@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>AfriPay | Mobile Money & Payment Hub</title>
     <style>
-        /* (same styles as before – unchanged) */
         * {
             margin: 0;
             padding: 0;
@@ -32,104 +31,125 @@
         }
 
         .live-header {
-            background: #0a2b3c;
-            padding: 1.2rem 1.8rem;
+            background: linear-gradient(135deg, #0a2b3c 0%, #1c4e6c 100%);
+            padding: 0.8rem 1.2rem;
             color: white;
         }
 
-        .brand {
+        .logo-container {
             display: flex;
+            align-items: center;
             justify-content: space-between;
-            align-items: baseline;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 8px;
+            margin-bottom: 8px;
         }
-
-        .brand h1 {
-            font-size: 1.6rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #FFF, #6bc6ff);
+        .africa-map-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.08);
+            padding: 4px 12px;
+            border-radius: 40px;
+            backdrop-filter: blur(4px);
+        }
+        .africa-svg {
+            width: 40px;
+            height: 40px;
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
+        }
+        .flag-grid {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            max-width: 180px;
+        }
+        .flag-icon {
+            font-size: 0.9rem;
+            transition: transform 0.2s;
+            cursor: default;
+        }
+        .flag-icon:hover { transform: scale(1.15); }
+        .brand-text {
+            font-size: 1.3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FFF, #FFD966, #6bc6ff);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
         }
-
         .datetime-box {
-            background: rgba(255,255,255,0.12);
-            padding: 0.4rem 1rem;
-            border-radius: 60px;
-            text-align: right;
-            font-size: 0.85rem;
+            background: rgba(0,0,0,0.3);
+            padding: 0.2rem 0.8rem;
+            border-radius: 40px;
+            text-align: center;
+            font-size: 0.7rem;
         }
-
-        .time-text { font-weight: 700; font-size: 1rem; }
+        .time-text { font-weight: 700; font-size: 0.8rem; }
 
         .user-welcome {
             background: rgba(255,255,255,0.15);
-            padding: 8px 12px;
+            padding: 6px 10px;
             border-radius: 40px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             display: inline-block;
-            margin-top: 8px;
+            margin-top: 6px;
         }
         .logout-btn {
             background: rgba(255,255,255,0.2);
             border: none;
-            padding: 4px 12px;
+            padding: 3px 10px;
             border-radius: 20px;
             color: white;
             cursor: pointer;
-            font-size: 0.7rem;
-            margin-left: 8px;
+            font-size: 0.65rem;
+            margin-left: 6px;
         }
-
         .auth-buttons {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             justify-content: flex-end;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
         }
         .auth-btn {
             background: rgba(255,255,255,0.2);
             border: none;
-            padding: 6px 16px;
+            padding: 5px 12px;
             border-radius: 20px;
             color: white;
             cursor: pointer;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             transition: 0.2s;
         }
         .auth-btn:hover { background: rgba(255,255,255,0.35); }
 
-        .form-container { padding: 1.8rem; }
-
+        .form-container { padding: 1.5rem; }
         .section-title {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             text-transform: uppercase;
             font-weight: 800;
             color: #1c6e8f;
-            margin: 1.2rem 0 0.8rem 0;
+            margin: 1rem 0 0.6rem 0;
             border-left: 4px solid #f4a261;
             padding-left: 12px;
         }
         .section-title:first-of-type { margin-top: 0; }
-
         .input-group {
-            margin-bottom: 1rem;
+            margin-bottom: 0.8rem;
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 4px;
         }
         .input-group label {
             font-weight: 600;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: #1e3b4a;
         }
         .input-group input, .input-group select {
-            padding: 12px 14px;
+            padding: 10px 12px;
             border-radius: 24px;
             border: 1.5px solid #e0e8f0;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             transition: 0.2s;
             outline: none;
             background: #fff;
@@ -141,52 +161,45 @@
         .double-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 1rem;
+            gap: 0.8rem;
         }
-
         .tx-row {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             align-items: center;
         }
-        .tx-row .input-group {
-            flex: 1;
-            margin-bottom: 0;
-        }
+        .tx-row .input-group { flex: 1; margin-bottom: 0; }
         .tx-btn {
             background: #f4a261;
             border: none;
-            padding: 10px 16px;
+            padding: 8px 12px;
             border-radius: 40px;
             font-weight: 600;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             cursor: pointer;
             transition: 0.2s;
             color: white;
             white-space: nowrap;
         }
-        .tx-btn.copy {
-            background: #2c7da0;
-        }
+        .tx-btn.copy { background: #2c7da0; }
         .tx-btn:hover { transform: translateY(-2px); opacity: 0.9; }
 
         .transfer-type-toggle {
             display: flex;
-            gap: 12px;
-            margin-bottom: 1rem;
+            gap: 10px;
+            margin-bottom: 0.8rem;
             background: #f1f5f9;
-            padding: 8px;
+            padding: 6px;
             border-radius: 60px;
         }
         .toggle-btn {
             flex: 1;
             text-align: center;
-            padding: 10px;
+            padding: 8px;
             border-radius: 50px;
             font-weight: 700;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             cursor: pointer;
-            transition: 0.2s;
             background: transparent;
             border: none;
         }
@@ -198,66 +211,63 @@
 
         .charges-panel {
             background: #f8fafc;
-            border-radius: 24px;
-            padding: 1rem;
-            margin: 1rem 0;
+            border-radius: 20px;
+            padding: 0.8rem;
+            margin: 0.8rem 0;
             border: 1px solid #e2edf7;
         }
         .charges-row {
             display: flex;
             justify-content: space-between;
-            padding: 6px 0;
-            font-size: 0.9rem;
+            padding: 4px 0;
+            font-size: 0.8rem;
         }
         .total-row {
             font-weight: 800;
-            font-size: 1.1rem;
+            font-size: 0.9rem;
             border-top: 2px dashed #cbdde9;
-            margin-top: 6px;
-            padding-top: 8px;
+            margin-top: 4px;
+            padding-top: 6px;
         }
 
         .country-selector-wrapper.hide-country { display: none; }
         .country-selector {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             align-items: center;
             background: white;
             border: 1.5px solid #e0e8f0;
             border-radius: 40px;
-            padding: 0 8px;
+            padding: 0 6px;
         }
-        .country-flag { font-size: 1.6rem; }
-        #countryCodeSelect { flex: 1; border: none; background: transparent; padding: 10px 4px; outline: none; }
+        .country-flag { font-size: 1.4rem; }
+        #countryCodeSelect { flex: 1; border: none; background: transparent; padding: 8px 4px; outline: none; }
 
         .mm-button-container {
             display: flex;
             justify-content: center;
-            margin: 16px 0;
+            margin: 12px 0;
         }
         .single-mm-btn {
             background: #0f2b3d;
             color: white;
             border: none;
-            padding: 14px 28px;
+            padding: 12px 20px;
             border-radius: 60px;
             font-weight: 800;
-            font-size: 1rem;
+            font-size: 0.9rem;
             cursor: pointer;
             transition: 0.2s;
             width: 100%;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
-        .single-mm-btn:hover {
-            background: #f4a261;
-            transform: translateY(-2px);
-        }
+        .single-mm-btn:hover { background: #f4a261; transform: translateY(-2px); }
 
         .business-strip {
             background: linear-gradient(90deg, #fef9f0 0%, #fff5e8 100%);
-            padding: 1rem 0.8rem;
-            margin-top: 1rem;
-            border-radius: 24px;
+            padding: 0.8rem;
+            margin-top: 0.8rem;
+            border-radius: 20px;
             border: 1px solid #ffe0b5;
             overflow-x: auto;
             white-space: nowrap;
@@ -267,59 +277,52 @@
         .business-strip::-webkit-scrollbar-track { background: #ffe0b5; border-radius: 10px; }
         .business-strip::-webkit-scrollbar-thumb { background: #f4a261; border-radius: 10px; }
         .business-title {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 700;
             color: #c97e2a;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             text-align: center;
         }
-        .business-icons { display: inline-flex; gap: 0.8rem; align-items: center; }
+        .business-icons { display: inline-flex; gap: 0.6rem; align-items: center; }
         .business-item {
             display: inline-flex;
             flex-direction: column;
             align-items: center;
             background: white;
-            padding: 8px 12px;
+            padding: 6px 10px;
             border-radius: 60px;
             cursor: pointer;
             transition: all 0.2s ease;
             border: 1px solid #ffe0b5;
-            min-width: 80px;
+            min-width: 70px;
         }
         .business-item:hover { transform: translateY(-4px); border-color: #f4a261; background: #fffaf5; }
-        .business-icon-img { font-size: 1.8rem; margin-bottom: 4px; }
-        .business-name { font-size: 0.7rem; font-weight: 700; color: #1c6e8f; }
-        .business-category { font-size: 0.55rem; color: #e67e22; }
+        .business-icon-img { font-size: 1.4rem; margin-bottom: 2px; }
+        .business-name { font-size: 0.6rem; font-weight: 700; color: #1c6e8f; }
+        .business-category { font-size: 0.5rem; color: #e67e22; }
 
         .goods-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px;
+            padding: 8px;
             border-bottom: 1px solid #eee;
             cursor: pointer;
             transition: background 0.2s;
         }
         .goods-item:hover { background: #fef9f0; }
-        .goods-name { font-weight: 600; }
-        .goods-price { color: #f4a261; font-weight: 700; }
-        .business-website {
-            display: inline-block;
-            margin-top: 10px;
-            color: #2c7da0;
-            text-decoration: none;
-            font-size: 0.8rem;
-        }
+        .goods-name { font-weight: 600; font-size: 0.8rem; }
+        .goods-price { color: #f4a261; font-weight: 700; font-size: 0.8rem; }
 
         .btn-submit {
             background: #0f2b3d;
             color: white;
             width: 100%;
-            padding: 14px;
+            padding: 12px;
             border-radius: 40px;
             font-weight: 800;
-            font-size: 1rem;
-            margin-top: 1rem;
+            font-size: 0.9rem;
+            margin-top: 0.8rem;
             border: none;
             cursor: pointer;
         }
@@ -329,21 +332,21 @@
             background: #f8fafc;
             border-top: 1px solid rgba(0,0,0,0.08);
             backdrop-filter: blur(4px);
-            padding: 1rem 1.2rem;
+            padding: 0.8rem;
         }
         .footer-buttons {
             display: flex;
             justify-content: space-around;
             flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 1rem;
+            gap: 8px;
+            margin-bottom: 0.8rem;
         }
         .footer-btn {
             background: #eef2f7;
             border: none;
-            padding: 8px 16px;
+            padding: 6px 12px;
             border-radius: 40px;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             font-weight: 600;
             cursor: pointer;
             color: #1c6e8f;
@@ -352,14 +355,14 @@
         .social-icons {
             display: flex;
             justify-content: center;
-            gap: 20px;
-            margin-top: 12px;
+            gap: 15px;
+            margin-top: 8px;
             flex-wrap: wrap;
         }
         .social-icon {
-            font-size: 1rem;
+            font-size: 0.8rem;
             cursor: pointer;
-            padding: 6px 12px;
+            padding: 4px 10px;
             background: #eef2f7;
             border-radius: 30px;
             color: #1c6e8f;
@@ -380,16 +383,24 @@
         .modal-content {
             background: white;
             border-radius: 2rem;
-            padding: 1.5rem;
+            padding: 1.2rem;
             width: 85%;
-            max-width: 350px;
+            max-width: 320px;
             max-height: 80vh;
             overflow-y: auto;
         }
-        .action-buttons { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
-        .action-btn { padding: 12px; border-radius: 40px; font-weight: bold; border: none; cursor: pointer; background: #0f2b3d; color: white; }
-        .close-modal { margin-top: 15px; background: #ccc; color: black; }
-
+        .action-buttons { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
+        .action-btn {
+            padding: 10px;
+            border-radius: 40px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            background: #0f2b3d;
+            color: white;
+            font-size: 0.8rem;
+        }
+        .close-modal { margin-top: 12px; background: #ccc; color: black; }
         .toast-msg {
             position: fixed;
             bottom: 20px;
@@ -397,29 +408,49 @@
             transform: translateX(-50%);
             background: #1e2f3c;
             color: white;
-            padding: 10px 20px;
+            padding: 8px 16px;
             border-radius: 60px;
             z-index: 1100;
             pointer-events: none;
+            font-size: 0.8rem;
         }
-        .error-msg { color: #e74c3c; font-size: 0.75rem; margin-top: 5px; }
-        .success-msg { color: #27ae60; font-size: 0.75rem; margin-top: 5px; }
-        
         @media (max-width: 600px) {
             .double-row { grid-template-columns: 1fr; gap: 0; }
-            .business-item { min-width: 70px; padding: 6px 8px; }
-            .business-icon-img { font-size: 1.4rem; }
-            .tx-row { flex-wrap: wrap; }
-            .tx-btn { padding: 8px 12px; font-size: 0.7rem; }
+            .business-item { min-width: 60px; padding: 4px 8px; }
+            .africa-svg { width: 32px; height: 32px; }
+            .flag-grid { max-width: 140px; }
+            .flag-icon { font-size: 0.8rem; }
+            .brand-text { font-size: 1.1rem; }
         }
     </style>
 </head>
 <body>
-
 <div class="app-card">
     <div class="live-header">
-        <div class="brand">
-            <h1>🌍 AfriPay</h1>
+        <div class="logo-container">
+            <div class="africa-map-logo">
+                <svg class="africa-svg" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M35,20 L50,12 L70,14 L85,22 L92,32 L95,48 L88,62 L78,70 L65,75 L52,73 L40,65 L33,55 L28,42 L30,28 L35,20Z" fill="#2c7da0" stroke="white" stroke-width="2" stroke-linejoin="round"/>
+                    <path d="M70,14 L78,20 L76,30 L66,28 L62,20 L70,14Z" fill="#1f5068" stroke="white" stroke-width="1.5"/>
+                    <path d="M52,73 L58,82 L54,90 L46,86 L48,78 L52,73Z" fill="#1f5068" stroke="white" stroke-width="1.5"/>
+                    <circle cx="45" cy="45" r="3" fill="#ffd966"/>
+                    <circle cx="80" cy="50" r="3" fill="#ffd966"/>
+                </svg>
+                <div class="flag-grid">
+                    <span class="flag-icon">🇿🇦</span> <span class="flag-icon">🇳🇬</span> <span class="flag-icon">🇪🇬</span> <span class="flag-icon">🇩🇿</span> <span class="flag-icon">🇦🇴</span>
+                    <span class="flag-icon">🇧🇯</span> <span class="flag-icon">🇧🇼</span> <span class="flag-icon">🇧🇫</span> <span class="flag-icon">🇧🇮</span> <span class="flag-icon">🇨🇲</span>
+                    <span class="flag-icon">🇨🇻</span> <span class="flag-icon">🇨🇫</span> <span class="flag-icon">🇹🇩</span> <span class="flag-icon">🇰🇲</span> <span class="flag-icon">🇨🇬</span>
+                    <span class="flag-icon">🇨🇩</span> <span class="flag-icon">🇩🇯</span> <span class="flag-icon">🇬🇶</span> <span class="flag-icon">🇪🇷</span> <span class="flag-icon">🇪🇹</span>
+                    <span class="flag-icon">🇬🇦</span> <span class="flag-icon">🇬🇲</span> <span class="flag-icon">🇬🇭</span> <span class="flag-icon">🇬🇳</span> <span class="flag-icon">🇬🇼</span>
+                    <span class="flag-icon">🇨🇮</span> <span class="flag-icon">🇰🇪</span> <span class="flag-icon">🇱🇸</span> <span class="flag-icon">🇱🇷</span> <span class="flag-icon">🇱🇾</span>
+                    <span class="flag-icon">🇲🇬</span> <span class="flag-icon">🇲🇼</span> <span class="flag-icon">🇲🇱</span> <span class="flag-icon">🇲🇷</span> <span class="flag-icon">🇲🇺</span>
+                    <span class="flag-icon">🇲🇦</span> <span class="flag-icon">🇲🇿</span> <span class="flag-icon">🇳🇦</span> <span class="flag-icon">🇳🇪</span> <span class="flag-icon">🇷🇼</span>
+                    <span class="flag-icon">🇸🇹</span> <span class="flag-icon">🇸🇳</span> <span class="flag-icon">🇸🇨</span> <span class="flag-icon">🇸🇱</span> <span class="flag-icon">🇸🇴</span>
+                    <span class="flag-icon">🇸🇸</span> <span class="flag-icon">🇸🇩</span> <span class="flag-icon">🇸🇿</span> <span class="flag-icon">🇹🇿</span> <span class="flag-icon">🇹🇬</span>
+                    <span class="flag-icon">🇹🇳</span> <span class="flag-icon">🇺🇬</span> <span class="flag-icon">🇿🇲</span> <span class="flag-icon">🇿🇼</span> <span class="flag-icon">🇪🇭</span>
+                </div>
+            </div>
+            <div class="brand-text">AfriPay</div>
             <div class="datetime-box">
                 <div id="currentDate">--</div>
                 <div class="time-text" id="currentTime">--:--:--</div>
@@ -437,7 +468,7 @@
                 </div>
             </div>
         </div>
-        <p style="font-size:0.7rem; opacity:0.8;">transfer • pay • cash out • Local or International</p>
+        <p style="font-size:0.65rem; opacity:0.8; text-align:center; margin-top: 6px;">transfer • pay • cash out • Local or International</p>
     </div>
 
     <div class="form-container" id="mainFormContainer" style="display:none;">
@@ -493,7 +524,6 @@
                 <div class="charges-row"><span>🌍 Currency:</span><span id="currencySymbol">GMD</span></div>
             </div>
 
-            <!-- Single combined button -->
             <div class="section-title">💸 Mobile Money Operator</div>
             <div class="mm-button-container">
                 <button type="button" class="single-mm-btn" id="mainMmBtn">🏦 WBMoney (All Operators)</button>
@@ -501,10 +531,7 @@
 
             <div class="section-title">🔖 TRANSACTION IDENTIFIER</div>
             <div class="tx-row">
-                <div class="input-group">
-                    <label>Transaction ID Number</label>
-                    <input type="text" id="transactionId" placeholder="Click 'Generate' to create an ID">
-                </div>
+                <div class="input-group"><label>Transaction ID Number</label><input type="text" id="transactionId" placeholder="Click 'Generate' to create an ID"></div>
                 <button type="button" class="tx-btn" id="generateTxBtn">✨ Generate ID</button>
                 <button type="button" class="tx-btn copy" id="copyTxBtn">📋 Copy</button>
             </div>
@@ -537,45 +564,33 @@
 
 <!-- Modals -->
 <div id="infoModal" class="modal"><div class="modal-content"><h3 id="modalTitle"></h3><div id="modalBody"></div><button class="action-btn close-modal">Close</button></div></div>
-<div id="subscribeModal" class="modal"><div class="modal-content"><h3>📧 Subscribe for Updates</h3><input type="email" id="subEmail" placeholder="Your email address" style="width:100%; padding:10px; margin:10px 0; border-radius:30px;"><button id="submitSubscribeBtn" class="action-btn">Subscribe</button><button class="action-btn close-modal">Cancel</button></div></div>
-<div id="loginModal" class="modal"><div class="modal-content"><h3>🔐 Login to AfriPay</h3><input type="text" id="loginName" placeholder="Full Name" style="width:100%; padding:10px; margin:10px 0; border-radius:30px;"><input type="tel" id="loginPhone" placeholder="Phone Number" style="width:100%; padding:10px; margin:10px 0; border-radius:30px;"><div id="loginError" class="error-msg"></div><button id="doLoginBtn" class="action-btn">Login</button><button class="action-btn close-modal">Cancel</button></div></div>
-<div id="registerModal" class="modal"><div class="modal-content"><h3>📝 Create Account</h3><input type="text" id="regName" placeholder="Full Name *" style="width:100%; padding:10px; margin:5px 0; border-radius:30px;"><input type="tel" id="regPhone" placeholder="Phone Number *" style="width:100%; padding:10px; margin:5px 0; border-radius:30px;"><select id="regCountry" style="width:100%; padding:10px; margin:5px 0; border-radius:30px;"><option>Sierra Leone</option><option>Nigeria</option><option>Ghana</option><option>Kenya</option></select><select id="regLanguage" style="width:100%; padding:10px; margin:5px 0; border-radius:30px;"><option value="en">English</option><option value="fr">Français</option><option value="es">Español</option></select><div id="regError" class="error-msg"></div><div id="regSuccess" class="success-msg"></div><button id="doRegisterBtn" class="action-btn">Register</button><button class="action-btn close-modal">Cancel</button></div></div>
-
-<div id="providerModal" class="modal">
-    <div class="modal-content">
-        <h3>Select Mobile Money Provider</h3>
-        <div class="action-buttons">
-            <button class="action-btn" data-provider="Orange Money">📱 Orange Money</button>
-            <button class="action-btn" data-provider="Afrimoney">🌍 Afrimoney</button>
-            <button class="action-btn" data-provider="QMoney">💎 QMoney</button>
-            <button class="action-btn" data-provider="WBMoney">🏦 WBMoney</button>
-            <button class="action-btn close-modal">Cancel</button>
-        </div>
-    </div>
-</div>
-
-<div id="roleModal" class="modal"><div class="modal-content"><h3 id="roleModalTitle">Select Transaction Type</h3><div class="action-buttons" id="roleButtons"><button class="action-btn" data-role="agent">🏢 Registered Agent</button><button class="action-btn" data-role="customer">👤 Registered Customer</button><button class="action-btn" data-role="other">🔄 From Another Network</button><button class="action-btn close-modal">Cancel</button></div></div></div>
-<div id="actionModal" class="modal"><div class="modal-content"><h3 id="modalProviderName">Orange Money</h3><div id="selectedRoleDisplay" style="font-size:0.75rem; color:#f4a261; margin-top:5px;"></div><div class="action-buttons"><button class="action-btn" id="actionTransfer">📤 Transfer</button><button class="action-btn pay" id="actionPay">💳 Pay for Goods/Services</button><button class="action-btn cashout" id="actionCashout">🏧 Cash Out</button><button class="action-btn close-modal">Cancel</button></div></div></div>
-<div id="goodsModal" class="modal"><div class="modal-content"><h3 id="goodsModalTitle">Select Item</h3><div id="goodsList"></div><a href="#" id="businessWebsiteLink" target="_blank" class="business-website">Visit Website</a><button class="action-btn close-modal" style="margin-top:15px;">Close</button></div></div>
+<div id="subscribeModal" class="modal"><div class="modal-content"><h3>📧 Subscribe</h3><input type="email" id="subEmail" placeholder="Your email" style="width:100%; padding:8px; margin:8px 0; border-radius:30px;"><button id="submitSubscribeBtn" class="action-btn">Subscribe</button><button class="action-btn close-modal" style="margin-top:8px;">Cancel</button></div></div>
+<div id="loginModal" class="modal"><div class="modal-content"><h3>🔐 Login</h3><input type="text" id="loginName" placeholder="Full Name" style="width:100%; padding:8px; margin:8px 0; border-radius:30px;"><input type="tel" id="loginPhone" placeholder="Phone Number" style="width:100%; padding:8px; margin:8px 0; border-radius:30px;"><div id="loginError" class="error-msg"></div><button id="doLoginBtn" class="action-btn">Login</button><button class="action-btn close-modal" style="margin-top:8px;">Cancel</button></div></div>
+<div id="registerModal" class="modal"><div class="modal-content"><h3>📝 Create Account</h3><input type="text" id="regName" placeholder="Full Name *" style="width:100%; padding:8px; margin:4px 0; border-radius:30px;"><input type="tel" id="regPhone" placeholder="Phone Number *" style="width:100%; padding:8px; margin:4px 0; border-radius:30px;"><select id="regCountry" style="width:100%; padding:8px; margin:4px 0; border-radius:30px;"><option>Sierra Leone</option><option>Nigeria</option><option>Ghana</option><option>Kenya</option></select><select id="regLanguage" style="width:100%; padding:8px; margin:4px 0; border-radius:30px;"><option value="en">English</option><option value="fr">Français</option><option value="es">Español</option></select><div id="regError" class="error-msg"></div><div id="regSuccess" class="success-msg"></div><button id="doRegisterBtn" class="action-btn">Register</button><button class="action-btn close-modal" style="margin-top:8px;">Cancel</button></div></div>
+<div id="providerModal" class="modal"><div class="modal-content"><h3>Select Provider</h3><div class="action-buttons"><button class="action-btn" data-provider="Orange Money">📱 Orange Money</button><button class="action-btn" data-provider="Afrimoney">🌍 Afrimoney</button><button class="action-btn" data-provider="QMoney">💎 QMoney</button><button class="action-btn" data-provider="WBMoney">🏦 WBMoney</button><button class="action-btn close-modal">Cancel</button></div></div></div>
+<div id="roleModal" class="modal"><div class="modal-content"><h3 id="roleModalTitle">Select Type</h3><div class="action-buttons" id="roleButtons"><button class="action-btn" data-role="agent">🏢 Registered Agent</button><button class="action-btn" data-role="customer">👤 Registered Customer</button><button class="action-btn" data-role="other">🔄 From Another Network</button><button class="action-btn close-modal">Cancel</button></div></div></div>
+<div id="actionModal" class="modal"><div class="modal-content"><h3 id="modalProviderName">Orange Money</h3><div id="selectedRoleDisplay" style="font-size:0.7rem; color:#f4a261; margin-top:4px;"></div><div class="action-buttons"><button class="action-btn" id="actionTransfer">📤 Transfer</button><button class="action-btn pay" id="actionPay">💳 Pay</button><button class="action-btn cashout" id="actionCashout">🏧 Cash Out</button><button class="action-btn close-modal">Cancel</button></div></div></div>
+<div id="goodsModal" class="modal"><div class="modal-content"><h3 id="goodsModalTitle">Select Item</h3><div id="goodsList"></div><a href="#" id="businessWebsiteLink" target="_blank" class="business-website">Visit Website</a><button class="action-btn close-modal" style="margin-top:12px;">Close</button></div></div>
 <div id="toastMsg" class="toast-msg" style="opacity:0; visibility:hidden;"></div>
 
 <script>
-    // ---------- Business Database (unchanged) ----------
+    // ----- Business Database (8 businesses with goods & prices) -----
     const businesses = [
-        { id: 1, name: "Mama's Kitchen", contact: "+232-76-123-456", type: "Restaurant", icon: "🍽️", website: "https://www.mamaskitchen.sl", goods: [{ name: "Jollof Rice + Chicken", price: 25.00 }, { name: "Fried Rice + Fish", price: 20.00 }, { name: "Beef Kebab (5pcs)", price: 12.00 }] },
-        { id: 2, name: "Freetown Computer Hub", contact: "+232-80-234-567", type: "Electronics", icon: "💻", website: "https://www.freetowncomputers.com", goods: [{ name: "Laptop Repair", price: 50.00 }, { name: "Phone Screen Replacement", price: 35.00 }, { name: "USB Flash Drive 64GB", price: 15.00 }] },
-        { id: 3, name: "Excellence School", contact: "+232-73-345-678", type: "Education", icon: "📚", website: "https://www.excellenceschool.edu", goods: [{ name: "Tuition Fee (Monthly)", price: 120.00 }, { name: "School Uniform Set", price: 45.00 }, { name: "Textbook Bundle", price: 60.00 }] },
-        { id: 4, name: "Dr. Kamara Clinic", contact: "+232-76-456-789", type: "Healthcare", icon: "🏥", website: "https://www.drkamaraclinic.com", goods: [{ name: "Consultation", price: 30.00 }, { name: "Malaria Test", price: 10.00 }, { name: "Blood Pressure Check", price: 8.00 }] },
-        { id: 5, name: "John's Hardware", contact: "+232-80-567-890", type: "Hardware", icon: "🔨", website: "https://www.johnshardware.sl", goods: [{ name: "Cement (50kg)", price: 8.00 }, { name: "Paint (Gallon)", price: 22.00 }, { name: "Drill Machine", price: 75.00 }] },
-        { id: 6, name: "Salone Fashion", contact: "+232-73-678-901", type: "Fashion", icon: "👗", website: "https://www.salonefashion.com", goods: [{ name: "African Print Dress", price: 45.00 }, { name: "Men's Shirt", price: 30.00 }, { name: "Custom Tailoring", price: 60.00 }] },
-        { id: 7, name: "James Williams", contact: "+232-76-012-345", type: "Individual", icon: "👤", website: "https://www.jameswilliams.com", goods: [{ name: "Freelance Web Design", price: 150.00 }, { name: "Graphic Design", price: 80.00 }] },
-        { id: 8, name: "Mary Koroma", contact: "+232-80-123-456", type: "Individual", icon: "👩", website: "https://www.marykoroma.com", goods: [{ name: "Handmade Crafts", price: 25.00 }, { name: "Catering Service", price: 100.00 }] }
+        { id:1, name:"Mama's Kitchen", contact:"+232-76-123-456", type:"Restaurant", icon:"🍽️", website:"https://www.mamaskitchen.sl", goods:[{name:"Jollof Rice + Chicken",price:25},{name:"Fried Rice + Fish",price:20},{name:"Beef Kebab (5pcs)",price:12}] },
+        { id:2, name:"Freetown Computer Hub", contact:"+232-80-234-567", type:"Electronics", icon:"💻", website:"https://www.freetowncomputers.com", goods:[{name:"Laptop Repair",price:50},{name:"Phone Screen Replacement",price:35},{name:"USB Flash Drive 64GB",price:15}] },
+        { id:3, name:"Excellence School", contact:"+232-73-345-678", type:"Education", icon:"📚", website:"https://www.excellenceschool.edu", goods:[{name:"Tuition Fee (Monthly)",price:120},{name:"School Uniform Set",price:45},{name:"Textbook Bundle",price:60}] },
+        { id:4, name:"Dr. Kamara Clinic", contact:"+232-76-456-789", type:"Healthcare", icon:"🏥", website:"https://www.drkamaraclinic.com", goods:[{name:"Consultation",price:30},{name:"Malaria Test",price:10},{name:"Blood Pressure Check",price:8}] },
+        { id:5, name:"John's Hardware", contact:"+232-80-567-890", type:"Hardware", icon:"🔨", website:"https://www.johnshardware.sl", goods:[{name:"Cement (50kg)",price:8},{name:"Paint (Gallon)",price:22},{name:"Drill Machine",price:75}] },
+        { id:6, name:"Salone Fashion", contact:"+232-73-678-901", type:"Fashion", icon:"👗", website:"https://www.salonefashion.com", goods:[{name:"African Print Dress",price:45},{name:"Men's Shirt",price:30},{name:"Custom Tailoring",price:60}] },
+        { id:7, name:"James Williams", contact:"+232-76-012-345", type:"Individual", icon:"👤", website:"https://www.jameswilliams.com", goods:[{name:"Freelance Web Design",price:150},{name:"Graphic Design",price:80}] },
+        { id:8, name:"Mary Koroma", contact:"+232-80-123-456", type:"Individual", icon:"👩", website:"https://www.marykoroma.com", goods:[{name:"Handmade Crafts",price:25},{name:"Catering Service",price:100}] }
     ];
 
     let currentUser = null;
     let selectedProvider = '';
     let selectedRole = '';
 
+    // ----- Transaction ID Generation (WBxxxxxxx.xxxxx.Axxxxxxx) -----
     function generateTransactionId() {
         const part1 = Math.floor(1000000 + Math.random() * 9000000);
         const part2 = Math.floor(10000 + Math.random() * 90000);
@@ -583,85 +598,70 @@
         const part3 = Math.floor(1000000 + Math.random() * 9000000);
         return `WB${part1}.${part2}.${letter}${part3}`;
     }
-
-    function setGeneratedTransactionId() {
-        const txField = document.getElementById('transactionId');
-        if (txField) txField.value = generateTransactionId();
-    }
-
+    function setGeneratedTransactionId() { document.getElementById('transactionId').value = generateTransactionId(); }
     function copyTransactionIdToClipboard() {
-        const txField = document.getElementById('transactionId');
-        if (txField && txField.value) {
-            navigator.clipboard.writeText(txField.value).then(() => showToast("✅ Transaction ID copied!", 2000));
-        } else {
-            showToast("⚠️ No ID to copy", 2000);
-        }
+        const val = document.getElementById('transactionId').value;
+        if(val) { navigator.clipboard.writeText(val); showToast("✅ ID copied!", 2000); }
+        else showToast("⚠️ No ID", 2000);
     }
-
     function ensureTransactionId() {
-        const txField = document.getElementById('transactionId');
-        if (!txField.value.trim()) txField.value = generateTransactionId();
+        let field = document.getElementById('transactionId');
+        if(!field.value.trim()) field.value = generateTransactionId();
     }
 
+    // ----- User persistence (localStorage) -----
     function loadStoredUser() {
         const stored = localStorage.getItem('afripay_user');
-        if (stored) {
+        if(stored) {
             try {
                 currentUser = JSON.parse(stored);
-                if (currentUser && currentUser.name && currentUser.phone) {
-                    showLoggedInUI();
-                    return true;
-                }
+                if(currentUser && currentUser.name && currentUser.phone) { showLoggedInUI(); return true; }
             } catch(e) {}
         }
         showLoggedOutUI();
         return false;
     }
-
     function saveUserToStorage(user) { localStorage.setItem('afripay_user', JSON.stringify(user)); }
     function clearUserStorage() { localStorage.removeItem('afripay_user'); currentUser = null; showLoggedOutUI(); }
-
     function showLoggedInUI() {
         document.getElementById('authButtons').style.display = 'none';
         document.getElementById('welcomeSection').style.display = 'block';
         document.getElementById('loggedUserName').innerText = currentUser?.name || 'User';
         document.getElementById('mainFormContainer').style.display = 'block';
-        if (currentUser) {
-            if (currentUser.name) document.getElementById('senderName').value = currentUser.name;
-            if (currentUser.phone) document.getElementById('senderPhone').value = currentUser.phone;
+        if(currentUser) {
+            if(currentUser.name) document.getElementById('senderName').value = currentUser.name;
+            if(currentUser.phone) document.getElementById('senderPhone').value = currentUser.phone;
         }
         renderBusinessStrip();
     }
-
     function showLoggedOutUI() {
         document.getElementById('authButtons').style.display = 'flex';
         document.getElementById('welcomeSection').style.display = 'none';
         document.getElementById('mainFormContainer').style.display = 'none';
     }
 
+    // ----- Business Strip rendering & goods modal -----
     function renderBusinessStrip() {
         const container = document.getElementById('businessIconsContainer');
-        if (!container) return;
+        if(!container) return;
         container.innerHTML = '';
         businesses.forEach(biz => {
-            const bizDiv = document.createElement('div');
-            bizDiv.className = 'business-item';
-            bizDiv.setAttribute('data-business-id', biz.id);
-            bizDiv.innerHTML = `<div class="business-icon-img">${biz.icon}</div><div class="business-name">${biz.name}</div><div class="business-category">${biz.type}</div>`;
-            bizDiv.addEventListener('click', () => showGoodsModal(biz.id));
-            container.appendChild(bizDiv);
+            const div = document.createElement('div');
+            div.className = 'business-item';
+            div.setAttribute('data-business-id', biz.id);
+            div.innerHTML = `<div class="business-icon-img">${biz.icon}</div><div class="business-name">${biz.name}</div><div class="business-category">${biz.type}</div>`;
+            div.addEventListener('click', () => showGoodsModal(biz.id));
+            container.appendChild(div);
         });
     }
-
     function showGoodsModal(businessId) {
         const biz = businesses.find(b => b.id === businessId);
-        if (!biz) return;
-        const goodsHtml = biz.goods.map(good => `<div class="goods-item" data-price="${good.price}" data-name="${good.name.replace(/['"]/g, '&quot;')}"><span class="goods-name">${good.name}</span><span class="goods-price">${good.price.toFixed(2)} ${getCurrencySymbolForDisplay()}</span></div>`).join('');
+        if(!biz) return;
+        const goodsHtml = biz.goods.map(g => `<div class="goods-item" data-price="${g.price}" data-name="${g.name.replace(/['"]/g, '&quot;')}"><span class="goods-name">${g.name}</span><span class="goods-price">${g.price.toFixed(2)} ${getCurrencySymbolForDisplay()}</span></div>`).join('');
         document.getElementById('goodsModalTitle').innerHTML = `${biz.icon} ${biz.name} - Select Item`;
         document.getElementById('goodsList').innerHTML = goodsHtml;
-        const websiteLink = document.getElementById('businessWebsiteLink');
-        websiteLink.href = biz.website;
-        websiteLink.innerText = `🌐 Visit ${biz.name} Website`;
+        document.getElementById('businessWebsiteLink').href = biz.website;
+        document.getElementById('businessWebsiteLink').innerText = `🌐 Visit ${biz.name} Website`;
         document.getElementById('goodsModal').style.display = 'flex';
         document.querySelectorAll('.goods-item').forEach(item => {
             item.addEventListener('click', () => {
@@ -676,171 +676,142 @@
             });
         });
     }
-    
     function getCurrencySymbolForDisplay() { return isLocalMode ? 'Local' : currentCountryData.currency; }
 
+    // ----- Registration & Login (Formspree endpoints) -----
     async function registerUser(userData) {
-        if (!userData.name || !userData.phone) {
-            document.getElementById('regError').innerText = "Please fill in both Name and Phone Number";
-            return false;
-        }
+        if(!userData.name || !userData.phone) { document.getElementById('regError').innerText = "Fill both fields"; return false; }
         document.getElementById('regError').innerText = "";
         document.getElementById('regSuccess').innerText = "Registering...";
         try {
-            await fetch('https://formspree.io/f/xbdwvvgn', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(userData) });
-            currentUser = { name: userData.name, phone: userData.phone, country: userData.country, language: userData.language };
+            await fetch('https://formspree.io/f/xbdwvvgn', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(userData) });
+            currentUser = { name:userData.name, phone:userData.phone, country:userData.country, language:userData.language };
             saveUserToStorage(currentUser);
             document.getElementById('regSuccess').innerText = "✅ Registration successful!";
             showToast("✅ Welcome " + userData.name);
-            setTimeout(() => { showLoggedInUI(); }, 1000);
+            setTimeout(() => showLoggedInUI(), 1000);
             return true;
-        } catch(err) { 
-            currentUser = { name: userData.name, phone: userData.phone, country: userData.country };
+        } catch(err) {
+            currentUser = { name:userData.name, phone:userData.phone, country:userData.country };
             saveUserToStorage(currentUser);
             showToast("✅ Registration successful!");
             showLoggedInUI();
             return true;
         }
     }
-
     function loginUser(fullName, phoneNumber) {
         const stored = localStorage.getItem('afripay_user');
-        if (stored) {
+        if(stored) {
             try {
                 const user = JSON.parse(stored);
-                if (user.name.toLowerCase() === fullName.toLowerCase() && user.phone === phoneNumber) {
+                if(user.name.toLowerCase() === fullName.toLowerCase() && user.phone === phoneNumber) {
                     currentUser = user;
                     saveUserToStorage(user);
                     showToast(`Welcome back, ${user.name}!`);
                     showLoggedInUI();
                     document.getElementById('loginError').innerText = "";
                     return true;
-                } else {
-                    document.getElementById('loginError').innerText = "❌ Name or Phone number doesn't match.";
-                    return false;
-                }
+                } else { document.getElementById('loginError').innerText = "❌ Name or Phone doesn't match."; return false; }
             } catch(e) { document.getElementById('loginError').innerText = "❌ Error loading user."; return false; }
-        } else {
-            document.getElementById('loginError').innerText = "❌ No account found. Please register first.";
-            return false;
-        }
+        } else { document.getElementById('loginError').innerText = "❌ No account. Register first."; return false; }
     }
 
-    // Provider selection
-    function openProviderModal() {
-        document.getElementById('providerModal').style.display = 'flex';
-    }
-
+    // ----- UI Flow: provider → role → action -----
+    function openProviderModal() { document.getElementById('providerModal').style.display = 'flex'; }
     function onProviderSelected(provider) {
         selectedProvider = provider;
         document.getElementById('providerModal').style.display = 'none';
-        document.getElementById('roleModalTitle').innerHTML = `${provider} - Choose recipient type`;
+        document.getElementById('roleModalTitle').innerHTML = `${provider} - Choose type`;
         document.getElementById('roleModal').style.display = 'flex';
     }
-
     function onRoleSelected(role) {
         selectedRole = role;
         document.getElementById('roleModal').style.display = 'none';
         let roleText = role === 'agent' ? '🏢 Registered Agent' : (role === 'customer' ? '👤 Registered Customer' : '🔄 From Another Network');
-        document.getElementById('selectedRoleDisplay').innerHTML = `Transaction type: ${roleText}`;
+        document.getElementById('selectedRoleDisplay').innerHTML = `Type: ${roleText}`;
         document.getElementById('modalProviderName').innerText = selectedProvider;
         document.getElementById('actionModal').style.display = 'flex';
     }
 
+    // ----- USSD logic with country Z mapping -----
     function getCountryCodeZ() {
         const selected = countrySelect.value;
         const parts = selected.split('|');
         return parts[5] || '1';
     }
-
-    function cleanPhoneNumber(rawPhone) { return rawPhone.replace(/\D/g, ''); }
+    function cleanPhoneNumber(raw) { return raw.replace(/\D/g, ''); }
 
     function buildAndDialUSSD(action) {
         let amount = parseFloat(amountInput.value);
-        if (isNaN(amount) || amount <= 0) { showToast("❌ Enter valid amount first"); return; }
+        if(isNaN(amount) || amount <= 0) { showToast("❌ Enter valid amount"); return; }
         let phone = document.getElementById('recipientPhone').value.trim();
-        if (!phone) { showToast("❌ Enter recipient phone number"); return; }
+        if(!phone) { showToast("❌ Recipient phone number required"); return; }
         let recipientNameRaw = document.getElementById('recipientName').value.trim();
-        if (!recipientNameRaw) { showToast("❌ Enter recipient name"); return; }
-        
+        if(!recipientNameRaw) { showToast("❌ Recipient name required"); return; }
+
         const charge = amount * 0.01;
         const gst = isLocalMode ? 0 : charge * (currentCountryData.gstRate / 100);
         const total = amount + charge + gst;
         const totalFixed = Math.round(total);
         let cleanPhone = cleanPhoneNumber(phone);
-        let encodedName = encodeURIComponent(recipientNameRaw);
-        
         let ussdCode = '';
-        
-        // INTERNATIONAL ORANGE MONEY
-        if (selectedProvider === "Orange Money" && !isLocalMode) {
-            const countryZ = getCountryCodeZ();
-            ussdCode = `#144*2*5*1*${countryZ}#`;
+
+        // International Orange Money: #144*2*5*1*Z#
+        if(selectedProvider === "Orange Money" && !isLocalMode) {
+            const z = getCountryCodeZ();
+            ussdCode = `#144*2*5*1*${z}#`;
         }
-        // INTERNATIONAL AFRIMONEY - CORRECT FORMAT: *161*1*6*1*Z#
-        else if (selectedProvider === "Afrimoney" && !isLocalMode) {
-            const countryZ = getCountryCodeZ();
-            ussdCode = `*161*1*6*1*${countryZ}#`;
+        // International Afrimoney: *161*1*6*1*Z#
+        else if(selectedProvider === "Afrimoney" && !isLocalMode) {
+            const z = getCountryCodeZ();
+            ussdCode = `*161*1*6*1*${z}#`;
         }
-        // INTERNATIONAL QMONEY (placeholder)
-        else if (selectedProvider === "QMoney" && !isLocalMode) {
-            const countryZ = getCountryCodeZ();
-            ussdCode = `*144*3*${countryZ}#`;
+        // International QMoney / WBMoney placeholders
+        else if(selectedProvider === "QMoney" && !isLocalMode) {
+            ussdCode = `*144*3*${getCountryCodeZ()}#`;
         }
-        // INTERNATIONAL WBMONEY (placeholder)
-        else if (selectedProvider === "WBMoney" && !isLocalMode) {
-            const countryZ = getCountryCodeZ();
-            ussdCode = `#144*4*${countryZ}#`;
+        else if(selectedProvider === "WBMoney" && !isLocalMode) {
+            ussdCode = `#144*4*${getCountryCodeZ()}#`;
         }
-        // LOCAL ORANGE MONEY
-        else if (selectedProvider === "Orange Money" && isLocalMode) {
-            if (selectedRole === 'agent') {
-                if (cleanPhone.length !== 6) {
-                    showToast("❌ For Registered Agent, please enter exactly 6 digits (agent code).", 4000);
-                    return;
-                }
+        // Local Orange Money
+        else if(selectedProvider === "Orange Money" && isLocalMode) {
+            if(selectedRole === 'agent') {
+                if(cleanPhone.length !== 6) { showToast("❌ Agent: enter exactly 6 digits", 4000); return; }
                 ussdCode = `#144*2*2*${cleanPhone}*${totalFixed}*0000#`;
-            } else if (selectedRole === 'customer') {
-                if (cleanPhone.length !== 9) {
-                    showToast("❌ For Registered Customer, please enter exactly 9 digits (phone number).", 4000);
-                    return;
-                }
+            } else if(selectedRole === 'customer') {
+                if(cleanPhone.length !== 9) { showToast("❌ Customer: enter exactly 9 digits", 4000); return; }
                 ussdCode = `#144*2*1*${cleanPhone}*${totalFixed}*0000#`;
-            } else { // other
+            } else {
                 ussdCode = `#144*2*3*${cleanPhone}*${totalFixed}*0000#`;
             }
         }
-        // LOCAL AFRIMONEY
-        else if (selectedProvider === "Afrimoney" && isLocalMode) {
+        // Local Afrimoney
+        else if(selectedProvider === "Afrimoney" && isLocalMode) {
             ussdCode = `#144*${cleanPhone}*${totalFixed}*0000#`;
         }
-        // LOCAL QMONEY
-        else if (selectedProvider === "QMoney" && isLocalMode) {
+        // Local QMoney & WBMoney
+        else if(selectedProvider === "QMoney" && isLocalMode) {
             ussdCode = `*144*3*${cleanPhone}*${totalFixed}*0000#`;
         }
-        // LOCAL WBMONEY
-        else if (selectedProvider === "WBMoney" && isLocalMode) {
+        else if(selectedProvider === "WBMoney" && isLocalMode) {
             ussdCode = `#144*4*${cleanPhone}*${totalFixed}*0000#`;
         }
         else {
-            // Fallback
             ussdCode = `#144*2*2*${cleanPhone}*${totalFixed}*0000#`;
         }
-        
-        let roleName = selectedRole === 'agent' ? 'Agent' : (selectedRole === 'customer' ? 'Customer' : 'Other Network');
-        showToast(`📞 ${selectedProvider} (${roleName}) - ${action}: ${ussdCode.substring(0, 45)}...`, 3000);
-        const dialLink = document.createElement('a');
-        dialLink.href = `tel:${ussdCode}`;
-        dialLink.style.display = 'none';
-        document.body.appendChild(dialLink);
-        dialLink.click();
-        document.body.removeChild(dialLink);
-        showToast(`✅ ${action} initiated. Complete on phone and enter Transaction ID.`, 5000);
+
+        let roleName = selectedRole === 'agent' ? 'Agent' : (selectedRole === 'customer' ? 'Customer' : 'Other');
+        showToast(`📞 ${selectedProvider} (${roleName}) - ${action}: ${ussdCode.substring(0,45)}...`, 3000);
+        const link = document.createElement('a');
+        link.href = `tel:${ussdCode}`;
+        link.click();
+        showToast(`✅ ${action} initiated. Enter Transaction ID.`, 5000);
     }
 
+    // ----- Date/Time update, toast, charges computation -----
     function updateDateTime() { const now = new Date(); document.getElementById('currentDate').innerText = now.toLocaleDateString(); document.getElementById('currentTime').innerText = now.toLocaleTimeString(); }
-    updateDateTime(); setInterval(updateDateTime, 1000);
-    function showToast(msg, dur=3000) { let t = document.getElementById('toastMsg'); t.innerText = msg; t.style.visibility = 'visible'; t.style.opacity = '1'; setTimeout(() => { t.style.opacity = '0'; setTimeout(()=> t.style.visibility='hidden', 300); }, dur); }
+    setInterval(updateDateTime, 1000); updateDateTime();
+    function showToast(msg, dur=3000) { let t = document.getElementById('toastMsg'); t.innerText = msg; t.style.visibility = 'visible'; t.style.opacity='1'; setTimeout(()=>{ t.style.opacity='0'; setTimeout(()=> t.style.visibility='hidden',300); }, dur); }
 
     const amountInput = document.getElementById('amountInput'), countrySelect = document.getElementById('countryCodeSelect'), flagSpan = document.getElementById('flagEmoji');
     const displayAmountSpan = document.getElementById('displayAmount'), chargeSpan = document.getElementById('chargeAmount'), gstSpan = document.getElementById('gstAmount'), totalSpan = document.getElementById('totalAmount'), gstRateLabel = document.getElementById('gstRateLabel'), currencySymbolSpan = document.getElementById('currencySymbol'), countryWrapper = document.getElementById('countryWrapper'), localToggle = document.getElementById('localToggleBtn'), intlToggle = document.getElementById('intlToggleBtn');
@@ -854,15 +825,14 @@
         isLocalMode = enabled;
         localToggle.classList.toggle('active', enabled); intlToggle.classList.toggle('active', !enabled);
         countryWrapper.style.display = enabled ? 'none' : 'block';
-        if (!enabled) { 
+        if(!enabled) {
             let val = countrySelect.value.split('|');
-            currentCountryData = { gstRate:parseFloat(val[4]), currency:val[2], flag:val[3] }; 
-            gstRateLabel.innerText = currentCountryData.gstRate; 
-            currencySymbolSpan.innerText = currentCountryData.currency; 
+            currentCountryData = { gstRate:parseFloat(val[4]), currency:val[2], flag:val[3] };
+            gstRateLabel.innerText = currentCountryData.gstRate;
+            currencySymbolSpan.innerText = currentCountryData.currency;
             flagSpan.innerText = currentCountryData.flag;
-        } else { 
-            gstRateLabel.innerText = "0"; 
-            currencySymbolSpan.innerText = "Local"; 
+        } else {
+            gstRateLabel.innerText = "0"; currencySymbolSpan.innerText = "Local";
         }
         computeCharges();
     }
@@ -870,66 +840,53 @@
     countrySelect.onchange = ()=>{ if(!isLocalMode){ let val = countrySelect.value.split('|'); currentCountryData = { gstRate:parseFloat(val[4]), currency:val[2], flag:val[3] }; gstRateLabel.innerText = currentCountryData.gstRate; currencySymbolSpan.innerText = currentCountryData.currency; flagSpan.innerText = currentCountryData.flag; computeCharges(); } };
     amountInput.oninput = computeCharges; setLocalMode(true);
 
-    // Event listeners for modals
-    document.querySelectorAll('#providerModal .action-btn[data-provider]').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const provider = btn.getAttribute('data-provider');
-            onProviderSelected(provider);
-        });
-    });
-
-    document.getElementById('roleButtons').querySelectorAll('[data-role]').forEach(btn => {
-        btn.addEventListener('click', (e) => { onRoleSelected(btn.getAttribute('data-role')); });
-    });
-
+    // ----- Event Listeners for modals and buttons -----
+    document.querySelectorAll('#providerModal .action-btn[data-provider]').forEach(btn => btn.addEventListener('click', (e) => onProviderSelected(btn.getAttribute('data-provider'))));
+    document.getElementById('roleButtons').querySelectorAll('[data-role]').forEach(btn => btn.addEventListener('click', (e) => onRoleSelected(btn.getAttribute('data-role'))));
     document.getElementById('mainMmBtn').addEventListener('click', () => {
-        if (parseFloat(amountInput.value) <= 0) { showToast("⚠️ Enter amount first"); return; }
-        if (!document.getElementById('recipientPhone').value.trim()) { showToast("⚠️ Enter recipient phone number"); return; }
-        if (!isLocalMode && !document.getElementById('recipientName').value.trim()) {
-            showToast("⚠️ Enter recipient name for international transfer");
-            return;
-        }
+        if(parseFloat(amountInput.value) <= 0) { showToast("⚠️ Enter amount first"); return; }
+        if(!document.getElementById('recipientPhone').value.trim()) { showToast("⚠️ Enter recipient phone"); return; }
+        if(!isLocalMode && !document.getElementById('recipientName').value.trim()) { showToast("⚠️ Enter recipient name for international transfer"); return; }
         openProviderModal();
     });
+    document.getElementById('actionTransfer').addEventListener('click', () => { buildAndDialUSSD('Transfer'); document.getElementById('actionModal').style.display = 'none'; selectedRole=''; selectedProvider=''; });
+    document.getElementById('actionPay').addEventListener('click', () => { buildAndDialUSSD('Pay'); document.getElementById('actionModal').style.display = 'none'; selectedRole=''; selectedProvider=''; });
+    document.getElementById('actionCashout').addEventListener('click', () => { buildAndDialUSSD('Cash out'); document.getElementById('actionModal').style.display = 'none'; selectedRole=''; selectedProvider=''; });
+    document.querySelectorAll('.close-modal').forEach(btn => btn.addEventListener('click', function() { this.closest('.modal').style.display='none'; }));
 
-    document.getElementById('actionTransfer').addEventListener('click', () => { buildAndDialUSSD('Transfer'); closeActionModal(); });
-    document.getElementById('actionPay').addEventListener('click', () => { buildAndDialUSSD('Pay'); closeActionModal(); });
-    document.getElementById('actionCashout').addEventListener('click', () => { buildAndDialUSSD('Cash out'); closeActionModal(); });
-    function closeActionModal() { document.getElementById('actionModal').style.display = 'none'; selectedRole = ''; selectedProvider = ''; }
-
+    // ----- Footer info modals -----
     function showInfoModal(title, body) { document.getElementById('modalTitle').innerText = title; document.getElementById('modalBody').innerHTML = body; document.getElementById('infoModal').style.display = 'flex'; }
-    document.getElementById('aboutAppBtn').onclick = ()=>showInfoModal("📘 About AfriPay", "AfriPay supports Orange Money, Afrimoney, QMoney, WBMoney. International transfers use country-coded USSD.");
-    document.getElementById('aboutDevBtn').onclick = ()=>showInfoModal("👨‍💻 About Developer", "Built by a passionate fintech developer to simplify African mobile money transfers.");
-    document.getElementById('contactBtn').onclick = ()=>showInfoModal("📞 Contact Support", "<strong>Phone:</strong><br>+232-76-436-811<br>+232-80-422-698<br>+232-73-671-566");
-    document.getElementById('subscribeBtn').onclick = ()=>{ document.getElementById('subscribeModal').style.display = 'flex'; };
-    document.getElementById('submitSubscribeBtn').onclick = ()=>{ let email = document.getElementById('subEmail').value; if(email) { showToast("📧 Subscribed!"); document.getElementById('subscribeModal').style.display = 'none'; } };
-    document.querySelectorAll('.close-modal').forEach(btn=>btn.addEventListener('click',function(){ this.closest('.modal').style.display='none'; }));
+    document.getElementById('aboutAppBtn').onclick = () => showInfoModal("📘 About AfriPay", "Cross-border mobile money transfers with Orange Money, Afrimoney, QMoney & WBMoney. Automatic fee + GST calculation.");
+    document.getElementById('aboutDevBtn').onclick = () => showInfoModal("👨‍💻 Developer", "Passionate fintech developer bridging African payment systems.");
+    document.getElementById('contactBtn').onclick = () => showInfoModal("📞 Contact", "<strong>Phone:</strong><br>+232-76-436-811<br>+232-80-422-698<br>+232-73-671-566");
+    document.getElementById('subscribeBtn').onclick = () => document.getElementById('subscribeModal').style.display = 'flex';
+    document.getElementById('submitSubscribeBtn').onclick = () => { let email = document.getElementById('subEmail').value; if(email) { showToast("📧 Subscribed!"); document.getElementById('subscribeModal').style.display = 'none'; } };
 
-    document.getElementById('whatsappBtn').onclick = ()=>{ window.open('https://wa.me/23276436811','_blank'); };
-    document.getElementById('facebookBtn').onclick = ()=>{ window.open('https://facebook.com/afripay','_blank'); };
-    document.getElementById('instagramBtn').onclick = ()=>{ window.open('https://instagram.com/afripay','_blank'); };
-    document.getElementById('youtubeBtn').onclick = ()=>{ window.open('https://youtube.com/@afripay','_blank'); };
-    document.getElementById('webineBtn').onclick = ()=>{ window.open('https://webine.com/afripay','_blank'); };
+    // Social media links
+    document.getElementById('whatsappBtn').onclick = () => window.open('https://wa.me/23276436811','_blank');
+    document.getElementById('facebookBtn').onclick = () => window.open('https://facebook.com/afripay','_blank');
+    document.getElementById('instagramBtn').onclick = () => window.open('https://instagram.com/afripay','_blank');
+    document.getElementById('youtubeBtn').onclick = () => window.open('https://youtube.com/@afripay','_blank');
+    document.getElementById('webineBtn').onclick = () => window.open('https://webine.com/afripay','_blank');
 
+    // Auth buttons
     document.getElementById('loginBtn').onclick = () => { document.getElementById('loginError').innerText = ""; document.getElementById('loginModal').style.display = 'flex'; };
     document.getElementById('registerBtn').onclick = () => { document.getElementById('regError').innerText = ""; document.getElementById('regSuccess').innerText = ""; document.getElementById('registerModal').style.display = 'flex'; };
     document.getElementById('logoutBtn').onclick = () => { clearUserStorage(); showToast("Logged out"); };
-    document.getElementById('doLoginBtn').onclick = () => { let name = document.getElementById('loginName').value.trim(); let phone = document.getElementById('loginPhone').value.trim(); if (name && phone) { loginUser(name, phone); if (currentUser) document.getElementById('loginModal').style.display='none'; } else { document.getElementById('loginError').innerText = "Enter both fields"; } };
-    document.getElementById('doRegisterBtn').onclick = async() => { let regData = { name: document.getElementById('regName').value.trim(), phone: document.getElementById('regPhone').value.trim(), country: document.getElementById('regCountry').value, language: document.getElementById('regLanguage').value }; if (regData.name && regData.phone) { await registerUser(regData); if (currentUser) setTimeout(() => document.getElementById('registerModal').style.display='none', 1500); } else { document.getElementById('regError').innerText = "Fill Name and Phone"; } };
+    document.getElementById('doLoginBtn').onclick = () => { let name = document.getElementById('loginName').value.trim(); let phone = document.getElementById('loginPhone').value.trim(); if(name && phone) { loginUser(name, phone); if(currentUser) document.getElementById('loginModal').style.display='none'; } else document.getElementById('loginError').innerText = "Enter both"; };
+    document.getElementById('doRegisterBtn').onclick = async() => { let regData = { name:document.getElementById('regName').value.trim(), phone:document.getElementById('regPhone').value.trim(), country:document.getElementById('regCountry').value, language:document.getElementById('regLanguage').value }; if(regData.name && regData.phone) { await registerUser(regData); if(currentUser) setTimeout(()=>document.getElementById('registerModal').style.display='none', 1500); } else document.getElementById('regError').innerText = "Fill Name and Phone"; };
 
     document.getElementById('generateTxBtn').addEventListener('click', setGeneratedTransactionId);
     document.getElementById('copyTxBtn').addEventListener('click', copyTransactionIdToClipboard);
 
-    // ========== UPDATED FORMSPREE LINK ==========
-    const MAIN_FORMSPREE = "https://formspree.io/f/xlgkgejq";
-    // ============================================
-    
+    // Main form submission to Formspree (main endpoint)
+    const MAIN_FORMSPREE = "https://formspree.io/f/mgoqlvlo";
     document.getElementById('mainForm').addEventListener('submit', async(e) => {
         e.preventDefault();
         const senderName = document.getElementById('senderName').value.trim();
         const senderPhone = document.getElementById('senderPhone').value.trim();
         const recipientName = document.getElementById('recipientName').value.trim();
-        if (!senderName || !senderPhone || !recipientName) { showToast("Please fill all required fields (*)", 3000); return; }
+        if(!senderName || !senderPhone || !recipientName) { showToast("Fill all required fields"); return; }
         ensureTransactionId();
         const amount = parseFloat(amountInput.value) || 0;
         const charge = amount * 0.01;
@@ -947,27 +904,27 @@
             user: currentUser?.name || "Guest",
             receipt_text: `🔹 AFRI-PAY RECEIPT 🔹\n\nTransaction ID: ${document.getElementById('transactionId').value.trim()}\nDate & Time: ${document.getElementById('currentDate').innerText} ${document.getElementById('currentTime').innerText}\nTransfer Type: ${isLocalMode ? "Local" : "International"}\nSender: ${senderName} (${senderPhone})\nRecipient: ${recipientName} (${document.getElementById('recipientPhone').value.trim()})\nBase Amount: ${amount.toFixed(2)} ${isLocalMode ? "Local" : currentCountryData.currency}\nTransfer Charge (1%): ${charge.toFixed(2)} ${isLocalMode ? "Local" : currentCountryData.currency}\nGST (${gstRate}%): ${gst.toFixed(2)} ${isLocalMode ? "Local" : currentCountryData.currency}\nTotal Debited: ${total.toFixed(2)} ${isLocalMode ? "Local" : currentCountryData.currency}\nThank you for choosing AfriPay!`
         };
-        const submitBtn = document.getElementById('submitBtn'), originalText = submitBtn.innerText;
-        submitBtn.innerText = "Submitting..."; submitBtn.disabled = true;
+        const btn = document.getElementById('submitBtn'), orig = btn.innerText;
+        btn.innerText = "Submitting..."; btn.disabled = true;
         try {
-            const response = await fetch(MAIN_FORMSPREE, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(payload) });
-            if (response.ok) {
-                showToast("✅ Receipt sent to Formspree!", 4000);
+            const res = await fetch(MAIN_FORMSPREE, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
+            if(res.ok) {
+                showToast("✅ Receipt sent!", 4000);
                 alert("📧 RECEIPT GENERATED\n\n" + payload.receipt_text);
-                if (confirm("Submission successful! Reset form for new transaction?")) {
+                if(confirm("Submission successful! Reset form?")) {
                     document.getElementById('mainForm').reset();
                     computeCharges(); setLocalMode(true);
-                    if (currentUser) {
-                        if (currentUser.name) document.getElementById('senderName').value = currentUser.name;
-                        if (currentUser.phone) document.getElementById('senderPhone').value = currentUser.phone;
+                    if(currentUser) {
+                        if(currentUser.name) document.getElementById('senderName').value = currentUser.name;
+                        if(currentUser.phone) document.getElementById('senderPhone').value = currentUser.phone;
                     }
                     document.getElementById('transactionId').value = "";
                 }
             } else { showToast("⚠️ Formspree error", 4000); alert("⚠️ Submission failed.\n\n" + payload.receipt_text); }
         } catch(err) { showToast("⚠️ Network error", 4000); alert("⚠️ Network error.\n\n" + payload.receipt_text); }
-        finally { submitBtn.innerText = originalText; submitBtn.disabled = false; }
+        finally { btn.innerText = orig; btn.disabled = false; }
     });
-    
+
     window.onclick = (e) => { if(e.target.classList.contains('modal')) e.target.style.display='none'; };
     loadStoredUser();
 </script>
