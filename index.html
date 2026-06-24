@@ -1,7 +1,9 @@
-<!-- ================================================================ -->
-<!--  IMPORTANT: Save this file as index.html and place it in the     -->
-<!--  root folder of your GitHub Pages repository.                    -->
-<!-- ================================================================ -->
+<!--
+  ================================================================
+  IMPORTANT: Save this file as index.html and place it in the
+  root folder of your GitHub Pages repository.
+  ================================================================
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,163 +21,347 @@
         body {
             background: linear-gradient(145deg, #eef2f7 0%, #d9e2ec 100%);
             min-height: 100vh;
-            padding: 1.5rem;
+            padding: 0.7rem;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
         .app-card {
-            max-width: 750px;
+            max-width: 648px;
             width: 100%;
             background: #ffffff;
-            border-radius: 2rem;
-            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.25);
+            border-radius: 1.6rem;
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.22);
             overflow: hidden;
         }
 
         .live-header {
             background: linear-gradient(135deg, #0a2b3c 0%, #1c4e6c 100%);
-            padding: 0.8rem 1.2rem;
+            padding: 0.5rem 0.7rem;
             color: white;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 4px;
+            min-height: 64px;
+            position: relative;
+            z-index: 10;
         }
 
         .logo-container {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            gap: 6px;
             flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 8px;
         }
+
         .africa-map-logo {
             display: flex;
             align-items: center;
-            gap: 8px;
-            background: rgba(255, 255, 255, 0.08);
-            padding: 4px 12px;
-            border-radius: 40px;
-            backdrop-filter: blur(4px);
+            gap: 4px;
+            background: rgba(255, 255, 255, 0.07);
+            padding: 3px 10px 3px 6px;
+            border-radius: 30px;
         }
+
         .africa-svg {
-            width: 40px;
-            height: 40px;
+            width: 33px;
+            height: 33px;
             filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
         }
-        .flag-grid {
-            display: flex;
-            gap: 4px;
-            flex-wrap: wrap;
-            max-width: 200px;
-        }
-        .flag-icon {
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-            border-radius: 6px;
-            padding: 1px 2px;
-            line-height: 1.4;
-            user-select: none;
-        }
-        .flag-icon:hover {
-            transform: scale(1.45);
-            background: rgba(255, 215, 0, 0.25);
-            box-shadow: 0 0 12px rgba(255, 215, 0, 0.5);
-            border-radius: 6px;
-        }
-        .flag-icon:active {
-            transform: scale(1.1);
-        }
+
         .brand-text {
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             font-weight: 800;
             background: linear-gradient(135deg, #FFF, #FFD966, #6bc6ff);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
+            letter-spacing: -0.5px;
         }
+
         .datetime-box {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 0.2rem 0.8rem;
-            border-radius: 40px;
+            background: rgba(0, 0, 0, 0.25);
+            padding: 0.1rem 0.5rem;
+            border-radius: 30px;
             text-align: center;
-            font-size: 0.7rem;
+            font-size: 0.6rem;
+            line-height: 1.2;
+            min-width: 70px;
         }
         .time-text {
             font-weight: 700;
-            font-size: 0.8rem;
+            font-size: 0.72rem;
         }
 
-        .user-welcome {
-            background: rgba(255, 255, 255, 0.15);
-            padding: 6px 10px;
-            border-radius: 40px;
-            font-size: 0.75rem;
-            display: inline-block;
-            margin-top: 6px;
-        }
-        .logout-btn {
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            padding: 3px 10px;
-            border-radius: 20px;
-            color: white;
-            cursor: pointer;
-            font-size: 0.65rem;
-            margin-left: 6px;
+        .auth-section {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
         }
         .auth-buttons {
             display: flex;
-            gap: 10px;
-            justify-content: flex-end;
-            margin-bottom: 0.5rem;
+            gap: 4px;
         }
         .auth-btn {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.15);
             border: none;
             padding: 5px 12px;
-            border-radius: 20px;
+            border-radius: 30px;
             color: white;
             cursor: pointer;
             font-size: 0.75rem;
             transition: 0.2s;
         }
         .auth-btn:hover {
-            background: rgba(255, 255, 255, 0.35);
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .user-welcome {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(255, 255, 255, 0.12);
+            padding: 3px 11px 3px 6px;
+            border-radius: 30px;
+            font-size: 0.72rem;
+        }
+        .user-avatar {
+            font-size: 1.2rem;
+            line-height: 1;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            object-fit: cover;
+            display: inline-block;
+            background: #2c7da0;
+            color: white;
+            text-align: center;
+            line-height: 28px;
+            font-size: 1.2rem;
+        }
+        .user-avatar-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+        }
+        .user-name-display {
+            font-weight: 600;
+        }
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.18);
+            border: none;
+            padding: 2px 9px;
+            border-radius: 20px;
+            color: white;
+            cursor: pointer;
+            font-size: 0.6rem;
+            transition: 0.2s;
+        }
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .connection-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.6rem;
+            color: #8fdf8f;
+            background: rgba(0, 180, 0, 0.15);
+            padding: 2px 9px 2px 4px;
+            border-radius: 30px;
+            border: 1px solid rgba(0, 200, 0, 0.2);
+            margin-left: 2px;
+        }
+        .connection-dot {
+            width: 7px;
+            height: 7px;
+            background: #2ecc71;
+            border-radius: 50%;
+            display: inline-block;
+            animation: pulse-dot 1.8s ease-in-out infinite;
+            box-shadow: 0 0 6px rgba(46, 204, 113, 0.5);
+        }
+        @keyframes pulse-dot {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(0.85);
+            }
+        }
+
+        /* ===== FLAGS STRIP ===== */
+        .flags-strip {
+            background: #f0f4f8;
+            border-bottom: 1px solid #e0e8f0;
+            padding: 4px 8px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: opacity 0.3s ease, max-height 0.3s ease;
+            position: relative;
+            z-index: 5;
+            max-height: 50px;
+            overflow: hidden;
+        }
+        .flags-strip.hidden {
+            opacity: 0;
+            max-height: 0;
+            padding: 0;
+            margin: 0;
+            border: none;
+            pointer-events: none;
+        }
+        .flag-grid-wrapper {
+            flex: 1;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding: 4px 0;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .flag-grid-wrapper::-webkit-scrollbar {
+            display: none;
+        }
+        .flag-grid {
+            display: flex;
+            gap: 4px;
+            flex-wrap: nowrap;
+            white-space: nowrap;
+            min-width: max-content;
+        }
+        .flag-icon {
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+            border-radius: 4px;
+            padding: 1px 2px;
+            line-height: 1.3;
+            user-select: none;
+            flex-shrink: 0;
+        }
+        .flag-icon:hover {
+            transform: scale(1.4);
+            background: rgba(255, 215, 0, 0.25);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+            border-radius: 4px;
+        }
+        .flag-scroll-btn {
+            background: rgba(0, 0, 0, 0.15);
+            border: none;
+            color: #1e3b4a;
+            border-radius: 50%;
+            width: 26px;
+            height: 26px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: 0.2s;
+        }
+        .flag-scroll-btn:hover {
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
         }
 
         .form-container {
-            padding: 1.5rem;
+            padding: 0.7rem 0.9rem 0.5rem 0.9rem;
         }
+
+        .profile-section {
+            background: #f0f6fb;
+            border-radius: 14px;
+            padding: 0.45rem 0.7rem;
+            margin-bottom: 0.5rem;
+            border: 1px solid #dce8f0;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.4rem 0.8rem;
+        }
+        .profile-section .profile-label {
+            font-weight: 600;
+            font-size: 0.66rem;
+            color: #1c6e8f;
+            margin-right: 2px;
+        }
+        .profile-section .profile-field {
+            font-size: 0.72rem;
+            color: #1e3b4a;
+            background: white;
+            padding: 1px 9px;
+            border-radius: 30px;
+            border: 1px solid #d0dce8;
+            display: inline-block;
+            min-width: 60px;
+        }
+        .profile-section .profile-field:read-only {
+            cursor: default;
+            background: #f8fafc;
+        }
+        .map-btn {
+            background: #2c7da0;
+            border: none;
+            padding: 4px 11px;
+            border-radius: 30px;
+            color: white;
+            font-size: 0.66rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            margin-left: auto;
+        }
+        .map-btn:hover {
+            background: #1f5068;
+            transform: translateY(-1px);
+        }
+
         .section-title {
-            font-size: 0.8rem;
+            font-size: 0.66rem;
             text-transform: uppercase;
             font-weight: 800;
             color: #1c6e8f;
-            margin: 1rem 0 0.6rem 0;
-            border-left: 4px solid #f4a261;
-            padding-left: 12px;
+            margin: 0.4rem 0 0.3rem 0;
+            border-left: 3px solid #f4a261;
+            padding-left: 8px;
         }
         .section-title:first-of-type {
             margin-top: 0;
         }
+
         .input-group {
-            margin-bottom: 0.8rem;
+            margin-bottom: 0.35rem;
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 2px;
         }
         .input-group label {
             font-weight: 600;
-            font-size: 0.75rem;
+            font-size: 0.66rem;
             color: #1e3b4a;
         }
         .input-group input,
         .input-group select {
-            padding: 10px 12px;
-            border-radius: 24px;
+            padding: 5px 9px;
+            border-radius: 20px;
             border: 1.5px solid #e0e8f0;
-            font-size: 0.85rem;
+            font-size: 0.77rem;
             transition: 0.2s;
             outline: none;
             background: #fff;
@@ -185,14 +371,20 @@
             border-color: #f4a261;
             box-shadow: 0 0 0 3px rgba(244, 162, 97, 0.2);
         }
+        .input-group input:read-only {
+            background: #f5f8fa;
+            cursor: default;
+        }
+
         .double-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 0.8rem;
+            gap: 0.4rem;
         }
+
         .tx-row {
             display: flex;
-            gap: 6px;
+            gap: 4px;
             align-items: center;
         }
         .tx-row .input-group {
@@ -202,10 +394,10 @@
         .tx-btn {
             background: #f4a261;
             border: none;
-            padding: 8px 12px;
-            border-radius: 40px;
+            padding: 6px 10px;
+            border-radius: 30px;
             font-weight: 600;
-            font-size: 0.7rem;
+            font-size: 0.6rem;
             cursor: pointer;
             transition: 0.2s;
             color: white;
@@ -215,54 +407,34 @@
             background: #2c7da0;
         }
         .tx-btn:hover {
-            transform: translateY(-2px);
+            transform: translateY(-1px);
             opacity: 0.9;
         }
 
         .transfer-type-toggle {
             display: flex;
-            gap: 10px;
-            margin-bottom: 0.8rem;
+            gap: 4px;
+            margin-bottom: 0.35rem;
             background: #f1f5f9;
-            padding: 6px;
-            border-radius: 60px;
+            padding: 3px;
+            border-radius: 40px;
         }
         .toggle-btn {
             flex: 1;
             text-align: center;
-            padding: 8px;
-            border-radius: 50px;
+            padding: 5px 6px;
+            border-radius: 40px;
             font-weight: 700;
-            font-size: 0.8rem;
+            font-size: 0.66rem;
             cursor: pointer;
             background: transparent;
             border: none;
+            transition: 0.2s;
         }
         .toggle-btn.active {
             background: #0f2b3d;
             color: white;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .charges-panel {
-            background: #f8fafc;
-            border-radius: 20px;
-            padding: 0.8rem;
-            margin: 0.8rem 0;
-            border: 1px solid #e2edf7;
-        }
-        .charges-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 4px 0;
-            font-size: 0.8rem;
-        }
-        .total-row {
-            font-weight: 800;
-            font-size: 0.9rem;
-            border-top: 2px dashed #cbdde9;
-            margin-top: 4px;
-            padding-top: 6px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
         }
 
         .country-selector-wrapper.hide-country {
@@ -270,59 +442,99 @@
         }
         .country-selector {
             display: flex;
-            gap: 6px;
+            gap: 3px;
             align-items: center;
             background: white;
             border: 1.5px solid #e0e8f0;
-            border-radius: 40px;
-            padding: 0 6px;
+            border-radius: 30px;
+            padding: 0 4px;
         }
         .country-flag {
-            font-size: 1.4rem;
+            font-size: 1.2rem;
         }
         #countryCodeSelect {
             flex: 1;
             border: none;
             background: transparent;
-            padding: 8px 4px;
+            padding: 4px 2px;
             outline: none;
+            font-size: 0.72rem;
+        }
+
+        .charges-panel {
+            background: #f8fafc;
+            border-radius: 14px;
+            padding: 0.4rem 0.6rem;
+            margin: 0.35rem 0;
+            border: 1px solid #e2edf7;
+        }
+        .charges-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 2px 0;
+            font-size: 0.72rem;
+        }
+        .total-row {
+            font-weight: 800;
+            font-size: 0.77rem;
+            border-top: 2px dashed #cbdde9;
+            margin-top: 3px;
+            padding-top: 4px;
         }
 
         .mm-button-container {
             display: flex;
             justify-content: center;
-            margin: 12px 0;
+            margin: 5px 0;
         }
         .single-mm-btn {
             background: #0f2b3d;
             color: white;
             border: none;
-            padding: 12px 20px;
-            border-radius: 60px;
-            font-weight: 800;
-            font-size: 0.9rem;
+            padding: 9px 13px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 0.77rem;
             cursor: pointer;
             transition: 0.2s;
             width: 100%;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
         }
         .single-mm-btn:hover {
             background: #f4a261;
-            transform: translateY(-2px);
+            transform: translateY(-1px);
+        }
+
+        .btn-submit {
+            background: #0f2b3d;
+            color: white;
+            width: 100%;
+            padding: 9px 11px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.77rem;
+            margin-top: 0.4rem;
+            border: none;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-submit:hover {
+            background: #f4a261;
+            transform: translateY(-1px);
         }
 
         .business-strip {
             background: linear-gradient(90deg, #fef9f0 0%, #fff5e8 100%);
-            padding: 0.8rem;
-            margin-top: 0.8rem;
-            border-radius: 20px;
+            padding: 0.35rem 0.4rem;
+            margin-top: 0.35rem;
+            border-radius: 14px;
             border: 1px solid #ffe0b5;
             overflow-x: auto;
             white-space: nowrap;
             scrollbar-width: thin;
         }
         .business-strip::-webkit-scrollbar {
-            height: 4px;
+            height: 3px;
         }
         .business-strip::-webkit-scrollbar-track {
             background: #ffe0b5;
@@ -333,15 +545,15 @@
             border-radius: 10px;
         }
         .business-title {
-            font-size: 0.7rem;
+            font-size: 0.55rem;
             font-weight: 700;
             color: #c97e2a;
-            margin-bottom: 8px;
+            margin-bottom: 3px;
             text-align: center;
         }
         .business-icons {
             display: inline-flex;
-            gap: 0.6rem;
+            gap: 0.3rem;
             align-items: center;
         }
         .business-item {
@@ -349,117 +561,78 @@
             flex-direction: column;
             align-items: center;
             background: white;
-            padding: 6px 10px;
-            border-radius: 60px;
+            padding: 3px 7px;
+            border-radius: 40px;
             cursor: pointer;
             transition: all 0.2s ease;
             border: 1px solid #ffe0b5;
-            min-width: 70px;
+            min-width: 52px;
         }
         .business-item:hover {
-            transform: translateY(-4px);
+            transform: translateY(-2px);
             border-color: #f4a261;
             background: #fffaf5;
         }
         .business-icon-img {
-            font-size: 1.4rem;
-            margin-bottom: 2px;
+            font-size: 1.1rem;
+            margin-bottom: 1px;
         }
         .business-name {
-            font-size: 0.6rem;
+            font-size: 0.5rem;
             font-weight: 700;
             color: #1c6e8f;
         }
         .business-category {
-            font-size: 0.5rem;
+            font-size: 0.43rem;
             color: #e67e22;
-        }
-
-        .goods-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px;
-            border-bottom: 1px solid #eee;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .goods-item:hover {
-            background: #fef9f0;
-        }
-        .goods-name {
-            font-weight: 600;
-            font-size: 0.8rem;
-        }
-        .goods-price {
-            color: #f4a261;
-            font-weight: 700;
-            font-size: 0.8rem;
-        }
-
-        .btn-submit {
-            background: #0f2b3d;
-            color: white;
-            width: 100%;
-            padding: 12px;
-            border-radius: 40px;
-            font-weight: 800;
-            font-size: 0.9rem;
-            margin-top: 0.8rem;
-            border: none;
-            cursor: pointer;
-        }
-        .btn-submit:hover {
-            background: #f4a261;
-            transform: translateY(-2px);
         }
 
         .footer-section {
             background: #f8fafc;
-            border-top: 1px solid rgba(0, 0, 0, 0.08);
-            backdrop-filter: blur(4px);
-            padding: 0.8rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.06);
+            padding: 0.4rem 0.5rem;
         }
         .footer-buttons {
             display: flex;
-            justify-content: space-around;
+            justify-content: center;
             flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 0.8rem;
+            gap: 3px;
+            margin-bottom: 3px;
         }
         .footer-btn {
             background: #eef2f7;
             border: none;
-            padding: 6px 12px;
-            border-radius: 40px;
-            font-size: 0.7rem;
+            padding: 3px 10px;
+            border-radius: 30px;
+            font-size: 0.6rem;
             font-weight: 600;
             cursor: pointer;
             color: #1c6e8f;
+            transition: 0.2s;
         }
         .footer-btn:hover {
             background: #dce5ec;
-            transform: translateY(-2px);
+            transform: translateY(-1px);
         }
         .social-icons {
             display: flex;
             justify-content: center;
-            gap: 15px;
-            margin-top: 8px;
+            gap: 6px;
             flex-wrap: wrap;
         }
         .social-icon {
-            font-size: 0.8rem;
+            font-size: 0.6rem;
             cursor: pointer;
-            padding: 4px 10px;
+            padding: 3px 10px;
             background: #eef2f7;
             border-radius: 30px;
             color: #1c6e8f;
             text-decoration: none;
+            transition: 0.2s;
         }
         .social-icon:hover {
             background: #dce5ec;
-            transform: scale(1.05);
+            transform: scale(1.03);
         }
 
         .modal {
@@ -473,88 +646,1022 @@
             align-items: center;
             justify-content: center;
             z-index: 1000;
+            backdrop-filter: blur(3px);
         }
         .modal-content {
             background: white;
-            border-radius: 2rem;
-            padding: 1.2rem;
-            width: 85%;
-            max-width: 320px;
+            border-radius: 1.6rem;
+            padding: 0.9rem 1.0rem;
+            width: 88%;
+            max-width: 300px;
             max-height: 80vh;
             overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        .modal-content h3 {
+            font-size: 0.99rem;
+            margin-bottom: 6px;
         }
         .action-buttons {
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            margin-top: 15px;
+            gap: 5px;
+            margin-top: 8px;
         }
         .action-btn {
-            padding: 10px;
-            border-radius: 40px;
+            padding: 9px;
+            border-radius: 30px;
             font-weight: bold;
             border: none;
             cursor: pointer;
             background: #0f2b3d;
             color: white;
-            font-size: 0.8rem;
+            font-size: 0.72rem;
+            transition: 0.2s;
         }
-        .close-modal {
-            margin-top: 12px;
+        .action-btn:hover {
+            background: #f4a261;
+            transform: translateY(-1px);
+        }
+        .action-btn.close-modal {
             background: #ccc;
-            color: black;
+            color: #222;
         }
+        .action-btn.close-modal:hover {
+            background: #bbb;
+        }
+
+        #mapModal .modal-content {
+            max-width: 90%;
+            width: 580px;
+            max-height: 85vh;
+            height: auto;
+            padding: 0.9rem;
+        }
+        #mapModal .modal-content iframe {
+            width: 100%;
+            height: 55vh;
+            border: none;
+            border-radius: 12px;
+            margin-top: 6px;
+        }
+
+        .goods-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 4px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 0.77rem;
+        }
+        .goods-item:hover {
+            background: #fef9f0;
+        }
+        .goods-name {
+            font-weight: 600;
+        }
+        .goods-price {
+            color: #f4a261;
+            font-weight: 700;
+        }
+
         .toast-msg {
             position: fixed;
-            bottom: 20px;
+            bottom: 14px;
             left: 50%;
             transform: translateX(-50%);
             background: #1e2f3c;
             color: white;
-            padding: 8px 16px;
-            border-radius: 60px;
+            padding: 5px 14px;
+            border-radius: 40px;
             z-index: 1100;
             pointer-events: none;
-            font-size: 0.8rem;
+            font-size: 0.72rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.25s ease, visibility 0.25s ease;
+            max-width: 85%;
+            text-align: center;
         }
+
         .error-msg {
             color: #c0392b;
-            font-size: 0.75rem;
-            margin: 4px 0;
+            font-size: 0.72rem;
+            margin: 3px 0;
         }
         .success-msg {
             color: #27ae60;
-            font-size: 0.75rem;
-            margin: 4px 0;
+            font-size: 0.72rem;
+            margin: 3px 0;
         }
 
+        .emoji-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 3px;
+            margin: 5px 0 6px 0;
+        }
+        .emoji-option {
+            font-size: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            padding: 3px 2px;
+            border-radius: 10px;
+            transition: 0.15s;
+            border: 2px solid transparent;
+            background: #f5f7fa;
+            line-height: 1.3;
+        }
+        .emoji-option:hover {
+            transform: scale(1.15);
+            background: #e8edf4;
+        }
+        .emoji-option.selected {
+            border-color: #f4a261;
+            background: #fff0e0;
+            box-shadow: 0 0 6px rgba(244, 162, 97, 0.3);
+        }
+
+        /* ===== GROUP MODAL STYLES ===== */
+        .group-member-list {
+            max-height: 180px;
+            overflow-y: auto;
+            margin: 6px 0;
+            border: 1px solid #e0e8f0;
+            border-radius: 12px;
+            padding: 3px 0;
+        }
+        .group-member-item {
+            display: flex;
+            align-items: center;
+            padding: 3px 8px;
+            gap: 6px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .group-member-item:hover {
+            background: #f0f4f8;
+        }
+        .group-member-item input[type="checkbox"] {
+            width: 15px;
+            height: 15px;
+            accent-color: #0f2b3d;
+        }
+        .group-member-item .member-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #d0dce8;
+            font-size: 0.77rem;
+        }
+        .group-member-item .member-name {
+            font-size: 0.77rem;
+            font-weight: 500;
+            color: #1e3b4a;
+        }
+        .member-counter {
+            font-size: 0.72rem;
+            color: #1c6e8f;
+            font-weight: 600;
+            margin-left: auto;
+        }
+
+        /* ================================================================
+           CHAT BUTTON & CHAT WINDOW
+           ================================================================ */
+        .chat-toggle-btn {
+            position: fixed;
+            bottom: 18px;
+            left: 18px;
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: #0f2b3d;
+            color: white;
+            border: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            font-size: 2.0rem;
+            cursor: pointer;
+            z-index: 500;
+            transition: transform 0.2s, background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .chat-toggle-btn:hover {
+            transform: scale(1.05);
+            background: #f4a261;
+        }
+        .chat-toggle-btn .chat-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            padding: 1px 5px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            min-width: 18px;
+            text-align: center;
+        }
+
+        .chat-window {
+            position: fixed;
+            left: 0;
+            right: 0;
+            width: 100%;
+            background: white;
+            border-radius: 0;
+            box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.15);
+            display: none;
+            flex-direction: row;
+            z-index: 600;
+            overflow: hidden;
+            border: none;
+            border-top: 1px solid #e0e8f0;
+        }
+        .chat-window.open {
+            display: flex;
+        }
+
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            background: white;
+        }
+
+        .chat-nav {
+            background: #0f2b3d;
+            color: white;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+            border-bottom: 1px solid #1c4e6c;
+            flex-shrink: 0;
+        }
+        .chat-nav .chat-contact {
+            flex: 1;
+            font-weight: 600;
+            font-size: 0.91rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .chat-nav .chat-actions {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .chat-nav .chat-actions button {
+            background: rgba(255, 255, 255, 0.12);
+            border: none;
+            color: white;
+            padding: 5px 9px;
+            border-radius: 20px;
+            font-size: 0.66rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            white-space: nowrap;
+        }
+        .chat-nav .chat-actions button:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+        .chat-nav .chat-close {
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            color: white;
+            font-size: 1.3rem;
+            cursor: pointer;
+            padding: 0 8px;
+            border-radius: 20px;
+            transition: 0.2s;
+            line-height: 1;
+        }
+        .chat-nav .chat-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        .sidebar-toggle {
+            display: none;
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            color: white;
+            font-size: 1.0rem;
+            cursor: pointer;
+            padding: 2px 6px;
+            border-radius: 20px;
+            transition: 0.2s;
+            line-height: 1;
+        }
+        .sidebar-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 10px 12px;
+            overflow-y: auto;
+            background: #f5f8fa;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            transition: background 0.2s;
+        }
+        .chat-message {
+            max-width: 85%;
+            padding: 6px 12px;
+            border-radius: 18px;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            word-wrap: break-word;
+            background: white;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+            transition: font-size 0.2s, filter 0.2s;
+        }
+        .chat-message.sent {
+            align-self: flex-end;
+            background: #0f2b3d;
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+        .chat-message .msg-time {
+            font-size: 0.6rem;
+            opacity: 0.6;
+            margin-left: 6px;
+        }
+        .chat-message .msg-media {
+            display: block;
+            margin-top: 3px;
+            font-size: 0.72rem;
+            color: #2c7da0;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        .chat-message video,
+        .chat-message audio {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-top: 3px;
+            display: block;
+            background: #000;
+        }
+        .chat-message audio {
+            max-width: 220px;
+            background: transparent;
+        }
+        .chat-message video {
+            max-height: 200px;
+            width: auto;
+        }
+
+        /* ===== CHAT CONTROLS TOOLBAR ===== */
+        .chat-controls {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            background: #f0f4f8;
+            border-top: 1px solid #e0e8f0;
+            flex-wrap: wrap;
+            flex-shrink: 0;
+        }
+        .chat-controls .ctrl-group {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .chat-controls button {
+            background: transparent;
+            border: 1px solid #d0dce8;
+            border-radius: 20px;
+            padding: 4px 9px;
+            font-size: 0.73rem;
+            cursor: pointer;
+            transition: 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            color: #1e3b4a;
+        }
+        .chat-controls button:hover {
+            background: #dce5ec;
+        }
+        .chat-controls input[type="color"] {
+            width: 28px;
+            height: 28px;
+            border: 1px solid #d0dce8;
+            border-radius: 50%;
+            padding: 0;
+            cursor: pointer;
+            background: none;
+        }
+        .chat-controls input[type="color"]::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+        .chat-controls input[type="color"]::-webkit-color-swatch {
+            border: none;
+            border-radius: 50%;
+        }
+        .chat-controls .brightness-slider {
+            width: 80px;
+            height: 4px;
+            -webkit-appearance: none;
+            background: #d0dce8;
+            border-radius: 2px;
+            outline: none;
+        }
+        .chat-controls .brightness-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #0f2b3d;
+            cursor: pointer;
+        }
+        .recording-indicator {
+            display: none;
+            align-items: center;
+            gap: 4px;
+            color: #e74c3c;
+            font-weight: 700;
+            font-size: 0.72rem;
+        }
+        .recording-indicator.active {
+            display: inline-flex;
+        }
+        .recording-dot {
+            width: 8px;
+            height: 8px;
+            background: #e74c3c;
+            border-radius: 50%;
+            animation: pulse-dot 0.8s ease-in-out infinite;
+        }
+
+        .chat-input-area {
+            display: flex;
+            gap: 6px;
+            padding: 8px 10px;
+            border-top: 1px solid #e0e8f0;
+            background: white;
+            flex-shrink: 0;
+        }
+        .chat-input-area input {
+            flex: 1;
+            padding: 6px 12px;
+            border-radius: 30px;
+            border: 1px solid #d0dce8;
+            outline: none;
+            font-size: 0.85rem;
+        }
+        .chat-input-area input:focus {
+            border-color: #f4a261;
+        }
+        .chat-input-area button {
+            background: #0f2b3d;
+            color: white;
+            border: none;
+            padding: 7px 14px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.79rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .chat-input-area button:hover {
+            background: #f4a261;
+        }
+
+        .hidden-input {
+            display: none;
+        }
+
+        /* ===== CHAT SIDEBAR ===== */
+        .chat-sidebar {
+            width: 162px;
+            background: #f8fafc;
+            border-left: 1px solid #e0e8f0;
+            padding: 8px 0;
+            overflow-y: auto;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        .sidebar-section-title {
+            font-size: 0.6rem;
+            font-weight: 700;
+            color: #1c6e8f;
+            padding: 4px 10px 4px 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #e0e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .sidebar-section-title .add-group-btn {
+            background: none;
+            border: none;
+            color: #2c7da0;
+            cursor: pointer;
+            font-size: 0.85rem;
+            padding: 0 3px;
+        }
+        .sidebar-section-title .add-group-btn:hover {
+            color: #f4a261;
+        }
+
+        .sidebar-user,
+        .sidebar-group {
+            display: flex;
+            align-items: center;
+            padding: 5px 10px;
+            gap: 6px;
+            cursor: pointer;
+            transition: background 0.15s;
+            border-left: 3px solid transparent;
+        }
+        .sidebar-user:hover,
+        .sidebar-group:hover {
+            background: #eef2f7;
+        }
+        .sidebar-user.active,
+        .sidebar-group.active {
+            background: #e2edf7;
+            border-left-color: #2c7da0;
+        }
+        .sidebar-user .avatar,
+        .sidebar-group .avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #d0dce8;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+            overflow: hidden;
+            color: #1e3b4a;
+        }
+        .sidebar-user .avatar img,
+        .sidebar-group .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .sidebar-user .user-info,
+        .sidebar-group .group-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .sidebar-user .user-info .name,
+        .sidebar-group .group-info .name {
+            font-size: 0.79rem;
+            font-weight: 600;
+            color: #1e3b4a;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .sidebar-user .status {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .status.online {
+            background: #2ecc71;
+        }
+        .status.offline {
+            background: #95a5a6;
+        }
+        .group-member-count {
+            font-size: 0.6rem;
+            color: #7f8c8d;
+            margin-left: 3px;
+        }
+        .group-actions {
+            display: flex;
+            gap: 3px;
+            align-items: center;
+        }
+        .group-actions button {
+            background: none;
+            border: none;
+            color: #95a5a6;
+            cursor: pointer;
+            font-size: 0.72rem;
+            padding: 0 3px;
+            transition: 0.2s;
+        }
+        .group-actions button:hover {
+            color: #e74c3c;
+        }
+
+        /* ================================================================
+           RESPONSIVE
+           ================================================================ */
         @media (max-width: 600px) {
             .double-row {
                 grid-template-columns: 1fr;
                 gap: 0;
             }
             .business-item {
-                min-width: 60px;
-                padding: 4px 8px;
+                min-width: 44px;
+                padding: 2px 6px;
             }
             .africa-svg {
-                width: 32px;
-                height: 32px;
-            }
-            .flag-grid {
-                max-width: 120px;
+                width: 28px;
+                height: 28px;
             }
             .flag-icon {
-                font-size: 0.7rem;
+                font-size: 0.88rem;
             }
             .brand-text {
+                font-size: 0.99rem;
+            }
+            .live-header {
+                padding: 0.35rem 0.5rem;
+                min-height: 56px;
+            }
+            .datetime-box {
+                font-size: 0.5rem;
+                min-width: 60px;
+                padding: 0.05rem 0.35rem;
+            }
+            .time-text {
+                font-size: 0.55rem;
+            }
+            .auth-btn {
+                font-size: 0.6rem;
+                padding: 4px 9px;
+            }
+            .user-welcome {
+                font-size: 0.6rem;
+                padding: 2px 8px 2px 5px;
+            }
+            .user-avatar {
+                font-size: 1.0rem;
+                width: 24px;
+                height: 24px;
+                line-height: 24px;
+            }
+            .connection-indicator {
+                font-size: 0.5rem;
+                padding: 2px 6px 2px 3px;
+            }
+            .connection-dot {
+                width: 6px;
+                height: 6px;
+            }
+            .form-container {
+                padding: 0.4rem 0.5rem 0.3rem 0.5rem;
+            }
+            .single-mm-btn {
+                font-size: 0.66rem;
+                padding: 6px 10px;
+            }
+            .btn-submit {
+                font-size: 0.66rem;
+                padding: 6px 10px;
+            }
+            .modal-content {
+                padding: 0.7rem;
+                max-width: 260px;
+            }
+            .emoji-option {
+                font-size: 1.3rem;
+                padding: 2px;
+            }
+            .emoji-grid {
+                grid-template-columns: repeat(5, 1fr);
+                gap: 2px;
+            }
+            .profile-section {
+                padding: 0.3rem 0.5rem;
+                gap: 0.3rem 0.5rem;
+            }
+            .profile-section .profile-field {
+                font-size: 0.6rem;
+                padding: 1px 7px;
+                min-width: 50px;
+            }
+            .map-btn {
+                font-size: 0.55rem;
+                padding: 3px 9px;
+                margin-left: 0;
+                width: 100%;
+                justify-content: center;
+                margin-top: 3px;
+            }
+            #mapModal .modal-content {
+                max-width: 95%;
+                width: auto;
+                padding: 0.7rem;
+            }
+            #mapModal .modal-content iframe {
+                height: 45vh;
+            }
+            .chat-window {
+                left: 0;
+                right: 0;
+                width: 100%;
+                bottom: 0;
+                top: auto !important;
+                height: 100vh;
+                max-height: 100vh;
+                border-radius: 0;
+            }
+            .chat-toggle-btn {
+                width: 56px;
+                height: 56px;
+                font-size: 1.7rem;
+                bottom: 14px;
+                left: 14px;
+            }
+            .chat-nav .chat-actions button {
+                font-size: 0.55rem;
+                padding: 4px 7px;
+            }
+            .chat-nav .chat-contact {
+                font-size: 0.79rem;
+            }
+            .chat-message {
+                font-size: 0.79rem;
+                padding: 5px 10px;
+            }
+            .chat-sidebar {
+                width: 140px;
+            }
+            .sidebar-user .user-info .name,
+            .sidebar-group .group-info .name {
+                font-size: 0.66rem;
+            }
+            .sidebar-user .avatar,
+            .sidebar-group .avatar {
+                width: 26px;
+                height: 26px;
+                font-size: 0.79rem;
+            }
+            .chat-controls .brightness-slider {
+                width: 60px;
+            }
+            .chat-controls input[type="color"] {
+                width: 26px;
+                height: 26px;
+            }
+            .chat-controls button {
+                font-size: 0.6rem;
+                padding: 3px 7px;
+            }
+            .group-member-list {
+                max-height: 130px;
+            }
+            .flag-scroll-btn {
+                width: 24px;
+                height: 24px;
+                font-size: 1rem;
+            }
+            .flag-icon {
+                font-size: 0.88rem;
+            }
+            .chat-input-area input {
+                font-size: 0.79rem;
+                padding: 5px 10px;
+            }
+            .chat-input-area button {
+                font-size: 0.72rem;
+                padding: 6px 12px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .flag-icon {
+                font-size: 0.73rem;
+            }
+            .brand-text {
+                font-size: 0.83rem;
+            }
+            .africa-svg {
+                width: 22px;
+                height: 22px;
+            }
+            .live-header {
+                min-height: 48px;
+                padding: 0.2rem 0.35rem;
+            }
+            .datetime-box {
+                font-size: 0.44rem;
+                min-width: 48px;
+                padding: 0 0.25rem;
+            }
+            .time-text {
+                font-size: 0.5rem;
+            }
+            .auth-btn {
+                font-size: 0.5rem;
+                padding: 3px 6px;
+            }
+            .user-welcome {
+                font-size: 0.5rem;
+                padding: 1px 5px 1px 3px;
+            }
+            .user-avatar {
+                font-size: 0.77rem;
+                width: 20px;
+                height: 20px;
+                line-height: 20px;
+            }
+            .connection-indicator {
+                font-size: 0.44rem;
+                padding: 1px 4px 1px 2px;
+            }
+            .connection-dot {
+                width: 5px;
+                height: 5px;
+            }
+            .form-container {
+                padding: 0.25rem 0.3rem 0.2rem 0.3rem;
+            }
+            .section-title {
+                font-size: 0.55rem;
+                margin: 0.3rem 0 0.2rem 0;
+                padding-left: 5px;
+            }
+            .input-group label {
+                font-size: 0.55rem;
+            }
+            .input-group input,
+            .input-group select {
+                padding: 3px 7px;
+                font-size: 0.66rem;
+            }
+            .single-mm-btn {
+                font-size: 0.6rem;
+                padding: 5px 8px;
+            }
+            .btn-submit {
+                font-size: 0.6rem;
+                padding: 5px 8px;
+            }
+            .tx-btn {
+                font-size: 0.55rem;
+                padding: 4px 8px;
+            }
+            .charges-row {
+                font-size: 0.66rem;
+            }
+            .total-row {
+                font-size: 0.72rem;
+            }
+            .business-item {
+                min-width: 40px;
+                padding: 2px 5px;
+            }
+            .business-icon-img {
+                font-size: 0.9rem;
+            }
+            .business-name {
+                font-size: 0.44rem;
+            }
+            .business-category {
+                font-size: 0.38rem;
+            }
+            .footer-btn {
+                font-size: 0.5rem;
+                padding: 2px 7px;
+            }
+            .social-icon {
+                font-size: 0.5rem;
+                padding: 2px 7px;
+            }
+            .emoji-option {
                 font-size: 1.1rem;
+            }
+            .emoji-grid {
+                grid-template-columns: repeat(5, 1fr);
+                gap: 2px;
+            }
+            .modal-content {
+                padding: 0.5rem;
+                max-width: 230px;
+            }
+            .modal-content h3 {
+                font-size: 0.83rem;
+            }
+            .action-btn {
+                font-size: 0.6rem;
+                padding: 6px;
+            }
+            .profile-section .profile-field {
+                font-size: 0.55rem;
+                padding: 1px 5px;
+                min-width: 40px;
+            }
+            .map-btn {
+                font-size: 0.5rem;
+                padding: 2px 7px;
+            }
+            #mapModal .modal-content iframe {
+                height: 35vh;
+            }
+            .chat-window {
+                left: 0;
+                right: 0;
+                width: 100%;
+                bottom: 0;
+                top: auto !important;
+                height: 100vh;
+                max-height: 100vh;
+            }
+            .chat-toggle-btn {
+                width: 48px;
+                height: 48px;
+                font-size: 1.4rem;
+                bottom: 10px;
+                left: 10px;
+            }
+            .chat-nav .chat-actions button {
+                font-size: 0.48rem;
+                padding: 3px 6px;
+            }
+            .chat-sidebar {
+                display: none;
+                position: absolute;
+                right: 0;
+                top: 0;
+                bottom: 0;
+                width: 140px;
+                background: #f8fafc;
+                border-left: 1px solid #e0e8f0;
+                z-index: 10;
+                box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1);
+                border-radius: 0 18px 18px 0;
+            }
+            .chat-sidebar.open {
+                display: flex;
+            }
+            .sidebar-toggle {
+                display: block;
+                font-size: 0.85rem;
+                padding: 2px 5px;
+            }
+            .chat-controls .brightness-slider {
+                width: 50px;
+            }
+            .chat-controls input[type="color"] {
+                width: 24px;
+                height: 24px;
+            }
+            .chat-controls button {
+                font-size: 0.55rem;
+                padding: 2px 6px;
+            }
+            .group-member-list {
+                max-height: 100px;
+            }
+            .flag-scroll-btn {
+                width: 22px;
+                height: 22px;
+                font-size: 0.9rem;
+            }
+            .flag-icon {
+                font-size: 0.73rem;
+            }
+            .chat-input-area input {
+                font-size: 0.72rem;
+                padding: 4px 8px;
+            }
+            .chat-input-area button {
+                font-size: 0.66rem;
+                padding: 5px 10px;
+            }
+            .chat-message {
+                font-size: 0.72rem;
+                padding: 4px 8px;
             }
         }
     </style>
 </head>
 <body>
     <div class="app-card">
+        <!-- ===== HEADER ===== -->
         <div class="live-header">
             <div class="logo-container">
                 <div class="africa-map-logo">
@@ -565,54 +1672,61 @@
                         <circle cx="45" cy="45" r="3" fill="#ffd966"/>
                         <circle cx="80" cy="50" r="3" fill="#ffd966"/>
                     </svg>
-                    <div class="flag-grid">
-                        <span class="flag-icon">🇱🇷</span> <span class="flag-icon">🇬🇳</span> <span class="flag-icon">🇸🇳</span>
-                        <span class="flag-icon">🇲🇱</span> <span class="flag-icon">🇨🇮</span> <span class="flag-icon">🇬🇭</span>
-                        <span class="flag-icon">🇳🇪</span> <span class="flag-icon">🇧🇯</span> <span class="flag-icon">🇬🇼</span>
-                        <span class="flag-icon">🇬🇲</span> <span class="flag-icon">🇹🇬</span> <span class="flag-icon">🇰🇪</span>
-                        <span class="flag-icon">🇨🇫</span> <span class="flag-icon">🇪🇹</span> <span class="flag-icon">🇬🇦</span>
-                        <span class="flag-icon">🇲🇬</span> <span class="flag-icon">🇲🇦</span> <span class="flag-icon">🇷🇼</span>
-                        <span class="flag-icon">🇺🇬</span> <span class="flag-icon">🇨🇩</span> <span class="flag-icon">🇧🇫</span>
-                        <span class="flag-icon">🇿🇦</span> <span class="flag-icon">🇳🇬</span> <span class="flag-icon">🇪🇬</span>
-                        <span class="flag-icon">🇩🇿</span> <span class="flag-icon">🇦🇴</span> <span class="flag-icon">🇧🇼</span>
-                        <span class="flag-icon">🇨🇲</span> <span class="flag-icon">🇨🇻</span> <span class="flag-icon">🇹🇩</span>
-                        <span class="flag-icon">🇰🇲</span> <span class="flag-icon">🇨🇬</span> <span class="flag-icon">🇩🇯</span>
-                        <span class="flag-icon">🇬🇶</span> <span class="flag-icon">🇪🇷</span> <span class="flag-icon">🇸🇿</span>
-                        <span class="flag-icon">🇱🇸</span> <span class="flag-icon">🇲🇼</span> <span class="flag-icon">🇲🇷</span>
-                        <span class="flag-icon">🇲🇺</span> <span class="flag-icon">🇲🇿</span> <span class="flag-icon">🇳🇦</span>
-                        <span class="flag-icon">🇸🇹</span> <span class="flag-icon">🇸🇨</span> <span class="flag-icon">🇸🇱</span>
-                        <span class="flag-icon">🇸🇴</span> <span class="flag-icon">🇸🇸</span> <span class="flag-icon">🇸🇩</span>
-                        <span class="flag-icon">🇹🇿</span> <span class="flag-icon">🇹🇳</span> <span class="flag-icon">🇿🇲</span>
-                        <span class="flag-icon">🇿🇼</span> <span class="flag-icon">🇪🇭</span>
-                    </div>
                 </div>
-                <div class="brand-text">AfriPay</div>
+                <span class="brand-text">WATU WEEKLY</span>
                 <div class="datetime-box">
                     <div id="currentDate">--</div>
                     <div class="time-text" id="currentTime">--:--:--</div>
                 </div>
             </div>
-            <div id="authSection">
+
+            <div class="auth-section" id="authSection">
                 <div class="auth-buttons" id="authButtons">
                     <button class="auth-btn" id="loginBtn">🔐 Login</button>
                     <button class="auth-btn" id="registerBtn">📝 Register</button>
                 </div>
                 <div id="welcomeSection" style="display:none;">
                     <div class="user-welcome">
-                        👋 Welcome, <span id="loggedUserName">User</span>
+                        <span class="user-avatar" id="userAvatarContainer">
+                            <span id="userAvatarEmoji">👤</span>
+                            <img id="userAvatarImg" class="user-avatar-img" style="display:none;" alt="avatar" />
+                        </span>
+                        <span class="user-name-display" id="loggedUserName">User</span>
                         <button class="logout-btn" id="logoutBtn">Logout</button>
+                        <span class="connection-indicator">
+                            <span class="connection-dot"></span> Online
+                        </span>
                     </div>
                 </div>
             </div>
-            <p style="font-size:0.65rem; opacity:0.8; text-align:center; margin-top: 6px;">transfer • pay • cash out • Local or International</p>
         </div>
 
+        <!-- ===== FLAGS STRIP ===== -->
+        <div class="flags-strip" id="flagsStrip">
+            <button class="flag-scroll-btn left" id="flagScrollLeft">‹</button>
+            <div class="flag-grid-wrapper" id="flagGridWrapper">
+                <div class="flag-grid" id="headerFlagGrid">
+                    <!-- populated by JS -->
+                </div>
+            </div>
+            <button class="flag-scroll-btn right" id="flagScrollRight">›</button>
+        </div>
+
+        <!-- ===== MAIN FORM ===== -->
         <div class="form-container" id="mainFormContainer" style="display:none;">
+            <div class="profile-section" id="profileSection">
+                <span class="profile-label">📍 Your Location:</span>
+                <span class="profile-field" id="profileAddress" readonly>—</span>
+                <span class="profile-field" id="profileCity" readonly>—</span>
+                <span class="profile-field" id="profileCountry" readonly>—</span>
+                <button class="map-btn" id="mapButton">🗺️ View on Map</button>
+            </div>
+
             <form id="mainForm">
                 <div class="section-title">👤 SENDER</div>
                 <div class="double-row">
                     <div class="input-group"><label>Full Name *</label><input type="text" id="senderName" required /></div>
-                    <div class="input-group"><label>Phone Number *</label><input type="tel" id="senderPhone" required /></div>
+                    <div class="input-group"><label>Phone *</label><input type="tel" id="senderPhone" required /></div>
                 </div>
                 <div class="input-group"><label>Location (City/Country) *</label><input type="text" id="senderLocation" required /></div>
                 <div class="input-group"><label>Amount *</label><input type="number" id="amountInput" step="any" required /></div>
@@ -620,12 +1734,12 @@
                 <div class="section-title">👥 RECIPIENT</div>
                 <div class="double-row">
                     <div class="input-group"><label>Recipient Name *</label><input type="text" id="recipientName" required /></div>
-                    <div class="input-group"><label>Phone Number *</label><input type="tel" id="recipientPhone" required /></div>
+                    <div class="input-group"><label>Phone *</label><input type="tel" id="recipientPhone" required /></div>
                 </div>
 
                 <div class="transfer-type-toggle">
-                    <button type="button" id="localToggleBtn" class="toggle-btn active">📍 Local Transfer</button>
-                    <button type="button" id="intlToggleBtn" class="toggle-btn">🌍 International Transfer</button>
+                    <button type="button" id="localToggleBtn" class="toggle-btn active">📍 Local</button>
+                    <button type="button" id="intlToggleBtn" class="toggle-btn">🌍 International</button>
                 </div>
 
                 <div class="country-selector-wrapper" id="countryWrapper" style="display:none;">
@@ -673,26 +1787,27 @@
                     <button type="button" class="single-mm-btn" id="mainMmBtn">🏦 WBMoney (All Operators)</button>
                 </div>
 
-                <div class="section-title">🔖 TRANSACTION IDENTIFIER</div>
+                <div class="section-title">🔖 TRANSACTION ID</div>
                 <div class="tx-row">
-                    <div class="input-group"><label>Transaction ID Number</label><input type="text" id="transactionId" placeholder="Click 'Generate' to create an ID" /></div>
-                    <button type="button" class="tx-btn" id="generateTxBtn">✨ Generate ID</button>
+                    <div class="input-group"><label>Transaction ID</label><input type="text" id="transactionId" placeholder="Click Generate" /></div>
+                    <button type="button" class="tx-btn" id="generateTxBtn">✨ Gen</button>
                     <button type="button" class="tx-btn copy" id="copyTxBtn">📋 Copy</button>
                 </div>
 
-                <button type="submit" class="btn-submit" id="submitBtn">✅ SUBMIT & GENERATE RECEIPT</button>
+                <button type="submit" class="btn-submit" id="submitBtn">✅ SUBMIT & RECEIPT</button>
 
                 <div class="business-strip">
-                    <div class="business-title">⭐ QUICK PAY TO REGISTERED BUSINESSES & INDIVIDUALS ⭐</div>
+                    <div class="business-title">⭐ QUICK PAY ⭐</div>
                     <div class="business-icons" id="businessIconsContainer"></div>
                 </div>
             </form>
         </div>
 
+        <!-- ===== FOOTER ===== -->
         <div class="footer-section">
             <div class="footer-buttons">
-                <button class="footer-btn" id="aboutAppBtn">📘 About App</button>
-                <button class="footer-btn" id="aboutDevBtn">👨‍💻 About Developer</button>
+                <button class="footer-btn" id="aboutAppBtn">📘 About</button>
+                <button class="footer-btn" id="aboutDevBtn">👨‍💻 Developer</button>
                 <button class="footer-btn" id="contactBtn">📞 Contact</button>
                 <button class="footer-btn" id="subscribeBtn">✉️ Subscribe</button>
             </div>
@@ -706,18 +1821,172 @@
         </div>
     </div>
 
-    <!-- Modals -->
+    <!-- ===== MODALS ===== -->
+    <div id="mapModal" class="modal">
+        <div class="modal-content">
+            <h3>📍 Your Location</h3>
+            <iframe id="mapIframe" allowfullscreen loading="lazy"></iframe>
+            <button class="action-btn close-modal" style="margin-top:10px;">Close Map</button>
+        </div>
+    </div>
+
     <div id="infoModal" class="modal"><div class="modal-content"><h3 id="modalTitle"></h3><div id="modalBody"></div><button class="action-btn close-modal">Close</button></div></div>
-    <div id="subscribeModal" class="modal"><div class="modal-content"><h3>📧 Subscribe</h3><input type="email" id="subEmail" placeholder="Your email" style="width:100%; padding:8px; margin:8px 0; border-radius:30px;" /><button id="submitSubscribeBtn" class="action-btn">Subscribe</button><button class="action-btn close-modal" style="margin-top:8px;">Cancel</button></div></div>
-    <div id="loginModal" class="modal"><div class="modal-content"><h3>🔐 Login</h3><input type="text" id="loginName" placeholder="Full Name" style="width:100%; padding:8px; margin:8px 0; border-radius:30px;" /><input type="tel" id="loginPhone" placeholder="Phone Number" style="width:100%; padding:8px; margin:8px 0; border-radius:30px;" /><div id="loginError" class="error-msg"></div><button id="doLoginBtn" class="action-btn">Login</button><button class="action-btn close-modal" style="margin-top:8px;">Cancel</button></div></div>
-    <div id="registerModal" class="modal"><div class="modal-content"><h3>📝 Create Account</h3><input type="text" id="regName" placeholder="Full Name *" style="width:100%; padding:8px; margin:4px 0; border-radius:30px;" /><input type="tel" id="regPhone" placeholder="Phone Number *" style="width:100%; padding:8px; margin:4px 0; border-radius:30px;" /><select id="regCountry" style="width:100%; padding:8px; margin:4px 0; border-radius:30px;"><option>Sierra Leone</option><option>Nigeria</option><option>Ghana</option><option>Kenya</option></select><select id="regLanguage" style="width:100%; padding:8px; margin:4px 0; border-radius:30px;"><option value="en">English</option><option value="fr">Français</option><option value="es">Español</option></select><div id="regError" class="error-msg"></div><div id="regSuccess" class="success-msg"></div><button id="doRegisterBtn" class="action-btn">Register</button><button class="action-btn close-modal" style="margin-top:8px;">Cancel</button></div></div>
+    <div id="subscribeModal" class="modal"><div class="modal-content"><h3>📧 Subscribe</h3><input type="email" id="subEmail" placeholder="Your email" style="width:100%; padding:5px 9px; margin:4px 0; border-radius:30px; border:1px solid #ddd; font-size:0.77rem;" /><button id="submitSubscribeBtn" class="action-btn">Subscribe</button><button class="action-btn close-modal" style="margin-top:4px;">Cancel</button></div></div>
+    <div id="loginModal" class="modal"><div class="modal-content"><h3>🔐 Login</h3><input type="text" id="loginName" placeholder="Full Name" style="width:100%; padding:5px 9px; margin:3px 0; border-radius:30px; border:1px solid #ddd; font-size:0.77rem;" /><input type="tel" id="loginPhone" placeholder="Phone Number" style="width:100%; padding:5px 9px; margin:3px 0; border-radius:30px; border:1px solid #ddd; font-size:0.77rem;" /><div id="loginError" class="error-msg"></div><button id="doLoginBtn" class="action-btn">Login</button><button class="action-btn close-modal" style="margin-top:4px;">Cancel</button></div></div>
+    <div id="registerModal" class="modal"><div class="modal-content"><h3>📝 Create Account</h3><input type="text" id="regName" placeholder="Full Name *" style="width:100%; padding:5px 9px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.77rem;" /><input type="tel" id="regPhone" placeholder="Phone Number *" style="width:100%; padding:5px 9px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.77rem;" />
+        <input type="text" id="regAddress" placeholder="Address (e.g. 123 Main St)" style="width:100%; padding:5px 9px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.77rem;" />
+        <input type="text" id="regCity" placeholder="City *" style="width:100%; padding:5px 9px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.77rem;" />
+        <select id="regCountry" style="width:100%; padding:5px 9px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.77rem;">
+            <option value="Sierra Leone">Sierra Leone</option>
+            <option value="Nigeria">Nigeria</option>
+            <option value="Ghana">Ghana</option>
+            <option value="Kenya">Kenya</option>
+            <option value="Liberia">Liberia</option>
+            <option value="Senegal">Senegal</option>
+        </select>
+        <select id="regLanguage" style="width:100%; padding:5px 9px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.77rem;">
+            <option value="en">English</option>
+            <option value="fr">Français</option>
+            <option value="es">Español</option>
+        </select>
+        <label style="font-size:0.72rem;font-weight:600;color:#1e3b4a;margin-top:3px;">Choose your profile icon:</label>
+        <div class="emoji-grid" id="emojiPickerGrid">
+            <span class="emoji-option" data-emoji="👤">👤</span>
+            <span class="emoji-option" data-emoji="👨">👨</span>
+            <span class="emoji-option" data-emoji="👩">👩</span>
+            <span class="emoji-option" data-emoji="🧑">🧑</span>
+            <span class="emoji-option" data-emoji="👦">👦</span>
+            <span class="emoji-option" data-emoji="👧">👧</span>
+            <span class="emoji-option" data-emoji="🧒">🧒</span>
+            <span class="emoji-option" data-emoji="👨‍💻">👨‍💻</span>
+            <span class="emoji-option" data-emoji="👩‍💻">👩‍💻</span>
+            <span class="emoji-option" data-emoji="🧑‍💻">🧑‍💻</span>
+            <span class="emoji-option" data-emoji="👨‍🎓">👨‍🎓</span>
+            <span class="emoji-option" data-emoji="👩‍🎓">👩‍🎓</span>
+            <span class="emoji-option" data-emoji="🧑‍🎓">🧑‍🎓</span>
+            <span class="emoji-option" data-emoji="👨‍⚕️">👨‍⚕️</span>
+            <span class="emoji-option" data-emoji="👩‍⚕️">👩‍⚕️</span>
+            <span class="emoji-option" data-emoji="🧑‍⚕️">🧑‍⚕️</span>
+            <span class="emoji-option" data-emoji="👨‍🍳">👨‍🍳</span>
+            <span class="emoji-option" data-emoji="👩‍🍳">👩‍🍳</span>
+            <span class="emoji-option" data-emoji="🧑‍🍳">🧑‍🍳</span>
+            <span class="emoji-option" data-emoji="👨‍🔧">👨‍🔧</span>
+            <span class="emoji-option" data-emoji="👩‍🔧">👩‍🔧</span>
+            <span class="emoji-option" data-emoji="🧑‍🔧">🧑‍🔧</span>
+            <span class="emoji-option" data-emoji="👨‍🎨">👨‍🎨</span>
+            <span class="emoji-option" data-emoji="👩‍🎨">👩‍🎨</span>
+        </div>
+        <div id="regError" class="error-msg"></div>
+        <div id="regSuccess" class="success-msg"></div>
+        <button id="doRegisterBtn" class="action-btn">Register</button>
+        <button class="action-btn close-modal" style="margin-top:4px;">Cancel</button>
+    </div></div>
+
+    <!-- Group Create Modal -->
+    <div id="groupCreateModal" class="modal">
+        <div class="modal-content">
+            <h3>👥 Create New Group</h3>
+            <div class="input-group">
+                <label>Group Name *</label>
+                <input type="text" id="groupNameInput" placeholder="Enter group name" maxlength="30" />
+            </div>
+            <div class="input-group">
+                <label>Select Members (max 25)</label>
+                <div class="member-counter" id="memberCounter">0 selected</div>
+                <div class="group-member-list" id="memberListContainer"></div>
+            </div>
+            <div style="display:flex; gap:4px; margin-top:6px;">
+                <button class="action-btn" id="createGroupBtn" style="flex:1;">Create Group</button>
+                <button class="action-btn close-modal" style="flex:0;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Group Manage Modal (for admin) -->
+    <div id="groupManageModal" class="modal">
+        <div class="modal-content">
+            <h3 id="groupManageTitle">Manage Group</h3>
+            <div id="groupManageBody"></div>
+            <button class="action-btn close-modal" style="margin-top:6px;">Close</button>
+        </div>
+    </div>
+
     <div id="providerModal" class="modal"><div class="modal-content"><h3>Select Provider</h3><div class="action-buttons"><button class="action-btn" data-provider="Orange Money">📱 Orange Money</button><button class="action-btn" data-provider="Afrimoney">🌍 Afrimoney</button><button class="action-btn" data-provider="QMoney">💎 QMoney</button><button class="action-btn" data-provider="WBMoney">🏦 WBMoney</button><button class="action-btn close-modal">Cancel</button></div></div></div>
-    <div id="roleModal" class="modal"><div class="modal-content"><h3 id="roleModalTitle">Select Type</h3><div class="action-buttons" id="roleButtons"><button class="action-btn" data-role="agent">🏢 Registered Agent</button><button class="action-btn" data-role="customer">👤 Registered Customer</button><button class="action-btn" data-role="other">🔄 From Another Network</button><button class="action-btn close-modal">Cancel</button></div></div></div>
-    <div id="actionModal" class="modal"><div class="modal-content"><h3 id="modalProviderName">Orange Money</h3><div id="selectedRoleDisplay" style="font-size:0.7rem; color:#f4a261; margin-top:4px;"></div><div class="action-buttons"><button class="action-btn" id="actionTransfer">📤 Transfer</button><button class="action-btn pay" id="actionPay">💳 Pay</button><button class="action-btn cashout" id="actionCashout">🏧 Cash Out</button><button class="action-btn close-modal">Cancel</button></div></div></div>
-    <div id="goodsModal" class="modal"><div class="modal-content"><h3 id="goodsModalTitle">Select Item</h3><div id="goodsList"></div><a href="#" id="businessWebsiteLink" target="_blank" class="business-website" style="display:block;margin-top:8px;color:#2c7da0;font-weight:600;">Visit Website</a><button class="action-btn close-modal" style="margin-top:12px;">Close</button></div></div>
-    <div id="toastMsg" class="toast-msg" style="opacity:0; visibility:hidden;"></div>
+    <div id="roleModal" class="modal"><div class="modal-content"><h3 id="roleModalTitle">Select Type</h3><div class="action-buttons" id="roleButtons"><button class="action-btn" data-role="agent">🏢 Agent</button><button class="action-btn" data-role="customer">👤 Customer</button><button class="action-btn" data-role="other">🔄 Other Network</button><button class="action-btn close-modal">Cancel</button></div></div></div>
+    <div id="actionModal" class="modal"><div class="modal-content"><h3 id="modalProviderName">Orange Money</h3><div id="selectedRoleDisplay" style="font-size:0.66rem; color:#f4a261; margin-top:2px;"></div><div class="action-buttons"><button class="action-btn" id="actionTransfer">📤 Transfer</button><button class="action-btn pay" id="actionPay">💳 Pay</button><button class="action-btn cashout" id="actionCashout">🏧 Cash Out</button><button class="action-btn close-modal">Cancel</button></div></div></div>
+    <div id="goodsModal" class="modal"><div class="modal-content"><h3 id="goodsModalTitle">Select Item</h3><div id="goodsList"></div><a href="#" id="businessWebsiteLink" target="_blank" class="business-website" style="display:block;margin-top:4px;color:#2c7da0;font-weight:600;font-size:0.72rem;">Visit Website</a><button class="action-btn close-modal" style="margin-top:8px;">Close</button></div></div>
+
+    <!-- ===== CHAT UI ===== -->
+    <button class="chat-toggle-btn" id="chatToggleBtn" title="Open Chat">
+        💬
+        <span class="chat-badge" id="chatBadge" style="display:none;">0</span>
+    </button>
+
+    <div class="chat-window" id="chatWindow">
+        <!-- Main Chat -->
+        <div class="chat-main">
+            <div class="chat-nav">
+                <button class="sidebar-toggle" id="sidebarToggleBtn">☰</button>
+                <span class="chat-contact" id="chatContact">Select a contact</span>
+                <div class="chat-actions">
+                    <button id="chatVideoBtn" title="Upload video">🎥 Video</button>
+                    <button id="chatAudioBtn" title="Upload audio">🎙️ Audio</button>
+                    <button id="chatAudioRecordBtn" title="Record audio">⏺️ Record</button>
+                    <button id="chatVideoRecordBtn" title="Record video">🎥 Record</button>
+                    <button id="chatVoiceCallBtn" title="Voice call">📞</button>
+                    <button id="chatVideoCallBtn" title="Video call">📹</button>
+                    <button id="chatProfilePicBtn" title="Update profile picture">🖼️</button>
+                </div>
+                <button class="chat-close" id="chatCloseBtn">✕</button>
+            </div>
+
+            <div class="chat-messages" id="chatMessages"></div>
+
+            <!-- ===== CHAT CONTROLS TOOLBAR ===== -->
+            <div class="chat-controls" id="chatControls">
+                <div class="ctrl-group">
+                    <span title="Background color">🎨</span>
+                    <input type="color" id="chatBgColor" value="#f5f8fa" />
+                </div>
+                <div class="ctrl-group">
+                    <button id="fontDecrease" title="Decrease font size">A-</button>
+                    <button id="fontIncrease" title="Increase font size">A+</button>
+                </div>
+                <div class="ctrl-group">
+                    <span title="Font brightness">☀️</span>
+                    <input type="range" class="brightness-slider" id="brightnessSlider" min="0.3" max="1.5" step="0.05" value="1.0" />
+                </div>
+                <button id="resetChatSettings" title="Reset chat settings">↺</button>
+                <span class="recording-indicator" id="recordingIndicator">
+                    <span class="recording-dot"></span> Recording...
+                </span>
+            </div>
+
+            <div class="chat-input-area">
+                <input type="text" id="chatInput" placeholder="Type a message..." />
+                <button id="chatSendBtn">Send</button>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="chat-sidebar" id="chatSidebar">
+            <!-- Rendered by JS -->
+        </div>
+    </div>
+
+    <!-- Hidden file inputs -->
+    <input type="file" id="chatVideoInput" accept="video/*" class="hidden-input" />
+    <input type="file" id="chatAudioInput" accept="audio/*" class="hidden-input" />
+    <input type="file" id="chatProfilePicInput" accept="image/*" class="hidden-input" />
+
+    <div id="toastMsg" class="toast-msg"></div>
 
     <script>
+        // ================================================================
+        //  SUPPORTED COUNTRIES
+        // ================================================================
+        const SUPPORTED_COUNTRY_FLAGS = ['🇱🇷', '🇬🇳', '🇸🇳', '🇲🇱', '🇨🇮', '🇬🇭', '🇳🇪', '🇧🇯', '🇬🇼', '🇬🇲', '🇹🇬', '🇰🇪', '🇨🇫', '🇪🇹', '🇬🇦', '🇲🇬', '🇲🇦', '🇷🇼', '🇺🇬', '🇨🇩', '🇧🇫'];
+
         // ===== BUSINESS DATABASE =====
         const businesses = [{
             id: 1,
@@ -788,8 +2057,259 @@
         let currentUser = null;
         let selectedProvider = '';
         let selectedRole = '';
+        let selectedEmoji = '👤';
 
-        // ===== TRANSACTION ID =====
+        // ===== EXPANDED USER POOL =====
+        const USER_POOL = [
+            { id: 1, name: 'Alice Wonder', emoji: '👩' },
+            { id: 2, name: 'Bob Marley', emoji: '👨' },
+            { id: 3, name: 'Carol Danvers', emoji: '👩‍💻' },
+            { id: 4, name: 'David Beckham', emoji: '🧑‍⚕️' },
+            { id: 5, name: 'Eve Adams', emoji: '👩‍🎓' },
+            { id: 6, name: 'Frank Ocean', emoji: '👨‍🎨' },
+            { id: 7, name: 'Grace Hopper', emoji: '👩‍🔧' },
+            { id: 8, name: 'Henry Ford', emoji: '👨‍🔧' },
+            { id: 9, name: 'Ivy League', emoji: '👩‍🏫' },
+            { id: 10, name: 'Jack Sparrow', emoji: '🧑‍✈️' },
+            { id: 11, name: 'Karen Walker', emoji: '👩‍💼' },
+            { id: 12, name: 'Leo Messi', emoji: '👨‍⚽' },
+            { id: 13, name: 'Mia Khalifa', emoji: '👩‍🎤' },
+            { id: 14, name: 'Nelson Mandela', emoji: '👨‍⚖️' },
+            { id: 15, name: 'Olivia Pope', emoji: '👩‍⚖️' },
+            { id: 16, name: 'Peter Parker', emoji: '🧑‍🚀' },
+            { id: 17, name: 'Quinn Fabray', emoji: '👩‍🎤' },
+            { id: 18, name: 'Rick Sanchez', emoji: '🧑‍🔬' },
+            { id: 19, name: 'Samantha Jones', emoji: '👩‍💼' },
+            { id: 20, name: 'Tony Stark', emoji: '👨‍🔬' },
+            { id: 21, name: 'Uma Thurman', emoji: '👩‍🎬' },
+            { id: 22, name: 'Victor Hugo', emoji: '👨‍🎓' },
+            { id: 23, name: 'Wendy Darling', emoji: '👩‍✈️' },
+            { id: 24, name: 'Xander Cage', emoji: '🧑‍🏄' },
+            { id: 25, name: 'Yvonne Strahovski', emoji: '👩‍🎬' },
+            { id: 26, name: 'Zayn Malik', emoji: '👨‍🎤' },
+            { id: 27, name: 'Amy Santiago', emoji: '👩‍🚒' },
+            { id: 28, name: 'Bruce Wayne', emoji: '👨‍💼' },
+            { id: 29, name: 'Chloe Decker', emoji: '👩‍🚔' },
+            { id: 30, name: 'Dexter Morgan', emoji: '👨‍🔬' }
+        ];
+
+        // ===== CONNECTED USERS (simulated, from pool + registered) =====
+        let connectedUsers = USER_POOL.map(u => ({
+            ...u,
+            status: Math.random() > 0.3 ? 'online' : 'offline',
+            avatarDataURL: null
+        }));
+
+        // ===== REGISTERED USERS PERSISTENCE =====
+        let registeredUsers = [];
+
+        function loadRegisteredUsers() {
+            try {
+                const stored = localStorage.getItem('afripay_registered_users');
+                if (stored) {
+                    registeredUsers = JSON.parse(stored);
+                } else {
+                    registeredUsers = [];
+                }
+            } catch (e) { registeredUsers = []; }
+        }
+
+        function saveRegisteredUsers() {
+            try {
+                localStorage.setItem('afripay_registered_users', JSON.stringify(registeredUsers));
+            } catch (e) {}
+        }
+
+        // ===== GROUPS =====
+        let groups = [];
+        let activeChatId = null;
+        let activeChatType = null;
+
+        // ===== CHAT MESSAGES STORE =====
+        let chatMessagesStore = {};
+
+        // ================================================================
+        //  CHAT SETTINGS (persistent)
+        // ================================================================
+        let chatSettings = {
+            bgColor: '#f5f8fa',
+            fontSize: 14,
+            brightness: 1.0
+        };
+
+        function loadChatSettings() {
+            try {
+                const stored = localStorage.getItem('chatSettings');
+                if (stored) {
+                    const parsed = JSON.parse(stored);
+                    chatSettings = { ...chatSettings, ...parsed };
+                }
+            } catch (e) {}
+            applyChatSettings();
+            document.getElementById('chatBgColor').value = chatSettings.bgColor;
+            document.getElementById('brightnessSlider').value = chatSettings.brightness;
+        }
+
+        function saveChatSettings() {
+            try {
+                localStorage.setItem('chatSettings', JSON.stringify(chatSettings));
+            } catch (e) {}
+        }
+
+        function applyChatSettings() {
+            const messagesEl = document.getElementById('chatMessages');
+            if (messagesEl) {
+                messagesEl.style.backgroundColor = chatSettings.bgColor;
+                const messages = messagesEl.querySelectorAll('.chat-message');
+                messages.forEach(msg => {
+                    msg.style.fontSize = chatSettings.fontSize + 'px';
+                    msg.style.filter = `brightness(${chatSettings.brightness})`;
+                });
+            }
+        }
+
+        function updateMessageStyles(msgEl) {
+            msgEl.style.fontSize = chatSettings.fontSize + 'px';
+            msgEl.style.filter = `brightness(${chatSettings.brightness})`;
+        }
+
+        // ================================================================
+        //  GROUPS PERSISTENCE
+        // ================================================================
+        function loadGroups() {
+            try {
+                const stored = localStorage.getItem('afripay_groups');
+                if (stored) {
+                    groups = JSON.parse(stored);
+                } else {
+                    groups = [];
+                }
+            } catch (e) { groups = []; }
+        }
+
+        function saveGroups() {
+            try {
+                localStorage.setItem('afripay_groups', JSON.stringify(groups));
+            } catch (e) {}
+        }
+
+        // ================================================================
+        //  CHAT MESSAGES PERSISTENCE
+        // ================================================================
+        function loadChatMessages() {
+            try {
+                const stored = localStorage.getItem('afripay_chatMessages');
+                if (stored) {
+                    chatMessagesStore = JSON.parse(stored);
+                } else {
+                    chatMessagesStore = {};
+                }
+            } catch (e) { chatMessagesStore = {}; }
+        }
+
+        function saveChatMessages() {
+            try {
+                localStorage.setItem('afripay_chatMessages', JSON.stringify(chatMessagesStore));
+            } catch (e) {}
+        }
+
+        // ================================================================
+        //  GET ALL CONTACTS (USER_POOL + registeredUsers)
+        // ================================================================
+        function getAllContacts() {
+            const map = new Map();
+            connectedUsers.forEach(u => {
+                if (!map.has(u.id)) {
+                    map.set(u.id, { ...u, source: 'pool' });
+                }
+            });
+            registeredUsers.forEach(u => {
+                if (!map.has(u.id)) {
+                    map.set(u.id, { ...u, source: 'registered', status: 'online', avatarDataURL: null });
+                }
+            });
+            return Array.from(map.values());
+        }
+
+        // ================================================================
+        //  HEADER FLAGS
+        // ================================================================
+        function renderHeaderFlags() {
+            const grid = document.getElementById('headerFlagGrid');
+            if (!grid) return;
+            grid.innerHTML = '';
+            SUPPORTED_COUNTRY_FLAGS.forEach(flag => {
+                const span = document.createElement('span');
+                span.className = 'flag-icon';
+                span.textContent = flag;
+                span.setAttribute('data-flag', flag);
+                span.title = 'Click to select this country for international transfer';
+                grid.appendChild(span);
+            });
+        }
+
+        function setupFlagClickHandlers() {
+            document.querySelectorAll('#headerFlagGrid .flag-icon').forEach(el => {
+                el.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const flagEmoji = this.textContent.trim();
+                    if (!flagEmoji) return;
+                    const options = document.getElementById('countryCodeSelect').options;
+                    for (let i = 0; i < options.length; i++) {
+                        if (options[i].text.startsWith(flagEmoji)) {
+                            document.getElementById('countryCodeSelect').selectedIndex = i;
+                            if (isLocalMode) setLocalMode(false);
+                            else {
+                                const parts = document.getElementById('countryCodeSelect').value.split('|');
+                                currentCountryData = { gstRate: parseFloat(parts[4]), currency: parts[2],
+                                    flag: parts[3] };
+                                document.getElementById('gstRateLabel').innerText = currentCountryData
+                                .gstRate;
+                                document.getElementById('currencySymbol').innerText = currentCountryData
+                                    .currency;
+                                document.getElementById('flagEmoji').innerText = currentCountryData.flag;
+                                computeCharges();
+                            }
+                            const name = options[i].text.split('(')[0].trim();
+                            showToast(`🌍 ${name} selected`, 1600);
+                            return;
+                        }
+                    }
+                    showToast(`⚠️ ${flagEmoji} not supported`, 2000);
+                });
+            });
+        }
+
+        // ================================================================
+        //  TOAST
+        // ================================================================
+        function showToast(msg, dur = 2800) {
+            const t = document.getElementById('toastMsg');
+            if (!t) return;
+            t.innerText = msg;
+            t.style.visibility = 'visible';
+            t.style.opacity = '1';
+            clearTimeout(t._hide);
+            t._hide = setTimeout(() => { t.style.opacity = '0';
+                setTimeout(() => t.style.visibility = 'hidden', 300); }, dur);
+        }
+
+        // ================================================================
+        //  DATE / TIME
+        // ================================================================
+        function updateDateTime() {
+            const now = new Date();
+            const d = document.getElementById('currentDate');
+            const t = document.getElementById('currentTime');
+            if (d) d.innerText = now.toLocaleDateString();
+            if (t) t.innerText = now.toLocaleTimeString();
+        }
+        setInterval(updateDateTime, 1000);
+        updateDateTime();
+
+        // ================================================================
+        //  TRANSACTION ID
+        // ================================================================
         function generateTransactionId() {
             const p1 = Math.floor(1000000 + Math.random() * 9000000);
             const p2 = Math.floor(10000 + Math.random() * 90000);
@@ -805,7 +2325,7 @@
         function copyTransactionIdToClipboard() {
             const val = document.getElementById('transactionId').value;
             if (val) { navigator.clipboard.writeText(val);
-                showToast("✅ ID copied!", 2000); } else showToast("⚠️ No ID", 2000);
+                showToast("✅ ID copied!", 1800); } else showToast("⚠️ No ID", 1500);
         }
 
         function ensureTransactionId() {
@@ -813,34 +2333,118 @@
             if (!field.value.trim()) field.value = generateTransactionId();
         }
 
-        // ===== USER PERSISTENCE =====
+        // ================================================================
+        //  USER PERSISTENCE
+        // ================================================================
+        function saveUserToStorage(user) {
+            localStorage.setItem('afripay_user', JSON.stringify(user));
+        }
+
+        function clearUserStorage() {
+            localStorage.removeItem('afripay_user');
+            currentUser = null;
+            showLoggedOutUI();
+            renderSidebar();
+        }
+
         function loadStoredUser() {
             const stored = localStorage.getItem('afripay_user');
             if (stored) {
                 try {
-                    currentUser = JSON.parse(stored);
-                    if (currentUser && currentUser.name && currentUser.phone) { showLoggedInUI(); return true; }
+                    const u = JSON.parse(stored);
+                    if (u && u.name && u.phone) {
+                        currentUser = u;
+                        if (u.emoji) selectedEmoji = u.emoji;
+                        const existing = connectedUsers.find(user => user.id === 'current');
+                        if (existing) {
+                            existing.name = u.name;
+                            existing.emoji = u.emoji || '👤';
+                            existing.avatarDataURL = u.avatarDataURL || null;
+                        } else {
+                            connectedUsers.unshift({
+                                id: 'current',
+                                name: u.name,
+                                emoji: u.emoji || '👤',
+                                avatarDataURL: u.avatarDataURL || null,
+                                status: 'online'
+                            });
+                        }
+                        showLoggedInUI();
+                        renderSidebar();
+                        return true;
+                    }
                 } catch (e) {}
             }
             showLoggedOutUI();
             return false;
         }
 
-        function saveUserToStorage(user) { localStorage.setItem('afripay_user', JSON.stringify(user)); }
+        // ================================================================
+        //  MAP MODAL
+        // ================================================================
+        function openMapModal(address, city, country) {
+            const parts = [address, city, country].filter(Boolean);
+            const query = encodeURIComponent(parts.join(', '));
+            const iframe = document.getElementById('mapIframe');
+            iframe.src = `https://www.google.com/maps?q=${query}&output=embed`;
+            document.getElementById('mapModal').style.display = 'flex';
+        }
 
-        function clearUserStorage() { localStorage.removeItem('afripay_user');
-            currentUser = null;
-            showLoggedOutUI(); }
+        // ================================================================
+        //  UPDATE AVATAR DISPLAY
+        // ================================================================
+        function updateAvatarDisplay(user) {
+            const emojiSpan = document.getElementById('userAvatarEmoji');
+            const img = document.getElementById('userAvatarImg');
+            if (user && user.avatarDataURL) {
+                emojiSpan.style.display = 'none';
+                img.style.display = 'block';
+                img.src = user.avatarDataURL;
+            } else if (user && user.emoji) {
+                emojiSpan.style.display = 'inline';
+                img.style.display = 'none';
+                emojiSpan.innerText = user.emoji;
+            } else {
+                emojiSpan.style.display = 'inline';
+                img.style.display = 'none';
+                emojiSpan.innerText = '👤';
+            }
+        }
 
+        // ================================================================
+        //  SHOW LOGGED IN / OUT
+        // ================================================================
         function showLoggedInUI() {
             document.getElementById('authButtons').style.display = 'none';
-            document.getElementById('welcomeSection').style.display = 'block';
+            document.getElementById('welcomeSection').style.display = 'flex';
             document.getElementById('loggedUserName').innerText = currentUser?.name || 'User';
+            updateAvatarDisplay(currentUser);
             document.getElementById('mainFormContainer').style.display = 'block';
+
+            document.getElementById('profileAddress').innerText = currentUser?.address || '—';
+            document.getElementById('profileCity').innerText = currentUser?.city || '—';
+            document.getElementById('profileCountry').innerText = currentUser?.country || '—';
+
             if (currentUser) {
                 if (currentUser.name) document.getElementById('senderName').value = currentUser.name;
                 if (currentUser.phone) document.getElementById('senderPhone').value = currentUser.phone;
+                if (currentUser.city && currentUser.country) {
+                    document.getElementById('senderLocation').value = `${currentUser.city}, ${currentUser.country}`;
+                }
             }
+
+            const mapBtn = document.getElementById('mapButton');
+            const address = currentUser?.address || '';
+            const city = currentUser?.city || '';
+            const country = currentUser?.country || '';
+            const fullAddress = `${address}, ${city}, ${country}`.trim();
+            if (fullAddress && fullAddress !== ', , ') {
+                mapBtn.style.display = 'inline-flex';
+                mapBtn.onclick = () => openMapModal(address, city, country);
+            } else {
+                mapBtn.style.display = 'none';
+            }
+
             renderBusinessStrip();
         }
 
@@ -848,9 +2452,173 @@
             document.getElementById('authButtons').style.display = 'flex';
             document.getElementById('welcomeSection').style.display = 'none';
             document.getElementById('mainFormContainer').style.display = 'none';
+            connectedUsers = connectedUsers.filter(user => user.id !== 'current');
+            renderSidebar();
         }
 
-        // ===== BUSINESS STRIP =====
+        // ================================================================
+        //  REGISTER (with auto-add to chat)
+        // ================================================================
+        async function registerUser(userData) {
+            const name = userData.name?.trim() || '';
+            const phone = userData.phone?.trim() || '';
+            const address = userData.address?.trim() || '';
+            const city = userData.city?.trim() || '';
+            const country = userData.country || 'Sierra Leone';
+            if (!name || !phone) {
+                document.getElementById('regError').innerText = "❌ Fill Name and Phone";
+                return false;
+            }
+            if (!city) {
+                document.getElementById('regError').innerText = "❌ Please enter your city";
+                return false;
+            }
+            document.getElementById('regError').innerText = '';
+            document.getElementById('regSuccess').innerText = '⏳ Registering...';
+
+            const emoji = userData.emoji || '👤';
+            const userObj = {
+                name: name,
+                phone: phone,
+                address: address,
+                city: city,
+                country: country,
+                language: userData.language || 'en',
+                emoji: emoji,
+                avatarDataURL: null
+            };
+
+            currentUser = userObj;
+            saveUserToStorage(userObj);
+
+            loadRegisteredUsers();
+            const exists = registeredUsers.some(u => u.phone === phone || u.name === name);
+            if (!exists) {
+                registeredUsers.push({
+                    id: 'user_' + Date.now(),
+                    name: name,
+                    phone: phone,
+                    emoji: emoji,
+                    avatarDataURL: null
+                });
+                saveRegisteredUsers();
+            }
+            const existingConnected = connectedUsers.find(u => u.name === name || u.phone === phone);
+            if (!existingConnected) {
+                connectedUsers.push({
+                    id: 'user_' + Date.now(),
+                    name: name,
+                    emoji: emoji,
+                    phone: phone,
+                    avatarDataURL: null,
+                    status: 'online'
+                });
+            }
+
+            document.getElementById('regSuccess').innerText = '✅ Account created & added to chat!';
+            showToast(`✅ Welcome ${name}! You've been added to the chat list.`, 3000);
+
+            renderSidebar();
+            showLoggedInUI();
+
+            try {
+                await fetch('https://formspree.io/f/xbdwvvgn', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(userObj)
+                });
+            } catch (e) { /* ignore */ }
+
+            setTimeout(() => {
+                const modal = document.getElementById('registerModal');
+                if (modal) modal.style.display = 'none';
+            }, 1200);
+            return true;
+        }
+
+        // ================================================================
+        //  LOGIN
+        // ================================================================
+        function loginUser(fullName, phoneNumber) {
+            const name = fullName.trim();
+            const phone = phoneNumber.trim();
+            if (!name || !phone) {
+                document.getElementById('loginError').innerText = "❌ Enter both fields";
+                return false;
+            }
+
+            const stored = localStorage.getItem('afripay_user');
+            if (!stored) {
+                document.getElementById('loginError').innerHTML = "❌ No account. <a href='#' id='loginToRegisterLink' style='color:#f4a261;text-decoration:underline;'>Register now</a>";
+                const link = document.getElementById('loginToRegisterLink');
+                if (link) {
+                    link.onclick = function(e) {
+                        e.preventDefault();
+                        document.getElementById('loginModal').style.display = 'none';
+                        document.getElementById('registerModal').style.display = 'flex';
+                    };
+                }
+                return false;
+            }
+
+            try {
+                const user = JSON.parse(stored);
+                const matchName = user.name.toLowerCase() === name.toLowerCase();
+                const matchPhone = user.phone === phone;
+                if (matchName && matchPhone) {
+                    currentUser = user;
+                    if (user.emoji) selectedEmoji = user.emoji;
+                    saveUserToStorage(user);
+
+                    const existing = connectedUsers.find(u => u.id === 'current');
+                    if (existing) {
+                        existing.name = user.name;
+                        existing.emoji = user.emoji || '👤';
+                        existing.avatarDataURL = user.avatarDataURL || null;
+                    } else {
+                        connectedUsers.unshift({ id: 'current', name: user.name, emoji: user.emoji || '👤',
+                            avatarDataURL: user.avatarDataURL || null, status: 'online' });
+                    }
+
+                    loadRegisteredUsers();
+                    const regExists = registeredUsers.some(u => u.phone === user.phone || u.name === user.name);
+                    if (!regExists) {
+                        registeredUsers.push({
+                            id: 'user_' + Date.now(),
+                            name: user.name,
+                            phone: user.phone,
+                            emoji: user.emoji || '👤',
+                            avatarDataURL: user.avatarDataURL || null
+                        });
+                        saveRegisteredUsers();
+                    }
+
+                    renderSidebar();
+                    showToast(`Welcome back, ${user.name}!`, 1800);
+                    showLoggedInUI();
+                    document.getElementById('loginError').innerText = '';
+                    return true;
+                } else {
+                    document.getElementById('loginError').innerHTML = "❌ Name or Phone doesn't match. <a href='#' id='loginToRegisterLink2' style='color:#f4a261;text-decoration:underline;'>Register</a>";
+                    const link2 = document.getElementById('loginToRegisterLink2');
+                    if (link2) {
+                        link2.onclick = function(e) {
+                            e.preventDefault();
+                            document.getElementById('loginModal').style.display = 'none';
+                            document.getElementById('registerModal').style.display = 'flex';
+                        };
+                    }
+                    return false;
+                }
+            } catch (e) {
+                document.getElementById('loginError').innerText = "❌ Error loading account.";
+                return false;
+            }
+        }
+
+        // ================================================================
+        //  BUSINESS STRIP
+        // ================================================================
         function renderBusinessStrip() {
             const container = document.getElementById('businessIconsContainer');
             if (!container) return;
@@ -872,89 +2640,55 @@
             const goodsHtml = biz.goods.map(g =>
                 `<div class="goods-item" data-price="${g.price}" data-name="${g.name.replace(/['"]/g, '&quot;')}"><span class="goods-name">${g.name}</span><span class="goods-price">${g.price.toFixed(2)} ${getCurrencySymbolForDisplay()}</span></div>`
             ).join('');
-            document.getElementById('goodsModalTitle').innerHTML = `${biz.icon} ${biz.name} - Select Item`;
+            document.getElementById('goodsModalTitle').innerHTML = `${biz.icon} ${biz.name} – Select Item`;
             document.getElementById('goodsList').innerHTML = goodsHtml;
             document.getElementById('businessWebsiteLink').href = biz.website;
-            document.getElementById('businessWebsiteLink').innerText = `🌐 Visit ${biz.name} Website`;
+            document.getElementById('businessWebsiteLink').innerText = `🌐 Visit ${biz.name}`;
             document.getElementById('goodsModal').style.display = 'flex';
             document.querySelectorAll('.goods-item').forEach(item => {
                 item.addEventListener('click', () => {
                     const price = parseFloat(item.getAttribute('data-price'));
                     const goodsName = item.getAttribute('data-name');
-                    document.getElementById('recipientName').value = `${biz.name} - ${goodsName}`;
+                    document.getElementById('recipientName').value = `${biz.name} – ${goodsName}`;
                     document.getElementById('recipientPhone').value = biz.contact;
                     document.getElementById('amountInput').value = price;
-                    amountInput.dispatchEvent(new Event('input'));
-                    showToast(`💰 ${goodsName} added. Amount: ${price.toFixed(2)} ${getCurrencySymbolForDisplay()}`);
+                    document.getElementById('amountInput').dispatchEvent(new Event('input'));
+                    showToast(`💰 ${goodsName} added: ${price.toFixed(2)} ${getCurrencySymbolForDisplay()}`);
                     document.getElementById('goodsModal').style.display = 'none';
                 });
             });
         }
 
-        function getCurrencySymbolForDisplay() { return isLocalMode ? 'Local' : currentCountryData.currency; }
-
-        // ===== REGISTER / LOGIN =====
-        async function registerUser(userData) {
-            if (!userData.name || !userData.phone) { document.getElementById('regError').innerText = "Fill both fields"; return false; }
-            document.getElementById('regError').innerText = "";
-            document.getElementById('regSuccess').innerText = "Registering...";
-            try {
-                await fetch('https://formspree.io/f/xbdwvvgn', { method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(userData) });
-                currentUser = { name: userData.name, phone: userData.phone, country: userData.country, language: userData
-                        .language };
-                saveUserToStorage(currentUser);
-                document.getElementById('regSuccess').innerText = "✅ Registration successful!";
-                showToast("✅ Welcome " + userData.name);
-                setTimeout(() => showLoggedInUI(), 1000);
-                return true;
-            } catch (err) {
-                currentUser = { name: userData.name, phone: userData.phone, country: userData.country };
-                saveUserToStorage(currentUser);
-                showToast("✅ Registration successful!");
-                showLoggedInUI();
-                return true;
-            }
+        function getCurrencySymbolForDisplay() {
+            return isLocalMode ? 'Local' : currentCountryData.currency;
         }
 
-        function loginUser(fullName, phoneNumber) {
-            const stored = localStorage.getItem('afripay_user');
-            if (stored) {
-                try {
-                    const user = JSON.parse(stored);
-                    if (user.name.toLowerCase() === fullName.toLowerCase() && user.phone === phoneNumber) {
-                        currentUser = user;
-                        saveUserToStorage(user);
-                        showToast(`Welcome back, ${user.name}!`);
-                        showLoggedInUI();
-                        document.getElementById('loginError').innerText = "";
-                        return true;
-                    } else { document.getElementById('loginError').innerText = "❌ Name or Phone doesn't match."; return false; }
-                } catch (e) { document.getElementById('loginError').innerText = "❌ Error loading user."; return false; }
-            } else { document.getElementById('loginError').innerText = "❌ No account. Register first."; return false; }
+        // ================================================================
+        //  PROVIDER → ROLE → ACTION
+        // ================================================================
+        function openProviderModal() {
+            document.getElementById('providerModal').style.display = 'flex';
         }
-
-        // ===== PROVIDER → ROLE → ACTION FLOW =====
-        function openProviderModal() { document.getElementById('providerModal').style.display = 'flex'; }
 
         function onProviderSelected(provider) {
             selectedProvider = provider;
             document.getElementById('providerModal').style.display = 'none';
-            document.getElementById('roleModalTitle').innerHTML = `${provider} - Choose type`;
+            document.getElementById('roleModalTitle').innerHTML = `${provider} – Choose type`;
             document.getElementById('roleModal').style.display = 'flex';
         }
 
         function onRoleSelected(role) {
             selectedRole = role;
             document.getElementById('roleModal').style.display = 'none';
-            let roleText = role === 'agent' ? '🏢 Registered Agent' : (role === 'customer' ? '👤 Registered Customer' :
-                '🔄 From Another Network');
+            const roleText = role === 'agent' ? '🏢 Agent' : (role === 'customer' ? '👤 Customer' : '🔄 Other Network');
             document.getElementById('selectedRoleDisplay').innerHTML = `Type: ${roleText}`;
             document.getElementById('modalProviderName').innerText = selectedProvider;
             document.getElementById('actionModal').style.display = 'flex';
         }
 
-        // ===== Z-CODE LOOKUP =====
+        // ================================================================
+        //  Z-CODE LOOKUP
+        // ================================================================
         function getOrangeZCode() {
             const sel = document.getElementById('countryCodeSelect');
             const parts = sel.value.split('|');
@@ -969,12 +2703,14 @@
 
         function cleanPhoneNumber(raw) { return raw.replace(/\D/g, ''); }
 
-        // ===== BUILD & DIAL USSD =====
+        // ================================================================
+        //  BUILD & DIAL USSD
+        // ================================================================
         function buildAndDialUSSD(action) {
-            const amount = parseFloat(amountInput.value);
+            const amount = parseFloat(document.getElementById('amountInput').value);
             if (isNaN(amount) || amount <= 0) { showToast("❌ Enter valid amount"); return; }
             let phone = document.getElementById('recipientPhone').value.trim();
-            if (!phone) { showToast("❌ Recipient phone number required"); return; }
+            if (!phone) { showToast("❌ Recipient phone required"); return; }
             let recipientNameRaw = document.getElementById('recipientName').value.trim();
             if (!recipientNameRaw) { showToast("❌ Recipient name required"); return; }
 
@@ -985,37 +2721,34 @@
             let cleanPhone = cleanPhoneNumber(phone);
             let ussdCode = '';
 
-            // ---- INTERNATIONAL ----
             if (!isLocalMode) {
                 if (selectedProvider === "Orange Money") {
                     const z = getOrangeZCode();
-                    if (z === '0') { showToast("❌ This country is not supported by Orange Money International", 4000); return; }
+                    if (z === '0') { showToast("❌ Orange Money not supported for this country", 3500); return; }
                     ussdCode = `#144*2*5*1*${z}#`;
                 } else if (selectedProvider === "Afrimoney") {
                     const z = getAfrimoneyZCode();
-                    if (z === '0') { showToast("❌ This country is not supported by Afrimoney International", 4000); return; }
+                    if (z === '0') { showToast("❌ Afrimoney not supported for this country", 3500); return; }
                     ussdCode = `*161*1*6*1*${z}#`;
                 } else if (selectedProvider === "QMoney") {
                     const z = getOrangeZCode();
-                    if (z === '0') { showToast("❌ This country is not supported by QMoney International", 4000); return; }
+                    if (z === '0') { showToast("❌ QMoney not supported for this country", 3500); return; }
                     ussdCode = `*144*3*${z}#`;
                 } else if (selectedProvider === "WBMoney") {
                     const z = getOrangeZCode();
-                    if (z === '0') { showToast("❌ This country is not supported by WBMoney International", 4000); return; }
+                    if (z === '0') { showToast("❌ WBMoney not supported for this country", 3500); return; }
                     ussdCode = `#144*4*${z}#`;
                 } else {
                     showToast("❌ Provider not configured for international", 3000);
                     return;
                 }
-            }
-            // ---- LOCAL ----
-            else {
+            } else {
                 if (selectedProvider === "Orange Money") {
                     if (selectedRole === 'agent') {
-                        if (cleanPhone.length !== 6) { showToast("❌ Agent: enter exactly 6 digits", 4000); return; }
+                        if (cleanPhone.length !== 6) { showToast("❌ Agent: enter exactly 6 digits", 3500); return; }
                         ussdCode = `#144*2*2*${cleanPhone}*${totalFixed}*0000#`;
                     } else if (selectedRole === 'customer') {
-                        if (cleanPhone.length !== 9) { showToast("❌ Customer: enter exactly 9 digits", 4000); return; }
+                        if (cleanPhone.length !== 9) { showToast("❌ Customer: enter exactly 9 digits", 3500); return; }
                         ussdCode = `#144*2*1*${cleanPhone}*${totalFixed}*0000#`;
                     } else {
                         ussdCode = `#144*2*3*${cleanPhone}*${totalFixed}*0000#`;
@@ -1032,28 +2765,16 @@
             }
 
             const roleName = selectedRole === 'agent' ? 'Agent' : (selectedRole === 'customer' ? 'Customer' : 'Other');
-            showToast(`📞 ${selectedProvider} (${roleName}) - ${action}: ${ussdCode.substring(0, 45)}...`, 3000);
+            showToast(`📞 ${selectedProvider} (${roleName}) – ${action}`, 2800);
             const link = document.createElement('a');
             link.href = `tel:${ussdCode}`;
             link.click();
-            showToast(`✅ ${action} initiated. Enter Transaction ID.`, 5000);
+            showToast(`✅ ${action} initiated. Enter Transaction ID.`, 4000);
         }
 
-        // ===== DATE / TIME / TOAST =====
-        function updateDateTime() { const now = new Date();
-            document.getElementById('currentDate').innerText = now.toLocaleDateString();
-            document.getElementById('currentTime').innerText = now.toLocaleTimeString(); }
-        setInterval(updateDateTime, 1000);
-        updateDateTime();
-
-        function showToast(msg, dur = 3000) { const t = document.getElementById('toastMsg');
-            t.innerText = msg;
-            t.style.visibility = 'visible';
-            t.style.opacity = '1';
-            setTimeout(() => { t.style.opacity = '0';
-                setTimeout(() => t.style.visibility = 'hidden', 300); }, dur); }
-
-        // ===== CHARGES COMPUTATION =====
+        // ================================================================
+        //  CHARGES COMPUTATION
+        // ================================================================
         const amountInput = document.getElementById('amountInput');
         const countrySelect = document.getElementById('countryCodeSelect');
         const flagSpan = document.getElementById('flagEmoji');
@@ -1116,63 +2837,765 @@
         amountInput.oninput = computeCharges;
         setLocalMode(true);
 
-        // ============================================================
-        //  FLAG CLICK HANDLER – Make header flags select a country
-        // ============================================================
-        function setupFlagClickHandlers() {
-            const flags = document.querySelectorAll('.flag-icon');
-            flags.forEach(flag => {
-                flag.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const flagEmoji = this.textContent.trim();
-                    if (!flagEmoji) return;
-
-                    const options = countrySelect.options;
-                    let found = false;
-                    for (let i = 0; i < options.length; i++) {
-                        const optText = options[i].text;
-                        // Match the flag emoji at the start of the option text
-                        if (optText.startsWith(flagEmoji)) {
-                            countrySelect.selectedIndex = i;
-                            // If we're in local mode, switch to international
-                            if (isLocalMode) {
-                                setLocalMode(false);
-                            } else {
-                                // Already international – just refresh data
-                                const parts = countrySelect.value.split('|');
-                                currentCountryData = { gstRate: parseFloat(parts[4]), currency: parts[2],
-                                    flag: parts[3] };
-                                gstRateLabel.innerText = currentCountryData.gstRate;
-                                currencySymbolSpan.innerText = currentCountryData.currency;
-                                flagSpan.innerText = currentCountryData.flag;
-                                computeCharges();
-                            }
-                            const countryName = options[i].text.split('(')[0].trim();
-                            showToast(`🌍 ${countryName} selected`, 1800);
-                            found = true;
-                            break;
-                        }
-                    }
-                    if (!found) {
-                        showToast(`⚠️ ${flagEmoji} not supported for international transfers`, 2500);
-                    }
+        // ================================================================
+        //  EMOJI PICKER
+        // ================================================================
+        function setupEmojiPicker() {
+            const grid = document.getElementById('emojiPickerGrid');
+            if (!grid) return;
+            const options = grid.querySelectorAll('.emoji-option');
+            options.forEach(el => {
+                el.addEventListener('click', function() {
+                    options.forEach(o => o.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedEmoji = this.getAttribute('data-emoji') || '👤';
                 });
+            });
+            const first = grid.querySelector('.emoji-option');
+            if (first) { first.classList.add('selected');
+                selectedEmoji = first.getAttribute('data-emoji') || '👤'; }
+        }
+
+        // ================================================================
+        //  CHAT FUNCTIONALITY (with settings, groups, messages)
+        // ================================================================
+        const chatToggleBtn = document.getElementById('chatToggleBtn');
+        const chatWindow = document.getElementById('chatWindow');
+        const chatCloseBtn = document.getElementById('chatCloseBtn');
+        const chatMessagesEl = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+        const chatSendBtn = document.getElementById('chatSendBtn');
+        const chatContactEl = document.getElementById('chatContact');
+        const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
+        const chatSidebar = document.getElementById('chatSidebar');
+
+        let mediaURLs = [];
+
+        function getChatId(contact, type) {
+            if (type === 'individual') return 'user_' + contact.id;
+            else if (type === 'group') return 'group_' + contact.id;
+            return null;
+        }
+
+        function getMessagesForChat(chatId) {
+            if (!chatMessagesStore[chatId]) chatMessagesStore[chatId] = [];
+            return chatMessagesStore[chatId];
+        }
+
+        function addMessageToChat(chatId, msg) {
+            if (!chatMessagesStore[chatId]) chatMessagesStore[chatId] = [];
+            chatMessagesStore[chatId].push(msg);
+            saveChatMessages();
+        }
+
+        function addMessage(type, content, time = new Date(), chatIdOverride = null) {
+            let chatId = chatIdOverride;
+            if (!chatId) {
+                if (activeChatId && activeChatType) {
+                    chatId = getChatId({ id: activeChatId }, activeChatType);
+                } else {
+                    chatId = 'general';
+                }
+            }
+            const msgObj = {
+                type: type,
+                content: content,
+                time: time.toISOString(),
+                sender: currentUser ? currentUser.name : 'Guest'
+            };
+            addMessageToChat(chatId, msgObj);
+            renderMessages(chatId);
+        }
+
+        function renderMessages(chatId) {
+            const messages = getMessagesForChat(chatId);
+            chatMessagesEl.innerHTML = '';
+            messages.forEach(msg => {
+                const msgDiv = document.createElement('div');
+                msgDiv.className = 'chat-message';
+                if (msg.type === 'sent') msgDiv.classList.add('sent');
+                const timeStr = new Date(msg.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                let content = msg.content;
+                if (typeof content === 'string' && (content.trim().startsWith('<video') || content.trim().startsWith(
+                        '<audio') || content.trim().startsWith('<div') || content.trim().startsWith(
+                        '<span'))) {
+                    msgDiv.innerHTML = content + ` <span class="msg-time">${timeStr}</span>`;
+                } else {
+                    msgDiv.innerHTML = `<span>${content}</span> <span class="msg-time">${timeStr}</span>`;
+                }
+                updateMessageStyles(msgDiv);
+                chatMessagesEl.appendChild(msgDiv);
+            });
+            chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight;
+        }
+
+        function setActiveChat(id, type) {
+            activeChatId = id;
+            activeChatType = type;
+            const chatId = getChatId({ id: id }, type);
+            renderMessages(chatId);
+            if (type === 'individual') {
+                const allContacts = getAllContacts();
+                const user = allContacts.find(u => u.id === id);
+                if (user) {
+                    chatContactEl.innerText = user.name;
+                } else {
+                    chatContactEl.innerText = 'Unknown';
+                }
+            } else if (type === 'group') {
+                const group = groups.find(g => g.id === id);
+                if (group) {
+                    chatContactEl.innerText = '👥 ' + group.name;
+                } else {
+                    chatContactEl.innerText = 'Group';
+                }
+            }
+            document.querySelectorAll('.sidebar-user, .sidebar-group').forEach(el => el.classList.remove('active'));
+            if (type === 'individual') {
+                const userEl = chatSidebar.querySelector(`.sidebar-user[data-id="${id}"]`);
+                if (userEl) userEl.classList.add('active');
+            } else if (type === 'group') {
+                const groupEl = chatSidebar.querySelector(`.sidebar-group[data-id="${id}"]`);
+                if (groupEl) groupEl.classList.add('active');
+            }
+        }
+
+        // Position chat window below header and hide flags strip
+        function positionChatWindow() {
+            const header = document.querySelector('.live-header');
+            const flagsStrip = document.getElementById('flagsStrip');
+            if (!header) return;
+            const rect = header.getBoundingClientRect();
+            const chatWindowEl = document.getElementById('chatWindow');
+            if (chatWindowEl) {
+                chatWindowEl.style.top = rect.bottom + 'px';
+                chatWindowEl.style.bottom = '0px';
+                chatWindowEl.style.height = 'auto';
+                // Hide flags strip when chat is open
+                if (chatWindowEl.classList.contains('open')) {
+                    flagsStrip.classList.add('hidden');
+                } else {
+                    flagsStrip.classList.remove('hidden');
+                }
+                const toggleBtn = document.getElementById('chatToggleBtn');
+                if (toggleBtn) {
+                    const isOpen = chatWindowEl.classList.contains('open');
+                    toggleBtn.style.display = isOpen ? 'none' : 'flex';
+                }
+            }
+        }
+
+        function toggleChat() {
+            const isOpen = chatWindow.classList.toggle('open');
+            if (isOpen) {
+                loadGroups();
+                loadChatMessages();
+                loadRegisteredUsers();
+                const contacts = getAllContacts();
+                if (contacts.length > 0) {
+                    let firstUser = contacts.find(u => u.id === 'current');
+                    if (!firstUser) firstUser = contacts[0];
+                    if (firstUser) {
+                        setActiveChat(firstUser.id, 'individual');
+                    }
+                } else {
+                    chatContactEl.innerText = 'No contacts';
+                }
+                applyChatSettings();
+                renderSidebar();
+                positionChatWindow();
+                document.getElementById('chatToggleBtn').style.display = 'none';
+            } else {
+                document.getElementById('chatToggleBtn').style.display = 'flex';
+                document.getElementById('flagsStrip').classList.remove('hidden');
+            }
+        }
+
+        chatToggleBtn.addEventListener('click', toggleChat);
+        chatCloseBtn.addEventListener('click', () => {
+            chatWindow.classList.remove('open');
+            document.getElementById('chatToggleBtn').style.display = 'flex';
+            document.getElementById('flagsStrip').classList.remove('hidden');
+        });
+
+        // Reposition on resize
+        window.addEventListener('resize', positionChatWindow);
+
+        sidebarToggleBtn.addEventListener('click', () => {
+            chatSidebar.classList.toggle('open');
+        });
+
+        function sendMessage() {
+            const text = chatInput.value.trim();
+            if (!text) return;
+            if (!activeChatId || !activeChatType) {
+                showToast('Select a chat first');
+                return;
+            }
+            const chatId = getChatId({ id: activeChatId }, activeChatType);
+            addMessage('sent', text, new Date(), chatId);
+            chatInput.value = '';
+            if (activeChatType === 'individual') {
+                setTimeout(() => {
+                    addMessage('received', 'Thanks! 😊', new Date(), chatId);
+                }, 1000);
+            } else {
+                const group = groups.find(g => g.id === activeChatId);
+                if (group && group.members.length > 0) {
+                    const otherMember = group.members.find(m => m !== currentUser?.name);
+                    if (otherMember) {
+                        setTimeout(() => {
+                            addMessage('received', `👍 (from ${otherMember})`, new Date(), chatId);
+                        }, 1200);
+                    }
+                }
+            }
+        }
+
+        chatSendBtn.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        // ================================================================
+        //  CHAT MEDIA: UPLOAD VIDEO
+        // ================================================================
+        document.getElementById('chatVideoBtn').addEventListener('click', () => {
+            document.getElementById('chatVideoInput').click();
+        });
+        document.getElementById('chatVideoInput').addEventListener('change', function(e) {
+            const file = this.files[0];
+            if (!file) return;
+            if (!file.type.startsWith('video/')) {
+                showToast('⚠️ Please select a video file');
+                this.value = '';
+                return;
+            }
+            const url = URL.createObjectURL(file);
+            mediaURLs.push(url);
+            const videoHTML =
+                `<div style="max-width:100%;"><video controls style="max-width:280px; max-height:200px; border-radius:8px; background:#000; width:100%;"><source src="${url}" type="${file.type}"></video><div style="font-size:0.6rem;color:#888;margin-top:2px;">${file.name}</div></div>`;
+            const chatId = getChatId({ id: activeChatId }, activeChatType);
+            addMessage('sent', videoHTML, new Date(), chatId);
+            showToast('✅ Video uploaded');
+            this.value = '';
+        });
+
+        // ================================================================
+        //  CHAT MEDIA: UPLOAD AUDIO
+        // ================================================================
+        document.getElementById('chatAudioBtn').addEventListener('click', () => {
+            document.getElementById('chatAudioInput').click();
+        });
+        document.getElementById('chatAudioInput').addEventListener('change', function(e) {
+            const file = this.files[0];
+            if (!file) return;
+            if (!file.type.startsWith('audio/')) {
+                showToast('⚠️ Please select an audio file');
+                this.value = '';
+                return;
+            }
+            const url = URL.createObjectURL(file);
+            mediaURLs.push(url);
+            const audioHTML =
+                `<div style="max-width:100%;"><audio controls style="max-width:220px; width:100%;"><source src="${url}" type="${file.type}"></audio><div style="font-size:0.6rem;color:#888;margin-top:2px;">${file.name}</div></div>`;
+            const chatId = getChatId({ id: activeChatId }, activeChatType);
+            addMessage('sent', audioHTML, new Date(), chatId);
+            showToast('✅ Audio uploaded');
+            this.value = '';
+        });
+
+        // ================================================================
+        //  CHAT MEDIA: RECORD AUDIO
+        // ================================================================
+        let audioRecorder = null;
+        let audioChunks = [];
+        let isAudioRecording = false;
+
+        document.getElementById('chatAudioRecordBtn').addEventListener('click', async function() {
+            if (isAudioRecording) {
+                if (audioRecorder && audioRecorder.state === 'recording') {
+                    audioRecorder.stop();
+                }
+                isAudioRecording = false;
+                document.getElementById('recordingIndicator').classList.remove('active');
+                this.textContent = '⏺️ Record';
+                showToast('⏹️ Recording stopped');
+                return;
+            }
+
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                audioRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+
+                audioRecorder.ondataavailable = (event) => {
+                    if (event.data.size > 0) {
+                        audioChunks.push(event.data);
+                    }
+                };
+
+                audioRecorder.onstop = () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    const url = URL.createObjectURL(audioBlob);
+                    mediaURLs.push(url);
+                    const audioHTML =
+                        `<div style="max-width:100%;"><audio controls style="max-width:220px; width:100%;"><source src="${url}" type="audio/webm"></audio><div style="font-size:0.6rem;color:#888;margin-top:2px;">🎤 Recorded audio</div></div>`;
+                    const chatId = getChatId({ id: activeChatId }, activeChatType);
+                    addMessage('sent', audioHTML, new Date(), chatId);
+                    showToast('✅ Recorded audio ready');
+                    stream.getTracks().forEach(track => track.stop());
+                };
+
+                audioRecorder.start();
+                isAudioRecording = true;
+                document.getElementById('recordingIndicator').classList.add('active');
+                this.textContent = '⏹️ Stop';
+                showToast('🔴 Recording audio...');
+            } catch (err) {
+                showToast('❌ Microphone access denied');
+                console.error(err);
+            }
+        });
+
+        // ================================================================
+        //  CHAT MEDIA: RECORD VIDEO
+        // ================================================================
+        let videoRecorder = null;
+        let videoChunks = [];
+        let isVideoRecording = false;
+
+        document.getElementById('chatVideoRecordBtn').addEventListener('click', async function() {
+            if (isVideoRecording) {
+                if (videoRecorder && videoRecorder.state === 'recording') {
+                    videoRecorder.stop();
+                }
+                isVideoRecording = false;
+                document.getElementById('recordingIndicator').classList.remove('active');
+                this.textContent = '🎥 Record';
+                showToast('⏹️ Recording stopped');
+                return;
+            }
+
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                videoRecorder = new MediaRecorder(stream);
+                videoChunks = [];
+
+                videoRecorder.ondataavailable = (event) => {
+                    if (event.data.size > 0) {
+                        videoChunks.push(event.data);
+                    }
+                };
+
+                videoRecorder.onstop = () => {
+                    const videoBlob = new Blob(videoChunks, { type: 'video/webm' });
+                    const url = URL.createObjectURL(videoBlob);
+                    mediaURLs.push(url);
+                    const videoHTML =
+                        `<div style="max-width:100%;"><video controls style="max-width:280px; max-height:200px; border-radius:8px; background:#000; width:100%;"><source src="${url}" type="video/webm"></video><div style="font-size:0.6rem;color:#888;margin-top:2px;">🎥 Recorded video</div></div>`;
+                    const chatId = getChatId({ id: activeChatId }, activeChatType);
+                    addMessage('sent', videoHTML, new Date(), chatId);
+                    showToast('✅ Recorded video ready');
+                    stream.getTracks().forEach(track => track.stop());
+                };
+
+                videoRecorder.start();
+                isVideoRecording = true;
+                document.getElementById('recordingIndicator').classList.add('active');
+                this.textContent = '⏹️ Stop';
+                showToast('🔴 Recording video...');
+            } catch (err) {
+                showToast('❌ Camera/Microphone access denied');
+                console.error(err);
+            }
+        });
+
+        // ================================================================
+        //  CHAT VOICE / VIDEO CALLS
+        // ================================================================
+        document.getElementById('chatVoiceCallBtn').addEventListener('click', () => {
+            showToast('📞 Calling... (simulated)');
+            const chatId = getChatId({ id: activeChatId }, activeChatType);
+            addMessage('system', '📞 Voice call initiated.', new Date(), chatId);
+        });
+
+        document.getElementById('chatVideoCallBtn').addEventListener('click', () => {
+            showToast('📹 Video call initiated (simulated)');
+            const chatId = getChatId({ id: activeChatId }, activeChatType);
+            addMessage('system', '📹 Video call started.', new Date(), chatId);
+        });
+
+        // ================================================================
+        //  CHAT PROFILE PICTURE UPDATE
+        // ================================================================
+        document.getElementById('chatProfilePicBtn').addEventListener('click', () => {
+            document.getElementById('chatProfilePicInput').click();
+        });
+        document.getElementById('chatProfilePicInput').addEventListener('change', function(e) {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    const dataURL = ev.target.result;
+                    if (currentUser) {
+                        currentUser.avatarDataURL = dataURL;
+                        saveUserToStorage(currentUser);
+                        updateAvatarDisplay(currentUser);
+                        const user = connectedUsers.find(u => u.id === 'current');
+                        if (user) user.avatarDataURL = dataURL;
+                        const regUser = registeredUsers.find(u => u.name === currentUser.name);
+                        if (regUser) regUser.avatarDataURL = dataURL;
+                        saveRegisteredUsers();
+                        renderSidebar();
+                        showToast('✅ Profile picture updated!');
+                        const chatId = getChatId({ id: activeChatId }, activeChatType);
+                        addMessage('system', '🖼️ Profile picture updated.', new Date(), chatId);
+                    } else {
+                        showToast('⚠️ Please login first');
+                    }
+                };
+                reader.readAsDataURL(file);
+                this.value = '';
+            }
+        });
+
+        // ================================================================
+        //  CHAT SETTINGS CONTROLS
+        // ================================================================
+        const bgColorInput = document.getElementById('chatBgColor');
+        const fontDecreaseBtn = document.getElementById('fontDecrease');
+        const fontIncreaseBtn = document.getElementById('fontIncrease');
+        const brightnessSlider = document.getElementById('brightnessSlider');
+        const resetBtn = document.getElementById('resetChatSettings');
+
+        bgColorInput.addEventListener('input', function() {
+            chatSettings.bgColor = this.value;
+            chatMessagesEl.style.backgroundColor = chatSettings.bgColor;
+            saveChatSettings();
+        });
+
+        fontDecreaseBtn.addEventListener('click', function() {
+            chatSettings.fontSize = Math.max(10, chatSettings.fontSize - 2);
+            applyChatSettingsToMessages();
+            saveChatSettings();
+        });
+
+        fontIncreaseBtn.addEventListener('click', function() {
+            chatSettings.fontSize = Math.min(24, chatSettings.fontSize + 2);
+            applyChatSettingsToMessages();
+            saveChatSettings();
+        });
+
+        brightnessSlider.addEventListener('input', function() {
+            chatSettings.brightness = parseFloat(this.value);
+            applyChatSettingsToMessages();
+            saveChatSettings();
+        });
+
+        resetBtn.addEventListener('click', function() {
+            chatSettings = { bgColor: '#f5f8fa', fontSize: 14, brightness: 1.0 };
+            bgColorInput.value = chatSettings.bgColor;
+            brightnessSlider.value = chatSettings.brightness;
+            applyChatSettingsToMessages();
+            chatMessagesEl.style.backgroundColor = chatSettings.bgColor;
+            saveChatSettings();
+            showToast('Chat settings reset');
+        });
+
+        function applyChatSettingsToMessages() {
+            const messages = chatMessagesEl.querySelectorAll('.chat-message');
+            messages.forEach(msg => {
+                msg.style.fontSize = chatSettings.fontSize + 'px';
+                msg.style.filter = `brightness(${chatSettings.brightness})`;
             });
         }
 
-        // ===== EVENT LISTENERS =====
+        // ================================================================
+        //  GROUP CREATION LOGIC
+        // ================================================================
+        function populateGroupMemberList() {
+            const container = document.getElementById('memberListContainer');
+            const contacts = getAllContacts();
+            let html = '';
+            contacts.forEach(user => {
+                if (user.id === 'current') return;
+                html += `
+                    <div class="group-member-item">
+                        <input type="checkbox" value="${user.id}" data-name="${user.name}" data-emoji="${user.emoji || '👤'}">
+                        <span class="member-avatar">${user.emoji || '👤'}</span>
+                        <span class="member-name">${user.name}</span>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+            container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                cb.addEventListener('change', updateMemberCounter);
+            });
+            updateMemberCounter();
+        }
+
+        function updateMemberCounter() {
+            const checked = document.querySelectorAll('#memberListContainer input:checked').length;
+            document.getElementById('memberCounter').innerText = `${checked} selected (max 25)`;
+        }
+
+        document.getElementById('createGroupBtn').addEventListener('click', function() {
+            const name = document.getElementById('groupNameInput').value.trim();
+            if (!name) { showToast('Please enter a group name'); return; }
+            const selected = document.querySelectorAll('#memberListContainer input:checked');
+            if (selected.length === 0) { showToast('Select at least one member'); return; }
+            if (selected.length > 25) { showToast('Maximum 25 members allowed'); return; }
+
+            const members = Array.from(selected).map(cb => cb.dataset.name);
+            if (currentUser && !members.includes(currentUser.name)) {
+                members.unshift(currentUser.name);
+            }
+
+            const group = {
+                id: 'group_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+                name: name,
+                creator: currentUser ? currentUser.name : 'Unknown',
+                members: members,
+                created: new Date().toISOString()
+            };
+            groups.push(group);
+            saveGroups();
+            document.getElementById('groupCreateModal').style.display = 'none';
+            showToast(`Group "${name}" created with ${members.length} members!`);
+            renderSidebar();
+            setActiveChat(group.id, 'group');
+            const chatId = getChatId({ id: group.id }, 'group');
+            addMessage('system', `👥 Group "${name}" created by ${group.creator}`, new Date(), chatId);
+        });
+
+        // ================================================================
+        //  SIDEBAR RENDER (with groups and contacts)
+        // ================================================================
+        function renderSidebar() {
+            const sidebar = document.getElementById('chatSidebar');
+            if (!sidebar) return;
+            sidebar.innerHTML = '';
+
+            const groupsTitle = document.createElement('div');
+            groupsTitle.className = 'sidebar-section-title';
+            groupsTitle.innerHTML = `👥 Groups <button class="add-group-btn" id="addGroupBtn">+</button>`;
+            sidebar.appendChild(groupsTitle);
+
+            if (groups.length === 0) {
+                const empty = document.createElement('div');
+                empty.style.cssText =
+                    'padding: 6px 10px; font-size: 0.66rem; color: #95a5a6; text-align: center;';
+                empty.innerText = 'No groups yet. Tap + to create.';
+                sidebar.appendChild(empty);
+            } else {
+                groups.forEach(group => {
+                    const div = document.createElement('div');
+                    div.className = 'sidebar-group';
+                    div.setAttribute('data-id', group.id);
+                    const isActive = (activeChatId === group.id && activeChatType === 'group');
+                    if (isActive) div.classList.add('active');
+
+                    const avatar = document.createElement('div');
+                    avatar.className = 'avatar';
+                    avatar.innerText = '👥';
+
+                    const info = document.createElement('div');
+                    info.className = 'group-info';
+                    const nameSpan = document.createElement('div');
+                    nameSpan.className = 'name';
+                    nameSpan.innerText = group.name + ` (${group.members.length})`;
+                    info.appendChild(nameSpan);
+
+                    const actions = document.createElement('div');
+                    actions.className = 'group-actions';
+                    if (group.creator === currentUser?.name) {
+                        const manageBtn = document.createElement('button');
+                        manageBtn.innerText = '⚙️';
+                        manageBtn.title = 'Manage Group';
+                        manageBtn.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            openGroupManageModal(group);
+                        });
+                        actions.appendChild(manageBtn);
+                    }
+
+                    div.appendChild(avatar);
+                    div.appendChild(info);
+                    div.appendChild(actions);
+
+                    div.addEventListener('click', () => {
+                        setActiveChat(group.id, 'group');
+                        if (window.innerWidth <= 400) chatSidebar.classList.remove('open');
+                    });
+
+                    sidebar.appendChild(div);
+                });
+            }
+
+            const contactsTitle = document.createElement('div');
+            contactsTitle.className = 'sidebar-section-title';
+            contactsTitle.innerText = '👤 Contacts';
+            sidebar.appendChild(contactsTitle);
+
+            const allContacts = getAllContacts();
+            if (allContacts.length === 0) {
+                const empty = document.createElement('div');
+                empty.style.cssText =
+                    'padding: 6px 10px; font-size: 0.66rem; color: #95a5a6; text-align: center;';
+                empty.innerText = 'No contacts available.';
+                sidebar.appendChild(empty);
+            } else {
+                allContacts.forEach(user => {
+                    const div = document.createElement('div');
+                    div.className = 'sidebar-user';
+                    div.setAttribute('data-id', user.id);
+                    const isActive = (activeChatId === user.id && activeChatType === 'individual');
+                    if (isActive) div.classList.add('active');
+
+                    const avatar = document.createElement('div');
+                    avatar.className = 'avatar';
+                    if (user.avatarDataURL) {
+                        const img = document.createElement('img');
+                        img.src = user.avatarDataURL;
+                        img.alt = user.name;
+                        avatar.appendChild(img);
+                    } else {
+                        avatar.innerText = user.emoji || '👤';
+                    }
+
+                    const info = document.createElement('div');
+                    info.className = 'user-info';
+                    const nameSpan = document.createElement('div');
+                    nameSpan.className = 'name';
+                    nameSpan.innerText = user.name;
+                    info.appendChild(nameSpan);
+
+                    const status = document.createElement('div');
+                    status.className = 'status ' + (user.status === 'online' ? 'online' : 'offline');
+
+                    div.appendChild(avatar);
+                    div.appendChild(info);
+                    div.appendChild(status);
+
+                    div.addEventListener('click', () => {
+                        setActiveChat(user.id, 'individual');
+                        if (window.innerWidth <= 400) chatSidebar.classList.remove('open');
+                    });
+
+                    sidebar.appendChild(div);
+                });
+            }
+
+            const addBtn = document.getElementById('addGroupBtn');
+            if (addBtn) {
+                addBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    document.getElementById('groupNameInput').value = '';
+                    populateGroupMemberList();
+                    document.getElementById('groupCreateModal').style.display = 'flex';
+                });
+            }
+        }
+
+        // ================================================================
+        //  GROUP MANAGE MODAL
+        // ================================================================
+        function openGroupManageModal(group) {
+            const modal = document.getElementById('groupManageModal');
+            document.getElementById('groupManageTitle').innerText = `Manage ${group.name}`;
+            let body = `<p style="font-size:0.83rem; margin-bottom:6px;"><strong>Admin:</strong> ${group.creator}</p>`;
+            body += `<p style="font-size:0.72rem; color:#1c6e8f; margin-bottom:3px;"><strong>Members (${group.members.length}/25):</strong></p>`;
+            body += `<div style="max-height:180px; overflow-y:auto;">`;
+            group.members.forEach(m => {
+                body += `<div style="display:flex; justify-content:space-between; padding:3px 0; border-bottom:1px solid #eee; font-size:0.77rem;">
+                            <span>${m}</span>
+                            ${group.creator === currentUser?.name && m !== group.creator ? `<button class="remove-member-btn" style="background:none; border:none; color:#e74c3c; cursor:pointer; font-size:0.72rem;" data-member="${m}" data-group="${group.id}">✕</button>` : ''}
+                        </div>`;
+            });
+            body += `</div>`;
+            if (group.creator === currentUser?.name) {
+                body +=
+                    `<div style="margin-top:6px; display:flex; gap:4px;"><button id="addMemberToGroupBtn" class="action-btn" style="flex:1; font-size:0.66rem; padding:5px;">➕ Add Member</button></div>`;
+            }
+            document.getElementById('groupManageBody').innerHTML = body;
+            modal.style.display = 'flex';
+
+            document.querySelectorAll('.remove-member-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const member = this.dataset.member;
+                    const groupId = this.dataset.group;
+                    const targetGroup = groups.find(g => g.id === groupId);
+                    if (targetGroup && targetGroup.creator === currentUser?.name) {
+                        targetGroup.members = targetGroup.members.filter(m => m !== member);
+                        saveGroups();
+                        showToast(`Removed ${member} from group`);
+                        openGroupManageModal(targetGroup);
+                        renderSidebar();
+                        if (activeChatId === groupId && activeChatType === 'group') {
+                            const chatId = getChatId({ id: groupId }, 'group');
+                            renderMessages(chatId);
+                        }
+                    }
+                });
+            });
+
+            const addMemberBtn = document.getElementById('addMemberToGroupBtn');
+            if (addMemberBtn) {
+                addMemberBtn.addEventListener('click', function() {
+                    const available = getAllContacts().filter(c => !group.members.includes(c.name));
+                    if (available.length === 0) {
+                        showToast('No more contacts to add');
+                        return;
+                    }
+                    const names = available.map(c => c.name).join(', ');
+                    const newMember = prompt(`Enter name to add (Available: ${names})`);
+                    if (newMember) {
+                        const found = available.find(c => c.name.toLowerCase() === newMember.toLowerCase());
+                        if (found) {
+                            group.members.push(found.name);
+                            saveGroups();
+                            showToast(`Added ${found.name} to group`);
+                            openGroupManageModal(group);
+                            renderSidebar();
+                            const chatId = getChatId({ id: group.id }, 'group');
+                            addMessage('system', `${found.name} was added to the group.`, new Date(), chatId);
+                        } else {
+                            showToast('User not found in contacts');
+                        }
+                    }
+                });
+            }
+        }
+
+        // ================================================================
+        //  SCROLL BUTTONS FOR FLAGS
+        // ================================================================
+        document.getElementById('flagScrollLeft').addEventListener('click', function() {
+            const wrapper = document.getElementById('flagGridWrapper');
+            wrapper.scrollBy({ left: -150, behavior: 'smooth' });
+        });
+        document.getElementById('flagScrollRight').addEventListener('click', function() {
+            const wrapper = document.getElementById('flagGridWrapper');
+            wrapper.scrollBy({ left: 150, behavior: 'smooth' });
+        });
+
+        // ================================================================
+        //  EVENT LISTENERS (App)
+        // ================================================================
         document.querySelectorAll('#providerModal .action-btn[data-provider]').forEach(btn =>
-            btn.addEventListener('click', (e) => onProviderSelected(btn.getAttribute('data-provider')))
+            btn.addEventListener('click', () => onProviderSelected(btn.getAttribute('data-provider')))
         );
         document.getElementById('roleButtons').querySelectorAll('[data-role]').forEach(btn =>
-            btn.addEventListener('click', (e) => onRoleSelected(btn.getAttribute('data-role')))
+            btn.addEventListener('click', () => onRoleSelected(btn.getAttribute('data-role')))
         );
 
         document.getElementById('mainMmBtn').addEventListener('click', () => {
             if (parseFloat(amountInput.value) <= 0) { showToast("⚠️ Enter amount first"); return; }
-            if (!document.getElementById('recipientPhone').value.trim()) { showToast("⚠️ Enter recipient phone"); return; }
+            if (!document.getElementById('recipientPhone').value.trim()) { showToast("⚠️ Enter recipient phone");
+                return; }
             if (!isLocalMode && !document.getElementById('recipientName').value.trim()) { showToast(
-                    "⚠️ Enter recipient name for international transfer"); return; }
+                    "⚠️ Enter recipient name for international"); return; }
             openProviderModal();
         });
 
@@ -1189,11 +3612,43 @@
             selectedRole = '';
             selectedProvider = ''; });
 
+        document.querySelectorAll('#mapModal .close-modal').forEach(btn =>
+            btn.addEventListener('click', function() {
+                document.getElementById('mapModal').style.display = 'none';
+                document.getElementById('mapIframe').src = '';
+            })
+        );
+        document.getElementById('mapModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.style.display = 'none';
+                document.getElementById('mapIframe').src = '';
+            }
+        });
+
         document.querySelectorAll('.close-modal').forEach(btn =>
-            btn.addEventListener('click', function() { this.closest('.modal').style.display = 'none'; })
+            btn.addEventListener('click', function() {
+                const modal = this.closest('.modal');
+                if (modal) {
+                    modal.style.display = 'none';
+                    if (modal.id === 'mapModal') {
+                        document.getElementById('mapIframe').src = '';
+                    }
+                }
+            })
         );
 
-        // ===== FOOTER INFO =====
+        window.onclick = (e) => {
+            if (e.target.classList.contains('modal')) {
+                e.target.style.display = 'none';
+                if (e.target.id === 'mapModal') {
+                    document.getElementById('mapIframe').src = '';
+                }
+            }
+        };
+
+        // ================================================================
+        //  FOOTER INFO
+        // ================================================================
         function showInfoModal(title, body) {
             document.getElementById('modalTitle').innerText = title;
             document.getElementById('modalBody').innerHTML = body;
@@ -1214,44 +3669,75 @@
                 document.getElementById('subscribeModal').style.display = 'none'; }
         };
 
-        // ===== SOCIAL LINKS =====
+        // ================================================================
+        //  SOCIAL LINKS
+        // ================================================================
         document.getElementById('whatsappBtn').onclick = () => window.open('https://wa.me/23276436811', '_blank');
         document.getElementById('facebookBtn').onclick = () => window.open('https://facebook.com/afripay', '_blank');
         document.getElementById('instagramBtn').onclick = () => window.open('https://instagram.com/afripay', '_blank');
         document.getElementById('youtubeBtn').onclick = () => window.open('https://youtube.com/@afripay', '_blank');
         document.getElementById('webineBtn').onclick = () => window.open('https://webine.com/afripay', '_blank');
 
-        // ===== AUTH BUTTONS =====
-        document.getElementById('loginBtn').onclick = () => { document.getElementById('loginError').innerText = "";
-            document.getElementById('loginModal').style.display = 'flex'; };
-        document.getElementById('registerBtn').onclick = () => { document.getElementById('regError').innerText = "";
-            document.getElementById('regSuccess').innerText = "";
-            document.getElementById('registerModal').style.display = 'flex'; };
+        // ================================================================
+        //  AUTH BUTTONS
+        // ================================================================
+        document.getElementById('loginBtn').onclick = () => {
+            document.getElementById('loginError').innerText = '';
+            document.getElementById('loginModal').style.display = 'flex';
+        };
+        document.getElementById('registerBtn').onclick = () => {
+            document.getElementById('regError').innerText = '';
+            document.getElementById('regSuccess').innerText = '';
+            document.getElementById('registerModal').style.display = 'flex';
+            const grid = document.getElementById('emojiPickerGrid');
+            if (grid) {
+                const first = grid.querySelector('.emoji-option');
+                grid.querySelectorAll('.emoji-option').forEach(o => o.classList.remove('selected'));
+                if (first) { first.classList.add('selected');
+                    selectedEmoji = first.getAttribute('data-emoji') || '👤'; }
+            }
+        };
         document.getElementById('logoutBtn').onclick = () => { clearUserStorage();
             showToast("Logged out"); };
+
         document.getElementById('doLoginBtn').onclick = () => {
             const name = document.getElementById('loginName').value.trim();
             const phone = document.getElementById('loginPhone').value.trim();
-            if (name && phone) { loginUser(name, phone); if (currentUser) document.getElementById('loginModal').style
-                    .display = 'none'; } else document.getElementById('loginError').innerText = "Enter both";
+            if (name && phone) {
+                if (loginUser(name, phone)) {
+                    document.getElementById('loginModal').style.display = 'none';
+                }
+            } else {
+                document.getElementById('loginError').innerText = "❌ Enter both fields";
+            }
         };
+
         document.getElementById('doRegisterBtn').onclick = async () => {
             const regData = {
                 name: document.getElementById('regName').value.trim(),
                 phone: document.getElementById('regPhone').value.trim(),
+                address: document.getElementById('regAddress').value.trim(),
+                city: document.getElementById('regCity').value.trim(),
                 country: document.getElementById('regCountry').value,
-                language: document.getElementById('regLanguage').value
+                language: document.getElementById('regLanguage').value,
+                emoji: selectedEmoji || '👤'
             };
-            if (regData.name && regData.phone) { await registerUser(regData); if (currentUser) setTimeout(() =>
-                    document.getElementById('registerModal').style.display = 'none', 1500); } else document
-                .getElementById('regError').innerText = "Fill Name and Phone";
+            if (regData.name && regData.phone && regData.city) {
+                await registerUser(regData);
+            } else {
+                document.getElementById('regError').innerText = "❌ Fill Name, Phone and City";
+            }
         };
 
-        // ===== TX ID BUTTONS =====
+        // ================================================================
+        //  TX ID BUTTONS
+        // ================================================================
         document.getElementById('generateTxBtn').addEventListener('click', setGeneratedTransactionId);
         document.getElementById('copyTxBtn').addEventListener('click', copyTransactionIdToClipboard);
 
-        // ===== MAIN FORM SUBMISSION =====
+        // ================================================================
+        //  MAIN FORM SUBMISSION
+        // ================================================================
         const MAIN_FORMSPREE = "https://formspree.io/f/mgoqlvlo";
         document.getElementById('mainForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -1294,7 +3780,7 @@
                 const res = await fetch(MAIN_FORMSPREE, { method: 'POST', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload) });
                 if (res.ok) {
-                    showToast("✅ Receipt sent!", 4000);
+                    showToast("✅ Receipt sent!", 3500);
                     alert("📧 RECEIPT GENERATED\n\n" + payload.receipt_text);
                     if (confirm("Submission successful! Reset form?")) {
                         document.getElementById('mainForm').reset();
@@ -1303,22 +3789,48 @@
                         if (currentUser) {
                             if (currentUser.name) document.getElementById('senderName').value = currentUser.name;
                             if (currentUser.phone) document.getElementById('senderPhone').value = currentUser.phone;
+                            if (currentUser.city && currentUser.country) {
+                                document.getElementById('senderLocation').value = `${currentUser.city}, ${currentUser.country}`;
+                            }
                         }
                         document.getElementById('transactionId').value = "";
                     }
-                } else { showToast("⚠️ Formspree error", 4000);
+                } else { showToast("⚠️ Formspree error", 3500);
                     alert("⚠️ Submission failed.\n\n" + payload.receipt_text); }
-            } catch (err) { showToast("⚠️ Network error", 4000);
+            } catch (err) { showToast("⚠️ Network error", 3500);
                 alert("⚠️ Network error.\n\n" + payload.receipt_text); } finally { btn.innerText = orig;
                 btn.disabled = false; }
         });
 
-        window.onclick = (e) => { if (e.target.classList.contains('modal')) e.target.style.display = 'none'; };
-
-        // ===== INIT =====
-        loadStoredUser();
-        // Set up flag click handlers after DOM is ready
+        // ================================================================
+        //  INIT
+        // ================================================================
+        renderHeaderFlags();
         setupFlagClickHandlers();
+        setupEmojiPicker();
+        loadChatSettings();
+        loadRegisteredUsers();
+        loadGroups();
+        loadChatMessages();
+        loadStoredUser();
+        renderSidebar();
+        positionChatWindow();
+
+        document.addEventListener('click', function(e) {
+            if (window.innerWidth <= 400) {
+                const sidebar = document.getElementById('chatSidebar');
+                const toggleBtn = document.getElementById('sidebarToggleBtn');
+                if (sidebar && sidebar.classList.contains('open')) {
+                    if (!sidebar.contains(e.target) && e.target !== toggleBtn && !toggleBtn.contains(e.target)) {
+                        sidebar.classList.remove('open');
+                    }
+                }
+            }
+        });
+
+        window.addEventListener('beforeunload', function() {
+            mediaURLs.forEach(url => URL.revokeObjectURL(url));
+        });
     </script>
 </body>
 </html>
