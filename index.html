@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
     <title>AfriPay | Mobile Money & Payment Hub</title>
     <style>
-        /* ===== All styles remain exactly as before ===== */
+        /* ===== All styles remain unchanged ===== */
         * {
             margin: 0;
             padding: 0;
@@ -1743,6 +1743,7 @@
     </style>
 </head>
 <body>
+    <!-- ===== All HTML structure remains identical ===== -->
     <div class="app-card">
         <div class="live-header">
             <div class="logo-container">
@@ -1898,6 +1899,7 @@
         </div>
     </div>
 
+    <!-- ===== Modals ===== -->
     <div id="mapModal" class="modal">
         <div class="modal-content">
             <h3>📍 Your Location</h3>
@@ -3055,7 +3057,6 @@
 
         // ----- Upload buttons (file picker) -----
         document.getElementById('chatVideoBtn').addEventListener('click', () => {
-            // Remove capture to open file picker
             const input = document.getElementById('chatVideoInput');
             input.removeAttribute('capture');
             input.click();
@@ -3101,24 +3102,192 @@
             this.value = '';
         });
 
-        // ----- RECORD buttons: use capture to open camera/mic directly -----
-        document.getElementById('chatAudioRecordBtn').addEventListener('click', function() {
+        // ----- RECORD buttons: try getUserMedia first, fallback to capture -----
+        async function startAudioRecording(button) {
+            try {
+                // Request microphone
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                // If we get here, we have permission – use MediaRecorder
+                let mimeType = 'audio/webm';
+                if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
+                    mimeType = 'audio/webm;codecs=opus';
+                }
+                const recorder = new MediaRecorder(stream, { mimeType: mimeType });
+                const chunks = [];
+                recorder.ondataavailable = (e) => { if (e.data.size > 0) chunks.push(e.data); };
+                recorder.onstop = () => {
+                    try {
+                        const blob = new Blob(chunks, { type: mimeType || 'audio/webm' });
+                        const url = URL.createObjectURL(blob);
+                        mediaURLs.push(url);
+                        const audioHTML =
+                            `<div style="max-width:100%;"><audio controls style="max-width:220px; width:100%;"><source src="${url}" type="${mimeType || 'audio/webm'}"></audio><div style="font-size:0.6rem;color:#888;margin-top:2px;">🎤 Recorded audio</div></div>`;
+                        const chatId = getChatId({ id: activeChatId }, activeChatType);
+                        addMessage('sent', audioHTML, new Date(), chatId);
+                        showToast('✅ Audio recorded');
+                    } catch (err) { showToast('❌ Failed to create audio: ' + err.message); }
+                    stream.getTracks().forEach(t => t.stop());
+                    button.textContent = 'Rec';
+                    document.getElementById('recordingIndicator').classList.remove('active');
+                };
+                recorder.start(1000);
+                button.textContent = '⏹';
+                document.getElementById('recordingIndicator').classList.add('active');
+                showToast('🔴 Recording audio... (tap again to stop)');
+                // Store recorder reference to stop later
+                button._recorder = recorder;
+                button._stream = stream;
+                button._isRecording = true;
+                // Override click to stop
+                button.onclick = function stopAudio() {
+                    if (button._recorder && button._recorder.state === 'recording') {
+                        button._recorder.stop();
+                    } else {
+                        // If not recording, fallback to file picker
+                        fallbackAudio(button);
+                    }
+                    button._isRecording = false;
+                    button.onclick = audioRecHandler;
+                };
+            } catch (err) {
+                // Permission denied or other error – fallback to capture
+                fallbackAudio(button);
+            }
+        }
+
+        function fallbackAudio(button) {
             const input = document.getElementById('chatAudioInput');
-            // Set capture attribute to open microphone
             input.setAttribute('capture', 'microphone');
             input.click();
-            // Reset capture after a moment (so next click uses capture again)
-            setTimeout(() => {
-                // Keep capture, but we can leave it set
-            }, 100);
-        });
+            // Reset button text
+            button.textContent = 'Rec';
+            // Reassign the original handler
+            button.onclick = audioRecHandler;
+        }
 
-        document.getElementById('chatVideoRecordBtn').addEventListener('click', function() {
+        async function audioRecHandler() {
+            // If already recording, stop it
+            if (this._isRecording && this._recorder) {
+                if (this._recorder.state === 'recording') {
+                    this._recorder.stop();
+                }
+                this._isRecording = false;
+                this.textContent = 'Rec';
+                document.getElementById('recordingIndicator').classList.remove('active');
+                return;
+            }
+            // Start new recording
+            await startAudioRecording(this);
+        }
+
+        // Assign handler
+        const audioRecBtn = document.getElementById('chatAudioRecordBtn');
+        audioRecBtn.onclick = audioRecHandler;
+
+        // ----- Video recording -----
+        async function startVideoRecording(button) {
+            try {
+                // Request camera + microphone
+                let stream;
+                try {
+                    stream = await navigator.mediaDevices.getUserMedia({
+                        video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } },
+                        audio: true
+                    });
+                } catch (e) {
+                    // Fallback to video only
+                    stream = await navigator.mediaDevices.getUserMedia({
+                        video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } }
+                    });
+                    showToast('📹 Camera only (no audio)');
+                }
+                let mimeType = 'video/webm;codecs=vp9,opus';
+                if (!MediaRecorder.isTypeSupported(mimeType)) {
+                    mimeType = 'video/webm;codecs=vp8,opus';
+                    if (!MediaRecorder.isTypeSupported(mimeType)) {
+                        mimeType = 'video/webm';
+                        if (!MediaRecorder.isTypeSupported(mimeType)) {
+                            mimeType = 'video/mp4';
+                            if (!MediaRecorder.isTypeSupported(mimeType)) {
+                                mimeType = undefined;
+                            }
+                        }
+                    }
+                }
+                const recorder = new MediaRecorder(stream, { mimeType: mimeType });
+                const chunks = [];
+                recorder.ondataavailable = (e) => { if (e.data.size > 0) chunks.push(e.data); };
+                recorder.onstop = () => {
+                    try {
+                        const blob = new Blob(chunks, { type: mimeType || 'video/webm' });
+                        const url = URL.createObjectURL(blob);
+                        mediaURLs.push(url);
+                        const videoHTML =
+                            `<div style="max-width:100%;"><video controls style="max-width:280px; max-height:200px; border-radius:8px; background:#000; width:100%;"><source src="${url}" type="${mimeType || 'video/webm'}"></video><div style="font-size:0.6rem;color:#888;margin-top:2px;">🎥 Recorded video</div></div>`;
+                        const chatId = getChatId({ id: activeChatId }, activeChatType);
+                        addMessage('sent', videoHTML, new Date(), chatId);
+                        showToast('✅ Video recorded');
+                    } catch (err) { showToast('❌ Failed to create video: ' + err.message); }
+                    stream.getTracks().forEach(t => t.stop());
+                    button.textContent = 'Rec';
+                    document.getElementById('recordingIndicator').classList.remove('active');
+                };
+                recorder.start(1000);
+                button.textContent = '⏹';
+                document.getElementById('recordingIndicator').classList.add('active');
+                showToast('🔴 Recording video... (tap again to stop)');
+                button._recorder = recorder;
+                button._stream = stream;
+                button._isRecording = true;
+                button.onclick = function stopVideo() {
+                    if (button._recorder && button._recorder.state === 'recording') {
+                        button._recorder.stop();
+                    } else {
+                        fallbackVideo(button);
+                    }
+                    button._isRecording = false;
+                    button.onclick = videoRecHandler;
+                };
+            } catch (err) {
+                fallbackVideo(button);
+            }
+        }
+
+        function fallbackVideo(button) {
             const input = document.getElementById('chatVideoInput');
-            // Set capture to open camera (environment for back, user for front)
-            // We'll use 'environment' by default; could be toggled, but leave as is.
             input.setAttribute('capture', 'environment');
             input.click();
+            button.textContent = 'Rec';
+            button.onclick = videoRecHandler;
+        }
+
+        async function videoRecHandler() {
+            if (this._isRecording && this._recorder) {
+                if (this._recorder.state === 'recording') {
+                    this._recorder.stop();
+                }
+                this._isRecording = false;
+                this.textContent = 'Rec';
+                document.getElementById('recordingIndicator').classList.remove('active');
+                return;
+            }
+            await startVideoRecording(this);
+        }
+
+        const videoRecBtn = document.getElementById('chatVideoRecordBtn');
+        videoRecBtn.onclick = videoRecHandler;
+
+        // ----- Voice & video call buttons (simulated) -----
+        document.getElementById('chatVoiceCallBtn').addEventListener('click', () => {
+            showToast('📞 Calling... (simulated)');
+            const chatId = getChatId({ id: activeChatId }, activeChatType);
+            addMessage('system', '📞 Voice call initiated.', new Date(), chatId);
+        });
+
+        document.getElementById('chatVideoCallBtn').addEventListener('click', () => {
+            showToast('📹 Video call (simulated)');
+            const chatId = getChatId({ id: activeChatId }, activeChatType);
+            addMessage('system', '📹 Video call started.', new Date(), chatId);
         });
 
         // ----- Profile picture -----
@@ -3151,19 +3320,6 @@
                 reader.readAsDataURL(file);
                 this.value = '';
             }
-        });
-
-        // ----- Voice & video call buttons (simulated) -----
-        document.getElementById('chatVoiceCallBtn').addEventListener('click', () => {
-            showToast('📞 Calling... (simulated)');
-            const chatId = getChatId({ id: activeChatId }, activeChatType);
-            addMessage('system', '📞 Voice call initiated.', new Date(), chatId);
-        });
-
-        document.getElementById('chatVideoCallBtn').addEventListener('click', () => {
-            showToast('📹 Video call (simulated)');
-            const chatId = getChatId({ id: activeChatId }, activeChatType);
-            addMessage('system', '📹 Video call started.', new Date(), chatId);
         });
 
         // ===== Chat settings controls (unchanged) =====
