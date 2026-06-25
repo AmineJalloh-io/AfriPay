@@ -30,7 +30,6 @@
             overflow: hidden;
         }
 
-        /* ===== HEADER — increased height & font sizes ===== */
         .live-header {
             background: linear-gradient(135deg, #0a2b3c 0%, #1c4e6c 100%);
             padding: 0.65rem 0.8rem;
@@ -207,7 +206,6 @@
             }
         }
 
-        /* ===== FLAGS STRIP ===== */
         .flags-strip {
             background: #f0f4f8;
             border-bottom: 1px solid #e0e8f0;
@@ -284,7 +282,6 @@
             color: white;
         }
 
-        /* ===== FORM ===== */
         .form-container {
             padding: 0.9rem 1.0rem 0.6rem 1.0rem;
         }
@@ -615,7 +612,6 @@
             color: #e67e22;
         }
 
-        /* ===== FOOTER ===== */
         .footer-section {
             background: #f8fafc;
             border-top: 1px solid rgba(0, 0, 0, 0.06);
@@ -672,7 +668,6 @@
             transform: scale(1.03);
         }
 
-        /* ===== MODALS ===== */
         .modal {
             display: none;
             position: fixed;
@@ -706,7 +701,6 @@
             gap: 5px;
             margin-top: 8px;
         }
-        /* Side-by-side modal buttons */
         .action-buttons-row {
             display: flex;
             flex-wrap: wrap;
@@ -837,7 +831,6 @@
             box-shadow: 0 0 6px rgba(244, 162, 97, 0.3);
         }
 
-        /* ===== GROUP MODAL ===== */
         .group-member-list {
             max-height: 180px;
             overflow-y: auto;
@@ -884,7 +877,6 @@
             margin-left: auto;
         }
 
-        /* ===== CHAT ===== */
         .chat-toggle-btn {
             position: fixed;
             bottom: 18px;
@@ -1214,7 +1206,6 @@
             display: none;
         }
 
-        /* ===== CHAT SIDEBAR ===== */
         .chat-sidebar {
             width: 170px;
             background: #f8fafc;
@@ -1338,9 +1329,6 @@
             color: #e74c3c;
         }
 
-        /* ================================================================
-           RESPONSIVE
-           ================================================================ */
         @media (max-width: 600px) {
             .double-row {
                 grid-template-columns: 1fr;
@@ -1755,7 +1743,6 @@
 </head>
 <body>
     <div class="app-card">
-        <!-- ===== HEADER ===== -->
         <div class="live-header">
             <div class="logo-container">
                 <div class="africa-map-logo">
@@ -1795,18 +1782,14 @@
             </div>
         </div>
 
-        <!-- ===== FLAGS STRIP ===== -->
         <div class="flags-strip" id="flagsStrip">
             <button class="flag-scroll-btn left" id="flagScrollLeft">‹</button>
             <div class="flag-grid-wrapper" id="flagGridWrapper">
-                <div class="flag-grid" id="headerFlagGrid">
-                    <!-- populated by JS -->
-                </div>
+                <div class="flag-grid" id="headerFlagGrid"></div>
             </div>
             <button class="flag-scroll-btn right" id="flagScrollRight">›</button>
         </div>
 
-        <!-- ===== MAIN FORM ===== -->
         <div class="form-container" id="mainFormContainer" style="display:none;">
             <div class="profile-section" id="profileSection">
                 <span class="profile-label">📍 Location:</span>
@@ -1897,7 +1880,6 @@
             </form>
         </div>
 
-        <!-- ===== FOOTER ===== -->
         <div class="footer-section">
             <div class="footer-buttons">
                 <button class="footer-btn" id="aboutAppBtn">About</button>
@@ -1915,7 +1897,6 @@
         </div>
     </div>
 
-    <!-- ===== MODALS ===== -->
     <div id="mapModal" class="modal">
         <div class="modal-content">
             <h3>📍 Your Location</h3>
@@ -1976,7 +1957,6 @@
         <button class="action-btn close-modal" style="margin-top:4px;">Cancel</button>
     </div></div>
 
-    <!-- Group Create Modal -->
     <div id="groupCreateModal" class="modal">
         <div class="modal-content">
             <h3>👥 New Group</h3>
@@ -1996,7 +1976,6 @@
         </div>
     </div>
 
-    <!-- Group Manage Modal -->
     <div id="groupManageModal" class="modal">
         <div class="modal-content">
             <h3 id="groupManageTitle">Manage Group</h3>
@@ -2010,7 +1989,6 @@
     <div id="actionModal" class="modal"><div class="modal-content"><h3 id="modalProviderName">Orange</h3><div id="selectedRoleDisplay" style="font-size:0.72rem; color:#f4a261; margin-top:2px;"></div><div class="action-buttons-row"><button class="action-btn" id="actionTransfer">Transfer</button><button class="action-btn pay" id="actionPay">Pay</button><button class="action-btn cashout" id="actionCashout">Cash Out</button><button class="action-btn close-modal">Cancel</button></div></div></div>
     <div id="goodsModal" class="modal"><div class="modal-content"><h3 id="goodsModalTitle">Select Item</h3><div id="goodsList"></div><a href="#" id="businessWebsiteLink" target="_blank" class="business-website" style="display:block;margin-top:4px;color:#2c7da0;font-weight:700;font-size:0.78rem;">Visit Website</a><button class="action-btn close-modal" style="margin-top:8px;">Close</button></div></div>
 
-    <!-- ===== CHAT UI ===== -->
     <button class="chat-toggle-btn" id="chatToggleBtn" title="Open Chat">
         💬
         <span class="chat-badge" id="chatBadge" style="display:none;">0</span>
@@ -2075,7 +2053,6 @@
         // ================================================================
         const SUPPORTED_COUNTRY_FLAGS = ['🇱🇷', '🇬🇳', '🇸🇳', '🇲🇱', '🇨🇮', '🇬🇭', '🇳🇪', '🇧🇯', '🇬🇼', '🇬🇲', '🇹🇬', '🇰🇪', '🇨🇫', '🇪🇹', '🇬🇦', '🇲🇬', '🇲🇦', '🇷🇼', '🇺🇬', '🇨🇩', '🇧🇫'];
 
-        // ===== BUSINESS DATABASE =====
         const businesses = [{
             id: 1,
             name: "Mama's Kitchen",
@@ -2147,7 +2124,6 @@
         let selectedRole = '';
         let selectedEmoji = '👤';
 
-        // ===== EXPANDED USER POOL =====
         const USER_POOL = [
             { id: 1, name: 'Alice Wonder', emoji: '👩' },
             { id: 2, name: 'Bob Marley', emoji: '👨' },
@@ -3117,6 +3093,9 @@
             this.value = '';
         });
 
+        // ================================================================
+        //  FIXED: RECORD AUDIO (better error handling + HTTPS check)
+        // ================================================================
         let audioRecorder = null;
         let audioChunks = [];
         let isAudioRecording = false;
@@ -3134,8 +3113,30 @@
             }
 
             try {
+                // 1. Check browser support
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                    showToast('❌ Your browser does not support audio recording.');
+                    return;
+                }
+
+                // 2. Check HTTPS
+                const protocol = window.location.protocol;
+                const hostname = window.location.hostname;
+                if (protocol !== 'https:' && hostname !== 'localhost' && hostname !== '127.0.0.1') {
+                    showToast('❌ Audio recording requires HTTPS. Please use a secure connection (e.g., GitHub Pages).');
+                    return;
+                }
+
+                // 3. Request microphone
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                audioRecorder = new MediaRecorder(stream);
+
+                // 4. Create recorder
+                let mimeType = 'audio/webm';
+                if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
+                    mimeType = 'audio/webm;codecs=opus';
+                }
+
+                audioRecorder = new MediaRecorder(stream, { mimeType: mimeType });
                 audioChunks = [];
 
                 audioRecorder.ondataavailable = (event) => {
@@ -3145,28 +3146,47 @@
                 };
 
                 audioRecorder.onstop = () => {
-                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                    const url = URL.createObjectURL(audioBlob);
-                    mediaURLs.push(url);
-                    const audioHTML =
-                        `<div style="max-width:100%;"><audio controls style="max-width:220px; width:100%;"><source src="${url}" type="audio/webm"></audio><div style="font-size:0.6rem;color:#888;margin-top:2px;">🎤 Recorded audio</div></div>`;
-                    const chatId = getChatId({ id: activeChatId }, activeChatType);
-                    addMessage('sent', audioHTML, new Date(), chatId);
-                    showToast('✅ Audio recorded');
+                    try {
+                        const audioBlob = new Blob(audioChunks, { type: mimeType || 'audio/webm' });
+                        const url = URL.createObjectURL(audioBlob);
+                        mediaURLs.push(url);
+                        const audioHTML =
+                            `<div style="max-width:100%;"><audio controls style="max-width:220px; width:100%;"><source src="${url}" type="${mimeType || 'audio/webm'}"></audio><div style="font-size:0.6rem;color:#888;margin-top:2px;">🎤 Recorded audio</div></div>`;
+                        const chatId = getChatId({ id: activeChatId }, activeChatType);
+                        addMessage('sent', audioHTML, new Date(), chatId);
+                        showToast('✅ Audio recorded');
+                    } catch (blobErr) {
+                        showToast('❌ Failed to create audio: ' + blobErr.message);
+                    }
                     stream.getTracks().forEach(track => track.stop());
                 };
 
-                audioRecorder.start();
+                audioRecorder.start(1000);
                 isAudioRecording = true;
                 document.getElementById('recordingIndicator').classList.add('active');
                 this.textContent = '⏹';
-                showToast('🔴 Recording audio...');
+                showToast('🔴 Recording audio... (tap again to stop)');
             } catch (err) {
-                showToast('❌ Microphone access denied');
-                console.error(err);
+                let msg = '❌ Microphone access denied. ';
+                if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+                    msg += 'Please allow microphone access in your browser settings.';
+                } else if (err.name === 'NotFoundError') {
+                    msg += 'No microphone found on your device.';
+                } else if (err.name === 'NotReadableError') {
+                    msg += 'Microphone is in use by another application.';
+                } else if (err.name === 'SecurityError') {
+                    msg += 'Access blocked due to security policy. Use HTTPS.';
+                } else {
+                    msg += err.message || 'Unknown error.';
+                }
+                showToast(msg);
+                console.error('Audio recording error:', err);
             }
         });
 
+        // ================================================================
+        //  FIXED: RECORD VIDEO (better error handling + HTTPS check)
+        // ================================================================
         let videoRecorder = null;
         let videoChunks = [];
         let isVideoRecording = false;
@@ -3184,8 +3204,65 @@
             }
 
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-                videoRecorder = new MediaRecorder(stream);
+                // 1. Check browser support
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                    showToast('❌ Your browser does not support camera/video recording.');
+                    return;
+                }
+
+                // 2. Check HTTPS
+                const protocol = window.location.protocol;
+                const hostname = window.location.hostname;
+                if (protocol !== 'https:' && hostname !== 'localhost' && hostname !== '127.0.0.1') {
+                    showToast('❌ Camera access requires HTTPS. Please use a secure connection (e.g., GitHub Pages).');
+                    return;
+                }
+
+                // 3. Request camera + microphone with fallback
+                let stream;
+                try {
+                    stream = await navigator.mediaDevices.getUserMedia({
+                        video: {
+                            facingMode: 'user',
+                            width: { ideal: 640 },
+                            height: { ideal: 480 }
+                        },
+                        audio: true
+                    });
+                } catch (mediaErr) {
+                    if (mediaErr.name === 'NotAllowedError' || mediaErr.name === 'PermissionDeniedError') {
+                        showToast(
+                            '❌ Camera/Microphone access denied. Please allow camera and microphone in your browser settings, then try again.'
+                            );
+                        return;
+                    }
+                    // Fallback: try video only
+                    try {
+                        stream = await navigator.mediaDevices.getUserMedia({
+                            video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } }
+                        });
+                        showToast('📹 Camera only (no audio)');
+                    } catch (videoOnlyErr) {
+                        throw videoOnlyErr;
+                    }
+                }
+
+                // 4. Determine supported MIME type
+                let mimeType = 'video/webm;codecs=vp9,opus';
+                if (!MediaRecorder.isTypeSupported(mimeType)) {
+                    mimeType = 'video/webm;codecs=vp8,opus';
+                    if (!MediaRecorder.isTypeSupported(mimeType)) {
+                        mimeType = 'video/webm';
+                        if (!MediaRecorder.isTypeSupported(mimeType)) {
+                            mimeType = 'video/mp4';
+                            if (!MediaRecorder.isTypeSupported(mimeType)) {
+                                mimeType = undefined;
+                            }
+                        }
+                    }
+                }
+
+                videoRecorder = new MediaRecorder(stream, { mimeType: mimeType });
                 videoChunks = [];
 
                 videoRecorder.ondataavailable = (event) => {
@@ -3195,25 +3272,43 @@
                 };
 
                 videoRecorder.onstop = () => {
-                    const videoBlob = new Blob(videoChunks, { type: 'video/webm' });
-                    const url = URL.createObjectURL(videoBlob);
-                    mediaURLs.push(url);
-                    const videoHTML =
-                        `<div style="max-width:100%;"><video controls style="max-width:280px; max-height:200px; border-radius:8px; background:#000; width:100%;"><source src="${url}" type="video/webm"></video><div style="font-size:0.6rem;color:#888;margin-top:2px;">🎥 Recorded video</div></div>`;
-                    const chatId = getChatId({ id: activeChatId }, activeChatType);
-                    addMessage('sent', videoHTML, new Date(), chatId);
-                    showToast('✅ Video recorded');
+                    try {
+                        const videoBlob = new Blob(videoChunks, { type: mimeType || 'video/webm' });
+                        const url = URL.createObjectURL(videoBlob);
+                        mediaURLs.push(url);
+                        const videoHTML =
+                            `<div style="max-width:100%;"><video controls style="max-width:280px; max-height:200px; border-radius:8px; background:#000; width:100%;"><source src="${url}" type="${mimeType || 'video/webm'}"></video><div style="font-size:0.6rem;color:#888;margin-top:2px;">🎥 Recorded video</div></div>`;
+                        const chatId = getChatId({ id: activeChatId }, activeChatType);
+                        addMessage('sent', videoHTML, new Date(), chatId);
+                        showToast('✅ Video recorded');
+                    } catch (blobErr) {
+                        showToast('❌ Failed to create video: ' + blobErr.message);
+                    }
                     stream.getTracks().forEach(track => track.stop());
                 };
 
-                videoRecorder.start();
+                videoRecorder.start(1000);
                 isVideoRecording = true;
                 document.getElementById('recordingIndicator').classList.add('active');
                 this.textContent = '⏹';
-                showToast('🔴 Recording video...');
+                showToast('🔴 Recording video... (tap again to stop)');
             } catch (err) {
-                showToast('❌ Camera/Microphone access denied');
-                console.error(err);
+                let msg = '❌ Camera/Microphone access denied. ';
+                if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+                    msg += 'Please allow camera and microphone in your browser settings.';
+                } else if (err.name === 'NotFoundError') {
+                    msg += 'No camera or microphone found on your device.';
+                } else if (err.name === 'NotReadableError') {
+                    msg += 'Camera is in use by another application.';
+                } else if (err.name === 'OverconstrainedError') {
+                    msg += 'Camera does not meet the required constraints.';
+                } else if (err.name === 'SecurityError') {
+                    msg += 'Access blocked due to security policy. Use HTTPS.';
+                } else {
+                    msg += err.message || 'Unknown error.';
+                }
+                showToast(msg);
+                console.error('Video recording error:', err);
             }
         });
 
