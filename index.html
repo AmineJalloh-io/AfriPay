@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
     <title>AfriPay | Mobile Money & Payment Hub</title>
     <style>
+        /* ===== All styles remain exactly as before ===== */
         * {
             margin: 0;
             padding: 0;
@@ -2041,6 +2042,7 @@
         <div class="chat-sidebar" id="chatSidebar"></div>
     </div>
 
+    <!-- Hidden file inputs – capture will be set dynamically -->
     <input type="file" id="chatVideoInput" accept="video/*" class="hidden-input" />
     <input type="file" id="chatAudioInput" accept="audio/*" class="hidden-input" />
     <input type="file" id="chatProfilePicInput" accept="image/*" class="hidden-input" />
@@ -3051,8 +3053,12 @@
             if (e.key === 'Enter') sendMessage();
         });
 
+        // ----- Upload buttons (file picker) -----
         document.getElementById('chatVideoBtn').addEventListener('click', () => {
-            document.getElementById('chatVideoInput').click();
+            // Remove capture to open file picker
+            const input = document.getElementById('chatVideoInput');
+            input.removeAttribute('capture');
+            input.click();
         });
         document.getElementById('chatVideoInput').addEventListener('change', function(e) {
             const file = this.files[0];
@@ -3073,7 +3079,9 @@
         });
 
         document.getElementById('chatAudioBtn').addEventListener('click', () => {
-            document.getElementById('chatAudioInput').click();
+            const input = document.getElementById('chatAudioInput');
+            input.removeAttribute('capture');
+            input.click();
         });
         document.getElementById('chatAudioInput').addEventListener('change', function(e) {
             const file = this.files[0];
@@ -3093,237 +3101,27 @@
             this.value = '';
         });
 
-        // ================================================================
-        //  FIXED: RECORD AUDIO (better error handling + HTTPS check)
-        // ================================================================
-        let audioRecorder = null;
-        let audioChunks = [];
-        let isAudioRecording = false;
-
-        document.getElementById('chatAudioRecordBtn').addEventListener('click', async function() {
-            if (isAudioRecording) {
-                if (audioRecorder && audioRecorder.state === 'recording') {
-                    audioRecorder.stop();
-                }
-                isAudioRecording = false;
-                document.getElementById('recordingIndicator').classList.remove('active');
-                this.textContent = 'Rec';
-                showToast('⏹️ Stopped');
-                return;
-            }
-
-            try {
-                // 1. Check browser support
-                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                    showToast('❌ Your browser does not support audio recording.');
-                    return;
-                }
-
-                // 2. Check HTTPS
-                const protocol = window.location.protocol;
-                const hostname = window.location.hostname;
-                if (protocol !== 'https:' && hostname !== 'localhost' && hostname !== '127.0.0.1') {
-                    showToast('❌ Audio recording requires HTTPS. Please use a secure connection (e.g., GitHub Pages).');
-                    return;
-                }
-
-                // 3. Request microphone
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-
-                // 4. Create recorder
-                let mimeType = 'audio/webm';
-                if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
-                    mimeType = 'audio/webm;codecs=opus';
-                }
-
-                audioRecorder = new MediaRecorder(stream, { mimeType: mimeType });
-                audioChunks = [];
-
-                audioRecorder.ondataavailable = (event) => {
-                    if (event.data.size > 0) {
-                        audioChunks.push(event.data);
-                    }
-                };
-
-                audioRecorder.onstop = () => {
-                    try {
-                        const audioBlob = new Blob(audioChunks, { type: mimeType || 'audio/webm' });
-                        const url = URL.createObjectURL(audioBlob);
-                        mediaURLs.push(url);
-                        const audioHTML =
-                            `<div style="max-width:100%;"><audio controls style="max-width:220px; width:100%;"><source src="${url}" type="${mimeType || 'audio/webm'}"></audio><div style="font-size:0.6rem;color:#888;margin-top:2px;">🎤 Recorded audio</div></div>`;
-                        const chatId = getChatId({ id: activeChatId }, activeChatType);
-                        addMessage('sent', audioHTML, new Date(), chatId);
-                        showToast('✅ Audio recorded');
-                    } catch (blobErr) {
-                        showToast('❌ Failed to create audio: ' + blobErr.message);
-                    }
-                    stream.getTracks().forEach(track => track.stop());
-                };
-
-                audioRecorder.start(1000);
-                isAudioRecording = true;
-                document.getElementById('recordingIndicator').classList.add('active');
-                this.textContent = '⏹';
-                showToast('🔴 Recording audio... (tap again to stop)');
-            } catch (err) {
-                let msg = '❌ Microphone access denied. ';
-                if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
-                    msg += 'Please allow microphone access in your browser settings.';
-                } else if (err.name === 'NotFoundError') {
-                    msg += 'No microphone found on your device.';
-                } else if (err.name === 'NotReadableError') {
-                    msg += 'Microphone is in use by another application.';
-                } else if (err.name === 'SecurityError') {
-                    msg += 'Access blocked due to security policy. Use HTTPS.';
-                } else {
-                    msg += err.message || 'Unknown error.';
-                }
-                showToast(msg);
-                console.error('Audio recording error:', err);
-            }
+        // ----- RECORD buttons: use capture to open camera/mic directly -----
+        document.getElementById('chatAudioRecordBtn').addEventListener('click', function() {
+            const input = document.getElementById('chatAudioInput');
+            // Set capture attribute to open microphone
+            input.setAttribute('capture', 'microphone');
+            input.click();
+            // Reset capture after a moment (so next click uses capture again)
+            setTimeout(() => {
+                // Keep capture, but we can leave it set
+            }, 100);
         });
 
-        // ================================================================
-        //  FIXED: RECORD VIDEO (better error handling + HTTPS check)
-        // ================================================================
-        let videoRecorder = null;
-        let videoChunks = [];
-        let isVideoRecording = false;
-
-        document.getElementById('chatVideoRecordBtn').addEventListener('click', async function() {
-            if (isVideoRecording) {
-                if (videoRecorder && videoRecorder.state === 'recording') {
-                    videoRecorder.stop();
-                }
-                isVideoRecording = false;
-                document.getElementById('recordingIndicator').classList.remove('active');
-                this.textContent = 'Rec';
-                showToast('⏹️ Stopped');
-                return;
-            }
-
-            try {
-                // 1. Check browser support
-                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                    showToast('❌ Your browser does not support camera/video recording.');
-                    return;
-                }
-
-                // 2. Check HTTPS
-                const protocol = window.location.protocol;
-                const hostname = window.location.hostname;
-                if (protocol !== 'https:' && hostname !== 'localhost' && hostname !== '127.0.0.1') {
-                    showToast('❌ Camera access requires HTTPS. Please use a secure connection (e.g., GitHub Pages).');
-                    return;
-                }
-
-                // 3. Request camera + microphone with fallback
-                let stream;
-                try {
-                    stream = await navigator.mediaDevices.getUserMedia({
-                        video: {
-                            facingMode: 'user',
-                            width: { ideal: 640 },
-                            height: { ideal: 480 }
-                        },
-                        audio: true
-                    });
-                } catch (mediaErr) {
-                    if (mediaErr.name === 'NotAllowedError' || mediaErr.name === 'PermissionDeniedError') {
-                        showToast(
-                            '❌ Camera/Microphone access denied. Please allow camera and microphone in your browser settings, then try again.'
-                            );
-                        return;
-                    }
-                    // Fallback: try video only
-                    try {
-                        stream = await navigator.mediaDevices.getUserMedia({
-                            video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } }
-                        });
-                        showToast('📹 Camera only (no audio)');
-                    } catch (videoOnlyErr) {
-                        throw videoOnlyErr;
-                    }
-                }
-
-                // 4. Determine supported MIME type
-                let mimeType = 'video/webm;codecs=vp9,opus';
-                if (!MediaRecorder.isTypeSupported(mimeType)) {
-                    mimeType = 'video/webm;codecs=vp8,opus';
-                    if (!MediaRecorder.isTypeSupported(mimeType)) {
-                        mimeType = 'video/webm';
-                        if (!MediaRecorder.isTypeSupported(mimeType)) {
-                            mimeType = 'video/mp4';
-                            if (!MediaRecorder.isTypeSupported(mimeType)) {
-                                mimeType = undefined;
-                            }
-                        }
-                    }
-                }
-
-                videoRecorder = new MediaRecorder(stream, { mimeType: mimeType });
-                videoChunks = [];
-
-                videoRecorder.ondataavailable = (event) => {
-                    if (event.data.size > 0) {
-                        videoChunks.push(event.data);
-                    }
-                };
-
-                videoRecorder.onstop = () => {
-                    try {
-                        const videoBlob = new Blob(videoChunks, { type: mimeType || 'video/webm' });
-                        const url = URL.createObjectURL(videoBlob);
-                        mediaURLs.push(url);
-                        const videoHTML =
-                            `<div style="max-width:100%;"><video controls style="max-width:280px; max-height:200px; border-radius:8px; background:#000; width:100%;"><source src="${url}" type="${mimeType || 'video/webm'}"></video><div style="font-size:0.6rem;color:#888;margin-top:2px;">🎥 Recorded video</div></div>`;
-                        const chatId = getChatId({ id: activeChatId }, activeChatType);
-                        addMessage('sent', videoHTML, new Date(), chatId);
-                        showToast('✅ Video recorded');
-                    } catch (blobErr) {
-                        showToast('❌ Failed to create video: ' + blobErr.message);
-                    }
-                    stream.getTracks().forEach(track => track.stop());
-                };
-
-                videoRecorder.start(1000);
-                isVideoRecording = true;
-                document.getElementById('recordingIndicator').classList.add('active');
-                this.textContent = '⏹';
-                showToast('🔴 Recording video... (tap again to stop)');
-            } catch (err) {
-                let msg = '❌ Camera/Microphone access denied. ';
-                if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
-                    msg += 'Please allow camera and microphone in your browser settings.';
-                } else if (err.name === 'NotFoundError') {
-                    msg += 'No camera or microphone found on your device.';
-                } else if (err.name === 'NotReadableError') {
-                    msg += 'Camera is in use by another application.';
-                } else if (err.name === 'OverconstrainedError') {
-                    msg += 'Camera does not meet the required constraints.';
-                } else if (err.name === 'SecurityError') {
-                    msg += 'Access blocked due to security policy. Use HTTPS.';
-                } else {
-                    msg += err.message || 'Unknown error.';
-                }
-                showToast(msg);
-                console.error('Video recording error:', err);
-            }
+        document.getElementById('chatVideoRecordBtn').addEventListener('click', function() {
+            const input = document.getElementById('chatVideoInput');
+            // Set capture to open camera (environment for back, user for front)
+            // We'll use 'environment' by default; could be toggled, but leave as is.
+            input.setAttribute('capture', 'environment');
+            input.click();
         });
 
-        document.getElementById('chatVoiceCallBtn').addEventListener('click', () => {
-            showToast('📞 Calling... (simulated)');
-            const chatId = getChatId({ id: activeChatId }, activeChatType);
-            addMessage('system', '📞 Voice call initiated.', new Date(), chatId);
-        });
-
-        document.getElementById('chatVideoCallBtn').addEventListener('click', () => {
-            showToast('📹 Video call (simulated)');
-            const chatId = getChatId({ id: activeChatId }, activeChatType);
-            addMessage('system', '📹 Video call started.', new Date(), chatId);
-        });
-
+        // ----- Profile picture -----
         document.getElementById('chatProfilePicBtn').addEventListener('click', () => {
             document.getElementById('chatProfilePicInput').click();
         });
@@ -3355,6 +3153,20 @@
             }
         });
 
+        // ----- Voice & video call buttons (simulated) -----
+        document.getElementById('chatVoiceCallBtn').addEventListener('click', () => {
+            showToast('📞 Calling... (simulated)');
+            const chatId = getChatId({ id: activeChatId }, activeChatType);
+            addMessage('system', '📞 Voice call initiated.', new Date(), chatId);
+        });
+
+        document.getElementById('chatVideoCallBtn').addEventListener('click', () => {
+            showToast('📹 Video call (simulated)');
+            const chatId = getChatId({ id: activeChatId }, activeChatType);
+            addMessage('system', '📹 Video call started.', new Date(), chatId);
+        });
+
+        // ===== Chat settings controls (unchanged) =====
         const bgColorInput = document.getElementById('chatBgColor');
         const fontDecreaseBtn = document.getElementById('fontDecrease');
         const fontIncreaseBtn = document.getElementById('fontIncrease');
@@ -3403,6 +3215,7 @@
             });
         }
 
+        // ===== Group functions (unchanged) =====
         function populateGroupMemberList() {
             const container = document.getElementById('memberListContainer');
             const contacts = getAllContacts();
@@ -3651,6 +3464,7 @@
             }
         }
 
+        // ===== Flag scroll =====
         document.getElementById('flagScrollLeft').addEventListener('click', function() {
             const wrapper = document.getElementById('flagGridWrapper');
             wrapper.scrollBy({ left: -150, behavior: 'smooth' });
@@ -3660,6 +3474,7 @@
             wrapper.scrollBy({ left: 150, behavior: 'smooth' });
         });
 
+        // ===== Provider/Role/Action modals (unchanged) =====
         document.querySelectorAll('#providerModal .action-btn[data-provider]').forEach(btn =>
             btn.addEventListener('click', () => onProviderSelected(btn.getAttribute('data-provider')))
         );
@@ -3689,6 +3504,7 @@
             selectedRole = '';
             selectedProvider = ''; });
 
+        // ===== Modal close handlers =====
         document.querySelectorAll('#mapModal .close-modal').forEach(btn =>
             btn.addEventListener('click', function() {
                 document.getElementById('mapModal').style.display = 'none';
@@ -3723,6 +3539,7 @@
             }
         };
 
+        // ===== Info modals =====
         function showInfoModal(title, body) {
             document.getElementById('modalTitle').innerText = title;
             document.getElementById('modalBody').innerHTML = body;
@@ -3743,12 +3560,14 @@
                 document.getElementById('subscribeModal').style.display = 'none'; }
         };
 
+        // ===== Social links =====
         document.getElementById('whatsappBtn').onclick = () => window.open('https://wa.me/23276436811', '_blank');
         document.getElementById('facebookBtn').onclick = () => window.open('https://facebook.com/afripay', '_blank');
         document.getElementById('instagramBtn').onclick = () => window.open('https://instagram.com/afripay', '_blank');
         document.getElementById('youtubeBtn').onclick = () => window.open('https://youtube.com/@afripay', '_blank');
         document.getElementById('webineBtn').onclick = () => window.open('https://webine.com/afripay', '_blank');
 
+        // ===== Auth =====
         document.getElementById('loginBtn').onclick = () => {
             document.getElementById('loginError').innerText = '';
             document.getElementById('loginModal').style.display = 'flex';
@@ -3797,9 +3616,11 @@
             }
         };
 
+        // ===== Transaction ID =====
         document.getElementById('generateTxBtn').addEventListener('click', setGeneratedTransactionId);
         document.getElementById('copyTxBtn').addEventListener('click', copyTransactionIdToClipboard);
 
+        // ===== Main form submit =====
         const MAIN_FORMSPREE = "https://formspree.io/f/mgoqlvlo";
         document.getElementById('mainForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -3864,6 +3685,7 @@
                 btn.disabled = false; }
         });
 
+        // ===== Initialization =====
         renderHeaderFlags();
         setupFlagClickHandlers();
         setupEmojiPicker();
