@@ -1,9 +1,3 @@
-<!--
-  ================================================================
-  IMPORTANT: Save this file as index.html and place it in the
-  root folder of your GitHub Pages repository.
-  ================================================================
--->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,16 +30,17 @@
             overflow: hidden;
         }
 
+        /* ===== HEADER — increased height & font sizes ===== */
         .live-header {
             background: linear-gradient(135deg, #0a2b3c 0%, #1c4e6c 100%);
-            padding: 0.5rem 0.7rem;
+            padding: 0.65rem 0.8rem;
             color: white;
             display: flex;
             flex-wrap: wrap;
             align-items: center;
             justify-content: space-between;
-            gap: 4px;
-            min-height: 64px;
+            gap: 6px;
+            min-height: 72px;
             position: relative;
             z-index: 10;
         }
@@ -53,7 +48,7 @@
         .logo-container {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             flex-wrap: wrap;
         }
 
@@ -62,18 +57,18 @@
             align-items: center;
             gap: 4px;
             background: rgba(255, 255, 255, 0.07);
-            padding: 3px 10px 3px 6px;
+            padding: 3px 12px 3px 6px;
             border-radius: 30px;
         }
 
         .africa-svg {
-            width: 33px;
-            height: 33px;
+            width: 36px;
+            height: 36px;
             filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
         }
 
         .brand-text {
-            font-size: 1.1rem;
+            font-size: 1.3rem;
             font-weight: 800;
             background: linear-gradient(135deg, #FFF, #FFD966, #6bc6ff);
             -webkit-background-clip: text;
@@ -84,37 +79,42 @@
 
         .datetime-box {
             background: rgba(0, 0, 0, 0.25);
-            padding: 0.1rem 0.5rem;
+            padding: 0.1rem 0.6rem;
             border-radius: 30px;
             text-align: center;
-            font-size: 0.6rem;
+            font-size: 0.7rem;
             line-height: 1.2;
-            min-width: 70px;
+            min-width: 78px;
         }
         .time-text {
             font-weight: 700;
-            font-size: 0.72rem;
+            font-size: 0.85rem;
         }
 
         .auth-section {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             flex-wrap: wrap;
         }
         .auth-buttons {
             display: flex;
-            gap: 4px;
+            gap: 6px;
         }
         .auth-btn {
             background: rgba(255, 255, 255, 0.15);
             border: none;
-            padding: 5px 12px;
+            padding: 7px 14px;
             border-radius: 30px;
             color: white;
             cursor: pointer;
-            font-size: 0.75rem;
+            font-size: 0.85rem;
+            font-weight: 600;
             transition: 0.2s;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .auth-btn:hover {
             background: rgba(255, 255, 255, 0.3);
@@ -123,25 +123,27 @@
         .user-welcome {
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 6px;
             background: rgba(255, 255, 255, 0.12);
-            padding: 3px 11px 3px 6px;
+            padding: 3px 12px 3px 6px;
             border-radius: 30px;
-            font-size: 0.72rem;
+            font-size: 0.85rem;
+            height: 40px;
         }
         .user-avatar {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             line-height: 1;
-            width: 28px;
-            height: 28px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             object-fit: cover;
             display: inline-block;
             background: #2c7da0;
             color: white;
             text-align: center;
-            line-height: 28px;
-            font-size: 1.2rem;
+            line-height: 32px;
+            font-size: 1.3rem;
+            flex-shrink: 0;
         }
         .user-avatar-img {
             width: 100%;
@@ -151,17 +153,22 @@
             display: block;
         }
         .user-name-display {
-            font-weight: 600;
+            font-weight: 700;
+            font-size: 0.85rem;
         }
         .logout-btn {
             background: rgba(255, 255, 255, 0.18);
             border: none;
-            padding: 2px 9px;
+            padding: 3px 10px;
             border-radius: 20px;
             color: white;
             cursor: pointer;
-            font-size: 0.6rem;
+            font-size: 0.7rem;
+            font-weight: 600;
             transition: 0.2s;
+            height: 32px;
+            display: flex;
+            align-items: center;
         }
         .logout-btn:hover {
             background: rgba(255, 255, 255, 0.3);
@@ -171,17 +178,17 @@
             display: inline-flex;
             align-items: center;
             gap: 4px;
-            font-size: 0.6rem;
+            font-size: 0.7rem;
             color: #8fdf8f;
             background: rgba(0, 180, 0, 0.15);
-            padding: 2px 9px 2px 4px;
+            padding: 2px 10px 2px 4px;
             border-radius: 30px;
             border: 1px solid rgba(0, 200, 0, 0.2);
-            margin-left: 2px;
+            height: 32px;
         }
         .connection-dot {
-            width: 7px;
-            height: 7px;
+            width: 8px;
+            height: 8px;
             background: #2ecc71;
             border-radius: 50%;
             display: inline-block;
@@ -241,7 +248,7 @@
             min-width: max-content;
         }
         .flag-icon {
-            font-size: 1.05rem;
+            font-size: 1.1rem;
             cursor: pointer;
             transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
             border-radius: 4px;
@@ -261,8 +268,8 @@
             border: none;
             color: #1e3b4a;
             border-radius: 50%;
-            width: 26px;
-            height: 26px;
+            width: 28px;
+            height: 28px;
             cursor: pointer;
             font-weight: bold;
             font-size: 1.2rem;
@@ -277,15 +284,16 @@
             color: white;
         }
 
+        /* ===== FORM ===== */
         .form-container {
-            padding: 0.7rem 0.9rem 0.5rem 0.9rem;
+            padding: 0.9rem 1.0rem 0.6rem 1.0rem;
         }
 
         .profile-section {
             background: #f0f6fb;
             border-radius: 14px;
-            padding: 0.45rem 0.7rem;
-            margin-bottom: 0.5rem;
+            padding: 0.55rem 0.8rem;
+            margin-bottom: 0.6rem;
             border: 1px solid #dce8f0;
             display: flex;
             flex-wrap: wrap;
@@ -293,16 +301,16 @@
             gap: 0.4rem 0.8rem;
         }
         .profile-section .profile-label {
-            font-weight: 600;
-            font-size: 0.66rem;
+            font-weight: 700;
+            font-size: 0.78rem;
             color: #1c6e8f;
             margin-right: 2px;
         }
         .profile-section .profile-field {
-            font-size: 0.72rem;
+            font-size: 0.85rem;
             color: #1e3b4a;
             background: white;
-            padding: 1px 9px;
+            padding: 2px 10px;
             border-radius: 30px;
             border: 1px solid #d0dce8;
             display: inline-block;
@@ -315,17 +323,18 @@
         .map-btn {
             background: #2c7da0;
             border: none;
-            padding: 4px 11px;
+            padding: 6px 12px;
             border-radius: 30px;
             color: white;
-            font-size: 0.66rem;
-            font-weight: 600;
+            font-size: 0.76rem;
+            font-weight: 700;
             cursor: pointer;
             transition: 0.2s;
             display: inline-flex;
             align-items: center;
             gap: 3px;
             margin-left: auto;
+            height: 38px;
         }
         .map-btn:hover {
             background: #1f5068;
@@ -333,11 +342,11 @@
         }
 
         .section-title {
-            font-size: 0.66rem;
+            font-size: 0.78rem;
             text-transform: uppercase;
             font-weight: 800;
             color: #1c6e8f;
-            margin: 0.4rem 0 0.3rem 0;
+            margin: 0.5rem 0 0.35rem 0;
             border-left: 3px solid #f4a261;
             padding-left: 8px;
         }
@@ -346,25 +355,26 @@
         }
 
         .input-group {
-            margin-bottom: 0.35rem;
+            margin-bottom: 0.4rem;
             display: flex;
             flex-direction: column;
             gap: 2px;
         }
         .input-group label {
-            font-weight: 600;
-            font-size: 0.66rem;
+            font-weight: 700;
+            font-size: 0.78rem;
             color: #1e3b4a;
         }
         .input-group input,
         .input-group select {
-            padding: 5px 9px;
+            padding: 6px 10px;
             border-radius: 20px;
             border: 1.5px solid #e0e8f0;
-            font-size: 0.77rem;
+            font-size: 0.9rem;
             transition: 0.2s;
             outline: none;
             background: #fff;
+            height: 42px;
         }
         .input-group input:focus,
         .input-group select:focus {
@@ -379,7 +389,7 @@
         .double-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 0.4rem;
+            gap: 0.5rem;
         }
 
         .tx-row {
@@ -394,14 +404,18 @@
         .tx-btn {
             background: #f4a261;
             border: none;
-            padding: 6px 10px;
+            padding: 7px 11px;
             border-radius: 30px;
-            font-weight: 600;
-            font-size: 0.6rem;
+            font-weight: 700;
+            font-size: 0.72rem;
             cursor: pointer;
             transition: 0.2s;
             color: white;
             white-space: nowrap;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .tx-btn.copy {
             background: #2c7da0;
@@ -414,7 +428,7 @@
         .transfer-type-toggle {
             display: flex;
             gap: 4px;
-            margin-bottom: 0.35rem;
+            margin-bottom: 0.4rem;
             background: #f1f5f9;
             padding: 3px;
             border-radius: 40px;
@@ -422,14 +436,18 @@
         .toggle-btn {
             flex: 1;
             text-align: center;
-            padding: 5px 6px;
+            padding: 6px 8px;
             border-radius: 40px;
             font-weight: 700;
-            font-size: 0.66rem;
+            font-size: 0.78rem;
             cursor: pointer;
             background: transparent;
             border: none;
             transition: 0.2s;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .toggle-btn.active {
             background: #0f2b3d;
@@ -448,9 +466,10 @@
             border: 1.5px solid #e0e8f0;
             border-radius: 30px;
             padding: 0 4px;
+            height: 42px;
         }
         .country-flag {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
         }
         #countryCodeSelect {
             flex: 1;
@@ -458,25 +477,26 @@
             background: transparent;
             padding: 4px 2px;
             outline: none;
-            font-size: 0.72rem;
+            font-size: 0.85rem;
+            height: 36px;
         }
 
         .charges-panel {
             background: #f8fafc;
             border-radius: 14px;
-            padding: 0.4rem 0.6rem;
-            margin: 0.35rem 0;
+            padding: 0.5rem 0.7rem;
+            margin: 0.4rem 0;
             border: 1px solid #e2edf7;
         }
         .charges-row {
             display: flex;
             justify-content: space-between;
             padding: 2px 0;
-            font-size: 0.72rem;
+            font-size: 0.85rem;
         }
         .total-row {
             font-weight: 800;
-            font-size: 0.77rem;
+            font-size: 0.9rem;
             border-top: 2px dashed #cbdde9;
             margin-top: 3px;
             padding-top: 4px;
@@ -491,14 +511,18 @@
             background: #0f2b3d;
             color: white;
             border: none;
-            padding: 9px 13px;
+            padding: 10px 15px;
             border-radius: 40px;
             font-weight: 700;
-            font-size: 0.77rem;
+            font-size: 0.9rem;
             cursor: pointer;
             transition: 0.2s;
             width: 100%;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .single-mm-btn:hover {
             background: #f4a261;
@@ -509,14 +533,18 @@
             background: #0f2b3d;
             color: white;
             width: 100%;
-            padding: 9px 11px;
+            padding: 10px 12px;
             border-radius: 30px;
             font-weight: 700;
-            font-size: 0.77rem;
-            margin-top: 0.4rem;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
             border: none;
             cursor: pointer;
             transition: 0.2s;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .btn-submit:hover {
             background: #f4a261;
@@ -525,8 +553,8 @@
 
         .business-strip {
             background: linear-gradient(90deg, #fef9f0 0%, #fff5e8 100%);
-            padding: 0.35rem 0.4rem;
-            margin-top: 0.35rem;
+            padding: 0.4rem 0.5rem;
+            margin-top: 0.4rem;
             border-radius: 14px;
             border: 1px solid #ffe0b5;
             overflow-x: auto;
@@ -545,7 +573,7 @@
             border-radius: 10px;
         }
         .business-title {
-            font-size: 0.55rem;
+            font-size: 0.65rem;
             font-weight: 700;
             color: #c97e2a;
             margin-bottom: 3px;
@@ -553,7 +581,7 @@
         }
         .business-icons {
             display: inline-flex;
-            gap: 0.3rem;
+            gap: 0.4rem;
             align-items: center;
         }
         .business-item {
@@ -561,12 +589,12 @@
             flex-direction: column;
             align-items: center;
             background: white;
-            padding: 3px 7px;
+            padding: 4px 8px;
             border-radius: 40px;
             cursor: pointer;
             transition: all 0.2s ease;
             border: 1px solid #ffe0b5;
-            min-width: 52px;
+            min-width: 58px;
         }
         .business-item:hover {
             transform: translateY(-2px);
@@ -574,41 +602,46 @@
             background: #fffaf5;
         }
         .business-icon-img {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             margin-bottom: 1px;
         }
         .business-name {
-            font-size: 0.5rem;
+            font-size: 0.58rem;
             font-weight: 700;
             color: #1c6e8f;
         }
         .business-category {
-            font-size: 0.43rem;
+            font-size: 0.48rem;
             color: #e67e22;
         }
 
+        /* ===== FOOTER ===== */
         .footer-section {
             background: #f8fafc;
             border-top: 1px solid rgba(0, 0, 0, 0.06);
-            padding: 0.4rem 0.5rem;
+            padding: 0.5rem 0.6rem;
         }
         .footer-buttons {
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
-            gap: 3px;
+            gap: 4px;
             margin-bottom: 3px;
         }
         .footer-btn {
             background: #eef2f7;
             border: none;
-            padding: 3px 10px;
+            padding: 4px 12px;
             border-radius: 30px;
-            font-size: 0.6rem;
-            font-weight: 600;
+            font-size: 0.72rem;
+            font-weight: 700;
             cursor: pointer;
             color: #1c6e8f;
             transition: 0.2s;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .footer-btn:hover {
             background: #dce5ec;
@@ -621,20 +654,25 @@
             flex-wrap: wrap;
         }
         .social-icon {
-            font-size: 0.6rem;
+            font-size: 0.72rem;
             cursor: pointer;
-            padding: 3px 10px;
+            padding: 4px 12px;
             background: #eef2f7;
             border-radius: 30px;
             color: #1c6e8f;
             text-decoration: none;
             transition: 0.2s;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .social-icon:hover {
             background: #dce5ec;
             transform: scale(1.03);
         }
 
+        /* ===== MODALS ===== */
         .modal {
             display: none;
             position: fixed;
@@ -651,15 +689,15 @@
         .modal-content {
             background: white;
             border-radius: 1.6rem;
-            padding: 0.9rem 1.0rem;
+            padding: 1.0rem 1.1rem;
             width: 88%;
-            max-width: 300px;
+            max-width: 320px;
             max-height: 80vh;
             overflow-y: auto;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         }
         .modal-content h3 {
-            font-size: 0.99rem;
+            font-size: 1.1rem;
             margin-bottom: 6px;
         }
         .action-buttons {
@@ -668,16 +706,31 @@
             gap: 5px;
             margin-top: 8px;
         }
+        /* Side-by-side modal buttons */
+        .action-buttons-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 8px;
+        }
+        .action-buttons-row .action-btn {
+            flex: 1;
+            min-width: 60px;
+        }
         .action-btn {
-            padding: 9px;
+            padding: 10px 14px;
             border-radius: 30px;
-            font-weight: bold;
+            font-weight: 700;
             border: none;
             cursor: pointer;
             background: #0f2b3d;
             color: white;
-            font-size: 0.72rem;
+            font-size: 0.78rem;
             transition: 0.2s;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .action-btn:hover {
             background: #f4a261;
@@ -714,7 +767,7 @@
             border-bottom: 1px solid #eee;
             cursor: pointer;
             transition: background 0.2s;
-            font-size: 0.77rem;
+            font-size: 0.9rem;
         }
         .goods-item:hover {
             background: #fef9f0;
@@ -734,11 +787,11 @@
             transform: translateX(-50%);
             background: #1e2f3c;
             color: white;
-            padding: 5px 14px;
+            padding: 6px 16px;
             border-radius: 40px;
             z-index: 1100;
             pointer-events: none;
-            font-size: 0.72rem;
+            font-size: 0.85rem;
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.25s ease, visibility 0.25s ease;
@@ -748,12 +801,12 @@
 
         .error-msg {
             color: #c0392b;
-            font-size: 0.72rem;
+            font-size: 0.85rem;
             margin: 3px 0;
         }
         .success-msg {
             color: #27ae60;
-            font-size: 0.72rem;
+            font-size: 0.85rem;
             margin: 3px 0;
         }
 
@@ -764,7 +817,7 @@
             margin: 5px 0 6px 0;
         }
         .emoji-option {
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             text-align: center;
             cursor: pointer;
             padding: 3px 2px;
@@ -784,7 +837,7 @@
             box-shadow: 0 0 6px rgba(244, 162, 97, 0.3);
         }
 
-        /* ===== GROUP MODAL STYLES ===== */
+        /* ===== GROUP MODAL ===== */
         .group-member-list {
             max-height: 180px;
             overflow-y: auto;
@@ -817,35 +870,33 @@
             align-items: center;
             justify-content: center;
             background: #d0dce8;
-            font-size: 0.77rem;
+            font-size: 0.85rem;
         }
         .group-member-item .member-name {
-            font-size: 0.77rem;
+            font-size: 0.85rem;
             font-weight: 500;
             color: #1e3b4a;
         }
         .member-counter {
-            font-size: 0.72rem;
+            font-size: 0.85rem;
             color: #1c6e8f;
             font-weight: 600;
             margin-left: auto;
         }
 
-        /* ================================================================
-           CHAT BUTTON & CHAT WINDOW
-           ================================================================ */
+        /* ===== CHAT ===== */
         .chat-toggle-btn {
             position: fixed;
             bottom: 18px;
             left: 18px;
-            width: 64px;
-            height: 64px;
+            width: 68px;
+            height: 68px;
             border-radius: 50%;
             background: #0f2b3d;
             color: white;
             border: none;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            font-size: 2.0rem;
+            font-size: 2.1rem;
             cursor: pointer;
             z-index: 500;
             transition: transform 0.2s, background 0.2s;
@@ -865,7 +916,7 @@
             color: white;
             border-radius: 50%;
             padding: 1px 5px;
-            font-size: 0.6rem;
+            font-size: 0.65rem;
             font-weight: 700;
             min-width: 18px;
             text-align: center;
@@ -901,18 +952,19 @@
         .chat-nav {
             background: #0f2b3d;
             color: white;
-            padding: 8px 12px;
+            padding: 10px 14px;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             flex-wrap: wrap;
             border-bottom: 1px solid #1c4e6c;
             flex-shrink: 0;
+            min-height: 58px;
         }
         .chat-nav .chat-contact {
             flex: 1;
-            font-weight: 600;
-            font-size: 0.91rem;
+            font-weight: 700;
+            font-size: 1.05rem;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -927,15 +979,16 @@
             background: rgba(255, 255, 255, 0.12);
             border: none;
             color: white;
-            padding: 5px 9px;
+            padding: 5px 10px;
             border-radius: 20px;
-            font-size: 0.66rem;
+            font-size: 0.7rem;
             cursor: pointer;
             transition: 0.2s;
             display: flex;
             align-items: center;
             gap: 3px;
             white-space: nowrap;
+            height: 34px;
         }
         .chat-nav .chat-actions button:hover {
             background: rgba(255, 255, 255, 0.25);
@@ -944,12 +997,16 @@
             background: rgba(255, 255, 255, 0.15);
             border: none;
             color: white;
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             cursor: pointer;
             padding: 0 8px;
             border-radius: 20px;
             transition: 0.2s;
             line-height: 1;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .chat-nav .chat-close:hover {
             background: rgba(255, 255, 255, 0.3);
@@ -959,12 +1016,13 @@
             background: rgba(255, 255, 255, 0.15);
             border: none;
             color: white;
-            font-size: 1.0rem;
+            font-size: 1.1rem;
             cursor: pointer;
             padding: 2px 6px;
             border-radius: 20px;
             transition: 0.2s;
             line-height: 1;
+            height: 34px;
         }
         .sidebar-toggle:hover {
             background: rgba(255, 255, 255, 0.3);
@@ -972,7 +1030,7 @@
 
         .chat-messages {
             flex: 1;
-            padding: 10px 12px;
+            padding: 12px 14px;
             overflow-y: auto;
             background: #f5f8fa;
             display: flex;
@@ -982,9 +1040,9 @@
         }
         .chat-message {
             max-width: 85%;
-            padding: 6px 12px;
+            padding: 7px 14px;
             border-radius: 18px;
-            font-size: 0.85rem;
+            font-size: 0.95rem;
             line-height: 1.4;
             word-wrap: break-word;
             background: white;
@@ -1000,14 +1058,14 @@
             border-bottom-right-radius: 4px;
         }
         .chat-message .msg-time {
-            font-size: 0.6rem;
+            font-size: 0.65rem;
             opacity: 0.6;
             margin-left: 6px;
         }
         .chat-message .msg-media {
             display: block;
             margin-top: 3px;
-            font-size: 0.72rem;
+            font-size: 0.85rem;
             color: #2c7da0;
             text-decoration: underline;
             cursor: pointer;
@@ -1029,7 +1087,6 @@
             width: auto;
         }
 
-        /* ===== CHAT CONTROLS TOOLBAR ===== */
         .chat-controls {
             display: flex;
             align-items: center;
@@ -1039,6 +1096,7 @@
             border-top: 1px solid #e0e8f0;
             flex-wrap: wrap;
             flex-shrink: 0;
+            min-height: 44px;
         }
         .chat-controls .ctrl-group {
             display: flex;
@@ -1049,21 +1107,22 @@
             background: transparent;
             border: 1px solid #d0dce8;
             border-radius: 20px;
-            padding: 4px 9px;
-            font-size: 0.73rem;
+            padding: 4px 10px;
+            font-size: 0.78rem;
             cursor: pointer;
             transition: 0.15s;
             display: flex;
             align-items: center;
             gap: 3px;
             color: #1e3b4a;
+            height: 34px;
         }
         .chat-controls button:hover {
             background: #dce5ec;
         }
         .chat-controls input[type="color"] {
-            width: 28px;
-            height: 28px;
+            width: 30px;
+            height: 30px;
             border: 1px solid #d0dce8;
             border-radius: 50%;
             padding: 0;
@@ -1099,7 +1158,7 @@
             gap: 4px;
             color: #e74c3c;
             font-weight: 700;
-            font-size: 0.72rem;
+            font-size: 0.78rem;
         }
         .recording-indicator.active {
             display: inline-flex;
@@ -1122,11 +1181,12 @@
         }
         .chat-input-area input {
             flex: 1;
-            padding: 6px 12px;
+            padding: 7px 14px;
             border-radius: 30px;
             border: 1px solid #d0dce8;
             outline: none;
-            font-size: 0.85rem;
+            font-size: 0.95rem;
+            height: 44px;
         }
         .chat-input-area input:focus {
             border-color: #f4a261;
@@ -1135,12 +1195,16 @@
             background: #0f2b3d;
             color: white;
             border: none;
-            padding: 7px 14px;
+            padding: 8px 16px;
             border-radius: 30px;
-            font-weight: 600;
-            font-size: 0.79rem;
+            font-weight: 700;
+            font-size: 0.85rem;
             cursor: pointer;
             transition: 0.2s;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .chat-input-area button:hover {
             background: #f4a261;
@@ -1152,7 +1216,7 @@
 
         /* ===== CHAT SIDEBAR ===== */
         .chat-sidebar {
-            width: 162px;
+            width: 170px;
             background: #f8fafc;
             border-left: 1px solid #e0e8f0;
             padding: 8px 0;
@@ -1163,7 +1227,7 @@
             gap: 3px;
         }
         .sidebar-section-title {
-            font-size: 0.6rem;
+            font-size: 0.65rem;
             font-weight: 700;
             color: #1c6e8f;
             padding: 4px 10px 4px 10px;
@@ -1179,7 +1243,7 @@
             border: none;
             color: #2c7da0;
             cursor: pointer;
-            font-size: 0.85rem;
+            font-size: 0.95rem;
             padding: 0 3px;
         }
         .sidebar-section-title .add-group-btn:hover {
@@ -1207,14 +1271,14 @@
         }
         .sidebar-user .avatar,
         .sidebar-group .avatar {
-            width: 30px;
-            height: 30px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             background: #d0dce8;
-            font-size: 0.85rem;
+            font-size: 0.95rem;
             flex-shrink: 0;
             overflow: hidden;
             color: #1e3b4a;
@@ -1232,7 +1296,7 @@
         }
         .sidebar-user .user-info .name,
         .sidebar-group .group-info .name {
-            font-size: 0.79rem;
+            font-size: 0.85rem;
             font-weight: 600;
             color: #1e3b4a;
             white-space: nowrap;
@@ -1240,8 +1304,8 @@
             text-overflow: ellipsis;
         }
         .sidebar-user .status {
-            width: 7px;
-            height: 7px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
             flex-shrink: 0;
         }
@@ -1252,7 +1316,7 @@
             background: #95a5a6;
         }
         .group-member-count {
-            font-size: 0.6rem;
+            font-size: 0.65rem;
             color: #7f8c8d;
             margin-left: 3px;
         }
@@ -1266,7 +1330,7 @@
             border: none;
             color: #95a5a6;
             cursor: pointer;
-            font-size: 0.72rem;
+            font-size: 0.78rem;
             padding: 0 3px;
             transition: 0.2s;
         }
@@ -1283,70 +1347,75 @@
                 gap: 0;
             }
             .business-item {
-                min-width: 44px;
-                padding: 2px 6px;
+                min-width: 50px;
+                padding: 3px 7px;
             }
             .africa-svg {
-                width: 28px;
-                height: 28px;
+                width: 30px;
+                height: 30px;
             }
             .flag-icon {
-                font-size: 0.88rem;
+                font-size: 0.95rem;
             }
             .brand-text {
-                font-size: 0.99rem;
+                font-size: 1.1rem;
             }
             .live-header {
-                padding: 0.35rem 0.5rem;
-                min-height: 56px;
+                padding: 0.45rem 0.6rem;
+                min-height: 64px;
             }
             .datetime-box {
-                font-size: 0.5rem;
-                min-width: 60px;
-                padding: 0.05rem 0.35rem;
+                font-size: 0.6rem;
+                min-width: 66px;
+                padding: 0.05rem 0.4rem;
             }
             .time-text {
-                font-size: 0.55rem;
+                font-size: 0.7rem;
             }
             .auth-btn {
-                font-size: 0.6rem;
-                padding: 4px 9px;
+                font-size: 0.72rem;
+                padding: 5px 10px;
+                height: 36px;
             }
             .user-welcome {
-                font-size: 0.6rem;
-                padding: 2px 8px 2px 5px;
+                font-size: 0.72rem;
+                padding: 2px 10px 2px 5px;
+                height: 36px;
             }
             .user-avatar {
-                font-size: 1.0rem;
-                width: 24px;
-                height: 24px;
-                line-height: 24px;
+                font-size: 1.1rem;
+                width: 26px;
+                height: 26px;
+                line-height: 26px;
             }
             .connection-indicator {
-                font-size: 0.5rem;
-                padding: 2px 6px 2px 3px;
+                font-size: 0.6rem;
+                padding: 2px 8px 2px 3px;
+                height: 28px;
             }
             .connection-dot {
                 width: 6px;
                 height: 6px;
             }
             .form-container {
-                padding: 0.4rem 0.5rem 0.3rem 0.5rem;
+                padding: 0.5rem 0.6rem 0.35rem 0.6rem;
             }
             .single-mm-btn {
-                font-size: 0.66rem;
-                padding: 6px 10px;
+                font-size: 0.78rem;
+                padding: 7px 12px;
+                height: 42px;
             }
             .btn-submit {
-                font-size: 0.66rem;
-                padding: 6px 10px;
+                font-size: 0.78rem;
+                padding: 7px 12px;
+                height: 42px;
             }
             .modal-content {
-                padding: 0.7rem;
-                max-width: 260px;
+                padding: 0.8rem;
+                max-width: 280px;
             }
             .emoji-option {
-                font-size: 1.3rem;
+                font-size: 1.4rem;
                 padding: 2px;
             }
             .emoji-grid {
@@ -1354,21 +1423,22 @@
                 gap: 2px;
             }
             .profile-section {
-                padding: 0.3rem 0.5rem;
+                padding: 0.35rem 0.6rem;
                 gap: 0.3rem 0.5rem;
             }
             .profile-section .profile-field {
-                font-size: 0.6rem;
-                padding: 1px 7px;
+                font-size: 0.72rem;
+                padding: 1px 8px;
                 min-width: 50px;
             }
             .map-btn {
-                font-size: 0.55rem;
-                padding: 3px 9px;
+                font-size: 0.66rem;
+                padding: 4px 10px;
                 margin-left: 0;
                 width: 100%;
                 justify-content: center;
                 margin-top: 3px;
+                height: 34px;
             }
             #mapModal .modal-content {
                 max-width: 95%;
@@ -1389,194 +1459,214 @@
                 border-radius: 0;
             }
             .chat-toggle-btn {
-                width: 56px;
-                height: 56px;
-                font-size: 1.7rem;
+                width: 60px;
+                height: 60px;
+                font-size: 1.8rem;
                 bottom: 14px;
                 left: 14px;
             }
             .chat-nav .chat-actions button {
-                font-size: 0.55rem;
-                padding: 4px 7px;
+                font-size: 0.6rem;
+                padding: 4px 8px;
+                height: 30px;
             }
             .chat-nav .chat-contact {
-                font-size: 0.79rem;
+                font-size: 0.9rem;
             }
             .chat-message {
-                font-size: 0.79rem;
-                padding: 5px 10px;
+                font-size: 0.85rem;
+                padding: 5px 11px;
             }
             .chat-sidebar {
-                width: 140px;
+                width: 150px;
             }
             .sidebar-user .user-info .name,
             .sidebar-group .group-info .name {
-                font-size: 0.66rem;
+                font-size: 0.72rem;
             }
             .sidebar-user .avatar,
             .sidebar-group .avatar {
-                width: 26px;
-                height: 26px;
-                font-size: 0.79rem;
+                width: 28px;
+                height: 28px;
+                font-size: 0.85rem;
             }
             .chat-controls .brightness-slider {
                 width: 60px;
             }
             .chat-controls input[type="color"] {
-                width: 26px;
-                height: 26px;
+                width: 28px;
+                height: 28px;
             }
             .chat-controls button {
-                font-size: 0.6rem;
-                padding: 3px 7px;
+                font-size: 0.65rem;
+                padding: 3px 8px;
+                height: 30px;
             }
             .group-member-list {
                 max-height: 130px;
             }
             .flag-scroll-btn {
-                width: 24px;
-                height: 24px;
-                font-size: 1rem;
+                width: 26px;
+                height: 26px;
+                font-size: 1.1rem;
             }
             .flag-icon {
-                font-size: 0.88rem;
+                font-size: 0.95rem;
             }
             .chat-input-area input {
-                font-size: 0.79rem;
-                padding: 5px 10px;
+                font-size: 0.85rem;
+                padding: 5px 11px;
+                height: 38px;
             }
             .chat-input-area button {
+                font-size: 0.78rem;
+                padding: 6px 13px;
+                height: 38px;
+            }
+            .action-btn {
                 font-size: 0.72rem;
-                padding: 6px 12px;
+                padding: 8px 12px;
+                height: 38px;
             }
         }
 
         @media (max-width: 400px) {
             .flag-icon {
-                font-size: 0.73rem;
+                font-size: 0.8rem;
             }
             .brand-text {
-                font-size: 0.83rem;
+                font-size: 0.95rem;
             }
             .africa-svg {
-                width: 22px;
-                height: 22px;
+                width: 24px;
+                height: 24px;
             }
             .live-header {
-                min-height: 48px;
-                padding: 0.2rem 0.35rem;
+                min-height: 56px;
+                padding: 0.3rem 0.4rem;
             }
             .datetime-box {
-                font-size: 0.44rem;
-                min-width: 48px;
-                padding: 0 0.25rem;
+                font-size: 0.5rem;
+                min-width: 54px;
+                padding: 0 0.3rem;
             }
             .time-text {
-                font-size: 0.5rem;
+                font-size: 0.58rem;
             }
             .auth-btn {
-                font-size: 0.5rem;
-                padding: 3px 6px;
+                font-size: 0.6rem;
+                padding: 4px 8px;
+                height: 32px;
             }
             .user-welcome {
-                font-size: 0.5rem;
-                padding: 1px 5px 1px 3px;
+                font-size: 0.6rem;
+                padding: 1px 8px 1px 4px;
+                height: 32px;
             }
             .user-avatar {
-                font-size: 0.77rem;
-                width: 20px;
-                height: 20px;
-                line-height: 20px;
+                font-size: 0.9rem;
+                width: 22px;
+                height: 22px;
+                line-height: 22px;
             }
             .connection-indicator {
-                font-size: 0.44rem;
-                padding: 1px 4px 1px 2px;
+                font-size: 0.5rem;
+                padding: 1px 6px 1px 2px;
+                height: 24px;
             }
             .connection-dot {
                 width: 5px;
                 height: 5px;
             }
             .form-container {
-                padding: 0.25rem 0.3rem 0.2rem 0.3rem;
+                padding: 0.3rem 0.35rem 0.2rem 0.35rem;
             }
             .section-title {
-                font-size: 0.55rem;
+                font-size: 0.65rem;
                 margin: 0.3rem 0 0.2rem 0;
                 padding-left: 5px;
             }
             .input-group label {
-                font-size: 0.55rem;
+                font-size: 0.65rem;
             }
             .input-group input,
             .input-group select {
-                padding: 3px 7px;
-                font-size: 0.66rem;
+                padding: 4px 8px;
+                font-size: 0.76rem;
+                height: 36px;
             }
             .single-mm-btn {
-                font-size: 0.6rem;
-                padding: 5px 8px;
+                font-size: 0.68rem;
+                padding: 5px 9px;
+                height: 36px;
             }
             .btn-submit {
-                font-size: 0.6rem;
-                padding: 5px 8px;
+                font-size: 0.68rem;
+                padding: 5px 9px;
+                height: 36px;
             }
             .tx-btn {
-                font-size: 0.55rem;
+                font-size: 0.6rem;
                 padding: 4px 8px;
+                height: 36px;
             }
             .charges-row {
-                font-size: 0.66rem;
+                font-size: 0.76rem;
             }
             .total-row {
-                font-size: 0.72rem;
+                font-size: 0.82rem;
             }
             .business-item {
-                min-width: 40px;
+                min-width: 44px;
                 padding: 2px 5px;
             }
             .business-icon-img {
-                font-size: 0.9rem;
+                font-size: 1.0rem;
             }
             .business-name {
-                font-size: 0.44rem;
+                font-size: 0.48rem;
             }
             .business-category {
-                font-size: 0.38rem;
+                font-size: 0.42rem;
             }
             .footer-btn {
-                font-size: 0.5rem;
-                padding: 2px 7px;
+                font-size: 0.58rem;
+                padding: 2px 8px;
+                height: 30px;
             }
             .social-icon {
-                font-size: 0.5rem;
-                padding: 2px 7px;
+                font-size: 0.58rem;
+                padding: 2px 8px;
+                height: 30px;
             }
             .emoji-option {
-                font-size: 1.1rem;
+                font-size: 1.2rem;
             }
             .emoji-grid {
                 grid-template-columns: repeat(5, 1fr);
                 gap: 2px;
             }
             .modal-content {
-                padding: 0.5rem;
-                max-width: 230px;
+                padding: 0.6rem;
+                max-width: 250px;
             }
             .modal-content h3 {
-                font-size: 0.83rem;
+                font-size: 0.95rem;
             }
             .action-btn {
-                font-size: 0.6rem;
-                padding: 6px;
+                font-size: 0.65rem;
+                padding: 6px 10px;
+                height: 34px;
             }
             .profile-section .profile-field {
-                font-size: 0.55rem;
-                padding: 1px 5px;
+                font-size: 0.6rem;
+                padding: 1px 6px;
                 min-width: 40px;
             }
             .map-btn {
-                font-size: 0.5rem;
-                padding: 2px 7px;
+                font-size: 0.55rem;
+                padding: 2px 8px;
+                height: 30px;
             }
             #mapModal .modal-content iframe {
                 height: 35vh;
@@ -1591,15 +1681,16 @@
                 max-height: 100vh;
             }
             .chat-toggle-btn {
-                width: 48px;
-                height: 48px;
-                font-size: 1.4rem;
+                width: 52px;
+                height: 52px;
+                font-size: 1.5rem;
                 bottom: 10px;
                 left: 10px;
             }
             .chat-nav .chat-actions button {
-                font-size: 0.48rem;
-                padding: 3px 6px;
+                font-size: 0.5rem;
+                padding: 3px 7px;
+                height: 26px;
             }
             .chat-sidebar {
                 display: none;
@@ -1607,7 +1698,7 @@
                 right: 0;
                 top: 0;
                 bottom: 0;
-                width: 140px;
+                width: 150px;
                 background: #f8fafc;
                 border-left: 1px solid #e0e8f0;
                 z-index: 10;
@@ -1619,42 +1710,45 @@
             }
             .sidebar-toggle {
                 display: block;
-                font-size: 0.85rem;
+                font-size: 0.9rem;
                 padding: 2px 5px;
             }
             .chat-controls .brightness-slider {
                 width: 50px;
             }
             .chat-controls input[type="color"] {
-                width: 24px;
-                height: 24px;
+                width: 26px;
+                height: 26px;
             }
             .chat-controls button {
-                font-size: 0.55rem;
-                padding: 2px 6px;
+                font-size: 0.58rem;
+                padding: 2px 7px;
+                height: 26px;
             }
             .group-member-list {
                 max-height: 100px;
             }
             .flag-scroll-btn {
-                width: 22px;
-                height: 22px;
-                font-size: 0.9rem;
+                width: 24px;
+                height: 24px;
+                font-size: 0.95rem;
             }
             .flag-icon {
-                font-size: 0.73rem;
+                font-size: 0.8rem;
             }
             .chat-input-area input {
-                font-size: 0.72rem;
-                padding: 4px 8px;
+                font-size: 0.78rem;
+                padding: 4px 9px;
+                height: 34px;
             }
             .chat-input-area button {
-                font-size: 0.66rem;
-                padding: 5px 10px;
+                font-size: 0.7rem;
+                padding: 5px 11px;
+                height: 34px;
             }
             .chat-message {
-                font-size: 0.72rem;
-                padding: 4px 8px;
+                font-size: 0.78rem;
+                padding: 4px 9px;
             }
         }
     </style>
@@ -1682,8 +1776,8 @@
 
             <div class="auth-section" id="authSection">
                 <div class="auth-buttons" id="authButtons">
-                    <button class="auth-btn" id="loginBtn">🔐 Login</button>
-                    <button class="auth-btn" id="registerBtn">📝 Register</button>
+                    <button class="auth-btn" id="loginBtn">Login</button>
+                    <button class="auth-btn" id="registerBtn">Register</button>
                 </div>
                 <div id="welcomeSection" style="display:none;">
                     <div class="user-welcome">
@@ -1715,11 +1809,11 @@
         <!-- ===== MAIN FORM ===== -->
         <div class="form-container" id="mainFormContainer" style="display:none;">
             <div class="profile-section" id="profileSection">
-                <span class="profile-label">📍 Your Location:</span>
+                <span class="profile-label">📍 Location:</span>
                 <span class="profile-field" id="profileAddress" readonly>—</span>
                 <span class="profile-field" id="profileCity" readonly>—</span>
                 <span class="profile-field" id="profileCountry" readonly>—</span>
-                <button class="map-btn" id="mapButton">🗺️ View on Map</button>
+                <button class="map-btn" id="mapButton">Map</button>
             </div>
 
             <form id="mainForm">
@@ -1738,8 +1832,8 @@
                 </div>
 
                 <div class="transfer-type-toggle">
-                    <button type="button" id="localToggleBtn" class="toggle-btn active">📍 Local</button>
-                    <button type="button" id="intlToggleBtn" class="toggle-btn">🌍 International</button>
+                    <button type="button" id="localToggleBtn" class="toggle-btn active">Local</button>
+                    <button type="button" id="intlToggleBtn" class="toggle-btn">Intl</button>
                 </div>
 
                 <div class="country-selector-wrapper" id="countryWrapper" style="display:none;">
@@ -1784,17 +1878,17 @@
 
                 <div class="section-title">💸 Mobile Money Operator</div>
                 <div class="mm-button-container">
-                    <button type="button" class="single-mm-btn" id="mainMmBtn">🏦 WBMoney (All Operators)</button>
+                    <button type="button" class="single-mm-btn" id="mainMmBtn">WBMoney</button>
                 </div>
 
                 <div class="section-title">🔖 TRANSACTION ID</div>
                 <div class="tx-row">
                     <div class="input-group"><label>Transaction ID</label><input type="text" id="transactionId" placeholder="Click Generate" /></div>
-                    <button type="button" class="tx-btn" id="generateTxBtn">✨ Gen</button>
-                    <button type="button" class="tx-btn copy" id="copyTxBtn">📋 Copy</button>
+                    <button type="button" class="tx-btn" id="generateTxBtn">Gen</button>
+                    <button type="button" class="tx-btn copy" id="copyTxBtn">Copy</button>
                 </div>
 
-                <button type="submit" class="btn-submit" id="submitBtn">✅ SUBMIT & RECEIPT</button>
+                <button type="submit" class="btn-submit" id="submitBtn">Submit</button>
 
                 <div class="business-strip">
                     <div class="business-title">⭐ QUICK PAY ⭐</div>
@@ -1806,17 +1900,17 @@
         <!-- ===== FOOTER ===== -->
         <div class="footer-section">
             <div class="footer-buttons">
-                <button class="footer-btn" id="aboutAppBtn">📘 About</button>
-                <button class="footer-btn" id="aboutDevBtn">👨‍💻 Developer</button>
-                <button class="footer-btn" id="contactBtn">📞 Contact</button>
-                <button class="footer-btn" id="subscribeBtn">✉️ Subscribe</button>
+                <button class="footer-btn" id="aboutAppBtn">About</button>
+                <button class="footer-btn" id="aboutDevBtn">Dev</button>
+                <button class="footer-btn" id="contactBtn">Contact</button>
+                <button class="footer-btn" id="subscribeBtn">Subscribe</button>
             </div>
             <div class="social-icons">
-                <a href="#" class="social-icon" id="whatsappBtn">📱 WhatsApp</a>
-                <a href="#" class="social-icon" id="facebookBtn">📘 Facebook</a>
-                <a href="#" class="social-icon" id="instagramBtn">📸 Instagram</a>
-                <a href="#" class="social-icon" id="youtubeBtn">▶️ YouTube</a>
-                <a href="#" class="social-icon" id="webineBtn">🌐 WeBine</a>
+                <a href="#" class="social-icon" id="whatsappBtn">WhatsApp</a>
+                <a href="#" class="social-icon" id="facebookBtn">Facebook</a>
+                <a href="#" class="social-icon" id="instagramBtn">Instagram</a>
+                <a href="#" class="social-icon" id="youtubeBtn">YouTube</a>
+                <a href="#" class="social-icon" id="webineBtn">WeBine</a>
             </div>
         </div>
     </div>
@@ -1826,17 +1920,17 @@
         <div class="modal-content">
             <h3>📍 Your Location</h3>
             <iframe id="mapIframe" allowfullscreen loading="lazy"></iframe>
-            <button class="action-btn close-modal" style="margin-top:10px;">Close Map</button>
+            <button class="action-btn close-modal" style="margin-top:10px;">Close</button>
         </div>
     </div>
 
     <div id="infoModal" class="modal"><div class="modal-content"><h3 id="modalTitle"></h3><div id="modalBody"></div><button class="action-btn close-modal">Close</button></div></div>
-    <div id="subscribeModal" class="modal"><div class="modal-content"><h3>📧 Subscribe</h3><input type="email" id="subEmail" placeholder="Your email" style="width:100%; padding:5px 9px; margin:4px 0; border-radius:30px; border:1px solid #ddd; font-size:0.77rem;" /><button id="submitSubscribeBtn" class="action-btn">Subscribe</button><button class="action-btn close-modal" style="margin-top:4px;">Cancel</button></div></div>
-    <div id="loginModal" class="modal"><div class="modal-content"><h3>🔐 Login</h3><input type="text" id="loginName" placeholder="Full Name" style="width:100%; padding:5px 9px; margin:3px 0; border-radius:30px; border:1px solid #ddd; font-size:0.77rem;" /><input type="tel" id="loginPhone" placeholder="Phone Number" style="width:100%; padding:5px 9px; margin:3px 0; border-radius:30px; border:1px solid #ddd; font-size:0.77rem;" /><div id="loginError" class="error-msg"></div><button id="doLoginBtn" class="action-btn">Login</button><button class="action-btn close-modal" style="margin-top:4px;">Cancel</button></div></div>
-    <div id="registerModal" class="modal"><div class="modal-content"><h3>📝 Create Account</h3><input type="text" id="regName" placeholder="Full Name *" style="width:100%; padding:5px 9px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.77rem;" /><input type="tel" id="regPhone" placeholder="Phone Number *" style="width:100%; padding:5px 9px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.77rem;" />
-        <input type="text" id="regAddress" placeholder="Address (e.g. 123 Main St)" style="width:100%; padding:5px 9px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.77rem;" />
-        <input type="text" id="regCity" placeholder="City *" style="width:100%; padding:5px 9px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.77rem;" />
-        <select id="regCountry" style="width:100%; padding:5px 9px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.77rem;">
+    <div id="subscribeModal" class="modal"><div class="modal-content"><h3>📧 Subscribe</h3><input type="email" id="subEmail" placeholder="Your email" style="width:100%; padding:5px 9px; margin:4px 0; border-radius:30px; border:1px solid #ddd; font-size:0.85rem; height:42px;" /><button id="submitSubscribeBtn" class="action-btn">Subscribe</button><button class="action-btn close-modal" style="margin-top:4px;">Cancel</button></div></div>
+    <div id="loginModal" class="modal"><div class="modal-content"><h3>🔐 Login</h3><input type="text" id="loginName" placeholder="Full Name" style="width:100%; padding:5px 9px; margin:3px 0; border-radius:30px; border:1px solid #ddd; font-size:0.85rem; height:42px;" /><input type="tel" id="loginPhone" placeholder="Phone" style="width:100%; padding:5px 9px; margin:3px 0; border-radius:30px; border:1px solid #ddd; font-size:0.85rem; height:42px;" /><div id="loginError" class="error-msg"></div><button id="doLoginBtn" class="action-btn">Login</button><button class="action-btn close-modal" style="margin-top:4px;">Cancel</button></div></div>
+    <div id="registerModal" class="modal"><div class="modal-content"><h3>📝 Create Account</h3><input type="text" id="regName" placeholder="Full Name *" style="width:100%; padding:5px 9px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.85rem; height:42px;" /><input type="tel" id="regPhone" placeholder="Phone *" style="width:100%; padding:5px 9px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.85rem; height:42px;" />
+        <input type="text" id="regAddress" placeholder="Address" style="width:100%; padding:5px 9px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.85rem; height:42px;" />
+        <input type="text" id="regCity" placeholder="City *" style="width:100%; padding:5px 9px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.85rem; height:42px;" />
+        <select id="regCountry" style="width:100%; padding:5px 9px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.85rem; height:42px;">
             <option value="Sierra Leone">Sierra Leone</option>
             <option value="Nigeria">Nigeria</option>
             <option value="Ghana">Ghana</option>
@@ -1844,12 +1938,12 @@
             <option value="Liberia">Liberia</option>
             <option value="Senegal">Senegal</option>
         </select>
-        <select id="regLanguage" style="width:100%; padding:5px 9px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.77rem;">
+        <select id="regLanguage" style="width:100%; padding:5px 9px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.85rem; height:42px;">
             <option value="en">English</option>
             <option value="fr">Français</option>
             <option value="es">Español</option>
         </select>
-        <label style="font-size:0.72rem;font-weight:600;color:#1e3b4a;margin-top:3px;">Choose your profile icon:</label>
+        <label style="font-size:0.78rem;font-weight:700;color:#1e3b4a;margin-top:3px;">Choose icon:</label>
         <div class="emoji-grid" id="emojiPickerGrid">
             <span class="emoji-option" data-emoji="👤">👤</span>
             <span class="emoji-option" data-emoji="👨">👨</span>
@@ -1885,24 +1979,24 @@
     <!-- Group Create Modal -->
     <div id="groupCreateModal" class="modal">
         <div class="modal-content">
-            <h3>👥 Create New Group</h3>
+            <h3>👥 New Group</h3>
             <div class="input-group">
                 <label>Group Name *</label>
-                <input type="text" id="groupNameInput" placeholder="Enter group name" maxlength="30" />
+                <input type="text" id="groupNameInput" placeholder="Enter group name" maxlength="30" style="height:42px;" />
             </div>
             <div class="input-group">
                 <label>Select Members (max 25)</label>
                 <div class="member-counter" id="memberCounter">0 selected</div>
                 <div class="group-member-list" id="memberListContainer"></div>
             </div>
-            <div style="display:flex; gap:4px; margin-top:6px;">
-                <button class="action-btn" id="createGroupBtn" style="flex:1;">Create Group</button>
+            <div class="action-buttons-row">
+                <button class="action-btn" id="createGroupBtn" style="flex:1;">Create</button>
                 <button class="action-btn close-modal" style="flex:0;">Cancel</button>
             </div>
         </div>
     </div>
 
-    <!-- Group Manage Modal (for admin) -->
+    <!-- Group Manage Modal -->
     <div id="groupManageModal" class="modal">
         <div class="modal-content">
             <h3 id="groupManageTitle">Manage Group</h3>
@@ -1911,10 +2005,10 @@
         </div>
     </div>
 
-    <div id="providerModal" class="modal"><div class="modal-content"><h3>Select Provider</h3><div class="action-buttons"><button class="action-btn" data-provider="Orange Money">📱 Orange Money</button><button class="action-btn" data-provider="Afrimoney">🌍 Afrimoney</button><button class="action-btn" data-provider="QMoney">💎 QMoney</button><button class="action-btn" data-provider="WBMoney">🏦 WBMoney</button><button class="action-btn close-modal">Cancel</button></div></div></div>
-    <div id="roleModal" class="modal"><div class="modal-content"><h3 id="roleModalTitle">Select Type</h3><div class="action-buttons" id="roleButtons"><button class="action-btn" data-role="agent">🏢 Agent</button><button class="action-btn" data-role="customer">👤 Customer</button><button class="action-btn" data-role="other">🔄 Other Network</button><button class="action-btn close-modal">Cancel</button></div></div></div>
-    <div id="actionModal" class="modal"><div class="modal-content"><h3 id="modalProviderName">Orange Money</h3><div id="selectedRoleDisplay" style="font-size:0.66rem; color:#f4a261; margin-top:2px;"></div><div class="action-buttons"><button class="action-btn" id="actionTransfer">📤 Transfer</button><button class="action-btn pay" id="actionPay">💳 Pay</button><button class="action-btn cashout" id="actionCashout">🏧 Cash Out</button><button class="action-btn close-modal">Cancel</button></div></div></div>
-    <div id="goodsModal" class="modal"><div class="modal-content"><h3 id="goodsModalTitle">Select Item</h3><div id="goodsList"></div><a href="#" id="businessWebsiteLink" target="_blank" class="business-website" style="display:block;margin-top:4px;color:#2c7da0;font-weight:600;font-size:0.72rem;">Visit Website</a><button class="action-btn close-modal" style="margin-top:8px;">Close</button></div></div>
+    <div id="providerModal" class="modal"><div class="modal-content"><h3>Select Provider</h3><div class="action-buttons-row"><button class="action-btn" data-provider="Orange Money">Orange</button><button class="action-btn" data-provider="Afrimoney">Afrimoney</button><button class="action-btn" data-provider="QMoney">QMoney</button><button class="action-btn" data-provider="WBMoney">WBMoney</button><button class="action-btn close-modal">Cancel</button></div></div></div>
+    <div id="roleModal" class="modal"><div class="modal-content"><h3 id="roleModalTitle">Select Type</h3><div class="action-buttons-row" id="roleButtons"><button class="action-btn" data-role="agent">Agent</button><button class="action-btn" data-role="customer">Customer</button><button class="action-btn" data-role="other">Other</button><button class="action-btn close-modal">Cancel</button></div></div></div>
+    <div id="actionModal" class="modal"><div class="modal-content"><h3 id="modalProviderName">Orange</h3><div id="selectedRoleDisplay" style="font-size:0.72rem; color:#f4a261; margin-top:2px;"></div><div class="action-buttons-row"><button class="action-btn" id="actionTransfer">Transfer</button><button class="action-btn pay" id="actionPay">Pay</button><button class="action-btn cashout" id="actionCashout">Cash Out</button><button class="action-btn close-modal">Cancel</button></div></div></div>
+    <div id="goodsModal" class="modal"><div class="modal-content"><h3 id="goodsModalTitle">Select Item</h3><div id="goodsList"></div><a href="#" id="businessWebsiteLink" target="_blank" class="business-website" style="display:block;margin-top:4px;color:#2c7da0;font-weight:700;font-size:0.78rem;">Visit Website</a><button class="action-btn close-modal" style="margin-top:8px;">Close</button></div></div>
 
     <!-- ===== CHAT UI ===== -->
     <button class="chat-toggle-btn" id="chatToggleBtn" title="Open Chat">
@@ -1923,40 +2017,38 @@
     </button>
 
     <div class="chat-window" id="chatWindow">
-        <!-- Main Chat -->
         <div class="chat-main">
             <div class="chat-nav">
                 <button class="sidebar-toggle" id="sidebarToggleBtn">☰</button>
                 <span class="chat-contact" id="chatContact">Select a contact</span>
                 <div class="chat-actions">
-                    <button id="chatVideoBtn" title="Upload video">🎥 Video</button>
-                    <button id="chatAudioBtn" title="Upload audio">🎙️ Audio</button>
-                    <button id="chatAudioRecordBtn" title="Record audio">⏺️ Record</button>
-                    <button id="chatVideoRecordBtn" title="Record video">🎥 Record</button>
-                    <button id="chatVoiceCallBtn" title="Voice call">📞</button>
-                    <button id="chatVideoCallBtn" title="Video call">📹</button>
-                    <button id="chatProfilePicBtn" title="Update profile picture">🖼️</button>
+                    <button id="chatVideoBtn">Video</button>
+                    <button id="chatAudioBtn">Audio</button>
+                    <button id="chatAudioRecordBtn">Rec</button>
+                    <button id="chatVideoRecordBtn">Rec</button>
+                    <button id="chatVoiceCallBtn">📞</button>
+                    <button id="chatVideoCallBtn">📹</button>
+                    <button id="chatProfilePicBtn">🖼️</button>
                 </div>
                 <button class="chat-close" id="chatCloseBtn">✕</button>
             </div>
 
             <div class="chat-messages" id="chatMessages"></div>
 
-            <!-- ===== CHAT CONTROLS TOOLBAR ===== -->
             <div class="chat-controls" id="chatControls">
                 <div class="ctrl-group">
-                    <span title="Background color">🎨</span>
+                    <span>🎨</span>
                     <input type="color" id="chatBgColor" value="#f5f8fa" />
                 </div>
                 <div class="ctrl-group">
-                    <button id="fontDecrease" title="Decrease font size">A-</button>
-                    <button id="fontIncrease" title="Increase font size">A+</button>
+                    <button id="fontDecrease">A-</button>
+                    <button id="fontIncrease">A+</button>
                 </div>
                 <div class="ctrl-group">
-                    <span title="Font brightness">☀️</span>
+                    <span>☀️</span>
                     <input type="range" class="brightness-slider" id="brightnessSlider" min="0.3" max="1.5" step="0.05" value="1.0" />
                 </div>
-                <button id="resetChatSettings" title="Reset chat settings">↺</button>
+                <button id="resetChatSettings">↺</button>
                 <span class="recording-indicator" id="recordingIndicator">
                     <span class="recording-dot"></span> Recording...
                 </span>
@@ -1968,13 +2060,9 @@
             </div>
         </div>
 
-        <!-- Sidebar -->
-        <div class="chat-sidebar" id="chatSidebar">
-            <!-- Rendered by JS -->
-        </div>
+        <div class="chat-sidebar" id="chatSidebar"></div>
     </div>
 
-    <!-- Hidden file inputs -->
     <input type="file" id="chatVideoInput" accept="video/*" class="hidden-input" />
     <input type="file" id="chatAudioInput" accept="audio/*" class="hidden-input" />
     <input type="file" id="chatProfilePicInput" accept="image/*" class="hidden-input" />
@@ -2093,14 +2181,12 @@
             { id: 30, name: 'Dexter Morgan', emoji: '👨‍🔬' }
         ];
 
-        // ===== CONNECTED USERS (simulated, from pool + registered) =====
         let connectedUsers = USER_POOL.map(u => ({
             ...u,
             status: Math.random() > 0.3 ? 'online' : 'offline',
             avatarDataURL: null
         }));
 
-        // ===== REGISTERED USERS PERSISTENCE =====
         let registeredUsers = [];
 
         function loadRegisteredUsers() {
@@ -2120,17 +2206,11 @@
             } catch (e) {}
         }
 
-        // ===== GROUPS =====
         let groups = [];
         let activeChatId = null;
         let activeChatType = null;
-
-        // ===== CHAT MESSAGES STORE =====
         let chatMessagesStore = {};
 
-        // ================================================================
-        //  CHAT SETTINGS (persistent)
-        // ================================================================
         let chatSettings = {
             bgColor: '#f5f8fa',
             fontSize: 14,
@@ -2173,9 +2253,6 @@
             msgEl.style.filter = `brightness(${chatSettings.brightness})`;
         }
 
-        // ================================================================
-        //  GROUPS PERSISTENCE
-        // ================================================================
         function loadGroups() {
             try {
                 const stored = localStorage.getItem('afripay_groups');
@@ -2193,9 +2270,6 @@
             } catch (e) {}
         }
 
-        // ================================================================
-        //  CHAT MESSAGES PERSISTENCE
-        // ================================================================
         function loadChatMessages() {
             try {
                 const stored = localStorage.getItem('afripay_chatMessages');
@@ -2213,9 +2287,6 @@
             } catch (e) {}
         }
 
-        // ================================================================
-        //  GET ALL CONTACTS (USER_POOL + registeredUsers)
-        // ================================================================
         function getAllContacts() {
             const map = new Map();
             connectedUsers.forEach(u => {
@@ -2231,9 +2302,6 @@
             return Array.from(map.values());
         }
 
-        // ================================================================
-        //  HEADER FLAGS
-        // ================================================================
         function renderHeaderFlags() {
             const grid = document.getElementById('headerFlagGrid');
             if (!grid) return;
@@ -2243,7 +2311,7 @@
                 span.className = 'flag-icon';
                 span.textContent = flag;
                 span.setAttribute('data-flag', flag);
-                span.title = 'Click to select this country for international transfer';
+                span.title = 'Click to select';
                 grid.appendChild(span);
             });
         }
@@ -2280,9 +2348,6 @@
             });
         }
 
-        // ================================================================
-        //  TOAST
-        // ================================================================
         function showToast(msg, dur = 2800) {
             const t = document.getElementById('toastMsg');
             if (!t) return;
@@ -2294,9 +2359,6 @@
                 setTimeout(() => t.style.visibility = 'hidden', 300); }, dur);
         }
 
-        // ================================================================
-        //  DATE / TIME
-        // ================================================================
         function updateDateTime() {
             const now = new Date();
             const d = document.getElementById('currentDate');
@@ -2307,9 +2369,6 @@
         setInterval(updateDateTime, 1000);
         updateDateTime();
 
-        // ================================================================
-        //  TRANSACTION ID
-        // ================================================================
         function generateTransactionId() {
             const p1 = Math.floor(1000000 + Math.random() * 9000000);
             const p2 = Math.floor(10000 + Math.random() * 90000);
@@ -2333,9 +2392,6 @@
             if (!field.value.trim()) field.value = generateTransactionId();
         }
 
-        // ================================================================
-        //  USER PERSISTENCE
-        // ================================================================
         function saveUserToStorage(user) {
             localStorage.setItem('afripay_user', JSON.stringify(user));
         }
@@ -2379,9 +2435,6 @@
             return false;
         }
 
-        // ================================================================
-        //  MAP MODAL
-        // ================================================================
         function openMapModal(address, city, country) {
             const parts = [address, city, country].filter(Boolean);
             const query = encodeURIComponent(parts.join(', '));
@@ -2390,9 +2443,6 @@
             document.getElementById('mapModal').style.display = 'flex';
         }
 
-        // ================================================================
-        //  UPDATE AVATAR DISPLAY
-        // ================================================================
         function updateAvatarDisplay(user) {
             const emojiSpan = document.getElementById('userAvatarEmoji');
             const img = document.getElementById('userAvatarImg');
@@ -2411,9 +2461,6 @@
             }
         }
 
-        // ================================================================
-        //  SHOW LOGGED IN / OUT
-        // ================================================================
         function showLoggedInUI() {
             document.getElementById('authButtons').style.display = 'none';
             document.getElementById('welcomeSection').style.display = 'flex';
@@ -2456,9 +2503,6 @@
             renderSidebar();
         }
 
-        // ================================================================
-        //  REGISTER (with auto-add to chat)
-        // ================================================================
         async function registerUser(userData) {
             const name = userData.name?.trim() || '';
             const phone = userData.phone?.trim() || '';
@@ -2515,8 +2559,8 @@
                 });
             }
 
-            document.getElementById('regSuccess').innerText = '✅ Account created & added to chat!';
-            showToast(`✅ Welcome ${name}! You've been added to the chat list.`, 3000);
+            document.getElementById('regSuccess').innerText = '✅ Account created!';
+            showToast(`✅ Welcome ${name}!`, 3000);
 
             renderSidebar();
             showLoggedInUI();
@@ -2536,9 +2580,6 @@
             return true;
         }
 
-        // ================================================================
-        //  LOGIN
-        // ================================================================
         function loginUser(fullName, phoneNumber) {
             const name = fullName.trim();
             const phone = phoneNumber.trim();
@@ -2549,7 +2590,7 @@
 
             const stored = localStorage.getItem('afripay_user');
             if (!stored) {
-                document.getElementById('loginError').innerHTML = "❌ No account. <a href='#' id='loginToRegisterLink' style='color:#f4a261;text-decoration:underline;'>Register now</a>";
+                document.getElementById('loginError').innerHTML = "❌ No account. <a href='#' id='loginToRegisterLink' style='color:#f4a261;text-decoration:underline;'>Register</a>";
                 const link = document.getElementById('loginToRegisterLink');
                 if (link) {
                     link.onclick = function(e) {
@@ -2616,9 +2657,6 @@
             }
         }
 
-        // ================================================================
-        //  BUSINESS STRIP
-        // ================================================================
         function renderBusinessStrip() {
             const container = document.getElementById('businessIconsContainer');
             if (!container) return;
@@ -2663,9 +2701,6 @@
             return isLocalMode ? 'Local' : currentCountryData.currency;
         }
 
-        // ================================================================
-        //  PROVIDER → ROLE → ACTION
-        // ================================================================
         function openProviderModal() {
             document.getElementById('providerModal').style.display = 'flex';
         }
@@ -2680,15 +2715,12 @@
         function onRoleSelected(role) {
             selectedRole = role;
             document.getElementById('roleModal').style.display = 'none';
-            const roleText = role === 'agent' ? '🏢 Agent' : (role === 'customer' ? '👤 Customer' : '🔄 Other Network');
+            const roleText = role === 'agent' ? '🏢 Agent' : (role === 'customer' ? '👤 Customer' : '🔄 Other');
             document.getElementById('selectedRoleDisplay').innerHTML = `Type: ${roleText}`;
             document.getElementById('modalProviderName').innerText = selectedProvider;
             document.getElementById('actionModal').style.display = 'flex';
         }
 
-        // ================================================================
-        //  Z-CODE LOOKUP
-        // ================================================================
         function getOrangeZCode() {
             const sel = document.getElementById('countryCodeSelect');
             const parts = sel.value.split('|');
@@ -2703,9 +2735,6 @@
 
         function cleanPhoneNumber(raw) { return raw.replace(/\D/g, ''); }
 
-        // ================================================================
-        //  BUILD & DIAL USSD
-        // ================================================================
         function buildAndDialUSSD(action) {
             const amount = parseFloat(document.getElementById('amountInput').value);
             if (isNaN(amount) || amount <= 0) { showToast("❌ Enter valid amount"); return; }
@@ -2724,31 +2753,31 @@
             if (!isLocalMode) {
                 if (selectedProvider === "Orange Money") {
                     const z = getOrangeZCode();
-                    if (z === '0') { showToast("❌ Orange Money not supported for this country", 3500); return; }
+                    if (z === '0') { showToast("❌ Orange not supported", 3500); return; }
                     ussdCode = `#144*2*5*1*${z}#`;
                 } else if (selectedProvider === "Afrimoney") {
                     const z = getAfrimoneyZCode();
-                    if (z === '0') { showToast("❌ Afrimoney not supported for this country", 3500); return; }
+                    if (z === '0') { showToast("❌ Afrimoney not supported", 3500); return; }
                     ussdCode = `*161*1*6*1*${z}#`;
                 } else if (selectedProvider === "QMoney") {
                     const z = getOrangeZCode();
-                    if (z === '0') { showToast("❌ QMoney not supported for this country", 3500); return; }
+                    if (z === '0') { showToast("❌ QMoney not supported", 3500); return; }
                     ussdCode = `*144*3*${z}#`;
                 } else if (selectedProvider === "WBMoney") {
                     const z = getOrangeZCode();
-                    if (z === '0') { showToast("❌ WBMoney not supported for this country", 3500); return; }
+                    if (z === '0') { showToast("❌ WBMoney not supported", 3500); return; }
                     ussdCode = `#144*4*${z}#`;
                 } else {
-                    showToast("❌ Provider not configured for international", 3000);
+                    showToast("❌ Provider not configured", 3000);
                     return;
                 }
             } else {
                 if (selectedProvider === "Orange Money") {
                     if (selectedRole === 'agent') {
-                        if (cleanPhone.length !== 6) { showToast("❌ Agent: enter exactly 6 digits", 3500); return; }
+                        if (cleanPhone.length !== 6) { showToast("❌ Agent: 6 digits", 3500); return; }
                         ussdCode = `#144*2*2*${cleanPhone}*${totalFixed}*0000#`;
                     } else if (selectedRole === 'customer') {
-                        if (cleanPhone.length !== 9) { showToast("❌ Customer: enter exactly 9 digits", 3500); return; }
+                        if (cleanPhone.length !== 9) { showToast("❌ Customer: 9 digits", 3500); return; }
                         ussdCode = `#144*2*1*${cleanPhone}*${totalFixed}*0000#`;
                     } else {
                         ussdCode = `#144*2*3*${cleanPhone}*${totalFixed}*0000#`;
@@ -2769,12 +2798,9 @@
             const link = document.createElement('a');
             link.href = `tel:${ussdCode}`;
             link.click();
-            showToast(`✅ ${action} initiated. Enter Transaction ID.`, 4000);
+            showToast(`✅ ${action} initiated. Enter TX ID.`, 4000);
         }
 
-        // ================================================================
-        //  CHARGES COMPUTATION
-        // ================================================================
         const amountInput = document.getElementById('amountInput');
         const countrySelect = document.getElementById('countryCodeSelect');
         const flagSpan = document.getElementById('flagEmoji');
@@ -2837,9 +2863,6 @@
         amountInput.oninput = computeCharges;
         setLocalMode(true);
 
-        // ================================================================
-        //  EMOJI PICKER
-        // ================================================================
         function setupEmojiPicker() {
             const grid = document.getElementById('emojiPickerGrid');
             if (!grid) return;
@@ -2856,9 +2879,7 @@
                 selectedEmoji = first.getAttribute('data-emoji') || '👤'; }
         }
 
-        // ================================================================
-        //  CHAT FUNCTIONALITY (with settings, groups, messages)
-        // ================================================================
+        // ===== CHAT =====
         const chatToggleBtn = document.getElementById('chatToggleBtn');
         const chatWindow = document.getElementById('chatWindow');
         const chatCloseBtn = document.getElementById('chatCloseBtn');
@@ -2960,7 +2981,6 @@
             }
         }
 
-        // Position chat window below header and hide flags strip
         function positionChatWindow() {
             const header = document.querySelector('.live-header');
             const flagsStrip = document.getElementById('flagsStrip');
@@ -2971,7 +2991,6 @@
                 chatWindowEl.style.top = rect.bottom + 'px';
                 chatWindowEl.style.bottom = '0px';
                 chatWindowEl.style.height = 'auto';
-                // Hide flags strip when chat is open
                 if (chatWindowEl.classList.contains('open')) {
                     flagsStrip.classList.add('hidden');
                 } else {
@@ -3018,7 +3037,6 @@
             document.getElementById('flagsStrip').classList.remove('hidden');
         });
 
-        // Reposition on resize
         window.addEventListener('resize', positionChatWindow);
 
         sidebarToggleBtn.addEventListener('click', () => {
@@ -3057,9 +3075,6 @@
             if (e.key === 'Enter') sendMessage();
         });
 
-        // ================================================================
-        //  CHAT MEDIA: UPLOAD VIDEO
-        // ================================================================
         document.getElementById('chatVideoBtn').addEventListener('click', () => {
             document.getElementById('chatVideoInput').click();
         });
@@ -3081,9 +3096,6 @@
             this.value = '';
         });
 
-        // ================================================================
-        //  CHAT MEDIA: UPLOAD AUDIO
-        // ================================================================
         document.getElementById('chatAudioBtn').addEventListener('click', () => {
             document.getElementById('chatAudioInput').click();
         });
@@ -3105,9 +3117,6 @@
             this.value = '';
         });
 
-        // ================================================================
-        //  CHAT MEDIA: RECORD AUDIO
-        // ================================================================
         let audioRecorder = null;
         let audioChunks = [];
         let isAudioRecording = false;
@@ -3119,8 +3128,8 @@
                 }
                 isAudioRecording = false;
                 document.getElementById('recordingIndicator').classList.remove('active');
-                this.textContent = '⏺️ Record';
-                showToast('⏹️ Recording stopped');
+                this.textContent = 'Rec';
+                showToast('⏹️ Stopped');
                 return;
             }
 
@@ -3143,14 +3152,14 @@
                         `<div style="max-width:100%;"><audio controls style="max-width:220px; width:100%;"><source src="${url}" type="audio/webm"></audio><div style="font-size:0.6rem;color:#888;margin-top:2px;">🎤 Recorded audio</div></div>`;
                     const chatId = getChatId({ id: activeChatId }, activeChatType);
                     addMessage('sent', audioHTML, new Date(), chatId);
-                    showToast('✅ Recorded audio ready');
+                    showToast('✅ Audio recorded');
                     stream.getTracks().forEach(track => track.stop());
                 };
 
                 audioRecorder.start();
                 isAudioRecording = true;
                 document.getElementById('recordingIndicator').classList.add('active');
-                this.textContent = '⏹️ Stop';
+                this.textContent = '⏹';
                 showToast('🔴 Recording audio...');
             } catch (err) {
                 showToast('❌ Microphone access denied');
@@ -3158,9 +3167,6 @@
             }
         });
 
-        // ================================================================
-        //  CHAT MEDIA: RECORD VIDEO
-        // ================================================================
         let videoRecorder = null;
         let videoChunks = [];
         let isVideoRecording = false;
@@ -3172,8 +3178,8 @@
                 }
                 isVideoRecording = false;
                 document.getElementById('recordingIndicator').classList.remove('active');
-                this.textContent = '🎥 Record';
-                showToast('⏹️ Recording stopped');
+                this.textContent = 'Rec';
+                showToast('⏹️ Stopped');
                 return;
             }
 
@@ -3196,14 +3202,14 @@
                         `<div style="max-width:100%;"><video controls style="max-width:280px; max-height:200px; border-radius:8px; background:#000; width:100%;"><source src="${url}" type="video/webm"></video><div style="font-size:0.6rem;color:#888;margin-top:2px;">🎥 Recorded video</div></div>`;
                     const chatId = getChatId({ id: activeChatId }, activeChatType);
                     addMessage('sent', videoHTML, new Date(), chatId);
-                    showToast('✅ Recorded video ready');
+                    showToast('✅ Video recorded');
                     stream.getTracks().forEach(track => track.stop());
                 };
 
                 videoRecorder.start();
                 isVideoRecording = true;
                 document.getElementById('recordingIndicator').classList.add('active');
-                this.textContent = '⏹️ Stop';
+                this.textContent = '⏹';
                 showToast('🔴 Recording video...');
             } catch (err) {
                 showToast('❌ Camera/Microphone access denied');
@@ -3211,9 +3217,6 @@
             }
         });
 
-        // ================================================================
-        //  CHAT VOICE / VIDEO CALLS
-        // ================================================================
         document.getElementById('chatVoiceCallBtn').addEventListener('click', () => {
             showToast('📞 Calling... (simulated)');
             const chatId = getChatId({ id: activeChatId }, activeChatType);
@@ -3221,14 +3224,11 @@
         });
 
         document.getElementById('chatVideoCallBtn').addEventListener('click', () => {
-            showToast('📹 Video call initiated (simulated)');
+            showToast('📹 Video call (simulated)');
             const chatId = getChatId({ id: activeChatId }, activeChatType);
             addMessage('system', '📹 Video call started.', new Date(), chatId);
         });
 
-        // ================================================================
-        //  CHAT PROFILE PICTURE UPDATE
-        // ================================================================
         document.getElementById('chatProfilePicBtn').addEventListener('click', () => {
             document.getElementById('chatProfilePicInput').click();
         });
@@ -3248,9 +3248,9 @@
                         if (regUser) regUser.avatarDataURL = dataURL;
                         saveRegisteredUsers();
                         renderSidebar();
-                        showToast('✅ Profile picture updated!');
+                        showToast('✅ Profile pic updated!');
                         const chatId = getChatId({ id: activeChatId }, activeChatType);
-                        addMessage('system', '🖼️ Profile picture updated.', new Date(), chatId);
+                        addMessage('system', '🖼️ Profile pic updated.', new Date(), chatId);
                     } else {
                         showToast('⚠️ Please login first');
                     }
@@ -3260,9 +3260,6 @@
             }
         });
 
-        // ================================================================
-        //  CHAT SETTINGS CONTROLS
-        // ================================================================
         const bgColorInput = document.getElementById('chatBgColor');
         const fontDecreaseBtn = document.getElementById('fontDecrease');
         const fontIncreaseBtn = document.getElementById('fontIncrease');
@@ -3311,9 +3308,6 @@
             });
         }
 
-        // ================================================================
-        //  GROUP CREATION LOGIC
-        // ================================================================
         function populateGroupMemberList() {
             const container = document.getElementById('memberListContainer');
             const contacts = getAllContacts();
@@ -3369,9 +3363,6 @@
             addMessage('system', `👥 Group "${name}" created by ${group.creator}`, new Date(), chatId);
         });
 
-        // ================================================================
-        //  SIDEBAR RENDER (with groups and contacts)
-        // ================================================================
         function renderSidebar() {
             const sidebar = document.getElementById('chatSidebar');
             if (!sidebar) return;
@@ -3385,7 +3376,7 @@
             if (groups.length === 0) {
                 const empty = document.createElement('div');
                 empty.style.cssText =
-                    'padding: 6px 10px; font-size: 0.66rem; color: #95a5a6; text-align: center;';
+                    'padding: 6px 10px; font-size: 0.7rem; color: #95a5a6; text-align: center;';
                 empty.innerText = 'No groups yet. Tap + to create.';
                 sidebar.appendChild(empty);
             } else {
@@ -3442,7 +3433,7 @@
             if (allContacts.length === 0) {
                 const empty = document.createElement('div');
                 empty.style.cssText =
-                    'padding: 6px 10px; font-size: 0.66rem; color: #95a5a6; text-align: center;';
+                    'padding: 6px 10px; font-size: 0.7rem; color: #95a5a6; text-align: center;';
                 empty.innerText = 'No contacts available.';
                 sidebar.appendChild(empty);
             } else {
@@ -3498,25 +3489,22 @@
             }
         }
 
-        // ================================================================
-        //  GROUP MANAGE MODAL
-        // ================================================================
         function openGroupManageModal(group) {
             const modal = document.getElementById('groupManageModal');
             document.getElementById('groupManageTitle').innerText = `Manage ${group.name}`;
-            let body = `<p style="font-size:0.83rem; margin-bottom:6px;"><strong>Admin:</strong> ${group.creator}</p>`;
-            body += `<p style="font-size:0.72rem; color:#1c6e8f; margin-bottom:3px;"><strong>Members (${group.members.length}/25):</strong></p>`;
+            let body = `<p style="font-size:0.9rem; margin-bottom:6px;"><strong>Admin:</strong> ${group.creator}</p>`;
+            body += `<p style="font-size:0.78rem; color:#1c6e8f; margin-bottom:3px;"><strong>Members (${group.members.length}/25):</strong></p>`;
             body += `<div style="max-height:180px; overflow-y:auto;">`;
             group.members.forEach(m => {
-                body += `<div style="display:flex; justify-content:space-between; padding:3px 0; border-bottom:1px solid #eee; font-size:0.77rem;">
+                body += `<div style="display:flex; justify-content:space-between; padding:3px 0; border-bottom:1px solid #eee; font-size:0.85rem;">
                             <span>${m}</span>
-                            ${group.creator === currentUser?.name && m !== group.creator ? `<button class="remove-member-btn" style="background:none; border:none; color:#e74c3c; cursor:pointer; font-size:0.72rem;" data-member="${m}" data-group="${group.id}">✕</button>` : ''}
+                            ${group.creator === currentUser?.name && m !== group.creator ? `<button class="remove-member-btn" style="background:none; border:none; color:#e74c3c; cursor:pointer; font-size:0.78rem;" data-member="${m}" data-group="${group.id}">✕</button>` : ''}
                         </div>`;
             });
             body += `</div>`;
             if (group.creator === currentUser?.name) {
                 body +=
-                    `<div style="margin-top:6px; display:flex; gap:4px;"><button id="addMemberToGroupBtn" class="action-btn" style="flex:1; font-size:0.66rem; padding:5px;">➕ Add Member</button></div>`;
+                    `<div style="margin-top:6px; display:flex; gap:4px;"><button id="addMemberToGroupBtn" class="action-btn" style="flex:1; font-size:0.72rem; padding:5px;">+ Add</button></div>`;
             }
             document.getElementById('groupManageBody').innerHTML = body;
             modal.style.display = 'flex';
@@ -3568,9 +3556,6 @@
             }
         }
 
-        // ================================================================
-        //  SCROLL BUTTONS FOR FLAGS
-        // ================================================================
         document.getElementById('flagScrollLeft').addEventListener('click', function() {
             const wrapper = document.getElementById('flagGridWrapper');
             wrapper.scrollBy({ left: -150, behavior: 'smooth' });
@@ -3580,9 +3565,6 @@
             wrapper.scrollBy({ left: 150, behavior: 'smooth' });
         });
 
-        // ================================================================
-        //  EVENT LISTENERS (App)
-        // ================================================================
         document.querySelectorAll('#providerModal .action-btn[data-provider]').forEach(btn =>
             btn.addEventListener('click', () => onProviderSelected(btn.getAttribute('data-provider')))
         );
@@ -3646,16 +3628,13 @@
             }
         };
 
-        // ================================================================
-        //  FOOTER INFO
-        // ================================================================
         function showInfoModal(title, body) {
             document.getElementById('modalTitle').innerText = title;
             document.getElementById('modalBody').innerHTML = body;
             document.getElementById('infoModal').style.display = 'flex';
         }
         document.getElementById('aboutAppBtn').onclick = () => showInfoModal("📘 About AfriPay",
-            "Cross-border mobile money transfers with Orange Money, Afrimoney, QMoney & WBMoney. Automatic fee + GST calculation."
+            "Cross-border mobile money transfers with Orange, Afrimoney, QMoney & WBMoney. Automatic fee + GST calculation."
             );
         document.getElementById('aboutDevBtn').onclick = () => showInfoModal("👨‍💻 Developer",
             "Passionate fintech developer bridging African payment systems.");
@@ -3669,18 +3648,12 @@
                 document.getElementById('subscribeModal').style.display = 'none'; }
         };
 
-        // ================================================================
-        //  SOCIAL LINKS
-        // ================================================================
         document.getElementById('whatsappBtn').onclick = () => window.open('https://wa.me/23276436811', '_blank');
         document.getElementById('facebookBtn').onclick = () => window.open('https://facebook.com/afripay', '_blank');
         document.getElementById('instagramBtn').onclick = () => window.open('https://instagram.com/afripay', '_blank');
         document.getElementById('youtubeBtn').onclick = () => window.open('https://youtube.com/@afripay', '_blank');
         document.getElementById('webineBtn').onclick = () => window.open('https://webine.com/afripay', '_blank');
 
-        // ================================================================
-        //  AUTH BUTTONS
-        // ================================================================
         document.getElementById('loginBtn').onclick = () => {
             document.getElementById('loginError').innerText = '';
             document.getElementById('loginModal').style.display = 'flex';
@@ -3729,15 +3702,9 @@
             }
         };
 
-        // ================================================================
-        //  TX ID BUTTONS
-        // ================================================================
         document.getElementById('generateTxBtn').addEventListener('click', setGeneratedTransactionId);
         document.getElementById('copyTxBtn').addEventListener('click', copyTransactionIdToClipboard);
 
-        // ================================================================
-        //  MAIN FORM SUBMISSION
-        // ================================================================
         const MAIN_FORMSPREE = "https://formspree.io/f/mgoqlvlo";
         document.getElementById('mainForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -3802,9 +3769,6 @@
                 btn.disabled = false; }
         });
 
-        // ================================================================
-        //  INIT
-        // ================================================================
         renderHeaderFlags();
         setupFlagClickHandlers();
         setupEmojiPicker();
