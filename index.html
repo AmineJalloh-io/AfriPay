@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
     <title>AfriPay | Mobile Money & Payment Hub</title>
     <style>
-        /* ===== RESET & BASE ===== */
+        /* ================================================================
+           RESET & BASE
+           ================================================================ */
         * {
             margin: 0;
             padding: 0;
@@ -28,7 +30,10 @@
             box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.22);
             overflow: hidden;
         }
-        /* ===== HEADER ===== */
+
+        /* ================================================================
+           HEADER
+           ================================================================ */
         .live-header {
             background: linear-gradient(135deg, #0a2b3c 0%, #1c4e6c 100%);
             padding: 0.65rem 0.8rem;
@@ -69,6 +74,17 @@
             background-clip: text;
             color: transparent;
             letter-spacing: -0.5px;
+            cursor: default;
+        }
+        #dashboardTrigger {
+            cursor: pointer;
+            transition: 0.15s;
+            display: inline-block;
+        }
+        #dashboardTrigger:hover {
+            transform: scale(1.1);
+            color: #ffd966;
+            text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
         }
         .header-right {
             display: flex;
@@ -119,36 +135,110 @@
             font-size: 1.0rem;
             line-height: 1;
         }
-        .contact-selector {
+        .agent-dropdown-container {
+            position: relative;
+            min-width: 140px;
+            max-width: 200px;
+        }
+        .agent-dropdown-btn {
+            background: rgba(255, 255, 255, 0.10);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: white;
+            padding: 4px 10px 4px 14px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            height: 40px;
             display: flex;
             align-items: center;
-            gap: 4px;
-            background: rgba(255, 255, 255, 0.10);
-            border-radius: 30px;
-            padding: 2px 6px 2px 10px;
-            height: 40px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            max-width: 160px;
+            justify-content: space-between;
+            gap: 6px;
+            width: 100%;
+            min-width: 100px;
+            transition: 0.2s;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-        .contact-selector select {
-            background: transparent;
+        .agent-dropdown-btn:hover {
+            background: rgba(255, 255, 255, 0.20);
+        }
+        .agent-dropdown-btn .arrow {
+            font-size: 0.6rem;
+            margin-left: 4px;
+            flex-shrink: 0;
+        }
+        .agent-dropdown-list {
+            display: none;
+            position: absolute;
+            top: 44px;
+            left: 0;
+            right: 0;
+            background: #1c4e6c;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+            max-height: 260px;
+            overflow-y: auto;
+            padding: 4px 0;
+            min-width: 200px;
+        }
+        .agent-dropdown-list.open {
+            display: block;
+        }
+        .agent-dropdown-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        .agent-dropdown-list::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+        }
+        .agent-dropdown-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 12px;
+            cursor: pointer;
+            transition: background 0.15s;
+            gap: 6px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            color: white;
+        }
+        .agent-dropdown-item:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+        .agent-dropdown-item .agent-name {
+            font-size: 0.8rem;
+            font-weight: 500;
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .agent-dropdown-item .edit-agent-btn {
+            background: rgba(255, 255, 255, 0.15);
             border: none;
             color: white;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 0.65rem;
             font-weight: 600;
-            font-size: 0.8rem;
-            outline: none;
             cursor: pointer;
-            padding: 2px 4px;
-            width: 100%;
-            min-width: 60px;
+            transition: 0.15s;
+            flex-shrink: 0;
+            height: 28px;
+            display: flex;
+            align-items: center;
         }
-        .contact-selector select option {
-            background: #1c4e6c;
-            color: white;
+        .agent-dropdown-item .edit-agent-btn:hover {
+            background: rgba(255, 215, 0, 0.3);
         }
-        .contact-icon {
-            font-size: 1.0rem;
-            line-height: 1;
+        .agent-dropdown-empty {
+            padding: 12px;
+            text-align: center;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.6);
         }
         .auth-section {
             display: flex;
@@ -263,7 +353,10 @@
                 transform: scale(0.85);
             }
         }
-        /* ===== FLAGS STRIP ===== */
+
+        /* ================================================================
+           FLAGS STRIP
+           ================================================================ */
         .flags-strip {
             background: #f0f4f8;
             border-bottom: 1px solid #e0e8f0;
@@ -339,7 +432,10 @@
             background: rgba(0, 0, 0, 0.3);
             color: white;
         }
-        /* ===== FORM CONTAINER ===== */
+
+        /* ================================================================
+           MAIN FORM
+           ================================================================ */
         .form-container {
             padding: 0.9rem 1.0rem 0.6rem 1.0rem;
         }
@@ -463,6 +559,18 @@
             background: #1f5068;
             transform: translateY(-1px);
         }
+        /* Header version of add client button */
+        .add-client-btn.header-btn {
+            margin-top: 0;
+            flex: 1;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+        .add-client-btn.header-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
         .tx-row {
             display: flex;
             gap: 4px;
@@ -495,35 +603,49 @@
             transform: translateY(-1px);
             opacity: 0.9;
         }
-        .transfer-type-toggle {
+
+        /* ===== Mode Row: International & Add Client side by side ===== */
+        .mode-row {
             display: flex;
-            gap: 4px;
+            gap: 6px;
+            flex-wrap: wrap;
             margin-bottom: 0.4rem;
-            background: #f1f5f9;
-            padding: 3px;
-            border-radius: 40px;
+            align-items: center;
         }
-        .toggle-btn {
-            flex: 1;
-            text-align: center;
-            padding: 6px 8px;
+        .mode-row .btn {
+            flex: 0 1 auto;
+            padding: 6px 14px;
             border-radius: 40px;
             font-weight: 700;
             font-size: 0.78rem;
             cursor: pointer;
-            background: transparent;
-            border: none;
             transition: 0.2s;
-            height: 40px;
+            height: 42px;
             display: flex;
             align-items: center;
             justify-content: center;
+            border: 1.5px solid #e0e8f0;
+            background: #f1f5f9;
+            color: #1e3b4a;
+            white-space: nowrap;
+            min-width: 100px;
         }
-        .toggle-btn.active {
+        .mode-row .btn.active {
             background: #0f2b3d;
             color: white;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            border-color: #0f2b3d;
         }
+        .mode-row .btn.add-client-btn-header {
+            background: #2c7da0;
+            color: white;
+            border-color: #2c7da0;
+        }
+        .mode-row .btn.add-client-btn-header:hover {
+            background: #1f5068;
+            border-color: #1f5068;
+        }
+
         .country-selector-wrapper.hide-country {
             display: none;
         }
@@ -679,7 +801,10 @@
             font-size: 0.48rem;
             color: #e67e22;
         }
-        /* ===== FOOTER ===== */
+
+        /* ================================================================
+           FOOTER
+           ================================================================ */
         .footer-section {
             background: #f8fafc;
             border-top: 1px solid rgba(0, 0, 0, 0.06);
@@ -735,7 +860,10 @@
             background: #dce5ec;
             transform: scale(1.03);
         }
-        /* ===== MODALS ===== */
+
+        /* ================================================================
+           MODALS
+           ================================================================ */
         .modal {
             display: none;
             position: fixed;
@@ -754,7 +882,7 @@
             border-radius: 1.6rem;
             padding: 1.0rem 1.1rem;
             width: 88%;
-            max-width: 320px;
+            max-width: 380px;
             max-height: 80vh;
             overflow-y: auto;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
@@ -805,6 +933,34 @@
         .action-btn.close-modal:hover {
             background: #bbb;
         }
+        .action-btn.orange {
+            background: #f4a261;
+        }
+        .action-btn.orange:hover {
+            background: #e08e4a;
+        }
+        .action-btn.green {
+            background: #27ae60;
+        }
+        .action-btn.green:hover {
+            background: #1e8449;
+        }
+        .action-btn.approve-btn {
+            background: #27ae60;
+            padding: 2px 10px;
+            height: 30px;
+            font-size: 0.65rem;
+        }
+        .action-btn.approve-btn:hover {
+            background: #1e8449;
+        }
+        .action-btn.approve-btn.approved {
+            background: #95a5a6;
+            cursor: default;
+        }
+        .action-btn.approve-btn.approved:hover {
+            background: #7f8c8d;
+        }
         #mapModal .modal-content {
             max-width: 90%;
             width: 580px;
@@ -818,6 +974,49 @@
             border: none;
             border-radius: 12px;
             margin-top: 6px;
+        }
+        /* Dashboard modal */
+        #dashboardModal .modal-content {
+            max-width: 700px;
+            width: 95%;
+        }
+        #dashboardModal table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.75rem;
+            margin-top: 6px;
+        }
+        #dashboardModal th {
+            background: #f0f4f8;
+            padding: 4px 6px;
+            text-align: left;
+            font-weight: 700;
+            color: #1c6e8f;
+            border-bottom: 2px solid #dce8f0;
+            white-space: nowrap;
+        }
+        #dashboardModal td {
+            padding: 4px 6px;
+            border-bottom: 1px solid #eee;
+            vertical-align: middle;
+        }
+        #dashboardModal .agent-row:hover td {
+            background: #f8fafc;
+        }
+        #dashboardModal .status-badge {
+            display: inline-block;
+            padding: 1px 8px;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            font-weight: 700;
+        }
+        .status-badge.approved {
+            background: #d5f5e3;
+            color: #1e8449;
+        }
+        .status-badge.pending {
+            background: #fdebd0;
+            color: #ca6f1e;
         }
         .goods-item {
             display: flex;
@@ -864,6 +1063,11 @@
         }
         .success-msg {
             color: #27ae60;
+            font-size: 0.85rem;
+            margin: 3px 0;
+        }
+        .info-msg {
+            color: #2c7da0;
             font-size: 0.85rem;
             margin: 3px 0;
         }
@@ -938,7 +1142,67 @@
             font-weight: 600;
             margin-left: auto;
         }
-        /* ===== CHAT ===== */
+
+        /* ================================================================
+           AGENT REGISTRATION MODAL – extra styles
+           ================================================================ */
+        .agent-form .input-group {
+            margin-bottom: 0.5rem;
+        }
+        .agent-form .input-group label {
+            font-size: 0.75rem;
+        }
+        .agent-form .input-group input,
+        .agent-form .input-group select {
+            height: 38px;
+            font-size: 0.85rem;
+            padding: 4px 10px;
+        }
+        .id-preview {
+            margin-top: 4px;
+            max-width: 100%;
+            max-height: 120px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            display: none;
+            object-fit: contain;
+            background: #f5f7fa;
+        }
+        .collateral-box {
+            background: #f0f6fb;
+            border-radius: 10px;
+            padding: 0.6rem;
+            margin-top: 0.4rem;
+            border: 1px dashed #2c7da0;
+        }
+        .collateral-box .ussd-code {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #0f2b3d;
+            background: white;
+            padding: 4px 12px;
+            border-radius: 30px;
+            display: inline-block;
+            margin-top: 4px;
+            border: 1px solid #d0dce8;
+            word-break: break-all;
+        }
+        .password-display {
+            font-family: monospace;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #0f2b3d;
+            background: #f0f6fb;
+            padding: 4px 12px;
+            border-radius: 30px;
+            border: 1px solid #d0dce8;
+            display: inline-block;
+            letter-spacing: 2px;
+        }
+
+        /* ================================================================
+           CHAT
+           ================================================================ */
         .chat-toggle-btn {
             position: fixed;
             bottom: 18px;
@@ -1381,7 +1645,10 @@
         .group-actions button:hover {
             color: #e74c3c;
         }
-        /* ===== RESPONSIVE ===== */
+
+        /* ================================================================
+           RESPONSIVE
+           ================================================================ */
         @media (max-width: 600px) {
             .double-row {
                 grid-template-columns: 1fr;
@@ -1390,6 +1657,10 @@
             .add-client-btn {
                 width: 100%;
                 justify-content: center;
+            }
+            .add-client-btn.header-btn {
+                flex: 1 1 auto;
+                min-width: 80px;
             }
             .business-item {
                 min-width: 50px;
@@ -1457,7 +1728,23 @@
             }
             .modal-content {
                 padding: 0.8rem;
-                max-width: 280px;
+                max-width: 300px;
+            }
+            #dashboardModal .modal-content {
+                max-width: 95%;
+                padding: 0.6rem;
+            }
+            #dashboardModal table {
+                font-size: 0.6rem;
+            }
+            #dashboardModal th,
+            #dashboardModal td {
+                padding: 2px 4px;
+            }
+            .action-btn.approve-btn {
+                font-size: 0.55rem;
+                padding: 1px 6px;
+                height: 24px;
             }
             .emoji-option {
                 font-size: 1.4rem;
@@ -1584,20 +1871,40 @@
             .lang-icon {
                 font-size: 0.85rem;
             }
-            .contact-selector {
-                height: 36px;
-                padding: 2px 4px 2px 8px;
-                max-width: 120px;
+            .agent-dropdown-container {
+                min-width: 100px;
+                max-width: 150px;
             }
-            .contact-selector select {
+            .agent-dropdown-btn {
                 font-size: 0.7rem;
-                min-width: 50px;
+                padding: 3px 8px 3px 12px;
+                height: 36px;
+                min-width: 80px;
             }
-            .contact-icon {
-                font-size: 0.85rem;
+            .agent-dropdown-list {
+                min-width: 160px;
+            }
+            .agent-dropdown-item .agent-name {
+                font-size: 0.7rem;
+            }
+            .agent-dropdown-item .edit-agent-btn {
+                font-size: 0.6rem;
+                padding: 1px 8px;
+                height: 24px;
             }
             .header-right {
                 gap: 4px;
+            }
+            .agent-form .input-group input,
+            .agent-form .input-group select {
+                height: 34px;
+                font-size: 0.8rem;
+            }
+            .mode-row .btn {
+                font-size: 0.7rem;
+                padding: 4px 10px;
+                height: 36px;
+                min-width: 80px;
             }
         }
         @media (max-width: 400px) {
@@ -1718,7 +2025,23 @@
             }
             .modal-content {
                 padding: 0.6rem;
-                max-width: 250px;
+                max-width: 260px;
+            }
+            #dashboardModal .modal-content {
+                max-width: 98%;
+                padding: 0.4rem;
+            }
+            #dashboardModal table {
+                font-size: 0.5rem;
+            }
+            #dashboardModal th,
+            #dashboardModal td {
+                padding: 1px 3px;
+            }
+            .action-btn.approve-btn {
+                font-size: 0.5rem;
+                padding: 1px 4px;
+                height: 20px;
             }
             .modal-content h3 {
                 font-size: 0.95rem;
@@ -1831,29 +2154,60 @@
             .lang-icon {
                 font-size: 0.7rem;
             }
-            .contact-selector {
-                height: 32px;
-                padding: 1px 3px 1px 6px;
-                max-width: 100px;
+            .agent-dropdown-container {
+                min-width: 80px;
+                max-width: 120px;
             }
-            .contact-selector select {
+            .agent-dropdown-btn {
                 font-size: 0.6rem;
-                min-width: 40px;
+                padding: 2px 6px 2px 10px;
+                height: 32px;
+                min-width: 60px;
             }
-            .contact-icon {
-                font-size: 0.7rem;
+            .agent-dropdown-btn .arrow {
+                font-size: 0.5rem;
+            }
+            .agent-dropdown-list {
+                min-width: 140px;
+            }
+            .agent-dropdown-item .agent-name {
+                font-size: 0.65rem;
+            }
+            .agent-dropdown-item .edit-agent-btn {
+                font-size: 0.55rem;
+                padding: 1px 6px;
+                height: 22px;
             }
             .add-client-btn {
                 font-size: 0.65rem;
                 padding: 4px 10px;
                 height: 34px;
             }
+            .agent-form .input-group input,
+            .agent-form .input-group select {
+                height: 30px;
+                font-size: 0.75rem;
+                padding: 3px 7px;
+            }
+            .collateral-box .ussd-code {
+                font-size: 0.9rem;
+                padding: 3px 8px;
+            }
+            .mode-row .btn {
+                font-size: 0.6rem;
+                padding: 3px 8px;
+                height: 30px;
+                min-width: 60px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="app-card">
-        <!-- ===== HEADER ===== -->
+
+        <!-- ============================================================
+        HEADER
+        ============================================================ -->
         <div class="live-header">
             <div class="logo-container">
                 <div class="africa-map-logo">
@@ -1865,7 +2219,7 @@
                         <circle cx="80" cy="50" r="3" fill="#ffd966"/>
                     </svg>
                 </div>
-                <span class="brand-text" data-i18n="app_name">AfriPay</span>
+                <span class="brand-text" id="brandText">Afri<span id="dashboardTrigger">P</span>ay</span>
             </div>
             <div class="header-right">
                 <div class="datetime-box">
@@ -1881,12 +2235,18 @@
                         <option value="es">🇪🇸 ES</option>
                     </select>
                 </div>
-                <div class="contact-selector">
-                    <span class="contact-icon">👤</span>
-                    <select id="contactDropdown">
-                        <option value="" data-name="" data-phone="">Select Contact</option>
-                    </select>
+
+                <!-- Custom Agent Dropdown -->
+                <div class="agent-dropdown-container">
+                    <button class="agent-dropdown-btn" id="agentDropdownBtn">
+                        <span id="selectedAgentName">Select Agent</span>
+                        <span class="arrow">▼</span>
+                    </button>
+                    <div class="agent-dropdown-list" id="agentDropdownList">
+                        <div class="agent-dropdown-empty">No agents registered</div>
+                    </div>
                 </div>
+
                 <div class="auth-section" id="authSection">
                     <div class="auth-buttons" id="authButtons">
                         <button class="auth-btn" id="loginBtn" data-i18n="login">Login</button>
@@ -1909,7 +2269,9 @@
             </div>
         </div>
 
-        <!-- ===== FLAGS STRIP ===== -->
+        <!-- ============================================================
+        FLAGS STRIP
+        ============================================================ -->
         <div class="flags-strip" id="flagsStrip">
             <button class="flag-scroll-btn left" id="flagScrollLeft">‹</button>
             <div class="flag-grid-wrapper" id="flagGridWrapper">
@@ -1918,7 +2280,9 @@
             <button class="flag-scroll-btn right" id="flagScrollRight">›</button>
         </div>
 
-        <!-- ===== MAIN FORM ===== -->
+        <!-- ============================================================
+        MAIN FORM
+        ============================================================ -->
         <div class="form-container" id="mainFormContainer" style="display:none;">
             <div class="profile-section" id="profileSection">
                 <span class="profile-label" data-i18n="location_label">📍 Location:</span>
@@ -1942,14 +2306,15 @@
                     <div class="input-group"><label data-i18n="client_phone">Client Phone *</label><input type="tel" id="recipientPhone" required /></div>
                 </div>
                 <div style="display:flex; align-items:center; gap:6px; margin-bottom:0.4rem;">
-                    <span style="font-size:0.7rem; color:#1c6e8f;" data-i18n="quick_fill">📋 Quick fill from dropdown</span>
-                    <button type="button" class="add-client-btn" id="addClientBtn" style="margin-top:0;" data-i18n="add_client">➕ Add Client</button>
+                    <span style="font-size:0.7rem; color:#1c6e8f;" data-i18n="quick_fill">📋 Select an agent from the dropdown</span>
                 </div>
 
-                <div class="transfer-type-toggle">
-                    <button type="button" id="localToggleBtn" class="toggle-btn active" data-i18n="local">Local</button>
-                    <button type="button" id="intlToggleBtn" class="toggle-btn" data-i18n="intl">Intl</button>
+                <!-- ===== Mode Row: International & Add Client side by side ===== -->
+                <div class="mode-row">
+                    <button class="btn" id="intlToggleBtn" data-i18n="international">International</button>
+                    <button class="btn add-client-btn-header" id="addClientBtnHeader" data-i18n="add_client">➕ Add Client</button>
                 </div>
+
                 <div class="country-selector-wrapper" id="countryWrapper" style="display:none;">
                     <div class="input-group">
                         <label data-i18n="recipient_country">🌍 Recipient Country</label>
@@ -2011,7 +2376,9 @@
             </form>
         </div>
 
-        <!-- ===== FOOTER ===== -->
+        <!-- ============================================================
+        FOOTER
+        ============================================================ -->
         <div class="footer-section">
             <div class="footer-buttons">
                 <button class="footer-btn" id="aboutAppBtn" data-i18n="about">About</button>
@@ -2029,11 +2396,23 @@
         </div>
     </div>
 
-    <!-- ===== MODALS ===== -->
+    <!-- ============================================================
+    MODALS
+    ============================================================ -->
+
+    <!-- Map Modal -->
     <div id="mapModal" class="modal"><div class="modal-content"><h3 data-i18n="map_title">📍 Your Location</h3><iframe id="mapIframe" allowfullscreen loading="lazy"></iframe><button class="action-btn close-modal" style="margin-top:10px;" data-i18n="close">Close</button></div></div>
+
+    <!-- Info Modal -->
     <div id="infoModal" class="modal"><div class="modal-content"><h3 id="modalTitle"></h3><div id="modalBody"></div><button class="action-btn close-modal" data-i18n="close">Close</button></div></div>
+
+    <!-- Subscribe Modal -->
     <div id="subscribeModal" class="modal"><div class="modal-content"><h3 data-i18n="subscribe_title">📧 Subscribe</h3><input type="email" id="subEmail" placeholder="Your email" style="width:100%; padding:5px 9px; margin:4px 0; border-radius:30px; border:1px solid #ddd; font-size:0.85rem; height:42px;" /><button id="submitSubscribeBtn" class="action-btn" data-i18n="subscribe">Subscribe</button><button class="action-btn close-modal" style="margin-top:4px;" data-i18n="cancel">Cancel</button></div></div>
+
+    <!-- Login Modal -->
     <div id="loginModal" class="modal"><div class="modal-content"><h3 data-i18n="login_title">🔐 Login</h3><input type="text" id="loginName" placeholder="Full Name" style="width:100%; padding:5px 9px; margin:3px 0; border-radius:30px; border:1px solid #ddd; font-size:0.85rem; height:42px;" /><input type="tel" id="loginPhone" placeholder="Phone" style="width:100%; padding:5px 9px; margin:3px 0; border-radius:30px; border:1px solid #ddd; font-size:0.85rem; height:42px;" /><div id="loginError" class="error-msg"></div><button id="doLoginBtn" class="action-btn" data-i18n="login">Login</button><button class="action-btn close-modal" style="margin-top:4px;" data-i18n="cancel">Cancel</button></div></div>
+
+    <!-- Register Modal -->
     <div id="registerModal" class="modal"><div class="modal-content"><h3 data-i18n="register_title">📝 Create Account</h3><input type="text" id="regName" placeholder="Full Name *" style="width:100%; padding:5px 9px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.85rem; height:42px;" /><input type="tel" id="regPhone" placeholder="Phone *" style="width:100%; padding:5px 9px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.85rem; height:42px;" />
         <input type="text" id="regAddress" placeholder="Address" style="width:100%; padding:5px 9px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.85rem; height:42px;" />
         <input type="text" id="regCity" placeholder="City *" style="width:100%; padding:5px 9px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.85rem; height:42px;" />
@@ -2052,20 +2431,164 @@
         </div>
         <div id="regError" class="error-msg"></div><div id="regSuccess" class="success-msg"></div>
         <button id="doRegisterBtn" class="action-btn" data-i18n="register">Register</button>
+        <button id="registerAgentBtn" class="action-btn orange" style="margin-top:4px;" data-i18n="register_agent">🏢 Register as Agent</button>
         <button class="action-btn close-modal" style="margin-top:4px;" data-i18n="cancel">Cancel</button>
     </div></div>
+
+    <!-- Agent Registration Modal -->
+    <div id="agentRegistrationModal" class="modal">
+        <div class="modal-content agent-form">
+            <h3 data-i18n="agent_reg_title">🏢 Agent Registration</h3>
+            <div id="agentRegError" class="error-msg"></div>
+            <div id="agentRegSuccess" class="success-msg"></div>
+            <div class="input-group"><label data-i18n="agent_business_name">Business Name *</label><input type="text" id="agentBusinessName" placeholder="e.g. Freetown Trading Co." /></div>
+            <div class="input-group"><label data-i18n="agent_business_address">Full Business Address *</label><input type="text" id="agentBusinessAddress" placeholder="Street, City, Country" /></div>
+            <div class="input-group"><label data-i18n="agent_reg_number">Official Business Registration Number *</label><input type="text" id="agentRegNumber" placeholder="e.g. SL-2025-0042" /></div>
+            <div class="input-group"><label data-i18n="agent_business_type">Business Type *</label>
+                <select id="agentBusinessType">
+                    <option value="Retail">Retail</option><option value="Wholesale">Wholesale</option>
+                    <option value="Service">Service</option><option value="Manufacturing">Manufacturing</option>
+                    <option value="Transport">Transport</option><option value="Hospitality">Hospitality</option>
+                    <option value="Financial">Financial</option><option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="double-row">
+                <div class="input-group"><label data-i18n="agent_owner_name">Owner Name *</label><input type="text" id="agentOwnerName" placeholder="Full name of owner" /></div>
+                <div class="input-group"><label data-i18n="agent_id_type">ID Type *</label>
+                    <select id="agentIdType">
+                        <option value="National ID">National ID</option><option value="Passport">Passport</option>
+                        <option value="Driver's License">Driver's License</option><option value="Voter's Card">Voter's Card</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+            </div>
+            <div class="input-group"><label data-i18n="agent_id_number">ID Number *</label><input type="text" id="agentIdNumber" placeholder="e.g. SL-123456" /></div>
+            <div class="input-group">
+                <label data-i18n="agent_id_image">Snap or Upload ID Image *</label>
+                <input type="file" id="agentIdImage" accept="image/*" capture="environment" style="padding:4px; height:auto;" />
+                <img id="agentIdPreview" class="id-preview" alt="ID Preview" />
+            </div>
+            <div class="input-group"><label data-i18n="agent_mobile_money">Mobile Money Number *</label><input type="tel" id="agentMobileMoney" placeholder="e.g. 23276123456" /></div>
+            <div class="input-group"><label data-i18n="agent_country_code">Request Country Code for International</label>
+                <select id="agentCountryCode">
+                    <option value="+232">🇸🇱 +232 (Sierra Leone)</option><option value="+234">🇳🇬 +234 (Nigeria)</option>
+                    <option value="+233">🇬🇭 +233 (Ghana)</option><option value="+254">🇰🇪 +254 (Kenya)</option>
+                    <option value="+231">🇱🇷 +231 (Liberia)</option><option value="+221">🇸🇳 +221 (Senegal)</option>
+                    <option value="+224">🇬🇳 +224 (Guinea)</option><option value="+223">🇲🇱 +223 (Mali)</option>
+                    <option value="+225">🇨🇮 +225 (Ivory Coast)</option><option value="+227">🇳🇪 +227 (Niger)</option>
+                    <option value="+229">🇧🇯 +229 (Benin)</option><option value="+245">🇬🇼 +245 (Guinea Bissau)</option>
+                    <option value="+220">🇬🇲 +220 (Gambia)</option><option value="+228">🇹🇬 +228 (Togo)</option>
+                    <option value="+236">🇨🇫 +236 (CAR)</option><option value="+251">🇪🇹 +251 (Ethiopia)</option>
+                    <option value="+241">🇬🇦 +241 (Gabon)</option><option value="+261">🇲🇬 +261 (Madagascar)</option>
+                    <option value="+212">🇲🇦 +212 (Morocco)</option><option value="+250">🇷🇼 +250 (Rwanda)</option>
+                    <option value="+256">🇺🇬 +256 (Uganda)</option><option value="+243">🇨🇩 +243 (DR Congo)</option>
+                    <option value="+226">🇧🇫 +226 (Burkina Faso)</option>
+                </select>
+            </div>
+
+            <!-- Password Generation -->
+            <div class="input-group">
+                <label data-i18n="agent_password">6 Alphanumeric Password *</label>
+                <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
+                    <input type="text" id="agentPassword" placeholder="e.g. A1B2C3" style="flex:1; min-width:100px; letter-spacing:2px; font-family:monospace;" readonly />
+                    <button type="button" class="action-btn green" id="generatePasswordBtn" style="padding:4px 14px; height:38px; font-size:0.7rem;" data-i18n="generate_password">🔑 Generate</button>
+                </div>
+                <div id="agentPasswordHint" style="font-size:0.65rem; color:#666; margin-top:2px;">Click Generate to create a 6-character alphanumeric password</div>
+            </div>
+
+            <!-- Collateral Box -->
+            <div class="collateral-box">
+                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                    <span style="font-weight:700; font-size:0.8rem; color:#1c6e8f;" data-i18n="collateral_label">🔒 Pay Account Collateral</span>
+                    <button class="action-btn orange" id="generateCollateralBtn" style="padding:4px 12px; height:34px; font-size:0.7rem;" data-i18n="generate_collateral">Generate USSD</button>
+                </div>
+                <div id="collateralResult" style="margin-top:4px;">
+                    <span style="font-size:0.7rem; color:#666;" data-i18n="collateral_hint">Click to generate a USSD code for Orange Money transfer collateral.</span>
+                    <div id="collateralUssdDisplay" class="ussd-code" style="display:none;"></div>
+                </div>
+                <div id="collateralError" class="error-msg" style="font-size:0.7rem;"></div>
+                <input type="hidden" id="collateralAmount" value="0" />
+            </div>
+
+            <div class="action-buttons-row" style="margin-top:8px;">
+                <button class="action-btn" id="submitAgentRegistrationBtn" data-i18n="register_agent_submit">Register Agent</button>
+                <button class="action-btn close-modal" data-i18n="cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Agent Modal -->
+    <div id="editAgentModal" class="modal">
+        <div class="modal-content agent-form">
+            <h3 data-i18n="edit_agent_title">✏️ Edit Agent</h3>
+            <div id="editAgentError" class="error-msg"></div>
+            <div id="editAgentSuccess" class="success-msg"></div>
+            <input type="hidden" id="editAgentId" />
+            <div class="input-group"><label data-i18n="agent_business_name">Business Name *</label><input type="text" id="editBusinessName" placeholder="Business name" /></div>
+            <div class="input-group"><label data-i18n="agent_reg_number">Business Registration Number *</label><input type="text" id="editRegNumber" placeholder="Registration number" /></div>
+            <div class="input-group"><label data-i18n="agent_mobile_money">Orange Money Number *</label><input type="tel" id="editMobileMoney" placeholder="e.g. 23276123456" /></div>
+            <div class="input-group">
+                <label data-i18n="agent_password">6 Alphanumeric Password *</label>
+                <input type="text" id="editPassword" placeholder="Enter the 6-character password" style="letter-spacing:2px; font-family:monospace;" />
+                <div id="editPasswordHint" style="font-size:0.65rem; color:#666; margin-top:2px;">Enter the password that was generated during registration</div>
+            </div>
+            <div class="action-buttons-row" style="margin-top:8px;">
+                <button class="action-btn" id="saveEditAgentBtn" data-i18n="save_changes">Save Changes</button>
+                <button class="action-btn close-modal" data-i18n="cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Add Client Modal -->
     <div id="addClientModal" class="modal"><div class="modal-content"><h3 data-i18n="add_client_title">➕ Add Client</h3><div class="input-group"><label data-i18n="client_name">Client Name *</label><input type="text" id="newClientName" placeholder="Enter client name" style="height:42px;" /></div><div class="input-group"><label data-i18n="client_phone">Client Phone *</label><input type="tel" id="newClientPhone" placeholder="Enter phone number" style="height:42px;" /></div><div id="addClientError" class="error-msg"></div><div class="action-buttons-row"><button class="action-btn" id="saveClientBtn" data-i18n="save">Save Client</button><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div></div></div>
 
+    <!-- Group Create Modal -->
     <div id="groupCreateModal" class="modal"><div class="modal-content"><h3 data-i18n="new_group">👥 New Group</h3><div class="input-group"><label data-i18n="group_name">Group Name *</label><input type="text" id="groupNameInput" placeholder="Enter group name" maxlength="30" style="height:42px;" /></div><div class="input-group"><label data-i18n="select_members">Select Members (max 25)</label><div class="member-counter" id="memberCounter">0 selected</div><div class="group-member-list" id="memberListContainer"></div></div><div class="action-buttons-row"><button class="action-btn" id="createGroupBtn" style="flex:1;" data-i18n="create">Create</button><button class="action-btn close-modal" style="flex:0;" data-i18n="cancel">Cancel</button></div></div></div>
+
+    <!-- Group Manage Modal -->
     <div id="groupManageModal" class="modal"><div class="modal-content"><h3 id="groupManageTitle" data-i18n="manage_group">Manage Group</h3><div id="groupManageBody"></div><button class="action-btn close-modal" style="margin-top:6px;" data-i18n="close">Close</button></div></div>
+
+    <!-- Provider Modal -->
     <div id="providerModal" class="modal"><div class="modal-content"><h3 data-i18n="select_provider">Select Provider</h3><div class="action-buttons-row"><button class="action-btn" data-provider="Orange Money" data-i18n="orange">Orange</button><button class="action-btn" data-provider="Afrimoney" data-i18n="afrimoney">Afrimoney</button><button class="action-btn" data-provider="QMoney" data-i18n="qmoney">QMoney</button><button class="action-btn" data-provider="WBMoney" data-i18n="wbmoney">WBMoney</button><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div></div></div>
+
+    <!-- Role Modal -->
     <div id="roleModal" class="modal"><div class="modal-content"><h3 id="roleModalTitle" data-i18n="select_type">Select Type</h3><div class="action-buttons-row" id="roleButtons"><button class="action-btn" data-role="agent" data-i18n="agent">Agent</button><button class="action-btn" data-role="customer" data-i18n="customer">Customer</button><button class="action-btn" data-role="other" data-i18n="other">Other</button><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div></div></div>
+
+    <!-- Action Modal -->
     <div id="actionModal" class="modal"><div class="modal-content"><h3 id="modalProviderName">Orange</h3><div id="selectedRoleDisplay" style="font-size:0.72rem; color:#f4a261; margin-top:2px;"></div><div class="action-buttons-row"><button class="action-btn" id="actionTransfer" data-i18n="transfer">Transfer</button><button class="action-btn pay" id="actionPay" data-i18n="pay">Pay</button><button class="action-btn cashout" id="actionCashout" data-i18n="cashout">Cash Out</button><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div></div></div>
+
+    <!-- Goods Modal -->
     <div id="goodsModal" class="modal"><div class="modal-content"><h3 id="goodsModalTitle" data-i18n="select_item">Select Item</h3><div id="goodsList"></div><a href="#" id="businessWebsiteLink" target="_blank" class="business-website" style="display:block;margin-top:4px;color:#2c7da0;font-weight:700;font-size:0.78rem;" data-i18n="visit_website">Visit Website</a><button class="action-btn close-modal" style="margin-top:8px;" data-i18n="close">Close</button></div></div>
 
-    <!-- ===== CHAT TOGGLE & WINDOW ===== -->
+    <!-- ===== DASHBOARD MODAL ===== -->
+    <div id="dashboardModal" class="modal">
+        <div class="modal-content">
+            <h3>📊 Agent Dashboard</h3>
+            <div id="dashboardContent" style="overflow-x:auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Agent Name</th>
+                            <th>Business</th>
+                            <th>Address</th>
+                            <th>Type</th>
+                            <th>Password</th>
+                            <th>Collateral</th>
+                            <th>Country</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dashboardTableBody"></tbody>
+                </table>
+            </div>
+            <button class="action-btn close-modal" style="margin-top:10px;" data-i18n="close">Close</button>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    CHAT
+    ============================================================ -->
     <button class="chat-toggle-btn" id="chatToggleBtn" title="Open Chat">💬<span class="chat-badge" id="chatBadge" style="display:none;">0</span></button>
     <div class="chat-window" id="chatWindow">
         <div class="chat-main">
@@ -2099,19 +2622,21 @@
         <div class="chat-sidebar" id="chatSidebar"></div>
     </div>
 
-    <!-- ===== HIDDEN INPUTS ===== -->
+    <!-- ============================================================
+    HIDDEN INPUTS
+    ============================================================ -->
     <input type="file" id="chatVideoInput" accept="video/*" class="hidden-input" />
     <input type="file" id="chatAudioInput" accept="audio/*" class="hidden-input" />
     <input type="file" id="chatProfilePicInput" accept="image/*" class="hidden-input" />
 
     <div id="toastMsg" class="toast-msg"></div>
 
-    <!-- ================================================================ -->
-    <!--  JAVASCRIPT – FULL APPLICATION LOGIC                             -->
-    <!-- ================================================================ -->
+    <!-- ============================================================
+    JAVASCRIPT – FULL APPLICATION LOGIC
+    ============================================================ -->
     <script>
         // ================================================================
-        //  TRANSLATIONS DICTIONARY (all languages)
+        // TRANSLATIONS DICTIONARY (full, all languages)
         // ================================================================
         const TRANSLATIONS = {
             en: {
@@ -2130,10 +2655,9 @@
                 recipient_title: '👥 CLIENT (RECIPIENT)',
                 client_name: 'Client Name *',
                 client_phone: 'Client Phone *',
-                quick_fill: '📋 Quick fill from dropdown',
+                quick_fill: '📋 Select an agent from the dropdown',
                 add_client: '➕ Add Client',
-                local: 'Local',
-                intl: 'Intl',
+                international: 'International',
                 recipient_country: '🌍 Recipient Country',
                 base_amount: '💰 Base Amount:',
                 transfer_charge: '📊 Transfer Charge (1%):',
@@ -2262,12 +2786,39 @@
                 receipt_gst: 'GST ({rate}%):',
                 receipt_total: 'Total Debited:',
                 receipt_thanks: 'Thank you for choosing AfriPay!',
-                select_contact_dropdown: 'Select Contact',
-                add_client_title: '➕ Add Client',
-                save: 'Save Client',
-                client_added: '✅ Client {name} added!',
-                client_name_required: '❌ Please enter a name',
-                client_phone_required: '❌ Please enter a phone number'
+                select_agent_placeholder: 'Select Agent',
+                register_agent: '🏢 Register as Agent',
+                agent_reg_title: '🏢 Agent Registration',
+                agent_business_name: 'Business Name *',
+                agent_business_address: 'Full Business Address *',
+                agent_reg_number: 'Official Business Registration Number *',
+                agent_business_type: 'Business Type *',
+                agent_owner_name: 'Owner Name *',
+                agent_id_type: 'ID Type *',
+                agent_id_number: 'ID Number *',
+                agent_id_image: 'Snap or Upload ID Image *',
+                agent_mobile_money: 'Mobile Money Number *',
+                agent_country_code: 'Request Country Code for International',
+                agent_password: '6 Alphanumeric Password *',
+                generate_password: '🔑 Generate',
+                collateral_label: '🔒 Pay Account Collateral',
+                generate_collateral: 'Generate USSD',
+                collateral_hint: 'Click to generate a USSD code for Orange Money transfer collateral.',
+                register_agent_submit: 'Register Agent',
+                agent_reg_success: '✅ Agent {name} registered successfully!',
+                agent_reg_error: '❌ Please fill all required fields',
+                agent_collateral_ussd: '📞 USSD Code: {code}',
+                agent_collateral_error: '❌ Please fill Mobile Money and Country Code first',
+                agent_reg_loading: '⏳ Registering agent...',
+                agent_already_exists: '❌ Agent with this business name already exists',
+                edit_agent_title: '✏️ Edit Agent',
+                save_changes: 'Save Changes',
+                edit_agent_success: '✅ Agent updated successfully!',
+                edit_agent_error: '❌ Please fill all fields',
+                edit_agent_password_error: '❌ Incorrect password. Please enter the password generated during registration.',
+                no_agents: 'No agents registered',
+                agent_updated: '✅ Agent {name} updated successfully!',
+                dashboard_title: '📊 Agent Dashboard',
             },
             fr: {
                 app_name: 'AfriPay',
@@ -2285,10 +2836,9 @@
                 recipient_title: '👥 CLIENT (DESTINATAIRE)',
                 client_name: 'Nom du client *',
                 client_phone: 'Téléphone du client *',
-                quick_fill: '📋 Remplissage rapide depuis la liste',
+                quick_fill: '📋 Sélectionnez un agent dans la liste',
                 add_client: '➕ Ajouter un client',
-                local: 'Local',
-                intl: 'Intl',
+                international: 'International',
                 recipient_country: '🌍 Pays du destinataire',
                 base_amount: '💰 Montant de base :',
                 transfer_charge: '📊 Frais de transfert (1%) :',
@@ -2417,12 +2967,39 @@
                 receipt_gst: 'TVA ({rate}%) :',
                 receipt_total: 'Total débité :',
                 receipt_thanks: 'Merci d\'avoir choisi AfriPay !',
-                select_contact_dropdown: 'Sélectionner un contact',
-                add_client_title: '➕ Ajouter un client',
-                save: 'Enregistrer le client',
-                client_added: '✅ Client {name} ajouté !',
-                client_name_required: '❌ Veuillez entrer un nom',
-                client_phone_required: '❌ Veuillez entrer un numéro de téléphone'
+                select_agent_placeholder: 'Sélectionner un agent',
+                register_agent: '🏢 S\'inscrire comme agent',
+                agent_reg_title: '🏢 Inscription d\'agent',
+                agent_business_name: 'Nom de l\'entreprise *',
+                agent_business_address: 'Adresse complète *',
+                agent_reg_number: 'Numéro d\'enregistrement officiel *',
+                agent_business_type: 'Type d\'entreprise *',
+                agent_owner_name: 'Nom du propriétaire *',
+                agent_id_type: 'Type de pièce d\'identité *',
+                agent_id_number: 'Numéro de pièce d\'identité *',
+                agent_id_image: 'Prendre ou télécharger une photo de la pièce d\'identité *',
+                agent_mobile_money: 'Numéro Mobile Money *',
+                agent_country_code: 'Demander l\'indicatif pays pour l\'international',
+                agent_password: 'Mot de passe alphanumérique de 6 caractères *',
+                generate_password: '🔑 Générer',
+                collateral_label: '🔒 Garantie du compte de paiement',
+                generate_collateral: 'Générer USSD',
+                collateral_hint: 'Cliquez pour générer un code USSD pour un transfert Orange Money.',
+                register_agent_submit: 'Enregistrer l\'agent',
+                agent_reg_success: '✅ Agent {name} enregistré avec succès !',
+                agent_reg_error: '❌ Veuillez remplir tous les champs obligatoires',
+                agent_collateral_ussd: '📞 Code USSD : {code}',
+                agent_collateral_error: '❌ Veuillez d\'abord remplir le numéro Mobile Money et l\'indicatif pays',
+                agent_reg_loading: '⏳ Inscription de l\'agent...',
+                agent_already_exists: '❌ Un agent avec ce nom d\'entreprise existe déjà',
+                edit_agent_title: '✏️ Modifier l\'agent',
+                save_changes: 'Enregistrer les modifications',
+                edit_agent_success: '✅ Agent mis à jour avec succès !',
+                edit_agent_error: '❌ Veuillez remplir tous les champs',
+                edit_agent_password_error: '❌ Mot de passe incorrect. Veuillez entrer le mot de passe généré lors de l\'inscription.',
+                no_agents: 'Aucun agent enregistré',
+                agent_updated: '✅ Agent {name} mis à jour avec succès !',
+                dashboard_title: '📊 Tableau de bord des agents',
             },
             ar: {
                 app_name: 'أفري باي',
@@ -2440,10 +3017,9 @@
                 recipient_title: '👥 العميل (المستلم)',
                 client_name: 'اسم العميل *',
                 client_phone: 'هاتف العميل *',
-                quick_fill: '📋 ملء سريع من القائمة المنسدلة',
+                quick_fill: '📋 اختر وكيلاً من القائمة المنسدلة',
                 add_client: '➕ إضافة عميل',
-                local: 'محلي',
-                intl: 'دولي',
+                international: 'دولي',
                 recipient_country: '🌍 بلد المستلم',
                 base_amount: '💰 المبلغ الأساسي:',
                 transfer_charge: '📊 رسوم التحويل (1%):',
@@ -2572,12 +3148,39 @@
                 receipt_gst: 'ضريبة السلع والخدمات ({rate}%):',
                 receipt_total: 'إجمالي المخصوم:',
                 receipt_thanks: 'شكراً لاختيارك أفري-باي!',
-                select_contact_dropdown: 'اختر جهة اتصال',
-                add_client_title: '➕ إضافة عميل',
-                save: 'حفظ العميل',
-                client_added: '✅ تم إضافة العميل {name}!',
-                client_name_required: '❌ الرجاء إدخال اسم',
-                client_phone_required: '❌ الرجاء إدخال رقم الهاتف'
+                select_agent_placeholder: 'اختر وكيلاً',
+                register_agent: '🏢 تسجيل كوكيل',
+                agent_reg_title: '🏢 تسجيل الوكيل',
+                agent_business_name: 'اسم الشركة *',
+                agent_business_address: 'العنوان الكامل للشركة *',
+                agent_reg_number: 'رقم التسجيل الرسمي للشركة *',
+                agent_business_type: 'نوع النشاط التجاري *',
+                agent_owner_name: 'اسم المالك *',
+                agent_id_type: 'نوع الهوية *',
+                agent_id_number: 'رقم الهوية *',
+                agent_id_image: 'التقط أو حمّل صورة الهوية *',
+                agent_mobile_money: 'رقم النقود المتنقلة *',
+                agent_country_code: 'طلب رمز الدولة للتحويلات الدولية',
+                agent_password: 'كلمة مرور أبجدية رقمية من 6 أحرف *',
+                generate_password: '🔑 إنشاء',
+                collateral_label: '🔒 ضمان حساب الدفع',
+                generate_collateral: 'إنشاء USSD',
+                collateral_hint: 'انقر لإنشاء رمز USSD لتحويل أورانج موني.',
+                register_agent_submit: 'تسجيل الوكيل',
+                agent_reg_success: '✅ تم تسجيل الوكيل {name} بنجاح!',
+                agent_reg_error: '❌ الرجاء ملء جميع الحقول المطلوبة',
+                agent_collateral_ussd: '📞 رمز USSD: {code}',
+                agent_collateral_error: '❌ الرجاء ملء رقم النقود المتنقلة ورمز الدولة أولاً',
+                agent_reg_loading: '⏳ جاري تسجيل الوكيل...',
+                agent_already_exists: '❌ وكيل بهذا الاسم التجاري موجود بالفعل',
+                edit_agent_title: '✏️ تعديل الوكيل',
+                save_changes: 'حفظ التغييرات',
+                edit_agent_success: '✅ تم تحديث الوكيل بنجاح!',
+                edit_agent_error: '❌ الرجاء ملء جميع الحقول',
+                edit_agent_password_error: '❌ كلمة مرور غير صحيحة. الرجاء إدخال كلمة المرور التي تم إنشاؤها أثناء التسجيل.',
+                no_agents: 'لا يوجد وكلاء مسجلون',
+                agent_updated: '✅ تم تحديث الوكيل {name} بنجاح!',
+                dashboard_title: '📊 لوحة تحكم الوكلاء',
             },
             es: {
                 app_name: 'AfriPay',
@@ -2595,10 +3198,9 @@
                 recipient_title: '👥 CLIENTE (DESTINATARIO)',
                 client_name: 'Nombre del cliente *',
                 client_phone: 'Teléfono del cliente *',
-                quick_fill: '📋 Relleno rápido desde el desplegable',
+                quick_fill: '📋 Selecciona un agente del desplegable',
                 add_client: '➕ Añadir cliente',
-                local: 'Local',
-                intl: 'Intl',
+                international: 'Internacional',
                 recipient_country: '🌍 País del destinatario',
                 base_amount: '💰 Monto base:',
                 transfer_charge: '📊 Comisión de transferencia (1%):',
@@ -2727,17 +3329,44 @@
                 receipt_gst: 'IVA ({rate}%):',
                 receipt_total: 'Total debitado:',
                 receipt_thanks: '¡Gracias por elegir AfriPay!',
-                select_contact_dropdown: 'Seleccionar contacto',
-                add_client_title: '➕ Añadir cliente',
-                save: 'Guardar cliente',
-                client_added: '✅ ¡Cliente {name} añadido!',
-                client_name_required: '❌ Por favor, introduce un nombre',
-                client_phone_required: '❌ Por favor, introduce un número de teléfono'
+                select_agent_placeholder: 'Seleccionar agente',
+                register_agent: '🏢 Registrarse como agente',
+                agent_reg_title: '🏢 Registro de agente',
+                agent_business_name: 'Nombre del negocio *',
+                agent_business_address: 'Dirección completa *',
+                agent_reg_number: 'Número de registro oficial *',
+                agent_business_type: 'Tipo de negocio *',
+                agent_owner_name: 'Nombre del propietario *',
+                agent_id_type: 'Tipo de identificación *',
+                agent_id_number: 'Número de identificación *',
+                agent_id_image: 'Tomar o subir foto de identificación *',
+                agent_mobile_money: 'Número de dinero móvil *',
+                agent_country_code: 'Solicitar código de país para internacional',
+                agent_password: 'Contraseña alfanumérica de 6 caracteres *',
+                generate_password: '🔑 Generar',
+                collateral_label: '🔒 Garantía de cuenta de pago',
+                generate_collateral: 'Generar USSD',
+                collateral_hint: 'Haz clic para generar un código USSD para transferencia de Orange Money.',
+                register_agent_submit: 'Registrar agente',
+                agent_reg_success: '✅ ¡Agente {name} registrado con éxito!',
+                agent_reg_error: '❌ Por favor, completa todos los campos obligatorios',
+                agent_collateral_ussd: '📞 Código USSD: {code}',
+                agent_collateral_error: '❌ Por favor, completa primero el número de dinero móvil y el código de país',
+                agent_reg_loading: '⏳ Registrando agente...',
+                agent_already_exists: '❌ Ya existe un agente con este nombre de negocio',
+                edit_agent_title: '✏️ Editar agente',
+                save_changes: 'Guardar cambios',
+                edit_agent_success: '✅ ¡Agente actualizado con éxito!',
+                edit_agent_error: '❌ Por favor, completa todos los campos',
+                edit_agent_password_error: '❌ Contraseña incorrecta. Por favor, ingresa la contraseña generada durante el registro.',
+                no_agents: 'No hay agentes registrados',
+                agent_updated: '✅ ¡Agente {name} actualizado con éxito!',
+                dashboard_title: '📊 Panel de agentes',
             }
         };
 
         // ================================================================
-        //  LANGUAGE ENGINE
+        // LANGUAGE ENGINE
         // ================================================================
         let currentLang = 'en';
 
@@ -2780,8 +3409,28 @@
         }
 
         function translatePage() {
+            // Update brand text manually to preserve the clickable "P"
+            const brand = document.getElementById('brandText');
+            if (brand) {
+                const appName = t('app_name');
+                if (appName === 'AfriPay') {
+                    brand.innerHTML = 'Afri<span id="dashboardTrigger">P</span>ay';
+                } else {
+                    brand.innerHTML = 'Afri<span id="dashboardTrigger">P</span>ay';
+                }
+                const trigger = document.getElementById('dashboardTrigger');
+                if (trigger) {
+                    trigger.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        openDashboard();
+                    });
+                }
+            }
+
+            // Regular i18n elements
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
+                if (key === 'app_name') return;
                 const translation = t(key);
                 if (translation && translation !== key) {
                     const hasGstRate = el.querySelector('#gstRateLabel');
@@ -2818,21 +3467,45 @@
                 }
             });
 
-            const contactSelect = document.getElementById('contactDropdown');
-            if (contactSelect) {
-                const firstOption = contactSelect.querySelector('option[value=""]');
-                if (firstOption) {
-                    firstOption.textContent = t('select_contact_dropdown');
-                }
+            const selectedName = document.getElementById('selectedAgentName');
+            if (selectedName && !selectedName.dataset.agentId) {
+                selectedName.textContent = t('select_agent_placeholder');
             }
+
+            // Update button labels
+            const intlBtn = document.getElementById('intlToggleBtn');
+            if (intlBtn) intlBtn.textContent = t('international');
+
+            const addClientBtn = document.getElementById('addClientBtnHeader');
+            if (addClientBtn) addClientBtn.textContent = '➕ ' + t('add_client');
 
             const addClientH3 = document.querySelector('#addClientModal h3');
             if (addClientH3) addClientH3.textContent = t('add_client_title');
             const saveBtn = document.getElementById('saveClientBtn');
             if (saveBtn) saveBtn.textContent = t('save');
 
+            const agentH3 = document.querySelector('#agentRegistrationModal h3');
+            if (agentH3) agentH3.textContent = t('agent_reg_title');
+            const agentSubmitBtn = document.getElementById('submitAgentRegistrationBtn');
+            if (agentSubmitBtn) agentSubmitBtn.textContent = t('register_agent_submit');
+            const agentRegBtn = document.getElementById('registerAgentBtn');
+            if (agentRegBtn) agentRegBtn.textContent = t('register_agent');
+            const genCollBtn = document.getElementById('generateCollateralBtn');
+            if (genCollBtn) genCollBtn.textContent = t('generate_collateral');
+            const genPassBtn = document.getElementById('generatePasswordBtn');
+            if (genPassBtn) genPassBtn.textContent = t('generate_password');
+
+            const editH3 = document.querySelector('#editAgentModal h3');
+            if (editH3) editH3.textContent = t('edit_agent_title');
+            const saveEditBtn = document.getElementById('saveEditAgentBtn');
+            if (saveEditBtn) saveEditBtn.textContent = t('save_changes');
+
+            const dashH3 = document.querySelector('#dashboardModal h3');
+            if (dashH3) dashH3.textContent = t('dashboard_title');
+
             renderSidebar();
             renderBusinessStrip();
+            renderAgentDropdown();
 
             if (activeChatId && activeChatType) {
                 if (activeChatType === 'individual') {
@@ -2873,7 +3546,7 @@
         });
 
         // ================================================================
-        //  SUPPORTED COUNTRIES, BUSINESSES, USER POOL
+        // SUPPORTED COUNTRIES, BUSINESSES, USER POOL
         // ================================================================
         const SUPPORTED_COUNTRY_FLAGS = ['🇱🇷', '🇬🇳', '🇸🇳', '🇲🇱', '🇨🇮', '🇬🇭', '🇳🇪', '🇧🇯', '🇬🇼', '🇬🇲', '🇹🇬', '🇰🇪', '🇨🇫', '🇪🇹', '🇬🇦', '🇲🇬', '🇲🇦', '🇷🇼', '🇺🇬', '🇨🇩', '🇧🇫'];
 
@@ -2947,6 +3620,8 @@
         let selectedProvider = '';
         let selectedRole = '';
         let selectedEmoji = '👤';
+        let selectedAgentId = null;
+        let currentCollateralAmount = 0;
 
         const USER_POOL = [
             { id: 1, name: 'Alice Wonder', emoji: '👩' },
@@ -2995,122 +3670,471 @@
         let chatSettings = { bgColor: '#f5f8fa', fontSize: 14, brightness: 1.0 };
 
         // ================================================================
-        //  CONTACT DROPDOWN & CLIENT ADD
+        // AGENT DROPDOWN FUNCTIONS
+        // ================================================================
+        function getAgents() {
+            return connectedUsers.filter(u => u.isAgent === true || u.role === 'agent');
+        }
+
+        function renderAgentDropdown() {
+            const list = document.getElementById('agentDropdownList');
+            if (!list) return;
+
+            const agents = getAgents();
+            list.innerHTML = '';
+
+            if (agents.length === 0) {
+                const empty = document.createElement('div');
+                empty.className = 'agent-dropdown-empty';
+                empty.textContent = t('no_agents');
+                list.appendChild(empty);
+                return;
+            }
+
+            agents.forEach(agent => {
+                const item = document.createElement('div');
+                item.className = 'agent-dropdown-item';
+
+                const nameSpan = document.createElement('span');
+                nameSpan.className = 'agent-name';
+                nameSpan.textContent = agent.name;
+                nameSpan.style.cursor = 'pointer';
+                nameSpan.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    selectAgent(agent.id);
+                    document.getElementById('agentDropdownList').classList.remove('open');
+                });
+
+                const editBtn = document.createElement('button');
+                editBtn.className = 'edit-agent-btn';
+                editBtn.textContent = 'Edit';
+                editBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    openEditAgentModal(agent.id);
+                    document.getElementById('agentDropdownList').classList.remove('open');
+                });
+
+                item.appendChild(nameSpan);
+                item.appendChild(editBtn);
+                list.appendChild(item);
+            });
+        }
+
+        function selectAgent(agentId) {
+            const agents = getAgents();
+            const agent = agents.find(a => a.id === agentId);
+            if (!agent) return;
+
+            selectedAgentId = agentId;
+            document.getElementById('selectedAgentName').textContent = agent.name;
+            document.getElementById('selectedAgentName').dataset.agentId = agentId;
+
+            document.getElementById('recipientName').value = agent.name;
+            document.getElementById('recipientPhone').value = agent.phone || '';
+            showToast(`👤 ${agent.name} selected`, 1500);
+        }
+
+        document.getElementById('agentDropdownBtn').addEventListener('click', function(e) {
+            e.stopPropagation();
+            const list = document.getElementById('agentDropdownList');
+            list.classList.toggle('open');
+            renderAgentDropdown();
+        });
+
+        document.addEventListener('click', function(e) {
+            const container = document.querySelector('.agent-dropdown-container');
+            if (container && !container.contains(e.target)) {
+                document.getElementById('agentDropdownList').classList.remove('open');
+            }
+        });
+
+        // ================================================================
+        // DASHBOARD
+        // ================================================================
+        function openDashboard() {
+            renderDashboard();
+            document.getElementById('dashboardModal').style.display = 'flex';
+        }
+
+        function renderDashboard() {
+            const tbody = document.getElementById('dashboardTableBody');
+            if (!tbody) return;
+            const agents = getAgents();
+            if (agents.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:20px; color:#95a5a6;">${t('no_agents')}</td></tr>`;
+                return;
+            }
+            let html = '';
+            agents.forEach(agent => {
+                const data = agent.agentData || agent;
+                const approved = data.approved || false;
+                const statusClass = approved ? 'approved' : 'pending';
+                const statusText = approved ? 'Approved' : 'Pending';
+                const collateral = data.collateralAmount || 0;
+                const countryCode = data.countryCode || 'N/A';
+                const password = data.password || 'N/A';
+                const bizName = data.businessName || 'N/A';
+                const bizAddress = data.businessAddress || 'N/A';
+                const bizType = data.businessType || 'N/A';
+                html += `
+                    <tr class="agent-row">
+                        <td>${agent.name}</td>
+                        <td>${bizName}</td>
+                        <td>${bizAddress}</td>
+                        <td>${bizType}</td>
+                        <td style="font-family:monospace; letter-spacing:1px;">${password}</td>
+                        <td>${collateral} ${data.currency || 'GMD'}</td>
+                        <td>${countryCode}</td>
+                        <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                        <td>
+                            <button class="action-btn approve-btn ${approved ? 'approved' : ''}" data-agent-id="${agent.id}" ${approved ? 'disabled' : ''}>
+                                ${approved ? 'Approved' : 'Approve'}
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+
+            tbody.querySelectorAll('.approve-btn:not(.approved)').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const agentId = this.dataset.agentId;
+                    approveAgent(agentId);
+                });
+            });
+        }
+
+        function approveAgent(agentId) {
+            const agents = getAgents();
+            const agent = agents.find(a => a.id === agentId);
+            if (!agent) return;
+            const data = agent.agentData || agent;
+            data.approved = true;
+
+            const regUser = registeredUsers.find(u => u.id === agentId);
+            if (regUser) regUser.approved = true;
+
+            const user = connectedUsers.find(u => u.id === agentId);
+            if (user) {
+                if (!user.agentData) user.agentData = data;
+                user.agentData.approved = true;
+            }
+
+            saveRegisteredUsers();
+            renderDashboard();
+            showToast(`✅ Agent ${agent.name} approved!`, 2000);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const trigger = document.getElementById('dashboardTrigger');
+            if (trigger) {
+                trigger.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    openDashboard();
+                });
+            }
+        });
+
+        // ================================================================
+        // CONTACT FUNCTIONS (exclude agents)
         // ================================================================
         function getAllContacts() {
             const map = new Map();
             connectedUsers.forEach(u => {
-                if (!map.has(u.id)) {
-                    map.set(u.id, { ...u, source: 'pool' });
+                if (u.isAgent !== true && u.role !== 'agent') {
+                    if (!map.has(u.id)) {
+                        map.set(u.id, { ...u, source: 'pool' });
+                    }
                 }
             });
             registeredUsers.forEach(u => {
-                if (!map.has(u.id)) {
-                    map.set(u.id, { ...u, source: 'registered', status: 'online', avatarDataURL: null });
+                if (u.role !== 'agent' && !u.isAgent) {
+                    if (!map.has(u.id)) {
+                        map.set(u.id, { ...u, source: 'registered', status: 'online', avatarDataURL: null });
+                    }
                 }
             });
             return Array.from(map.values());
         }
 
-        function populateContactDropdown() {
-            const select = document.getElementById('contactDropdown');
-            if (!select) return;
-            const placeholder = select.querySelector('option[value=""]');
-            while (select.options.length > 1) {
-                select.remove(1);
+        // ================================================================
+        // PASSWORD GENERATION
+        // ================================================================
+        function generateAlphanumericPassword(length = 6) {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
             }
-            const allContacts = getAllContacts();
-            allContacts.forEach(contact => {
-                const option = document.createElement('option');
-                option.value = contact.phone || contact.id;
-                option.dataset.name = contact.name;
-                option.dataset.phone = contact.phone || '';
-                option.textContent = contact.name;
-                if (!option.value) option.value = contact.id;
-                select.appendChild(option);
-            });
-            if (placeholder) {
-                placeholder.textContent = t('select_contact_dropdown');
-            }
+            return result;
         }
 
-        document.getElementById('contactDropdown').addEventListener('change', function() {
-            const selectedOption = this.options[this.selectedIndex];
-            if (!selectedOption || selectedOption.value === '') return;
-            const name = selectedOption.dataset.name || '';
-            const phone = selectedOption.dataset.phone || '';
-            if (name) {
-                document.getElementById('recipientName').value = name;
-            }
-            if (phone) {
-                document.getElementById('recipientPhone').value = phone;
-            } else {
-                const val = selectedOption.value;
-                if (val && val.length > 3) {
-                    document.getElementById('recipientPhone').value = val;
-                }
-            }
-            showToast(`👤 ${name} selected`, 1500);
-        });
-
-        const addClientBtn = document.getElementById('addClientBtn');
-        const addClientModal = document.getElementById('addClientModal');
-        const newClientName = document.getElementById('newClientName');
-        const newClientPhone = document.getElementById('newClientPhone');
-        const saveClientBtn = document.getElementById('saveClientBtn');
-        const addClientError = document.getElementById('addClientError');
-
-        addClientBtn.addEventListener('click', function() {
-            newClientName.value = '';
-            newClientPhone.value = '';
-            addClientError.textContent = '';
-            addClientModal.style.display = 'flex';
-        });
-
-        saveClientBtn.addEventListener('click', function() {
-            const name = newClientName.value.trim();
-            const phone = newClientPhone.value.trim();
-            if (!name) { addClientError.textContent = t('client_name_required'); return; }
-            if (!phone) { addClientError.textContent = t('client_phone_required'); return; }
-            const newId = 'client_' + Date.now();
-            connectedUsers.push({
-                id: newId,
-                name: name,
-                phone: phone,
-                emoji: '👤',
-                status: 'online',
-                avatarDataURL: null
-            });
-            populateContactDropdown();
-            document.getElementById('recipientName').value = name;
-            document.getElementById('recipientPhone').value = phone;
-            const select = document.getElementById('contactDropdown');
-            for (let i = 0; i < select.options.length; i++) {
-                if (select.options[i].dataset.name === name && select.options[i].dataset.phone === phone) {
-                    select.selectedIndex = i;
-                    break;
-                }
-            }
-            showToast(t('client_added', { name: name }), 2000);
-            addClientModal.style.display = 'none';
-            addClientError.textContent = '';
-        });
-
-        document.querySelectorAll('#addClientModal .close-modal').forEach(btn => {
-            btn.addEventListener('click', function() {
-                addClientModal.style.display = 'none';
-                addClientError.textContent = '';
-            });
-        });
-        addClientModal.addEventListener('click', function(e) {
-            if (e.target === this) {
-                this.style.display = 'none';
-                addClientError.textContent = '';
-            }
+        document.getElementById('generatePasswordBtn').addEventListener('click', function() {
+            const password = generateAlphanumericPassword(6);
+            document.getElementById('agentPassword').value = password;
+            document.getElementById('agentPasswordHint').textContent = '✅ Password generated: ' + password;
+            document.getElementById('agentPasswordHint').style.color = '#27ae60';
+            showToast('🔑 Password generated: ' + password, 3000);
         });
 
         // ================================================================
-        //  CORE FUNCTIONS (load, save, UI updates)
+        // AGENT REGISTRATION
+        // ================================================================
+        const agentRegModal = document.getElementById('agentRegistrationModal');
+        const registerAgentBtn = document.getElementById('registerAgentBtn');
+        const agentRegError = document.getElementById('agentRegError');
+        const agentRegSuccess = document.getElementById('agentRegSuccess');
+
+        registerAgentBtn.addEventListener('click', function() {
+            agentRegError.textContent = '';
+            agentRegSuccess.textContent = '';
+            document.getElementById('agentBusinessName').value = '';
+            document.getElementById('agentBusinessAddress').value = '';
+            document.getElementById('agentRegNumber').value = '';
+            document.getElementById('agentOwnerName').value = '';
+            document.getElementById('agentIdNumber').value = '';
+            document.getElementById('agentMobileMoney').value = '';
+            document.getElementById('agentPassword').value = '';
+            document.getElementById('agentPasswordHint').textContent = 'Click Generate to create a 6-character alphanumeric password';
+            document.getElementById('agentPasswordHint').style.color = '#666';
+            document.getElementById('agentIdPreview').style.display = 'none';
+            document.getElementById('agentIdPreview').src = '';
+            document.getElementById('collateralUssdDisplay').style.display = 'none';
+            document.getElementById('collateralUssdDisplay').textContent = '';
+            document.getElementById('collateralError').textContent = '';
+            document.getElementById('collateralAmount').value = '0';
+            currentCollateralAmount = 0;
+            agentRegModal.style.display = 'flex';
+        });
+
+        document.getElementById('agentIdImage').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    const preview = document.getElementById('agentIdPreview');
+                    preview.src = ev.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.getElementById('generateCollateralBtn').addEventListener('click', function() {
+            const mobileMoney = document.getElementById('agentMobileMoney').value.trim();
+            const countryCode = document.getElementById('agentCountryCode').value;
+            const errorEl = document.getElementById('collateralError');
+            const displayEl = document.getElementById('collateralUssdDisplay');
+
+            if (!mobileMoney) {
+                errorEl.textContent = t('agent_collateral_error');
+                displayEl.style.display = 'none';
+                return;
+            }
+            errorEl.textContent = '';
+
+            const amount = Math.floor(Math.random() * 490) + 10;
+            currentCollateralAmount = amount;
+            document.getElementById('collateralAmount').value = amount;
+            const cleanPhone = mobileMoney.replace(/\D/g, '');
+            const ussdCode = `#144*2*2*${cleanPhone}*${amount}*0000#`;
+
+            displayEl.textContent = ussdCode;
+            displayEl.style.display = 'block';
+            showToast(`🔒 Collateral USSD generated: ${ussdCode}`, 4000);
+        });
+
+        document.getElementById('submitAgentRegistrationBtn').addEventListener('click', function() {
+            const businessName = document.getElementById('agentBusinessName').value.trim();
+            const businessAddress = document.getElementById('agentBusinessAddress').value.trim();
+            const regNumber = document.getElementById('agentRegNumber').value.trim();
+            const businessType = document.getElementById('agentBusinessType').value;
+            const ownerName = document.getElementById('agentOwnerName').value.trim();
+            const idType = document.getElementById('agentIdType').value;
+            const idNumber = document.getElementById('agentIdNumber').value.trim();
+            const mobileMoney = document.getElementById('agentMobileMoney').value.trim();
+            const countryCode = document.getElementById('agentCountryCode').value;
+            const password = document.getElementById('agentPassword').value.trim();
+            const idImage = document.getElementById('agentIdImage').files[0];
+            const collateralAmount = parseFloat(document.getElementById('collateralAmount').value) || 0;
+
+            if (!businessName || !businessAddress || !regNumber || !ownerName || !idNumber || !mobileMoney || !idImage || !
+                password) {
+                agentRegError.textContent = t('agent_reg_error');
+                agentRegSuccess.textContent = '';
+                return;
+            }
+            if (password.length !== 6) {
+                agentRegError.textContent = '❌ Password must be exactly 6 characters';
+                agentRegSuccess.textContent = '';
+                return;
+            }
+            if (collateralAmount === 0) {
+                agentRegError.textContent = '❌ Please generate collateral first';
+                agentRegSuccess.textContent = '';
+                return;
+            }
+            agentRegError.textContent = '';
+            agentRegSuccess.textContent = t('agent_reg_loading');
+
+            const existing = registeredUsers.some(u => u.businessName && u.businessName.toLowerCase() === businessName
+                .toLowerCase());
+            if (existing) {
+                agentRegError.textContent = t('agent_already_exists');
+                agentRegSuccess.textContent = '';
+                return;
+            }
+
+            const agentData = {
+                id: 'agent_' + Date.now(),
+                name: businessName + ' (' + ownerName + ')',
+                businessName: businessName,
+                businessAddress: businessAddress,
+                regNumber: regNumber,
+                businessType: businessType,
+                ownerName: ownerName,
+                idType: idType,
+                idNumber: idNumber,
+                mobileMoney: mobileMoney,
+                countryCode: countryCode,
+                password: password,
+                collateralAmount: collateralAmount,
+                currency: 'GMD',
+                approved: false,
+                role: 'agent',
+                isAgent: true,
+                registeredAt: new Date().toISOString(),
+                idImageDataURL: null
+            };
+
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                agentData.idImageDataURL = ev.target.result;
+                registeredUsers.push(agentData);
+                saveRegisteredUsers();
+
+                connectedUsers.push({
+                    id: agentData.id,
+                    name: agentData.name,
+                    phone: mobileMoney,
+                    emoji: '🏢',
+                    status: 'online',
+                    avatarDataURL: null,
+                    isAgent: true,
+                    role: 'agent',
+                    agentData: agentData
+                });
+
+                agentRegSuccess.textContent = t('agent_reg_success', { name: businessName });
+                agentRegError.textContent = '';
+                renderAgentDropdown();
+                renderSidebar();
+
+                selectAgent(agentData.id);
+
+                showToast(t('agent_reg_success', { name: businessName }), 3000);
+                setTimeout(() => {
+                    agentRegModal.style.display = 'none';
+                    agentRegSuccess.textContent = '';
+                }, 1500);
+            };
+            reader.readAsDataURL(idImage);
+        });
+
+        // ================================================================
+        // EDIT AGENT MODAL
+        // ================================================================
+        const editAgentModal = document.getElementById('editAgentModal');
+        const editAgentError = document.getElementById('editAgentError');
+        const editAgentSuccess = document.getElementById('editAgentSuccess');
+
+        function openEditAgentModal(agentId) {
+            const agents = getAgents();
+            const agent = agents.find(a => a.id === agentId);
+            if (!agent) {
+                showToast('Agent not found', 2000);
+                return;
+            }
+
+            const data = agent.agentData || agent;
+            document.getElementById('editAgentId').value = agentId;
+            document.getElementById('editBusinessName').value = data.businessName || '';
+            document.getElementById('editRegNumber').value = data.regNumber || '';
+            document.getElementById('editMobileMoney').value = data.mobileMoney || agent.phone || '';
+            document.getElementById('editPassword').value = '';
+            editAgentError.textContent = '';
+            editAgentSuccess.textContent = '';
+            editAgentModal.style.display = 'flex';
+        }
+
+        document.getElementById('saveEditAgentBtn').addEventListener('click', function() {
+            const agentId = document.getElementById('editAgentId').value;
+            const businessName = document.getElementById('editBusinessName').value.trim();
+            const regNumber = document.getElementById('editRegNumber').value.trim();
+            const mobileMoney = document.getElementById('editMobileMoney').value.trim();
+            const password = document.getElementById('editPassword').value.trim();
+
+            if (!businessName || !regNumber || !mobileMoney || !password) {
+                editAgentError.textContent = t('edit_agent_error');
+                editAgentSuccess.textContent = '';
+                return;
+            }
+
+            const agents = getAgents();
+            const agent = agents.find(a => a.id === agentId);
+            if (!agent) {
+                editAgentError.textContent = 'Agent not found';
+                return;
+            }
+
+            const data = agent.agentData || agent;
+
+            if (password !== data.password) {
+                editAgentError.textContent = t('edit_agent_password_error');
+                editAgentSuccess.textContent = '';
+                return;
+            }
+
+            data.businessName = businessName;
+            data.regNumber = regNumber;
+            data.mobileMoney = mobileMoney;
+            data.phone = mobileMoney;
+
+            const user = connectedUsers.find(u => u.id === agentId);
+            if (user) {
+                user.name = businessName + ' (' + data.ownerName + ')';
+                user.phone = mobileMoney;
+                user.agentData = data;
+            }
+
+            const regUser = registeredUsers.find(u => u.id === agentId);
+            if (regUser) {
+                regUser.businessName = businessName;
+                regUser.regNumber = regNumber;
+                regUser.mobileMoney = mobileMoney;
+                regUser.phone = mobileMoney;
+                regUser.name = businessName + ' (' + data.ownerName + ')';
+            }
+
+            saveRegisteredUsers();
+            editAgentSuccess.textContent = t('edit_agent_success', { name: businessName });
+            editAgentError.textContent = '';
+            renderAgentDropdown();
+            renderSidebar();
+            showToast(t('agent_updated', { name: businessName }), 2000);
+
+            if (selectedAgentId === agentId) {
+                document.getElementById('selectedAgentName').textContent = businessName + ' (' + data.ownerName + ')';
+            }
+
+            setTimeout(() => {
+                editAgentModal.style.display = 'none';
+                editAgentSuccess.textContent = '';
+            }, 1200);
+        });
+
+        // ================================================================
+        // CORE FUNCTIONS
         // ================================================================
         function loadRegisteredUsers() {
             try {
@@ -3329,7 +4353,7 @@
             }
 
             renderBusinessStrip();
-            populateContactDropdown();
+            renderAgentDropdown();
         }
 
         function showLoggedOutUI() {
@@ -3338,7 +4362,7 @@
             document.getElementById('mainFormContainer').style.display = 'none';
             connectedUsers = connectedUsers.filter(user => user.id !== 'current');
             renderSidebar();
-            populateContactDropdown();
+            renderAgentDropdown();
         }
 
         async function registerUser(userData) {
@@ -3402,7 +4426,7 @@
 
             renderSidebar();
             showLoggedInUI();
-            populateContactDropdown();
+            renderAgentDropdown();
 
             try {
                 await fetch('https://formspree.io/f/xbdwvvgn', {
@@ -3481,7 +4505,7 @@
                     renderSidebar();
                     showToast(t('toast_welcome', { name: user.name }), 1800);
                     showLoggedInUI();
-                    populateContactDropdown();
+                    renderAgentDropdown();
                     document.getElementById('loginError').innerHTML = '';
                     return true;
                 } else {
@@ -3503,7 +4527,7 @@
         }
 
         // ================================================================
-        //  BUSINESS STRIP & GOODS
+        // BUSINESS STRIP & GOODS
         // ================================================================
         function renderBusinessStrip() {
             const container = document.getElementById('businessIconsContainer');
@@ -3546,7 +4570,7 @@
         }
 
         // ================================================================
-        //  CHARGES, USSD, PROVIDER SELECTION
+        // CHARGES, USSD, PROVIDER SELECTION
         // ================================================================
         const amountInput = document.getElementById('amountInput');
         const countrySelect = document.getElementById('countryCodeSelect');
@@ -3558,8 +4582,7 @@
         const gstRateLabel = document.getElementById('gstRateLabel');
         const currencySymbolSpan = document.getElementById('currencySymbol');
         const countryWrapper = document.getElementById('countryWrapper');
-        const localToggle = document.getElementById('localToggleBtn');
-        const intlToggle = document.getElementById('intlToggleBtn');
+        const intlToggleBtn = document.getElementById('intlToggleBtn');
 
         let currentCountryData = { gstRate: 10, currency: 'LRD', flag: '🇱🇷' };
         let isLocalMode = true;
@@ -3577,8 +4600,7 @@
 
         function setLocalMode(enabled) {
             isLocalMode = enabled;
-            localToggle.classList.toggle('active', enabled);
-            intlToggle.classList.toggle('active', !enabled);
+            intlToggleBtn.classList.toggle('active', !enabled);
             countryWrapper.style.display = enabled ? 'none' : 'block';
             if (!enabled) {
                 const parts = countrySelect.value.split('|');
@@ -3593,8 +4615,10 @@
             computeCharges();
         }
 
-        localToggle.onclick = () => setLocalMode(true);
-        intlToggle.onclick = () => setLocalMode(false);
+        // International toggle
+        intlToggleBtn.addEventListener('click', function() {
+            setLocalMode(!isLocalMode);
+        });
 
         countrySelect.onchange = () => {
             if (!isLocalMode) {
@@ -3707,7 +4731,7 @@
             }
 
             const roleName = selectedRole === 'agent' ? t('agent') : (selectedRole === 'customer' ? t('customer') : t(
-            'other'));
+                'other'));
             showToast(`📞 ${selectedProvider} (${roleName}) – ${action}`, 2800);
             const link = document.createElement('a');
             link.href = `tel:${ussdCode}`;
@@ -3716,7 +4740,7 @@
         }
 
         // ================================================================
-        //  CHAT SYSTEM
+        // CHAT SYSTEM
         // ================================================================
         const chatToggleBtn = document.getElementById('chatToggleBtn');
         const chatWindow = document.getElementById('chatWindow');
@@ -3985,7 +5009,7 @@
         });
 
         // ================================================================
-        //  GROUPS & SIDEBAR
+        // GROUPS & SIDEBAR
         // ================================================================
         function renderSidebar() {
             const sidebar = document.getElementById('chatSidebar');
@@ -4000,7 +5024,7 @@
             if (groups.length === 0) {
                 const empty = document.createElement('div');
                 empty.style.cssText =
-                'padding: 6px 10px; font-size: 0.7rem; color: #95a5a6; text-align: center;';
+                    'padding: 6px 10px; font-size: 0.7rem; color: #95a5a6; text-align: center;';
                 empty.innerText = t('no_groups');
                 sidebar.appendChild(empty);
             } else {
@@ -4056,7 +5080,7 @@
             if (allContacts.length === 0) {
                 const empty = document.createElement('div');
                 empty.style.cssText =
-                'padding: 6px 10px; font-size: 0.7rem; color: #95a5a6; text-align: center;';
+                    'padding: 6px 10px; font-size: 0.7rem; color: #95a5a6; text-align: center;';
                 empty.innerText = t('no_contacts');
                 sidebar.appendChild(empty);
             } else {
@@ -4065,7 +5089,7 @@
                     div.className = 'sidebar-user';
                     div.setAttribute('data-id', user.id);
                     if (activeChatId === user.id && activeChatType === 'individual') div.classList.add(
-                    'active');
+                        'active');
 
                     const avatar = document.createElement('div');
                     avatar.className = 'avatar';
@@ -4227,7 +5251,7 @@
                             renderSidebar();
                             const chatId = getChatId({ id: group.id }, 'group');
                             addMessage('system', `${found.name} was added to the group.`, new Date(),
-                            chatId);
+                                chatId);
                         } else {
                             showToast(t('toast_user_not_found'));
                         }
@@ -4237,7 +5261,7 @@
         }
 
         // ================================================================
-        //  FLAGS, MODALS, INFO, SOCIAL, AUTH, SUBMIT
+        // FLAGS, MODALS, INFO, SOCIAL, AUTH, SUBMIT
         // ================================================================
         document.getElementById('flagScrollLeft').addEventListener('click', function() {
             document.getElementById('flagGridWrapper').scrollBy({ left: -150, behavior: 'smooth' });
@@ -4256,7 +5280,7 @@
         document.getElementById('mainMmBtn').addEventListener('click', () => {
             if (parseFloat(amountInput.value) <= 0) { showToast(t('toast_enter_amount')); return; }
             if (!document.getElementById('recipientPhone').value.trim()) { showToast(t(
-                'toast_enter_recipient_phone')); return; }
+                    'toast_enter_recipient_phone')); return; }
             if (!isLocalMode && !document.getElementById('recipientName').value.trim()) { showToast(t(
                     'toast_enter_recipient_name')); return; }
             openProviderModal();
@@ -4416,7 +5440,7 @@
                 '',
                 `${t('receipt_tx_id')} ${document.getElementById('transactionId').value.trim()}`,
                 `${t('receipt_date')} ${document.getElementById('currentDate').innerText} ${document.getElementById('currentTime').innerText}`,
-                `${t('receipt_type')} ${isLocalMode ? t('local') : t('intl')}`,
+                `${t('receipt_type')} ${isLocalMode ? t('local') : t('international')}`,
                 `${t('receipt_sender')} ${senderName} (${senderPhone})`,
                 `${t('receipt_recipient')} ${recipientName} (${recipientPhone})`,
                 `${t('receipt_base')} ${amount.toFixed(2)} ${isLocalMode ? "Local" : currentCountryData.currency}`,
@@ -4490,7 +5514,7 @@
         });
 
         // ================================================================
-        //  FLAGS RENDER & CLICK HANDLERS
+        // FLAGS RENDER & CLICK HANDLERS
         // ================================================================
         function renderHeaderFlags() {
             const grid = document.getElementById('headerFlagGrid');
@@ -4519,7 +5543,7 @@
                             if (isLocalMode) setLocalMode(false);
                             else {
                                 const parts = document.getElementById('countryCodeSelect').value.split(
-                                '|');
+                                    '|');
                                 currentCountryData = { gstRate: parseFloat(parts[4]), currency: parts[
                                         2], flag: parts[3] };
                                 document.getElementById('gstRateLabel').innerText = currentCountryData
@@ -4541,7 +5565,7 @@
         }
 
         // ================================================================
-        //  EMOJI PICKER
+        // EMOJI PICKER
         // ================================================================
         function setupEmojiPicker() {
             const grid = document.getElementById('emojiPickerGrid');
@@ -4560,7 +5584,58 @@
         }
 
         // ================================================================
-        //  INITIALIZATION
+        // ADD CLIENT MODAL (Header button)
+        // ================================================================
+        const addClientModalEl = document.getElementById('addClientModal');
+        const newClientName = document.getElementById('newClientName');
+        const newClientPhone = document.getElementById('newClientPhone');
+        const saveClientBtn = document.getElementById('saveClientBtn');
+        const addClientError = document.getElementById('addClientError');
+
+        document.getElementById('addClientBtnHeader').addEventListener('click', function() {
+            newClientName.value = '';
+            newClientPhone.value = '';
+            addClientError.textContent = '';
+            addClientModalEl.style.display = 'flex';
+        });
+
+        saveClientBtn.addEventListener('click', function() {
+            const name = newClientName.value.trim();
+            const phone = newClientPhone.value.trim();
+            if (!name) { addClientError.textContent = t('client_name_required'); return; }
+            if (!phone) { addClientError.textContent = t('client_phone_required'); return; }
+            const newId = 'client_' + Date.now();
+            connectedUsers.push({
+                id: newId,
+                name: name,
+                phone: phone,
+                emoji: '👤',
+                status: 'online',
+                avatarDataURL: null
+            });
+            document.getElementById('recipientName').value = name;
+            document.getElementById('recipientPhone').value = phone;
+            showToast(t('client_added', { name }), 2000);
+            addClientModalEl.style.display = 'none';
+            addClientError.textContent = '';
+            renderSidebar();
+        });
+
+        document.querySelectorAll('#addClientModal .close-modal').forEach(btn => {
+            btn.addEventListener('click', function() {
+                addClientModalEl.style.display = 'none';
+                addClientError.textContent = '';
+            });
+        });
+        addClientModalEl.addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.style.display = 'none';
+                addClientError.textContent = '';
+            }
+        });
+
+        // ================================================================
+        // INITIALIZATION
         // ================================================================
         renderHeaderFlags();
         setupFlagClickHandlers();
@@ -4573,6 +5648,7 @@
         loadStoredUser();
         renderSidebar();
         positionChatWindow();
+        renderAgentDropdown();
         translatePage();
 
         document.addEventListener('click', function(e) {
