@@ -1639,18 +1639,18 @@
         }
 
         /* ================================================================
-           BUTTON TEXT INCREASE – 18% LARGER
+           BUTTON TEXT – REDUCED 8% (was 1.18em → 1.09em)
            ================================================================ */
         button, .auth-btn, .action-btn, .tx-btn, .single-mm-btn, .btn-submit,
         .add-client-btn, .toggle-btn, .intl-toggle-btn, .mode-row .btn,
         .footer-btn, .social-icon, .agent-dropdown-btn, .edit-agent-btn,
         .approve-btn, .flag-scroll-btn, .btn, .add-client-btn-header,
         .logout-btn, .map-btn, .auth-btn, .agent-dropdown-btn {
-            font-size: 1.18em !important;
+            font-size: 1.09em !important;
         }
 
         /* ================================================================
-           LABEL TEXT REDUCTION – 6% LESS
+           LABEL TEXT – REDUCED 8% (was 0.94em → 0.86em)
            ================================================================ */
         label, .input-group label, .profile-label, .section-title,
         .business-title, .modal-content h3, .admin-auth-modal .input-group label,
@@ -1666,7 +1666,7 @@
         .admin-auth-modal .auth-divider, .admin-auth-modal .auth-error,
         .admin-auth-modal .auth-success, .dashboard-table th,
         .dashboard-table td, .agent-dropdown-item .edit-agent-btn {
-            font-size: 0.94em !important;
+            font-size: 0.86em !important;
         }
 
         .brand-text, .chat-toggle-btn {
@@ -2200,6 +2200,139 @@
                 font-size: 0.8rem;
             }
         }
+
+        /* ================================================================
+           COLLATERAL LIMIT INDICATOR
+           ================================================================ */
+        .collateral-limit-indicator {
+            font-size: 0.7rem;
+            color: #1c6e8f;
+            background: #e8f0f8;
+            padding: 2px 10px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-left: 6px;
+            border: 1px solid #c0d8e8;
+        }
+
+        /* ================================================================
+           USSD DISPLAY IN REGISTER MODAL
+           ================================================================ */
+        .ussd-result-box {
+            display: none;
+            margin-top: 6px;
+            padding: 6px 10px;
+            background: #f0f6fb;
+            border-radius: 8px;
+            border: 1px solid #2c7da0;
+            word-break: break-all;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .ussd-result-box .ussd-label {
+            font-weight: 700;
+            color: #1c6e8f;
+        }
+        .ussd-result-box .ussd-code-value {
+            font-family: monospace;
+            font-weight: 700;
+            color: #0f2b3d;
+            font-size: 0.95rem;
+            flex: 1;
+        }
+        .ussd-result-box .copy-ussd-btn {
+            background: #2c7da0;
+            border: none;
+            color: white;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            height: 28px;
+            font-size: 0.7rem;
+        }
+        .ussd-result-box .copy-ussd-btn:hover {
+            background: #1f5068;
+        }
+
+        /* Sierra Leone note */
+        .sl-mode-note {
+            font-size: 0.7rem;
+            color: #1c6e8f;
+            background: #e8f0f8;
+            padding: 2px 10px;
+            border-radius: 20px;
+            display: inline-block;
+            border: 1px solid #c0d8e8;
+            margin-top: 3px;
+        }
+
+        /* Guinea mode note */
+        .guinea-mode-note {
+            font-size: 0.7rem;
+            color: #1c6e8f;
+            background: #e8f0f8;
+            padding: 2px 10px;
+            border-radius: 20px;
+            display: inline-block;
+            border: 1px solid #c0d8e8;
+            margin-top: 3px;
+        }
+
+        /* Client (Agent) auto-populated label */
+        .auto-populated-note {
+            font-size: 0.6rem;
+            color: #27ae60;
+            font-weight: 600;
+        }
+        .agent-name-display {
+            font-size: 0.7rem;
+            color: #1c6e8f;
+            background: #e8f0f8;
+            padding: 2px 8px;
+            border-radius: 12px;
+            display: inline-block;
+            margin-left: 4px;
+        }
+
+        /* Image upload preview */
+        .image-upload-preview {
+            margin-top: 4px;
+            text-align: center;
+        }
+        .image-upload-preview img {
+            max-width: 80px;
+            max-height: 80px;
+            border-radius: 50%;
+            border: 2px solid #2c7da0;
+            object-fit: cover;
+        }
+        .image-upload-preview .remove-image-btn {
+            background: none;
+            border: none;
+            color: #e74c3c;
+            cursor: pointer;
+            font-size: 0.7rem;
+            display: block;
+            margin: 2px auto;
+        }
+        .image-upload-preview .remove-image-btn:hover {
+            text-decoration: underline;
+        }
+        .agent-logo-preview img {
+            border-radius: 8px;
+            max-width: 100px;
+            max-height: 100px;
+            object-fit: contain;
+            border: 1px solid #ddd;
+        }
+
+        /* Required field indicator */
+        .required-star {
+            color: #e74c3c;
+            margin-left: 2px;
+        }
     </style>
 </head>
 <body>
@@ -2298,21 +2431,44 @@
                     <div class="input-group"><label data-i18n="phone">Phone *</label><input type="tel" id="senderPhone" required /></div>
                 </div>
                 <div class="input-group"><label data-i18n="location">Location (City/Country) *</label><input type="text" id="senderLocation" required /></div>
-                <div class="input-group"><label data-i18n="amount">Amount *</label><input type="number" id="amountInput" step="any" required /></div>
+                <div class="input-group"><label data-i18n="amount">Amount * <span id="amountLimitIndicator" class="collateral-limit-indicator" style="display:none;">Max: —</span></label><input type="number" id="amountInput" step="any" required /></div>
 
-                <div class="section-title" data-i18n="recipient_title">👥 CLIENT (RECIPIENT)</div>
+                <!-- ===== AGENT Section – populated from dropdown ===== -->
+                <div class="section-title" id="agentSectionTitle">👤 AGENT</div>
                 <div class="double-row">
-                    <div class="input-group"><label data-i18n="client_name">Client Name *</label><input type="text" id="recipientName" required /></div>
-                    <div class="input-group"><label data-i18n="client_phone">Client Phone *</label><input type="tel" id="recipientPhone" required /></div>
+                    <div class="input-group">
+                        <label id="agentNameLabel">Agent Name *</label>
+                        <input type="text" id="agentName" required readonly />
+                    </div>
+                    <div class="input-group">
+                        <label id="agentPhoneLabel">Agent Phone *</label>
+                        <input type="tel" id="agentPhone" required readonly />
+                    </div>
                 </div>
-                <div style="display:flex; align-items:center; gap:6px; margin-bottom:0.4rem;">
-                    <span style="font-size:0.7rem; color:#1c6e8f;" data-i18n="quick_fill">📋 Select an agent from the dropdown</span>
+
+                <!-- ===== CLIENT Section – populated from Add Client modal ===== -->
+                <div class="section-title" id="clientSectionTitle" style="display:none;">👥 CLIENT</div>
+                <div class="double-row" id="clientFieldsRow" style="display:none;">
+                    <div class="input-group">
+                        <label id="clientNameLabel">Client Name *</label>
+                        <input type="text" id="clientName" readonly />
+                    </div>
+                    <div class="input-group">
+                        <label id="clientPhoneLabel">Client Phone *</label>
+                        <input type="tel" id="clientPhone" readonly />
+                    </div>
+                </div>
+
+                <div style="display:flex; align-items:center; gap:6px; margin-bottom:0.4rem; flex-wrap:wrap;">
+                    <span style="font-size:0.7rem; color:#1c6e8f;">📋 Select an agent from the dropdown, or use <strong>Add Client</strong> to add a client</span>
+                    <span id="slModeNote" class="sl-mode-note" style="display:none;">🌍 International Agent – Special USSD format</span>
+                    <span id="guineaModeNote" class="guinea-mode-note" style="display:none;">🇬🇳 Guinea Orange Money USSD</span>
                 </div>
 
                 <!-- ===== Mode Row: International & Add Client side by side ===== -->
                 <div class="mode-row">
                     <button class="btn" id="intlToggleBtn" data-i18n="international">International</button>
-                    <button class="btn add-client-btn-header" id="addClientBtnHeader" data-i18n="add_client">Add Client</button>
+                    <button class="btn add-client-btn-header" id="addClientBtnHeader" data-i18n="add_client">➕ Add Client</button>
                 </div>
 
                 <div class="country-selector-wrapper" id="countryWrapper" style="display:none;">
@@ -2412,12 +2568,13 @@
     <!-- Login Modal (user login) -->
     <div id="loginModal" class="modal"><div class="modal-content"><h3 data-i18n="login_title">🔐 Login</h3><input type="text" id="loginName" placeholder="Full Name" style="width:100%; padding:5px 9px; margin:3px 0; border-radius:30px; border:1px solid #ddd; font-size:0.85rem; height:42px;" /><input type="tel" id="loginPhone" placeholder="Phone" style="width:100%; padding:5px 9px; margin:3px 0; border-radius:30px; border:1px solid #ddd; font-size:0.85rem; height:42px;" /><div id="loginError" class="error-msg"></div><button id="doLoginBtn" class="action-btn" data-i18n="login">Login</button><button class="action-btn close-modal" style="margin-top:4px;" data-i18n="cancel">Cancel</button></div></div>
 
-    <!-- Register Modal (user registration) -->
+    <!-- Register Modal (user registration) with image upload -->
     <div id="registerModal" class="modal"><div class="modal-content"><h3 data-i18n="register_title">📝 Create Account</h3><input type="text" id="regName" placeholder="Full Name *" style="width:100%; padding:5px 9px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.85rem; height:42px;" /><input type="tel" id="regPhone" placeholder="Phone *" style="width:100%; padding:5px 9px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.85rem; height:42px;" />
         <input type="text" id="regAddress" placeholder="Address" style="width:100%; padding:5px 9px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.85rem; height:42px;" />
         <input type="text" id="regCity" placeholder="City *" style="width:100%; padding:5px 9px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.85rem; height:42px;" />
         <select id="regCountry" style="width:100%; padding:5px 9px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.85rem; height:42px;">
             <option value="Sierra Leone">Sierra Leone</option><option value="Nigeria">Nigeria</option><option value="Ghana">Ghana</option><option value="Kenya">Kenya</option><option value="Liberia">Liberia</option><option value="Senegal">Senegal</option>
+            <option value="Guinea">Guinea</option>
         </select>
         <select id="regLanguage" style="width:100%; padding:5px 9px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.85rem; height:42px;">
             <option value="en">English</option><option value="fr">Français</option><option value="es">Español</option>
@@ -2429,13 +2586,34 @@
             <span class="emoji-option" data-emoji="🧑‍🎓">🧑‍🎓</span><span class="emoji-option" data-emoji="👨‍⚕️">👨‍⚕️</span><span class="emoji-option" data-emoji="👩‍⚕️">👩‍⚕️</span><span class="emoji-option" data-emoji="🧑‍⚕️">🧑‍⚕️</span><span class="emoji-option" data-emoji="👨‍🍳">👨‍🍳</span><span class="emoji-option" data-emoji="👩‍🍳">👩‍🍳</span>
             <span class="emoji-option" data-emoji="🧑‍🍳">🧑‍🍳</span><span class="emoji-option" data-emoji="👨‍🔧">👨‍🔧</span><span class="emoji-option" data-emoji="👩‍🔧">👩‍🔧</span><span class="emoji-option" data-emoji="🧑‍🔧">🧑‍🔧</span><span class="emoji-option" data-emoji="👨‍🎨">👨‍🎨</span><span class="emoji-option" data-emoji="👩‍🎨">👩‍🎨</span>
         </div>
+
+        <!-- Image Upload for User -->
+        <div style="margin-top:8px;">
+            <label style="font-size:0.78rem;font-weight:700;color:#1e3b4a;">Or upload your own image:</label>
+            <input type="file" id="regProfileImage" accept="image/*" style="width:100%; padding:4px; border-radius:20px; border:1px solid #ddd; font-size:0.85rem; height:38px;" />
+            <div id="regProfilePreview" class="image-upload-preview" style="display:none;">
+                <img src="#" alt="Profile preview" />
+                <button type="button" id="regProfileRemove" class="remove-image-btn">✕ Remove</button>
+            </div>
+        </div>
+
+        <!-- USSD Generation for registration -->
+        <div style="display:flex; gap:6px; align-items:center; margin-top:4px;">
+            <button type="button" class="action-btn" id="regGenerateUssdBtn" style="flex:1; background:#2c7da0; height:38px; font-size:0.85rem;">📱 Generate USSD</button>
+        </div>
+        <div class="ussd-result-box" id="regUssdResult">
+            <span class="ussd-label">📞 USSD Code:</span>
+            <span class="ussd-code-value" id="regUssdCode"></span>
+            <button class="copy-ussd-btn" id="regCopyUssdBtn">Copy</button>
+        </div>
+
         <div id="regError" class="error-msg"></div><div id="regSuccess" class="success-msg"></div>
         <button id="doRegisterBtn" class="action-btn" data-i18n="register">Register</button>
         <button id="registerAgentBtn" class="action-btn orange" style="margin-top:4px;" data-i18n="register_agent">🏢 Register as Agent</button>
         <button class="action-btn close-modal" style="margin-top:4px;" data-i18n="cancel">Cancel</button>
     </div></div>
 
-    <!-- Agent Registration Modal -->
+    <!-- Agent Registration Modal with Business Logo (REQUIRED) -->
     <div id="agentRegistrationModal" class="modal">
         <div class="modal-content agent-form">
             <h3 data-i18n="agent_reg_title">🏢 Agent Registration</h3>
@@ -2468,7 +2646,48 @@
                 <input type="file" id="agentIdImage" accept="image/*" capture="environment" style="padding:4px; height:auto;" />
                 <img id="agentIdPreview" class="id-preview" alt="ID Preview" />
             </div>
+
+            <!-- Business Logo Upload – NOW REQUIRED -->
+            <div class="input-group">
+                <label data-i18n="agent_logo">Business Logo <span class="required-star">*</span></label>
+                <input type="file" id="agentLogoImage" accept="image/*" required style="padding:4px; height:auto;" />
+                <div id="agentLogoPreviewContainer" class="image-upload-preview agent-logo-preview" style="display:none;">
+                    <img src="#" alt="Logo Preview" />
+                    <button type="button" id="agentLogoRemove" class="remove-image-btn">✕ Remove</button>
+                </div>
+                <div style="font-size:0.65rem; color:#666; margin-top:2px;">Please upload your business logo (required).</div>
+            </div>
+
             <div class="input-group"><label data-i18n="agent_mobile_money">Mobile Money Number *</label><input type="tel" id="agentMobileMoney" placeholder="e.g. 23276123456" /></div>
+
+            <!-- Collateral Limit Dropdown -->
+            <div class="input-group">
+                <label for="agentCollateralLimit">💳 Collateral Limit *</label>
+                <select id="agentCollateralLimit">
+                    <option value="500">500</option>
+                    <option value="1000">1,000</option>
+                    <option value="1500">1,500</option>
+                    <option value="2000">2,000</option>
+                    <option value="2500">2,500</option>
+                    <option value="3000">3,000</option>
+                    <option value="3500">3,500</option>
+                    <option value="4000">4,000</option>
+                    <option value="4500">4,500</option>
+                    <option value="5000" selected>5,000</option>
+                    <option value="5500">5,500</option>
+                    <option value="6000">6,000</option>
+                    <option value="6500">6,500</option>
+                    <option value="7000">7,000</option>
+                    <option value="7500">7,500</option>
+                    <option value="8000">8,000</option>
+                    <option value="8500">8,500</option>
+                    <option value="9000">9,000</option>
+                    <option value="9500">9,500</option>
+                    <option value="10000">10,000</option>
+                </select>
+                <div style="font-size:0.6rem; color:#666; margin-top:2px;">This sets the maximum amount the agent can transact. Any amount below or equal to this limit is accepted.</div>
+            </div>
+
             <div class="input-group"><label data-i18n="agent_country_code">Request Country Code for International</label>
                 <select id="agentCountryCode">
                     <option value="+232">🇸🇱 +232 (Sierra Leone)</option><option value="+234">🇳🇬 +234 (Nigeria)</option>
@@ -2496,7 +2715,7 @@
                 <div id="agentPasswordHint" style="font-size:0.65rem; color:#666; margin-top:2px;">Click Generate to create a 6-character alphanumeric password</div>
             </div>
 
-            <!-- Collateral Box -->
+            <!-- Collateral Box (USSD generation) -->
             <div class="collateral-box">
                 <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
                     <span style="font-weight:700; font-size:0.8rem; color:#1c6e8f;" data-i18n="collateral_label">🔒 Pay Account Collateral</span>
@@ -2586,7 +2805,7 @@
                             <th>Address</th>
                             <th>Type</th>
                             <th>Password</th>
-                            <th>Collateral</th>
+                            <th>Collateral Limit</th>
                             <th>Country</th>
                             <th>Status</th>
                             <th>Action</th>
@@ -2665,9 +2884,9 @@
                 phone: 'Phone *',
                 location: 'Location (City/Country) *',
                 amount: 'Amount *',
-                recipient_title: '👥 CLIENT (RECIPIENT)',
-                client_name: 'Client Name *',
-                client_phone: 'Client Phone *',
+                recipient_title: '👤 AGENT',
+                client_name: 'Agent Name *',
+                client_phone: 'Agent Phone *',
                 quick_fill: '📋 Select an agent from the dropdown',
                 add_client: 'Add Client',
                 international: 'International',
@@ -2700,6 +2919,9 @@
                 login_title: '🔐 Login',
                 register_title: '📝 Create Account',
                 choose_icon: 'Choose icon:',
+                upload_image: 'Or upload your own image:',
+                remove_image: '✕ Remove',
+                agent_logo: 'Business Logo *',
                 new_group: '👥 New Group',
                 group_name: 'Group Name *',
                 select_members: 'Select Members (max 25)',
@@ -2865,9 +3087,9 @@
                 phone: 'Téléphone *',
                 location: 'Lieu (Ville/Pays) *',
                 amount: 'Montant *',
-                recipient_title: '👥 CLIENT (DESTINATAIRE)',
-                client_name: 'Nom du client *',
-                client_phone: 'Téléphone du client *',
+                recipient_title: '👤 AGENT',
+                client_name: 'Nom de l\'agent *',
+                client_phone: 'Téléphone de l\'agent *',
                 quick_fill: '📋 Sélectionnez un agent dans la liste',
                 add_client: 'Ajouter un client',
                 international: 'International',
@@ -2900,6 +3122,9 @@
                 login_title: '🔐 Connexion',
                 register_title: '📝 Créer un compte',
                 choose_icon: 'Choisir une icône :',
+                upload_image: 'Ou téléchargez votre propre image :',
+                remove_image: '✕ Supprimer',
+                agent_logo: 'Logo de l\'entreprise *',
                 new_group: '👥 Nouveau groupe',
                 group_name: 'Nom du groupe *',
                 select_members: 'Sélectionner des membres (max 25)',
@@ -3065,9 +3290,9 @@
                 phone: 'الهاتف *',
                 location: 'الموقع (مدينة/بلد) *',
                 amount: 'المبلغ *',
-                recipient_title: '👥 العميل (المستلم)',
-                client_name: 'اسم العميل *',
-                client_phone: 'هاتف العميل *',
+                recipient_title: '👤 الوكيل',
+                client_name: 'اسم الوكيل *',
+                client_phone: 'هاتف الوكيل *',
                 quick_fill: '📋 اختر وكيلاً من القائمة المنسدلة',
                 add_client: 'إضافة عميل',
                 international: 'دولي',
@@ -3100,6 +3325,9 @@
                 login_title: '🔐 تسجيل الدخول',
                 register_title: '📝 إنشاء حساب',
                 choose_icon: 'اختر أيقونة:',
+                upload_image: 'أو حمّل صورتك الخاصة:',
+                remove_image: '✕ إزالة',
+                agent_logo: 'شعار الشركة *',
                 new_group: '👥 مجموعة جديدة',
                 group_name: 'اسم المجموعة *',
                 select_members: 'اختر الأعضاء (حد أقصى 25)',
@@ -3265,9 +3493,9 @@
                 phone: 'Teléfono *',
                 location: 'Ubicación (Ciudad/País) *',
                 amount: 'Monto *',
-                recipient_title: '👥 CLIENTE (DESTINATARIO)',
-                client_name: 'Nombre del cliente *',
-                client_phone: 'Teléfono del cliente *',
+                recipient_title: '👤 AGENTE',
+                client_name: 'Nombre del agente *',
+                client_phone: 'Teléfono del agente *',
                 quick_fill: '📋 Selecciona un agente del desplegable',
                 add_client: 'Añadir cliente',
                 international: 'Internacional',
@@ -3300,6 +3528,9 @@
                 login_title: '🔐 Iniciar sesión',
                 register_title: '📝 Crear cuenta',
                 choose_icon: 'Elige un icono:',
+                upload_image: 'O sube tu propia imagen:',
+                remove_image: '✕ Eliminar',
+                agent_logo: 'Logo de la empresa *',
                 new_group: '👥 Nuevo grupo',
                 group_name: 'Nombre del grupo *',
                 select_members: 'Seleccionar miembros (máx. 25)',
@@ -3584,6 +3815,14 @@
             const saveEditBtn = document.getElementById('saveEditAgentBtn');
             if (saveEditBtn) saveEditBtn.textContent = t('save_changes');
 
+            // Update image upload labels (these are not data-i18n)
+            const uploadLabel = document.querySelector('#registerModal label:not([data-i18n])');
+            if (uploadLabel && uploadLabel.textContent.includes('Or upload')) {
+                uploadLabel.textContent = t('upload_image');
+            }
+            const agentLogoLabel = document.querySelector('#agentRegistrationModal .input-group label[data-i18n="agent_logo"]');
+            if (agentLogoLabel) agentLogoLabel.innerHTML = t('agent_logo') + ' <span class="required-star">*</span>';
+
             renderSidebar();
             renderBusinessStrip();
             renderAgentDropdown();
@@ -3829,7 +4068,8 @@
             if (!tbody) return;
             const agents = getAgents();
             if (agents.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:20px; color:#95a5a6;">${t('no_agents')}</td></tr>`;
+                tbody.innerHTML =
+                    `<tr><td colspan="9" style="text-align:center; padding:20px; color:#95a5a6;">${t('no_agents')}</td></tr>`;
                 return;
             }
             let html = '';
@@ -3838,7 +4078,7 @@
                 const approved = data.approved || false;
                 const statusClass = approved ? 'approved' : 'pending';
                 const statusText = approved ? 'Approved' : 'Pending';
-                const collateral = data.collateralAmount || 0;
+                const collateralLimit = data.collateralLimit || 0;
                 const countryCode = data.countryCode || 'N/A';
                 const password = data.password || 'N/A';
                 const bizName = data.businessName || 'N/A';
@@ -3851,7 +4091,7 @@
                         <td>${bizAddress}</td>
                         <td>${bizType}</td>
                         <td style="font-family:monospace; letter-spacing:1px;">${password}</td>
-                        <td>${collateral} ${data.currency || 'GMD'}</td>
+                        <td>${collateralLimit}</td>
                         <td>${countryCode}</td>
                         <td><span class="status-badge ${statusClass}">${statusText}</span></td>
                         <td>
@@ -3989,6 +4229,20 @@
         let selectedAgentId = null;
         let currentCollateralAmount = 0;
 
+        // Country selector mapping for Guinea Orange Money USSD
+        const COUNTRY_SELECTOR_MAP = {
+            '+221': '1', // Senegal
+            '+232': '2', // Sierra Leone
+            '+231': '3', // Liberia
+            '+225': '4', // Cote d'Ivoire
+            '+223': '5', // Mali
+            '+233': '6', // Ghana
+            '+243': '7', // DR Congo
+            '+229': '8', // Benin
+            '+220': '9', // Gambia
+            '+237': '10' // Cameroon
+        };
+
         const USER_POOL = [
             { id: 1, name: 'Alice Wonder', emoji: '👩' },
             { id: 2, name: 'Bob Marley', emoji: '👨' },
@@ -4095,9 +4349,57 @@
             document.getElementById('selectedAgentName').textContent = agent.name;
             document.getElementById('selectedAgentName').dataset.agentId = agentId;
 
-            document.getElementById('recipientName').value = agent.name;
-            document.getElementById('recipientPhone').value = agent.phone || '';
-            showToast(`👤 ${agent.name} selected`, 1500);
+            // ---- Populate AGENT fields (Agent Name + Agent Phone with country code) ----
+            const data = agent.agentData || agent;
+            document.getElementById('agentName').value = agent.name;
+            // Format phone with country code
+            let phoneDisplay = agent.phone || '';
+            if (data.countryCode && phoneDisplay && !phoneDisplay.startsWith(data.countryCode)) {
+                phoneDisplay = data.countryCode + ' ' + phoneDisplay;
+            } else if (data.countryCode && !phoneDisplay) {
+                phoneDisplay = data.countryCode;
+            }
+            document.getElementById('agentPhone').value = phoneDisplay;
+
+            // ---- Apply collateral limit to amount field ----
+            const limit = data.collateralLimit || 0;
+            const amountInput = document.getElementById('amountInput');
+            const limitIndicator = document.getElementById('amountLimitIndicator');
+
+            if (limit > 0) {
+                amountInput.max = limit;
+                amountInput.placeholder = `Max ${limit}`;
+                limitIndicator.style.display = 'inline-block';
+                limitIndicator.textContent = `Max: ${limit}`;
+                const currentVal = parseFloat(amountInput.value);
+                if (currentVal > limit) {
+                    amountInput.value = limit;
+                    amountInput.dispatchEvent(new Event('input'));
+                }
+                showToast(`🔒 Collateral limit: ${limit} (max amount)`, 2000);
+            } else {
+                amountInput.removeAttribute('max');
+                amountInput.placeholder = 'Enter amount';
+                limitIndicator.style.display = 'none';
+            }
+            computeCharges();
+
+            // ---- Show special note for Guinea users ----
+            const guineaNote = document.getElementById('guineaModeNote');
+            const slNote = document.getElementById('slModeNote');
+            if (currentUser && currentUser.country === 'Guinea') {
+                guineaNote.style.display = 'inline-block';
+                slNote.style.display = 'none';
+            } else {
+                guineaNote.style.display = 'none';
+                // Show Sierra Leone note if agent is from another country
+                if (data.countryCode && data.countryCode !== '+232') {
+                    slNote.style.display = 'inline-block';
+                    slNote.textContent = '🌍 International Agent – Special USSD format';
+                } else {
+                    slNote.style.display = 'none';
+                }
+            }
         }
 
         document.getElementById('agentDropdownBtn').addEventListener('click', function(e) {
@@ -4178,11 +4480,15 @@
             document.getElementById('agentPasswordHint').style.color = '#666';
             document.getElementById('agentIdPreview').style.display = 'none';
             document.getElementById('agentIdPreview').src = '';
+            document.getElementById('agentLogoPreviewContainer').style.display = 'none';
+            document.getElementById('agentLogoPreviewContainer').querySelector('img').src = '';
+            document.getElementById('agentLogoImage').value = '';
             document.getElementById('collateralUssdDisplay').style.display = 'none';
             document.getElementById('collateralUssdDisplay').textContent = '';
             document.getElementById('collateralError').textContent = '';
             document.getElementById('collateralAmount').value = '0';
             currentCollateralAmount = 0;
+            document.getElementById('agentCollateralLimit').value = '5000';
             agentRegModal.style.display = 'flex';
         });
 
@@ -4197,6 +4503,26 @@
                 };
                 reader.readAsDataURL(file);
             }
+        });
+
+        // Agent Logo upload
+        document.getElementById('agentLogoImage').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const container = document.getElementById('agentLogoPreviewContainer');
+            const img = container.querySelector('img');
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    img.src = ev.target.result;
+                    container.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        document.getElementById('agentLogoRemove').addEventListener('click', function() {
+            document.getElementById('agentLogoImage').value = '';
+            document.getElementById('agentLogoPreviewContainer').style.display = 'none';
+            document.getElementById('agentLogoPreviewContainer').querySelector('img').src = '';
         });
 
         document.getElementById('generateCollateralBtn').addEventListener('click', function() {
@@ -4236,6 +4562,25 @@
             const password = document.getElementById('agentPassword').value.trim();
             const idImage = document.getElementById('agentIdImage').files[0];
             const collateralAmount = parseFloat(document.getElementById('collateralAmount').value) || 0;
+            const collateralLimit = parseInt(document.getElementById('agentCollateralLimit').value) || 5000;
+
+            // Get logo image – NOW REQUIRED
+            const logoFile = document.getElementById('agentLogoImage').files[0];
+            let logoDataURL = null;
+            const logoPreview = document.getElementById('agentLogoPreviewContainer');
+            if (logoPreview.style.display !== 'none') {
+                const img = logoPreview.querySelector('img');
+                if (img && img.src && !img.src.startsWith('#')) {
+                    logoDataURL = img.src;
+                }
+            }
+
+            // Validate logo is present
+            if (!logoFile && !logoDataURL) {
+                agentRegError.textContent = '❌ Business logo is required. Please upload an image.';
+                agentRegSuccess.textContent = '';
+                return;
+            }
 
             if (!businessName || !businessAddress || !regNumber || !ownerName || !idNumber || !mobileMoney || !idImage || !
                 password) {
@@ -4278,12 +4623,14 @@
                 countryCode: countryCode,
                 password: password,
                 collateralAmount: collateralAmount,
+                collateralLimit: collateralLimit,
                 currency: 'GMD',
                 approved: false,
                 role: 'agent',
                 isAgent: true,
                 registeredAt: new Date().toISOString(),
-                idImageDataURL: null
+                idImageDataURL: null,
+                logoDataURL: logoDataURL // store logo
             };
 
             const reader = new FileReader();
@@ -4301,7 +4648,8 @@
                     avatarDataURL: null,
                     isAgent: true,
                     role: 'agent',
-                    agentData: agentData
+                    agentData: agentData,
+                    logoDataURL: logoDataURL
                 });
 
                 agentRegSuccess.textContent = t('agent_reg_success', { name: businessName });
@@ -4404,6 +4752,14 @@
 
             if (selectedAgentId === agentId) {
                 document.getElementById('selectedAgentName').textContent = businessName + ' (' + data.ownerName + ')';
+                document.getElementById('agentName').value = businessName + ' (' + data.ownerName + ')';
+                let phoneDisplay = data.mobileMoney || '';
+                if (data.countryCode && phoneDisplay && !phoneDisplay.startsWith(data.countryCode)) {
+                    phoneDisplay = data.countryCode + ' ' + phoneDisplay;
+                } else if (data.countryCode && !phoneDisplay) {
+                    phoneDisplay = data.countryCode;
+                }
+                document.getElementById('agentPhone').value = phoneDisplay;
             }
 
             setTimeout(() => {
@@ -4662,6 +5018,7 @@
             document.getElementById('regSuccess').innerText = t('toast_register_loading');
 
             const emoji = userData.emoji || '👤';
+            const avatarDataURL = userData.avatarDataURL || null;
             const userObj = {
                 name,
                 phone,
@@ -4670,7 +5027,7 @@
                 country,
                 language: userData.language || 'en',
                 emoji,
-                avatarDataURL: null
+                avatarDataURL: avatarDataURL
             };
 
             currentUser = userObj;
@@ -4684,7 +5041,7 @@
                     name,
                     phone,
                     emoji,
-                    avatarDataURL: null
+                    avatarDataURL: avatarDataURL
                 });
                 saveRegisteredUsers();
             }
@@ -4695,7 +5052,7 @@
                     name,
                     emoji,
                     phone,
-                    avatarDataURL: null,
+                    avatarDataURL: avatarDataURL,
                     status: 'online'
                 });
             }
@@ -4838,11 +5195,18 @@
                 item.addEventListener('click', () => {
                     const price = parseFloat(item.getAttribute('data-price'));
                     const goodsName = item.getAttribute('data-name');
-                    document.getElementById('recipientName').value = `${biz.name} – ${goodsName}`;
-                    document.getElementById('recipientPhone').value = biz.contact;
-                    document.getElementById('amountInput').value = price;
-                    document.getElementById('amountInput').dispatchEvent(new Event('input'));
-                    showToast(`💰 ${goodsName} added: ${price.toFixed(2)} ${getCurrencySymbolForDisplay()}`);
+                    document.getElementById('agentName').value = `${biz.name} – ${goodsName}`;
+                    document.getElementById('agentPhone').value = biz.contact;
+                    const amountInput = document.getElementById('amountInput');
+                    const maxLimit = parseFloat(amountInput.max);
+                    let finalPrice = price;
+                    if (maxLimit > 0 && price > maxLimit) {
+                        finalPrice = maxLimit;
+                        showToast(`⚠️ Amount capped at collateral limit: ${maxLimit}`, 2500);
+                    }
+                    amountInput.value = finalPrice;
+                    amountInput.dispatchEvent(new Event('input'));
+                    showToast(`💰 ${goodsName} added: ${finalPrice.toFixed(2)} ${getCurrencySymbolForDisplay()}`);
                     document.getElementById('goodsModal').style.display = 'none';
                 });
             });
@@ -4916,55 +5280,96 @@
             return isLocalMode ? 'Local' : currentCountryData.currency;
         }
 
-        function openProviderModal() {
-            document.getElementById('providerModal').style.display = 'flex';
+        // ================================================================
+        // GUINEA ORANGE MONEY USSD GENERATION
+        // ================================================================
+        function generateGuineaOrangeUssd(agent, amount, totalFixed) {
+            const selector = COUNTRY_SELECTOR_MAP[agent.agentData.countryCode] || '0';
+            if (selector === '0') {
+                showToast('⚠️ Agent country not supported for Guinea USSD.', 3000);
+                return null;
+            }
+            const agentName = (agent.agentData.businessName || agent.name).replace(/\s/g, '_');
+            let phoneDigits = (agent.agentData.mobileMoney || agent.phone || '').replace(/\D/g, '');
+            if (!phoneDigits || phoneDigits.length < 6) {
+                showToast('⚠️ Agent phone number missing or invalid.', 3000);
+                return null;
+            }
+            const phoneWithGuinea = '+224' + phoneDigits;
+            const amountStr = totalFixed.toString();
+            const ussd = `*144*1*3*${selector}*${agentName}*${phoneWithGuinea}*${amountStr}*1*PIN#`;
+            return ussd;
         }
-
-        function onProviderSelected(provider) {
-            selectedProvider = provider;
-            document.getElementById('providerModal').style.display = 'none';
-            document.getElementById('roleModalTitle').innerHTML = `${provider} – ${t('select_type')}`;
-            document.getElementById('roleModal').style.display = 'flex';
-        }
-
-        function onRoleSelected(role) {
-            selectedRole = role;
-            document.getElementById('roleModal').style.display = 'none';
-            const roleText = role === 'agent' ? t('agent') : (role === 'customer' ? t('customer') : t('other'));
-            document.getElementById('selectedRoleDisplay').innerHTML = `${t('select_type')}: ${roleText}`;
-            document.getElementById('modalProviderName').innerText = selectedProvider;
-            document.getElementById('actionModal').style.display = 'flex';
-        }
-
-        function getOrangeZCode() {
-            const sel = document.getElementById('countryCodeSelect');
-            const parts = sel.value.split('|');
-            return parts[5] || '0';
-        }
-
-        function getAfrimoneyZCode() {
-            const sel = document.getElementById('countryCodeSelect');
-            const parts = sel.value.split('|');
-            return parts[6] || '0';
-        }
-
-        function cleanPhoneNumber(raw) { return raw.replace(/\D/g, ''); }
 
         function buildAndDialUSSD(action) {
             const amount = parseFloat(amountInput.value);
             if (isNaN(amount) || amount <= 0) { showToast(t('toast_valid_amount')); return; }
-            let phone = document.getElementById('recipientPhone').value.trim();
-            if (!phone) { showToast(t('toast_recipient_phone_required')); return; }
-            let recipientNameRaw = document.getElementById('recipientName').value.trim();
-            if (!recipientNameRaw) { showToast(t('toast_recipient_name_required')); return; }
+
+            const maxLimit = parseFloat(amountInput.max);
+            if (maxLimit > 0 && amount > maxLimit) {
+                showToast(`❌ Amount exceeds collateral limit of ${maxLimit}`, 3000);
+                return;
+            }
+
+            let phone = document.getElementById('agentPhone').value.trim();
+            let cleanPhone = phone.replace(/\D/g, '');
+            let agentName = document.getElementById('agentName').value.trim();
+            if (!agentName) { showToast('⚠️ Please select an agent first.'); return; }
 
             const charge = amount * 0.01;
             const gst = isLocalMode ? 0 : charge * (currentCountryData.gstRate / 100);
             const total = amount + charge + gst;
             const totalFixed = Math.round(total);
-            let cleanPhone = cleanPhoneNumber(phone);
             let ussdCode = '';
 
+            // ---- Check if user is from Guinea and in local mode ----
+            if (isLocalMode && currentUser && currentUser.country === 'Guinea') {
+                let selectedAgent = null;
+                if (selectedAgentId) {
+                    const agents = getAgents();
+                    selectedAgent = agents.find(a => a.id === selectedAgentId);
+                }
+                if (selectedAgent && selectedAgent.agentData) {
+                    const guineaUssd = generateGuineaOrangeUssd(selectedAgent, amount, totalFixed);
+                    if (guineaUssd) {
+                        ussdCode = guineaUssd;
+                        const link = document.createElement('a');
+                        link.href = `tel:${ussdCode}`;
+                        link.click();
+                        showToast('📞 Guinea Orange Money USSD generated. Replace PIN with your 4-digit Mobile Money pin.', 4000);
+                        navigator.clipboard.writeText(ussdCode).then(() => {
+                            showToast('✅ USSD code copied to clipboard! Replace PIN with your pin.', 3000);
+                        }).catch(() => {});
+                        return;
+                    }
+                }
+            }
+
+            // ---- Check if a non-Sierra Leone agent is selected for international special ----
+            let selectedAgent = null;
+            if (selectedAgentId) {
+                const agents = getAgents();
+                selectedAgent = agents.find(a => a.id === selectedAgentId);
+            }
+
+            if (isLocalMode && selectedAgent && selectedAgent.agentData &&
+                selectedAgent.agentData.countryCode && selectedAgent.agentData.countryCode !== '+232' &&
+                !(currentUser && currentUser.country === 'Guinea')) {
+                const slUssd = generateInternationalAgentUssd(selectedAgent, amount, totalFixed);
+                if (slUssd) {
+                    ussdCode = slUssd;
+                    const link = document.createElement('a');
+                    link.href = `tel:${ussdCode}`;
+                    link.click();
+                    showToast('📞 International agent USSD generated. Replace PIN with your Mobile Money pin.', 4000);
+                    navigator.clipboard.writeText(ussdCode).then(() => {
+                        showToast('✅ USSD code copied to clipboard! Replace PIN with your pin.', 3000);
+                    }).catch(() => {});
+                    return;
+                }
+            }
+
+            // ---- Normal USSD generation (fallback) ----
             if (!isLocalMode) {
                 if (selectedProvider === "Orange Money") {
                     const z = getOrangeZCode();
@@ -5016,6 +5421,62 @@
             link.click();
             showToast(t('toast_initiated', { action }), 4000);
         }
+
+        function generateInternationalAgentUssd(agent, amount, totalFixed) {
+            const countrySelector = '1';
+            const agentName = (agent.agentData.businessName || agent.name).replace(/\s/g, '_');
+            const phoneDigits = (agent.agentData.mobileMoney || agent.phone || '').replace(/\D/g, '');
+            if (!phoneDigits || phoneDigits.length < 6) {
+                showToast('⚠️ Agent phone number missing or invalid.', 3000);
+                return null;
+            }
+            const amountStr = totalFixed.toString();
+            const ussd = `#144*2*5*1*${countrySelector}*${agentName}*${phoneDigits}*${amountStr}*1*PIN#`;
+            return ussd;
+        }
+
+        // ================================================================
+        // PROVIDER SELECTION
+        // ================================================================
+        function openProviderModal() {
+            const amount = parseFloat(amountInput.value);
+            const maxLimit = parseFloat(amountInput.max);
+            if (maxLimit > 0 && amount > maxLimit) {
+                showToast(`❌ Amount exceeds collateral limit of ${maxLimit}`, 3000);
+                return;
+            }
+            document.getElementById('providerModal').style.display = 'flex';
+        }
+
+        function onProviderSelected(provider) {
+            selectedProvider = provider;
+            document.getElementById('providerModal').style.display = 'none';
+            document.getElementById('roleModalTitle').innerHTML = `${provider} – ${t('select_type')}`;
+            document.getElementById('roleModal').style.display = 'flex';
+        }
+
+        function onRoleSelected(role) {
+            selectedRole = role;
+            document.getElementById('roleModal').style.display = 'none';
+            const roleText = role === 'agent' ? t('agent') : (role === 'customer' ? t('customer') : t('other'));
+            document.getElementById('selectedRoleDisplay').innerHTML = `${t('select_type')}: ${roleText}`;
+            document.getElementById('modalProviderName').innerText = selectedProvider;
+            document.getElementById('actionModal').style.display = 'flex';
+        }
+
+        function getOrangeZCode() {
+            const sel = document.getElementById('countryCodeSelect');
+            const parts = sel.value.split('|');
+            return parts[5] || '0';
+        }
+
+        function getAfrimoneyZCode() {
+            const sel = document.getElementById('countryCodeSelect');
+            const parts = sel.value.split('|');
+            return parts[6] || '0';
+        }
+
+        function cleanPhoneNumber(raw) { return raw.replace(/\D/g, ''); }
 
         // ================================================================
         // CHAT SYSTEM
@@ -5557,10 +6018,7 @@
 
         document.getElementById('mainMmBtn').addEventListener('click', () => {
             if (parseFloat(amountInput.value) <= 0) { showToast(t('toast_enter_amount')); return; }
-            if (!document.getElementById('recipientPhone').value.trim()) { showToast(t(
-                    'toast_enter_recipient_phone')); return; }
-            if (!isLocalMode && !document.getElementById('recipientName').value.trim()) { showToast(t(
-                    'toast_enter_recipient_name')); return; }
+            if (!document.getElementById('agentName').value.trim()) { showToast('⚠️ Please select an agent first.'); return; }
             openProviderModal();
         });
 
@@ -5657,6 +6115,11 @@
                 if (first) { first.classList.add('selected');
                     selectedEmoji = first.getAttribute('data-emoji') || '👤'; }
             }
+            // Reset USSD display
+            document.getElementById('regUssdResult').style.display = 'none';
+            // Reset profile image preview
+            document.getElementById('regProfilePreview').style.display = 'none';
+            document.getElementById('regProfileImage').value = '';
         };
         document.getElementById('logoutBtn').onclick = () => { clearUserStorage();
             showToast(t('toast_logout')); };
@@ -5673,22 +6136,108 @@
             }
         };
 
+        // ================================================================
+        // USER REGISTRATION WITH IMAGE UPLOAD
+        // ================================================================
+        // Handle profile image upload
+        document.getElementById('regProfileImage').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const previewContainer = document.getElementById('regProfilePreview');
+            const img = previewContainer.querySelector('img');
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    img.src = ev.target.result;
+                    previewContainer.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        document.getElementById('regProfileRemove').addEventListener('click', function() {
+            document.getElementById('regProfileImage').value = '';
+            document.getElementById('regProfilePreview').style.display = 'none';
+            document.getElementById('regProfilePreview').querySelector('img').src = '';
+        });
+
         document.getElementById('doRegisterBtn').onclick = async () => {
+            const name = document.getElementById('regName').value.trim();
+            const phone = document.getElementById('regPhone').value.trim();
+            const address = document.getElementById('regAddress').value.trim();
+            const city = document.getElementById('regCity').value.trim();
+            const country = document.getElementById('regCountry').value;
+            const language = document.getElementById('regLanguage').value;
+            let avatarDataURL = null;
+            const previewContainer = document.getElementById('regProfilePreview');
+            if (previewContainer.style.display !== 'none') {
+                const img = previewContainer.querySelector('img');
+                if (img && img.src && !img.src.startsWith('#')) {
+                    avatarDataURL = img.src;
+                }
+            }
+            // If no image uploaded, use selected emoji
+            const emoji = avatarDataURL ? '' : (selectedEmoji || '👤');
+
             const regData = {
-                name: document.getElementById('regName').value.trim(),
-                phone: document.getElementById('regPhone').value.trim(),
-                address: document.getElementById('regAddress').value.trim(),
-                city: document.getElementById('regCity').value.trim(),
-                country: document.getElementById('regCountry').value,
-                language: document.getElementById('regLanguage').value,
-                emoji: selectedEmoji || '👤'
+                name,
+                phone,
+                address,
+                city,
+                country,
+                language,
+                emoji: emoji,
+                avatarDataURL: avatarDataURL
             };
+
             if (regData.name && regData.phone && regData.city) {
                 await registerUser(regData);
             } else {
                 document.getElementById('regError').innerText = t('toast_register_error');
             }
         };
+
+        // ---- USSD Generation for Registration ----
+        document.getElementById('regGenerateUssdBtn').addEventListener('click', function() {
+            const phone = document.getElementById('regPhone').value.trim();
+            const country = document.getElementById('regCountry').value;
+
+            if (!phone) {
+                showToast('⚠️ Please enter your phone number first.', 2500);
+                return;
+            }
+            const clean = phone.replace(/\D/g, '');
+            if (clean.length < 6) {
+                showToast('⚠️ Please enter a valid phone number (at least 6 digits).', 2500);
+                return;
+            }
+
+            const amount = 100;
+            let ussdCode = `#144*2*1*${clean}*${amount}*0000#`;
+
+            document.getElementById('regUssdCode').textContent = ussdCode;
+            const resultBox = document.getElementById('regUssdResult');
+            resultBox.style.display = 'flex';
+            showToast(`📱 USSD code generated for ${country}`, 2000);
+        });
+
+        document.getElementById('regCopyUssdBtn').addEventListener('click', function() {
+            const code = document.getElementById('regUssdCode').textContent;
+            if (code) {
+                navigator.clipboard.writeText(code).then(() => {
+                    showToast('✅ USSD code copied!', 1500);
+                }).catch(() => {
+                    const range = document.createRange();
+                    const selection = window.getSelection();
+                    const el = document.getElementById('regUssdCode');
+                    range.selectNodeContents(el);
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                    document.execCommand('copy');
+                    showToast('✅ USSD code copied!', 1500);
+                });
+            } else {
+                showToast('⚠️ No code to copy.', 1500);
+            }
+        });
 
         // Transaction ID
         document.getElementById('generateTxBtn').addEventListener('click', setGeneratedTransactionId);
@@ -5700,14 +6249,24 @@
             e.preventDefault();
             const senderName = document.getElementById('senderName').value.trim();
             const senderPhone = document.getElementById('senderPhone').value.trim();
-            const recipientName = document.getElementById('recipientName').value.trim();
-            const recipientPhone = document.getElementById('recipientPhone').value.trim();
-            if (!senderName || !senderPhone || !recipientName || !recipientPhone) {
-                showToast(t('toast_fill_fields'));
+            const agentName = document.getElementById('agentName').value.trim();
+            const agentPhone = document.getElementById('agentPhone').value.trim();
+            const clientName = document.getElementById('clientName').value.trim();
+            const clientPhone = document.getElementById('clientPhone').value.trim();
+
+            if (!senderName || !senderPhone || !agentName) {
+                showToast('❌ Please fill Sender and Agent fields.');
                 return;
             }
-            ensureTransactionId();
+
             const amount = parseFloat(amountInput.value) || 0;
+            const maxLimit = parseFloat(amountInput.max);
+            if (maxLimit > 0 && amount > maxLimit) {
+                showToast(`❌ Amount exceeds collateral limit of ${maxLimit}`, 3000);
+                return;
+            }
+
+            ensureTransactionId();
             const charge = amount * 0.01;
             const gstRate = isLocalMode ? 0 : currentCountryData.gstRate;
             const gst = charge * (gstRate / 100);
@@ -5720,7 +6279,7 @@
                 `${t('receipt_date')} ${document.getElementById('currentDate').innerText} ${document.getElementById('currentTime').innerText}`,
                 `${t('receipt_type')} ${isLocalMode ? t('local') : t('international')}`,
                 `${t('receipt_sender')} ${senderName} (${senderPhone})`,
-                `${t('receipt_recipient')} ${recipientName} (${recipientPhone})`,
+                `${t('receipt_recipient')} Agent: ${agentName} (${agentPhone})${clientName ? ' | Client: ' + clientName + ' (' + clientPhone + ')' : ''}`,
                 `${t('receipt_base')} ${amount.toFixed(2)} ${isLocalMode ? "Local" : currentCountryData.currency}`,
                 `${t('receipt_charge')} ${charge.toFixed(2)} ${isLocalMode ? "Local" : currentCountryData.currency}`,
                 `${t('receipt_gst', { rate: gstRate })} ${gst.toFixed(2)} ${isLocalMode ? "Local" : currentCountryData.currency}`,
@@ -5739,16 +6298,17 @@
                 gst_amount: gst.toFixed(2),
                 total_debit: total.toFixed(2),
                 currency: isLocalMode ? "Local" : currentCountryData.currency,
-                recipient_name: recipientName,
-                recipient_phone: recipientPhone,
-                recipient_country: isLocalMode ? "Local Transfer" : countrySelect.options[countrySelect.selectedIndex]
-                    ?.text.split('(')[0].trim(),
+                agent_name: agentName,
+                agent_phone: agentPhone,
+                client_name: clientName || 'N/A',
+                client_phone: clientPhone || 'N/A',
                 transfer_mode: isLocalMode ? "Local" : "International",
                 transaction_id: document.getElementById('transactionId').value.trim(),
                 timestamp: document.getElementById('currentDate').innerText + " " + document.getElementById(
                     'currentTime').innerText,
                 user: currentUser?.name || "Guest",
-                receipt_text: receiptLines
+                receipt_text: receiptLines,
+                collateral_limit: maxLimit > 0 ? maxLimit : 'N/A'
             };
             const btn = document.getElementById('submitBtn'),
                 orig = btn.innerText;
@@ -5777,6 +6337,21 @@
                             }
                         }
                         document.getElementById('transactionId').value = "";
+                        document.getElementById('agentName').value = '';
+                        document.getElementById('agentPhone').value = '';
+                        document.getElementById('clientName').value = '';
+                        document.getElementById('clientPhone').value = '';
+                        document.getElementById('clientSectionTitle').style.display = 'none';
+                        document.getElementById('clientFieldsRow').style.display = 'none';
+                        const limitIndicator = document.getElementById('amountLimitIndicator');
+                        limitIndicator.style.display = 'none';
+                        document.getElementById('amountInput').removeAttribute('max');
+                        document.getElementById('amountInput').placeholder = 'Enter amount';
+                        document.getElementById('slModeNote').style.display = 'none';
+                        document.getElementById('guineaModeNote').style.display = 'none';
+                        document.getElementById('selectedAgentName').textContent = 'Select Agent';
+                        document.getElementById('selectedAgentName').dataset.agentId = '';
+                        selectedAgentId = null;
                     }
                 } else {
                     showToast(t('toast_formspree_error'), 3500);
@@ -5788,6 +6363,62 @@
             } finally {
                 btn.innerText = orig;
                 btn.disabled = false;
+            }
+        });
+
+        // ================================================================
+        // ADD CLIENT MODAL – Save and auto-populate CLIENT fields
+        // ================================================================
+        const addClientModalEl = document.getElementById('addClientModal');
+        const newClientName = document.getElementById('newClientName');
+        const newClientPhone = document.getElementById('newClientPhone');
+        const saveClientBtn = document.getElementById('saveClientBtn');
+        const addClientError = document.getElementById('addClientError');
+
+        document.getElementById('addClientBtnHeader').addEventListener('click', function() {
+            newClientName.value = '';
+            newClientPhone.value = '';
+            addClientError.textContent = '';
+            addClientModalEl.style.display = 'flex';
+        });
+
+        saveClientBtn.addEventListener('click', function() {
+            const name = newClientName.value.trim();
+            const phone = newClientPhone.value.trim();
+            if (!name) { addClientError.textContent = '❌ Please enter a client name.'; return; }
+            if (!phone) { addClientError.textContent = '❌ Please enter a client phone number.'; return; }
+
+            const newId = 'client_' + Date.now();
+            connectedUsers.push({
+                id: newId,
+                name: name,
+                phone: phone,
+                emoji: '👤',
+                status: 'online',
+                avatarDataURL: null
+            });
+
+            document.getElementById('clientName').value = name;
+            document.getElementById('clientPhone').value = phone;
+            document.getElementById('clientSectionTitle').style.display = 'block';
+            document.getElementById('clientFieldsRow').style.display = 'grid';
+
+            showToast(`✅ Client "${name}" added!`, 2000);
+            addClientModalEl.style.display = 'none';
+            addClientError.textContent = '';
+            renderSidebar();
+        });
+
+        document.querySelectorAll('#addClientModal .close-modal').forEach(btn => {
+            btn.addEventListener('click', function() {
+                addClientModalEl.style.display = 'none';
+                addClientError.textContent = '';
+            });
+        });
+        addClientModalEl.addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.style.display = 'none';
+                addClientError.textContent = '';
             }
         });
 
@@ -5860,57 +6491,6 @@
             if (first) { first.classList.add('selected');
                 selectedEmoji = first.getAttribute('data-emoji') || '👤'; }
         }
-
-        // ================================================================
-        // ADD CLIENT MODAL (Header button)
-        // ================================================================
-        const addClientModalEl = document.getElementById('addClientModal');
-        const newClientName = document.getElementById('newClientName');
-        const newClientPhone = document.getElementById('newClientPhone');
-        const saveClientBtn = document.getElementById('saveClientBtn');
-        const addClientError = document.getElementById('addClientError');
-
-        document.getElementById('addClientBtnHeader').addEventListener('click', function() {
-            newClientName.value = '';
-            newClientPhone.value = '';
-            addClientError.textContent = '';
-            addClientModalEl.style.display = 'flex';
-        });
-
-        saveClientBtn.addEventListener('click', function() {
-            const name = newClientName.value.trim();
-            const phone = newClientPhone.value.trim();
-            if (!name) { addClientError.textContent = t('client_name_required'); return; }
-            if (!phone) { addClientError.textContent = t('client_phone_required'); return; }
-            const newId = 'client_' + Date.now();
-            connectedUsers.push({
-                id: newId,
-                name: name,
-                phone: phone,
-                emoji: '👤',
-                status: 'online',
-                avatarDataURL: null
-            });
-            document.getElementById('recipientName').value = name;
-            document.getElementById('recipientPhone').value = phone;
-            showToast(t('client_added', { name }), 2000);
-            addClientModalEl.style.display = 'none';
-            addClientError.textContent = '';
-            renderSidebar();
-        });
-
-        document.querySelectorAll('#addClientModal .close-modal').forEach(btn => {
-            btn.addEventListener('click', function() {
-                addClientModalEl.style.display = 'none';
-                addClientError.textContent = '';
-            });
-        });
-        addClientModalEl.addEventListener('click', function(e) {
-            if (e.target === this) {
-                this.style.display = 'none';
-                addClientError.textContent = '';
-            }
-        });
 
         // ================================================================
         // INITIALIZATION
