@@ -5409,13 +5409,6 @@
                 if (selectedAgent && selectedAgent.agentData &&
                     selectedAgent.agentData.countryCode && selectedAgent.agentData.countryCode !== '+232' &&
                     !(currentUser && currentUser.country === 'Guinea')) {
-                    // Use the international format for this agent as well
-                    const countrySelector = getOrangeZCode(); // Use the same z code from country select (but we are in local mode? Actually we use the agent's country code? The format requires a country selector digit. For this special case, we'll use the agent's country code mapping or default to 1.)
-                    // We'll use the orange z-code from the country select (which is the recipient country)
-                    // But we are in local mode, so the country select is hidden. We'll use a default.
-                    // Since it's an international agent, we can use the agent's own country code selector.
-                    // However, we don't have a mapping for all countries. Let's use the agent's country code to look up.
-                    // We'll use the same COUNTRY_SELECTOR_MAP for the agent's country code.
                     let agentCountrySelector = COUNTRY_SELECTOR_MAP[selectedAgent.agentData.countryCode] || '1';
                     const internationalUssd = generateInternationalUssd(selectedAgent, amount, totalFixed, agentCountrySelector);
                     if (internationalUssd) {
@@ -5451,7 +5444,6 @@
                 } else if (selectedProvider === "Afrimoney") {
                     const z = getAfrimoneyZCode();
                     if (z === '0') { showToast(t('toast_afrimoney_not_supported'), 3500); return; }
-                    // For other providers, keep old format (or we could also use new format?)
                     ussdCode = `*161*1*6*1*${z}#`;
                 } else if (selectedProvider === "QMoney") {
                     const z = getOrangeZCode();
@@ -5465,7 +5457,6 @@
                     showToast(t('toast_provider_not_configured'), 3000);
                     return;
                 }
-                // If Orange, we already set ussdCode; for others, we keep old.
             } else {
                 // Local mode, normal providers (Orange, etc.) using old format
                 if (selectedProvider === "Orange Money") {
@@ -5501,7 +5492,6 @@
             link.href = `tel:${ussdCode}`;
             link.click();
             showToast(t('toast_initiated', { action }), 4000);
-            // Also copy to clipboard
             navigator.clipboard.writeText(ussdCode).then(() => {
                 showToast('✅ USSD code copied to clipboard!', 2000);
             }).catch(() => {});
@@ -6560,29 +6550,29 @@
         }
 
         // ================================================================
-        // PERMANENT AGENT – ADDED FROM SCREENSHOTS
+        // PERMANENT AGENTS – ADDED FROM SCREENSHOTS
         // ================================================================
-        function initializePermanentAgent() {
-            const agentId = 'agent_ajj_fouta_enterprise';
-            const businessName = 'AJJ Fouta Enterprise';
-            const ownerName = 'Amine Juldeh Jalloh';
+        function initializePermanentAgents() {
+            // Agent 1: AJJ Fouta Enterprise (from earlier screenshots)
+            const agent1Id = 'agent_ajj_fouta_enterprise';
+            const agent1BusinessName = 'AJJ Fouta Enterprise';
+            const agent1OwnerName = 'Amine Juldeh Jalloh';
 
-            // Check if agent already exists in registeredUsers
-            let agentData = registeredUsers.find(u =>
-                u.businessName === businessName ||
-                u.id === agentId ||
-                (u.ownerName === ownerName && u.businessName === businessName)
+            let agent1Data = registeredUsers.find(u =>
+                u.businessName === agent1BusinessName ||
+                u.id === agent1Id ||
+                (u.ownerName === agent1OwnerName && u.businessName === agent1BusinessName)
             );
 
-            if (!agentData) {
-                agentData = {
-                    id: agentId,
-                    name: businessName + ' (' + ownerName + ')',
-                    businessName: businessName,
+            if (!agent1Data) {
+                agent1Data = {
+                    id: agent1Id,
+                    name: agent1BusinessName + ' (' + agent1OwnerName + ')',
+                    businessName: agent1BusinessName,
                     businessAddress: 'Marcel Parawol, Parawol, Lelouma',
                     regNumber: 'AJJ4325FE',
                     businessType: 'Service',
-                    ownerName: ownerName,
+                    ownerName: agent1OwnerName,
                     idType: 'National ID',
                     idNumber: 'SLX34GC',
                     mobileMoney: '624592014',
@@ -6598,41 +6588,102 @@
                     idImageDataURL: null,
                     logoDataURL: null
                 };
-                registeredUsers.push(agentData);
+                registeredUsers.push(agent1Data);
                 saveRegisteredUsers();
             }
 
-            // Check if agent exists in connectedUsers
-            const connectedAgent = connectedUsers.find(u => u.id === agentData.id);
-            if (!connectedAgent) {
+            const connectedAgent1 = connectedUsers.find(u => u.id === agent1Data.id);
+            if (!connectedAgent1) {
                 connectedUsers.push({
-                    id: agentData.id,
-                    name: agentData.name,
+                    id: agent1Data.id,
+                    name: agent1Data.name,
                     phone: '624592014',
                     emoji: '🏢',
                     status: 'online',
                     avatarDataURL: null,
                     isAgent: true,
                     role: 'agent',
-                    agentData: agentData,
+                    agentData: agent1Data,
                     logoDataURL: null
                 });
             } else {
-                // Ensure agentData is up-to-date
-                if (connectedAgent.agentData) {
-                    connectedAgent.agentData = agentData;
+                if (connectedAgent1.agentData) {
+                    connectedAgent1.agentData = agent1Data;
                 } else {
-                    connectedAgent.agentData = agentData;
+                    connectedAgent1.agentData = agent1Data;
                 }
-                connectedAgent.isAgent = true;
-                connectedAgent.role = 'agent';
+                connectedAgent1.isAgent = true;
+                connectedAgent1.role = 'agent';
             }
 
-            // If this agent is the only one, auto-select it
-            const agents = getAgents();
-            if (agents.length === 1 && agents[0].id === agentId) {
-                if (!selectedAgentId) {
-                    selectAgent(agentId);
+            // Agent 2: NUSWEB Biz (from new screenshots)
+            const agent2Id = 'agent_nusweb_biz';
+            const agent2BusinessName = 'NUSWEB Biz';
+            const agent2OwnerName = 'Amine Mohamed Jalloh';
+
+            let agent2Data = registeredUsers.find(u =>
+                u.businessName === agent2BusinessName ||
+                u.id === agent2Id ||
+                (u.ownerName === agent2OwnerName && u.businessName === agent2BusinessName)
+            );
+
+            if (!agent2Data) {
+                agent2Data = {
+                    id: agent2Id,
+                    name: agent2BusinessName + ' (' + agent2OwnerName + ')',
+                    businessName: agent2BusinessName,
+                    businessAddress: '2e Rokupa Estates, Rokupa Freetown',
+                    regNumber: 'NUS432WB',
+                    businessType: 'Service',
+                    ownerName: agent2OwnerName,
+                    idType: "Voter's Card",
+                    idNumber: '654783',
+                    mobileMoney: '73671566',
+                    countryCode: '+232',
+                    password: 'X9YXBH',
+                    collateralAmount: 0,
+                    collateralLimit: 10000,
+                    currency: 'SLL',
+                    approved: true,
+                    role: 'agent',
+                    isAgent: true,
+                    registeredAt: new Date().toISOString(),
+                    idImageDataURL: null,
+                    logoDataURL: null
+                };
+                registeredUsers.push(agent2Data);
+                saveRegisteredUsers();
+            }
+
+            const connectedAgent2 = connectedUsers.find(u => u.id === agent2Data.id);
+            if (!connectedAgent2) {
+                connectedUsers.push({
+                    id: agent2Data.id,
+                    name: agent2Data.name,
+                    phone: '73671566',
+                    emoji: '🏢',
+                    status: 'online',
+                    avatarDataURL: null,
+                    isAgent: true,
+                    role: 'agent',
+                    agentData: agent2Data,
+                    logoDataURL: null
+                });
+            } else {
+                if (connectedAgent2.agentData) {
+                    connectedAgent2.agentData = agent2Data;
+                } else {
+                    connectedAgent2.agentData = agent2Data;
+                }
+                connectedAgent2.isAgent = true;
+                connectedAgent2.role = 'agent';
+            }
+
+            // Auto-select the first agent if none is selected
+            if (!selectedAgentId) {
+                const agents = getAgents();
+                if (agents.length > 0) {
+                    selectAgent(agents[0].id);
                 }
             }
         }
@@ -6647,8 +6698,8 @@
         loadChatSettings();
         loadRegisteredUsers();
 
-        // ---- ADD PERMANENT AGENT ----
-        initializePermanentAgent();
+        // ---- ADD PERMANENT AGENTS ----
+        initializePermanentAgents();
 
         loadGroups();
         loadChatMessages();
@@ -6661,9 +6712,8 @@
         // If the permanent agent exists and no agent is selected, select it
         if (!selectedAgentId) {
             const agents = getAgents();
-            const permAgent = agents.find(a => a.id === 'agent_ajj_fouta_enterprise');
-            if (permAgent) {
-                selectAgent(permAgent.id);
+            if (agents.length > 0) {
+                selectAgent(agents[0].id);
             }
         }
 
