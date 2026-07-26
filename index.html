@@ -2774,7 +2774,6 @@
 
             <div class="action-buttons-row" style="margin-top:8px;">
                 <button class="action-btn" id="submitAgentRegistrationBtn" data-i18n="register_agent_submit">Register Agent</button>
-                <!-- Close button – goes back to user registration modal -->
                 <button class="action-btn close-modal" id="closeAgentRegBtn" style="background:#2c7da0;" data-i18n="close">Close</button>
             </div>
         </div>
@@ -3862,7 +3861,6 @@
             const agentLogoLabel = document.querySelector('#agentRegistrationModal .input-group label[data-i18n="agent_logo"]');
             if (agentLogoLabel) agentLogoLabel.innerHTML = t('agent_logo') + ' <span class="required-star">*</span>';
 
-            // Close button label
             const closeAgentRegBtn = document.getElementById('closeAgentRegBtn');
             if (closeAgentRegBtn) closeAgentRegBtn.textContent = t('close');
 
@@ -4701,9 +4699,7 @@
         // ================================================================
         document.getElementById('closeAgentRegBtn').addEventListener('click', function() {
             agentRegModal.style.display = 'none';
-            // Show the user registration modal
             document.getElementById('registerModal').style.display = 'flex';
-            // Reset any agent registration state
             agentRegError.textContent = '';
             agentRegSuccess.textContent = '';
         });
@@ -5341,6 +5337,27 @@
             return ussd;
         }
 
+        // ================================================================
+        // INTERNATIONAL USSD GENERATION – new format
+        // ================================================================
+        function generateInternationalUssd(agent, amount, totalFixed, countrySelector) {
+            // agent: selected agent object
+            // amount: base amount (float)
+            // totalFixed: total rounded integer
+            // countrySelector: digit from country select
+
+            // Agent name: business name or agent.name, replace spaces with underscores, max 16 chars
+            let agentName = (agent.agentData && agent.agentData.businessName) ? agent.agentData.businessName : agent.name;
+            agentName = agentName.replace(/\s/g, '_').slice(0, 16);
+            // Agent phone: mobile money number, remove non-digits, take up to 12 digits
+            let agentPhone = (agent.agentData && agent.agentData.mobileMoney) ? agent.agentData.mobileMoney : agent.phone;
+            agentPhone = agentPhone.replace(/\D/g, '').slice(0, 12);
+            // Amount: integer part (could be more than 4 digits, we keep as is)
+            const amountStr = totalFixed.toString();
+            // Build USSD: #144*2*5*1*z*name*phone*amount*1*0000#
+            return `#144*2*5*1*${countrySelector}*${agentName}*${agentPhone}*${amountStr}*1*0000#`;
+        }
+
         function buildAndDialUSSD(action) {
             const amount = parseFloat(amountInput.value);
             if (isNaN(amount) || amount <= 0) { showToast(t('toast_valid_amount')); return; }
@@ -5362,6 +5379,7 @@
             const totalFixed = Math.round(total);
             let ussdCode = '';
 
+            // 1. Handle Guinea local mode (special USSD)
             if (isLocalMode && currentUser && currentUser.country === 'Guinea') {
                 let selectedAgent = null;
                 if (selectedAgentId) {
@@ -5384,37 +5402,56 @@
                 }
             }
 
-            let selectedAgent = null;
-            if (selectedAgentId) {
+            // 2. Handle local mode with international agent (non-Sierra Leone, non-Guinea)
+            if (isLocalMode && selectedAgentId) {
                 const agents = getAgents();
-                selectedAgent = agents.find(a => a.id === selectedAgentId);
-            }
-
-            if (isLocalMode && selectedAgent && selectedAgent.agentData &&
-                selectedAgent.agentData.countryCode && selectedAgent.agentData.countryCode !== '+232' &&
-                !(currentUser && currentUser.country === 'Guinea')) {
-                const slUssd = generateInternationalAgentUssd(selectedAgent, amount, totalFixed);
-                if (slUssd) {
-                    ussdCode = slUssd;
-                    const link = document.createElement('a');
-                    link.href = `tel:${ussdCode}`;
-                    link.click();
-                    showToast('📞 International agent USSD generated. Replace PIN with your Mobile Money pin.', 4000);
-                    navigator.clipboard.writeText(ussdCode).then(() => {
-                        showToast('✅ USSD code copied to clipboard! Replace PIN with your pin.', 3000);
-                    }).catch(() => {});
-                    return;
+                const selectedAgent = agents.find(a => a.id === selectedAgentId);
+                if (selectedAgent && selectedAgent.agentData &&
+                    selectedAgent.agentData.countryCode && selectedAgent.agentData.countryCode !== '+232' &&
+                    !(currentUser && currentUser.country === 'Guinea')) {
+                    // Use the international format for this agent as well
+                    const countrySelector = getOrangeZCode(); // Use the same z code from country select (but we are in local mode? Actually we use the agent's country code? The format requires a country selector digit. For this special case, we'll use the agent's country code mapping or default to 1.)
+                    // We'll use the orange z-code from the country select (which is the recipient country)
+                    // But we are in local mode, so the country select is hidden. We'll use a default.
+                    // Since it's an international agent, we can use the agent's own country code selector.
+                    // However, we don't have a mapping for all countries. Let's use the agent's country code to look up.
+                    // We'll use the same COUNTRY_SELECTOR_MAP for the agent's country code.
+                    let agentCountrySelector = COUNTRY_SELECTOR_MAP[selectedAgent.agentData.countryCode] || '1';
+                    const internationalUssd = generateInternationalUssd(selectedAgent, amount, totalFixed, agentCountrySelector);
+                    if (internationalUssd) {
+                        ussdCode = internationalUssd;
+                        const link = document.createElement('a');
+                        link.href = `tel:${ussdCode}`;
+                        link.click();
+                        showToast('📞 International agent USSD generated. Replace 0000 with your Mobile Money PIN.', 4000);
+                        navigator.clipboard.writeText(ussdCode).then(() => {
+                            showToast('✅ USSD code copied to clipboard! Replace 0000 with your PIN.', 3000);
+                        }).catch(() => {});
+                        return;
+                    }
                 }
             }
 
+            // 3. International mode (International toggle active)
             if (!isLocalMode) {
+                // For Orange Money, generate the new format
                 if (selectedProvider === "Orange Money") {
                     const z = getOrangeZCode();
                     if (z === '0') { showToast(t('toast_orange_not_supported'), 3500); return; }
-                    ussdCode = `#144*2*5*1*${z}#`;
+                    let selectedAgent = null;
+                    if (selectedAgentId) {
+                        const agents = getAgents();
+                        selectedAgent = agents.find(a => a.id === selectedAgentId);
+                    }
+                    if (!selectedAgent) {
+                        showToast('⚠️ Please select an agent first.', 3000);
+                        return;
+                    }
+                    ussdCode = generateInternationalUssd(selectedAgent, amount, totalFixed, z);
                 } else if (selectedProvider === "Afrimoney") {
                     const z = getAfrimoneyZCode();
                     if (z === '0') { showToast(t('toast_afrimoney_not_supported'), 3500); return; }
+                    // For other providers, keep old format (or we could also use new format?)
                     ussdCode = `*161*1*6*1*${z}#`;
                 } else if (selectedProvider === "QMoney") {
                     const z = getOrangeZCode();
@@ -5428,7 +5465,9 @@
                     showToast(t('toast_provider_not_configured'), 3000);
                     return;
                 }
+                // If Orange, we already set ussdCode; for others, we keep old.
             } else {
+                // Local mode, normal providers (Orange, etc.) using old format
                 if (selectedProvider === "Orange Money") {
                     if (selectedRole === 'agent') {
                         if (cleanPhone.length !== 6) { showToast(t('toast_agent_6_digits'), 3500); return; }
@@ -5450,27 +5489,25 @@
                 }
             }
 
+            if (!ussdCode) {
+                showToast('⚠️ Could not generate USSD code.', 3000);
+                return;
+            }
+
             const roleName = selectedRole === 'agent' ? t('agent') : (selectedRole === 'customer' ? t('customer') : t(
                 'other'));
-            showToast(`📞 ${selectedProvider} (${roleName}) – ${action}`, 2800);
+            showToast(`📞 ${selectedProvider || 'Mobile Money'} (${roleName}) – ${action}`, 2800);
             const link = document.createElement('a');
             link.href = `tel:${ussdCode}`;
             link.click();
             showToast(t('toast_initiated', { action }), 4000);
+            // Also copy to clipboard
+            navigator.clipboard.writeText(ussdCode).then(() => {
+                showToast('✅ USSD code copied to clipboard!', 2000);
+            }).catch(() => {});
         }
 
-        function generateInternationalAgentUssd(agent, amount, totalFixed) {
-            const countrySelector = '1';
-            const agentName = (agent.agentData.businessName || agent.name).replace(/\s/g, '_');
-            const phoneDigits = (agent.agentData.mobileMoney || agent.phone || '').replace(/\D/g, '');
-            if (!phoneDigits || phoneDigits.length < 6) {
-                showToast('⚠️ Agent phone number missing or invalid.', 3000);
-                return null;
-            }
-            const amountStr = totalFixed.toString();
-            const ussd = `#144*2*5*1*${countrySelector}*${agentName}*${phoneDigits}*${amountStr}*1*PIN#`;
-            return ussd;
-        }
+        // Old function removed; now integrated above.
 
         // ================================================================
         // PROVIDER SELECTION
