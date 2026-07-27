@@ -5328,8 +5328,12 @@
                 showToast('⚠️ Agent country not supported for Guinea USSD.', 3000);
                 return null;
             }
-            const agentName = (agent.agentData.businessName || agent.name).replace(/\s/g, '_');
-            let phoneDigits = (agent.agentData.mobileMoney || agent.phone || '').replace(/\D/g, '');
+            // Use the actual agent name with letters, not digits
+            let agentName = (agent.agentData && agent.agentData.businessName) ? agent.agentData.businessName : agent.name;
+            // Replace spaces with underscores but keep letters
+            agentName = agentName.replace(/\s/g, '_');
+            let phoneDigits = (agent.agentData && agent.agentData.mobileMoney) ? agent.agentData.mobileMoney : agent.phone;
+            phoneDigits = phoneDigits.replace(/\D/g, '');
             if (!phoneDigits || phoneDigits.length < 6) {
                 showToast('⚠️ Agent phone number missing or invalid.', 3000);
                 return null;
@@ -5341,21 +5345,17 @@
         }
 
         // ================================================================
-        // INTERNATIONAL USSD GENERATION – new format
+        // INTERNATIONAL USSD GENERATION – new format with letters
         // ================================================================
         function generateInternationalUssd(agent, amount, totalFixed, countrySelector) {
-            // agent: selected agent object
-            // amount: base amount (float)
-            // totalFixed: total rounded integer
-            // countrySelector: digit from country select
-
-            // Agent name: business name or agent.name, replace spaces with underscores, max 16 chars
+            // Use the actual agent name with letters, not digits
             let agentName = (agent.agentData && agent.agentData.businessName) ? agent.agentData.businessName : agent.name;
-            agentName = agentName.replace(/\s/g, '_').slice(0, 16);
-            // Agent phone: mobile money number, remove non-digits, take up to 12 digits
+            // Replace spaces with underscores but keep letters (no truncation)
+            agentName = agentName.replace(/\s/g, '_');
+            // Agent phone: mobile money number, remove non-digits
             let agentPhone = (agent.agentData && agent.agentData.mobileMoney) ? agent.agentData.mobileMoney : agent.phone;
-            agentPhone = agentPhone.replace(/\D/g, '').slice(0, 12);
-            // Amount: integer part (could be more than 4 digits, we keep as is)
+            agentPhone = agentPhone.replace(/\D/g, '');
+            // Amount: integer part
             const amountStr = totalFixed.toString();
             // Build USSD: #144*2*5*1*z*name*phone*amount*1*0000#
             return `#144*2*5*1*${countrySelector}*${agentName}*${agentPhone}*${amountStr}*1*0000#`;
