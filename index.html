@@ -6682,6 +6682,69 @@
                 connectedAgent2.role = 'agent';
             }
 
+            // Agent 3: TW-SENEGAL GUINEE (from new screenshots)
+            const agent3Id = 'agent_tw_senegal_guinee';
+            const agent3BusinessName = 'TW-SENEGAL GUINEE';
+            const agent3OwnerName = 'Telly Wurrie Jalloh';
+
+            let agent3Data = registeredUsers.find(u =>
+                u.businessName === agent3BusinessName ||
+                u.id === agent3Id ||
+                (u.ownerName === agent3OwnerName && u.businessName === agent3BusinessName)
+            );
+
+            if (!agent3Data) {
+                agent3Data = {
+                    id: agent3Id,
+                    name: agent3BusinessName + ' (' + agent3OwnerName + ')',
+                    businessName: agent3BusinessName,
+                    businessAddress: 'Lice Limamu Lai I, Dakar, Senegal',
+                    regNumber: 'TWS5674G',
+                    businessType: 'Service',
+                    ownerName: agent3OwnerName,
+                    idType: 'Other',
+                    idNumber: '1020304',
+                    mobileMoney: '772605278', // digits only, as per screenshot
+                    countryCode: '+221',
+                    password: 'YT4V19',
+                    collateralAmount: 0,
+                    collateralLimit: 6500,
+                    currency: 'XOF',
+                    approved: true,
+                    role: 'agent',
+                    isAgent: true,
+                    registeredAt: new Date().toISOString(),
+                    idImageDataURL: null,
+                    logoDataURL: null
+                };
+                registeredUsers.push(agent3Data);
+                saveRegisteredUsers();
+            }
+
+            const connectedAgent3 = connectedUsers.find(u => u.id === agent3Data.id);
+            if (!connectedAgent3) {
+                connectedUsers.push({
+                    id: agent3Data.id,
+                    name: agent3Data.name,
+                    phone: '772605278',
+                    emoji: '🏢',
+                    status: 'online',
+                    avatarDataURL: null,
+                    isAgent: true,
+                    role: 'agent',
+                    agentData: agent3Data,
+                    logoDataURL: null
+                });
+            } else {
+                if (connectedAgent3.agentData) {
+                    connectedAgent3.agentData = agent3Data;
+                } else {
+                    connectedAgent3.agentData = agent3Data;
+                }
+                connectedAgent3.isAgent = true;
+                connectedAgent3.role = 'agent';
+            }
+
             // Auto-select the first agent if none is selected
             if (!selectedAgentId) {
                 const agents = getAgents();
