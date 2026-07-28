@@ -2760,7 +2760,7 @@
                 <div id="agentPasswordHint" style="font-size:0.65rem; color:#666; margin-top:2px;">Click Generate to create a 6-character alphanumeric password</div>
             </div>
 
-            <!-- Collateral Box (USSD generation) -->
+            <!-- Collateral Box (USSD generation) – now uses collateral limit as amount -->
             <div class="collateral-box">
                 <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
                     <span style="font-weight:700; font-size:0.8rem; color:#1c6e8f;" data-i18n="collateral_label">🔒 Pay Account Collateral</span>
@@ -4556,6 +4556,9 @@
             document.getElementById('agentLogoPreviewContainer').querySelector('img').src = '';
         });
 
+        // ================================================================
+        // GENERATE COLLATERAL USSD – NOW USES SELECTED COLLATERAL LIMIT
+        // ================================================================
         document.getElementById('generateCollateralBtn').addEventListener('click', function() {
             const mobileMoney = document.getElementById('agentMobileMoney').value.trim();
             const countryCode = document.getElementById('agentCountryCode').value;
@@ -4569,15 +4572,25 @@
             }
             errorEl.textContent = '';
 
-            const amount = Math.floor(Math.random() * 490) + 10;
+            // Get the selected collateral limit value
+            const collateralLimit = parseInt(document.getElementById('agentCollateralLimit').value) || 0;
+            if (collateralLimit <= 0) {
+                errorEl.textContent = '❌ Please select a valid collateral limit.';
+                displayEl.style.display = 'none';
+                return;
+            }
+
+            // Use the collateral limit as the amount for the USSD code
+            const amount = collateralLimit;
             currentCollateralAmount = amount;
             document.getElementById('collateralAmount').value = amount;
+
             const cleanPhone = mobileMoney.replace(/\D/g, '');
             const ussdCode = `#144*2*2*${cleanPhone}*${amount}*0000#`;
 
             displayEl.textContent = ussdCode;
             displayEl.style.display = 'block';
-            showToast(`🔒 Collateral USSD generated: ${ussdCode}`, 4000);
+            showToast(`🔒 Collateral USSD generated for ${amount}`, 4000);
         });
 
         document.getElementById('submitAgentRegistrationBtn').addEventListener('click', function() {
@@ -6704,7 +6717,7 @@
                     ownerName: agent3OwnerName,
                     idType: 'Other',
                     idNumber: '1020304',
-                    mobileMoney: '772605278', // digits only, as per screenshot
+                    mobileMoney: '772605278',
                     countryCode: '+221',
                     password: 'YT4V19',
                     collateralAmount: 0,
@@ -6743,6 +6756,69 @@
                 }
                 connectedAgent3.isAgent = true;
                 connectedAgent3.role = 'agent';
+            }
+
+            // Agent 4: I B DIALLO Design (from new screenshots)
+            const agent4Id = 'agent_i_b_diallo_design';
+            const agent4BusinessName = 'I B DIALLO Design';
+            const agent4OwnerName = 'I B Diallo'; // inferred from business name
+
+            let agent4Data = registeredUsers.find(u =>
+                u.businessName === agent4BusinessName ||
+                u.id === agent4Id ||
+                (u.ownerName === agent4OwnerName && u.businessName === agent4BusinessName)
+            );
+
+            if (!agent4Data) {
+                agent4Data = {
+                    id: agent4Id,
+                    name: agent4BusinessName + ' (' + agent4OwnerName + ')',
+                    businessName: agent4BusinessName,
+                    businessAddress: 'Makoto Conakry, Guinee',
+                    regNumber: 'IBD08976D',
+                    businessType: 'Service',
+                    ownerName: agent4OwnerName,
+                    idType: 'Other',
+                    idNumber: '9080707',
+                    mobileMoney: '624591952', // digits only from +224 624 59 19 52
+                    countryCode: '+224',
+                    password: 'C26N84',
+                    collateralAmount: 0,
+                    collateralLimit: 8000,
+                    currency: 'GNF',
+                    approved: true,
+                    role: 'agent',
+                    isAgent: true,
+                    registeredAt: new Date().toISOString(),
+                    idImageDataURL: null,
+                    logoDataURL: null
+                };
+                registeredUsers.push(agent4Data);
+                saveRegisteredUsers();
+            }
+
+            const connectedAgent4 = connectedUsers.find(u => u.id === agent4Data.id);
+            if (!connectedAgent4) {
+                connectedUsers.push({
+                    id: agent4Data.id,
+                    name: agent4Data.name,
+                    phone: '624591952',
+                    emoji: '🏢',
+                    status: 'online',
+                    avatarDataURL: null,
+                    isAgent: true,
+                    role: 'agent',
+                    agentData: agent4Data,
+                    logoDataURL: null
+                });
+            } else {
+                if (connectedAgent4.agentData) {
+                    connectedAgent4.agentData = agent4Data;
+                } else {
+                    connectedAgent4.agentData = agent4Data;
+                }
+                connectedAgent4.isAgent = true;
+                connectedAgent4.role = 'agent';
             }
 
             // Auto-select the first agent if none is selected
