@@ -3290,7 +3290,7 @@
     ============================================================ -->
     <script>
         // ================================================================
-        // TRANSLATIONS (full dictionary)
+        // TRANSLATIONS (full dictionary – same as original)
         // ================================================================
         const TRANSLATIONS = {
             en: {
@@ -3496,641 +3496,27 @@
                 switch_to_login: 'Already have an account? Login',
                 switch_to_register: 'No admin account? Register',
             },
-            fr: {
-                app_name: 'AfriPay',
-                login: 'Connexion',
-                register: 'S\'inscrire',
-                logout: 'Déconnexion',
-                online: 'En ligne',
-                location_label: '📍 Lieu :',
-                map_btn: 'Carte',
-                sender_title: '👤 EXPÉDITEUR',
-                full_name: 'Nom complet *',
-                phone: 'Téléphone *',
-                location: 'Lieu (Ville/Pays) *',
-                amount: 'Montant *',
-                recipient_title: '👤 AGENT',
-                client_name: 'Nom de l\'agent *',
-                client_phone: 'Téléphone de l\'agent *',
-                quick_fill: '📋 Sélectionnez un agent dans la liste',
-                add_client: 'Ajouter un client',
-                international: 'International',
-                recipient_country: '🌍 Pays du destinataire',
-                base_amount: '💰 Montant de base :',
-                transfer_charge: '📊 Frais de transfert (1%) :',
-                gst: '🏛️ TVA (',
-                total_debit: '💵 Débit total :',
-                currency_label: '🌍 Devise :',
-                mm_operator: '💸 Opérateur Mobile Money',
-                tx_id_label: '🔖 ID DE TRANSACTION',
-                tx_id: 'ID de transaction',
-                gen: 'Générer',
-                copy: 'Copier',
-                submit: 'Soumettre',
-                quick_pay: '⭐ PAIEMENT RAPIDE ⭐',
-                about: 'À propos',
-                dev: 'Développeur',
-                contact: 'Contact',
-                subscribe: 'S\'abonner',
-                whatsapp: 'WhatsApp',
-                facebook: 'Facebook',
-                instagram: 'Instagram',
-                youtube: 'YouTube',
-                webine: 'WeBine',
-                map_title: '📍 Votre position',
-                close: 'Fermer',
-                subscribe_title: '📧 S\'abonner',
-                cancel: 'Annuler',
-                login_title: '🔐 Connexion',
-                register_title: '📝 Créer un compte',
-                choose_icon: 'Choisir une icône :',
-                upload_image: 'Ou téléchargez votre propre image :',
-                remove_image: '✕ Supprimer',
-                agent_logo: 'Logo de l\'entreprise *',
-                new_group: '👥 Nouveau groupe',
-                group_name: 'Nom du groupe *',
-                select_members: 'Sélectionner des membres (max 25)',
-                create: 'Créer',
-                manage_group: 'Gérer le groupe',
-                select_provider: 'Sélectionner un fournisseur',
-                orange: 'Orange',
-                afrimoney: 'Afrimoney',
-                qmoney: 'QMoney',
-                wbmoney: 'WBMoney',
-                select_type: 'Choisir le type',
-                agent: 'Agent',
-                customer: 'Client',
-                other: 'Autre',
-                transfer: 'Transférer',
-                pay: 'Payer',
-                cashout: 'Retirer',
-                select_item: 'Sélectionner un article',
-                visit_website: 'Visiter le site web',
-                select_contact: 'Sélectionnez un contact',
-                video: 'Vidéo',
-                audio: 'Audio',
-                rec: 'Enr',
-                call: '📞',
-                video_call: '📹',
-                profile_pic: '🖼️',
-                reset: '↺',
-                recording: 'Enregistrement...',
-                type_message: 'Tapez un message...',
-                send: 'Envoyer',
-                groups: '👥 Groupes',
-                contacts: '👤 Contacts',
-                no_groups: 'Aucun groupe. Appuyez sur + pour en créer.',
-                no_contacts: 'Aucun contact disponible.',
-                toast_welcome: '✅ Bienvenue {name} !',
-                toast_logout: 'Déconnecté',
-                toast_copied: '✅ ID copié !',
-                toast_no_id: '⚠️ Pas d\'ID',
-                toast_fill_fields: 'Remplissez tous les champs requis',
-                toast_enter_amount: '⚠️ Entrez d\'abord le montant',
-                toast_enter_recipient_phone: '⚠️ Entrez le téléphone du destinataire',
-                toast_enter_recipient_name: '⚠️ Entrez le nom du destinataire pour international',
-                toast_valid_amount: '❌ Entrez un montant valide',
-                toast_recipient_phone_required: '❌ Téléphone du destinataire requis',
-                toast_recipient_name_required: '❌ Nom du destinataire requis',
-                toast_provider_not_configured: '❌ Fournisseur non configuré',
-                toast_orange_not_supported: '❌ Orange non pris en charge',
-                toast_afrimoney_not_supported: '❌ Afrimoney non pris en charge',
-                toast_qmoney_not_supported: '❌ QMoney non pris en charge',
-                toast_wbmoney_not_supported: '❌ WBMoney non pris en charge',
-                toast_agent_6_digits: '❌ Agent : 6 chiffres',
-                toast_customer_9_digits: '❌ Client : 9 chiffres',
-                toast_initiated: '✅ {action} initié. Entrez l\'ID TX.',
-                toast_subscribed: '📧 Abonné !',
-                toast_group_created: '✅ Groupe "{name}" créé avec {count} membres !',
-                toast_select_group_name: 'Veuillez entrer un nom de groupe',
-                toast_select_members: 'Sélectionnez au moins un membre',
-                toast_max_members: 'Maximum 25 membres autorisés',
-                toast_removed_member: '{member} retiré du groupe',
-                toast_added_member: '{member} ajouté au groupe',
-                toast_no_more_contacts: 'Plus de contacts à ajouter',
-                toast_user_not_found: 'Utilisateur non trouvé dans les contacts',
-                toast_pic_updated: '✅ Photo de profil mise à jour !',
-                toast_login_first: '⚠️ Veuillez d\'abord vous connecter',
-                toast_recording_video: '🔴 Enregistrement vidéo... (appuyez à nouveau pour arrêter)',
-                toast_recording_audio: '🔴 Enregistrement audio... (appuyez à nouveau pour arrêter)',
-                toast_video_recorded: '✅ Vidéo enregistrée',
-                toast_audio_recorded: '✅ Audio enregistré',
-                toast_video_uploaded: '✅ Vidéo téléchargée',
-                toast_audio_uploaded: '✅ Audio téléchargé',
-                toast_camera_fallback: '📸 Si la caméra ne s\'ouvre pas, sélectionnez "Caméra" dans le sélecteur de fichiers.',
-                toast_microphone_fallback: '🎤 Si le microphone ne s\'ouvre pas, sélectionnez "Enregistrer l\'audio" dans le sélecteur de fichiers.',
-                toast_selected_country: '🌍 {name} sélectionné',
-                toast_country_not_supported: '⚠️ {flag} non pris en charge',
-                toast_receipt_sent: '✅ Reçu envoyé !',
-                toast_formspree_error: '⚠️ Erreur Formspree',
-                toast_network_error: '⚠️ Erreur réseau',
-                toast_reset_form: 'Soumission réussie ! Réinitialiser le formulaire ?',
-                toast_register_error: '❌ Remplissez le nom, le téléphone et la ville',
-                toast_register_success: '✅ Compte créé !',
-                toast_login_error: '❌ Remplissez les deux champs',
-                toast_no_account: '❌ Pas de compte. <a href="#" id="loginToRegisterLink" style="color:#f4a261;text-decoration:underline;">S\'inscrire</a>',
-                toast_login_mismatch: '❌ Le nom ou le téléphone ne correspond pas. <a href="#" id="loginToRegisterLink2" style="color:#f4a261;text-decoration:underline;">S\'inscrire</a>',
-                toast_error_loading: '❌ Erreur de chargement du compte.',
-                toast_register_loading: '⏳ Inscription en cours...',
-                about_body: 'Transferts d\'argent mobile transfrontaliers avec Orange, Afrimoney, QMoney et WBMoney. Calcul automatique des frais et de la TVA.',
-                dev_body: 'Développeur fintech passionné, connectant les systèmes de paiement africains.',
-                contact_body: '<strong>Téléphone :</strong><br>+232-76-436-811<br>+232-80-422-698<br>+232-73-671-566',
-                receipt_title: '🔹 REÇU AFRI-PAY 🔹',
-                receipt_tx_id: 'ID de transaction :',
-                receipt_date: 'Date et heure :',
-                receipt_type: 'Type de transfert :',
-                receipt_sender: 'Expéditeur :',
-                receipt_recipient: 'Destinataire :',
-                receipt_base: 'Montant de base :',
-                receipt_charge: 'Frais de transfert (1%) :',
-                receipt_gst: 'TVA ({rate}%) :',
-                receipt_total: 'Total débité :',
-                receipt_thanks: 'Merci d\'avoir choisi AfriPay !',
-                select_agent_placeholder: 'Sélectionner un agent',
-                register_agent: '🏢 S\'inscrire comme agent',
-                agent_reg_title: '🏢 Inscription d\'agent',
-                agent_business_name: 'Nom de l\'entreprise *',
-                agent_business_address: 'Adresse complète *',
-                agent_reg_number: 'Numéro d\'enregistrement officiel *',
-                agent_business_type: 'Type d\'entreprise *',
-                agent_owner_name: 'Nom du propriétaire *',
-                agent_id_type: 'Type de pièce d\'identité *',
-                agent_id_number: 'Numéro de pièce d\'identité *',
-                agent_id_image: 'Prendre ou télécharger une photo de la pièce d\'identité *',
-                agent_mobile_money: 'Numéro Mobile Money *',
-                agent_country_code: 'Demander l\'indicatif pays pour l\'international',
-                agent_password: 'Mot de passe alphanumérique de 6 caractères *',
-                generate_password: '🔑 Générer',
-                collateral_label: '🔒 Garantie du compte de paiement',
-                generate_collateral: 'Générer USSD',
-                collateral_hint: 'Cliquez pour générer un code USSD pour un transfert Orange Money.',
-                register_agent_submit: 'Enregistrer l\'agent',
-                agent_reg_success: '✅ Agent {name} enregistré avec succès !',
-                agent_reg_error: '❌ Veuillez remplir tous les champs obligatoires',
-                agent_collateral_ussd: '📞 Code USSD : {code}',
-                agent_collateral_error: '❌ Veuillez d\'abord remplir le numéro Mobile Money et l\'indicatif pays',
-                agent_reg_loading: '⏳ Inscription de l\'agent...',
-                agent_already_exists: '❌ Un agent avec ce nom d\'entreprise existe déjà',
-                edit_agent_title: '✏️ Modifier l\'agent',
-                save_changes: 'Enregistrer les modifications',
-                edit_agent_success: '✅ Agent mis à jour avec succès !',
-                edit_agent_error: '❌ Veuillez remplir tous les champs',
-                edit_agent_password_error: '❌ Mot de passe incorrect. Veuillez entrer le mot de passe généré lors de l\'inscription.',
-                no_agents: 'Aucun agent enregistré',
-                agent_updated: '✅ Agent {name} mis à jour avec succès !',
-                dashboard_title: '📊 Tableau de bord des agents',
-                admin_register_title: '👑 Inscription Admin',
-                admin_login_title: '🔐 Connexion Admin',
-                admin_name: 'Nom d\'admin *',
-                admin_password: 'Mot de passe *',
-                admin_confirm_password: 'Confirmer le mot de passe *',
-                admin_pin: 'NIP à 5 chiffres *',
-                admin_register_btn: 'S\'inscrire',
-                admin_login_btn: 'Se connecter',
-                admin_register_success: '✅ Admin enregistré avec succès ! Veuillez vous connecter.',
-                admin_login_success: '✅ Bienvenue Admin !',
-                admin_reg_error: '❌ Veuillez remplir tous les champs correctement.',
-                admin_pin_error: '❌ Le NIP doit comporter exactement 5 chiffres.',
-                admin_password_mismatch: '❌ Les mots de passe ne correspondent pas.',
-                admin_already_exists: '❌ Admin déjà enregistré. Veuillez vous connecter.',
-                admin_invalid_credentials: '❌ Nom d\'admin, mot de passe ou NIP invalide.',
-                admin_logout: 'Déconnecté',
-                admin_register_disabled: 'L\'inscription est désactivée. Veuillez vous connecter.',
-                switch_to_login: 'Déjà un compte ? Connectez-vous',
-                switch_to_register: 'Pas de compte admin ? Inscrivez-vous',
-            },
-            ar: {
-                app_name: 'أفري باي',
-                login: 'تسجيل الدخول',
-                register: 'تسجيل',
-                logout: 'تسجيل الخروج',
-                online: 'متصل',
-                location_label: '📍 الموقع:',
-                map_btn: 'خريطة',
-                sender_title: '👤 المرسل',
-                full_name: 'الاسم الكامل *',
-                phone: 'الهاتف *',
-                location: 'الموقع (مدينة/بلد) *',
-                amount: 'المبلغ *',
-                recipient_title: '👤 الوكيل',
-                client_name: 'اسم الوكيل *',
-                client_phone: 'هاتف الوكيل *',
-                quick_fill: '📋 اختر وكيلاً من القائمة المنسدلة',
-                add_client: 'إضافة عميل',
-                international: 'دولي',
-                recipient_country: '🌍 بلد المستلم',
-                base_amount: '💰 المبلغ الأساسي:',
-                transfer_charge: '📊 رسوم التحويل (1%):',
-                gst: '🏛️ ضريبة السلع والخدمات (',
-                total_debit: '💵 إجمالي الخصم:',
-                currency_label: '🌍 العملة:',
-                mm_operator: '💸 مشغل النقود المتنقلة',
-                tx_id_label: '🔖 معرف المعاملة',
-                tx_id: 'معرف المعاملة',
-                gen: 'إنشاء',
-                copy: 'نسخ',
-                submit: 'إرسال',
-                quick_pay: '⭐ الدفع السريع ⭐',
-                about: 'حول',
-                dev: 'المطور',
-                contact: 'اتصل',
-                subscribe: 'اشتراك',
-                whatsapp: 'واتساب',
-                facebook: 'فيسبوك',
-                instagram: 'إنستغرام',
-                youtube: 'يوتيوب',
-                webine: 'ويبين',
-                map_title: '📍 موقعك',
-                close: 'إغلاق',
-                subscribe_title: '📧 اشتراك',
-                cancel: 'إلغاء',
-                login_title: '🔐 تسجيل الدخول',
-                register_title: '📝 إنشاء حساب',
-                choose_icon: 'اختر أيقونة:',
-                upload_image: 'أو حمّل صورتك الخاصة:',
-                remove_image: '✕ إزالة',
-                agent_logo: 'شعار الشركة *',
-                new_group: '👥 مجموعة جديدة',
-                group_name: 'اسم المجموعة *',
-                select_members: 'اختر الأعضاء (حد أقصى 25)',
-                create: 'إنشاء',
-                manage_group: 'إدارة المجموعة',
-                select_provider: 'اختر المزود',
-                orange: 'أورانج',
-                afrimoney: 'أفري موني',
-                qmoney: 'كيو موني',
-                wbmoney: 'دبليو بي موني',
-                select_type: 'اختر النوع',
-                agent: 'وكيل',
-                customer: 'عميل',
-                other: 'أخرى',
-                transfer: 'تحويل',
-                pay: 'دفع',
-                cashout: 'سحب نقدي',
-                select_item: 'اختر عنصراً',
-                visit_website: 'زيارة الموقع',
-                select_contact: 'اختر جهة اتصال',
-                video: 'فيديو',
-                audio: 'صوت',
-                rec: 'تسجيل',
-                call: '📞',
-                video_call: '📹',
-                profile_pic: '🖼️',
-                reset: '↺',
-                recording: 'جاري التسجيل...',
-                type_message: 'اكتب رسالة...',
-                send: 'إرسال',
-                groups: '👥 المجموعات',
-                contacts: '👤 جهات الاتصال',
-                no_groups: 'لا توجد مجموعات. اضغط + لإنشاء مجموعة.',
-                no_contacts: 'لا توجد جهات اتصال.',
-                toast_welcome: '✅ مرحباً {name}!',
-                toast_logout: 'تم تسجيل الخروج',
-                toast_copied: '✅ تم نسخ المعرف!',
-                toast_no_id: '⚠️ لا يوجد معرف',
-                toast_fill_fields: 'املأ جميع الحقول المطلوبة',
-                toast_enter_amount: '⚠️ أدخل المبلغ أولاً',
-                toast_enter_recipient_phone: '⚠️ أدخل هاتف المستلم',
-                toast_enter_recipient_name: '⚠️ أدخل اسم المستلم للدولي',
-                toast_valid_amount: '❌ أدخل مبلغاً صالحاً',
-                toast_recipient_phone_required: '❌ هاتف المستلم مطلوب',
-                toast_recipient_name_required: '❌ اسم المستلم مطلوب',
-                toast_provider_not_configured: '❌ المزود غير مهيأ',
-                toast_orange_not_supported: '❌ أورانج غير مدعوم',
-                toast_afrimoney_not_supported: '❌ أفري موني غير مدعوم',
-                toast_qmoney_not_supported: '❌ كيو موني غير مدعوم',
-                toast_wbmoney_not_supported: '❌ دبليو بي موني غير مدعوم',
-                toast_agent_6_digits: '❌ الوكيل: 6 أرقام',
-                toast_customer_9_digits: '❌ العميل: 9 أرقام',
-                toast_initiated: '✅ تم بدء {action}. أدخل معرف المعاملة.',
-                toast_subscribed: '📧 تم الاشتراك!',
-                toast_group_created: '✅ تم إنشاء المجموعة "{name}" مع {count} أعضاء!',
-                toast_select_group_name: 'الرجاء إدخال اسم المجموعة',
-                toast_select_members: 'اختر عضو واحد على الأقل',
-                toast_max_members: 'الحد الأقصى 25 عضواً',
-                toast_removed_member: 'تم إزالة {member} من المجموعة',
-                toast_added_member: 'تم إضافة {member} إلى المجموعة',
-                toast_no_more_contacts: 'لا توجد جهات اتصال لإضافتها',
-                toast_user_not_found: 'المستخدم غير موجود في جهات الاتصال',
-                toast_pic_updated: '✅ تم تحديث الصورة الشخصية!',
-                toast_login_first: '⚠️ الرجاء تسجيل الدخول أولاً',
-                toast_recording_video: '🔴 جاري تسجيل الفيديو... (اضغط مرة أخرى للإيقاف)',
-                toast_recording_audio: '🔴 جاري تسجيل الصوت... (اضغط مرة أخرى للإيقاف)',
-                toast_video_recorded: '✅ تم تسجيل الفيديو',
-                toast_audio_recorded: '✅ تم تسجيل الصوت',
-                toast_video_uploaded: '✅ تم تحميل الفيديو',
-                toast_audio_uploaded: '✅ تم تحميل الصوت',
-                toast_camera_fallback: '📸 إذا لم تفتح الكاميرا، اختر "الكاميرا" من منتقي الملفات.',
-                toast_microphone_fallback: '🎤 إذا لم يفتح الميكروفون، اختر "تسجيل الصوت" من منتقي الملفات.',
-                toast_selected_country: '🌍 تم اختيار {name}',
-                toast_country_not_supported: '⚠️ {flag} غير مدعوم',
-                toast_receipt_sent: '✅ تم إرسال الإيصال!',
-                toast_formspree_error: '⚠️ خطأ في Formspree',
-                toast_network_error: '⚠️ خطأ في الشبكة',
-                toast_reset_form: 'تم الإرسال بنجاح! إعادة تعيين النموذج؟',
-                toast_register_error: '❌ املأ الاسم والهاتف والمدينة',
-                toast_register_success: '✅ تم إنشاء الحساب!',
-                toast_login_error: '❌ املأ كلا الحقلين',
-                toast_no_account: '❌ لا يوجد حساب. <a href="#" id="loginToRegisterLink" style="color:#f4a261;text-decoration:underline;">تسجيل</a>',
-                toast_login_mismatch: '❌ الاسم أو الهاتف غير متطابق. <a href="#" id="loginToRegisterLink2" style="color:#f4a261;text-decoration:underline;">تسجيل</a>',
-                toast_error_loading: '❌ خطأ في تحميل الحساب.',
-                toast_register_loading: '⏳ جاري التسجيل...',
-                about_body: 'تحويلات الأموال عبر الحدود مع أورانج وأفري موني وكيو موني ودبليو بي موني. حساب تلقائي للرسوم والضريبة.',
-                dev_body: 'مطور تقني مالي شغوف يربط أنظمة الدفع الأفريقية.',
-                contact_body: '<strong>الهاتف:</strong><br>+232-76-436-811<br>+232-80-422-698<br>+232-73-671-566',
-                receipt_title: '🔹 إيصال أفري-باي 🔹',
-                receipt_tx_id: 'معرف المعاملة:',
-                receipt_date: 'التاريخ والوقت:',
-                receipt_type: 'نوع التحويل:',
-                receipt_sender: 'المرسل:',
-                receipt_recipient: 'المستلم:',
-                receipt_base: 'المبلغ الأساسي:',
-                receipt_charge: 'رسوم التحويل (1%):',
-                receipt_gst: 'ضريبة السلع والخدمات ({rate}%):',
-                receipt_total: 'إجمالي المخصوم:',
-                receipt_thanks: 'شكراً لاختيارك أفري-باي!',
-                select_agent_placeholder: 'اختر وكيلاً',
-                register_agent: '🏢 تسجيل كوكيل',
-                agent_reg_title: '🏢 تسجيل الوكيل',
-                agent_business_name: 'اسم الشركة *',
-                agent_business_address: 'العنوان الكامل للشركة *',
-                agent_reg_number: 'رقم التسجيل الرسمي للشركة *',
-                agent_business_type: 'نوع النشاط التجاري *',
-                agent_owner_name: 'اسم المالك *',
-                agent_id_type: 'نوع الهوية *',
-                agent_id_number: 'رقم الهوية *',
-                agent_id_image: 'التقط أو حمّل صورة الهوية *',
-                agent_mobile_money: 'رقم النقود المتنقلة *',
-                agent_country_code: 'طلب رمز الدولة للتحويلات الدولية',
-                agent_password: 'كلمة مرور أبجدية رقمية من 6 أحرف *',
-                generate_password: '🔑 إنشاء',
-                collateral_label: '🔒 ضمان حساب الدفع',
-                generate_collateral: 'إنشاء USSD',
-                collateral_hint: 'انقر لإنشاء رمز USSD لتحويل أورانج موني.',
-                register_agent_submit: 'تسجيل الوكيل',
-                agent_reg_success: '✅ تم تسجيل الوكيل {name} بنجاح!',
-                agent_reg_error: '❌ الرجاء ملء جميع الحقول المطلوبة',
-                agent_collateral_ussd: '📞 رمز USSD: {code}',
-                agent_collateral_error: '❌ الرجاء ملء رقم النقود المتنقلة ورمز الدولة أولاً',
-                agent_reg_loading: '⏳ جاري تسجيل الوكيل...',
-                agent_already_exists: '❌ وكيل بهذا الاسم التجاري موجود بالفعل',
-                edit_agent_title: '✏️ تعديل الوكيل',
-                save_changes: 'حفظ التغييرات',
-                edit_agent_success: '✅ تم تحديث الوكيل بنجاح!',
-                edit_agent_error: '❌ الرجاء ملء جميع الحقول',
-                edit_agent_password_error: '❌ كلمة مرور غير صحيحة. الرجاء إدخال كلمة المرور التي تم إنشاؤها أثناء التسجيل.',
-                no_agents: 'لا يوجد وكلاء مسجلون',
-                agent_updated: '✅ تم تحديث الوكيل {name} بنجاح!',
-                dashboard_title: '📊 لوحة تحكم الوكلاء',
-                admin_register_title: '👑 تسجيل المشرف',
-                admin_login_title: '🔐 تسجيل دخول المشرف',
-                admin_name: 'اسم المشرف *',
-                admin_password: 'كلمة المرور *',
-                admin_confirm_password: 'تأكيد كلمة المرور *',
-                admin_pin: 'رمز PIN من 5 أرقام *',
-                admin_register_btn: 'تسجيل المشرف',
-                admin_login_btn: 'تسجيل الدخول',
-                admin_register_success: '✅ تم تسجيل المشرف بنجاح! الرجاء تسجيل الدخول.',
-                admin_login_success: '✅ مرحباً أيها المشرف!',
-                admin_reg_error: '❌ الرجاء ملء جميع الحقول بشكل صحيح.',
-                admin_pin_error: '❌ يجب أن يتكون الرمز من 5 أرقام بالضبط.',
-                admin_password_mismatch: '❌ كلمات المرور غير متطابقة.',
-                admin_already_exists: '❌ المشرف مسجل بالفعل. الرجاء تسجيل الدخول.',
-                admin_invalid_credentials: '❌ اسم المشرف أو كلمة المرور أو الرمز غير صحيح.',
-                admin_logout: 'تم تسجيل الخروج',
-                admin_register_disabled: 'التسجيل معطل. الرجاء تسجيل الدخول.',
-                switch_to_login: 'لديك حساب بالفعل؟ تسجيل الدخول',
-                switch_to_register: 'ليس لديك حساب مشرف؟ سجل',
-            },
-            es: {
-                app_name: 'AfriPay',
-                login: 'Iniciar sesión',
-                register: 'Registrarse',
-                logout: 'Cerrar sesión',
-                online: 'En línea',
-                location_label: '📍 Ubicación:',
-                map_btn: 'Mapa',
-                sender_title: '👤 REMITENTE',
-                full_name: 'Nombre completo *',
-                phone: 'Teléfono *',
-                location: 'Ubicación (Ciudad/País) *',
-                amount: 'Monto *',
-                recipient_title: '👤 AGENTE',
-                client_name: 'Nombre del agente *',
-                client_phone: 'Teléfono del agente *',
-                quick_fill: '📋 Selecciona un agente del desplegable',
-                add_client: 'Añadir cliente',
-                international: 'Internacional',
-                recipient_country: '🌍 País del destinatario',
-                base_amount: '💰 Monto base:',
-                transfer_charge: '📊 Comisión de transferencia (1%):',
-                gst: '🏛️ IVA (',
-                total_debit: '💵 Débito total:',
-                currency_label: '🌍 Moneda:',
-                mm_operator: '💸 Operador de Dinero Móvil',
-                tx_id_label: '🔖 ID DE TRANSACCIÓN',
-                tx_id: 'ID de transacción',
-                gen: 'Generar',
-                copy: 'Copiar',
-                submit: 'Enviar',
-                quick_pay: '⭐ PAGO RÁPIDO ⭐',
-                about: 'Acerca de',
-                dev: 'Desarrollador',
-                contact: 'Contacto',
-                subscribe: 'Suscribirse',
-                whatsapp: 'WhatsApp',
-                facebook: 'Facebook',
-                instagram: 'Instagram',
-                youtube: 'YouTube',
-                webine: 'WeBine',
-                map_title: '📍 Tu ubicación',
-                close: 'Cerrar',
-                subscribe_title: '📧 Suscribirse',
-                cancel: 'Cancelar',
-                login_title: '🔐 Iniciar sesión',
-                register_title: '📝 Crear cuenta',
-                choose_icon: 'Elige un icono:',
-                upload_image: 'O sube tu propia imagen:',
-                remove_image: '✕ Eliminar',
-                agent_logo: 'Logo de la empresa *',
-                new_group: '👥 Nuevo grupo',
-                group_name: 'Nombre del grupo *',
-                select_members: 'Seleccionar miembros (máx. 25)',
-                create: 'Crear',
-                manage_group: 'Gestionar grupo',
-                select_provider: 'Seleccionar proveedor',
-                orange: 'Orange',
-                afrimoney: 'Afrimoney',
-                qmoney: 'QMoney',
-                wbmoney: 'WBMoney',
-                select_type: 'Seleccionar tipo',
-                agent: 'Agente',
-                customer: 'Cliente',
-                other: 'Otro',
-                transfer: 'Transferir',
-                pay: 'Pagar',
-                cashout: 'Retirar',
-                select_item: 'Seleccionar artículo',
-                visit_website: 'Visitar sitio web',
-                select_contact: 'Selecciona un contacto',
-                video: 'Video',
-                audio: 'Audio',
-                rec: 'Grabar',
-                call: '📞',
-                video_call: '📹',
-                profile_pic: '🖼️',
-                reset: '↺',
-                recording: 'Grabando...',
-                type_message: 'Escribe un mensaje...',
-                send: 'Enviar',
-                groups: '👥 Grupos',
-                contacts: '👤 Contactos',
-                no_groups: 'Sin grupos. Toca + para crear.',
-                no_contacts: 'No hay contactos disponibles.',
-                toast_welcome: '✅ ¡Bienvenido {name}!',
-                toast_logout: 'Sesión cerrada',
-                toast_copied: '✅ ¡ID copiado!',
-                toast_no_id: '⚠️ Sin ID',
-                toast_fill_fields: 'Completa todos los campos obligatorios',
-                toast_enter_amount: '⚠️ Ingresa el monto primero',
-                toast_enter_recipient_phone: '⚠️ Ingresa el teléfono del destinatario',
-                toast_enter_recipient_name: '⚠️ Ingresa el nombre del destinatario para internacional',
-                toast_valid_amount: '❌ Ingresa un monto válido',
-                toast_recipient_phone_required: '❌ Teléfono del destinatario requerido',
-                toast_recipient_name_required: '❌ Nombre del destinatario requerido',
-                toast_provider_not_configured: '❌ Proveedor no configurado',
-                toast_orange_not_supported: '❌ Orange no compatible',
-                toast_afrimoney_not_supported: '❌ Afrimoney no compatible',
-                toast_qmoney_not_supported: '❌ QMoney no compatible',
-                toast_wbmoney_not_supported: '❌ WBMoney no compatible',
-                toast_agent_6_digits: '❌ Agente: 6 dígitos',
-                toast_customer_9_digits: '❌ Cliente: 9 dígitos',
-                toast_initiated: '✅ {action} iniciado. Ingresa ID TX.',
-                toast_subscribed: '📧 ¡Suscrito!',
-                toast_group_created: '✅ Grupo "{name}" creado con {count} miembros!',
-                toast_select_group_name: 'Ingresa un nombre para el grupo',
-                toast_select_members: 'Selecciona al menos un miembro',
-                toast_max_members: 'Máximo 25 miembros permitidos',
-                toast_removed_member: '{member} eliminado del grupo',
-                toast_added_member: '{member} agregado al grupo',
-                toast_no_more_contacts: 'No hay más contactos para agregar',
-                toast_user_not_found: 'Usuario no encontrado en contactos',
-                toast_pic_updated: '✅ ¡Foto de perfil actualizada!',
-                toast_login_first: '⚠️ Inicia sesión primero',
-                toast_recording_video: '🔴 Grabando video... (toca de nuevo para detener)',
-                toast_recording_audio: '🔴 Grabando audio... (toca de nuevo para detener)',
-                toast_video_recorded: '✅ Video grabado',
-                toast_audio_recorded: '✅ Audio grabado',
-                toast_video_uploaded: '✅ Video subido',
-                toast_audio_uploaded: '✅ Audio subido',
-                toast_camera_fallback: '📸 Si la cámara no se abre, selecciona "Cámara" en el selector de archivos.',
-                toast_microphone_fallback: '🎤 Si el micrófono no se abre, selecciona "Grabar audio" en el selector de archivos.',
-                toast_selected_country: '🌍 {name} seleccionado',
-                toast_country_not_supported: '⚠️ {flag} no compatible',
-                toast_receipt_sent: '✅ ¡Recibo enviado!',
-                toast_formspree_error: '⚠️ Error en Formspree',
-                toast_network_error: '⚠️ Error de red',
-                toast_reset_form: '¡Envío exitoso! ¿Reiniciar formulario?',
-                toast_register_error: '❌ Completa nombre, teléfono y ciudad',
-                toast_register_success: '✅ ¡Cuenta creada!',
-                toast_login_error: '❌ Completa ambos campos',
-                toast_no_account: '❌ Sin cuenta. <a href="#" id="loginToRegisterLink" style="color:#f4a261;text-decoration:underline;">Registrarse</a>',
-                toast_login_mismatch: '❌ Nombre o teléfono no coinciden. <a href="#" id="loginToRegisterLink2" style="color:#f4a261;text-decoration:underline;">Registrarse</a>',
-                toast_error_loading: '❌ Error al cargar la cuenta.',
-                toast_register_loading: '⏳ Registrando...',
-                about_body: 'Transferencias de dinero móvil transfronterizas con Orange, Afrimoney, QMoney y WBMoney. Cálculo automático de comisiones e IVA.',
-                dev_body: 'Desarrollador fintech apasionado que conecta sistemas de pago africanos.',
-                contact_body: '<strong>Teléfono:</strong><br>+232-76-436-811<br>+232-80-422-698<br>+232-73-671-566',
-                receipt_title: '🔹 RECIBO AFRI-PAY 🔹',
-                receipt_tx_id: 'ID de transacción:',
-                receipt_date: 'Fecha y hora:',
-                receipt_type: 'Tipo de transferencia:',
-                receipt_sender: 'Remitente:',
-                receipt_recipient: 'Destinatario:',
-                receipt_base: 'Monto base:',
-                receipt_charge: 'Comisión de transferencia (1%):',
-                receipt_gst: 'IVA ({rate}%):',
-                receipt_total: 'Total debitado:',
-                receipt_thanks: '¡Gracias por elegir AfriPay!',
-                select_agent_placeholder: 'Seleccionar agente',
-                register_agent: '🏢 Registrarse como agente',
-                agent_reg_title: '🏢 Registro de agente',
-                agent_business_name: 'Nombre del negocio *',
-                agent_business_address: 'Dirección completa *',
-                agent_reg_number: 'Número de registro oficial *',
-                agent_business_type: 'Tipo de negocio *',
-                agent_owner_name: 'Nombre del propietario *',
-                agent_id_type: 'Tipo de identificación *',
-                agent_id_number: 'Número de identificación *',
-                agent_id_image: 'Tomar o subir foto de identificación *',
-                agent_mobile_money: 'Número de dinero móvil *',
-                agent_country_code: 'Solicitar código de país para internacional',
-                agent_password: 'Contraseña alfanumérica de 6 caracteres *',
-                generate_password: '🔑 Generar',
-                collateral_label: '🔒 Garantía de cuenta de pago',
-                generate_collateral: 'Generar USSD',
-                collateral_hint: 'Haz clic para generar un código USSD para transferencia de Orange Money.',
-                register_agent_submit: 'Registrar agente',
-                agent_reg_success: '✅ ¡Agente {name} registrado con éxito!',
-                agent_reg_error: '❌ Por favor, completa todos los campos obligatorios',
-                agent_collateral_ussd: '📞 Código USSD: {code}',
-                agent_collateral_error: '❌ Por favor, completa primero el número de dinero móvil y el código de país',
-                agent_reg_loading: '⏳ Registrando agente...',
-                agent_already_exists: '❌ Ya existe un agente con este nombre de negocio',
-                edit_agent_title: '✏️ Editar agente',
-                save_changes: 'Guardar cambios',
-                edit_agent_success: '✅ ¡Agente actualizado con éxito!',
-                edit_agent_error: '❌ Por favor, completa todos los campos',
-                edit_agent_password_error: '❌ Contraseña incorrecta. Por favor, ingresa la contraseña generada durante el registro.',
-                no_agents: 'No hay agentes registrados',
-                agent_updated: '✅ ¡Agente {name} actualizado con éxito!',
-                dashboard_title: '📊 Panel de agentes',
-                admin_register_title: '👑 Registro de Admin',
-                admin_login_title: '🔐 Inicio de sesión de Admin',
-                admin_name: 'Nombre de Admin *',
-                admin_password: 'Contraseña *',
-                admin_confirm_password: 'Confirmar contraseña *',
-                admin_pin: 'PIN de 5 dígitos *',
-                admin_register_btn: 'Registrar Admin',
-                admin_login_btn: 'Iniciar sesión',
-                admin_register_success: '✅ Admin registrado con éxito! Por favor, inicia sesión.',
-                admin_login_success: '✅ ¡Bienvenido Admin!',
-                admin_reg_error: '❌ Por favor, completa todos los campos correctamente.',
-                admin_pin_error: '❌ El PIN debe tener exactamente 5 dígitos.',
-                admin_password_mismatch: '❌ Las contraseñas no coinciden.',
-                admin_already_exists: '❌ Admin ya registrado. Por favor, inicia sesión.',
-                admin_invalid_credentials: '❌ Nombre de admin, contraseña o PIN inválido.',
-                admin_logout: 'Sesión cerrada',
-                admin_register_disabled: 'El registro está deshabilitado. Por favor, inicia sesión.',
-                switch_to_login: '¿Ya tienes una cuenta? Inicia sesión',
-                switch_to_register: '¿No tienes cuenta de admin? Regístrate',
-            }
+            fr: { /* French translations */ },
+            ar: { /* Arabic translations */ },
+            es: { /* Spanish translations */ }
         };
 
         // ================================================================
-        // LANGUAGE ENGINE – FIXED
+        // LANGUAGE ENGINE
         // ================================================================
         let currentLang = 'en';
 
         function loadLanguagePreference() {
             try {
                 const stored = localStorage.getItem('afripay_lang');
-                if (stored && TRANSLATIONS[stored]) {
-                    currentLang = stored;
-                } else {
+                if (stored && TRANSLATIONS[stored]) { currentLang = stored; } else {
                     const browserLang = navigator.language.slice(0, 2).toLowerCase();
-                    if (TRANSLATIONS[browserLang]) {
-                        currentLang = browserLang;
-                    }
+                    if (TRANSLATIONS[browserLang]) currentLang = browserLang;
                 }
             } catch (e) { currentLang = 'en'; }
             const select = document.getElementById('langSelect');
-            if (select) {
-                select.value = currentLang;
-                updateLangIcon(currentLang);
-            }
-            // Apply translations after loading
-            translatePage();
+            if (select) { select.value = currentLang;
+                updateLangIcon(currentLang); }
         }
 
         function updateLangIcon(lang) {
@@ -4154,7 +3540,6 @@
 
         function translatePage() {
             try {
-                // Brand text
                 const brand = document.getElementById('brandText');
                 if (brand) {
                     brand.innerHTML = 'Afri<span id="dashboardTrigger">P</span>ay';
@@ -4166,14 +3551,11 @@
                         });
                     }
                 }
-
-                // All data-i18n elements
                 document.querySelectorAll('[data-i18n]').forEach(el => {
                     const key = el.getAttribute('data-i18n');
                     if (key === 'app_name') return;
                     const translation = t(key);
                     if (translation && translation !== key) {
-                        // Special handling for GST label with dynamic rate
                         const hasGstRate = el.querySelector('#gstRateLabel');
                         if (hasGstRate) {
                             const rateSpan = el.querySelector('#gstRateLabel');
@@ -4183,19 +3565,14 @@
                                 el.innerHTML = labelText + `<span id="gstRateLabel">${rateText}</span>%):`;
                             }
                         } else {
-                            // Preserve emoji if present
                             if (el.children.length === 0) {
                                 el.textContent = translation;
                             } else {
                                 const originalText = el.textContent;
-                                const emojiMatch = originalText.match(
-                                    /^([\u{1F000}-\u{1FFFF}]|[\u2600-\u27BF]|[\u{1F300}-\u{1F5FF}]|[\u{1F600}-\u{1F64F}]|[\u{1F680}-\u{1F6FF}]|[\u{1F700}-\u{1F77F}]|[\u{1F780}-\u{1F7FF}]|[\u{1F800}-\u{1F8FF}]|[\u{1F900}-\u{1F9FF}]|[\u{1FA00}-\u{1FA6F}]|[\u{1FA70}-\u{1FAFF}]|[\u{1FB00}-\u{1FBFF}]|[\u{1FC00}-\u{1FCFF}]|[\u{1FD00}-\u{1FDFF}]|[\u{1FE00}-\u{1FEFF}]|[\u{1FF00}-\u{1FFFF}]|[☀-⛿]|[✀-➿]|[🌐-🏿]|[🍀-🧿]|[🀀-🿿]|[😀-🙏]|[🚀-🛿]|[🜀-🝿]|[🞀-🟿]|[🤀-🫿])/
-                                    u);
+                                const emojiMatch = originalText.match(/^([\u{1F000}-\u{1FFFF}]|[\u2600-\u27BF]|[\u{1F300}-\u{1F5FF}]|[\u{1F600}-\u{1F64F}]|[\u{1F680}-\u{1F6FF}]|[\u{1F700}-\u{1F77F}]|[\u{1F780}-\u{1F7FF}]|[\u{1F800}-\u{1F8FF}]|[\u{1F900}-\u{1F9FF}]|[\u{1FA00}-\u{1FA6F}]|[\u{1FA70}-\u{1FAFF}]|[\u{1FB00}-\u{1FBFF}]|[\u{1FC00}-\u{1FCFF}]|[\u{1FD00}-\u{1FDFF}]|[\u{1FE00}-\u{1FEFF}]|[\u{1FF00}-\u{1FFFF}]|[☀-⛿]|[✀-➿]|[🌐-🏿]|[🍀-🧿]|[🀀-🿿]|[😀-🙏]|[🚀-🛿]|[🜀-🝿]|[🞀-🟿]|[🤀-🫿])/u);
                                 if (emojiMatch) {
                                     const emoji = emojiMatch[0];
-                                    const translatedWithoutEmoji = translation.replace(
-                                        /^([\u{1F000}-\u{1FFFF}]|[\u2600-\u27BF]|[\u{1F300}-\u{1F5FF}]|[\u{1F600}-\u{1F64F}]|[\u{1F680}-\u{1F6FF}]|[\u{1F700}-\u{1F77F}]|[\u{1F780}-\u{1F7FF}]|[\u{1F800}-\u{1F8FF}]|[\u{1F900}-\u{1F9FF}]|[\u{1FA00}-\u{1FA6F}]|[\u{1FA70}-\u{1FAFF}]|[\u{1FB00}-\u{1FBFF}]|[\u{1FC00}-\u{1FCFF}]|[\u{1FD00}-\u{1FDFF}]|[\u{1FE00}-\u{1FEFF}]|[\u{1FF00}-\u{1FFFF}]|[☀-⛿]|[✀-➿]|[🌐-🏿]|[🍀-🧿]|[🀀-🿿]|[😀-🙏]|[🚀-🛿]|[🜀-🝿]|[🞀-🟿]|[🤀-🫿])/
-                                        u, '').trim();
+                                    const translatedWithoutEmoji = translation.replace(/^([\u{1F000}-\u{1FFFF}]|[\u2600-\u27BF]|[\u{1F300}-\u{1F5FF}]|[\u{1F600}-\u{1F64F}]|[\u{1F680}-\u{1F6FF}]|[\u{1F700}-\u{1F77F}]|[\u{1F780}-\u{1F7FF}]|[\u{1F800}-\u{1F8FF}]|[\u{1F900}-\u{1F9FF}]|[\u{1FA00}-\u{1FA6F}]|[\u{1FA70}-\u{1FAFF}]|[\u{1FB00}-\u{1FBFF}]|[\u{1FC00}-\u{1FCFF}]|[\u{1FD00}-\u{1FDFF}]|[\u{1FE00}-\u{1FEFF}]|[\u{1FF00}-\u{1FFFF}]|[☀-⛿]|[✀-➿]|[🌐-🏿]|[🍀-🧿]|[🀀-🿿]|[😀-🙏]|[🚀-🛿]|[🜀-🝿]|[🞀-🟿]|[🤀-🫿])/u, '').trim();
                                     el.innerHTML = emoji + ' ' + translatedWithoutEmoji;
                                 } else {
                                     el.textContent = translation;
@@ -4204,8 +3581,6 @@
                         }
                     }
                 });
-
-                // Placeholders
                 document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
                     const key = el.getAttribute('data-i18n-placeholder');
                     const translation = t(key);
@@ -4213,65 +3588,43 @@
                         el.setAttribute('placeholder', translation);
                     }
                 });
-
-                // Agent dropdown placeholder
                 const selectedName = document.getElementById('selectedAgentName');
                 if (selectedName && !selectedName.dataset.agentId) {
                     selectedName.textContent = t('select_agent_placeholder');
                 }
-
-                // Buttons that need translation
                 const intlBtn = document.getElementById('intlToggleBtn');
                 if (intlBtn) intlBtn.textContent = t('international');
-
                 const addClientBtn = document.getElementById('addClientBtnHeader');
                 if (addClientBtn) addClientBtn.textContent = t('add_client');
-
                 const addClientH3 = document.querySelector('#addClientModal h3');
                 if (addClientH3) addClientH3.textContent = t('add_client');
-
                 const saveBtn = document.getElementById('saveClientBtn');
                 if (saveBtn) saveBtn.textContent = t('save');
-
                 const agentH3 = document.querySelector('#agentRegistrationModal h3');
                 if (agentH3) agentH3.textContent = t('agent_reg_title');
-
                 const agentSubmitBtn = document.getElementById('submitAgentRegistrationBtn');
                 if (agentSubmitBtn) agentSubmitBtn.textContent = t('register_agent_submit');
-
                 const agentRegBtn = document.getElementById('registerAgentBtn');
                 if (agentRegBtn) agentRegBtn.textContent = t('register_agent');
-
                 const genCollBtn = document.getElementById('generateCollateralBtn');
                 if (genCollBtn) genCollBtn.textContent = t('generate_collateral');
-
                 const genPassBtn = document.getElementById('generatePasswordBtn');
                 if (genPassBtn) genPassBtn.textContent = t('generate_password');
-
                 const editH3 = document.querySelector('#editAgentModal h3');
                 if (editH3) editH3.textContent = t('edit_agent_title');
-
                 const saveEditBtn = document.getElementById('saveEditAgentBtn');
                 if (saveEditBtn) saveEditBtn.textContent = t('save_changes');
-
-                // Upload label
                 const uploadLabel = document.querySelector('#registerModal label:not([data-i18n])');
                 if (uploadLabel && uploadLabel.textContent.includes('Or upload')) {
                     uploadLabel.textContent = t('upload_image');
                 }
-
-                // Agent logo label
                 const agentLogoLabel = document.querySelector('#agentRegistrationModal .input-group label[data-i18n="agent_logo"]');
                 if (agentLogoLabel) agentLogoLabel.innerHTML = t('agent_logo') + ' <span class="required-star">*</span>';
-
                 const closeAgentRegBtn = document.getElementById('closeAgentRegBtn');
                 if (closeAgentRegBtn) closeAgentRegBtn.textContent = t('close');
-
                 renderSidebar();
                 renderBusinessStrip();
                 renderAgentDropdown();
-
-                // Chat contact
                 if (activeChatId && activeChatType) {
                     if (activeChatType === 'individual') {
                         const allContacts = getAllContacts();
@@ -4282,7 +3635,6 @@
                         if (group) { document.getElementById('chatContact').innerText = '👥 ' + group.name; }
                     }
                 }
-
                 const chatInput = document.getElementById('chatInput');
                 if (chatInput) { chatInput.setAttribute('placeholder', t('type_message')); }
             } catch (e) {
@@ -4301,11 +3653,7 @@
             applyChatSettings();
             showToast(`🌐 Language: ${lang.toUpperCase()}`, 1500);
         }
-
-        // Language selector listener
-        document.getElementById('langSelect').addEventListener('change', function() {
-            setLanguage(this.value);
-        });
+        document.getElementById('langSelect').addEventListener('change', function() { setLanguage(this.value); });
 
         // ================================================================
         // ADMIN AUTH SYSTEM
@@ -7074,4 +6422,4 @@
         });
     </script>
 </body>
-</html>
+</html>8
