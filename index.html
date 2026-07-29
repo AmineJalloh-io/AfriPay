@@ -32,7 +32,7 @@
         }
 
         /* ================================================================
-           HEADER – (unchanged)
+           HEADER
            ================================================================ */
         .live-header {
             background: linear-gradient(135deg, #0a2b3c 0%, #1c4e6c 100%);
@@ -351,7 +351,7 @@
         }
 
         /* ================================================================
-           FLAGS STRIP – (unchanged)
+           FLAGS STRIP
            ================================================================ */
         .flags-strip {
             background: #f0f4f8;
@@ -430,7 +430,7 @@
         }
 
         /* ================================================================
-           MAIN FORM – (unchanged)
+           MAIN FORM
            ================================================================ */
         .form-container {
             padding: 0.9rem 1.0rem 0.6rem 1.0rem;
@@ -769,7 +769,7 @@
         }
 
         /* ================================================================
-           FOOTER – (unchanged)
+           FOOTER
            ================================================================ */
         .footer-section {
             background: #f8fafc;
@@ -826,7 +826,7 @@
         }
 
         /* ================================================================
-           MODALS – (unchanged, plus new Agreement Modal)
+           MODALS
            ================================================================ */
         .modal {
             display: none;
@@ -1095,7 +1095,7 @@
         }
 
         /* ================================================================
-           AGENT REGISTRATION MODAL – (unchanged)
+           AGENT REGISTRATION MODAL
            ================================================================ */
         .agent-form .input-group {
             margin-bottom: 0.5rem;
@@ -1152,7 +1152,7 @@
         }
 
         /* ================================================================
-           ADMIN AUTH MODALS – (unchanged)
+           ADMIN AUTH MODALS
            ================================================================ */
         .admin-auth-modal .modal-content {
             max-width: 360px;
@@ -1202,7 +1202,7 @@
         }
 
         /* ================================================================
-           CHAT – (unchanged)
+           CHAT
            ================================================================ */
         .chat-toggle-btn {
             position: fixed;
@@ -1639,7 +1639,7 @@
         }
 
         /* ================================================================
-           BUTTON TEXT – (unchanged)
+           BUTTON TEXT
            ================================================================ */
         button,
         .auth-btn,
@@ -1717,7 +1717,7 @@
         }
 
         /* ================================================================
-           RESPONSIVE – (unchanged)
+           RESPONSIVE
            ================================================================ */
         @media (max-width: 600px) {
             .double-row {
@@ -2364,7 +2364,7 @@
         }
 
         /* ================================================================
-           RECEIPT MODAL – (unchanged)
+           RECEIPT MODAL
            ================================================================ */
         #receiptModal .modal-content {
             max-width: 440px;
@@ -2592,7 +2592,7 @@
         }
 
         /* ================================================================
-           AGREEMENT MODAL – NEW STYLES
+           AGREEMENT MODAL
            ================================================================ */
         #agreementModal .modal-content {
             max-width: 560px;
@@ -2759,7 +2759,7 @@
 <body>
     <div class="app-card">
         <!-- ============================================================
-        HEADER – (unchanged)
+        HEADER
         ============================================================ -->
         <div class="live-header">
             <div class="logo-container">
@@ -2820,7 +2820,7 @@
         </div>
 
         <!-- ============================================================
-        FLAGS STRIP – (unchanged)
+        FLAGS STRIP
         ============================================================ -->
         <div class="flags-strip" id="flagsStrip">
             <button class="flag-scroll-btn left" id="flagScrollLeft">‹</button>
@@ -2831,7 +2831,7 @@
         </div>
 
         <!-- ============================================================
-        MAIN FORM – (unchanged)
+        MAIN FORM
         ============================================================ -->
         <div class="form-container" id="mainFormContainer" style="display:none;">
             <div class="profile-section" id="profileSection">
@@ -2938,7 +2938,7 @@
         </div>
 
         <!-- ============================================================
-        FOOTER – (unchanged)
+        FOOTER
         ============================================================ -->
         <div class="footer-section">
             <div class="footer-buttons">
@@ -2961,19 +2961,19 @@
     MODALS
     ============================================================ -->
 
-    <!-- Map Modal – (unchanged) -->
+    <!-- Map Modal -->
     <div id="mapModal" class="modal"><div class="modal-content"><h3 data-i18n="map_title">📍 Your Location</h3><iframe id="mapIframe" allowfullscreen loading="lazy"></iframe><button class="action-btn close-modal" style="margin-top:10px;" data-i18n="close">Close</button></div></div>
 
-    <!-- Info Modal – (unchanged) -->
+    <!-- Info Modal -->
     <div id="infoModal" class="modal"><div class="modal-content"><h3 id="modalTitle"></h3><div id="modalBody"></div><button class="action-btn close-modal" data-i18n="close">Close</button></div></div>
 
-    <!-- Subscribe Modal – (unchanged) -->
+    <!-- Subscribe Modal -->
     <div id="subscribeModal" class="modal"><div class="modal-content"><h3 data-i18n="subscribe_title">📧 Subscribe</h3><input type="email" id="subEmail" placeholder="Your email" style="width:100%; padding:5px 9px; margin:4px 0; border-radius:30px; border:1px solid #ddd; font-size:0.85rem; height:42px;" /><button id="submitSubscribeBtn" class="action-btn" data-i18n="subscribe">Subscribe</button><button class="action-btn close-modal" style="margin-top:4px;" data-i18n="cancel">Cancel</button></div></div>
 
-    <!-- Login Modal – (unchanged) -->
+    <!-- Login Modal -->
     <div id="loginModal" class="modal"><div class="modal-content"><h3 data-i18n="login_title">🔐 Login</h3><input type="text" id="loginName" placeholder="Full Name" style="width:100%; padding:5px 9px; margin:3px 0; border-radius:30px; border:1px solid #ddd; font-size:0.85rem; height:42px;" /><input type="tel" id="loginPhone" placeholder="Phone" style="width:100%; padding:5px 9px; margin:3px 0; border-radius:30px; border:1px solid #ddd; font-size:0.85rem; height:42px;" /><div id="loginError" class="error-msg"></div><button id="doLoginBtn" class="action-btn" data-i18n="login">Login</button><button class="action-btn close-modal" style="margin-top:4px;" data-i18n="cancel">Cancel</button></div></div>
 
-    <!-- Register Modal – (unchanged) -->
+    <!-- Register Modal -->
     <div id="registerModal" class="modal"><div class="modal-content"><h3 data-i18n="register_title">📝 Create Account</h3><input type="text" id="regName" placeholder="Full Name *" style="width:100%; padding:5px 9px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.85rem; height:42px;" /><input type="tel" id="regPhone" placeholder="Phone *" style="width:100%; padding:5px 9px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.85rem; height:42px;" />
         <input type="text" id="regAddress" placeholder="Address" style="width:100%; padding:5px 9px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.85rem; height:42px;" />
         <input type="text" id="regCity" placeholder="City *" style="width:100%; padding:5px 9px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.85rem; height:42px;" />
@@ -3013,7 +3013,7 @@
         <button class="action-btn close-modal" style="margin-top:4px;" data-i18n="cancel">Cancel</button>
     </div></div>
 
-    <!-- Agent Registration Modal – (unchanged, but with Agreement button) -->
+    <!-- Agent Registration Modal -->
     <div id="agentRegistrationModal" class="modal">
         <div class="modal-content agent-form">
             <h3 data-i18n="agent_reg_title">🏢 Agent Registration</h3>
@@ -3106,7 +3106,7 @@
                 <input type="hidden" id="collateralAmount" value="0" />
             </div>
 
-            <!-- NEW: View Agreement Button -->
+            <!-- View Agreement Button -->
             <div style="margin: 10px 0 6px 0; text-align: center;">
                 <button class="action-btn orange" id="viewAgreementBtn" style="width:100%; height:42px; font-size:0.85rem;">📜 View & Sign Agent Agreement</button>
                 <div id="agreementStatusDisplay" style="font-size:0.65rem; color:#7f8c8d; margin-top:3px;">
@@ -3121,9 +3121,7 @@
         </div>
     </div>
 
-    <!-- ============================================================
-    AGREEMENT MODAL – NEW
-    ============================================================ -->
+    <!-- Agreement Modal -->
     <div id="agreementModal" class="modal">
         <div class="modal-content">
             <div class="agreement-modal-header">
@@ -3145,10 +3143,7 @@
         </div>
     </div>
 
-    <!-- ============================================================
-    OTHER MODALS – (unchanged)
-    ============================================================ -->
-    <!-- Edit Agent Modal – (unchanged) -->
+    <!-- Edit Agent Modal -->
     <div id="editAgentModal" class="modal">
         <div class="modal-content agent-form">
             <h3 data-i18n="edit_agent_title">✏️ Edit Agent</h3>
@@ -3171,35 +3166,35 @@
         </div>
     </div>
 
-    <!-- Add Client Modal – (unchanged) -->
+    <!-- Add Client Modal -->
     <div id="addClientModal" class="modal"><div class="modal-content"><h3 data-i18n="add_client">Add Client</h3><div class="input-group"><label data-i18n="client_name">Client Name *</label><input type="text" id="newClientName" placeholder="Enter client name" style="height:42px;" /></div><div class="input-group"><label data-i18n="client_phone">Client Phone *</label><input type="tel" id="newClientPhone" placeholder="Enter phone number" style="height:42px;" /></div><div id="addClientError" class="error-msg"></div><div class="action-buttons-row"><button class="action-btn" id="saveClientBtn" data-i18n="save">Save Client</button><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div></div></div>
 
-    <!-- Group Create Modal – (unchanged) -->
+    <!-- Group Create Modal -->
     <div id="groupCreateModal" class="modal"><div class="modal-content"><h3 data-i18n="new_group">👥 New Group</h3><div class="input-group"><label data-i18n="group_name">Group Name *</label><input type="text" id="groupNameInput" placeholder="Enter group name" maxlength="30" style="height:42px;" /></div><div class="input-group"><label data-i18n="select_members">Select Members (max 25)</label><div class="member-counter" id="memberCounter">0 selected</div><div class="group-member-list" id="memberListContainer"></div></div><div class="action-buttons-row"><button class="action-btn" id="createGroupBtn" style="flex:1;" data-i18n="create">Create</button><button class="action-btn close-modal" style="flex:0;" data-i18n="cancel">Cancel</button></div></div></div>
 
-    <!-- Group Manage Modal – (unchanged) -->
+    <!-- Group Manage Modal -->
     <div id="groupManageModal" class="modal"><div class="modal-content"><h3 id="groupManageTitle" data-i18n="manage_group">Manage Group</h3><div id="groupManageBody"></div><button class="action-btn close-modal" style="margin-top:6px;" data-i18n="close">Close</button></div></div>
 
-    <!-- Provider Modal – (unchanged) -->
+    <!-- Provider Modal -->
     <div id="providerModal" class="modal"><div class="modal-content"><h3 data-i18n="select_provider">Select Provider</h3><div class="action-buttons-row"><button class="action-btn" data-provider="Orange Money" data-i18n="orange">Orange</button><button class="action-btn" data-provider="Afrimoney" data-i18n="afrimoney">Afrimoney</button><button class="action-btn" data-provider="QMoney" data-i18n="qmoney">QMoney</button><button class="action-btn" data-provider="WBMoney" data-i18n="wbmoney">WBMoney</button><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div></div></div>
 
-    <!-- Role Modal – (unchanged) -->
+    <!-- Role Modal -->
     <div id="roleModal" class="modal"><div class="modal-content"><h3 id="roleModalTitle" data-i18n="select_type">Select Type</h3><div class="action-buttons-row" id="roleButtons"><button class="action-btn" data-role="agent" data-i18n="agent">Agent</button><button class="action-btn" data-role="customer" data-i18n="customer">Customer</button><button class="action-btn" data-role="other" data-i18n="other">Other</button><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div></div></div>
 
-    <!-- Action Modal – (unchanged) -->
+    <!-- Action Modal -->
     <div id="actionModal" class="modal"><div class="modal-content"><h3 id="modalProviderName">Orange</h3><div id="selectedRoleDisplay" style="font-size:0.72rem; color:#f4a261; margin-top:2px;"></div><div class="action-buttons-row"><button class="action-btn" id="actionTransfer" data-i18n="transfer">Transfer</button><button class="action-btn pay" id="actionPay" data-i18n="pay">Pay</button><button class="action-btn cashout" id="actionCashout" data-i18n="cashout">Cash Out</button><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div></div></div>
 
-    <!-- Goods Modal – (unchanged) -->
+    <!-- Goods Modal -->
     <div id="goodsModal" class="modal"><div class="modal-content"><h3 id="goodsModalTitle" data-i18n="select_item">Select Item</h3><div id="goodsList"></div><a href="#" id="businessWebsiteLink" target="_blank" class="business-website" style="display:block;margin-top:4px;color:#2c7da0;font-weight:700;font-size:0.78rem;" data-i18n="visit_website">Visit Website</a><button class="action-btn close-modal" style="margin-top:8px;" data-i18n="close">Close</button></div></div>
 
-    <!-- Admin Auth Modal – (unchanged) -->
+    <!-- Admin Auth Modal -->
     <div id="adminAuthModal" class="modal admin-auth-modal">
         <div class="modal-content" id="adminAuthContent">
             <div id="adminAuthBody"></div>
         </div>
     </div>
 
-    <!-- Dashboard Modal – (unchanged) -->
+    <!-- Dashboard Modal -->
     <div id="dashboardModal" class="modal">
         <div class="modal-content">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
@@ -3216,7 +3211,7 @@
         </div>
     </div>
 
-    <!-- Receipt Modal – (unchanged) -->
+    <!-- Receipt Modal -->
     <div id="receiptModal" class="modal">
         <div class="modal-content">
             <div class="receipt-header">
@@ -3249,7 +3244,7 @@
     </div>
 
     <!-- ============================================================
-    CHAT – (unchanged)
+    CHAT
     ============================================================ -->
     <button class="chat-toggle-btn" id="chatToggleBtn" title="Open Chat">💬<span class="chat-badge" id="chatBadge" style="display:none;">0</span></button>
     <div class="chat-window" id="chatWindow">
@@ -3284,7 +3279,7 @@
         <div class="chat-sidebar" id="chatSidebar"></div>
     </div>
 
-    <!-- Hidden inputs – (unchanged) -->
+    <!-- Hidden inputs -->
     <input type="file" id="chatVideoInput" accept="video/*" class="hidden-input" />
     <input type="file" id="chatAudioInput" accept="audio/*" class="hidden-input" />
     <input type="file" id="chatProfilePicInput" accept="image/*" class="hidden-input" />
@@ -3295,48 +3290,2074 @@
     ============================================================ -->
     <script>
         // ================================================================
-        // TRANSLATIONS – (full dictionary from original, unchanged)
+        // TRANSLATIONS (full dictionary – same as original)
         // ================================================================
-        const TRANSLATIONS = { en: { /* ... full translations ... */ }, fr: { /* ... */ }, ar: { /* ... */ }, es: { /* ... */
-            } };
-        // (For brevity, we assume translations are loaded in the final file)
+        const TRANSLATIONS = {
+            en: {
+                app_name: 'AfriPay',
+                login: 'Login',
+                register: 'Register',
+                logout: 'Logout',
+                online: 'Online',
+                location_label: '📍 Location:',
+                map_btn: 'Map',
+                sender_title: '👤 SENDER',
+                full_name: 'Full Name *',
+                phone: 'Phone *',
+                location: 'Location (City/Country) *',
+                amount: 'Amount *',
+                recipient_title: '👤 AGENT',
+                client_name: 'Agent Name *',
+                client_phone: 'Agent Phone *',
+                quick_fill: '📋 Select an agent from the dropdown',
+                add_client: 'Add Client',
+                international: 'International',
+                recipient_country: '🌍 Recipient Country',
+                base_amount: '💰 Base Amount:',
+                transfer_charge: '📊 Transfer Charge (1%):',
+                gst: '🏛️ GST (',
+                total_debit: '💵 Total Debit:',
+                currency_label: '🌍 Currency:',
+                mm_operator: '💸 Mobile Money Operator',
+                tx_id_label: '🔖 TRANSACTION ID',
+                tx_id: 'Transaction ID',
+                gen: 'Gen',
+                copy: 'Copy',
+                submit: 'Submit',
+                quick_pay: '⭐ QUICK PAY ⭐',
+                about: 'About',
+                dev: 'Dev',
+                contact: 'Contact',
+                subscribe: 'Subscribe',
+                whatsapp: 'WhatsApp',
+                facebook: 'Facebook',
+                instagram: 'Instagram',
+                youtube: 'YouTube',
+                webine: 'WeBine',
+                map_title: '📍 Your Location',
+                close: 'Close',
+                subscribe_title: '📧 Subscribe',
+                cancel: 'Cancel',
+                login_title: '🔐 Login',
+                register_title: '📝 Create Account',
+                choose_icon: 'Choose icon:',
+                upload_image: 'Or upload your own image:',
+                remove_image: '✕ Remove',
+                agent_logo: 'Business Logo *',
+                new_group: '👥 New Group',
+                group_name: 'Group Name *',
+                select_members: 'Select Members (max 25)',
+                create: 'Create',
+                manage_group: 'Manage Group',
+                select_provider: 'Select Provider',
+                orange: 'Orange',
+                afrimoney: 'Afrimoney',
+                qmoney: 'QMoney',
+                wbmoney: 'WBMoney',
+                select_type: 'Select Type',
+                agent: 'Agent',
+                customer: 'Customer',
+                other: 'Other',
+                transfer: 'Transfer',
+                pay: 'Pay',
+                cashout: 'Cash Out',
+                select_item: 'Select Item',
+                visit_website: 'Visit Website',
+                select_contact: 'Select a contact',
+                video: 'Video',
+                audio: 'Audio',
+                rec: 'Rec',
+                call: '📞',
+                video_call: '📹',
+                profile_pic: '🖼️',
+                reset: '↺',
+                recording: 'Recording...',
+                type_message: 'Type a message...',
+                send: 'Send',
+                groups: '👥 Groups',
+                contacts: '👤 Contacts',
+                no_groups: 'No groups yet. Tap + to create.',
+                no_contacts: 'No contacts available.',
+                toast_welcome: '✅ Welcome {name}!',
+                toast_logout: 'Logged out',
+                toast_copied: '✅ ID copied!',
+                toast_no_id: '⚠️ No ID',
+                toast_fill_fields: 'Fill all required fields',
+                toast_enter_amount: '⚠️ Enter amount first',
+                toast_enter_recipient_phone: '⚠️ Enter recipient phone',
+                toast_enter_recipient_name: '⚠️ Enter recipient name for international',
+                toast_valid_amount: '❌ Enter valid amount',
+                toast_recipient_phone_required: '❌ Recipient phone required',
+                toast_recipient_name_required: '❌ Recipient name required',
+                toast_provider_not_configured: '❌ Provider not configured',
+                toast_orange_not_supported: '❌ Orange not supported',
+                toast_afrimoney_not_supported: '❌ Afrimoney not supported',
+                toast_qmoney_not_supported: '❌ QMoney not supported',
+                toast_wbmoney_not_supported: '❌ WBMoney not supported',
+                toast_agent_6_digits: '❌ Agent: 6 digits',
+                toast_customer_9_digits: '❌ Customer: 9 digits',
+                toast_initiated: '✅ {action} initiated. Enter TX ID.',
+                toast_subscribed: '📧 Subscribed!',
+                toast_group_created: '✅ Group "{name}" created with {count} members!',
+                toast_select_group_name: 'Please enter a group name',
+                toast_select_members: 'Select at least one member',
+                toast_max_members: 'Maximum 25 members allowed',
+                toast_removed_member: 'Removed {member} from group',
+                toast_added_member: 'Added {member} to group',
+                toast_no_more_contacts: 'No more contacts to add',
+                toast_user_not_found: 'User not found in contacts',
+                toast_pic_updated: '✅ Profile pic updated!',
+                toast_login_first: '⚠️ Please login first',
+                toast_recording_video: '🔴 Recording video... (tap again to stop)',
+                toast_recording_audio: '🔴 Recording audio... (tap again to stop)',
+                toast_video_recorded: '✅ Video recorded',
+                toast_audio_recorded: '✅ Audio recorded',
+                toast_video_uploaded: '✅ Video uploaded',
+                toast_audio_uploaded: '✅ Audio uploaded',
+                toast_camera_fallback: '📸 If camera doesn\'t open, select "Camera" from the file picker.',
+                toast_microphone_fallback: '🎤 If microphone doesn\'t open, select "Record Audio" from the file picker.',
+                toast_selected_country: '🌍 {name} selected',
+                toast_country_not_supported: '⚠️ {flag} not supported',
+                toast_receipt_sent: '✅ Receipt sent!',
+                toast_formspree_error: '⚠️ Formspree error',
+                toast_network_error: '⚠️ Network error',
+                toast_reset_form: 'Submission successful! Reset form?',
+                toast_register_error: '❌ Fill Name, Phone and City',
+                toast_register_success: '✅ Account created!',
+                toast_login_error: '❌ Enter both fields',
+                toast_no_account: '❌ No account. <a href="#" id="loginToRegisterLink" style="color:#f4a261;text-decoration:underline;">Register</a>',
+                toast_login_mismatch: '❌ Name or Phone doesn\'t match. <a href="#" id="loginToRegisterLink2" style="color:#f4a261;text-decoration:underline;">Register</a>',
+                toast_error_loading: '❌ Error loading account.',
+                toast_register_loading: '⏳ Registering...',
+                about_body: 'Cross-border mobile money transfers with Orange, Afrimoney, QMoney & WBMoney. Automatic fee + GST calculation.',
+                dev_body: 'Passionate fintech developer bridging African payment systems.',
+                contact_body: '<strong>Phone:</strong><br>+232-76-436-811<br>+232-80-422-698<br>+232-73-671-566',
+                receipt_title: '🔹 AFRI-PAY RECEIPT 🔹',
+                receipt_tx_id: 'Transaction ID:',
+                receipt_date: 'Date & Time:',
+                receipt_type: 'Transfer Type:',
+                receipt_sender: 'Sender:',
+                receipt_recipient: 'Recipient:',
+                receipt_base: 'Base Amount:',
+                receipt_charge: 'Transfer Charge (1%):',
+                receipt_gst: 'GST ({rate}%):',
+                receipt_total: 'Total Debited:',
+                receipt_thanks: 'Thank you for choosing AfriPay!',
+                select_agent_placeholder: 'Select Agent',
+                register_agent: '🏢 Register as Agent',
+                agent_reg_title: '🏢 Agent Registration',
+                agent_business_name: 'Business Name *',
+                agent_business_address: 'Full Business Address *',
+                agent_reg_number: 'Official Business Registration Number *',
+                agent_business_type: 'Business Type *',
+                agent_owner_name: 'Owner Name *',
+                agent_id_type: 'ID Type *',
+                agent_id_number: 'ID Number *',
+                agent_id_image: 'Snap or Upload ID Image *',
+                agent_mobile_money: 'Mobile Money Number *',
+                agent_country_code: 'Request Country Code for International',
+                agent_password: '6 Alphanumeric Password *',
+                generate_password: '🔑 Generate',
+                collateral_label: '🔒 Pay Account Collateral',
+                generate_collateral: 'Generate USSD',
+                collateral_hint: 'Click to generate a USSD code for Orange Money transfer collateral.',
+                register_agent_submit: 'Register Agent',
+                agent_reg_success: '✅ Agent {name} registered successfully!',
+                agent_reg_error: '❌ Please fill all required fields',
+                agent_collateral_ussd: '📞 USSD Code: {code}',
+                agent_collateral_error: '❌ Please fill Mobile Money and Country Code first',
+                agent_reg_loading: '⏳ Registering agent...',
+                agent_already_exists: '❌ Agent with this business name already exists',
+                edit_agent_title: '✏️ Edit Agent',
+                save_changes: 'Save Changes',
+                edit_agent_success: '✅ Agent updated successfully!',
+                edit_agent_error: '❌ Please fill all fields',
+                edit_agent_password_error: '❌ Incorrect password. Please enter the password generated during registration.',
+                no_agents: 'No agents registered',
+                agent_updated: '✅ Agent {name} updated successfully!',
+                dashboard_title: '📊 Agent Dashboard',
+                admin_register_title: '👑 Admin Registration',
+                admin_login_title: '🔐 Admin Login',
+                admin_name: 'Admin Name *',
+                admin_password: 'Password *',
+                admin_confirm_password: 'Confirm Password *',
+                admin_pin: '5-Digit PIN *',
+                admin_register_btn: 'Register Admin',
+                admin_login_btn: 'Login',
+                admin_register_success: '✅ Admin registered successfully! Please login.',
+                admin_login_success: '✅ Welcome Admin!',
+                admin_reg_error: '❌ Please fill all fields correctly.',
+                admin_pin_error: '❌ PIN must be exactly 5 digits.',
+                admin_password_mismatch: '❌ Passwords do not match.',
+                admin_already_exists: '❌ Admin already registered. Please login.',
+                admin_invalid_credentials: '❌ Invalid admin name, password, or PIN.',
+                admin_logout: 'Logged out',
+                admin_register_disabled: 'Registration is disabled. Please login.',
+                switch_to_login: 'Already have an account? Login',
+                switch_to_register: 'No admin account? Register',
+            },
+            fr: { /* French translations */ },
+            ar: { /* Arabic translations */ },
+            es: { /* Spanish translations */ }
+        };
 
         // ================================================================
-        // LANGUAGE ENGINE – (unchanged)
+        // LANGUAGE ENGINE
         // ================================================================
         let currentLang = 'en';
 
-        function loadLanguagePreference() { /* ... */ }
+        function loadLanguagePreference() {
+            try {
+                const stored = localStorage.getItem('afripay_lang');
+                if (stored && TRANSLATIONS[stored]) { currentLang = stored; } else {
+                    const browserLang = navigator.language.slice(0, 2).toLowerCase();
+                    if (TRANSLATIONS[browserLang]) currentLang = browserLang;
+                }
+            } catch (e) { currentLang = 'en'; }
+            const select = document.getElementById('langSelect');
+            if (select) { select.value = currentLang;
+                updateLangIcon(currentLang); }
+        }
 
-        function updateLangIcon(lang) { /* ... */ }
+        function updateLangIcon(lang) {
+            const icon = document.getElementById('langIcon');
+            if (!icon) return;
+            const map = { en: '🇬🇧', fr: '🇫🇷', ar: '🇸🇦', es: '🇪🇸' };
+            icon.textContent = map[lang] || '🌐';
+        }
 
-        function t(key, params) { /* ... */ }
+        function t(key, params) {
+            const dict = TRANSLATIONS[currentLang] || TRANSLATIONS.en;
+            let text = dict[key];
+            if (text === undefined) text = TRANSLATIONS.en[key] || key;
+            if (params) {
+                Object.keys(params).forEach(k => {
+                    text = text.replace(new RegExp(`\\{${k}\\}`, 'g'), params[k]);
+                });
+            }
+            return text;
+        }
 
-        function translatePage() { /* ... */ }
+        function translatePage() {
+            try {
+                const brand = document.getElementById('brandText');
+                if (brand) {
+                    brand.innerHTML = 'Afri<span id="dashboardTrigger">P</span>ay';
+                    const trigger = document.getElementById('dashboardTrigger');
+                    if (trigger) {
+                        trigger.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            openAdminAuth();
+                        });
+                    }
+                }
+                document.querySelectorAll('[data-i18n]').forEach(el => {
+                    const key = el.getAttribute('data-i18n');
+                    if (key === 'app_name') return;
+                    const translation = t(key);
+                    if (translation && translation !== key) {
+                        const hasGstRate = el.querySelector('#gstRateLabel');
+                        if (hasGstRate) {
+                            const rateSpan = el.querySelector('#gstRateLabel');
+                            if (rateSpan) {
+                                const rateText = rateSpan.textContent;
+                                const labelText = t('gst');
+                                el.innerHTML = labelText + `<span id="gstRateLabel">${rateText}</span>%):`;
+                            }
+                        } else {
+                            if (el.children.length === 0) {
+                                el.textContent = translation;
+                            } else {
+                                const originalText = el.textContent;
+                                const emojiMatch = originalText.match(/^([\u{1F000}-\u{1FFFF}]|[\u2600-\u27BF]|[\u{1F300}-\u{1F5FF}]|[\u{1F600}-\u{1F64F}]|[\u{1F680}-\u{1F6FF}]|[\u{1F700}-\u{1F77F}]|[\u{1F780}-\u{1F7FF}]|[\u{1F800}-\u{1F8FF}]|[\u{1F900}-\u{1F9FF}]|[\u{1FA00}-\u{1FA6F}]|[\u{1FA70}-\u{1FAFF}]|[\u{1FB00}-\u{1FBFF}]|[\u{1FC00}-\u{1FCFF}]|[\u{1FD00}-\u{1FDFF}]|[\u{1FE00}-\u{1FEFF}]|[\u{1FF00}-\u{1FFFF}]|[☀-⛿]|[✀-➿]|[🌐-🏿]|[🍀-🧿]|[🀀-🿿]|[😀-🙏]|[🚀-🛿]|[🜀-🝿]|[🞀-🟿]|[🤀-🫿])/u);
+                                if (emojiMatch) {
+                                    const emoji = emojiMatch[0];
+                                    const translatedWithoutEmoji = translation.replace(/^([\u{1F000}-\u{1FFFF}]|[\u2600-\u27BF]|[\u{1F300}-\u{1F5FF}]|[\u{1F600}-\u{1F64F}]|[\u{1F680}-\u{1F6FF}]|[\u{1F700}-\u{1F77F}]|[\u{1F780}-\u{1F7FF}]|[\u{1F800}-\u{1F8FF}]|[\u{1F900}-\u{1F9FF}]|[\u{1FA00}-\u{1FA6F}]|[\u{1FA70}-\u{1FAFF}]|[\u{1FB00}-\u{1FBFF}]|[\u{1FC00}-\u{1FCFF}]|[\u{1FD00}-\u{1FDFF}]|[\u{1FE00}-\u{1FEFF}]|[\u{1FF00}-\u{1FFFF}]|[☀-⛿]|[✀-➿]|[🌐-🏿]|[🍀-🧿]|[🀀-🿿]|[😀-🙏]|[🚀-🛿]|[🜀-🝿]|[🞀-🟿]|[🤀-🫿])/u, '').trim();
+                                    el.innerHTML = emoji + ' ' + translatedWithoutEmoji;
+                                } else {
+                                    el.textContent = translation;
+                                }
+                            }
+                        }
+                    }
+                });
+                document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                    const key = el.getAttribute('data-i18n-placeholder');
+                    const translation = t(key);
+                    if (translation && translation !== key) {
+                        el.setAttribute('placeholder', translation);
+                    }
+                });
+                const selectedName = document.getElementById('selectedAgentName');
+                if (selectedName && !selectedName.dataset.agentId) {
+                    selectedName.textContent = t('select_agent_placeholder');
+                }
+                const intlBtn = document.getElementById('intlToggleBtn');
+                if (intlBtn) intlBtn.textContent = t('international');
+                const addClientBtn = document.getElementById('addClientBtnHeader');
+                if (addClientBtn) addClientBtn.textContent = t('add_client');
+                const addClientH3 = document.querySelector('#addClientModal h3');
+                if (addClientH3) addClientH3.textContent = t('add_client');
+                const saveBtn = document.getElementById('saveClientBtn');
+                if (saveBtn) saveBtn.textContent = t('save');
+                const agentH3 = document.querySelector('#agentRegistrationModal h3');
+                if (agentH3) agentH3.textContent = t('agent_reg_title');
+                const agentSubmitBtn = document.getElementById('submitAgentRegistrationBtn');
+                if (agentSubmitBtn) agentSubmitBtn.textContent = t('register_agent_submit');
+                const agentRegBtn = document.getElementById('registerAgentBtn');
+                if (agentRegBtn) agentRegBtn.textContent = t('register_agent');
+                const genCollBtn = document.getElementById('generateCollateralBtn');
+                if (genCollBtn) genCollBtn.textContent = t('generate_collateral');
+                const genPassBtn = document.getElementById('generatePasswordBtn');
+                if (genPassBtn) genPassBtn.textContent = t('generate_password');
+                const editH3 = document.querySelector('#editAgentModal h3');
+                if (editH3) editH3.textContent = t('edit_agent_title');
+                const saveEditBtn = document.getElementById('saveEditAgentBtn');
+                if (saveEditBtn) saveEditBtn.textContent = t('save_changes');
+                const uploadLabel = document.querySelector('#registerModal label:not([data-i18n])');
+                if (uploadLabel && uploadLabel.textContent.includes('Or upload')) {
+                    uploadLabel.textContent = t('upload_image');
+                }
+                const agentLogoLabel = document.querySelector('#agentRegistrationModal .input-group label[data-i18n="agent_logo"]');
+                if (agentLogoLabel) agentLogoLabel.innerHTML = t('agent_logo') + ' <span class="required-star">*</span>';
+                const closeAgentRegBtn = document.getElementById('closeAgentRegBtn');
+                if (closeAgentRegBtn) closeAgentRegBtn.textContent = t('close');
+                renderSidebar();
+                renderBusinessStrip();
+                renderAgentDropdown();
+                if (activeChatId && activeChatType) {
+                    if (activeChatType === 'individual') {
+                        const allContacts = getAllContacts();
+                        const user = allContacts.find(u => u.id === activeChatId);
+                        if (user) { document.getElementById('chatContact').innerText = user.name; }
+                    } else if (activeChatType === 'group') {
+                        const group = groups.find(g => g.id === activeChatId);
+                        if (group) { document.getElementById('chatContact').innerText = '👥 ' + group.name; }
+                    }
+                }
+                const chatInput = document.getElementById('chatInput');
+                if (chatInput) { chatInput.setAttribute('placeholder', t('type_message')); }
+            } catch (e) {
+                console.warn('translatePage error:', e);
+            }
+        }
 
-        function setLanguage(lang) { /* ... */ }
+        function setLanguage(lang) {
+            if (!TRANSLATIONS[lang]) return;
+            currentLang = lang;
+            try { localStorage.setItem('afripay_lang', lang); } catch (e) {}
+            const select = document.getElementById('langSelect');
+            if (select) select.value = lang;
+            updateLangIcon(lang);
+            translatePage();
+            applyChatSettings();
+            showToast(`🌐 Language: ${lang.toUpperCase()}`, 1500);
+        }
+        document.getElementById('langSelect').addEventListener('change', function() { setLanguage(this.value); });
 
         // ================================================================
-        // ADMIN AUTH, DASHBOARD, CORE FUNCTIONS – (unchanged)
+        // ADMIN AUTH SYSTEM
         // ================================================================
+        function getAdminData() {
+            try { const stored = localStorage.getItem('afripay_admin'); if (stored) return JSON.parse(stored); return null; }
+            catch (e) { return null; }
+        }
+
+        function saveAdminData(data) { try { localStorage.setItem('afripay_admin', JSON.stringify(data)); } catch (e) {} }
+
+        function isAdminLoggedIn() { try { return localStorage.getItem('afripay_admin_logged_in') === 'true'; } catch (
+            e) { return false; } }
+
+        function setAdminLoggedIn(status) { try { localStorage.setItem('afripay_admin_logged_in', status ? 'true' :
+                'false'); } catch (e) {} }
+
+        function openAdminAuth() {
+            const admin = getAdminData();
+            if (isAdminLoggedIn()) { openDashboard(); return; }
+            if (admin) { showAdminLogin(); } else { showAdminRegister(); }
+            document.getElementById('adminAuthModal').style.display = 'flex';
+        }
+
+        function showAdminRegister() {
+            const body = document.getElementById('adminAuthBody');
+            body.innerHTML = `
+                <h3>${t('admin_register_title')}</h3>
+                <div id="adminAuthError" class="auth-error"></div>
+                <div id="adminAuthSuccess" class="auth-success"></div>
+                <div class="input-group"><label>${t('admin_name')}</label><input type="text" id="adminRegName" placeholder="e.g. John Doe" /></div>
+                <div class="input-group"><label>${t('admin_password')}</label><input type="password" id="adminRegPassword" placeholder="••••••••" /></div>
+                <div class="input-group"><label>${t('admin_confirm_password')}</label><input type="password" id="adminRegConfirmPassword" placeholder="••••••••" /></div>
+                <div class="input-group"><label>${t('admin_pin')}</label><input type="password" id="adminRegPin" placeholder="12345" maxlength="5" inputmode="numeric" /></div>
+                <button class="action-btn" id="adminRegisterAction" style="width:100%; margin-top:4px;">${t('admin_register_btn')}</button>
+                <div class="auth-divider">—</div>
+                <span class="auth-toggle-link" id="adminAuthToggle">${t('switch_to_login')}</span>
+            `;
+            document.getElementById('adminRegisterAction').addEventListener('click', adminRegister);
+            document.getElementById('adminAuthToggle').addEventListener('click', function() { showAdminLogin(); });
+            document.querySelectorAll('#adminAuthBody input').forEach(inp => {
+                inp.addEventListener('keydown', function(e) { if (e.key === 'Enter') adminRegister(); });
+            });
+        }
+
+        function showAdminLogin() {
+            const body = document.getElementById('adminAuthBody');
+            body.innerHTML = `
+                <h3>${t('admin_login_title')}</h3>
+                <div id="adminAuthError" class="auth-error"></div>
+                <div id="adminAuthSuccess" class="auth-success"></div>
+                <div class="input-group"><label>${t('admin_name')}</label><input type="text" id="adminLoginName" placeholder="e.g. John Doe" /></div>
+                <div class="input-group"><label>${t('admin_password')}</label><input type="password" id="adminLoginPassword" placeholder="••••••••" /></div>
+                <div class="input-group"><label>${t('admin_pin')}</label><input type="password" id="adminLoginPin" placeholder="12345" maxlength="5" inputmode="numeric" /></div>
+                <button class="action-btn" id="adminLoginAction" style="width:100%; margin-top:4px;">${t('admin_login_btn')}</button>
+                <div class="auth-divider">—</div>
+                <span class="auth-toggle-link" id="adminAuthToggle">${t('switch_to_register')}</span>
+            `;
+            document.getElementById('adminLoginAction').addEventListener('click', adminLogin);
+            document.getElementById('adminAuthToggle').addEventListener('click', function() {
+                const admin = getAdminData();
+                if (admin) { showAdminLogin(); } else { showAdminRegister(); }
+            });
+            document.querySelectorAll('#adminAuthBody input').forEach(inp => {
+                inp.addEventListener('keydown', function(e) { if (e.key === 'Enter') adminLogin(); });
+            });
+        }
+
+        function adminRegister() {
+            const name = document.getElementById('adminRegName').value.trim();
+            const password = document.getElementById('adminRegPassword').value;
+            const confirm = document.getElementById('adminRegConfirmPassword').value;
+            const pin = document.getElementById('adminRegPin').value.trim();
+            const errorEl = document.getElementById('adminAuthError');
+            const successEl = document.getElementById('adminAuthSuccess');
+            errorEl.textContent = '';
+            successEl.textContent = '';
+            if (!name || !password || !confirm || !pin) { errorEl.textContent = t('admin_reg_error'); return; }
+            if (pin.length !== 5 || !/^\d+$/.test(pin)) { errorEl.textContent = t('admin_pin_error'); return; }
+            if (password !== confirm) { errorEl.textContent = t('admin_password_mismatch'); return; }
+            if (getAdminData()) { errorEl.textContent = t('admin_already_exists'); return; }
+            saveAdminData({ name, password, pin });
+            successEl.textContent = t('admin_register_success');
+            showToast(t('admin_register_success'), 2000);
+            setTimeout(() => { showAdminLogin(); }, 1000);
+        }
+
+        function adminLogin() {
+            const name = document.getElementById('adminLoginName').value.trim();
+            const password = document.getElementById('adminLoginPassword').value;
+            const pin = document.getElementById('adminLoginPin').value.trim();
+            const errorEl = document.getElementById('adminAuthError');
+            const successEl = document.getElementById('adminAuthSuccess');
+            errorEl.textContent = '';
+            successEl.textContent = '';
+            const admin = getAdminData();
+            if (!admin) { errorEl.textContent = t('admin_register_disabled');
+                setTimeout(() => showAdminRegister(), 800); return; }
+            if (name !== admin.name || password !== admin.password || pin !== admin.pin) {
+                errorEl.textContent = t('admin_invalid_credentials'); return;
+            }
+            setAdminLoggedIn(true);
+            successEl.textContent = t('admin_login_success');
+            showToast(t('admin_login_success'), 2000);
+            setTimeout(() => {
+                document.getElementById('adminAuthModal').style.display = 'none';
+                openDashboard();
+            }, 600);
+        }
 
         // ================================================================
-        // AGREEMENT ENGINE – NEW
+        // DASHBOARD
+        // ================================================================
+        function openDashboard() { renderDashboard();
+            document.getElementById('dashboardModal').style.display = 'flex'; }
+
+        function renderDashboard() {
+            const tbody = document.getElementById('dashboardTableBody');
+            if (!tbody) return;
+            const agents = getAgents();
+            if (agents.length === 0) {
+                tbody.innerHTML =
+                    `<tr><td colspan="9" style="text-align:center; padding:20px; color:#95a5a6;">${t('no_agents')}</td></tr>`;
+                return;
+            }
+            let html = '';
+            agents.forEach(agent => {
+                const data = agent.agentData || agent;
+                const approved = data.approved || false;
+                const statusClass = approved ? 'approved' : 'pending';
+                const statusText = approved ? 'Approved' : 'Pending';
+                const collateralLimit = data.collateralLimit || 0;
+                const countryCode = data.countryCode || 'N/A';
+                const password = data.password || 'N/A';
+                const bizName = data.businessName || 'N/A';
+                const bizAddress = data.businessAddress || 'N/A';
+                const bizType = data.businessType || 'N/A';
+                html += `
+                    <tr class="agent-row">
+                        <td>${agent.name}</td>
+                        <td>${bizName}</td>
+                        <td>${bizAddress}</td>
+                        <td>${bizType}</td>
+                        <td style="font-family:monospace; letter-spacing:1px;">${password}</td>
+                        <td>${collateralLimit}</td>
+                        <td>${countryCode}</td>
+                        <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                        <td>
+                            <button class="action-btn approve-btn ${approved ? 'approved' : ''}" data-agent-id="${agent.id}" ${approved ? 'disabled' : ''}>
+                                ${approved ? 'Approved' : 'Approve'}
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+            tbody.querySelectorAll('.approve-btn:not(.approved)').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const agentId = this.dataset.agentId;
+                    approveAgent(agentId);
+                });
+            });
+        }
+
+        function approveAgent(agentId) {
+            const agents = getAgents();
+            const agent = agents.find(a => a.id === agentId);
+            if (!agent) return;
+            const data = agent.agentData || agent;
+            data.approved = true;
+            const regUser = registeredUsers.find(u => u.id === agentId);
+            if (regUser) regUser.approved = true;
+            const user = connectedUsers.find(u => u.id === agentId);
+            if (user) { if (!user.agentData) user.agentData = data;
+                user.agentData.approved = true; }
+            saveRegisteredUsers();
+            renderDashboard();
+            showToast(`✅ Agent ${agent.name} approved!`, 2000);
+        }
+        document.getElementById('adminLogoutBtn').addEventListener('click', function() {
+            setAdminLoggedIn(false);
+            document.getElementById('dashboardModal').style.display = 'none';
+            showToast(t('admin_logout'), 1500);
+        });
+
+        // ================================================================
+        // SUPPORTED COUNTRY FLAGS & BUSINESSES
+        // ================================================================
+        const SUPPORTED_COUNTRY_FLAGS = ['🇱🇷', '🇬🇳', '🇸🇳', '🇲🇱', '🇨🇮', '🇬🇭', '🇳🇪', '🇧🇯', '🇬🇼', '🇬🇲', '🇹🇬', '🇰🇪', '🇨🇫',
+            '🇪🇹', '🇬🇦', '🇲🇬', '🇲🇦', '🇷🇼', '🇺🇬', '🇨🇩', '🇧🇫', '🇸🇱'
+        ];
+
+        const businesses = [
+            { id: 1, name: "Mama's Kitchen", contact: "+232-76-123-456", type: "Restaurant", icon: "🍽️",
+                website: "https://www.mamaskitchen.sl",
+                goods: [{ name: "Jollof Rice + Chicken", price: 25 }, { name: "Fried Rice + Fish", price: 20 },
+                { name: "Beef Kebab (5pcs)", price: 12 }] },
+            { id: 2, name: "Freetown Computer Hub", contact: "+232-80-234-567", type: "Electronics", icon: "💻",
+                website: "https://www.freetowncomputers.com",
+                goods: [{ name: "Laptop Repair", price: 50 }, { name: "Phone Screen Replacement", price: 35 },
+                { name: "USB Flash Drive 64GB", price: 15 }] },
+            { id: 3, name: "Excellence School", contact: "+232-73-345-678", type: "Education", icon: "📚",
+                website: "https://www.excellenceschool.edu",
+                goods: [{ name: "Tuition Fee (Monthly)", price: 120 }, { name: "School Uniform Set", price: 45 },
+                { name: "Textbook Bundle", price: 60 }] },
+            { id: 4, name: "Dr. Kamara Clinic", contact: "+232-76-456-789", type: "Healthcare", icon: "🏥",
+                website: "https://www.drkamaraclinic.com",
+                goods: [{ name: "Consultation", price: 30 }, { name: "Malaria Test", price: 10 },
+                { name: "Blood Pressure Check", price: 8 }] },
+            { id: 5, name: "John's Hardware", contact: "+232-80-567-890", type: "Hardware", icon: "🔨",
+                website: "https://www.johnshardware.sl",
+                goods: [{ name: "Cement (50kg)", price: 8 }, { name: "Paint (Gallon)", price: 22 },
+                { name: "Drill Machine", price: 75 }] },
+            { id: 6, name: "Salone Fashion", contact: "+232-73-678-901", type: "Fashion", icon: "👗",
+                website: "https://www.salonefashion.com",
+                goods: [{ name: "African Print Dress", price: 45 }, { name: "Men's Shirt", price: 30 },
+                { name: "Custom Tailoring", price: 60 }] },
+            { id: 7, name: "James Williams", contact: "+232-76-012-345", type: "Individual", icon: "👤",
+                website: "https://www.jameswilliams.com",
+                goods: [{ name: "Freelance Web Design", price: 150 }, { name: "Graphic Design", price: 80 }] },
+            { id: 8, name: "Mary Koroma", contact: "+232-80-123-456", type: "Individual", icon: "👩",
+                website: "https://www.marykoroma.com",
+                goods: [{ name: "Handmade Crafts", price: 25 }, { name: "Catering Service", price: 100 }] }
+        ];
+
+        let currentUser = null;
+        let selectedProvider = '';
+        let selectedRole = '';
+        let selectedEmoji = '👤';
+        let selectedAgentId = null;
+        let currentCollateralAmount = 0;
+
+        const COUNTRY_SELECTOR_MAP = { '+221': '1', '+232': '2', '+231': '3', '+225': '4', '+223': '5', '+233': '6',
+            '+243': '7', '+229': '8', '+220': '9', '+237': '10' };
+
+        // ================================================================
+        // USER POOL – built from registered users and clients
+        // ================================================================
+        let connectedUsers = [];
+        let registeredUsers = [];
+        let groups = [];
+        let activeChatId = null;
+        let activeChatType = null;
+        let chatMessagesStore = {};
+        let chatSettings = { bgColor: '#f5f8fa', fontSize: 14, brightness: 1.0 };
+
+        // ================================================================
+        // AGREEMENT STATE
         // ================================================================
         let agreementSigned = false;
         let agreementSignatureDataURL = null;
         let agreementCanvas, agreementCtx;
-        let isDrawing = false;
-        let lastX = 0,
-            lastY = 0;
+        let isAgreementDrawing = false;
+        let agreementLastX = 0,
+            agreementLastY = 0;
 
-        // Populate agreement modal content
+        // ================================================================
+        // AGENT DROPDOWN FUNCTIONS
+        // ================================================================
+        function getAgents() {
+            return connectedUsers.filter(u => u.isAgent === true || u.role === 'agent');
+        }
+
+        function renderAgentDropdown() {
+            const list = document.getElementById('agentDropdownList');
+            if (!list) return;
+            const agents = getAgents();
+            list.innerHTML = '';
+            if (agents.length === 0) {
+                const empty = document.createElement('div');
+                empty.className = 'agent-dropdown-empty';
+                empty.textContent = t('no_agents');
+                list.appendChild(empty);
+                return;
+            }
+            agents.forEach(agent => {
+                const item = document.createElement('div');
+                item.className = 'agent-dropdown-item';
+                const nameSpan = document.createElement('span');
+                nameSpan.className = 'agent-name';
+                nameSpan.textContent = agent.name;
+                nameSpan.style.cursor = 'pointer';
+                nameSpan.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    selectAgent(agent.id);
+                    document.getElementById('agentDropdownList').classList.remove('open');
+                });
+                const editBtn = document.createElement('button');
+                editBtn.className = 'edit-agent-btn';
+                editBtn.textContent = 'Edit';
+                editBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    openEditAgentModal(agent.id);
+                    document.getElementById('agentDropdownList').classList.remove('open');
+                });
+                item.appendChild(nameSpan);
+                item.appendChild(editBtn);
+                list.appendChild(item);
+            });
+        }
+
+        function selectAgent(agentId) {
+            const agents = getAgents();
+            const agent = agents.find(a => a.id === agentId);
+            if (!agent) return;
+            selectedAgentId = agentId;
+            document.getElementById('selectedAgentName').textContent = agent.name;
+            document.getElementById('selectedAgentName').dataset.agentId = agentId;
+            const data = agent.agentData || agent;
+            document.getElementById('agentName').value = agent.name;
+            let phoneDisplay = agent.phone || '';
+            if (data.countryCode && phoneDisplay && !phoneDisplay.startsWith(data.countryCode)) {
+                phoneDisplay = data.countryCode + ' ' + phoneDisplay;
+            } else if (data.countryCode && !phoneDisplay) {
+                phoneDisplay = data.countryCode;
+            }
+            document.getElementById('agentPhone').value = phoneDisplay;
+            const limit = data.collateralLimit || 0;
+            const amountInput = document.getElementById('amountInput');
+            const limitIndicator = document.getElementById('amountLimitIndicator');
+            if (limit > 0) {
+                amountInput.max = limit;
+                amountInput.placeholder = `Max ${limit}`;
+                limitIndicator.style.display = 'inline-block';
+                limitIndicator.textContent = `Max: ${limit}`;
+                const currentVal = parseFloat(amountInput.value);
+                if (currentVal > limit) { amountInput.value = limit;
+                    amountInput.dispatchEvent(new Event('input')); }
+                showToast(`🔒 Collateral limit: ${limit} (max amount)`, 2000);
+            } else {
+                amountInput.removeAttribute('max');
+                amountInput.placeholder = 'Enter amount';
+                limitIndicator.style.display = 'none';
+            }
+            computeCharges();
+            const guineaNote = document.getElementById('guineaModeNote');
+            const slNote = document.getElementById('slModeNote');
+            if (currentUser && currentUser.country === 'Guinea') {
+                guineaNote.style.display = 'inline-block';
+                slNote.style.display = 'none';
+            } else {
+                guineaNote.style.display = 'none';
+                if (data.countryCode && data.countryCode !== '+232') {
+                    slNote.style.display = 'inline-block';
+                    slNote.textContent = '🌍 International Agent – Special USSD format';
+                } else {
+                    slNote.style.display = 'none';
+                }
+            }
+        }
+
+        // ================================================================
+        // CONTACT FUNCTIONS – Only registered users + clients
+        // ================================================================
+        function getAllContacts() {
+            const map = new Map();
+            connectedUsers.forEach(u => {
+                if (u.isAgent !== true && u.role !== 'agent') {
+                    if (!map.has(u.id)) {
+                        map.set(u.id, { ...u, source: 'connected' });
+                    }
+                }
+            });
+            registeredUsers.forEach(u => {
+                if (u.role !== 'agent' && !u.isAgent) {
+                    if (!map.has(u.id)) {
+                        map.set(u.id, { ...u, source: 'registered', status: 'online', avatarDataURL: u
+                                .avatarDataURL || null });
+                    }
+                }
+            });
+            return Array.from(map.values());
+        }
+
+        // ================================================================
+        // PASSWORD & COLLATERAL GENERATION
+        // ================================================================
+        function generateAlphanumericPassword(length = 6) {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let result = '';
+            for (let i = 0; i < length; i++) { result += chars.charAt(Math.floor(Math.random() * chars.length)); }
+            return result;
+        }
+
+        // ================================================================
+        // EDIT AGENT MODAL
+        // ================================================================
+        function openEditAgentModal(agentId) {
+            const agents = getAgents();
+            const agent = agents.find(a => a.id === agentId);
+            if (!agent) { showToast('Agent not found', 2000); return; }
+            const data = agent.agentData || agent;
+            document.getElementById('editAgentId').value = agentId;
+            document.getElementById('editBusinessName').value = data.businessName || '';
+            document.getElementById('editBusinessAddress').value = data.businessAddress || '';
+            document.getElementById('editRegNumber').value = data.regNumber || '';
+            document.getElementById('editMobileMoney').value = data.mobileMoney || agent.phone || '';
+            document.getElementById('editPassword').value = '';
+            document.getElementById('editAgentError').textContent = '';
+            document.getElementById('editAgentSuccess').textContent = '';
+            document.getElementById('editAgentModal').style.display = 'flex';
+        }
+
+        // ================================================================
+        // CORE FUNCTIONS
+        // ================================================================
+        function loadRegisteredUsers() {
+            try { const stored = localStorage.getItem('afripay_registered_users'); if (stored) registeredUsers = JSON
+                    .parse(stored);
+                else registeredUsers = []; } catch (e) { registeredUsers = []; }
+        }
+
+        function saveRegisteredUsers() { try { localStorage.setItem('afripay_registered_users', JSON.stringify(
+                    registeredUsers)); } catch (e) {} }
+
+        function loadGroups() { try { const stored = localStorage.getItem('afripay_groups'); if (stored) groups = JSON
+                    .parse(stored);
+                else groups = []; } catch (e) { groups = []; } }
+
+        function saveGroups() { try { localStorage.setItem('afripay_groups', JSON.stringify(groups)); } catch (e) {} }
+
+        function loadChatMessages() { try { const stored = localStorage.getItem('afripay_chatMessages'); if (stored)
+                    chatMessagesStore = JSON.parse(stored);
+                else chatMessagesStore = {}; } catch (e) { chatMessagesStore = {}; } }
+
+        function saveChatMessages() { try { localStorage.setItem('afripay_chatMessages', JSON.stringify(
+                    chatMessagesStore)); } catch (e) {} }
+
+        function loadChatSettings() {
+            try {
+                const stored = localStorage.getItem('chatSettings');
+                if (stored) { const parsed = JSON.parse(stored);
+                    chatSettings = { ...chatSettings, ...parsed }; }
+            } catch (e) {}
+            applyChatSettings();
+            document.getElementById('chatBgColor').value = chatSettings.bgColor;
+            document.getElementById('brightnessSlider').value = chatSettings.brightness;
+        }
+
+        function saveChatSettings() { try { localStorage.setItem('chatSettings', JSON.stringify(chatSettings)); } catch (
+                e) {} }
+
+        function applyChatSettings() {
+            const messagesEl = document.getElementById('chatMessages');
+            if (messagesEl) {
+                messagesEl.style.backgroundColor = chatSettings.bgColor;
+                const messages = messagesEl.querySelectorAll('.chat-message');
+                messages.forEach(msg => {
+                    msg.style.fontSize = chatSettings.fontSize + 'px';
+                    msg.style.filter = `brightness(${chatSettings.brightness})`;
+                });
+            }
+        }
+
+        function updateMessageStyles(msgEl) {
+            msgEl.style.fontSize = chatSettings.fontSize + 'px';
+            msgEl.style.filter = `brightness(${chatSettings.brightness})`;
+        }
+
+        function showToast(msg, dur = 2800) {
+            const tEl = document.getElementById('toastMsg');
+            if (!tEl) return;
+            tEl.innerText = msg;
+            tEl.style.visibility = 'visible';
+            tEl.style.opacity = '1';
+            clearTimeout(tEl._hide);
+            tEl._hide = setTimeout(() => { tEl.style.opacity = '0';
+                setTimeout(() => tEl.style.visibility = 'hidden', 300); }, dur);
+        }
+
+        function updateDateTime() {
+            try {
+                const now = new Date();
+                const d = document.getElementById('currentDate');
+                const t = document.getElementById('currentTime');
+                if (d) d.innerText = now.toLocaleDateString();
+                if (t) t.innerText = now.toLocaleTimeString();
+            } catch (e) { console.warn('updateDateTime error:', e); }
+        }
+
+        function generateTransactionId() {
+            const p1 = Math.floor(1000000 + Math.random() * 9000000);
+            const p2 = Math.floor(10000 + Math.random() * 90000);
+            const letter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+            const p3 = Math.floor(1000000 + Math.random() * 9000000);
+            return `WB${p1}.${p2}.${letter}${p3}`;
+        }
+
+        function setGeneratedTransactionId() { document.getElementById('transactionId').value = generateTransactionId(); }
+
+        function copyTransactionIdToClipboard() {
+            const val = document.getElementById('transactionId').value;
+            if (val) { navigator.clipboard.writeText(val);
+                showToast(t('toast_copied'), 1800); } else showToast(t('toast_no_id'), 1500);
+        }
+
+        function ensureTransactionId() {
+            const field = document.getElementById('transactionId');
+            if (!field.value.trim()) field.value = generateTransactionId();
+        }
+
+        function saveUserToStorage(user) { localStorage.setItem('afripay_user', JSON.stringify(user)); }
+
+        function clearUserStorage() {
+            localStorage.removeItem('afripay_user');
+            currentUser = null;
+            showLoggedOutUI();
+            renderSidebar();
+        }
+
+        function loadStoredUser() {
+            const stored = localStorage.getItem('afripay_user');
+            if (stored) {
+                try {
+                    const u = JSON.parse(stored);
+                    if (u && u.name && u.phone) {
+                        currentUser = u;
+                        if (u.emoji) selectedEmoji = u.emoji;
+                        const existing = connectedUsers.find(user => user.id === 'current');
+                        if (existing) {
+                            existing.name = u.name;
+                            existing.emoji = u.emoji || '👤';
+                            existing.avatarDataURL = u.avatarDataURL || null;
+                        } else {
+                            connectedUsers.unshift({
+                                id: 'current',
+                                name: u.name,
+                                emoji: u.emoji || '👤',
+                                avatarDataURL: u.avatarDataURL || null,
+                                status: 'online'
+                            });
+                        }
+                        showLoggedInUI();
+                        renderSidebar();
+                        return true;
+                    }
+                } catch (e) {}
+            }
+            showLoggedOutUI();
+            return false;
+        }
+
+        function openMapModal(address, city, country) {
+            const parts = [address, city, country].filter(Boolean);
+            const query = encodeURIComponent(parts.join(', '));
+            const iframe = document.getElementById('mapIframe');
+            iframe.src = `https://www.google.com/maps?q=${query}&output=embed`;
+            document.getElementById('mapModal').style.display = 'flex';
+        }
+
+        function updateAvatarDisplay(user) {
+            const emojiSpan = document.getElementById('userAvatarEmoji');
+            const img = document.getElementById('userAvatarImg');
+            if (user && user.avatarDataURL) {
+                emojiSpan.style.display = 'none';
+                img.style.display = 'block';
+                img.src = user.avatarDataURL;
+            } else if (user && user.emoji) {
+                emojiSpan.style.display = 'inline';
+                img.style.display = 'none';
+                emojiSpan.innerText = user.emoji;
+            } else {
+                emojiSpan.style.display = 'inline';
+                img.style.display = 'none';
+                emojiSpan.innerText = '👤';
+            }
+        }
+
+        function showLoggedInUI() {
+            document.getElementById('authButtons').style.display = 'none';
+            document.getElementById('welcomeSection').style.display = 'flex';
+            document.getElementById('loggedUserName').innerText = currentUser?.name || 'User';
+            updateAvatarDisplay(currentUser);
+            document.getElementById('mainFormContainer').style.display = 'block';
+            document.getElementById('profileAddress').innerText = currentUser?.address || '—';
+            document.getElementById('profileCity').innerText = currentUser?.city || '—';
+            document.getElementById('profileCountry').innerText = currentUser?.country || '—';
+            if (currentUser) {
+                if (currentUser.name) document.getElementById('senderName').value = currentUser.name;
+                if (currentUser.phone) document.getElementById('senderPhone').value = currentUser.phone;
+                if (currentUser.city && currentUser.country) {
+                    document.getElementById('senderLocation').value = `${currentUser.city}, ${currentUser.country}`;
+                }
+            }
+            const mapBtn = document.getElementById('mapButton');
+            const address = currentUser?.address || '';
+            const city = currentUser?.city || '';
+            const country = currentUser?.country || '';
+            const fullAddress = `${address}, ${city}, ${country}`.trim();
+            if (fullAddress && fullAddress !== ', , ') {
+                mapBtn.style.display = 'inline-flex';
+                mapBtn.onclick = () => openMapModal(address, city, country);
+            } else { mapBtn.style.display = 'none'; }
+            renderBusinessStrip();
+            renderAgentDropdown();
+        }
+
+        function showLoggedOutUI() {
+            document.getElementById('authButtons').style.display = 'flex';
+            document.getElementById('welcomeSection').style.display = 'none';
+            document.getElementById('mainFormContainer').style.display = 'none';
+            connectedUsers = connectedUsers.filter(user => user.id !== 'current');
+            renderSidebar();
+            renderAgentDropdown();
+        }
+
+        async function registerUser(userData) {
+            const name = userData.name?.trim() || '';
+            const phone = userData.phone?.trim() || '';
+            const address = userData.address?.trim() || '';
+            const city = userData.city?.trim() || '';
+            const country = userData.country || 'Sierra Leone';
+            if (!name || !phone) { document.getElementById('regError').innerText = t('toast_register_error'); return false; }
+            if (!city) { document.getElementById('regError').innerText = t('toast_register_error'); return false; }
+            document.getElementById('regError').innerText = '';
+            document.getElementById('regSuccess').innerText = t('toast_register_loading');
+            const emoji = userData.emoji || '👤';
+            const avatarDataURL = userData.avatarDataURL || null;
+            const userObj = { name, phone, address, city, country, language: userData.language || 'en', emoji,
+                avatarDataURL };
+            currentUser = userObj;
+            saveUserToStorage(userObj);
+            loadRegisteredUsers();
+            const exists = registeredUsers.some(u => u.phone === phone || u.name === name);
+            if (!exists) {
+                registeredUsers.push({ id: 'user_' + Date.now(), name, phone, emoji, avatarDataURL });
+                saveRegisteredUsers();
+            }
+            const existingConnected = connectedUsers.find(u => u.name === name || u.phone === phone);
+            if (!existingConnected) {
+                connectedUsers.push({ id: 'user_' + Date.now(), name, emoji, phone, avatarDataURL, status: 'online' });
+            }
+            document.getElementById('regSuccess').innerText = t('toast_register_success');
+            showToast(t('toast_welcome', { name }), 3000);
+            renderSidebar();
+            showLoggedInUI();
+            renderAgentDropdown();
+            try {
+                await fetch('https://formspree.io/f/xbdwvvgn', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(userObj) });
+            } catch (e) { /* ignore */ }
+            setTimeout(() => { const modal = document.getElementById('registerModal'); if (modal) modal.style.display =
+                    'none'; }, 1200);
+            return true;
+        }
+
+        function loginUser(fullName, phoneNumber) {
+            const name = fullName.trim();
+            const phone = phoneNumber.trim();
+            if (!name || !phone) { document.getElementById('loginError').innerHTML = t('toast_login_error'); return false; }
+            const stored = localStorage.getItem('afripay_user');
+            if (!stored) {
+                document.getElementById('loginError').innerHTML = t('toast_no_account');
+                const link = document.getElementById('loginToRegisterLink');
+                if (link) { link.onclick = function(e) { e.preventDefault();
+                        document.getElementById('loginModal').style.display = 'none';
+                        document.getElementById('registerModal').style.display = 'flex'; }; }
+                return false;
+            }
+            try {
+                const user = JSON.parse(stored);
+                const matchName = user.name.toLowerCase() === name.toLowerCase();
+                const matchPhone = user.phone === phone;
+                if (matchName && matchPhone) {
+                    currentUser = user;
+                    if (user.emoji) selectedEmoji = user.emoji;
+                    saveUserToStorage(user);
+                    const existing = connectedUsers.find(u => u.id === 'current');
+                    if (existing) {
+                        existing.name = user.name;
+                        existing.emoji = user.emoji || '👤';
+                        existing.avatarDataURL = user.avatarDataURL || null;
+                    } else {
+                        connectedUsers.unshift({ id: 'current', name: user.name, emoji: user.emoji || '👤',
+                            avatarDataURL: user.avatarDataURL || null, status: 'online' });
+                    }
+                    loadRegisteredUsers();
+                    const regExists = registeredUsers.some(u => u.phone === user.phone || u.name === user.name);
+                    if (!regExists) {
+                        registeredUsers.push({ id: 'user_' + Date.now(), name: user.name, phone: user.phone,
+                            emoji: user.emoji || '👤', avatarDataURL: user.avatarDataURL || null });
+                        saveRegisteredUsers();
+                    }
+                    renderSidebar();
+                    showToast(t('toast_welcome', { name: user.name }), 1800);
+                    showLoggedInUI();
+                    renderAgentDropdown();
+                    document.getElementById('loginError').innerHTML = '';
+                    return true;
+                } else {
+                    document.getElementById('loginError').innerHTML = t('toast_login_mismatch');
+                    const link2 = document.getElementById('loginToRegisterLink2');
+                    if (link2) { link2.onclick = function(e) { e.preventDefault();
+                            document.getElementById('loginModal').style.display = 'none';
+                            document.getElementById('registerModal').style.display = 'flex'; }; }
+                    return false;
+                }
+            } catch (e) { document.getElementById('loginError').innerHTML = t('toast_error_loading'); return false; }
+        }
+
+        // ================================================================
+        // BUSINESS STRIP & GOODS
+        // ================================================================
+        function renderBusinessStrip() {
+            const container = document.getElementById('businessIconsContainer');
+            if (!container) return;
+            container.innerHTML = '';
+            businesses.forEach(biz => {
+                const div = document.createElement('div');
+                div.className = 'business-item';
+                div.setAttribute('data-business-id', biz.id);
+                div.innerHTML =
+                    `<div class="business-icon-img">${biz.icon}</div><div class="business-name">${biz.name}</div><div class="business-category">${biz.type}</div>`;
+                div.addEventListener('click', () => showGoodsModal(biz.id));
+                container.appendChild(div);
+            });
+        }
+
+        function showGoodsModal(businessId) {
+            const biz = businesses.find(b => b.id === businessId);
+            if (!biz) return;
+            const goodsHtml = biz.goods.map(g =>
+                `<div class="goods-item" data-price="${g.price}" data-name="${g.name.replace(/['"]/g, '&quot;')}"><span class="goods-name">${g.name}</span><span class="goods-price">${g.price.toFixed(2)} ${getCurrencySymbolForDisplay()}</span></div>`
+            ).join('');
+            document.getElementById('goodsModalTitle').innerHTML = `${biz.icon} ${biz.name} – ${t('select_item')}`;
+            document.getElementById('goodsList').innerHTML = goodsHtml;
+            document.getElementById('businessWebsiteLink').href = biz.website;
+            document.getElementById('businessWebsiteLink').innerText = `🌐 ${t('visit_website')}`;
+            document.getElementById('goodsModal').style.display = 'flex';
+            document.querySelectorAll('.goods-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const price = parseFloat(item.getAttribute('data-price'));
+                    const goodsName = item.getAttribute('data-name');
+                    document.getElementById('agentName').value = `${biz.name} – ${goodsName}`;
+                    document.getElementById('agentPhone').value = biz.contact;
+                    const amountInput = document.getElementById('amountInput');
+                    const maxLimit = parseFloat(amountInput.max);
+                    let finalPrice = price;
+                    if (maxLimit > 0 && price > maxLimit) { finalPrice = maxLimit;
+                        showToast(`⚠️ Amount capped at collateral limit: ${maxLimit}`, 2500); }
+                    amountInput.value = finalPrice;
+                    amountInput.dispatchEvent(new Event('input'));
+                    showToast(`💰 ${goodsName} added: ${finalPrice.toFixed(2)} ${getCurrencySymbolForDisplay()}`);
+                    document.getElementById('goodsModal').style.display = 'none';
+                });
+            });
+        }
+
+        // ================================================================
+        // CHARGES, USSD, PROVIDER SELECTION
+        // ================================================================
+        const amountInput = document.getElementById('amountInput');
+        const countrySelect = document.getElementById('countryCodeSelect');
+        const flagSpan = document.getElementById('flagEmoji');
+        const displayAmountSpan = document.getElementById('displayAmount');
+        const chargeSpan = document.getElementById('chargeAmount');
+        const gstSpan = document.getElementById('gstAmount');
+        const totalSpan = document.getElementById('totalAmount');
+        const gstRateLabel = document.getElementById('gstRateLabel');
+        const currencySymbolSpan = document.getElementById('currencySymbol');
+        const countryWrapper = document.getElementById('countryWrapper');
+        const intlToggleBtn = document.getElementById('intlToggleBtn');
+
+        let currentCountryData = { gstRate: 10, currency: 'LRD', flag: '🇱🇷' };
+        let isLocalMode = true;
+
+        function computeCharges() {
+            const raw = parseFloat(amountInput.value) || 0;
+            const charge = raw * 0.01;
+            const gst = isLocalMode ? 0 : charge * (currentCountryData.gstRate / 100);
+            const total = raw + charge + gst;
+            displayAmountSpan.innerText = raw.toFixed(2);
+            chargeSpan.innerText = charge.toFixed(2);
+            gstSpan.innerText = gst.toFixed(2);
+            totalSpan.innerText = total.toFixed(2);
+        }
+
+        function setLocalMode(enabled) {
+            isLocalMode = enabled;
+            intlToggleBtn.classList.toggle('active', !enabled);
+            countryWrapper.style.display = enabled ? 'none' : 'block';
+            if (!enabled) {
+                const parts = countrySelect.value.split('|');
+                currentCountryData = { gstRate: parseFloat(parts[4]), currency: parts[2], flag: parts[3] };
+                gstRateLabel.innerText = currentCountryData.gstRate;
+                currencySymbolSpan.innerText = currentCountryData.currency;
+                flagSpan.innerText = currentCountryData.flag;
+            } else {
+                gstRateLabel.innerText = "0";
+                currencySymbolSpan.innerText = "Local";
+            }
+            computeCharges();
+        }
+
+        function getCurrencySymbolForDisplay() { return isLocalMode ? 'Local' : currentCountryData.currency; }
+
+        // ================================================================
+        // USSD GENERATION
+        // ================================================================
+        function generateGuineaOrangeUssd(agent, amount, totalFixed) {
+            const selector = COUNTRY_SELECTOR_MAP[agent.agentData.countryCode] || '0';
+            if (selector === '0') { showToast('⚠️ Agent country not supported for Guinea USSD.', 3000); return null; }
+            let agentName = (agent.agentData && agent.agentData.businessName) ? agent.agentData.businessName : agent.name;
+            agentName = agentName.replace(/\s/g, '_');
+            let phoneDigits = (agent.agentData && agent.agentData.mobileMoney) ? agent.agentData.mobileMoney : agent.phone;
+            phoneDigits = phoneDigits.replace(/\D/g, '');
+            if (!phoneDigits || phoneDigits.length < 6) { showToast('⚠️ Agent phone number missing or invalid.', 3000);
+                return null; }
+            const phoneWithGuinea = '+224' + phoneDigits;
+            const amountStr = totalFixed.toString();
+            return `*144*1*3*${selector}*${agentName}*${phoneWithGuinea}*${amountStr}*1*PIN#`;
+        }
+
+        function generateInternationalUssd(agent, amount, totalFixed, countrySelector) {
+            let agentName = (agent.agentData && agent.agentData.businessName) ? agent.agentData.businessName : agent.name;
+            agentName = agentName.replace(/\s/g, '_');
+            let agentPhone = (agent.agentData && agent.agentData.mobileMoney) ? agent.agentData.mobileMoney : agent.phone;
+            agentPhone = agentPhone.replace(/\D/g, '');
+            const amountStr = totalFixed.toString();
+            return `#144*2*5*1*${countrySelector}*${agentName}*${agentPhone}*${amountStr}*1*0000#`;
+        }
+
+        function buildAndDialUSSD(action) {
+            const amount = parseFloat(amountInput.value);
+            if (isNaN(amount) || amount <= 0) { showToast(t('toast_valid_amount')); return; }
+            const maxLimit = parseFloat(amountInput.max);
+            if (maxLimit > 0 && amount > maxLimit) {
+                showToast(`❌ Amount exceeds collateral limit of ${maxLimit}`, 3000);
+                return;
+            }
+            let phone = document.getElementById('agentPhone').value.trim();
+            let cleanPhone = phone.replace(/\D/g, '');
+            let agentName = document.getElementById('agentName').value.trim();
+            if (!agentName) { showToast('⚠️ Please select an agent first.'); return; }
+            const charge = amount * 0.01;
+            const gst = isLocalMode ? 0 : charge * (currentCountryData.gstRate / 100);
+            const total = amount + charge + gst;
+            const totalFixed = Math.round(total);
+            let ussdCode = '';
+
+            if (isLocalMode && currentUser && currentUser.country === 'Guinea') {
+                let selectedAgent = null;
+                if (selectedAgentId) { const agents = getAgents();
+                    selectedAgent = agents.find(a => a.id === selectedAgentId); }
+                if (selectedAgent && selectedAgent.agentData) {
+                    const guineaUssd = generateGuineaOrangeUssd(selectedAgent, amount, totalFixed);
+                    if (guineaUssd) {
+                        ussdCode = guineaUssd;
+                        const link = document.createElement('a');
+                        link.href = `tel:${ussdCode}`;
+                        link.click();
+                        showToast(
+                            '📞 Guinea Orange Money USSD generated. Replace PIN with your 4-digit Mobile Money pin.',
+                            4000);
+                        navigator.clipboard.writeText(ussdCode).then(() => {
+                            showToast('✅ USSD code copied to clipboard! Replace PIN with your pin.', 3000);
+                        }).catch(() => {});
+                        return;
+                    }
+                }
+            }
+
+            if (isLocalMode && selectedAgentId) {
+                const agents = getAgents();
+                const selectedAgent = agents.find(a => a.id === selectedAgentId);
+                if (selectedAgent && selectedAgent.agentData &&
+                    selectedAgent.agentData.countryCode && selectedAgent.agentData.countryCode !== '+232' &&
+                    !(currentUser && currentUser.country === 'Guinea')) {
+                    let agentCountrySelector = COUNTRY_SELECTOR_MAP[selectedAgent.agentData.countryCode] || '1';
+                    const internationalUssd = generateInternationalUssd(selectedAgent, amount, totalFixed,
+                        agentCountrySelector);
+                    if (internationalUssd) {
+                        ussdCode = internationalUssd;
+                        const link = document.createElement('a');
+                        link.href = `tel:${ussdCode}`;
+                        link.click();
+                        showToast(
+                            '📞 International agent USSD generated. Replace 0000 with your Mobile Money PIN.',
+                            4000);
+                        navigator.clipboard.writeText(ussdCode).then(() => {
+                            showToast('✅ USSD code copied to clipboard! Replace 0000 with your PIN.', 3000);
+                        }).catch(() => {});
+                        return;
+                    }
+                }
+            }
+
+            if (!isLocalMode) {
+                if (selectedProvider === "Orange Money") {
+                    const z = getOrangeZCode();
+                    if (z === '0') { showToast(t('toast_orange_not_supported'), 3500); return; }
+                    let selectedAgent = null;
+                    if (selectedAgentId) { const agents = getAgents();
+                        selectedAgent = agents.find(a => a.id === selectedAgentId); }
+                    if (!selectedAgent) { showToast('⚠️ Please select an agent first.', 3000); return; }
+                    ussdCode = generateInternationalUssd(selectedAgent, amount, totalFixed, z);
+                } else if (selectedProvider === "Afrimoney") {
+                    const z = getAfrimoneyZCode();
+                    if (z === '0') { showToast(t('toast_afrimoney_not_supported'), 3500); return; }
+                    ussdCode = `*161*1*6*1*${z}#`;
+                } else if (selectedProvider === "QMoney") {
+                    const z = getOrangeZCode();
+                    if (z === '0') { showToast(t('toast_qmoney_not_supported'), 3500); return; }
+                    ussdCode = `*144*3*${z}#`;
+                } else if (selectedProvider === "WBMoney") {
+                    const z = getOrangeZCode();
+                    if (z === '0') { showToast(t('toast_wbmoney_not_supported'), 3500); return; }
+                    ussdCode = `#144*4*${z}#`;
+                } else { showToast(t('toast_provider_not_configured'), 3000); return; }
+            } else {
+                if (selectedProvider === "Orange Money") {
+                    if (selectedRole === 'agent') {
+                        if (cleanPhone.length !== 6) { showToast(t('toast_agent_6_digits'), 3500); return; }
+                        ussdCode = `#144*2*2*${cleanPhone}*${totalFixed}*0000#`;
+                    } else if (selectedRole === 'customer') {
+                        if (cleanPhone.length !== 9) { showToast(t('toast_customer_9_digits'), 3500); return; }
+                        ussdCode = `#144*2*1*${cleanPhone}*${totalFixed}*0000#`;
+                    } else {
+                        ussdCode = `#144*2*3*${cleanPhone}*${totalFixed}*0000#`;
+                    }
+                } else if (selectedProvider === "Afrimoney") {
+                    ussdCode = `#144*${cleanPhone}*${totalFixed}*0000#`;
+                } else if (selectedProvider === "QMoney") {
+                    ussdCode = `*144*3*${cleanPhone}*${totalFixed}*0000#`;
+                } else if (selectedProvider === "WBMoney") {
+                    ussdCode = `#144*4*${cleanPhone}*${totalFixed}*0000#`;
+                } else {
+                    ussdCode = `#144*2*2*${cleanPhone}*${totalFixed}*0000#`;
+                }
+            }
+
+            if (!ussdCode) { showToast('⚠️ Could not generate USSD code.', 3000); return; }
+            const roleName = selectedRole === 'agent' ? t('agent') : (selectedRole === 'customer' ? t('customer') : t(
+                'other'));
+            showToast(`📞 ${selectedProvider || 'Mobile Money'} (${roleName}) – ${action}`, 2800);
+            const link = document.createElement('a');
+            link.href = `tel:${ussdCode}`;
+            link.click();
+            showToast(t('toast_initiated', { action }), 4000);
+            navigator.clipboard.writeText(ussdCode).then(() => {
+                showToast('✅ USSD code copied to clipboard!', 2000);
+            }).catch(() => {});
+        }
+
+        function openProviderModal() {
+            const amount = parseFloat(amountInput.value);
+            const maxLimit = parseFloat(amountInput.max);
+            if (maxLimit > 0 && amount > maxLimit) {
+                showToast(`❌ Amount exceeds collateral limit of ${maxLimit}`, 3000);
+                return;
+            }
+            document.getElementById('providerModal').style.display = 'flex';
+        }
+
+        function onProviderSelected(provider) {
+            selectedProvider = provider;
+            document.getElementById('providerModal').style.display = 'none';
+            document.getElementById('roleModalTitle').innerHTML = `${provider} – ${t('select_type')}`;
+            document.getElementById('roleModal').style.display = 'flex';
+        }
+
+        function onRoleSelected(role) {
+            selectedRole = role;
+            document.getElementById('roleModal').style.display = 'none';
+            const roleText = role === 'agent' ? t('agent') : (role === 'customer' ? t('customer') : t('other'));
+            document.getElementById('selectedRoleDisplay').innerHTML = `${t('select_type')}: ${roleText}`;
+            document.getElementById('modalProviderName').innerText = selectedProvider;
+            document.getElementById('actionModal').style.display = 'flex';
+        }
+
+        function getOrangeZCode() { const sel = document.getElementById('countryCodeSelect'); const parts = sel.value.split(
+                '|'); return parts[5] || '0'; }
+
+        function getAfrimoneyZCode() { const sel = document.getElementById('countryCodeSelect'); const parts = sel.value
+                .split('|'); return parts[6] || '0'; }
+
+        // ================================================================
+        // CHAT SYSTEM
+        // ================================================================
+        const chatToggleBtn = document.getElementById('chatToggleBtn');
+        const chatWindow = document.getElementById('chatWindow');
+        const chatCloseBtn = document.getElementById('chatCloseBtn');
+        const chatMessagesEl = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+        const chatSendBtn = document.getElementById('chatSendBtn');
+        const chatContactEl = document.getElementById('chatContact');
+        const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
+        const chatSidebar = document.getElementById('chatSidebar');
+
+        function getChatId(contact, type) {
+            if (type === 'individual') return 'user_' + contact.id;
+            else if (type === 'group') return 'group_' + contact.id;
+            return null;
+        }
+
+        function getMessagesForChat(chatId) {
+            if (!chatMessagesStore[chatId]) chatMessagesStore[chatId] = [];
+            return chatMessagesStore[chatId];
+        }
+
+        function addMessageToChat(chatId, msg) {
+            if (!chatMessagesStore[chatId]) chatMessagesStore[chatId] = [];
+            chatMessagesStore[chatId].push(msg);
+            saveChatMessages();
+        }
+
+        function addMessage(type, content, time = new Date(), chatIdOverride = null) {
+            let chatId = chatIdOverride;
+            if (!chatId) {
+                if (activeChatId && activeChatType) { chatId = getChatId({ id: activeChatId }, activeChatType); } else {
+                    chatId = 'general'; }
+            }
+            const msgObj = { type, content, time: time.toISOString(), sender: currentUser ? currentUser.name : 'Guest' };
+            addMessageToChat(chatId, msgObj);
+            renderMessages(chatId);
+        }
+
+        function renderMessages(chatId) {
+            const messages = getMessagesForChat(chatId);
+            chatMessagesEl.innerHTML = '';
+            messages.forEach(msg => {
+                const msgDiv = document.createElement('div');
+                msgDiv.className = 'chat-message';
+                if (msg.type === 'sent') msgDiv.classList.add('sent');
+                const timeStr = new Date(msg.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                let content = msg.content;
+                if (typeof content === 'string' && (content.trim().startsWith('<video') || content.trim().startsWith(
+                        '<audio') || content.trim().startsWith('<div') || content.trim().startsWith(
+                        '<span'))) {
+                    msgDiv.innerHTML = content + ` <span class="msg-time">${timeStr}</span>`;
+                } else {
+                    msgDiv.innerHTML = `<span>${content}</span> <span class="msg-time">${timeStr}</span>`;
+                }
+                updateMessageStyles(msgDiv);
+                chatMessagesEl.appendChild(msgDiv);
+            });
+            chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight;
+        }
+
+        function setActiveChat(id, type) {
+            activeChatId = id;
+            activeChatType = type;
+            const chatId = getChatId({ id }, type);
+            renderMessages(chatId);
+            if (type === 'individual') {
+                const allContacts = getAllContacts();
+                const user = allContacts.find(u => u.id === id);
+                chatContactEl.innerText = user ? user.name : t('select_contact');
+            } else if (type === 'group') {
+                const group = groups.find(g => g.id === id);
+                chatContactEl.innerText = group ? '👥 ' + group.name : t('select_contact');
+            }
+            document.querySelectorAll('.sidebar-user, .sidebar-group').forEach(el => el.classList.remove('active'));
+            if (type === 'individual') {
+                const userEl = chatSidebar.querySelector(`.sidebar-user[data-id="${id}"]`);
+                if (userEl) userEl.classList.add('active');
+            } else if (type === 'group') {
+                const groupEl = chatSidebar.querySelector(`.sidebar-group[data-id="${id}"]`);
+                if (groupEl) groupEl.classList.add('active');
+            }
+        }
+
+        function positionChatWindow() {
+            const header = document.querySelector('.live-header');
+            const flagsStrip = document.getElementById('flagsStrip');
+            if (!header) return;
+            const rect = header.getBoundingClientRect();
+            const chatWindowEl = document.getElementById('chatWindow');
+            if (chatWindowEl) {
+                chatWindowEl.style.top = rect.bottom + 'px';
+                chatWindowEl.style.bottom = '0px';
+                chatWindowEl.style.height = 'auto';
+                if (chatWindowEl.classList.contains('open')) {
+                    flagsStrip.classList.add('hidden');
+                } else { flagsStrip.classList.remove('hidden'); }
+                const toggleBtn = document.getElementById('chatToggleBtn');
+                if (toggleBtn) { toggleBtn.style.display = chatWindowEl.classList.contains('open') ? 'none' : 'flex'; }
+            }
+        }
+
+        function toggleChat() {
+            const isOpen = chatWindow.classList.toggle('open');
+            if (isOpen) {
+                loadGroups();
+                loadChatMessages();
+                loadRegisteredUsers();
+                const contacts = getAllContacts();
+                if (contacts.length > 0) {
+                    let firstUser = contacts.find(u => u.id === 'current');
+                    if (!firstUser) firstUser = contacts[0];
+                    if (firstUser) setActiveChat(firstUser.id, 'individual');
+                } else { chatContactEl.innerText = t('select_contact'); }
+                applyChatSettings();
+                renderSidebar();
+                positionChatWindow();
+                document.getElementById('chatToggleBtn').style.display = 'none';
+                initChatControls();
+            } else {
+                document.getElementById('chatToggleBtn').style.display = 'flex';
+                document.getElementById('flagsStrip').classList.remove('hidden');
+            }
+        }
+
+        function sendMessage() {
+            try {
+                const text = chatInput.value.trim();
+                if (!text) return;
+                if (!activeChatId || !activeChatType) { showToast(t('select_contact')); return; }
+                const chatId = getChatId({ id: activeChatId }, activeChatType);
+                addMessage('sent', text, new Date(), chatId);
+                chatInput.value = '';
+                if (activeChatType === 'individual') {
+                    setTimeout(() => { addMessage('received', 'Thanks! 😊', new Date(), chatId); }, 1000);
+                } else {
+                    const group = groups.find(g => g.id === activeChatId);
+                    if (group && group.members.length > 0) {
+                        const otherMember = group.members.find(m => m !== currentUser?.name);
+                        if (otherMember) {
+                            setTimeout(() => { addMessage('received', `👍 (from ${otherMember})`, new Date(),
+                                chatId); }, 1200);
+                        }
+                    }
+                }
+            } catch (e) { console.warn('sendMessage error:', e); }
+        }
+
+        function applyChatSettingsToMessages() {
+            const messages = chatMessagesEl.querySelectorAll('.chat-message');
+            messages.forEach(msg => {
+                msg.style.fontSize = chatSettings.fontSize + 'px';
+                msg.style.filter = `brightness(${chatSettings.brightness})`;
+            });
+        }
+
+        // ================================================================
+        // CHAT CONTROLS – fixed with proper event handling
+        // ================================================================
+        function initChatControls() {
+            try {
+                const sendBtn = document.getElementById('chatSendBtn');
+                const chatInputEl = document.getElementById('chatInput');
+                if (sendBtn) {
+                    sendBtn.removeEventListener('click', sendMessage);
+                    sendBtn.addEventListener('click', sendMessage);
+                }
+                if (chatInputEl) {
+                    chatInputEl.removeEventListener('keydown', chatInputKeyHandler);
+                    chatInputEl.addEventListener('keydown', chatInputKeyHandler);
+                }
+
+                const btnIds = [
+                    'chatVideoRecordBtn', 'chatAudioRecordBtn', 'chatVideoBtn',
+                    'chatAudioBtn', 'chatProfilePicBtn', 'chatVoiceCallBtn',
+                    'chatVideoCallBtn'
+                ];
+                btnIds.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        el.removeEventListener('click', getChatHandler(id));
+                        el.addEventListener('click', getChatHandler(id));
+                    }
+                });
+
+                const bgColor = document.getElementById('chatBgColor');
+                if (bgColor) {
+                    bgColor.removeEventListener('input', bgColorHandler);
+                    bgColor.addEventListener('input', bgColorHandler);
+                }
+                const fontDec = document.getElementById('fontDecrease');
+                if (fontDec) {
+                    fontDec.removeEventListener('click', fontDecreaseHandler);
+                    fontDec.addEventListener('click', fontDecreaseHandler);
+                }
+                const fontInc = document.getElementById('fontIncrease');
+                if (fontInc) {
+                    fontInc.removeEventListener('click', fontIncreaseHandler);
+                    fontInc.addEventListener('click', fontIncreaseHandler);
+                }
+                const brightness = document.getElementById('brightnessSlider');
+                if (brightness) {
+                    brightness.removeEventListener('input', brightnessHandler);
+                    brightness.addEventListener('input', brightnessHandler);
+                }
+                const reset = document.getElementById('resetChatSettings');
+                if (reset) {
+                    reset.removeEventListener('click', resetSettingsHandler);
+                    reset.addEventListener('click', resetSettingsHandler);
+                }
+                const sidebarToggle = document.getElementById('sidebarToggleBtn');
+                if (sidebarToggle) {
+                    sidebarToggle.removeEventListener('click', sidebarToggleHandler);
+                    sidebarToggle.addEventListener('click', sidebarToggleHandler);
+                }
+                console.log('✅ Chat controls initialized.');
+            } catch (e) {
+                console.warn('initChatControls error:', e);
+            }
+        }
+
+        function chatInputKeyHandler(e) {
+            if (e.key === 'Enter') sendMessage();
+        }
+
+        function getChatHandler(id) {
+            const handlers = {
+                'chatVideoRecordBtn': function() {
+                    try {
+                        showToast(t('toast_recording_video'));
+                        setTimeout(() => {
+                            const chatId = getChatId({ id: activeChatId }, activeChatType);
+                            addMessage('sent', '🎥 Video recording (simulated)', new Date(), chatId);
+                            showToast(t('toast_video_recorded'));
+                        }, 2000);
+                    } catch (e) { console.warn('chatVideoRecordBtn error:', e); }
+                },
+                'chatAudioRecordBtn': function() {
+                    try {
+                        showToast(t('toast_recording_audio'));
+                        setTimeout(() => {
+                            const chatId = getChatId({ id: activeChatId }, activeChatType);
+                            addMessage('sent', '🎤 Audio recording (simulated)', new Date(), chatId);
+                            showToast(t('toast_audio_recorded'));
+                        }, 2000);
+                    } catch (e) { console.warn('chatAudioRecordBtn error:', e); }
+                },
+                'chatVideoBtn': function() {
+                    try {
+                        showToast(t('toast_video_uploaded'));
+                        const chatId = getChatId({ id: activeChatId }, activeChatType);
+                        addMessage('sent', '📹 Video uploaded (simulated)', new Date(), chatId);
+                    } catch (e) { console.warn('chatVideoBtn error:', e); }
+                },
+                'chatAudioBtn': function() {
+                    try {
+                        showToast(t('toast_audio_uploaded'));
+                        const chatId = getChatId({ id: activeChatId }, activeChatType);
+                        addMessage('sent', '🎵 Audio uploaded (simulated)', new Date(), chatId);
+                    } catch (e) { console.warn('chatAudioBtn error:', e); }
+                },
+                'chatProfilePicBtn': function() {
+                    try {
+                        showToast(t('toast_pic_updated'));
+                        const chatId = getChatId({ id: activeChatId }, activeChatType);
+                        addMessage('sent', '🖼️ Profile picture updated', new Date(), chatId);
+                    } catch (e) { console.warn('chatProfilePicBtn error:', e); }
+                },
+                'chatVoiceCallBtn': function() {
+                    try {
+                        showToast('📞 Voice call (simulated)');
+                        const chatId = getChatId({ id: activeChatId }, activeChatType);
+                        addMessage('system', '📞 Voice call initiated.', new Date(), chatId);
+                    } catch (e) { console.warn('chatVoiceCallBtn error:', e); }
+                },
+                'chatVideoCallBtn': function() {
+                    try {
+                        showToast('📹 Video call (simulated)');
+                        const chatId = getChatId({ id: activeChatId }, activeChatType);
+                        addMessage('system', '📹 Video call started.', new Date(), chatId);
+                    } catch (e) { console.warn('chatVideoCallBtn error:', e); }
+                }
+            };
+            return handlers[id] || function() {};
+        }
+
+        function bgColorHandler(e) {
+            try {
+                chatSettings.bgColor = this.value;
+                document.getElementById('chatMessages').style.backgroundColor = chatSettings.bgColor;
+                saveChatSettings();
+            } catch (e) { console.warn('bgColorHandler error:', e); }
+        }
+
+        function fontDecreaseHandler() {
+            try {
+                chatSettings.fontSize = Math.max(10, chatSettings.fontSize - 2);
+                applyChatSettingsToMessages();
+                saveChatSettings();
+            } catch (e) { console.warn('fontDecreaseHandler error:', e); }
+        }
+
+        function fontIncreaseHandler() {
+            try {
+                chatSettings.fontSize = Math.min(24, chatSettings.fontSize + 2);
+                applyChatSettingsToMessages();
+                saveChatSettings();
+            } catch (e) { console.warn('fontIncreaseHandler error:', e); }
+        }
+
+        function brightnessHandler(e) {
+            try {
+                chatSettings.brightness = parseFloat(this.value);
+                applyChatSettingsToMessages();
+                saveChatSettings();
+            } catch (e) { console.warn('brightnessHandler error:', e); }
+        }
+
+        function resetSettingsHandler() {
+            try {
+                chatSettings = { bgColor: '#f5f8fa', fontSize: 14, brightness: 1.0 };
+                document.getElementById('chatBgColor').value = chatSettings.bgColor;
+                document.getElementById('brightnessSlider').value = chatSettings.brightness;
+                applyChatSettingsToMessages();
+                document.getElementById('chatMessages').style.backgroundColor = chatSettings.bgColor;
+                saveChatSettings();
+                showToast(t('reset'));
+            } catch (e) { console.warn('resetSettingsHandler error:', e); }
+        }
+
+        function sidebarToggleHandler() {
+            try {
+                document.getElementById('chatSidebar').classList.toggle('open');
+            } catch (e) { console.warn('sidebarToggleHandler error:', e); }
+        }
+
+        // ================================================================
+        // GROUPS & SIDEBAR
+        // ================================================================
+        function renderSidebar() {
+            const sidebar = document.getElementById('chatSidebar');
+            if (!sidebar) return;
+            sidebar.innerHTML = '';
+            const groupsTitle = document.createElement('div');
+            groupsTitle.className = 'sidebar-section-title';
+            groupsTitle.innerHTML = `${t('groups')} <button class="add-group-btn" id="addGroupBtn">+</button>`;
+            sidebar.appendChild(groupsTitle);
+            if (groups.length === 0) {
+                const empty = document.createElement('div');
+                empty.style.cssText = 'padding: 6px 10px; font-size: 0.7rem; color: #95a5a6; text-align: center;';
+                empty.innerText = t('no_groups');
+                sidebar.appendChild(empty);
+            } else {
+                groups.forEach(group => {
+                    const div = document.createElement('div');
+                    div.className = 'sidebar-group';
+                    div.setAttribute('data-id', group.id);
+                    if (activeChatId === group.id && activeChatType === 'group') div.classList.add('active');
+                    const avatar = document.createElement('div');
+                    avatar.className = 'avatar';
+                    avatar.innerText = '👥';
+                    const info = document.createElement('div');
+                    info.className = 'group-info';
+                    const nameSpan = document.createElement('div');
+                    nameSpan.className = 'name';
+                    nameSpan.innerText = group.name + ` (${group.members.length})`;
+                    info.appendChild(nameSpan);
+                    const actions = document.createElement('div');
+                    actions.className = 'group-actions';
+                    if (group.creator === currentUser?.name) {
+                        const manageBtn = document.createElement('button');
+                        manageBtn.innerText = '⚙️';
+                        manageBtn.title = t('manage_group');
+                        manageBtn.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            openGroupManageModal(group);
+                        });
+                        actions.appendChild(manageBtn);
+                    }
+                    div.appendChild(avatar);
+                    div.appendChild(info);
+                    div.appendChild(actions);
+                    div.addEventListener('click', () => {
+                        setActiveChat(group.id, 'group');
+                        if (window.innerWidth <= 400) chatSidebar.classList.remove('open');
+                    });
+                    sidebar.appendChild(div);
+                });
+            }
+            const contactsTitle = document.createElement('div');
+            contactsTitle.className = 'sidebar-section-title';
+            contactsTitle.innerText = t('contacts');
+            sidebar.appendChild(contactsTitle);
+            const allContacts = getAllContacts();
+            if (allContacts.length === 0) {
+                const empty = document.createElement('div');
+                empty.style.cssText = 'padding: 6px 10px; font-size: 0.7rem; color: #95a5a6; text-align: center;';
+                empty.innerText = t('no_contacts');
+                sidebar.appendChild(empty);
+            } else {
+                allContacts.forEach(user => {
+                    const div = document.createElement('div');
+                    div.className = 'sidebar-user';
+                    div.setAttribute('data-id', user.id);
+                    if (activeChatId === user.id && activeChatType === 'individual') div.classList.add(
+                    'active');
+                    const avatar = document.createElement('div');
+                    avatar.className = 'avatar';
+                    if (user.avatarDataURL) {
+                        const img = document.createElement('img');
+                        img.src = user.avatarDataURL;
+                        img.alt = user.name;
+                        avatar.appendChild(img);
+                    } else { avatar.innerText = user.emoji || '👤'; }
+                    const info = document.createElement('div');
+                    info.className = 'user-info';
+                    const nameSpan = document.createElement('div');
+                    nameSpan.className = 'name';
+                    nameSpan.innerText = user.name;
+                    info.appendChild(nameSpan);
+                    const status = document.createElement('div');
+                    status.className = 'status ' + (user.status === 'online' ? 'online' : 'offline');
+                    div.appendChild(avatar);
+                    div.appendChild(info);
+                    div.appendChild(status);
+                    div.addEventListener('click', () => {
+                        setActiveChat(user.id, 'individual');
+                        if (window.innerWidth <= 400) chatSidebar.classList.remove('open');
+                    });
+                    sidebar.appendChild(div);
+                });
+            }
+            const addBtn = document.getElementById('addGroupBtn');
+            if (addBtn) {
+                addBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    document.getElementById('groupNameInput').value = '';
+                    populateGroupMemberList();
+                    document.getElementById('groupCreateModal').style.display = 'flex';
+                });
+            }
+        }
+
+        function populateGroupMemberList() {
+            const container = document.getElementById('memberListContainer');
+            const contacts = getAllContacts();
+            let html = '';
+            contacts.forEach(user => {
+                if (user.id === 'current') return;
+                html += `
+                    <div class="group-member-item">
+                        <input type="checkbox" value="${user.id}" data-name="${user.name}" data-emoji="${user.emoji || '👤'}">
+                        <span class="member-avatar">${user.emoji || '👤'}</span>
+                        <span class="member-name">${user.name}</span>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+            container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                cb.addEventListener('change', updateMemberCounter);
+            });
+            updateMemberCounter();
+        }
+
+        function updateMemberCounter() {
+            const checked = document.querySelectorAll('#memberListContainer input:checked').length;
+            document.getElementById('memberCounter').innerText = `${checked} ${t('select_members')}`;
+        }
+
+        function openGroupManageModal(group) {
+            const modal = document.getElementById('groupManageModal');
+            document.getElementById('groupManageTitle').innerText = `${t('manage_group')}: ${group.name}`;
+            let body =
+                `<p style="font-size:0.9rem; margin-bottom:6px;"><strong>${t('agent')}:</strong> ${group.creator}</p>`;
+            body +=
+                `<p style="font-size:0.78rem; color:#1c6e8f; margin-bottom:3px;"><strong>${t('contacts')} (${group.members.length}/25):</strong></p>`;
+            body += `<div style="max-height:180px; overflow-y:auto;">`;
+            group.members.forEach(m => {
+                body +=
+                    `<div style="display:flex; justify-content:space-between; padding:3px 0; border-bottom:1px solid #eee; font-size:0.85rem;">
+                            <span>${m}</span>
+                            ${group.creator === currentUser?.name && m !== group.creator ? `<button class="remove-member-btn" style="background:none; border:none; color:#e74c3c; cursor:pointer; font-size:0.78rem;" data-member="${m}" data-group="${group.id}">✕</button>` : ''}
+                        </div>`;
+            });
+            body += `</div>`;
+            if (group.creator === currentUser?.name) {
+                body +=
+                    `<div style="margin-top:6px; display:flex; gap:4px;"><button id="addMemberToGroupBtn" class="action-btn" style="flex:1; font-size:0.72rem; padding:5px;">+ ${t('contacts')}</button></div>`;
+            }
+            document.getElementById('groupManageBody').innerHTML = body;
+            modal.style.display = 'flex';
+            document.querySelectorAll('.remove-member-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const member = this.dataset.member;
+                    const groupId = this.dataset.group;
+                    const targetGroup = groups.find(g => g.id === groupId);
+                    if (targetGroup && targetGroup.creator === currentUser?.name) {
+                        targetGroup.members = targetGroup.members.filter(m => m !== member);
+                        saveGroups();
+                        showToast(t('toast_removed_member', { member }));
+                        openGroupManageModal(targetGroup);
+                        renderSidebar();
+                        if (activeChatId === groupId && activeChatType === 'group') {
+                            const chatId = getChatId({ id: groupId }, 'group');
+                            renderMessages(chatId);
+                        }
+                    }
+                });
+            });
+            const addMemberBtn = document.getElementById('addMemberToGroupBtn');
+            if (addMemberBtn) {
+                addMemberBtn.addEventListener('click', function() {
+                    const available = getAllContacts().filter(c => !group.members.includes(c.name));
+                    if (available.length === 0) { showToast(t('toast_no_more_contacts')); return; }
+                    const names = available.map(c => c.name).join(', ');
+                    const newMember = prompt(`${t('contacts')} (${names})`);
+                    if (newMember) {
+                        const found = available.find(c => c.name.toLowerCase() === newMember.toLowerCase());
+                        if (found) {
+                            group.members.push(found.name);
+                            saveGroups();
+                            showToast(t('toast_added_member', { member: found.name }));
+                            openGroupManageModal(group);
+                            renderSidebar();
+                            const chatId = getChatId({ id: group.id }, 'group');
+                            addMessage('system', `${found.name} was added to the group.`, new Date(),
+                            chatId);
+                        } else { showToast(t('toast_user_not_found')); }
+                    }
+                });
+            }
+        }
+
+        // ================================================================
+        // FLAGS, MODALS, INFO, SOCIAL, AUTH, SUBMIT
+        // ================================================================
+        function showInfoModal(title, body) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalBody').innerHTML = body;
+            document.getElementById('infoModal').style.display = 'flex';
+        }
+
+        function renderHeaderFlags() {
+            const grid = document.getElementById('headerFlagGrid');
+            if (!grid) return;
+            grid.innerHTML = '';
+            SUPPORTED_COUNTRY_FLAGS.forEach(flag => {
+                const span = document.createElement('span');
+                span.className = 'flag-icon';
+                span.textContent = flag;
+                span.setAttribute('data-flag', flag);
+                span.title = 'Click to select';
+                grid.appendChild(span);
+            });
+        }
+
+        function setupFlagClickHandlers() {
+            document.querySelectorAll('#headerFlagGrid .flag-icon').forEach(el => {
+                el.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const flagEmoji = this.textContent.trim();
+                    if (!flagEmoji) return;
+                    const options = document.getElementById('countryCodeSelect').options;
+                    for (let i = 0; i < options.length; i++) {
+                        if (options[i].text.startsWith(flagEmoji)) {
+                            document.getElementById('countryCodeSelect').selectedIndex = i;
+                            if (isLocalMode) setLocalMode(false);
+                            else {
+                                const parts = document.getElementById('countryCodeSelect').value.split(
+                                '|');
+                                currentCountryData = { gstRate: parseFloat(parts[4]), currency: parts[
+                                        2], flag: parts[3] };
+                                document.getElementById('gstRateLabel').innerText = currentCountryData
+                                    .gstRate;
+                                document.getElementById('currencySymbol').innerText = currentCountryData
+                                    .currency;
+                                document.getElementById('flagEmoji').innerText = currentCountryData
+                                    .flag;
+                                computeCharges();
+                            }
+                            const name = options[i].text.split('(')[0].trim();
+                            showToast(t('toast_selected_country', { name }), 1600);
+                            return;
+                        }
+                    }
+                    showToast(t('toast_country_not_supported', { flag: flagEmoji }), 2000);
+                });
+            });
+        }
+
+        function setupEmojiPicker() {
+            const grid = document.getElementById('emojiPickerGrid');
+            if (!grid) return;
+            const options = grid.querySelectorAll('.emoji-option');
+            options.forEach(el => {
+                el.addEventListener('click', function() {
+                    options.forEach(o => o.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedEmoji = this.getAttribute('data-emoji') || '👤';
+                });
+            });
+            const first = grid.querySelector('.emoji-option');
+            if (first) { first.classList.add('selected');
+                selectedEmoji = first.getAttribute('data-emoji') || '👤'; }
+        }
+
+        // ================================================================
+        // RECEIPT MODAL
+        // ================================================================
+        let lastReceiptData = null;
+
+        function showReceiptModal(receiptData) {
+            lastReceiptData = receiptData;
+            const body = document.getElementById('receiptBody');
+            const badge = document.getElementById('receiptBadge');
+            badge.textContent = '🔹 CONFIRMED';
+
+            const lines = [
+                { label: t('receipt_tx_id'), value: receiptData.txId },
+                { label: t('receipt_date'), value: receiptData.date },
+                { label: t('receipt_type'), value: receiptData.mode },
+                { label: t('receipt_sender'), value: receiptData.sender },
+                { label: '👤 Agent', value: receiptData.agent },
+                { label: '👥 Client', value: receiptData.client || 'N/A' },
+                { label: t('receipt_base'), value: receiptData.currency + ' ' + receiptData.baseAmount },
+                { label: t('receipt_charge'), value: receiptData.currency + ' ' + receiptData.charge },
+                { label: t('receipt_gst', { rate: receiptData.gstRate }), value: receiptData.currency + ' ' + receiptData
+                        .gst },
+                { label: t('receipt_total'), value: receiptData.currency + ' ' + receiptData.total, total: true }
+            ];
+
+            let html = '';
+            lines.forEach(line => {
+                const cls = line.total ? 'receipt-row total' : 'receipt-row';
+                html += `<div class="${cls}"><span class="label">${line.label}</span><span class="value">${line.value}</span></div>`;
+            });
+            body.innerHTML = html;
+
+            const clientPhone = document.getElementById('clientPhone').value.trim();
+            const clientName = document.getElementById('clientName').value.trim() || 'Client';
+            const agentPhone = document.getElementById('agentPhone').value.trim();
+            const agentName = document.getElementById('agentName').value.trim() || 'Agent';
+
+            const receiptText = [
+                '🔹 AFRI·PAY RECEIPT 🔹',
+                '─────────────────',
+                `${t('receipt_tx_id')} ${receiptData.txId}`,
+                `${t('receipt_date')} ${receiptData.date}`,
+                `${t('receipt_type')} ${receiptData.mode}`,
+                `${t('receipt_sender')} ${receiptData.sender}`,
+                `👤 Agent: ${receiptData.agent}`,
+                `👥 Client: ${receiptData.client || 'N/A'}`,
+                `${t('receipt_base')} ${receiptData.currency} ${receiptData.baseAmount}`,
+                `${t('receipt_charge')} ${receiptData.currency} ${receiptData.charge}`,
+                `${t('receipt_gst', { rate: receiptData.gstRate })} ${receiptData.currency} ${receiptData.gst}`,
+                `${t('receipt_total')} ${receiptData.currency} ${receiptData.total}`,
+                '─────────────────',
+                '✨ Thank you for choosing AfriPay!',
+                '🔗 Powered by WeBine Financial Technologies'
+            ].join('\n');
+
+            const encodedText = encodeURIComponent(receiptText);
+
+            const clientWhatsAppBtn = document.getElementById('receiptShareClientWhatsApp');
+            if (clientPhone) {
+                const clientClean = clientPhone.replace(/\D/g, '');
+                clientWhatsAppBtn.onclick = () => {
+                    const url = `https://wa.me/${clientClean}?text=${encodedText}`;
+                    window.open(url, '_blank');
+                    showToast(`📤 Receipt sent to ${clientName} via WhatsApp`, 2500);
+                };
+                clientWhatsAppBtn.style.display = 'flex';
+            } else {
+                clientWhatsAppBtn.style.display = 'none';
+            }
+
+            const agentWhatsAppBtn = document.getElementById('receiptShareAgentWhatsApp');
+            if (agentPhone) {
+                const agentClean = agentPhone.replace(/\D/g, '');
+                agentWhatsAppBtn.onclick = () => {
+                    const url = `https://wa.me/${agentClean}?text=${encodedText}`;
+                    window.open(url, '_blank');
+                    showToast(`📤 Receipt sent to ${agentName} via WhatsApp`, 2500);
+                };
+                agentWhatsAppBtn.style.display = 'flex';
+            } else {
+                agentWhatsAppBtn.style.display = 'none';
+            }
+
+            const clientSMSBtn = document.getElementById('receiptShareClientSMS');
+            if (clientPhone) {
+                const clientClean = clientPhone.replace(/\D/g, '');
+                clientSMSBtn.onclick = () => {
+                    const url = `sms:${clientClean}?body=${encodedText}`;
+                    window.location.href = url;
+                    showToast(`📤 Receipt sent to ${clientName} via SMS`, 2500);
+                };
+                clientSMSBtn.style.display = 'flex';
+            } else {
+                clientSMSBtn.style.display = 'none';
+            }
+
+            const agentSMSBtn = document.getElementById('receiptShareAgentSMS');
+            if (agentPhone) {
+                const agentClean = agentPhone.replace(/\D/g, '');
+                agentSMSBtn.onclick = () => {
+                    const url = `sms:${agentClean}?body=${encodedText}`;
+                    window.location.href = url;
+                    showToast(`📤 Receipt sent to ${agentName} via SMS`, 2500);
+                };
+                agentSMSBtn.style.display = 'flex';
+            } else {
+                agentSMSBtn.style.display = 'none';
+            }
+
+            document.getElementById('receiptModal').style.display = 'flex';
+        }
+
+        // ================================================================
+        // AGREEMENT ENGINE – with proper canvas setup and modal controls
+        // ================================================================
         function populateAgreementModal() {
             const body = document.getElementById('agreementBody');
             const now = new Date();
             const dateStr = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
-            // Get current form values
             const bizName = document.getElementById('agentBusinessName').value.trim() || '___';
             const ownerName = document.getElementById('agentOwnerName').value.trim() || '___';
 
@@ -3464,31 +5485,31 @@
 
             function startDraw(e) {
                 e.preventDefault();
-                isDrawing = true;
+                isAgreementDrawing = true;
                 const pos = getPos(e);
-                lastX = pos.x;
-                lastY = pos.y;
+                agreementLastX = pos.x;
+                agreementLastY = pos.y;
             }
 
             function draw(e) {
                 e.preventDefault();
-                if (!isDrawing) return;
+                if (!isAgreementDrawing) return;
                 const pos = getPos(e);
                 ctx.beginPath();
-                ctx.moveTo(lastX, lastY);
+                ctx.moveTo(agreementLastX, agreementLastY);
                 ctx.lineTo(pos.x, pos.y);
                 ctx.strokeStyle = '#0a2b3c';
                 ctx.lineWidth = 2.5;
                 ctx.lineCap = 'round';
                 ctx.lineJoin = 'round';
                 ctx.stroke();
-                lastX = pos.x;
-                lastY = pos.y;
+                agreementLastX = pos.x;
+                agreementLastY = pos.y;
             }
 
             function endDraw(e) {
                 e.preventDefault();
-                isDrawing = false;
+                isAgreementDrawing = false;
             }
 
             canvas.addEventListener('mousedown', startDraw);
@@ -3499,11 +5520,9 @@
             canvas.addEventListener('touchmove', draw);
             canvas.addEventListener('touchend', endDraw);
 
-            // Clear initial
             ctx.fillStyle = 'white';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Resize handler
             function resizeCanvas() {
                 const rect = canvas.getBoundingClientRect();
                 const w = rect.width || 400;
@@ -3538,221 +5557,868 @@
         function updateAgreementStatus(signed) {
             agreementSigned = signed;
             const statusText = document.getElementById('agreementStatusText');
-            const statusDisplay = document.getElementById('agreementStatusDisplay');
             if (signed) {
                 statusText.textContent = 'Signed ✅';
                 statusText.style.color = '#27ae60';
-                statusDisplay.style.display = 'block';
             } else {
                 statusText.textContent = 'Not Signed';
                 statusText.style.color = '#e74c3c';
-                statusDisplay.style.display = 'block';
             }
         }
 
-        // Agreement Modal Controls
-        document.getElementById('viewAgreementBtn').addEventListener('click', function() {
-            // Check if form has required fields filled
-            const bizName = document.getElementById('agentBusinessName').value.trim();
-            const ownerName = document.getElementById('agentOwnerName').value.trim();
-            if (!bizName || !ownerName) {
-                showToast('⚠️ Please fill in Business Name and Owner Name first.', 3000);
-                return;
-            }
-            populateAgreementModal();
-            document.getElementById('agreementModal').style.display = 'flex';
-            document.getElementById('agreementAgreeBtn').disabled = true;
-            document.getElementById('agreementStatus').innerHTML = '✍️ Please draw your signature above.';
-            // Reset signature if already signed
-            if (agreementSigned) {
-                agreementSigned = false;
-                agreementSignatureDataURL = null;
-                updateAgreementStatus(false);
-                document.getElementById('agreementSigPreview').classList.remove('show');
-                document.getElementById('agreementSigPreview').src = '';
-                clearAgreementSignature();
-            }
-        });
-
-        document.getElementById('agreementAgreeBtn').addEventListener('click', function() {
-            if (!agreementSignatureDataURL) {
-                showToast('⚠️ Please provide your signature first.', 2000);
-                return;
-            }
-            // Finalize agreement
-            agreementSigned = true;
-            updateAgreementStatus(true);
-            document.getElementById('agreementStatus').innerHTML = '✅ Agreement signed successfully!';
-            this.disabled = true;
-            this.textContent = '✅ Signed';
-            this.classList.add('agreed');
-            showToast('✅ Agent Agreement signed successfully!', 2500);
-
-            // Store agreement data in a global for registration
-            window._agentAgreement = {
-                signed: true,
-                signature: agreementSignatureDataURL,
-                signedDate: new Date().toISOString(),
-                agentName: document.getElementById('agentOwnerName').value.trim(),
-                businessName: document.getElementById('agentBusinessName').value.trim()
-            };
-
-            // Close modal after short delay
-            setTimeout(() => {
-                document.getElementById('agreementModal').style.display = 'none';
-            }, 800);
-        });
-
-        document.getElementById('agreementCloseBtn').addEventListener('click', function() {
-            document.getElementById('agreementModal').style.display = 'none';
-        });
-
-        document.getElementById('agreementModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                this.style.display = 'none';
-            }
-        });
-
         // ================================================================
-        // MODIFIED AGENT REGISTRATION SUBMIT – checks agreement
+        // INITIALIZE PERMANENT AGENTS (from screenshots)
         // ================================================================
-        // Override the original submit to also require agreement signed
-        const originalSubmitAgent = document.getElementById('submitAgentRegistrationBtn');
-        // Remove any existing listeners and add our own
-        const newSubmitBtn = document.getElementById('submitAgentRegistrationBtn');
-        newSubmitBtn.addEventListener('click', function(e) {
-            e.preventDefault();
+        function initializePermanentAgents() {
+            const agents = [
+                { id: 'agent_ajj_fouta_enterprise', businessName: 'AJJ Fouta Enterprise', ownerName: 'Amine Juldeh Jalloh',
+                    address: 'Marcel Parawol, Parawol, Lelouma', regNumber: 'AJJ4325FE', type: 'Service',
+                    idType: 'National ID', idNumber: 'SLX34GC', mobileMoney: '624592014', countryCode: '+224',
+                    password: 'IP57PX', collateralLimit: 9500, currency: 'GNF' },
+                { id: 'agent_nusweb_biz', businessName: 'NUSWEB Biz', ownerName: 'Amine Mohamed Jalloh',
+                    address: '2e Rokupa Estates, Rokupa Freetown', regNumber: 'NUS432WB', type: 'Service',
+                    idType: "Voter's Card", idNumber: '654783', mobileMoney: '73671566', countryCode: '+232',
+                    password: 'X9YXBH', collateralLimit: 10000, currency: 'SLL' },
+                { id: 'agent_tw_senegal_guinee', businessName: 'TW-SENEGAL GUINEE', ownerName: 'Telly Wurrie Jalloh',
+                    address: 'Lice Limamu Lai I, Dakar, Senegal', regNumber: 'TWS5674G', type: 'Service',
+                    idType: 'Other', idNumber: '1020304', mobileMoney: '772605278', countryCode: '+221',
+                    password: 'YT4V19', collateralLimit: 6500, currency: 'XOF' },
+                { id: 'agent_i_b_diallo_design', businessName: 'I B DIALLO Design', ownerName: 'I B Diallo',
+                    address: 'Makoto Conakry, Guinee', regNumber: 'IBD08976D', type: 'Service', idType: 'Other',
+                    idNumber: '9080707', mobileMoney: '624591952', countryCode: '+224', password: 'C26N84',
+                    collateralLimit: 8000, currency: 'GNF' }
+            ];
 
-            // Check if agreement is signed
-            if (!agreementSigned || !window._agentAgreement) {
-                document.getElementById('agentRegError').textContent = '❌ Please read and sign the Agent Agreement first.';
-                document.getElementById('agentRegSuccess').textContent = '';
-                showToast('⚠️ You must sign the Agent Agreement before registering.', 3000);
-                // Open the agreement modal
-                document.getElementById('viewAgreementBtn').click();
-                return;
-            }
+            agents.forEach(a => {
+                let existing = registeredUsers.find(u => u.businessName === a.businessName || u.id === a.id);
+                if (!existing) {
+                    const agentData = {
+                        id: a.id,
+                        name: a.businessName + ' (' + a.ownerName + ')',
+                        businessName: a.businessName,
+                        businessAddress: a.address,
+                        regNumber: a.regNumber,
+                        businessType: a.type,
+                        ownerName: a.ownerName,
+                        idType: a.idType,
+                        idNumber: a.idNumber,
+                        mobileMoney: a.mobileMoney,
+                        countryCode: a.countryCode,
+                        password: a.password,
+                        collateralAmount: 0,
+                        collateralLimit: a.collateralLimit,
+                        currency: a.currency,
+                        approved: true,
+                        role: 'agent',
+                        isAgent: true,
+                        registeredAt: new Date().toISOString(),
+                        idImageDataURL: null,
+                        logoDataURL: null,
+                        agreement: null
+                    };
+                    registeredUsers.push(agentData);
+                    saveRegisteredUsers();
+                    connectedUsers.push({
+                        id: agentData.id,
+                        name: agentData.name,
+                        phone: a.mobileMoney,
+                        emoji: '🏢',
+                        status: 'online',
+                        avatarDataURL: null,
+                        isAgent: true,
+                        role: 'agent',
+                        agentData: agentData,
+                        logoDataURL: null
+                    });
+                } else {
+                    const connected = connectedUsers.find(u => u.id === existing.id);
+                    if (!connected) {
+                        connectedUsers.push({
+                            id: existing.id,
+                            name: existing.name,
+                            phone: existing.mobileMoney || existing.phone,
+                            emoji: '🏢',
+                            status: 'online',
+                            avatarDataURL: null,
+                            isAgent: true,
+                            role: 'agent',
+                            agentData: existing,
+                            logoDataURL: null
+                        });
+                    } else {
+                        if (!connected.agentData) connected.agentData = existing;
+                        connected.isAgent = true;
+                        connected.role = 'agent';
+                    }
+                }
+            });
 
-            // Check if all required fields are filled
-            const bizName = document.getElementById('agentBusinessName').value.trim();
-            const bizAddress = document.getElementById('agentBusinessAddress').value.trim();
-            const regNumber = document.getElementById('agentRegNumber').value.trim();
-            const ownerName = document.getElementById('agentOwnerName').value.trim();
-            const idNumber = document.getElementById('agentIdNumber').value.trim();
-            const mobileMoney = document.getElementById('agentMobileMoney').value.trim();
-            const password = document.getElementById('agentPassword').value.trim();
-            const idImage = document.getElementById('agentIdImage').files[0];
-            const logoFile = document.getElementById('agentLogoImage').files[0];
-            const collateralAmount = parseFloat(document.getElementById('collateralAmount').value) || 0;
-
-            if (!bizName || !bizAddress || !regNumber || !ownerName || !idNumber || !mobileMoney || !idImage || !password) {
-                document.getElementById('agentRegError').textContent = t('agent_reg_error');
-                document.getElementById('agentRegSuccess').textContent = '';
-                return;
-            }
-            if (password.length !== 6) {
-                document.getElementById('agentRegError').textContent = '❌ Password must be exactly 6 characters';
-                document.getElementById('agentRegSuccess').textContent = '';
-                return;
-            }
-            if (collateralAmount === 0) {
-                document.getElementById('agentRegError').textContent = '❌ Please generate collateral first';
-                document.getElementById('agentRegSuccess').textContent = '';
-                return;
-            }
-
-            // Check for duplicate business name
-            const existing = registeredUsers.some(u => u.businessName && u.businessName.toLowerCase() === bizName
-                .toLowerCase());
-            if (existing) {
-                document.getElementById('agentRegError').textContent = t('agent_already_exists');
-                document.getElementById('agentRegSuccess').textContent = '';
-                return;
-            }
-
-            document.getElementById('agentRegError').textContent = '';
-            document.getElementById('agentRegSuccess').textContent = t('agent_reg_loading');
-
-            // Get logo data URL
-            let logoDataURL = null;
-            const logoPreview = document.getElementById('agentLogoPreviewContainer');
-            if (logoPreview.style.display !== 'none') {
-                const img = logoPreview.querySelector('img');
-                if (img && img.src && !img.src.startsWith('#')) {
-                    logoDataURL = img.src;
+            if (!selectedAgentId) {
+                const agentsList = getAgents();
+                if (agentsList.length > 0) {
+                    selectAgent(agentsList[0].id);
                 }
             }
-
-            // Build agent data including agreement
-            const agentData = {
-                id: 'agent_' + Date.now(),
-                name: bizName + ' (' + ownerName + ')',
-                businessName: bizName,
-                businessAddress: bizAddress,
-                regNumber: regNumber,
-                businessType: document.getElementById('agentBusinessType').value,
-                ownerName: ownerName,
-                idType: document.getElementById('agentIdType').value,
-                idNumber: idNumber,
-                mobileMoney: mobileMoney,
-                countryCode: document.getElementById('agentCountryCode').value,
-                password: password,
-                collateralAmount: collateralAmount,
-                collateralLimit: parseInt(document.getElementById('agentCollateralLimit').value) || 5000,
-                currency: 'GNF',
-                approved: false,
-                role: 'agent',
-                isAgent: true,
-                registeredAt: new Date().toISOString(),
-                idImageDataURL: null,
-                logoDataURL: logoDataURL,
-                agreement: window._agentAgreement || null
-            };
-
-            const reader = new FileReader();
-            reader.onload = function(ev) {
-                agentData.idImageDataURL = ev.target.result;
-                registeredUsers.push(agentData);
-                saveRegisteredUsers();
-                connectedUsers.push({
-                    id: agentData.id,
-                    name: agentData.name,
-                    phone: mobileMoney,
-                    emoji: '🏢',
-                    status: 'online',
-                    avatarDataURL: null,
-                    isAgent: true,
-                    role: 'agent',
-                    agentData: agentData,
-                    logoDataURL: logoDataURL
-                });
-                document.getElementById('agentRegSuccess').textContent = t('agent_reg_success', { name: bizName });
-                document.getElementById('agentRegError').textContent = '';
-                renderAgentDropdown();
-                renderSidebar();
-                selectAgent(agentData.id);
-                showToast(t('agent_reg_success', { name: bizName }), 3000);
-                setTimeout(() => {
-                    document.getElementById('agentRegistrationModal').style.display = 'none';
-                    document.getElementById('agentRegSuccess').textContent = '';
-                }, 1500);
-            };
-            reader.readAsDataURL(idImage);
-        });
+        }
 
         // ================================================================
-        // OTHER FUNCTIONS – (unchanged from original)
-        // ================================================================
-        // ... (all other functions remain exactly as in the original)
-
-        // ================================================================
-        // INITIALIZATION – (unchanged)
+        // MAIN INITIALIZATION – FIXED: all event listeners attached in DOMContentLoaded
         // ================================================================
         document.addEventListener('DOMContentLoaded', function() {
-            // ... (all original initialization code)
-            // Additional: update agreement status display
-            updateAgreementStatus(false);
-            console.log('✅ AfriPay initialized with Agreement Modal.');
+            try {
+                // --- 1. Attach ALL event listeners FIRST ---
+                // Login / Register / Logout
+                document.getElementById('loginBtn').onclick = function() {
+                    document.getElementById('loginError').innerHTML = '';
+                    document.getElementById('loginModal').style.display = 'flex';
+                };
+                document.getElementById('registerBtn').onclick = function() {
+                    document.getElementById('regError').innerText = '';
+                    document.getElementById('regSuccess').innerText = '';
+                    document.getElementById('registerModal').style.display = 'flex';
+                    const grid = document.getElementById('emojiPickerGrid');
+                    if (grid) {
+                        const first = grid.querySelector('.emoji-option');
+                        grid.querySelectorAll('.emoji-option').forEach(o => o.classList.remove('selected'));
+                        if (first) { first.classList.add('selected');
+                            selectedEmoji = first.getAttribute('data-emoji') || '👤'; }
+                    }
+                    document.getElementById('regUssdResult').style.display = 'none';
+                    document.getElementById('regProfilePreview').style.display = 'none';
+                    document.getElementById('regProfileImage').value = '';
+                };
+                document.getElementById('logoutBtn').onclick = function() {
+                    clearUserStorage();
+                    showToast(t('toast_logout'));
+                };
+
+                // Agent dropdown toggle
+                document.getElementById('agentDropdownBtn').addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const list = document.getElementById('agentDropdownList');
+                    list.classList.toggle('open');
+                    renderAgentDropdown();
+                });
+                document.addEventListener('click', function(e) {
+                    const container = document.querySelector('.agent-dropdown-container');
+                    if (container && !container.contains(e.target)) {
+                        document.getElementById('agentDropdownList').classList.remove('open');
+                    }
+                });
+
+                // Map button
+                document.getElementById('mapButton').onclick = function() {
+                    const address = currentUser?.address || '';
+                    const city = currentUser?.city || '';
+                    const country = currentUser?.country || '';
+                    openMapModal(address, city, country);
+                };
+
+                // Transaction ID buttons
+                document.getElementById('generateTxBtn').addEventListener('click', setGeneratedTransactionId);
+                document.getElementById('copyTxBtn').addEventListener('click', copyTransactionIdToClipboard);
+
+                // Modal close handlers
+                document.querySelectorAll('.close-modal').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const modal = this.closest('.modal');
+                        if (modal) {
+                            modal.style.display = 'none';
+                            if (modal.id === 'mapModal') {
+                                document.getElementById('mapIframe').src = '';
+                            }
+                        }
+                    });
+                });
+
+                // Provider, role, action modals
+                document.querySelectorAll('#providerModal .action-btn[data-provider]').forEach(btn =>
+                    btn.addEventListener('click', () => onProviderSelected(btn.getAttribute('data-provider')))
+                );
+                document.getElementById('roleButtons').querySelectorAll('[data-role]').forEach(btn =>
+                    btn.addEventListener('click', () => onRoleSelected(btn.getAttribute('data-role')))
+                );
+                document.getElementById('actionTransfer').addEventListener('click', function() {
+                    buildAndDialUSSD(t('transfer'));
+                    document.getElementById('actionModal').style.display = 'none';
+                    selectedRole = '';
+                    selectedProvider = '';
+                });
+                document.getElementById('actionPay').addEventListener('click', function() {
+                    buildAndDialUSSD(t('pay'));
+                    document.getElementById('actionModal').style.display = 'none';
+                    selectedRole = '';
+                    selectedProvider = '';
+                });
+                document.getElementById('actionCashout').addEventListener('click', function() {
+                    buildAndDialUSSD(t('cashout'));
+                    document.getElementById('actionModal').style.display = 'none';
+                    selectedRole = '';
+                    selectedProvider = '';
+                });
+
+                // Main MM button
+                document.getElementById('mainMmBtn').addEventListener('click', function() {
+                    if (parseFloat(amountInput.value) <= 0) { showToast(t('toast_enter_amount')); return; }
+                    if (!document.getElementById('agentName').value.trim()) { showToast('⚠️ Please select an agent first.'); return; }
+                    openProviderModal();
+                });
+
+                // Main form submit
+                document.getElementById('mainForm').addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    try {
+                        const senderName = document.getElementById('senderName').value.trim();
+                        const senderPhone = document.getElementById('senderPhone').value.trim();
+                        const agentName = document.getElementById('agentName').value.trim();
+                        const agentPhone = document.getElementById('agentPhone').value.trim();
+                        const clientName = document.getElementById('clientName').value.trim();
+                        const clientPhone = document.getElementById('clientPhone').value.trim();
+
+                        if (!senderName || !senderPhone || !agentName) {
+                            showToast('❌ Please fill Sender and Agent fields.');
+                            return;
+                        }
+
+                        const amount = parseFloat(amountInput.value) || 0;
+                        const maxLimit = parseFloat(amountInput.max);
+                        if (maxLimit > 0 && amount > maxLimit) {
+                            showToast(`❌ Amount exceeds collateral limit of ${maxLimit}`, 3000);
+                            return;
+                        }
+
+                        ensureTransactionId();
+                        const charge = amount * 0.01;
+                        const gstRate = isLocalMode ? 0 : currentCountryData.gstRate;
+                        const gst = charge * (gstRate / 100);
+                        const total = amount + charge + gst;
+                        const currency = isLocalMode ? "Local" : currentCountryData.currency;
+                        const txId = document.getElementById('transactionId').value.trim();
+                        const dateStr = document.getElementById('currentDate').innerText + " " + document.getElementById(
+                            'currentTime').innerText;
+
+                        const receiptData = {
+                            txId,
+                            date: dateStr,
+                            mode: isLocalMode ? "Local" : "International",
+                            sender: `${senderName} (${senderPhone})`,
+                            agent: `${agentName} (${agentPhone})`,
+                            client: clientName ? `${clientName} (${clientPhone})` : 'N/A',
+                            baseAmount: amount.toFixed(2),
+                            charge: charge.toFixed(2),
+                            gstRate: gstRate,
+                            gst: gst.toFixed(2),
+                            total: total.toFixed(2),
+                            currency: currency
+                        };
+
+                        showReceiptModal(receiptData);
+
+                        const payload = {
+                            sender_name: senderName,
+                            sender_phone: senderPhone,
+                            sender_location: document.getElementById('senderLocation').value.trim(),
+                            amount: amount.toFixed(2),
+                            transfer_charge: charge.toFixed(2),
+                            gst_rate: gstRate,
+                            gst_amount: gst.toFixed(2),
+                            total_debit: total.toFixed(2),
+                            currency: currency,
+                            agent_name: agentName,
+                            agent_phone: agentPhone,
+                            client_name: clientName || 'N/A',
+                            client_phone: clientPhone || 'N/A',
+                            transfer_mode: isLocalMode ? "Local" : "International",
+                            transaction_id: txId,
+                            timestamp: dateStr,
+                            user: currentUser?.name || "Guest",
+                            collateral_limit: maxLimit > 0 ? maxLimit : 'N/A'
+                        };
+
+                        const btn = document.getElementById('submitBtn'),
+                            orig = btn.innerText;
+                        btn.innerText = t('submit') + "...";
+                        btn.disabled = true;
+                        try {
+                            const res = await fetch('https://formspree.io/f/mgoqlvlo', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(payload)
+                            });
+                            if (res.ok) { showToast(t('toast_receipt_sent'), 3500); } else { showToast(t(
+                                    'toast_formspree_error'), 3500); }
+                        } catch (err) { showToast(t('toast_network_error'), 3500); } finally {
+                            btn.innerText = orig;
+                            btn.disabled = false;
+                        }
+                    } catch (err) {
+                        showToast('❌ Submit error: ' + err.message, 3000);
+                    }
+                });
+
+                // Add client
+                document.getElementById('addClientBtnHeader').addEventListener('click', function() {
+                    document.getElementById('newClientName').value = '';
+                    document.getElementById('newClientPhone').value = '';
+                    document.getElementById('addClientError').textContent = '';
+                    document.getElementById('addClientModal').style.display = 'flex';
+                });
+                document.getElementById('saveClientBtn').addEventListener('click', function() {
+                    const name = document.getElementById('newClientName').value.trim();
+                    const phone = document.getElementById('newClientPhone').value.trim();
+                    if (!name) { document.getElementById('addClientError').textContent =
+                            '❌ Please enter a client name.'; return; }
+                    if (!phone) { document.getElementById('addClientError').textContent =
+                            '❌ Please enter a client phone number.'; return; }
+                    const newId = 'client_' + Date.now();
+                    connectedUsers.push({
+                        id: newId,
+                        name: name,
+                        phone: phone,
+                        emoji: '👤',
+                        status: 'online',
+                        avatarDataURL: null
+                    });
+                    registeredUsers.push({ id: newId, name, phone, emoji: '👤', avatarDataURL: null });
+                    saveRegisteredUsers();
+                    document.getElementById('clientName').value = name;
+                    document.getElementById('clientPhone').value = phone;
+                    document.getElementById('clientSectionTitle').style.display = 'block';
+                    document.getElementById('clientFieldsRow').style.display = 'grid';
+                    showToast(`✅ Client "${name}" added!`, 2000);
+                    document.getElementById('addClientModal').style.display = 'none';
+                    document.getElementById('addClientError').textContent = '';
+                    renderSidebar();
+                });
+
+                // Info modals
+                document.getElementById('aboutAppBtn').onclick = () => showInfoModal(t('about'), t('about_body'));
+                document.getElementById('aboutDevBtn').onclick = () => showInfoModal(t('dev'), t('dev_body'));
+                document.getElementById('contactBtn').onclick = () => showInfoModal(t('contact'), t('contact_body'));
+                document.getElementById('subscribeBtn').onclick = () => document.getElementById('subscribeModal').style
+                    .display = 'flex';
+                document.getElementById('submitSubscribeBtn').onclick = function() {
+                    const email = document.getElementById('subEmail').value;
+                    if (email) { showToast(t('toast_subscribed'));
+                        document.getElementById('subscribeModal').style.display = 'none'; }
+                };
+
+                // Social icons
+                document.getElementById('whatsappBtn').onclick = () => window.open('https://wa.me/23276436811',
+                '_blank');
+                document.getElementById('facebookBtn').onclick = () => window.open('https://facebook.com/afripay',
+                    '_blank');
+                document.getElementById('instagramBtn').onclick = () => window.open('https://instagram.com/afripay',
+                    '_blank');
+                document.getElementById('youtubeBtn').onclick = () => window.open('https://youtube.com/@afripay',
+                    '_blank');
+                document.getElementById('webineBtn').onclick = () => window.open('https://webine.com/afripay',
+                '_blank');
+
+                // Admin dashboard trigger
+                const dashboardTrigger = document.getElementById('dashboardTrigger');
+                if (dashboardTrigger) {
+                    dashboardTrigger.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        openAdminAuth();
+                    });
+                }
+                document.getElementById('adminLogoutBtn').addEventListener('click', function() {
+                    setAdminLoggedIn(false);
+                    document.getElementById('dashboardModal').style.display = 'none';
+                    showToast(t('admin_logout'), 1500);
+                });
+
+                // Generate password and collateral
+                document.getElementById('generatePasswordBtn').addEventListener('click', function() {
+                    const password = generateAlphanumericPassword(6);
+                    document.getElementById('agentPassword').value = password;
+                    document.getElementById('agentPasswordHint').textContent = '✅ Password generated: ' + password;
+                    document.getElementById('agentPasswordHint').style.color = '#27ae60';
+                    showToast('🔑 Password generated: ' + password, 3000);
+                });
+                document.getElementById('generateCollateralBtn').addEventListener('click', function() {
+                    const mobileMoney = document.getElementById('agentMobileMoney').value.trim();
+                    const countryCode = document.getElementById('agentCountryCode').value;
+                    const errorEl = document.getElementById('collateralError');
+                    const displayEl = document.getElementById('collateralUssdDisplay');
+                    if (!mobileMoney) { errorEl.textContent = t('agent_collateral_error');
+                        displayEl.style.display = 'none'; return; }
+                    errorEl.textContent = '';
+                    const collateralLimit = parseInt(document.getElementById('agentCollateralLimit').value) || 0;
+                    if (collateralLimit <= 0) { errorEl.textContent = '❌ Please select a valid collateral limit.';
+                        displayEl.style.display = 'none'; return; }
+                    const amount = collateralLimit;
+                    currentCollateralAmount = amount;
+                    document.getElementById('collateralAmount').value = amount;
+                    const cleanPhone = mobileMoney.replace(/\D/g, '');
+                    const ussdCode = `#144*2*2*${cleanPhone}*${amount}*0000#`;
+                    displayEl.textContent = ussdCode;
+                    displayEl.style.display = 'block';
+                    showToast(`🔒 Collateral USSD generated for ${amount}`, 4000);
+                });
+
+                // Register agent button
+                document.getElementById('registerAgentBtn').addEventListener('click', function() {
+                    document.getElementById('agentRegError').textContent = '';
+                    document.getElementById('agentRegSuccess').textContent = '';
+                    document.getElementById('agentBusinessName').value = '';
+                    document.getElementById('agentBusinessAddress').value = '';
+                    document.getElementById('agentRegNumber').value = '';
+                    document.getElementById('agentOwnerName').value = '';
+                    document.getElementById('agentIdNumber').value = '';
+                    document.getElementById('agentMobileMoney').value = '';
+                    document.getElementById('agentPassword').value = '';
+                    document.getElementById('agentPasswordHint').textContent =
+                        'Click Generate to create a 6-character alphanumeric password';
+                    document.getElementById('agentPasswordHint').style.color = '#666';
+                    document.getElementById('agentIdPreview').style.display = 'none';
+                    document.getElementById('agentIdPreview').src = '';
+                    document.getElementById('agentLogoPreviewContainer').style.display = 'none';
+                    document.getElementById('agentLogoPreviewContainer').querySelector('img').src = '';
+                    document.getElementById('agentLogoImage').value = '';
+                    document.getElementById('collateralUssdDisplay').style.display = 'none';
+                    document.getElementById('collateralUssdDisplay').textContent = '';
+                    document.getElementById('collateralError').textContent = '';
+                    document.getElementById('collateralAmount').value = '0';
+                    currentCollateralAmount = 0;
+                    document.getElementById('agentCollateralLimit').value = '5000';
+                    document.getElementById('agentRegistrationModal').style.display = 'flex';
+                    // Reset agreement status when opening
+                    agreementSigned = false;
+                    agreementSignatureDataURL = null;
+                    updateAgreementStatus(false);
+                    document.getElementById('agreementSigPreview').classList.remove('show');
+                    document.getElementById('agreementSigPreview').src = '';
+                    if (agreementCanvas && agreementCtx) {
+                        clearAgreementSignature();
+                    }
+                });
+
+                document.getElementById('closeAgentRegBtn').addEventListener('click', function() {
+                    document.getElementById('agentRegistrationModal').style.display = 'none';
+                    document.getElementById('registerModal').style.display = 'flex';
+                    document.getElementById('agentRegError').textContent = '';
+                    document.getElementById('agentRegSuccess').textContent = '';
+                });
+
+                // View Agreement button
+                document.getElementById('viewAgreementBtn').addEventListener('click', function() {
+                    const bizName = document.getElementById('agentBusinessName').value.trim();
+                    const ownerName = document.getElementById('agentOwnerName').value.trim();
+                    if (!bizName || !ownerName) {
+                        showToast('⚠️ Please fill in Business Name and Owner Name first.', 3000);
+                        return;
+                    }
+                    populateAgreementModal();
+                    document.getElementById('agreementModal').style.display = 'flex';
+                    document.getElementById('agreementAgreeBtn').disabled = true;
+                    document.getElementById('agreementStatus').innerHTML = '✍️ Please draw your signature above.';
+                    if (agreementSigned) {
+                        agreementSigned = false;
+                        agreementSignatureDataURL = null;
+                        updateAgreementStatus(false);
+                        document.getElementById('agreementSigPreview').classList.remove('show');
+                        document.getElementById('agreementSigPreview').src = '';
+                        clearAgreementSignature();
+                    }
+                });
+
+                // Agreement Agree button
+                document.getElementById('agreementAgreeBtn').addEventListener('click', function() {
+                    if (!agreementSignatureDataURL) {
+                        showToast('⚠️ Please provide your signature first.', 2000);
+                        return;
+                    }
+                    agreementSigned = true;
+                    updateAgreementStatus(true);
+                    document.getElementById('agreementStatus').innerHTML = '✅ Agreement signed successfully!';
+                    this.disabled = true;
+                    this.textContent = '✅ Signed';
+                    this.classList.add('agreed');
+                    showToast('✅ Agent Agreement signed successfully!', 2500);
+
+                    window._agentAgreement = {
+                        signed: true,
+                        signature: agreementSignatureDataURL,
+                        signedDate: new Date().toISOString(),
+                        agentName: document.getElementById('agentOwnerName').value.trim(),
+                        businessName: document.getElementById('agentBusinessName').value.trim()
+                    };
+
+                    setTimeout(() => {
+                        document.getElementById('agreementModal').style.display = 'none';
+                    }, 800);
+                });
+
+                document.getElementById('agreementCloseBtn').addEventListener('click', function() {
+                    document.getElementById('agreementModal').style.display = 'none';
+                });
+
+                document.getElementById('agreementModal').addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        this.style.display = 'none';
+                    }
+                });
+
+                // Submit Agent Registration (with agreement check)
+                document.getElementById('submitAgentRegistrationBtn').addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    // Check if agreement is signed
+                    if (!agreementSigned || !window._agentAgreement) {
+                        document.getElementById('agentRegError').textContent =
+                            '❌ Please read and sign the Agent Agreement first.';
+                        document.getElementById('agentRegSuccess').textContent = '';
+                        showToast('⚠️ You must sign the Agent Agreement before registering.', 3000);
+                        document.getElementById('viewAgreementBtn').click();
+                        return;
+                    }
+
+                    const bizName = document.getElementById('agentBusinessName').value.trim();
+                    const bizAddress = document.getElementById('agentBusinessAddress').value.trim();
+                    const regNumber = document.getElementById('agentRegNumber').value.trim();
+                    const ownerName = document.getElementById('agentOwnerName').value.trim();
+                    const idNumber = document.getElementById('agentIdNumber').value.trim();
+                    const mobileMoney = document.getElementById('agentMobileMoney').value.trim();
+                    const password = document.getElementById('agentPassword').value.trim();
+                    const idImage = document.getElementById('agentIdImage').files[0];
+                    const collateralAmount = parseFloat(document.getElementById('collateralAmount').value) || 0;
+
+                    if (!bizName || !bizAddress || !regNumber || !ownerName || !idNumber || !mobileMoney || !idImage ||
+                        !password) {
+                        document.getElementById('agentRegError').textContent = t('agent_reg_error');
+                        document.getElementById('agentRegSuccess').textContent = '';
+                        return;
+                    }
+                    if (password.length !== 6) {
+                        document.getElementById('agentRegError').textContent =
+                            '❌ Password must be exactly 6 characters';
+                        document.getElementById('agentRegSuccess').textContent = '';
+                        return;
+                    }
+                    if (collateralAmount === 0) {
+                        document.getElementById('agentRegError').textContent =
+                            '❌ Please generate collateral first';
+                        document.getElementById('agentRegSuccess').textContent = '';
+                        return;
+                    }
+
+                    const existing = registeredUsers.some(u => u.businessName && u.businessName.toLowerCase() === bizName
+                        .toLowerCase());
+                    if (existing) {
+                        document.getElementById('agentRegError').textContent = t('agent_already_exists');
+                        document.getElementById('agentRegSuccess').textContent = '';
+                        return;
+                    }
+
+                    document.getElementById('agentRegError').textContent = '';
+                    document.getElementById('agentRegSuccess').textContent = t('agent_reg_loading');
+
+                    let logoDataURL = null;
+                    const logoPreview = document.getElementById('agentLogoPreviewContainer');
+                    if (logoPreview.style.display !== 'none') {
+                        const img = logoPreview.querySelector('img');
+                        if (img && img.src && !img.src.startsWith('#')) {
+                            logoDataURL = img.src;
+                        }
+                    }
+
+                    const agentData = {
+                        id: 'agent_' + Date.now(),
+                        name: bizName + ' (' + ownerName + ')',
+                        businessName: bizName,
+                        businessAddress: bizAddress,
+                        regNumber: regNumber,
+                        businessType: document.getElementById('agentBusinessType').value,
+                        ownerName: ownerName,
+                        idType: document.getElementById('agentIdType').value,
+                        idNumber: idNumber,
+                        mobileMoney: mobileMoney,
+                        countryCode: document.getElementById('agentCountryCode').value,
+                        password: password,
+                        collateralAmount: collateralAmount,
+                        collateralLimit: parseInt(document.getElementById('agentCollateralLimit').value) || 5000,
+                        currency: 'GNF',
+                        approved: false,
+                        role: 'agent',
+                        isAgent: true,
+                        registeredAt: new Date().toISOString(),
+                        idImageDataURL: null,
+                        logoDataURL: logoDataURL,
+                        agreement: window._agentAgreement || null
+                    };
+
+                    const reader = new FileReader();
+                    reader.onload = function(ev) {
+                        agentData.idImageDataURL = ev.target.result;
+                        registeredUsers.push(agentData);
+                        saveRegisteredUsers();
+                        connectedUsers.push({
+                            id: agentData.id,
+                            name: agentData.name,
+                            phone: mobileMoney,
+                            emoji: '🏢',
+                            status: 'online',
+                            avatarDataURL: null,
+                            isAgent: true,
+                            role: 'agent',
+                            agentData: agentData,
+                            logoDataURL: logoDataURL
+                        });
+                        document.getElementById('agentRegSuccess').textContent = t('agent_reg_success', { name: bizName });
+                        document.getElementById('agentRegError').textContent = '';
+                        renderAgentDropdown();
+                        renderSidebar();
+                        selectAgent(agentData.id);
+                        showToast(t('agent_reg_success', { name: bizName }), 3000);
+                        setTimeout(() => {
+                            document.getElementById('agentRegistrationModal').style.display = 'none';
+                            document.getElementById('agentRegSuccess').textContent = '';
+                        }, 1500);
+                    };
+                    reader.readAsDataURL(idImage);
+                });
+
+                // Edit agent save
+                document.getElementById('saveEditAgentBtn').addEventListener('click', function() {
+                    try {
+                        const agentId = document.getElementById('editAgentId').value;
+                        const businessName = document.getElementById('editBusinessName').value.trim();
+                        const businessAddress = document.getElementById('editBusinessAddress').value.trim();
+                        const regNumber = document.getElementById('editRegNumber').value.trim();
+                        const mobileMoney = document.getElementById('editMobileMoney').value.trim();
+                        const password = document.getElementById('editPassword').value.trim();
+                        if (!businessName || !businessAddress || !regNumber || !mobileMoney || !password) {
+                            document.getElementById('editAgentError').textContent = t('edit_agent_error');
+                            document.getElementById('editAgentSuccess').textContent = '';
+                            return;
+                        }
+                        const agents = getAgents();
+                        const agent = agents.find(a => a.id === agentId);
+                        if (!agent) { document.getElementById('editAgentError').textContent =
+                                'Agent not found'; return; }
+                        const data = agent.agentData || agent;
+                        if (password !== data.password) {
+                            document.getElementById('editAgentError').textContent = t(
+                                'edit_agent_password_error');
+                            document.getElementById('editAgentSuccess').textContent = '';
+                            return;
+                        }
+                        data.businessName = businessName;
+                        data.businessAddress = businessAddress;
+                        data.regNumber = regNumber;
+                        data.mobileMoney = mobileMoney;
+                        data.phone = mobileMoney;
+                        const user = connectedUsers.find(u => u.id === agentId);
+                        if (user) { user.name = businessName + ' (' + data.ownerName + ')';
+                            user.phone = mobileMoney;
+                            user.agentData = data; }
+                        const regUser = registeredUsers.find(u => u.id === agentId);
+                        if (regUser) { regUser.businessName = businessName;
+                            regUser.businessAddress = businessAddress;
+                            regUser.regNumber = regNumber;
+                            regUser.mobileMoney = mobileMoney;
+                            regUser.phone = mobileMoney;
+                            regUser.name = businessName + ' (' + data.ownerName + ')'; }
+                        saveRegisteredUsers();
+                        document.getElementById('editAgentSuccess').textContent = t('edit_agent_success',
+                            { name: businessName });
+                        document.getElementById('editAgentError').textContent = '';
+                        renderAgentDropdown();
+                        renderSidebar();
+                        showToast(t('agent_updated', { name: businessName }), 2000);
+                        if (selectedAgentId === agentId) {
+                            document.getElementById('selectedAgentName').textContent = businessName + ' (' +
+                                data.ownerName + ')';
+                            document.getElementById('agentName').value = businessName + ' (' + data
+                                .ownerName + ')';
+                            let phoneDisplay = data.mobileMoney || '';
+                            if (data.countryCode && phoneDisplay && !phoneDisplay.startsWith(data
+                                    .countryCode)) {
+                                phoneDisplay = data.countryCode + ' ' + phoneDisplay;
+                            } else if (data.countryCode && !phoneDisplay) { phoneDisplay = data
+                                    .countryCode; }
+                            document.getElementById('agentPhone').value = phoneDisplay;
+                        }
+                        setTimeout(() => {
+                            document.getElementById('editAgentModal').style.display = 'none';
+                            document.getElementById('editAgentSuccess').textContent = '';
+                        }, 1200);
+                    } catch (err) {
+                        document.getElementById('editAgentError').textContent = '❌ Error: ' + err.message;
+                    }
+                });
+
+                // Group creation
+                document.getElementById('createGroupBtn').addEventListener('click', function() {
+                    try {
+                        const name = document.getElementById('groupNameInput').value.trim();
+                        if (!name) { showToast(t('toast_select_group_name')); return; }
+                        const selected = document.querySelectorAll('#memberListContainer input:checked');
+                        if (selected.length === 0) { showToast(t('toast_select_members')); return; }
+                        if (selected.length > 25) { showToast(t('toast_max_members')); return; }
+                        const members = Array.from(selected).map(cb => cb.dataset.name);
+                        if (currentUser && !members.includes(currentUser.name)) { members.unshift(currentUser
+                                .name); }
+                        const group = {
+                            id: 'group_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+                            name: name,
+                            creator: currentUser ? currentUser.name : 'Unknown',
+                            members: members,
+                            created: new Date().toISOString()
+                        };
+                        groups.push(group);
+                        saveGroups();
+                        document.getElementById('groupCreateModal').style.display = 'none';
+                        showToast(t('toast_group_created', { name, count: members.length }));
+                        renderSidebar();
+                        setActiveChat(group.id, 'group');
+                        const chatId = getChatId({ id: group.id }, 'group');
+                        addMessage('system', `👥 Group "${name}" created by ${group.creator}`, new Date(),
+                            chatId);
+                    } catch (err) {
+                        showToast('❌ Group creation error: ' + err.message, 3000);
+                    }
+                });
+
+                // Flag scroll
+                document.getElementById('flagScrollLeft').addEventListener('click', function() {
+                    document.getElementById('flagGridWrapper').scrollBy({ left: -150, behavior: 'smooth' });
+                });
+                document.getElementById('flagScrollRight').addEventListener('click', function() {
+                    document.getElementById('flagGridWrapper').scrollBy({ left: 150, behavior: 'smooth' });
+                });
+
+                // Do login
+                document.getElementById('doLoginBtn').addEventListener('click', function() {
+                    const name = document.getElementById('loginName').value.trim();
+                    const phone = document.getElementById('loginPhone').value.trim();
+                    if (name && phone) {
+                        if (loginUser(name, phone)) { document.getElementById('loginModal').style.display =
+                                'none'; }
+                    } else { document.getElementById('loginError').innerHTML = t('toast_login_error'); }
+                });
+
+                // Do register
+                document.getElementById('doRegisterBtn').addEventListener('click', async function() {
+                    const name = document.getElementById('regName').value.trim();
+                    const phone = document.getElementById('regPhone').value.trim();
+                    const address = document.getElementById('regAddress').value.trim();
+                    const city = document.getElementById('regCity').value.trim();
+                    const country = document.getElementById('regCountry').value;
+                    const language = document.getElementById('regLanguage').value;
+                    let avatarDataURL = null;
+                    const previewContainer = document.getElementById('regProfilePreview');
+                    if (previewContainer.style.display !== 'none') {
+                        const img = previewContainer.querySelector('img');
+                        if (img && img.src && !img.src.startsWith('#')) { avatarDataURL = img.src; }
+                    }
+                    const emoji = avatarDataURL ? '' : (selectedEmoji || '👤');
+                    const regData = { name, phone, address, city, country, language, emoji, avatarDataURL };
+                    if (regData.name && regData.phone && regData.city) { await registerUser(regData); } else { document
+                            .getElementById('regError').innerText = t('toast_register_error'); }
+                });
+
+                // Generate USSD in register
+                document.getElementById('regGenerateUssdBtn').addEventListener('click', function() {
+                    const phone = document.getElementById('regPhone').value.trim();
+                    const country = document.getElementById('regCountry').value;
+                    if (!phone) { showToast('⚠️ Please enter your phone number first.', 2500); return; }
+                    const clean = phone.replace(/\D/g, '');
+                    if (clean.length < 6) { showToast(
+                            '⚠️ Please enter a valid phone number (at least 6 digits).', 2500); return; }
+                    const amount = 100;
+                    let ussdCode = `#144*2*1*${clean}*${amount}*0000#`;
+                    document.getElementById('regUssdCode').textContent = ussdCode;
+                    document.getElementById('regUssdResult').style.display = 'flex';
+                    showToast(`📱 USSD code generated for ${country}`, 2000);
+                });
+                document.getElementById('regCopyUssdBtn').addEventListener('click', function() {
+                    const code = document.getElementById('regUssdCode').textContent;
+                    if (code) {
+                        navigator.clipboard.writeText(code).then(() => { showToast('✅ USSD code copied!',
+                            1500); }).catch(() => {
+                            const range = document.createRange();
+                            const selection = window.getSelection();
+                            const el = document.getElementById('regUssdCode');
+                            range.selectNodeContents(el);
+                            selection.removeAllRanges();
+                            selection.addRange(range);
+                            document.execCommand('copy');
+                            showToast('✅ USSD code copied!', 1500);
+                        });
+                    } else { showToast('⚠️ No code to copy.', 1500); }
+                });
+
+                // Receipt close
+                document.getElementById('receiptCloseBtn').addEventListener('click', function() {
+                    document.getElementById('receiptModal').style.display = 'none';
+                });
+                document.getElementById('receiptModal').addEventListener('click', function(e) {
+                    if (e.target === this) this.style.display = 'none';
+                });
+
+                // --- 2. Now run all setup functions ---
+                renderHeaderFlags();
+                setupFlagClickHandlers();
+                setupEmojiPicker();
+                loadLanguagePreference();
+                loadChatSettings();
+                loadRegisteredUsers();
+                initializePermanentAgents();
+                loadGroups();
+                loadChatMessages();
+                loadStoredUser();
+                renderSidebar();
+                positionChatWindow();
+                renderAgentDropdown();
+                translatePage();
+
+                // Timestamp update
+                updateDateTime();
+                setInterval(updateDateTime, 1000);
+
+                // Additional: ensure agent selection if none
+                if (!selectedAgentId) {
+                    const agents = getAgents();
+                    if (agents.length > 0) {
+                        selectAgent(agents[0].id);
+                    }
+                }
+
+                // Chat toggle
+                document.getElementById('chatToggleBtn').addEventListener('click', toggleChat);
+                document.getElementById('chatCloseBtn').addEventListener('click', function() {
+                    chatWindow.classList.remove('open');
+                    document.getElementById('chatToggleBtn').style.display = 'flex';
+                    document.getElementById('flagsStrip').classList.remove('hidden');
+                });
+
+                document.getElementById('sidebarToggleBtn').addEventListener('click', function() {
+                    document.getElementById('chatSidebar').classList.toggle('open');
+                });
+
+                // Initialize chat controls
+                initChatControls();
+
+                // Ensure brand trigger works
+                const brandTrigger = document.querySelector('#brandText #dashboardTrigger');
+                if (brandTrigger) {
+                    brandTrigger.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        openAdminAuth();
+                    });
+                }
+
+                // Update agreement status display
+                updateAgreementStatus(false);
+
+                console.log('✅ AfriPay initialized successfully.');
+            } catch (error) {
+                console.error('❌ AfriPay initialization error:', error);
+                showToast('⚠️ App loading error. Please refresh the page.', 5000);
+            }
         });
     </script>
 </body>
