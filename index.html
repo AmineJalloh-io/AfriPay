@@ -314,6 +314,23 @@
         .logout-btn:hover {
             background: rgba(255, 255, 255, 0.3);
         }
+        .edit-account-btn {
+            background: rgba(255, 255, 255, 0.18);
+            border: none;
+            padding: 3px 10px;
+            border-radius: 20px;
+            color: white;
+            cursor: pointer;
+            font-size: 0.7rem;
+            font-weight: 600;
+            transition: 0.2s;
+            height: 32px;
+            display: flex;
+            align-items: center;
+        }
+        .edit-account-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
         .connection-indicator {
             display: inline-flex;
             align-items: center;
@@ -326,7 +343,7 @@
             border: 1px solid rgba(0, 200, 0, 0.2);
             height: 32px;
         }
-        .connection-dot {
+        .connection-indicator .connection-dot {
             width: 8px;
             height: 8px;
             background: #2ecc71;
@@ -334,6 +351,9 @@
             display: inline-block;
             animation: pulse-dot 1.8s ease-in-out infinite;
             box-shadow: 0 0 6px rgba(46, 204, 113, 0.5);
+        }
+        .connection-indicator .connection-text {
+            display: none;
         }
         @keyframes pulse-dot {
             0%,
@@ -1657,6 +1677,7 @@
         .btn,
         .add-client-btn-header,
         .logout-btn,
+        .edit-account-btn,
         .map-btn,
         .auth-btn,
         .agent-dropdown-btn {
@@ -2751,6 +2772,36 @@
             color: #27ae60;
             font-weight: 700;
         }
+
+        /* ================================================================
+           EDIT ACCOUNT MODAL
+           ================================================================ */
+        #editAccountModal .modal-content {
+            max-width: 400px;
+            width: 90%;
+        }
+        #editAccountModal .input-group {
+            margin-bottom: 0.6rem;
+        }
+        #editAccountModal .input-group label {
+            font-size: 0.75rem;
+        }
+        #editAccountModal .input-group input,
+        #editAccountModal .input-group select {
+            height: 40px;
+            font-size: 0.85rem;
+            padding: 4px 10px;
+        }
+        #editAccountModal .emoji-grid {
+            grid-template-columns: repeat(6, 1fr);
+            gap: 3px;
+            margin: 5px 0 6px 0;
+        }
+        #editAccountModal .emoji-grid .emoji-option {
+            font-size: 1.3rem;
+            padding: 2px;
+            border-radius: 8px;
+        }
     </style>
 </head>
 <body>
@@ -2806,9 +2857,11 @@
                                 <img id="userAvatarImg" class="user-avatar-img" style="display:none;" alt="avatar" />
                             </span>
                             <span class="user-name-display" id="loggedUserName">User</span>
+                            <button class="edit-account-btn" id="editAccountBtn" data-i18n="edit_account">✏️ Edit</button>
                             <button class="logout-btn" id="logoutBtn" data-i18n="logout">Logout</button>
                             <span class="connection-indicator">
-                                <span class="connection-dot"></span> <span data-i18n="online">Online</span>
+                                <span class="connection-dot"></span>
+                                <span class="connection-text" data-i18n="online">Online</span>
                             </span>
                         </div>
                     </div>
@@ -3240,6 +3293,64 @@
         </div>
     </div>
 
+    <!-- Edit Account Modal -->
+    <div id="editAccountModal" class="modal">
+        <div class="modal-content">
+            <h3 data-i18n="edit_account_title">✏️ Edit Account</h3>
+            <div id="editAccountError" class="error-msg"></div>
+            <div id="editAccountSuccess" class="success-msg"></div>
+            <div class="input-group">
+                <label data-i18n="full_name">Full Name *</label>
+                <input type="text" id="editAccountName" placeholder="Full Name" />
+            </div>
+            <div class="input-group">
+                <label data-i18n="phone">Phone *</label>
+                <input type="tel" id="editAccountPhone" placeholder="Phone Number" />
+            </div>
+            <div class="input-group">
+                <label data-i18n="location">Address</label>
+                <input type="text" id="editAccountAddress" placeholder="Address" />
+            </div>
+            <div class="input-group">
+                <label data-i18n="location">City *</label>
+                <input type="text" id="editAccountCity" placeholder="City" />
+            </div>
+            <div class="input-group">
+                <label data-i18n="location">Country</label>
+                <select id="editAccountCountry">
+                    <option value="Sierra Leone">Sierra Leone</option>
+                    <option value="Nigeria">Nigeria</option>
+                    <option value="Ghana">Ghana</option>
+                    <option value="Kenya">Kenya</option>
+                    <option value="Liberia">Liberia</option>
+                    <option value="Senegal">Senegal</option>
+                    <option value="Guinea">Guinea</option>
+                </select>
+            </div>
+            <label style="font-size:0.78rem;font-weight:700;color:#1e3b4a;margin-top:3px;" data-i18n="choose_icon">Choose icon:</label>
+            <div class="emoji-grid" id="editEmojiPickerGrid">
+                <span class="emoji-option" data-emoji="👤">👤</span><span class="emoji-option" data-emoji="👨">👨</span>
+                <span class="emoji-option" data-emoji="👩">👩</span><span class="emoji-option" data-emoji="🧑">🧑</span>
+                <span class="emoji-option" data-emoji="👦">👦</span><span class="emoji-option" data-emoji="👧">👧</span>
+                <span class="emoji-option" data-emoji="🧒">🧒</span><span class="emoji-option" data-emoji="👨‍💻">👨‍💻</span>
+                <span class="emoji-option" data-emoji="👩‍💻">👩‍💻</span><span class="emoji-option" data-emoji="🧑‍💻">🧑‍💻</span>
+                <span class="emoji-option" data-emoji="👨‍🎓">👨‍🎓</span><span class="emoji-option" data-emoji="👩‍🎓">👩‍🎓</span>
+            </div>
+            <div style="margin-top:8px;">
+                <label style="font-size:0.78rem;font-weight:700;color:#1e3b4a;">Upload profile image:</label>
+                <input type="file" id="editProfileImage" accept="image/*" style="width:100%; padding:4px; border-radius:20px; border:1px solid #ddd; font-size:0.85rem; height:38px;" />
+                <div id="editProfilePreview" class="image-upload-preview" style="display:none;">
+                    <img src="#" alt="Profile preview" />
+                    <button type="button" id="editProfileRemove" class="remove-image-btn">✕ Remove</button>
+                </div>
+            </div>
+            <div class="action-buttons-row" style="margin-top:8px;">
+                <button class="action-btn green" id="saveEditAccountBtn" data-i18n="save">Save Changes</button>
+                <button class="action-btn close-modal" data-i18n="cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <!-- ============================================================
     CHAT
     ============================================================ -->
@@ -3492,6 +3603,9 @@
                 admin_register_disabled: 'Registration is disabled. Please login.',
                 switch_to_login: 'Already have an account? Login',
                 switch_to_register: 'No admin account? Register',
+                edit_account: '✏️ Edit',
+                edit_account_title: '✏️ Edit Account',
+                save: 'Save Changes',
             },
             fr: {
                 app_name: 'AfriPay',
@@ -3695,6 +3809,9 @@
                 admin_register_disabled: "L'inscription est désactivée. Veuillez vous connecter.",
                 switch_to_login: 'Déjà un compte ? Connectez-vous',
                 switch_to_register: 'Pas de compte admin ? Inscrivez-vous',
+                edit_account: '✏️ Modifier',
+                edit_account_title: '✏️ Modifier le compte',
+                save: 'Enregistrer',
             },
             ar: {
                 app_name: 'أفري باي',
@@ -3898,6 +4015,9 @@
                 admin_register_disabled: 'التسجيل معطل. الرجاء تسجيل الدخول.',
                 switch_to_login: 'لديك حساب بالفعل؟ تسجيل الدخول',
                 switch_to_register: 'ليس لديك حساب مدير؟ سجل',
+                edit_account: '✏️ تعديل',
+                edit_account_title: '✏️ تعديل الحساب',
+                save: 'حفظ التغييرات',
             },
             es: {
                 app_name: 'AfriPay',
@@ -4101,6 +4221,9 @@
                 admin_register_disabled: 'El registro está desactivado. Inicie sesión.',
                 switch_to_login: '¿Ya tienes cuenta? Inicia sesión',
                 switch_to_register: '¿No tienes cuenta de administrador? Regístrate',
+                edit_account: '✏️ Editar',
+                edit_account_title: '✏️ Editar cuenta',
+                save: 'Guardar cambios',
             }
         };
 
@@ -4225,6 +4348,12 @@
                 if (agentLogoLabel) agentLogoLabel.innerHTML = t('agent_logo') + ' <span class="required-star">*</span>';
                 const closeAgentRegBtn = document.getElementById('closeAgentRegBtn');
                 if (closeAgentRegBtn) closeAgentRegBtn.textContent = t('close');
+                const editAccountBtn = document.getElementById('editAccountBtn');
+                if (editAccountBtn) editAccountBtn.textContent = t('edit_account');
+                const editAccountTitle = document.querySelector('#editAccountModal h3');
+                if (editAccountTitle) editAccountTitle.textContent = t('edit_account_title');
+                const saveEditAccountBtn = document.getElementById('saveEditAccountBtn');
+                if (saveEditAccountBtn) saveEditAccountBtn.textContent = t('save');
                 renderSidebar();
                 renderBusinessStrip();
                 renderAgentDropdown();
@@ -4658,6 +4787,120 @@
             document.getElementById('editAgentError').textContent = '';
             document.getElementById('editAgentSuccess').textContent = '';
             document.getElementById('editAgentModal').style.display = 'flex';
+        }
+
+        // ================================================================
+        // EDIT ACCOUNT FUNCTIONS
+        // ================================================================
+        function openEditAccountModal() {
+            if (!currentUser) {
+                showToast(t('toast_login_first'), 2000);
+                return;
+            }
+            const modal = document.getElementById('editAccountModal');
+            document.getElementById('editAccountName').value = currentUser.name || '';
+            document.getElementById('editAccountPhone').value = currentUser.phone || '';
+            document.getElementById('editAccountAddress').value = currentUser.address || '';
+            document.getElementById('editAccountCity').value = currentUser.city || '';
+            document.getElementById('editAccountCountry').value = currentUser.country || 'Sierra Leone';
+            document.getElementById('editAccountError').textContent = '';
+            document.getElementById('editAccountSuccess').textContent = '';
+            document.getElementById('editProfilePreview').style.display = 'none';
+            document.getElementById('editProfilePreview').querySelector('img').src = '';
+            if (currentUser.avatarDataURL) {
+                const preview = document.getElementById('editProfilePreview');
+                preview.style.display = 'block';
+                preview.querySelector('img').src = currentUser.avatarDataURL;
+            }
+            // Set selected emoji
+            const grid = document.getElementById('editEmojiPickerGrid');
+            const options = grid.querySelectorAll('.emoji-option');
+            options.forEach(o => o.classList.remove('selected'));
+            let found = false;
+            options.forEach(o => {
+                if (o.getAttribute('data-emoji') === (currentUser.emoji || '👤')) {
+                    o.classList.add('selected');
+                    found = true;
+                }
+            });
+            if (!found) {
+                const first = grid.querySelector('.emoji-option');
+                if (first) first.classList.add('selected');
+            }
+            modal.style.display = 'flex';
+        }
+
+        function saveEditAccount() {
+            const name = document.getElementById('editAccountName').value.trim();
+            const phone = document.getElementById('editAccountPhone').value.trim();
+            const address = document.getElementById('editAccountAddress').value.trim();
+            const city = document.getElementById('editAccountCity').value.trim();
+            const country = document.getElementById('editAccountCountry').value;
+            const errorEl = document.getElementById('editAccountError');
+            const successEl = document.getElementById('editAccountSuccess');
+            errorEl.textContent = '';
+            successEl.textContent = '';
+
+            if (!name || !phone || !city) {
+                errorEl.textContent = t('toast_register_error');
+                return;
+            }
+
+            // Get selected emoji
+            const selected = document.querySelector('#editEmojiPickerGrid .emoji-option.selected');
+            const emoji = selected ? selected.getAttribute('data-emoji') : '👤';
+
+            // Get profile image
+            let avatarDataURL = currentUser.avatarDataURL || null;
+            const previewContainer = document.getElementById('editProfilePreview');
+            if (previewContainer.style.display !== 'none') {
+                const img = previewContainer.querySelector('img');
+                if (img && img.src && !img.src.startsWith('#')) {
+                    avatarDataURL = img.src;
+                }
+            }
+
+            // Update current user
+            currentUser.name = name;
+            currentUser.phone = phone;
+            currentUser.address = address;
+            currentUser.city = city;
+            currentUser.country = country;
+            currentUser.emoji = emoji;
+            currentUser.avatarDataURL = avatarDataURL;
+
+            // Update stored user
+            saveUserToStorage(currentUser);
+
+            // Update connected users
+            const existing = connectedUsers.find(u => u.id === 'current');
+            if (existing) {
+                existing.name = name;
+                existing.emoji = emoji;
+                existing.avatarDataURL = avatarDataURL;
+            }
+
+            // Update registered users
+            const regUser = registeredUsers.find(u => u.phone === currentUser.phone || u.name === currentUser.name);
+            if (regUser) {
+                regUser.name = name;
+                regUser.phone = phone;
+                regUser.emoji = emoji;
+                regUser.avatarDataURL = avatarDataURL;
+                regUser.city = city;
+                regUser.country = country;
+                regUser.address = address;
+            }
+            saveRegisteredUsers();
+
+            // Update UI
+            showLoggedInUI();
+            renderSidebar();
+            successEl.textContent = '✅ Account updated successfully!';
+            showToast('✅ Account updated successfully!', 2000);
+            setTimeout(() => {
+                document.getElementById('editAccountModal').style.display = 'none';
+            }, 1000);
         }
 
         // ================================================================
@@ -5841,6 +6084,18 @@
                 selectedEmoji = first.getAttribute('data-emoji') || '👤'; }
         }
 
+        function setupEditEmojiPicker() {
+            const grid = document.getElementById('editEmojiPickerGrid');
+            if (!grid) return;
+            const options = grid.querySelectorAll('.emoji-option');
+            options.forEach(el => {
+                el.addEventListener('click', function() {
+                    options.forEach(o => o.classList.remove('selected'));
+                    this.classList.add('selected');
+                });
+            });
+        }
+
         // ================================================================
         // RECEIPT MODAL
         // ================================================================
@@ -6294,6 +6549,38 @@
                     clearUserStorage();
                     showToast(t('toast_logout'));
                 };
+
+                // Edit Account button
+                document.getElementById('editAccountBtn').addEventListener('click', function() {
+                    openEditAccountModal();
+                });
+
+                // Save Edit Account
+                document.getElementById('saveEditAccountBtn').addEventListener('click', function() {
+                    saveEditAccount();
+                });
+
+                // Edit Account profile image preview
+                document.getElementById('editProfileImage').addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(ev) {
+                            const preview = document.getElementById('editProfilePreview');
+                            preview.style.display = 'block';
+                            preview.querySelector('img').src = ev.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+                document.getElementById('editProfileRemove').addEventListener('click', function() {
+                    document.getElementById('editProfilePreview').style.display = 'none';
+                    document.getElementById('editProfilePreview').querySelector('img').src = '';
+                    document.getElementById('editProfileImage').value = '';
+                });
+
+                // Setup edit emoji picker
+                setupEditEmojiPicker();
 
                 // Agent dropdown toggle
                 document.getElementById('agentDropdownBtn').addEventListener('click', function(e) {
