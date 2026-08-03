@@ -3016,6 +3016,24 @@
                 display: none;
             }
         }
+
+        /* ================================================================
+           ADD CLIENT MODAL - FIXED with full fields
+           ================================================================ */
+        #addClientModal .modal-content {
+            max-width: 420px;
+            width: 95%;
+        }
+        #addClientModal .double-row {
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+        }
+        @media (max-width: 480px) {
+            #addClientModal .double-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+        }
     </style>
 </head>
 <body>
@@ -3151,6 +3169,14 @@
                     <div class="input-group"><label id="clientNameLabel">Client Name *</label><input type="text" id="clientName" readonly /></div>
                     <div class="input-group"><label id="clientPhoneLabel">Client Phone *</label><input type="tel" id="clientPhone" readonly /></div>
                 </div>
+                <!-- Client details fields (populated from Add Client) -->
+                <div id="clientDetailsRow" style="display:none;">
+                    <div class="input-group"><label>Client Address</label><input type="text" id="clientAddress" readonly /></div>
+                    <div class="double-row">
+                        <div class="input-group"><label>Client City</label><input type="text" id="clientCity" readonly /></div>
+                        <div class="input-group"><label>Client Country</label><input type="text" id="clientCountry" readonly /></div>
+                    </div>
+                </div>
                 <div style="display:flex; align-items:center; gap:6px; margin-bottom:0.4rem; flex-wrap:wrap;">
                     <span style="font-size:0.7rem; color:#1c6e8f;">📋 Select an agent from the dropdown, or use <strong>Add Client</strong> to add a client</span>
                     <span id="slModeNote" class="sl-mode-note" style="display:none;">🌍 International Agent – Special USSD format</span>
@@ -3252,7 +3278,7 @@
     </div>
 
     <!-- ============================================================
-    MODALS (all IDs preserved)
+    MODALS (all IDs preserved + UPDATED Add Client Modal)
     ============================================================ -->
     <!-- Map Modal -->
     <div id="mapModal" class="modal"><div class="modal-content"><h3 data-i18n="map_title">📍 Your Location</h3><iframe id="mapIframe" allowfullscreen loading="lazy"></iframe><button class="action-btn close-modal" style="margin-top:10px;" data-i18n="close">Close</button></div></div>
@@ -3572,8 +3598,65 @@
         </div>
     </div>
 
-    <!-- Add Client Modal -->
-    <div id="addClientModal" class="modal"><div class="modal-content"><h3 data-i18n="add_client">Add Client</h3><div class="input-group"><label data-i18n="client_name">Client Name *</label><input type="text" id="newClientName" placeholder="Enter client name" style="height:42px;" /></div><div class="input-group"><label data-i18n="client_phone">Client Phone *</label><input type="tel" id="newClientPhone" placeholder="Enter phone number" style="height:42px;" /></div><div id="addClientError" class="error-msg"></div><div class="action-buttons-row"><button class="action-btn" id="saveClientBtn" data-i18n="save">Save Client</button><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div></div></div>
+    <!-- ================================================================
+    ADD CLIENT MODAL - FIXED with full fields (name, phone, address, city, country)
+    ================================================================ -->
+    <div id="addClientModal" class="modal">
+        <div class="modal-content">
+            <h3 data-i18n="add_client">➕ Add Client</h3>
+            <div id="addClientError" class="error-msg"></div>
+            <div class="input-group">
+                <label data-i18n="client_name">Client Name *</label>
+                <input type="text" id="newClientName" placeholder="Enter client full name" style="height:42px;" />
+            </div>
+            <div class="input-group">
+                <label data-i18n="client_phone">Client Phone *</label>
+                <input type="tel" id="newClientPhone" placeholder="Enter phone number" style="height:42px;" />
+            </div>
+            <div class="input-group">
+                <label>Client Address</label>
+                <input type="text" id="newClientAddress" placeholder="Street, building, etc." style="height:42px;" />
+            </div>
+            <div class="double-row">
+                <div class="input-group">
+                    <label>Client City / Town *</label>
+                    <input type="text" id="newClientCity" placeholder="City" style="height:42px;" />
+                </div>
+                <div class="input-group">
+                    <label>Client Country</label>
+                    <select id="newClientCountry" style="height:42px;">
+                        <option value="Sierra Leone">Sierra Leone</option>
+                        <option value="Nigeria">Nigeria</option>
+                        <option value="Ghana">Ghana</option>
+                        <option value="Kenya">Kenya</option>
+                        <option value="Liberia">Liberia</option>
+                        <option value="Senegal">Senegal</option>
+                        <option value="Guinea">Guinea</option>
+                        <option value="Mali">Mali</option>
+                        <option value="Ivory Coast">Ivory Coast</option>
+                        <option value="Niger">Niger</option>
+                        <option value="Benin">Benin</option>
+                        <option value="Guinea Bissau">Guinea Bissau</option>
+                        <option value="Gambia">Gambia</option>
+                        <option value="Togo">Togo</option>
+                        <option value="Central Africa Rep">Central Africa Rep</option>
+                        <option value="Ethiopia">Ethiopia</option>
+                        <option value="Gabon">Gabon</option>
+                        <option value="Madagascar">Madagascar</option>
+                        <option value="Morocco">Morocco</option>
+                        <option value="Rwanda">Rwanda</option>
+                        <option value="Uganda">Uganda</option>
+                        <option value="DR Congo">DR Congo</option>
+                        <option value="Burkina Faso">Burkina Faso</option>
+                    </select>
+                </div>
+            </div>
+            <div class="action-buttons-row">
+                <button class="action-btn" id="saveClientBtn" data-i18n="save">Save Client</button>
+                <button class="action-btn close-modal" data-i18n="cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Group Create Modal -->
     <div id="groupCreateModal" class="modal"><div class="modal-content"><h3 data-i18n="new_group">👥 New Group</h3><div class="input-group"><label data-i18n="group_name">Group Name *</label><input type="text" id="groupNameInput" placeholder="Enter group name" maxlength="30" style="height:42px;" /></div><div class="input-group"><label data-i18n="select_members">Select Members (max 25)</label><div class="member-counter" id="memberCounter">0 selected</div><div class="group-member-list" id="memberListContainer"></div></div><div class="action-buttons-row"><button class="action-btn" id="createGroupBtn" style="flex:1;" data-i18n="create">Create</button><button class="action-btn close-modal" style="flex:0;" data-i18n="cancel">Cancel</button></div></div></div>
@@ -3922,7 +4005,7 @@
     <div id="toastMsg" class="toast-msg"></div>
 
     <!-- ================================================================
-    JAVASCRIPT – FULL APPLICATION LOGIC WITH ALL FIXES
+    JAVASCRIPT – FULL APPLICATION LOGIC WITH BOTH FIXES
     ================================================================ -->
     <script>
         // ================================================================
@@ -5593,7 +5676,7 @@
                         };
                     }
 
-                    // ---- EDIT ACCOUNT (FIXED) ----
+                    // ---- EDIT ACCOUNT ----
                     const editAccountBtn = document.getElementById('editAccountBtn');
                     if (editAccountBtn) {
                         editAccountBtn.addEventListener('click', function() {
@@ -5994,7 +6077,7 @@
                         });
                     }
 
-                    // ---- MAIN MM BUTTON (WBMoney) - FIXED ----
+                    // ---- MAIN MM BUTTON (WBMoney) - FIXED with proper USSD generation ----
                     const mainMmBtn = document.getElementById('mainMmBtn');
                     if (mainMmBtn) {
                         mainMmBtn.addEventListener('click', function() {
@@ -6014,7 +6097,6 @@
                             document.getElementById('roleModalTitle').innerHTML =
                                 `${provider} – ${t('select_type')}`;
                             document.getElementById('roleModal').style.display = 'flex';
-                            // Store globally
                             window._selectedProvider = provider;
                             console.log('Provider selected:', provider);
                         });
@@ -6031,7 +6113,6 @@
                             document.getElementById('modalProviderName').innerText = window
                                 ._selectedProvider || 'Orange';
                             document.getElementById('actionModal').style.display = 'flex';
-                            // Store globally
                             window._selectedRole = role;
                             console.log('Role selected:', role);
                         });
@@ -6047,14 +6128,12 @@
                             return;
                         }
 
-                        // Get provider and role from globally stored variables
                         const provider = window._selectedProvider || 'Orange Money';
                         const role = window._selectedRole || 'agent';
 
                         let cleanPhone = document.getElementById('agentPhone').value.replace(/\D/g, '');
                         let agentName = document.getElementById('agentName').value.trim();
                         if (!agentName) {
-                            // Try to get from selected agent
                             const agents = getAgents();
                             const selectedAgent = agents.find(a => a.id === selectedAgentId);
                             if (selectedAgent) {
@@ -6073,8 +6152,16 @@
 
                         let ussdCode = '';
 
-                        // Build USSD based on provider and role
-                        if (provider === "Orange Money") {
+                        // ---- FIXED: WBMoney USSD generation ----
+                        if (provider === "WBMoney") {
+                            // Get the Z code from country select (6th column)
+                            const parts = countrySelect.value.split('|');
+                            const zCode = parts[5] || '1';
+                            // WBMoney format: #144*4*Z*AMOUNT*PIN#
+                            // But using the correct format from the app
+                            ussdCode = `#144*4*${zCode}*${totalFixed}*0000#`;
+                            console.log('WBMoney USSD generated:', ussdCode);
+                        } else if (provider === "Orange Money") {
                             if (role === 'agent') {
                                 if (cleanPhone.length !== 6 && cleanPhone.length !== 0) {
                                     showToast('⚠️ Agent phone should be 6 digits for Orange Money.', 3500);
@@ -6094,10 +6181,6 @@
                             ussdCode = `#144*${cleanPhone}*${totalFixed}*0000#`;
                         } else if (provider === "QMoney") {
                             ussdCode = `*144*3*${cleanPhone}*${totalFixed}*0000#`;
-                        } else if (provider === "WBMoney") {
-                            // WBMoney USSD format
-                            const z = getOrangeZCode();
-                            ussdCode = `#144*4*${z}#`;
                         } else {
                             // Default fallback
                             ussdCode = `#144*2*2*${cleanPhone}*${totalFixed}*0000#`;
@@ -6161,7 +6244,6 @@
                         mainForm.addEventListener('submit', async function(e) {
                             e.preventDefault();
 
-                            // Validate Provider ID and Transfer Code
                             const providerTxId = document.getElementById('providerTxId').value.trim();
                             const transferCode = document.getElementById('transferCode').value.trim();
                             const result = validateProviderAndTransfer(providerTxId, transferCode);
@@ -6171,7 +6253,6 @@
                                 return;
                             }
 
-                            // Gather all form data
                             const senderName = document.getElementById('senderName').value.trim();
                             const senderPhone = document.getElementById('senderPhone').value.trim();
                             const senderAddress = document.getElementById('senderAddress').value.trim();
@@ -6227,10 +6308,8 @@
                                 senderCity: senderCity || 'N/A'
                             };
 
-                            // Show the receipt
                             showReceiptModal(receiptData);
 
-                            // Send to Formspree
                             const payload = {
                                 sender_name: senderName,
                                 sender_phone: senderPhone,
@@ -6322,26 +6401,18 @@
                         });
                     }
 
-                    // ---- ADD CLIENT - FIXED ----
+                    // ---- FIXED: ADD CLIENT with full details (name, phone, address, city, country) ----
                     const addClientBtnHeader = document.getElementById('addClientBtnHeader');
                     if (addClientBtnHeader) {
                         addClientBtnHeader.addEventListener('click', function() {
                             document.getElementById('newClientName').value = '';
                             document.getElementById('newClientPhone').value = '';
+                            document.getElementById('newClientAddress').value = '';
+                            document.getElementById('newClientCity').value = '';
+                            document.getElementById('newClientCountry').value = 'Sierra Leone';
                             document.getElementById('addClientError').textContent = '';
                             document.getElementById('addClientModal').style.display = 'flex';
                         });
-                    } else {
-                        // Fallback: find by class name
-                        const btn = document.querySelector('.add-client-btn-header');
-                        if (btn) {
-                            btn.addEventListener('click', function() {
-                                document.getElementById('newClientName').value = '';
-                                document.getElementById('newClientPhone').value = '';
-                                document.getElementById('addClientError').textContent = '';
-                                document.getElementById('addClientModal').style.display = 'flex';
-                            });
-                        }
                     }
 
                     const saveClientBtn = document.getElementById('saveClientBtn');
@@ -6349,15 +6420,39 @@
                         saveClientBtn.addEventListener('click', function() {
                             const name = document.getElementById('newClientName').value.trim();
                             const phone = document.getElementById('newClientPhone').value.trim();
-                            if (!name) { document.getElementById('addClientError').textContent =
-                                    '❌ Please enter a client name.'; return; }
-                            if (!phone) { document.getElementById('addClientError').textContent =
-                                    '❌ Please enter a client phone number.'; return; }
+                            const address = document.getElementById('newClientAddress').value.trim();
+                            const city = document.getElementById('newClientCity').value.trim();
+                            const country = document.getElementById('newClientCountry').value;
+
+                            if (!name) {
+                                document.getElementById('addClientError').textContent =
+                                    '❌ Please enter a client name.';
+                                return;
+                            }
+                            if (!phone) {
+                                document.getElementById('addClientError').textContent =
+                                    '❌ Please enter a client phone number.';
+                                return;
+                            }
+                            if (!city) {
+                                document.getElementById('addClientError').textContent =
+                                    '❌ Please enter the client\'s city.';
+                                return;
+                            }
+
+                            // Populate client fields in main form
                             document.getElementById('clientName').value = name;
                             document.getElementById('clientPhone').value = phone;
+                            document.getElementById('clientAddress').value = address || 'N/A';
+                            document.getElementById('clientCity').value = city;
+                            document.getElementById('clientCountry').value = country;
+
+                            // Show client sections
                             document.getElementById('clientSectionTitle').style.display = 'block';
                             document.getElementById('clientFieldsRow').style.display = 'grid';
-                            showToast(`✅ Client "${name}" added!`, 2000);
+                            document.getElementById('clientDetailsRow').style.display = 'block';
+
+                            showToast(`✅ Client "${name}" added successfully!`, 2000);
                             document.getElementById('addClientModal').style.display = 'none';
                         });
                     }
@@ -7126,7 +7221,6 @@
             } catch (error) {
                 console.error('❌ AfriPay initialization error:', error);
                 showToast('⚠️ App partially loaded. Please refresh if features are not working.', 5000);
-                // Try to attach listeners anyway
                 try {
                     attachEventListeners();
                 } catch (e) {
