@@ -3914,7 +3914,6 @@
 
         function saveUserToStorage(user) {
             try {
-                // Ensure avatar is not too large
                 if (user.avatarDataURL && user.avatarDataURL.length > 100000) {
                     console.warn('Avatar too large, removing to save storage.');
                     user.avatarDataURL = null;
@@ -3922,7 +3921,6 @@
                 localStorage.setItem(STORAGE_KEYS.user, JSON.stringify(user));
             } catch (e) {
                 console.warn('Could not save user, storage may be full. Removing avatar and retrying.');
-                // Remove avatar and try again
                 user.avatarDataURL = null;
                 try {
                     localStorage.setItem(STORAGE_KEYS.user, JSON.stringify(user));
@@ -4053,7 +4051,6 @@
                 }
 
                 let avatarDataURL = userData.avatarDataURL || null;
-                // If still too large, discard
                 if (avatarDataURL && avatarDataURL.length > 50000) {
                     console.warn('Avatar still too large, discarding.');
                     avatarDataURL = null;
@@ -4416,55 +4413,57 @@
         }
 
         // ================================================================
-        // MAIN INIT
+        // MAIN INIT - SEPARATE EVENT LISTENER ATTACHMENT
         // ================================================================
-        document.addEventListener('DOMContentLoaded', function() {
-            try {
-                // Clear any oversized data to prevent quota errors
-                const userStr = localStorage.getItem(STORAGE_KEYS.user);
-                if (userStr && userStr.length > 200000) {
-                    localStorage.removeItem(STORAGE_KEYS.user);
-                    console.log('Cleared oversized user data.');
-                }
+        function attachEventListeners() {
+            console.log('🔗 Attaching event listeners...');
 
-                loadRegisteredUsers();
-                syncConnectedUsersFromRegistered();
-                loadStoredUser();
-                renderSidebar();
-                renderAgentDropdown();
-                renderHeaderFlags();
-                renderBusinessStrip();
-                computeCharges();
-
-                // Language
-                document.getElementById('langSelect').addEventListener('change', function() {
+            // ---- LANGUAGE ----
+            const langSelect = document.getElementById('langSelect');
+            if (langSelect) {
+                langSelect.addEventListener('change', function() {
                     currentLang = this.value;
                     localStorage.setItem('afripay_lang', currentLang);
                     showToast('🌐 Language: ' + currentLang.toUpperCase(), 1500);
                 });
+            }
 
-                // Login
-                document.getElementById('loginBtn').onclick = function() {
+            // ---- LOGIN ----
+            const loginBtn = document.getElementById('loginBtn');
+            if (loginBtn) {
+                loginBtn.onclick = function() {
                     document.getElementById('loginError').innerHTML = '';
                     document.getElementById('loginModal').style.display = 'flex';
                 };
+            }
 
-                // Register
-                document.getElementById('registerBtn').onclick = function() {
+            // ---- REGISTER ----
+            const registerBtn = document.getElementById('registerBtn');
+            if (registerBtn) {
+                registerBtn.onclick = function() {
                     document.getElementById('regError').innerText = '';
                     document.getElementById('regSuccess').innerText = '';
                     document.getElementById('registerModal').style.display = 'flex';
                 };
+            }
 
-                // Logout
-                document.getElementById('logoutBtn').onclick = function() {
+            // ---- LOGOUT ----
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.onclick = function() {
                     clearUserStorage();
                     showToast(t('toast_logout'));
                 };
+            }
 
-                // Edit Account
-                document.getElementById('editAccountBtn').addEventListener('click', function() {
-                    if (!currentUser) { showToast(t('toast_login_first'), 2000); return; }
+            // ---- EDIT ACCOUNT (FIXED) ----
+            const editAccountBtn = document.getElementById('editAccountBtn');
+            if (editAccountBtn) {
+                editAccountBtn.addEventListener('click', function() {
+                    if (!currentUser) {
+                        showToast(t('toast_login_first'), 2000);
+                        return;
+                    }
                     document.getElementById('editAccountName').value = currentUser.name || '';
                     document.getElementById('editAccountPhone').value = currentUser.phone || '';
                     document.getElementById('editAccountAddress').value = currentUser.address || '';
@@ -4475,9 +4474,14 @@
                     document.getElementById('editAccountSuccess').textContent = '';
                     document.getElementById('editAccountModal').style.display = 'flex';
                 });
+            } else {
+                console.warn('editAccountBtn not found');
+            }
 
-                // Save Edit Account
-                document.getElementById('saveEditAccountBtn').addEventListener('click', async function() {
+            // ---- SAVE EDIT ACCOUNT ----
+            const saveEditAccountBtn = document.getElementById('saveEditAccountBtn');
+            if (saveEditAccountBtn) {
+                saveEditAccountBtn.addEventListener('click', async function() {
                     const name = document.getElementById('editAccountName').value.trim();
                     const phone = document.getElementById('editAccountPhone').value.trim();
                     const address = document.getElementById('editAccountAddress').value.trim();
@@ -4537,99 +4541,55 @@
                                 'none'; }, 1000);
                     }
                 });
+            }
 
-                // Agent dropdown toggle
-                document.getElementById('agentDropdownBtn').addEventListener('click', function(e) {
+            // ---- DASHBOARD TRIGGER (FIXED) ----
+            const dashboardTrigger = document.getElementById('dashboardTrigger');
+            if (dashboardTrigger) {
+                dashboardTrigger.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    console.log('Dashboard trigger clicked');
+                    const admin = localStorage.getItem('afripay_admin');
+                    if (admin) {
+                        document.getElementById('dashboardModal').style.display = 'flex';
+                    } else {
+                        showToast('🔐 Admin access required. Contact support.', 2000);
+                    }
+                });
+            } else {
+                console.warn('dashboardTrigger not found');
+            }
+
+            // ---- ADMIN LOGOUT ----
+            const adminLogoutBtn = document.getElementById('adminLogoutBtn');
+            if (adminLogoutBtn) {
+                adminLogoutBtn.addEventListener('click', function() {
+                    localStorage.removeItem('afripay_admin_logged_in');
+                    document.getElementById('dashboardModal').style.display = 'none';
+                    showToast('Logged out', 1500);
+                });
+            }
+
+            // ---- AGENT DROPDOWN ----
+            const agentDropdownBtn = document.getElementById('agentDropdownBtn');
+            if (agentDropdownBtn) {
+                agentDropdownBtn.addEventListener('click', function(e) {
                     e.stopPropagation();
                     document.getElementById('agentDropdownList').classList.toggle('open');
                     renderAgentDropdown();
                 });
-                document.addEventListener('click', function(e) {
-                    const container = document.querySelector('.agent-dropdown-container');
-                    if (container && !container.contains(e.target)) {
-                        document.getElementById('agentDropdownList').classList.remove('open');
-                    }
-                });
+            }
+            document.addEventListener('click', function(e) {
+                const container = document.querySelector('.agent-dropdown-container');
+                if (container && !container.contains(e.target)) {
+                    document.getElementById('agentDropdownList').classList.remove('open');
+                }
+            });
 
-                // ================================================================
-                // REGISTER BUTTON - FIXED WITH AGGRESSIVE COMPRESSION
-                // ================================================================
-                document.getElementById('doRegisterBtn').addEventListener('click', async function() {
-                    const name = document.getElementById('regName').value.trim();
-                    const phone = document.getElementById('regPhone').value.trim();
-                    const address = document.getElementById('regAddress').value.trim();
-                    const city = getCityValue('regCitySelect', 'regCityOther');
-                    const country = document.getElementById('regCountry').value;
-                    const language = document.getElementById('regLanguage').value;
-
-                    const selected = document.querySelector('#emojiPickerGrid .emoji-option.selected');
-                    const emoji = selected ? selected.getAttribute('data-emoji') : '👤';
-
-                    let avatarDataURL = null;
-                    const previewContainer = document.getElementById('regProfilePreview');
-                    const fileInput = document.getElementById('regProfileImage');
-
-                    if (previewContainer.style.display !== 'none') {
-                        const img = previewContainer.querySelector('img');
-                        if (img && img.src && !img.src.startsWith('#')) {
-                            avatarDataURL = img.src;
-                        }
-                    }
-
-                    if (!avatarDataURL && fileInput && fileInput.files && fileInput.files[0]) {
-                        try {
-                            avatarDataURL = await compressImage(fileInput.files[0], 100, 100, 0.6);
-                            if (avatarDataURL.length > 50000) {
-                                avatarDataURL = null;
-                                showToast('⚠️ Image too large, using emoji instead.', 3000);
-                            }
-                            const img = previewContainer.querySelector('img');
-                            if (img) img.src = avatarDataURL || '';
-                            previewContainer.style.display = avatarDataURL ? 'block' : 'none';
-                        } catch (e) {
-                            console.warn('Image compression failed, using emoji fallback.', e);
-                            avatarDataURL = null;
-                        }
-                    }
-
-                    if (!name || !phone || !city) {
-                        document.getElementById('regError').innerText = t('toast_register_error');
-                        return;
-                    }
-
-                    const regData = {
-                        name: name,
-                        phone: phone,
-                        address: address || '',
-                        city: city,
-                        country: country || 'Sierra Leone',
-                        language: language || 'en',
-                        emoji: avatarDataURL ? '' : emoji,
-                        avatarDataURL: avatarDataURL
-                    };
-
-                    await registerUser(regData);
-                });
-
-                // ================================================================
-                // LOGIN BUTTON
-                // ================================================================
-                document.getElementById('doLoginBtn').addEventListener('click', function() {
-                    const name = document.getElementById('loginName').value.trim();
-                    const phone = document.getElementById('loginPhone').value.trim();
-                    if (name && phone) {
-                        if (loginUser(name, phone)) {
-                            document.getElementById('loginModal').style.display = 'none';
-                        }
-                    } else {
-                        document.getElementById('loginError').innerHTML = t('toast_login_error');
-                    }
-                });
-
-                // ================================================================
-                // MAP BUTTON
-                // ================================================================
-                document.getElementById('mapButton').onclick = function() {
+            // ---- MAP BUTTON ----
+            const mapButton = document.getElementById('mapButton');
+            if (mapButton) {
+                mapButton.onclick = function() {
                     if (currentUser) {
                         const query = encodeURIComponent([currentUser.address, currentUser.city, currentUser
                             .country
@@ -4639,548 +4599,971 @@
                         document.getElementById('mapModal').style.display = 'flex';
                     }
                 };
+            }
 
-                // ================================================================
-                // CLOSE MODALS
-                // ================================================================
-                document.querySelectorAll('.close-modal').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        const modal = this.closest('.modal');
-                        if (modal) modal.style.display = 'none';
-                    });
+            // ---- CLOSE MODALS ----
+            document.querySelectorAll('.close-modal').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const modal = this.closest('.modal');
+                    if (modal) modal.style.display = 'none';
                 });
+            });
 
-                // ================================================================
-                // SUBSCRIBE
-                // ================================================================
-                document.getElementById('subscribeBtn').onclick = function() {
-                    document.getElementById('subscribeModal').style.display = 'flex';
-                };
-                document.getElementById('submitSubscribeBtn').onclick = function() {
-                    const email = document.getElementById('subEmail').value;
-                    if (email) {
-                        showToast(t('toast_subscribed'));
-                        document.getElementById('subscribeModal').style.display = 'none';
-                    }
-                };
+            // ---- SUBSCRIBE ----
+            document.getElementById('subscribeBtn').onclick = function() {
+                document.getElementById('subscribeModal').style.display = 'flex';
+            };
+            document.getElementById('submitSubscribeBtn').onclick = function() {
+                const email = document.getElementById('subEmail').value;
+                if (email) {
+                    showToast(t('toast_subscribed'));
+                    document.getElementById('subscribeModal').style.display = 'none';
+                }
+            };
 
-                // ================================================================
-                // INFO MODALS
-                // ================================================================
-                document.getElementById('aboutAppBtn').onclick = function() {
-                    document.getElementById('modalTitle').innerText = t('about');
-                    document.getElementById('modalBody').innerHTML = t('about_body');
-                    document.getElementById('infoModal').style.display = 'flex';
-                };
-                document.getElementById('aboutDevBtn').onclick = function() {
-                    document.getElementById('modalTitle').innerText = t('dev');
-                    document.getElementById('modalBody').innerHTML = t('dev_body');
-                    document.getElementById('infoModal').style.display = 'flex';
-                };
-                document.getElementById('contactBtn').onclick = function() {
-                    document.getElementById('modalTitle').innerText = t('contact');
-                    document.getElementById('modalBody').innerHTML = t('contact_body');
-                    document.getElementById('infoModal').style.display = 'flex';
-                };
+            // ---- INFO MODALS ----
+            document.getElementById('aboutAppBtn').onclick = function() {
+                document.getElementById('modalTitle').innerText = t('about');
+                document.getElementById('modalBody').innerHTML = t('about_body');
+                document.getElementById('infoModal').style.display = 'flex';
+            };
+            document.getElementById('aboutDevBtn').onclick = function() {
+                document.getElementById('modalTitle').innerText = t('dev');
+                document.getElementById('modalBody').innerHTML = t('dev_body');
+                document.getElementById('infoModal').style.display = 'flex';
+            };
+            document.getElementById('contactBtn').onclick = function() {
+                document.getElementById('modalTitle').innerText = t('contact');
+                document.getElementById('modalBody').innerHTML = t('contact_body');
+                document.getElementById('infoModal').style.display = 'flex';
+            };
 
-                // ================================================================
-                // SOCIAL LINKS
-                // ================================================================
-                document.getElementById('whatsappBtn').onclick = () => window.open('https://wa.me/23276436811',
+            // ---- SOCIAL LINKS ----
+            document.getElementById('whatsappBtn').onclick = () => window.open('https://wa.me/23276436811',
+            '_blank');
+            document.getElementById('facebookBtn').onclick = () => window.open('https://facebook.com/afripay',
                 '_blank');
-                document.getElementById('facebookBtn').onclick = () => window.open('https://facebook.com/afripay',
-                    '_blank');
-                document.getElementById('instagramBtn').onclick = () => window.open('https://instagram.com/afripay',
-                    '_blank');
-                document.getElementById('youtubeBtn').onclick = () => window.open('https://youtube.com/@afripay',
-                    '_blank');
+            document.getElementById('instagramBtn').onclick = () => window.open('https://instagram.com/afripay',
+                '_blank');
+            document.getElementById('youtubeBtn').onclick = () => window.open('https://youtube.com/@afripay',
+                '_blank');
 
-                // ================================================================
-                // ADMIN DASHBOARD TRIGGER
-                // ================================================================
-                document.getElementById('dashboardTrigger').addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const admin = localStorage.getItem('afripay_admin');
-                    if (admin) {
-                        document.getElementById('dashboardModal').style.display = 'flex';
-                    } else {
-                        showToast('🔐 Admin access required. Contact support.', 2000);
+            // ---- GENERATE TX ID ----
+            document.getElementById('generateTxBtn').addEventListener('click', function() {
+                const p1 = Math.floor(1000000 + Math.random() * 9000000);
+                const p2 = Math.floor(10000 + Math.random() * 90000);
+                const letter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+                const p3 = Math.floor(1000000 + Math.random() * 9000000);
+                document.getElementById('transactionId').value = `WB${p1}.${p2}.${letter}${p3}`;
+            });
+
+            // ---- COPY TX ID ----
+            document.getElementById('copyTxBtn').addEventListener('click', function() {
+                const val = document.getElementById('transactionId').value;
+                if (val) {
+                    navigator.clipboard.writeText(val);
+                    showToast(t('toast_copied'), 1800);
+                } else showToast(t('toast_no_id'), 1500);
+            });
+
+            // ---- CHAT TOGGLE ----
+            document.getElementById('chatToggleBtn').addEventListener('click', function() {
+                const window = document.getElementById('chatWindow');
+                window.classList.toggle('open');
+                this.style.display = window.classList.contains('open') ? 'none' : 'flex';
+            });
+            document.getElementById('chatCloseBtn').addEventListener('click', function() {
+                document.getElementById('chatWindow').classList.remove('open');
+                document.getElementById('chatToggleBtn').style.display = 'flex';
+            });
+
+            // ---- SEND CHAT MESSAGE ----
+            document.getElementById('chatSendBtn').addEventListener('click', function() {
+                const input = document.getElementById('chatInput');
+                const text = input.value.trim();
+                if (text) {
+                    const messages = document.getElementById('chatMessages');
+                    const msg = document.createElement('div');
+                    msg.className = 'chat-message sent';
+                    msg.innerHTML =
+                        `<span>${SecurityUtils.escapeHTML(text)}</span> <span class="msg-time">${new Date().toLocaleTimeString()}</span>`;
+                    messages.appendChild(msg);
+                    messages.scrollTop = messages.scrollHeight;
+                    input.value = '';
+                }
+            });
+            document.getElementById('chatInput').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') document.getElementById('chatSendBtn').click();
+            });
+
+            // ---- CHAT CONTROLS ----
+            document.getElementById('chatBgColor').addEventListener('input', function() {
+                document.getElementById('chatMessages').style.backgroundColor = this.value;
+            });
+            document.getElementById('fontIncrease').addEventListener('click', function() {
+                const msgs = document.querySelectorAll('.chat-message');
+                msgs.forEach(m => { m.style.fontSize = (parseFloat(m.style.fontSize) || 14) + 2 + 'px'; });
+            });
+            document.getElementById('fontDecrease').addEventListener('click', function() {
+                const msgs = document.querySelectorAll('.chat-message');
+                msgs.forEach(m => { m.style.fontSize = Math.max(10, (parseFloat(m.style.fontSize) || 14) - 2) +
+                        'px'; });
+            });
+
+            // ---- PROFILE IMAGE UPLOAD ----
+            document.getElementById('userAvatarContainer').addEventListener('click', function(e) {
+                if (e.target.closest('.logout-btn') || e.target.closest('.edit-account-btn')) return;
+                if (!currentUser) {
+                    showToast('⚠️ Please login first to change your profile picture.', 2000);
+                    return;
+                }
+                document.getElementById('avatarUploadInput').click();
+            });
+
+            document.getElementById('avatarUploadInput').addEventListener('change', async function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                if (!file.type.startsWith('image/')) {
+                    showToast('⚠️ Please select an image file.', 2000);
+                    this.value = '';
+                    return;
+                }
+                if (file.size > 3 * 1024 * 1024) {
+                    showToast('⚠️ Image must be less than 3MB.', 2000);
+                    this.value = '';
+                    return;
+                }
+                try {
+                    showToast('⏳ Compressing image...', 1500);
+                    const compressedDataURL = await compressImage(file, 100, 100, 0.6);
+                    if (compressedDataURL.length > 50000) {
+                        showToast('⚠️ Image too large, using emoji instead.', 3000);
+                        this.value = '';
+                        return;
                     }
-                });
+                    if (currentUser) {
+                        currentUser.avatarDataURL = compressedDataURL;
+                        saveUserToStorage(currentUser);
+                        const regUser = registeredUsers.find(u => u.phone === currentUser.phone || u.name ===
+                            currentUser.name);
+                        if (regUser) {
+                            regUser.avatarDataURL = compressedDataURL;
+                            saveRegisteredUsers();
+                        }
+                        const connUser = connectedUsers.find(u => u.id === 'current');
+                        if (connUser) connUser.avatarDataURL = compressedDataURL;
+                        updateAvatarDisplay(currentUser);
+                        showToast('✅ Profile picture updated!', 2000);
+                        renderSidebar();
+                    }
+                } catch (err) {
+                    showToast('⚠️ Failed to compress image. Please try a smaller image.', 3000);
+                    console.error('Compression error:', err);
+                }
+                this.value = '';
+            });
 
-                // ================================================================
-                // GENERATE TX ID
-                // ================================================================
-                document.getElementById('generateTxBtn').addEventListener('click', function() {
+            // ---- REGISTRATION IMAGE PREVIEW ----
+            document.getElementById('regProfileImage').addEventListener('change', async function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    try {
+                        const compressed = await compressImage(file, 100, 100, 0.6);
+                        if (compressed.length <= 50000) {
+                            const preview = document.getElementById('regProfilePreview');
+                            preview.style.display = 'block';
+                            preview.querySelector('img').src = compressed;
+                        } else {
+                            showToast('⚠️ Image too large, using emoji instead.', 3000);
+                            this.value = '';
+                        }
+                    } catch (err) {
+                        showToast('⚠️ Could not compress image. Please try a smaller file.', 3000);
+                        this.value = '';
+                    }
+                }
+            });
+            document.getElementById('regProfileRemove').addEventListener('click', function() {
+                const preview = document.getElementById('regProfilePreview');
+                preview.style.display = 'none';
+                preview.querySelector('img').src = '';
+                document.getElementById('regProfileImage').value = '';
+            });
+
+            // ---- EDIT ACCOUNT IMAGE PREVIEW ----
+            document.getElementById('editProfileImage').addEventListener('change', async function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    try {
+                        const compressed = await compressImage(file, 100, 100, 0.6);
+                        if (compressed.length <= 50000) {
+                            const preview = document.getElementById('editProfilePreview');
+                            preview.style.display = 'block';
+                            preview.querySelector('img').src = compressed;
+                        } else {
+                            showToast('⚠️ Image too large, using emoji instead.', 3000);
+                            this.value = '';
+                        }
+                    } catch (err) {
+                        showToast('⚠️ Could not compress image. Please try a smaller file.', 3000);
+                        this.value = '';
+                    }
+                }
+            });
+            document.getElementById('editProfileRemove').addEventListener('click', function() {
+                const preview = document.getElementById('editProfilePreview');
+                preview.style.display = 'none';
+                preview.querySelector('img').src = '';
+                document.getElementById('editProfileImage').value = '';
+            });
+
+            // ---- AGENT LOGO ----
+            document.getElementById('agentLogoImage').addEventListener('change', async function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    try {
+                        const compressed = await compressImage(file, 150, 150, 0.7);
+                        if (compressed.length <= 80000) {
+                            const preview = document.getElementById('agentLogoPreviewContainer');
+                            preview.style.display = 'block';
+                            preview.querySelector('img').src = compressed;
+                        } else {
+                            showToast('⚠️ Logo too large, using placeholder.', 3000);
+                            this.value = '';
+                        }
+                    } catch (err) {
+                        showToast('⚠️ Could not compress logo. Please try a smaller file.', 3000);
+                        this.value = '';
+                    }
+                }
+            });
+            document.getElementById('agentLogoRemove').addEventListener('click', function() {
+                const preview = document.getElementById('agentLogoPreviewContainer');
+                preview.style.display = 'none';
+                preview.querySelector('img').src = '';
+                document.getElementById('agentLogoImage').value = '';
+            });
+
+            // ---- INTERNATIONAL TOGGLE ----
+            document.getElementById('intlToggleBtn').addEventListener('click', function() {
+                setLocalMode(isLocalMode);
+            });
+
+            // ---- MAIN MM BUTTON ----
+            document.getElementById('mainMmBtn').addEventListener('click', function() {
+                if (parseFloat(amountInput.value) <= 0) { showToast(t('toast_enter_amount')); return; }
+                if (!document.getElementById('agentName').value.trim()) { showToast(
+                        '⚠️ Please select an agent first.'); return; }
+                document.getElementById('providerModal').style.display = 'flex';
+            });
+
+            // ---- PROVIDER / ROLE / ACTION MODALS ----
+            document.querySelectorAll('#providerModal .action-btn[data-provider]').forEach(btn =>
+                btn.addEventListener('click', function() {
+                    const provider = this.getAttribute('data-provider');
+                    document.getElementById('providerModal').style.display = 'none';
+                    document.getElementById('roleModalTitle').innerHTML = `${provider} – ${t('select_type')}`;
+                    document.getElementById('roleModal').style.display = 'flex';
+                    window._selectedProvider = provider;
+                })
+            );
+
+            document.querySelectorAll('#roleButtons .action-btn[data-role]').forEach(btn =>
+                btn.addEventListener('click', function() {
+                    const role = this.getAttribute('data-role');
+                    document.getElementById('roleModal').style.display = 'none';
+                    const roleText = role === 'agent' ? t('agent') : (role === 'customer' ? t('customer') :
+                        t('other'));
+                    document.getElementById('selectedRoleDisplay').innerHTML =
+                        `${t('select_type')}: ${roleText}`;
+                    document.getElementById('modalProviderName').innerText = window._selectedProvider ||
+                        'Orange';
+                    document.getElementById('actionModal').style.display = 'flex';
+                    window._selectedRole = role;
+                })
+            );
+
+            function buildAndDialUSSD(action) {
+                const amount = parseFloat(amountInput.value);
+                if (isNaN(amount) || amount <= 0) { showToast(t('toast_valid_amount')); return; }
+                const maxLimit = parseFloat(amountInput.max);
+                if (maxLimit > 0 && amount > maxLimit) {
+                    showToast(`❌ Amount exceeds collateral limit of ${maxLimit}`, 3000);
+                    return;
+                }
+                let cleanPhone = document.getElementById('agentPhone').value.replace(/\D/g, '');
+                let agentName = document.getElementById('agentName').value.trim();
+                if (!agentName) { showToast('⚠️ Please select an agent first.'); return; }
+                const charge = amount * 0.01;
+                const gst = isLocalMode ? 0 : charge * (currentCountryData.gstRate / 100);
+                const total = amount + charge + gst;
+                const totalFixed = Math.round(total);
+                let ussdCode = `#144*2*2*${cleanPhone}*${totalFixed}*0000#`;
+                showToast(`📞 ${window._selectedProvider || 'Mobile Money'} – ${action}`, 2800);
+                const link = document.createElement('a');
+                link.href = `tel:${ussdCode}`;
+                link.click();
+                showToast(t('toast_initiated', { action }), 4000);
+                navigator.clipboard.writeText(ussdCode).then(() => { showToast('✅ USSD code copied!', 2000); })
+                    .catch(() => {});
+            }
+
+            document.getElementById('actionTransfer').addEventListener('click', function() {
+                buildAndDialUSSD(t('transfer'));
+                document.getElementById('actionModal').style.display = 'none';
+            });
+            document.getElementById('actionPay').addEventListener('click', function() {
+                buildAndDialUSSD(t('pay'));
+                document.getElementById('actionModal').style.display = 'none';
+            });
+            document.getElementById('actionCashout').addEventListener('click', function() {
+                buildAndDialUSSD(t('cashout'));
+                document.getElementById('actionModal').style.display = 'none';
+            });
+
+            // ---- MAIN FORM SUBMIT ----
+            document.getElementById('mainForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const providerTxId = document.getElementById('providerTxId').value.trim();
+                if (!providerTxId) {
+                    showToast('❌ Please enter a Provider Transaction ID.', 3000);
+                    return;
+                }
+                if (!/^[A-Za-z]{2}[0-9]{6}\.[0-9]{4}\.[A-Za-z][0-9]{5}$/.test(providerTxId)) {
+                    showToast('❌ Invalid Provider TX ID format.', 3000);
+                    return;
+                }
+                const senderName = document.getElementById('senderName').value.trim();
+                const senderPhone = document.getElementById('senderPhone').value.trim();
+                const agentName = document.getElementById('agentName').value.trim();
+                if (!senderName || !senderPhone || !agentName) {
+                    showToast('❌ Please fill Sender and Agent fields.');
+                    return;
+                }
+                const amount = parseFloat(amountInput.value) || 0;
+                if (amount <= 0) { showToast('❌ Please enter a valid amount.'); return; }
+                const maxLimit = parseFloat(amountInput.max);
+                if (maxLimit > 0 && amount > maxLimit) {
+                    showToast(`❌ Amount exceeds collateral limit of ${maxLimit}`, 3000);
+                    return;
+                }
+                ensureTransactionId();
+                const charge = amount * 0.01;
+                const gstRate = isLocalMode ? 0 : currentCountryData.gstRate;
+                const gst = charge * (gstRate / 100);
+                const total = amount + charge + gst;
+                const currency = isLocalMode ? "Local" : currentCountryData.currency;
+                const txId = document.getElementById('transactionId').value.trim();
+                const dateStr = document.getElementById('currentDate').innerText + " " + document.getElementById(
+                    'currentTime').innerText;
+                const receiptData = {
+                    txId,
+                    date: dateStr,
+                    mode: isLocalMode ? "Local" : "International",
+                    sender: `${senderName} (${senderPhone})`,
+                    agent: agentName,
+                    client: document.getElementById('clientName').value.trim() || 'N/A',
+                    baseAmount: amount.toFixed(2),
+                    charge: charge.toFixed(2),
+                    gstRate: gstRate,
+                    gst: gst.toFixed(2),
+                    total: total.toFixed(2),
+                    currency: currency,
+                    providerTxId: providerTxId
+                };
+                showReceiptModal(receiptData);
+            });
+
+            function ensureTransactionId() {
+                const field = document.getElementById('transactionId');
+                if (field && !field.value.trim()) {
                     const p1 = Math.floor(1000000 + Math.random() * 9000000);
                     const p2 = Math.floor(10000 + Math.random() * 90000);
                     const letter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
                     const p3 = Math.floor(1000000 + Math.random() * 9000000);
-                    document.getElementById('transactionId').value = `WB${p1}.${p2}.${letter}${p3}`;
-                });
+                    field.value = `WB${p1}.${p2}.${letter}${p3}`;
+                }
+            }
 
-                // ================================================================
-                // COPY TX ID
-                // ================================================================
-                document.getElementById('copyTxBtn').addEventListener('click', function() {
-                    const val = document.getElementById('transactionId').value;
-                    if (val) {
-                        navigator.clipboard.writeText(val);
-                        showToast(t('toast_copied'), 1800);
-                    } else showToast(t('toast_no_id'), 1500);
+            function showReceiptModal(data) {
+                const body = document.getElementById('receiptBody');
+                const lines = [
+                    { label: t('receipt_tx_id'), value: data.txId },
+                    { label: t('receipt_date'), value: data.date },
+                    { label: t('receipt_type'), value: data.mode },
+                    { label: t('receipt_sender'), value: data.sender },
+                    { label: '👤 Agent', value: data.agent },
+                    { label: '👥 Client', value: data.client },
+                    { label: '🔐 Provider TX ID', value: data.providerTxId || 'N/A' },
+                    { label: t('receipt_base'), value: data.currency + ' ' + data.baseAmount },
+                    { label: t('receipt_charge'), value: data.currency + ' ' + data.charge },
+                    { label: t('receipt_gst', { rate: data.gstRate }), value: data.currency + ' ' + data.gst },
+                    { label: t('receipt_total'), value: data.currency + ' ' + data.total, total: true }
+                ];
+                let html = '';
+                lines.forEach(line => {
+                    const cls = line.total ? 'receipt-row total' : 'receipt-row';
+                    html +=
+                        `<div class="${cls}"><span class="label">${line.label}</span><span class="value">${line.value}</span></div>`;
                 });
+                body.innerHTML = html;
+                document.getElementById('receiptModal').style.display = 'flex';
+            }
 
-                // ================================================================
-                // CHAT TOGGLE
-                // ================================================================
-                document.getElementById('chatToggleBtn').addEventListener('click', function() {
-                    const window = document.getElementById('chatWindow');
-                    window.classList.toggle('open');
-                    this.style.display = window.classList.contains('open') ? 'none' : 'flex';
-                });
-                document.getElementById('chatCloseBtn').addEventListener('click', function() {
-                    document.getElementById('chatWindow').classList.remove('open');
-                    document.getElementById('chatToggleBtn').style.display = 'flex';
-                });
+            document.getElementById('receiptCloseBtn').addEventListener('click', function() {
+                document.getElementById('receiptModal').style.display = 'none';
+            });
 
-                // ================================================================
-                // SEND CHAT MESSAGE
-                // ================================================================
-                document.getElementById('chatSendBtn').addEventListener('click', function() {
-                    const input = document.getElementById('chatInput');
-                    const text = input.value.trim();
-                    if (text) {
-                        const messages = document.getElementById('chatMessages');
-                        const msg = document.createElement('div');
-                        msg.className = 'chat-message sent';
-                        msg.innerHTML =
-                            `<span>${SecurityUtils.escapeHTML(text)}</span> <span class="msg-time">${new Date().toLocaleTimeString()}</span>`;
-                        messages.appendChild(msg);
-                        messages.scrollTop = messages.scrollHeight;
-                        input.value = '';
-                    }
-                });
-                document.getElementById('chatInput').addEventListener('keydown', function(e) {
-                    if (e.key === 'Enter') document.getElementById('chatSendBtn').click();
-                });
+            // ---- ADD CLIENT ----
+            document.getElementById('addClientBtnHeader').addEventListener('click', function() {
+                document.getElementById('newClientName').value = '';
+                document.getElementById('newClientPhone').value = '';
+                document.getElementById('addClientError').textContent = '';
+                document.getElementById('addClientModal').style.display = 'flex';
+            });
 
-                // ================================================================
-                // CHAT CONTROLS
-                // ================================================================
-                document.getElementById('chatBgColor').addEventListener('input', function() {
-                    document.getElementById('chatMessages').style.backgroundColor = this.value;
-                });
-                document.getElementById('fontIncrease').addEventListener('click', function() {
-                    const msgs = document.querySelectorAll('.chat-message');
-                    msgs.forEach(m => { m.style.fontSize = (parseFloat(m.style.fontSize) || 14) + 2 + 'px'; });
-                });
-                document.getElementById('fontDecrease').addEventListener('click', function() {
-                    const msgs = document.querySelectorAll('.chat-message');
-                    msgs.forEach(m => { m.style.fontSize = Math.max(10, (parseFloat(m.style.fontSize) || 14) - 2) +
-                            'px'; });
-                });
+            document.getElementById('saveClientBtn').addEventListener('click', function() {
+                const name = document.getElementById('newClientName').value.trim();
+                const phone = document.getElementById('newClientPhone').value.trim();
+                if (!name) { document.getElementById('addClientError').textContent =
+                        '❌ Please enter a client name.'; return; }
+                if (!phone) { document.getElementById('addClientError').textContent =
+                        '❌ Please enter a client phone number.'; return; }
+                document.getElementById('clientName').value = name;
+                document.getElementById('clientPhone').value = phone;
+                document.getElementById('clientSectionTitle').style.display = 'block';
+                document.getElementById('clientFieldsRow').style.display = 'grid';
+                showToast(`✅ Client "${name}" added!`, 2000);
+                document.getElementById('addClientModal').style.display = 'none';
+            });
 
-                // ================================================================
-                // PROFILE IMAGE UPLOAD - WITH COMPRESSION
-                // ================================================================
-                document.getElementById('userAvatarContainer').addEventListener('click', function(e) {
-                    if (e.target.closest('.logout-btn') || e.target.closest('.edit-account-btn')) return;
-                    if (!currentUser) {
-                        showToast('⚠️ Please login first to change your profile picture.', 2000);
-                        return;
-                    }
-                    document.getElementById('avatarUploadInput').click();
-                });
+            // ---- AMOUNT INPUT ----
+            document.getElementById('amountInput').addEventListener('input', computeCharges);
+            document.getElementById('countryCodeSelect').addEventListener('change', function() {
+                if (!isLocalMode) {
+                    const parts = this.value.split('|');
+                    currentCountryData = { gstRate: parseFloat(parts[4]), currency: parts[2], flag: parts[3] };
+                    gstRateLabel.innerText = currentCountryData.gstRate;
+                    currencySymbolSpan.innerText = currentCountryData.currency;
+                    flagSpan.innerText = currentCountryData.flag;
+                    computeCharges();
+                }
+            });
 
-                document.getElementById('avatarUploadInput').addEventListener('change', async function(e) {
-                    const file = e.target.files[0];
-                    if (!file) return;
-                    if (!file.type.startsWith('image/')) {
-                        showToast('⚠️ Please select an image file.', 2000);
-                        this.value = '';
-                        return;
-                    }
-                    if (file.size > 3 * 1024 * 1024) {
-                        showToast('⚠️ Image must be less than 3MB.', 2000);
-                        this.value = '';
-                        return;
-                    }
-                    try {
-                        showToast('⏳ Compressing image...', 1500);
-                        const compressedDataURL = await compressImage(file, 100, 100, 0.6);
-                        if (compressedDataURL.length > 50000) {
-                            showToast('⚠️ Image too large, using emoji instead.', 3000);
-                            this.value = '';
+            // ---- FLAG CLICK ----
+            document.querySelectorAll('#headerFlagGrid .flag-icon').forEach(el => {
+                el.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const flagEmoji = this.textContent.trim();
+                    if (!flagEmoji) return;
+                    const options = document.getElementById('countryCodeSelect').options;
+                    for (let i = 0; i < options.length; i++) {
+                        if (options[i].text.startsWith(flagEmoji)) {
+                            document.getElementById('countryCodeSelect').selectedIndex = i;
+                            if (isLocalMode) setLocalMode(false);
+                            else {
+                                const parts = document.getElementById('countryCodeSelect').value
+                                    .split('|');
+                                currentCountryData = { gstRate: parseFloat(parts[4]),
+                                    currency: parts[2], flag: parts[3] };
+                                gstRateLabel.innerText = currentCountryData.gstRate;
+                                currencySymbolSpan.innerText = currentCountryData.currency;
+                                flagSpan.innerText = currentCountryData.flag;
+                                computeCharges();
+                            }
+                            const name = options[i].text.split('(')[0].trim();
+                            showToast(t('toast_selected_country', { name }), 1600);
                             return;
                         }
-                        if (currentUser) {
-                            currentUser.avatarDataURL = compressedDataURL;
-                            saveUserToStorage(currentUser);
-                            const regUser = registeredUsers.find(u => u.phone === currentUser.phone || u.name ===
-                                currentUser.name);
-                            if (regUser) {
-                                regUser.avatarDataURL = compressedDataURL;
-                                saveRegisteredUsers();
-                            }
-                            const connUser = connectedUsers.find(u => u.id === 'current');
-                            if (connUser) connUser.avatarDataURL = compressedDataURL;
-                            updateAvatarDisplay(currentUser);
-                            showToast('✅ Profile picture updated!', 2000);
-                            renderSidebar();
-                        }
-                    } catch (err) {
-                        showToast('⚠️ Failed to compress image. Please try a smaller image.', 3000);
-                        console.error('Compression error:', err);
                     }
-                    this.value = '';
+                    showToast(t('toast_country_not_supported', { flag: flagEmoji }), 2000);
                 });
+            });
 
-                // Preview for registration image
-                document.getElementById('regProfileImage').addEventListener('change', async function(e) {
-                    const file = e.target.files[0];
-                    if (file) {
-                        try {
-                            const compressed = await compressImage(file, 100, 100, 0.6);
-                            if (compressed.length <= 50000) {
-                                const preview = document.getElementById('regProfilePreview');
-                                preview.style.display = 'block';
-                                preview.querySelector('img').src = compressed;
-                            } else {
-                                showToast('⚠️ Image too large, using emoji instead.', 3000);
-                                this.value = '';
-                            }
-                        } catch (err) {
-                            showToast('⚠️ Could not compress image. Please try a smaller file.', 3000);
-                            this.value = '';
-                        }
-                    }
-                });
-                document.getElementById('regProfileRemove').addEventListener('click', function() {
-                    const preview = document.getElementById('regProfilePreview');
-                    preview.style.display = 'none';
-                    preview.querySelector('img').src = '';
-                    document.getElementById('regProfileImage').value = '';
-                });
+            // ---- FLAG SCROLL ----
+            document.getElementById('flagScrollLeft').addEventListener('click', function() {
+                document.getElementById('flagGridWrapper').scrollBy({ left: -150, behavior: 'smooth' });
+            });
+            document.getElementById('flagScrollRight').addEventListener('click', function() {
+                document.getElementById('flagGridWrapper').scrollBy({ left: 150, behavior: 'smooth' });
+            });
 
-                // Preview for edit account image
-                document.getElementById('editProfileImage').addEventListener('change', async function(e) {
-                    const file = e.target.files[0];
-                    if (file) {
-                        try {
-                            const compressed = await compressImage(file, 100, 100, 0.6);
-                            if (compressed.length <= 50000) {
-                                const preview = document.getElementById('editProfilePreview');
-                                preview.style.display = 'block';
-                                preview.querySelector('img').src = compressed;
-                            } else {
-                                showToast('⚠️ Image too large, using emoji instead.', 3000);
-                                this.value = '';
-                            }
-                        } catch (err) {
-                            showToast('⚠️ Could not compress image. Please try a smaller file.', 3000);
-                            this.value = '';
-                        }
-                    }
+            // ---- EMOJI PICKER ----
+            document.querySelectorAll('#emojiPickerGrid .emoji-option').forEach(el => {
+                el.addEventListener('click', function() {
+                    document.querySelectorAll('#emojiPickerGrid .emoji-option').forEach(o => o
+                        .classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedEmoji = this.getAttribute('data-emoji') || '👤';
                 });
-                document.getElementById('editProfileRemove').addEventListener('click', function() {
-                    const preview = document.getElementById('editProfilePreview');
-                    preview.style.display = 'none';
-                    preview.querySelector('img').src = '';
-                    document.getElementById('editProfileImage').value = '';
+            });
+            document.querySelectorAll('#editEmojiPickerGrid .emoji-option').forEach(el => {
+                el.addEventListener('click', function() {
+                    document.querySelectorAll('#editEmojiPickerGrid .emoji-option').forEach(o => o
+                        .classList.remove('selected'));
+                    this.classList.add('selected');
                 });
+            });
 
-                // ================================================================
-                // AGENT LOGO COMPRESSION
-                // ================================================================
-                document.getElementById('agentLogoImage').addEventListener('change', async function(e) {
-                    const file = e.target.files[0];
-                    if (file) {
-                        try {
-                            const compressed = await compressImage(file, 150, 150, 0.7);
-                            if (compressed.length <= 80000) {
-                                const preview = document.getElementById('agentLogoPreviewContainer');
-                                preview.style.display = 'block';
-                                preview.querySelector('img').src = compressed;
-                            } else {
-                                showToast('⚠️ Logo too large, using placeholder.', 3000);
-                                this.value = '';
-                            }
-                        } catch (err) {
-                            showToast('⚠️ Could not compress logo. Please try a smaller file.', 3000);
-                            this.value = '';
-                        }
-                    }
+            // ---- GENERATE USSD IN REGISTER ----
+            document.getElementById('regGenerateUssdBtn').addEventListener('click', function() {
+                const phone = document.getElementById('regPhone').value.trim();
+                if (!phone) { showToast('⚠️ Please enter your phone number first.', 2500); return; }
+                const clean = phone.replace(/\D/g, '');
+                if (clean.length < 6) { showToast(
+                        '⚠️ Please enter a valid phone number (at least 6 digits).', 2500); return; }
+                const ussdCode = `#144*2*1*${clean}*100*0000#`;
+                document.getElementById('regUssdCode').textContent = ussdCode;
+                document.getElementById('regUssdResult').style.display = 'flex';
+                showToast('📱 USSD code generated!', 2000);
+            });
+            document.getElementById('regCopyUssdBtn').addEventListener('click', function() {
+                const code = document.getElementById('regUssdCode').textContent;
+                if (code) {
+                    navigator.clipboard.writeText(code).then(() => { showToast('✅ USSD code copied!',
+                        1500); }).catch(() => {
+                        const el = document.getElementById('regUssdCode');
+                        const range = document.createRange();
+                        range.selectNodeContents(el);
+                        const sel = window.getSelection();
+                        sel.removeAllRanges();
+                        sel.addRange(range);
+                        document.execCommand('copy');
+                        showToast('✅ USSD code copied!', 1500);
+                    });
+                } else showToast('⚠️ No code to copy.', 1500);
+            });
+
+            // ---- AGENT REGISTRATION ----
+            document.getElementById('generatePasswordBtn').addEventListener('click', function() {
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                let result = '';
+                for (let i = 0; i < 6; i++) result += chars.charAt(Math.floor(Math.random() * chars.length));
+                document.getElementById('agentPassword').value = result;
+                document.getElementById('agentPasswordHint').textContent = '✅ Password generated: ' + result;
+                document.getElementById('agentPasswordHint').style.color = '#27ae60';
+                showToast('🔑 Password generated: ' + result, 3000);
+            });
+
+            document.getElementById('generateCollateralBtn').addEventListener('click', function() {
+                const mobileMoney = document.getElementById('agentMobileMoney').value.trim();
+                const errorEl = document.getElementById('collateralError');
+                const displayEl = document.getElementById('collateralUssdDisplay');
+                if (!mobileMoney) { errorEl.textContent = t('agent_collateral_error');
+                    displayEl.style.display = 'none'; return; }
+                errorEl.textContent = '';
+                const collateralLimit = parseInt(document.getElementById('agentCollateralLimit').value) || 0;
+                if (collateralLimit <= 0) { errorEl.textContent = '❌ Please select a valid collateral limit.';
+                    displayEl.style.display = 'none'; return; }
+                const cleanPhone = mobileMoney.replace(/\D/g, '');
+                const ussdCode = `#144*2*2*${cleanPhone}*${collateralLimit}*0000#`;
+                displayEl.textContent = ussdCode;
+                displayEl.style.display = 'block';
+                document.getElementById('collateralAmount').value = collateralLimit;
+                showToast(`🔒 Collateral USSD generated for ${collateralLimit}`, 4000);
+            });
+
+            // ---- VIEW AGREEMENT ----
+            document.getElementById('viewAgreementBtn').addEventListener('click', function() {
+                const bizName = document.getElementById('agentBusinessName').value.trim();
+                const ownerName = document.getElementById('agentOwnerName').value.trim();
+                if (!bizName || !ownerName) {
+                    showToast('⚠️ Please fill in Business Name and Owner Name first.', 3000);
+                    return;
+                }
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long',
+                    day: 'numeric' });
+                const body = document.getElementById('agreementBody');
+                body.innerHTML = `
+                        <div class="clause"><span class="tag">Clause 1 – Agent Obligation</span><strong>I</strong> <span class="placeholder">${SecurityUtils.escapeHTML(ownerName)}</span>, <strong>Owner of:</strong> <span class="placeholder">${SecurityUtils.escapeHTML(bizName)}</span>, <strong>on the:</strong> <span class="placeholder">${dateStr}</span>, <strong>agreed</strong> to honor the developer's rules of engagement...</div>
+                        <div class="clause"><span class="tag">Clause 2 – Commission</span><strong>I</strong> <span class="placeholder">${SecurityUtils.escapeHTML(ownerName)}</span> agreed to receive <strong>7%</strong> of charges.</div>
+                        <div class="clause"><span class="tag">Clause 3 – Warning & Closure</span>Taking more than percentage for more than once will close the agent account.</div>
+                        <div class="clause"><span class="tag">Clause 4 – Agent Signature</span><div class="agreement-signature-area open"><canvas id="agreementSigCanvas" width="400" height="100"></canvas><div class="sig-actions"><button class="sig-clear" id="clearAgreementSig">🗑️ Clear</button><button class="sig-confirm" id="confirmAgreementSig">✅ Confirm Signature</button></div></div><img class="sig-preview" id="agreementSigPreview" alt="Signature" /></div>
+                        <div class="clause dev-clause"><span class="tag">Developer Agreement – NUSWEB</span>Developer Mohamed Amine Jalloh agrees to support the agent.</div>
+                        <div style="font-size:0.6rem; color:#7f8c8d; text-align:center; margin-top:8px;">Date: ${dateStr}</div>
+                    `;
+                document.getElementById('agreementModal').style.display = 'flex';
+                const canvas = document.getElementById('agreementSigCanvas');
+                const ctx = canvas.getContext('2d');
+                let drawing = false,
+                    lastX = 0,
+                    lastY = 0;
+
+                function getPos(e) {
+                    const rect = canvas.getBoundingClientRect();
+                    const x = (e.clientX || e.touches?.[0]?.clientX || 0) - rect.left;
+                    const y = (e.clientY || e.touches?.[0]?.clientY || 0) - rect.top;
+                    const scaleX = canvas.width / rect.width;
+                    const scaleY = canvas.height / rect.height;
+                    return { x: x * scaleX, y: y * scaleY };
+                }
+                canvas.addEventListener('mousedown', function(e) { drawing = true;
+                    lastX = getPos(e).x;
+                    lastY = getPos(e).y; });
+                canvas.addEventListener('mousemove', function(e) { if (!drawing) return; const pos = getPos(e);
+                    ctx.beginPath();
+                    ctx.moveTo(lastX, lastY);
+                    ctx.lineTo(pos.x, pos.y);
+                    ctx.strokeStyle = '#0a2b3c';
+                    ctx.lineWidth = 2.5;
+                    ctx.lineCap = 'round';
+                    ctx.stroke();
+                    lastX = pos.x;
+                    lastY = pos.y; });
+                canvas.addEventListener('mouseup', function() { drawing = false; });
+                canvas.addEventListener('touchstart', function(e) { drawing = true; const pos = getPos(e);
+                    lastX = pos.x;
+                    lastY = pos.y; });
+                canvas.addEventListener('touchmove', function(e) { if (!drawing) return; const pos = getPos(e);
+                    ctx.beginPath();
+                    ctx.moveTo(lastX, lastY);
+                    ctx.lineTo(pos.x, pos.y);
+                    ctx.stroke();
+                    lastX = pos.x;
+                    lastY = pos.y; });
+                canvas.addEventListener('touchend', function() { drawing = false; });
+                ctx.fillStyle = 'white';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                document.getElementById('clearAgreementSig').addEventListener('click', function() {
+                    ctx.fillStyle = 'white';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    document.getElementById('agreementSigPreview').classList.remove('show');
+                    document.getElementById('agreementAgreeBtn').disabled = true;
+                    agreementSigned = false;
+                    updateAgreementStatus(false);
                 });
-                document.getElementById('agentLogoRemove').addEventListener('click', function() {
-                    const preview = document.getElementById('agentLogoPreviewContainer');
-                    preview.style.display = 'none';
-                    preview.querySelector('img').src = '';
-                    document.getElementById('agentLogoImage').value = '';
+                document.getElementById('confirmAgreementSig').addEventListener('click', function() {
+                    const dataURL = canvas.toDataURL('image/png');
+                    if (dataURL === 'data:,') { showToast('⚠️ Please draw your signature first.',
+                        2000); return; }
+                    agreementSignatureDataURL = dataURL;
+                    document.getElementById('agreementSigPreview').src = dataURL;
+                    document.getElementById('agreementSigPreview').classList.add('show');
+                    document.getElementById('agreementAgreeBtn').disabled = false;
+                    document.getElementById('agreementStatus').innerHTML =
+                        '✅ Signature confirmed. Click "I Agree & Sign" to finalize.';
+                    agreementSigned = true;
+                    updateAgreementStatus(true);
+                    showToast('✅ Signature confirmed!', 1500);
                 });
+            });
 
-                // ================================================================
-                // INTERNATIONAL TOGGLE
-                // ================================================================
-                document.getElementById('intlToggleBtn').addEventListener('click', function() {
-                    setLocalMode(isLocalMode);
-                });
+            function updateAgreementStatus(signed) {
+                const statusText = document.getElementById('agreementStatusText');
+                if (signed) { statusText.textContent = 'Signed ✅';
+                    statusText.style.color = '#27ae60'; } else { statusText.textContent = 'Not Signed';
+                    statusText.style.color = '#e74c3c'; }
+            }
 
-                // ================================================================
-                // MAIN MM BUTTON
-                // ================================================================
-                document.getElementById('mainMmBtn').addEventListener('click', function() {
-                    if (parseFloat(amountInput.value) <= 0) { showToast(t('toast_enter_amount')); return; }
-                    if (!document.getElementById('agentName').value.trim()) { showToast(
-                            '⚠️ Please select an agent first.'); return; }
-                    document.getElementById('providerModal').style.display = 'flex';
-                });
+            document.getElementById('agreementAgreeBtn').addEventListener('click', function() {
+                if (!agreementSignatureDataURL) { showToast('⚠️ Please provide your signature first.',
+                        2000); return; }
+                document.getElementById('agreementStatus').innerHTML = '✅ Agreement signed successfully!';
+                this.disabled = true;
+                this.textContent = '✅ Signed';
+                this.classList.add('agreed');
+                showToast('✅ Agent Agreement signed successfully!', 2500);
+                window._agentAgreement = {
+                    signed: true,
+                    signature: agreementSignatureDataURL,
+                    signedDate: new Date().toISOString(),
+                    agentName: document.getElementById('agentOwnerName').value.trim(),
+                    businessName: document.getElementById('agentBusinessName').value.trim(),
+                    agreementText: 'Agent Agreement signed.'
+                };
+                setTimeout(() => { document.getElementById('agreementModal').style.display = 'none'; },
+                800);
+            });
 
-                // ================================================================
-                // PROVIDER / ROLE / ACTION MODALS
-                // ================================================================
-                document.querySelectorAll('#providerModal .action-btn[data-provider]').forEach(btn =>
-                    btn.addEventListener('click', function() {
-                        const provider = this.getAttribute('data-provider');
-                        document.getElementById('providerModal').style.display = 'none';
-                        document.getElementById('roleModalTitle').innerHTML = `${provider} – ${t('select_type')}`;
-                        document.getElementById('roleModal').style.display = 'flex';
-                        window._selectedProvider = provider;
-                    })
-                );
+            document.getElementById('agreementCloseBtn').addEventListener('click', function() {
+                document.getElementById('agreementModal').style.display = 'none';
+            });
 
-                document.querySelectorAll('#roleButtons .action-btn[data-role]').forEach(btn =>
-                    btn.addEventListener('click', function() {
-                        const role = this.getAttribute('data-role');
-                        document.getElementById('roleModal').style.display = 'none';
-                        const roleText = role === 'agent' ? t('agent') : (role === 'customer' ? t('customer') :
-                            t('other'));
-                        document.getElementById('selectedRoleDisplay').innerHTML =
-                            `${t('select_type')}: ${roleText}`;
-                        document.getElementById('modalProviderName').innerText = window._selectedProvider ||
-                            'Orange';
-                        document.getElementById('actionModal').style.display = 'flex';
-                        window._selectedRole = role;
-                    })
-                );
+            // ---- SUBMIT AGENT REGISTRATION ----
+            document.getElementById('submitAgentRegistrationBtn').addEventListener('click', function() {
+                const providerTxId = document.getElementById('agentProviderTxId').value.trim();
+                if (!providerTxId) { showToast('❌ Please enter a Provider Transaction ID.', 3000); return; }
+                if (!/^[A-Za-z]{2}[0-9]{6}\.[0-9]{4}\.[A-Za-z][0-9]{5}$/.test(providerTxId)) {
+                    showToast('❌ Invalid Provider TX ID format.', 3000);
+                    return;
+                }
+                if (!agreementSigned || !window._agentAgreement) {
+                    showToast('⚠️ You must sign the Agent Agreement before registering.', 3000);
+                    document.getElementById('viewAgreementBtn').click();
+                    return;
+                }
+                const bizName = document.getElementById('agentBusinessName').value.trim();
+                const address = document.getElementById('agentAddress').value.trim();
+                const city = getCityValue('agentCitySelect', 'agentCityOther');
+                const regNumber = document.getElementById('agentRegNumber').value.trim();
+                const ownerName = document.getElementById('agentOwnerName').value.trim();
+                const idNumber = document.getElementById('agentIdNumber').value.trim();
+                const mobileMoney = document.getElementById('agentMobileMoney').value.trim();
+                const password = document.getElementById('agentPassword').value.trim();
+                const collateralAmount = parseFloat(document.getElementById('collateralAmount').value) || 0;
+                if (!bizName || !address || !city || !regNumber || !ownerName || !idNumber || !mobileMoney ||
+                    !password) {
+                    document.getElementById('agentRegError').textContent = t('agent_reg_error');
+                    return;
+                }
+                if (password.length !== 6) {
+                    document.getElementById('agentRegError').textContent =
+                        '❌ Password must be exactly 6 characters';
+                    return;
+                }
+                if (collateralAmount === 0) {
+                    document.getElementById('agentRegError').textContent =
+                        '❌ Please generate collateral first';
+                    return;
+                }
+                document.getElementById('agentRegError').textContent = '';
+                document.getElementById('agentRegSuccess').textContent = t('agent_reg_loading');
 
-                function buildAndDialUSSD(action) {
-                    const amount = parseFloat(amountInput.value);
-                    if (isNaN(amount) || amount <= 0) { showToast(t('toast_valid_amount')); return; }
-                    const maxLimit = parseFloat(amountInput.max);
-                    if (maxLimit > 0 && amount > maxLimit) {
-                        showToast(`❌ Amount exceeds collateral limit of ${maxLimit}`, 3000);
-                        return;
-                    }
-                    let cleanPhone = document.getElementById('agentPhone').value.replace(/\D/g, '');
-                    let agentName = document.getElementById('agentName').value.trim();
-                    if (!agentName) { showToast('⚠️ Please select an agent first.'); return; }
-                    const charge = amount * 0.01;
-                    const gst = isLocalMode ? 0 : charge * (currentCountryData.gstRate / 100);
-                    const total = amount + charge + gst;
-                    const totalFixed = Math.round(total);
-                    let ussdCode = `#144*2*2*${cleanPhone}*${totalFixed}*0000#`;
-                    showToast(`📞 ${window._selectedProvider || 'Mobile Money'} – ${action}`, 2800);
-                    const link = document.createElement('a');
-                    link.href = `tel:${ussdCode}`;
-                    link.click();
-                    showToast(t('toast_initiated', { action }), 4000);
-                    navigator.clipboard.writeText(ussdCode).then(() => { showToast('✅ USSD code copied!', 2000); })
-                        .catch(() => {});
+                let logoDataURL = null;
+                const logoPreview = document.getElementById('agentLogoPreviewContainer');
+                if (logoPreview.style.display !== 'none') {
+                    const img = logoPreview.querySelector('img');
+                    if (img && img.src && !img.src.startsWith('#')) logoDataURL = img.src;
                 }
 
-                document.getElementById('actionTransfer').addEventListener('click', function() {
-                    buildAndDialUSSD(t('transfer'));
-                    document.getElementById('actionModal').style.display = 'none';
-                });
-                document.getElementById('actionPay').addEventListener('click', function() {
-                    buildAndDialUSSD(t('pay'));
-                    document.getElementById('actionModal').style.display = 'none';
-                });
-                document.getElementById('actionCashout').addEventListener('click', function() {
-                    buildAndDialUSSD(t('cashout'));
-                    document.getElementById('actionModal').style.display = 'none';
-                });
+                const agentData = {
+                    id: 'agent_' + Date.now(),
+                    name: bizName + ' (' + ownerName + ')',
+                    businessName: bizName,
+                    businessAddress: address,
+                    city: city,
+                    regNumber: regNumber,
+                    businessType: document.getElementById('agentBusinessType').value,
+                    ownerName: ownerName,
+                    idType: document.getElementById('agentIdType').value,
+                    idNumber: idNumber,
+                    mobileMoney: mobileMoney,
+                    countryCode: document.getElementById('agentCountryCode').value,
+                    password: password,
+                    collateralAmount: collateralAmount,
+                    collateralLimit: parseInt(document.getElementById('agentCollateralLimit').value) || 5000,
+                    currency: 'GNF',
+                    approved: false,
+                    role: 'agent',
+                    isAgent: true,
+                    registeredAt: new Date().toISOString(),
+                    idImageDataURL: null,
+                    logoDataURL: logoDataURL,
+                    agreement: window._agentAgreement || null,
+                    providerTxId: providerTxId
+                };
 
-                // ================================================================
-                // MAIN FORM SUBMIT
-                // ================================================================
-                document.getElementById('mainForm').addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    const providerTxId = document.getElementById('providerTxId').value.trim();
-                    if (!providerTxId) {
-                        showToast('❌ Please enter a Provider Transaction ID.', 3000);
-                        return;
-                    }
-                    if (!/^[A-Za-z]{2}[0-9]{6}\.[0-9]{4}\.[A-Za-z][0-9]{5}$/.test(providerTxId)) {
-                        showToast('❌ Invalid Provider TX ID format.', 3000);
-                        return;
-                    }
-                    const senderName = document.getElementById('senderName').value.trim();
-                    const senderPhone = document.getElementById('senderPhone').value.trim();
-                    const agentName = document.getElementById('agentName').value.trim();
-                    if (!senderName || !senderPhone || !agentName) {
-                        showToast('❌ Please fill Sender and Agent fields.');
-                        return;
-                    }
-                    const amount = parseFloat(amountInput.value) || 0;
-                    if (amount <= 0) { showToast('❌ Please enter a valid amount.'); return; }
-                    const maxLimit = parseFloat(amountInput.max);
-                    if (maxLimit > 0 && amount > maxLimit) {
-                        showToast(`❌ Amount exceeds collateral limit of ${maxLimit}`, 3000);
-                        return;
-                    }
-                    ensureTransactionId();
-                    const charge = amount * 0.01;
-                    const gstRate = isLocalMode ? 0 : currentCountryData.gstRate;
-                    const gst = charge * (gstRate / 100);
-                    const total = amount + charge + gst;
-                    const currency = isLocalMode ? "Local" : currentCountryData.currency;
-                    const txId = document.getElementById('transactionId').value.trim();
-                    const dateStr = document.getElementById('currentDate').innerText + " " + document.getElementById(
-                        'currentTime').innerText;
-                    const receiptData = {
-                        txId,
-                        date: dateStr,
-                        mode: isLocalMode ? "Local" : "International",
-                        sender: `${senderName} (${senderPhone})`,
-                        agent: agentName,
-                        client: document.getElementById('clientName').value.trim() || 'N/A',
-                        baseAmount: amount.toFixed(2),
-                        charge: charge.toFixed(2),
-                        gstRate: gstRate,
-                        gst: gst.toFixed(2),
-                        total: total.toFixed(2),
-                        currency: currency,
-                        providerTxId: providerTxId
+                const idImage = document.getElementById('agentIdImage').files[0];
+                if (idImage) {
+                    const reader = new FileReader();
+                    reader.onload = function(ev) {
+                        agentData.idImageDataURL = ev.target.result;
+                        registeredUsers.push(agentData);
+                        saveRegisteredUsers();
+                        showToast(t('agent_reg_success', { name: bizName }), 3000);
+                        renderAgentDropdown();
+                        renderSidebar();
+                        selectAgent(agentData.id);
+                        document.getElementById('agentRegSuccess').textContent = t('agent_reg_success',
+                            { name: bizName });
+                        setTimeout(() => {
+                            document.getElementById('agentRegistrationModal').style.display =
+                            'none';
+                        }, 1500);
                     };
-                    showReceiptModal(receiptData);
-                });
+                    reader.readAsDataURL(idImage);
+                } else {
+                    registeredUsers.push(agentData);
+                    saveRegisteredUsers();
+                    showToast(t('agent_reg_success', { name: bizName }), 3000);
+                    renderAgentDropdown();
+                    renderSidebar();
+                    selectAgent(agentData.id);
+                    document.getElementById('agentRegSuccess').textContent = t('agent_reg_success', { name:
+                        bizName });
+                    setTimeout(() => {
+                        document.getElementById('agentRegistrationModal').style.display = 'none';
+                    }, 1500);
+                }
+            });
 
-                function ensureTransactionId() {
-                    const field = document.getElementById('transactionId');
-                    if (field && !field.value.trim()) {
-                        const p1 = Math.floor(1000000 + Math.random() * 9000000);
-                        const p2 = Math.floor(10000 + Math.random() * 90000);
-                        const letter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
-                        const p3 = Math.floor(1000000 + Math.random() * 9000000);
-                        field.value = `WB${p1}.${p2}.${letter}${p3}`;
+            document.getElementById('closeAgentRegBtn').addEventListener('click', function() {
+                document.getElementById('agentRegistrationModal').style.display = 'none';
+            });
+
+            document.getElementById('registerAgentBtn').addEventListener('click', function() {
+                document.getElementById('agentRegistrationModal').style.display = 'flex';
+            });
+
+            // ---- SAVE EDIT AGENT ----
+            document.getElementById('saveEditAgentBtn').addEventListener('click', function() {
+                const agentId = document.getElementById('editAgentId').value;
+                const businessName = document.getElementById('editBusinessName').value.trim();
+                const address = document.getElementById('editAddress').value.trim();
+                const city = getCityValue('editCitySelect', 'editCityOther');
+                const regNumber = document.getElementById('editRegNumber').value.trim();
+                const mobileMoney = document.getElementById('editMobileMoney').value.trim();
+                const password = document.getElementById('editPassword').value.trim();
+                if (!businessName || !address || !city || !regNumber || !mobileMoney || !password) {
+                    document.getElementById('editAgentError').textContent = t('edit_agent_error');
+                    return;
+                }
+                const agents = getAgents();
+                const agent = agents.find(a => a.id === agentId);
+                if (!agent) { document.getElementById('editAgentError').textContent = 'Agent not found'; return; }
+                const data = agent.agentData || agent;
+                if (password !== data.password) {
+                    document.getElementById('editAgentError').textContent = t('edit_agent_password_error');
+                    return;
+                }
+                data.businessName = businessName;
+                data.businessAddress = address;
+                data.city = city;
+                data.regNumber = regNumber;
+                data.mobileMoney = mobileMoney;
+                data.phone = mobileMoney;
+                const user = connectedUsers.find(u => u.id === agentId);
+                if (user) { user.name = businessName + ' (' + data.ownerName + ')';
+                    user.phone = mobileMoney;
+                    user.agentData = data; }
+                const regUser = registeredUsers.find(u => u.id === agentId);
+                if (regUser) {
+                    regUser.businessName = businessName;
+                    regUser.businessAddress = address;
+                    regUser.city = city;
+                    regUser.regNumber = regNumber;
+                    regUser.mobileMoney = mobileMoney;
+                    regUser.phone = mobileMoney;
+                    regUser.name = businessName + ' (' + data.ownerName + ')';
+                }
+                saveRegisteredUsers();
+                document.getElementById('editAgentSuccess').textContent = t('edit_agent_success', { name:
+                    businessName });
+                document.getElementById('editAgentError').textContent = '';
+                renderAgentDropdown();
+                renderSidebar();
+                showToast(t('agent_updated', { name: businessName }), 2000);
+                if (selectedAgentId === agentId) {
+                    document.getElementById('selectedAgentName').textContent = businessName + ' (' + data
+                        .ownerName + ')';
+                    document.getElementById('agentName').value = businessName + ' (' + data.ownerName + ')';
+                    let phoneDisplay = data.mobileMoney || '';
+                    if (data.countryCode && phoneDisplay && !phoneDisplay.startsWith(data.countryCode)) {
+                        phoneDisplay = data.countryCode + ' ' + phoneDisplay;
+                    } else if (data.countryCode && !phoneDisplay) { phoneDisplay = data.countryCode; }
+                    document.getElementById('agentPhone').value = phoneDisplay;
+                }
+                setTimeout(() => {
+                    document.getElementById('editAgentModal').style.display = 'none';
+                    document.getElementById('editAgentSuccess').textContent = '';
+                }, 1200);
+            });
+
+            // ---- RECEIPT CLOSE ----
+            document.getElementById('receiptModal').addEventListener('click', function(e) {
+                if (e.target === this) this.style.display = 'none';
+            });
+
+            // ---- DO REGISTER ----
+            document.getElementById('doRegisterBtn').addEventListener('click', async function() {
+                const name = document.getElementById('regName').value.trim();
+                const phone = document.getElementById('regPhone').value.trim();
+                const address = document.getElementById('regAddress').value.trim();
+                const city = getCityValue('regCitySelect', 'regCityOther');
+                const country = document.getElementById('regCountry').value;
+                const language = document.getElementById('regLanguage').value;
+
+                const selected = document.querySelector('#emojiPickerGrid .emoji-option.selected');
+                const emoji = selected ? selected.getAttribute('data-emoji') : '👤';
+
+                let avatarDataURL = null;
+                const previewContainer = document.getElementById('regProfilePreview');
+                const fileInput = document.getElementById('regProfileImage');
+
+                if (previewContainer.style.display !== 'none') {
+                    const img = previewContainer.querySelector('img');
+                    if (img && img.src && !img.src.startsWith('#')) {
+                        avatarDataURL = img.src;
                     }
                 }
 
-                function showReceiptModal(data) {
-                    const body = document.getElementById('receiptBody');
-                    const lines = [
-                        { label: t('receipt_tx_id'), value: data.txId },
-                        { label: t('receipt_date'), value: data.date },
-                        { label: t('receipt_type'), value: data.mode },
-                        { label: t('receipt_sender'), value: data.sender },
-                        { label: '👤 Agent', value: data.agent },
-                        { label: '👥 Client', value: data.client },
-                        { label: '🔐 Provider TX ID', value: data.providerTxId || 'N/A' },
-                        { label: t('receipt_base'), value: data.currency + ' ' + data.baseAmount },
-                        { label: t('receipt_charge'), value: data.currency + ' ' + data.charge },
-                        { label: t('receipt_gst', { rate: data.gstRate }), value: data.currency + ' ' + data.gst },
-                        { label: t('receipt_total'), value: data.currency + ' ' + data.total, total: true }
-                    ];
-                    let html = '';
-                    lines.forEach(line => {
-                        const cls = line.total ? 'receipt-row total' : 'receipt-row';
-                        html +=
-                            `<div class="${cls}"><span class="label">${line.label}</span><span class="value">${line.value}</span></div>`;
-                    });
-                    body.innerHTML = html;
-                    document.getElementById('receiptModal').style.display = 'flex';
-                }
-
-                document.getElementById('receiptCloseBtn').addEventListener('click', function() {
-                    document.getElementById('receiptModal').style.display = 'none';
-                });
-
-                // ================================================================
-                // ADD CLIENT
-                // ================================================================
-                document.getElementById('addClientBtnHeader').addEventListener('click', function() {
-                    document.getElementById('newClientName').value = '';
-                    document.getElementById('newClientPhone').value = '';
-                    document.getElementById('addClientError').textContent = '';
-                    document.getElementById('addClientModal').style.display = 'flex';
-                });
-
-                document.getElementById('saveClientBtn').addEventListener('click', function() {
-                    const name = document.getElementById('newClientName').value.trim();
-                    const phone = document.getElementById('newClientPhone').value.trim();
-                    if (!name) { document.getElementById('addClientError').textContent =
-                            '❌ Please enter a client name.'; return; }
-                    if (!phone) { document.getElementById('addClientError').textContent =
-                            '❌ Please enter a client phone number.'; return; }
-                    document.getElementById('clientName').value = name;
-                    document.getElementById('clientPhone').value = phone;
-                    document.getElementById('clientSectionTitle').style.display = 'block';
-                    document.getElementById('clientFieldsRow').style.display = 'grid';
-                    showToast(`✅ Client "${name}" added!`, 2000);
-                    document.getElementById('addClientModal').style.display = 'none';
-                });
-
-                // ================================================================
-                // AMOUNT INPUT - compute charges
-                // ================================================================
-                document.getElementById('amountInput').addEventListener('input', computeCharges);
-                document.getElementById('countryCodeSelect').addEventListener('change', function() {
-                    if (!isLocalMode) {
-                        const parts = this.value.split('|');
-                        currentCountryData = { gstRate: parseFloat(parts[4]), currency: parts[2], flag: parts[3] };
-                        gstRateLabel.innerText = currentCountryData.gstRate;
-                        currencySymbolSpan.innerText = currentCountryData.currency;
-                        flagSpan.innerText = currentCountryData.flag;
-                        computeCharges();
-                    }
-                });
-
-                // ================================================================
-                // FLAG CLICK HANDLERS
-                // ================================================================
-                document.querySelectorAll('#headerFlagGrid .flag-icon').forEach(el => {
-                    el.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        const flagEmoji = this.textContent.trim();
-                        if (!flagEmoji) return;
-                        const options = document.getElementById('countryCodeSelect').options;
-                        for (let i = 0; i < options.length; i++) {
-                            if (options[i].text.startsWith(flagEmoji)) {
-                                document.getElementById('countryCodeSelect').selectedIndex = i;
-                                if (isLocalMode) setLocalMode(false);
-                                else {
-                                    const parts = document.getElementById('countryCodeSelect').value
-                                        .split('|');
-                                    currentCountryData = { gstRate: parseFloat(parts[4]),
-                                        currency: parts[2], flag: parts[3] };
-                                    gstRateLabel.innerText = currentCountryData.gstRate;
-                                    currencySymbolSpan.innerText = currentCountryData.currency;
-                                    flagSpan.innerText = currentCountryData.flag;
-                                    computeCharges();
-                                }
-                                const name = options[i].text.split('(')[0].trim();
-                                showToast(t('toast_selected_country', { name }), 1600);
-                                return;
-                            }
+                if (!avatarDataURL && fileInput && fileInput.files && fileInput.files[0]) {
+                    try {
+                        avatarDataURL = await compressImage(fileInput.files[0], 100, 100, 0.6);
+                        if (avatarDataURL.length > 50000) {
+                            avatarDataURL = null;
+                            showToast('⚠️ Image too large, using emoji instead.', 3000);
                         }
-                        showToast(t('toast_country_not_supported', { flag: flagEmoji }), 2000);
-                    });
-                });
+                        const img = previewContainer.querySelector('img');
+                        if (img) img.src = avatarDataURL || '';
+                        previewContainer.style.display = avatarDataURL ? 'block' : 'none';
+                    } catch (e) {
+                        console.warn('Image compression failed, using emoji fallback.', e);
+                        avatarDataURL = null;
+                    }
+                }
 
-                // ================================================================
-                // FLAG SCROLL
-                // ================================================================
-                document.getElementById('flagScrollLeft').addEventListener('click', function() {
-                    document.getElementById('flagGridWrapper').scrollBy({ left: -150, behavior: 'smooth' });
-                });
-                document.getElementById('flagScrollRight').addEventListener('click', function() {
-                    document.getElementById('flagGridWrapper').scrollBy({ left: 150, behavior: 'smooth' });
-                });
+                if (!name || !phone || !city) {
+                    document.getElementById('regError').innerText = t('toast_register_error');
+                    return;
+                }
 
-                // ================================================================
-                // DATE/TIME UPDATE
-                // ================================================================
+                const regData = {
+                    name: name,
+                    phone: phone,
+                    address: address || '',
+                    city: city,
+                    country: country || 'Sierra Leone',
+                    language: language || 'en',
+                    emoji: avatarDataURL ? '' : emoji,
+                    avatarDataURL: avatarDataURL
+                };
+
+                await registerUser(regData);
+            });
+
+            // ---- DO LOGIN ----
+            document.getElementById('doLoginBtn').addEventListener('click', function() {
+                const name = document.getElementById('loginName').value.trim();
+                const phone = document.getElementById('loginPhone').value.trim();
+                if (name && phone) {
+                    if (loginUser(name, phone)) {
+                        document.getElementById('loginModal').style.display = 'none';
+                    }
+                } else {
+                    document.getElementById('loginError').innerHTML = t('toast_login_error');
+                }
+            });
+
+            console.log('✅ All event listeners attached.');
+        }
+
+        // ================================================================
+        // MAIN INIT
+        // ================================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                console.log('🚀 AfriPay initializing...');
+
+                // Clear any oversized data to prevent quota errors
+                const userStr = localStorage.getItem(STORAGE_KEYS.user);
+                if (userStr && userStr.length > 200000) {
+                    localStorage.removeItem(STORAGE_KEYS.user);
+                    console.log('Cleared oversized user data.');
+                }
+
+                loadRegisteredUsers();
+                syncConnectedUsersFromRegistered();
+                loadStoredUser();
+                renderSidebar();
+                renderAgentDropdown();
+                renderHeaderFlags();
+                renderBusinessStrip();
+                computeCharges();
+
+                // UPDATE DATE/TIME
                 function updateDateTime() {
                     try {
                         const now = new Date();
@@ -5191,414 +5574,18 @@
                 updateDateTime();
                 setInterval(updateDateTime, 1000);
 
-                // ================================================================
-                // EMOJI PICKER
-                // ================================================================
-                document.querySelectorAll('#emojiPickerGrid .emoji-option').forEach(el => {
-                    el.addEventListener('click', function() {
-                        document.querySelectorAll('#emojiPickerGrid .emoji-option').forEach(o => o
-                            .classList.remove('selected'));
-                        this.classList.add('selected');
-                        selectedEmoji = this.getAttribute('data-emoji') || '👤';
-                    });
-                });
-                document.querySelectorAll('#editEmojiPickerGrid .emoji-option').forEach(el => {
-                    el.addEventListener('click', function() {
-                        document.querySelectorAll('#editEmojiPickerGrid .emoji-option').forEach(o => o
-                            .classList.remove('selected'));
-                        this.classList.add('selected');
-                    });
-                });
+                // ATTACH ALL EVENT LISTENERS
+                attachEventListeners();
 
-                // ================================================================
-                // GENERATE USSD IN REGISTER
-                // ================================================================
-                document.getElementById('regGenerateUssdBtn').addEventListener('click', function() {
-                    const phone = document.getElementById('regPhone').value.trim();
-                    if (!phone) { showToast('⚠️ Please enter your phone number first.', 2500); return; }
-                    const clean = phone.replace(/\D/g, '');
-                    if (clean.length < 6) { showToast(
-                            '⚠️ Please enter a valid phone number (at least 6 digits).', 2500); return; }
-                    const ussdCode = `#144*2*1*${clean}*100*0000#`;
-                    document.getElementById('regUssdCode').textContent = ussdCode;
-                    document.getElementById('regUssdResult').style.display = 'flex';
-                    showToast('📱 USSD code generated!', 2000);
-                });
-                document.getElementById('regCopyUssdBtn').addEventListener('click', function() {
-                    const code = document.getElementById('regUssdCode').textContent;
-                    if (code) {
-                        navigator.clipboard.writeText(code).then(() => { showToast('✅ USSD code copied!',
-                            1500); }).catch(() => {
-                            const el = document.getElementById('regUssdCode');
-                            const range = document.createRange();
-                            range.selectNodeContents(el);
-                            const sel = window.getSelection();
-                            sel.removeAllRanges();
-                            sel.addRange(range);
-                            document.execCommand('copy');
-                            showToast('✅ USSD code copied!', 1500);
-                        });
-                    } else showToast('⚠️ No code to copy.', 1500);
-                });
+                // Set initial local mode state
+                setLocalMode(true);
 
-                // ================================================================
-                // AGENT REGISTRATION - GENERATE PASSWORD
-                // ================================================================
-                document.getElementById('generatePasswordBtn').addEventListener('click', function() {
-                    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-                    let result = '';
-                    for (let i = 0; i < 6; i++) result += chars.charAt(Math.floor(Math.random() * chars.length));
-                    document.getElementById('agentPassword').value = result;
-                    document.getElementById('agentPasswordHint').textContent = '✅ Password generated: ' + result;
-                    document.getElementById('agentPasswordHint').style.color = '#27ae60';
-                    showToast('🔑 Password generated: ' + result, 3000);
-                });
-
-                // ================================================================
-                // AGENT REGISTRATION - GENERATE COLLATERAL
-                // ================================================================
-                document.getElementById('generateCollateralBtn').addEventListener('click', function() {
-                    const mobileMoney = document.getElementById('agentMobileMoney').value.trim();
-                    const errorEl = document.getElementById('collateralError');
-                    const displayEl = document.getElementById('collateralUssdDisplay');
-                    if (!mobileMoney) { errorEl.textContent = t('agent_collateral_error');
-                        displayEl.style.display = 'none'; return; }
-                    errorEl.textContent = '';
-                    const collateralLimit = parseInt(document.getElementById('agentCollateralLimit').value) || 0;
-                    if (collateralLimit <= 0) { errorEl.textContent = '❌ Please select a valid collateral limit.';
-                        displayEl.style.display = 'none'; return; }
-                    const cleanPhone = mobileMoney.replace(/\D/g, '');
-                    const ussdCode = `#144*2*2*${cleanPhone}*${collateralLimit}*0000#`;
-                    displayEl.textContent = ussdCode;
-                    displayEl.style.display = 'block';
-                    document.getElementById('collateralAmount').value = collateralLimit;
-                    showToast(`🔒 Collateral USSD generated for ${collateralLimit}`, 4000);
-                });
-
-                // ================================================================
-                // VIEW AGREEMENT
-                // ================================================================
-                document.getElementById('viewAgreementBtn').addEventListener('click', function() {
-                    const bizName = document.getElementById('agentBusinessName').value.trim();
-                    const ownerName = document.getElementById('agentOwnerName').value.trim();
-                    if (!bizName || !ownerName) {
-                        showToast('⚠️ Please fill in Business Name and Owner Name first.', 3000);
-                        return;
-                    }
-                    const now = new Date();
-                    const dateStr = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long',
-                        day: 'numeric' });
-                    const body = document.getElementById('agreementBody');
-                    body.innerHTML = `
-                        <div class="clause"><span class="tag">Clause 1 – Agent Obligation</span><strong>I</strong> <span class="placeholder">${SecurityUtils.escapeHTML(ownerName)}</span>, <strong>Owner of:</strong> <span class="placeholder">${SecurityUtils.escapeHTML(bizName)}</span>, <strong>on the:</strong> <span class="placeholder">${dateStr}</span>, <strong>agreed</strong> to honor the developer's rules of engagement...</div>
-                        <div class="clause"><span class="tag">Clause 2 – Commission</span><strong>I</strong> <span class="placeholder">${SecurityUtils.escapeHTML(ownerName)}</span> agreed to receive <strong>7%</strong> of charges.</div>
-                        <div class="clause"><span class="tag">Clause 3 – Warning & Closure</span>Taking more than percentage for more than once will close the agent account.</div>
-                        <div class="clause"><span class="tag">Clause 4 – Agent Signature</span><div class="agreement-signature-area open"><canvas id="agreementSigCanvas" width="400" height="100"></canvas><div class="sig-actions"><button class="sig-clear" id="clearAgreementSig">🗑️ Clear</button><button class="sig-confirm" id="confirmAgreementSig">✅ Confirm Signature</button></div></div><img class="sig-preview" id="agreementSigPreview" alt="Signature" /></div>
-                        <div class="clause dev-clause"><span class="tag">Developer Agreement – NUSWEB</span>Developer Mohamed Amine Jalloh agrees to support the agent.</div>
-                        <div style="font-size:0.6rem; color:#7f8c8d; text-align:center; margin-top:8px;">Date: ${dateStr}</div>
-                    `;
-                    document.getElementById('agreementModal').style.display = 'flex';
-                    const canvas = document.getElementById('agreementSigCanvas');
-                    const ctx = canvas.getContext('2d');
-                    let drawing = false,
-                        lastX = 0,
-                        lastY = 0;
-
-                    function getPos(e) {
-                        const rect = canvas.getBoundingClientRect();
-                        const x = (e.clientX || e.touches?.[0]?.clientX || 0) - rect.left;
-                        const y = (e.clientY || e.touches?.[0]?.clientY || 0) - rect.top;
-                        const scaleX = canvas.width / rect.width;
-                        const scaleY = canvas.height / rect.height;
-                        return { x: x * scaleX, y: y * scaleY };
-                    }
-                    canvas.addEventListener('mousedown', function(e) { drawing = true;
-                        lastX = getPos(e).x;
-                        lastY = getPos(e).y; });
-                    canvas.addEventListener('mousemove', function(e) { if (!drawing) return; const pos = getPos(e);
-                        ctx.beginPath();
-                        ctx.moveTo(lastX, lastY);
-                        ctx.lineTo(pos.x, pos.y);
-                        ctx.strokeStyle = '#0a2b3c';
-                        ctx.lineWidth = 2.5;
-                        ctx.lineCap = 'round';
-                        ctx.stroke();
-                        lastX = pos.x;
-                        lastY = pos.y; });
-                    canvas.addEventListener('mouseup', function() { drawing = false; });
-                    canvas.addEventListener('touchstart', function(e) { drawing = true; const pos = getPos(e);
-                        lastX = pos.x;
-                        lastY = pos.y; });
-                    canvas.addEventListener('touchmove', function(e) { if (!drawing) return; const pos = getPos(e);
-                        ctx.beginPath();
-                        ctx.moveTo(lastX, lastY);
-                        ctx.lineTo(pos.x, pos.y);
-                        ctx.stroke();
-                        lastX = pos.x;
-                        lastY = pos.y; });
-                    canvas.addEventListener('touchend', function() { drawing = false; });
-                    ctx.fillStyle = 'white';
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                    document.getElementById('clearAgreementSig').addEventListener('click', function() {
-                        ctx.fillStyle = 'white';
-                        ctx.fillRect(0, 0, canvas.width, canvas.height);
-                        document.getElementById('agreementSigPreview').classList.remove('show');
-                        document.getElementById('agreementAgreeBtn').disabled = true;
-                        agreementSigned = false;
-                        updateAgreementStatus(false);
-                    });
-                    document.getElementById('confirmAgreementSig').addEventListener('click', function() {
-                        const dataURL = canvas.toDataURL('image/png');
-                        if (dataURL === 'data:,') { showToast('⚠️ Please draw your signature first.',
-                            2000); return; }
-                        agreementSignatureDataURL = dataURL;
-                        document.getElementById('agreementSigPreview').src = dataURL;
-                        document.getElementById('agreementSigPreview').classList.add('show');
-                        document.getElementById('agreementAgreeBtn').disabled = false;
-                        document.getElementById('agreementStatus').innerHTML =
-                            '✅ Signature confirmed. Click "I Agree & Sign" to finalize.';
-                        agreementSigned = true;
-                        updateAgreementStatus(true);
-                        showToast('✅ Signature confirmed!', 1500);
-                    });
-                });
-
-                function updateAgreementStatus(signed) {
-                    const statusText = document.getElementById('agreementStatusText');
-                    if (signed) { statusText.textContent = 'Signed ✅';
-                        statusText.style.color = '#27ae60'; } else { statusText.textContent = 'Not Signed';
-                        statusText.style.color = '#e74c3c'; }
-                }
-
-                document.getElementById('agreementAgreeBtn').addEventListener('click', function() {
-                    if (!agreementSignatureDataURL) { showToast('⚠️ Please provide your signature first.',
-                            2000); return; }
-                    document.getElementById('agreementStatus').innerHTML = '✅ Agreement signed successfully!';
-                    this.disabled = true;
-                    this.textContent = '✅ Signed';
-                    this.classList.add('agreed');
-                    showToast('✅ Agent Agreement signed successfully!', 2500);
-                    window._agentAgreement = {
-                        signed: true,
-                        signature: agreementSignatureDataURL,
-                        signedDate: new Date().toISOString(),
-                        agentName: document.getElementById('agentOwnerName').value.trim(),
-                        businessName: document.getElementById('agentBusinessName').value.trim(),
-                        agreementText: 'Agent Agreement signed.'
-                    };
-                    setTimeout(() => { document.getElementById('agreementModal').style.display = 'none'; },
-                    800);
-                });
-
-                document.getElementById('agreementCloseBtn').addEventListener('click', function() {
-                    document.getElementById('agreementModal').style.display = 'none';
-                });
-
-                // ================================================================
-                // SUBMIT AGENT REGISTRATION
-                // ================================================================
-                document.getElementById('submitAgentRegistrationBtn').addEventListener('click', function() {
-                    const providerTxId = document.getElementById('agentProviderTxId').value.trim();
-                    if (!providerTxId) { showToast('❌ Please enter a Provider Transaction ID.', 3000); return; }
-                    if (!/^[A-Za-z]{2}[0-9]{6}\.[0-9]{4}\.[A-Za-z][0-9]{5}$/.test(providerTxId)) {
-                        showToast('❌ Invalid Provider TX ID format.', 3000);
-                        return;
-                    }
-                    if (!agreementSigned || !window._agentAgreement) {
-                        showToast('⚠️ You must sign the Agent Agreement before registering.', 3000);
-                        document.getElementById('viewAgreementBtn').click();
-                        return;
-                    }
-                    const bizName = document.getElementById('agentBusinessName').value.trim();
-                    const address = document.getElementById('agentAddress').value.trim();
-                    const city = getCityValue('agentCitySelect', 'agentCityOther');
-                    const regNumber = document.getElementById('agentRegNumber').value.trim();
-                    const ownerName = document.getElementById('agentOwnerName').value.trim();
-                    const idNumber = document.getElementById('agentIdNumber').value.trim();
-                    const mobileMoney = document.getElementById('agentMobileMoney').value.trim();
-                    const password = document.getElementById('agentPassword').value.trim();
-                    const collateralAmount = parseFloat(document.getElementById('collateralAmount').value) || 0;
-                    if (!bizName || !address || !city || !regNumber || !ownerName || !idNumber || !mobileMoney ||
-                        !password) {
-                        document.getElementById('agentRegError').textContent = t('agent_reg_error');
-                        return;
-                    }
-                    if (password.length !== 6) {
-                        document.getElementById('agentRegError').textContent =
-                            '❌ Password must be exactly 6 characters';
-                        return;
-                    }
-                    if (collateralAmount === 0) {
-                        document.getElementById('agentRegError').textContent =
-                            '❌ Please generate collateral first';
-                        return;
-                    }
-                    document.getElementById('agentRegError').textContent = '';
-                    document.getElementById('agentRegSuccess').textContent = t('agent_reg_loading');
-
-                    let logoDataURL = null;
-                    const logoPreview = document.getElementById('agentLogoPreviewContainer');
-                    if (logoPreview.style.display !== 'none') {
-                        const img = logoPreview.querySelector('img');
-                        if (img && img.src && !img.src.startsWith('#')) logoDataURL = img.src;
-                    }
-
-                    const agentData = {
-                        id: 'agent_' + Date.now(),
-                        name: bizName + ' (' + ownerName + ')',
-                        businessName: bizName,
-                        businessAddress: address,
-                        city: city,
-                        regNumber: regNumber,
-                        businessType: document.getElementById('agentBusinessType').value,
-                        ownerName: ownerName,
-                        idType: document.getElementById('agentIdType').value,
-                        idNumber: idNumber,
-                        mobileMoney: mobileMoney,
-                        countryCode: document.getElementById('agentCountryCode').value,
-                        password: password,
-                        collateralAmount: collateralAmount,
-                        collateralLimit: parseInt(document.getElementById('agentCollateralLimit').value) || 5000,
-                        currency: 'GNF',
-                        approved: false,
-                        role: 'agent',
-                        isAgent: true,
-                        registeredAt: new Date().toISOString(),
-                        idImageDataURL: null,
-                        logoDataURL: logoDataURL,
-                        agreement: window._agentAgreement || null,
-                        providerTxId: providerTxId
-                    };
-
-                    const idImage = document.getElementById('agentIdImage').files[0];
-                    if (idImage) {
-                        const reader = new FileReader();
-                        reader.onload = function(ev) {
-                            agentData.idImageDataURL = ev.target.result;
-                            registeredUsers.push(agentData);
-                            saveRegisteredUsers();
-                            showToast(t('agent_reg_success', { name: bizName }), 3000);
-                            renderAgentDropdown();
-                            renderSidebar();
-                            selectAgent(agentData.id);
-                            document.getElementById('agentRegSuccess').textContent = t('agent_reg_success',
-                                { name: bizName });
-                            setTimeout(() => {
-                                document.getElementById('agentRegistrationModal').style.display =
-                                'none';
-                            }, 1500);
-                        };
-                        reader.readAsDataURL(idImage);
-                    } else {
-                        registeredUsers.push(agentData);
-                        saveRegisteredUsers();
-                        showToast(t('agent_reg_success', { name: bizName }), 3000);
-                        renderAgentDropdown();
-                        renderSidebar();
-                        selectAgent(agentData.id);
-                        document.getElementById('agentRegSuccess').textContent = t('agent_reg_success', { name:
-                            bizName });
-                        setTimeout(() => {
-                            document.getElementById('agentRegistrationModal').style.display = 'none';
-                        }, 1500);
-                    }
-                });
-
-                document.getElementById('closeAgentRegBtn').addEventListener('click', function() {
-                    document.getElementById('agentRegistrationModal').style.display = 'none';
-                });
-
-                document.getElementById('registerAgentBtn').addEventListener('click', function() {
-                    document.getElementById('agentRegistrationModal').style.display = 'flex';
-                });
-
-                // ================================================================
-                // SAVE EDIT AGENT
-                // ================================================================
-                document.getElementById('saveEditAgentBtn').addEventListener('click', function() {
-                    const agentId = document.getElementById('editAgentId').value;
-                    const businessName = document.getElementById('editBusinessName').value.trim();
-                    const address = document.getElementById('editAddress').value.trim();
-                    const city = getCityValue('editCitySelect', 'editCityOther');
-                    const regNumber = document.getElementById('editRegNumber').value.trim();
-                    const mobileMoney = document.getElementById('editMobileMoney').value.trim();
-                    const password = document.getElementById('editPassword').value.trim();
-                    if (!businessName || !address || !city || !regNumber || !mobileMoney || !password) {
-                        document.getElementById('editAgentError').textContent = t('edit_agent_error');
-                        return;
-                    }
-                    const agents = getAgents();
-                    const agent = agents.find(a => a.id === agentId);
-                    if (!agent) { document.getElementById('editAgentError').textContent = 'Agent not found'; return; }
-                    const data = agent.agentData || agent;
-                    if (password !== data.password) {
-                        document.getElementById('editAgentError').textContent = t('edit_agent_password_error');
-                        return;
-                    }
-                    data.businessName = businessName;
-                    data.businessAddress = address;
-                    data.city = city;
-                    data.regNumber = regNumber;
-                    data.mobileMoney = mobileMoney;
-                    data.phone = mobileMoney;
-                    const user = connectedUsers.find(u => u.id === agentId);
-                    if (user) { user.name = businessName + ' (' + data.ownerName + ')';
-                        user.phone = mobileMoney;
-                        user.agentData = data; }
-                    const regUser = registeredUsers.find(u => u.id === agentId);
-                    if (regUser) {
-                        regUser.businessName = businessName;
-                        regUser.businessAddress = address;
-                        regUser.city = city;
-                        regUser.regNumber = regNumber;
-                        regUser.mobileMoney = mobileMoney;
-                        regUser.phone = mobileMoney;
-                        regUser.name = businessName + ' (' + data.ownerName + ')';
-                    }
-                    saveRegisteredUsers();
-                    document.getElementById('editAgentSuccess').textContent = t('edit_agent_success', { name:
-                        businessName });
-                    document.getElementById('editAgentError').textContent = '';
-                    renderAgentDropdown();
-                    renderSidebar();
-                    showToast(t('agent_updated', { name: businessName }), 2000);
-                    if (selectedAgentId === agentId) {
-                        document.getElementById('selectedAgentName').textContent = businessName + ' (' + data
-                            .ownerName + ')';
-                        document.getElementById('agentName').value = businessName + ' (' + data.ownerName + ')';
-                        let phoneDisplay = data.mobileMoney || '';
-                        if (data.countryCode && phoneDisplay && !phoneDisplay.startsWith(data.countryCode)) {
-                            phoneDisplay = data.countryCode + ' ' + phoneDisplay;
-                        } else if (data.countryCode && !phoneDisplay) { phoneDisplay = data.countryCode; }
-                        document.getElementById('agentPhone').value = phoneDisplay;
-                    }
-                    setTimeout(() => {
-                        document.getElementById('editAgentModal').style.display = 'none';
-                        document.getElementById('editAgentSuccess').textContent = '';
-                    }, 1200);
-                });
-
-                // ================================================================
-                // DASHBOARD - if admin logged in
-                // ================================================================
-                document.getElementById('adminLogoutBtn').addEventListener('click', function() {
-                    localStorage.removeItem('afripay_admin_logged_in');
-                    document.getElementById('dashboardModal').style.display = 'none';
-                    showToast('Logged out', 1500);
-                });
-
-                // ================================================================
-                // RECEIPT MODAL CLOSE
-                // ================================================================
-                document.getElementById('receiptModal').addEventListener('click', function(e) {
-                    if (e.target === this) this.style.display = 'none';
-                });
-
-                console.log('✅ AfriPay loaded with all fixes!');
+                console.log('✅ AfriPay fully loaded!');
             } catch (error) {
                 console.error('❌ AfriPay initialization error:', error);
                 showToast('⚠️ App partially loaded. Please refresh if features are not working.', 5000);
+                // Try to attach listeners anyway
+                try { attachEventListeners(); } catch (e) { console.warn('Could not attach listeners:', e); }
             }
         });
     </script>
