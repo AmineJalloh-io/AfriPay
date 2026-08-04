@@ -691,14 +691,14 @@
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
             border-color: #0f2b3d;
         }
-        .mode-row .btn.add-client-btn-header {
-            background: #2c7da0;
+        .mode-row .btn.beneficiary-btn-header {
+            background: #27ae60;
             color: white;
-            border-color: #2c7da0;
+            border-color: #27ae60;
         }
-        .mode-row .btn.add-client-btn-header:hover {
-            background: #1f5068;
-            border-color: #1f5068;
+        .mode-row .btn.beneficiary-btn-header:hover {
+            background: #1e8449;
+            border-color: #1e8449;
         }
         .country-selector-wrapper.hide-country {
             display: none;
@@ -1821,7 +1821,7 @@
         .approve-btn,
         .flag-scroll-btn,
         .btn,
-        .add-client-btn-header,
+        .beneficiary-btn-header,
         .logout-btn,
         .edit-account-btn,
         .map-btn,
@@ -1894,7 +1894,7 @@
                 width: 100%;
                 justify-content: center;
             }
-            .add-client-btn.header-btn {
+            .beneficiary-btn-header {
                 flex: 1 1 auto;
                 min-width: 80px;
             }
@@ -2404,6 +2404,10 @@
                 font-size: 0.55rem !important;
             }
             .add-client-btn {
+                padding: 4px 10px;
+                height: 34px;
+            }
+            .beneficiary-btn-header {
                 padding: 4px 10px;
                 height: 34px;
             }
@@ -3018,21 +3022,43 @@
         }
 
         /* ================================================================
-           ADD CLIENT MODAL - FIXED with full fields
+           BENEFICIARY MODAL - UPDATED with full fields
            ================================================================ */
-        #addClientModal .modal-content {
+        #beneficiaryModal .modal-content {
             max-width: 420px;
             width: 95%;
         }
-        #addClientModal .double-row {
+        #beneficiaryModal .double-row {
             grid-template-columns: 1fr 1fr;
             gap: 0.5rem;
         }
         @media (max-width: 480px) {
-            #addClientModal .double-row {
+            #beneficiaryModal .double-row {
                 grid-template-columns: 1fr;
                 gap: 0;
             }
+        }
+        .beneficiary-section {
+            background: #f0f6fb;
+            border-radius: 10px;
+            padding: 0.4rem 0.6rem;
+            margin-top: 0.2rem;
+            border: 1px solid #dce8f0;
+        }
+        .beneficiary-section .beneficiary-label {
+            font-weight: 700;
+            color: #1c6e8f;
+            font-size: 0.7rem;
+        }
+        .beneficiary-section .beneficiary-field {
+            color: #1e3b4a;
+            background: white;
+            padding: 1px 8px;
+            border-radius: 20px;
+            border: 1px solid #d0dce8;
+            display: inline-block;
+            font-size: 0.75rem;
+            margin: 1px 2px;
         }
     </style>
 </head>
@@ -3164,27 +3190,26 @@
                     <div class="input-group"><label id="agentNameLabel">Agent Name *</label><input type="text" id="agentName" required readonly /></div>
                     <div class="input-group"><label id="agentPhoneLabel">Agent Phone *</label><input type="tel" id="agentPhone" required readonly /></div>
                 </div>
-                <div class="section-title" id="clientSectionTitle" style="display:none;">👥 CLIENT</div>
-                <div class="double-row" id="clientFieldsRow" style="display:none;">
-                    <div class="input-group"><label id="clientNameLabel">Client Name *</label><input type="text" id="clientName" readonly /></div>
-                    <div class="input-group"><label id="clientPhoneLabel">Client Phone *</label><input type="tel" id="clientPhone" readonly /></div>
-                </div>
-                <!-- Client details fields (populated from Add Client) -->
-                <div id="clientDetailsRow" style="display:none;">
-                    <div class="input-group"><label>Client Address</label><input type="text" id="clientAddress" readonly /></div>
-                    <div class="double-row">
-                        <div class="input-group"><label>Client City</label><input type="text" id="clientCity" readonly /></div>
-                        <div class="input-group"><label>Client Country</label><input type="text" id="clientCountry" readonly /></div>
+                
+                <!-- BENEFICIARY SECTION - Read-only display -->
+                <div id="beneficiarySection" class="beneficiary-section" style="display:none;">
+                    <div style="display:flex; flex-wrap:wrap; align-items:center; gap:4px;">
+                        <span class="beneficiary-label">👤 Beneficiary:</span>
+                        <span class="beneficiary-field" id="beneficiaryNameDisplay">—</span>
+                        <span class="beneficiary-field" id="beneficiaryAddressDisplay">—</span>
+                        <span class="beneficiary-field" id="beneficiaryCityDisplay">—</span>
+                        <span class="beneficiary-field" id="beneficiaryCountryDisplay">—</span>
                     </div>
                 </div>
+
                 <div style="display:flex; align-items:center; gap:6px; margin-bottom:0.4rem; flex-wrap:wrap;">
-                    <span style="font-size:0.7rem; color:#1c6e8f;">📋 Select an agent from the dropdown, or use <strong>Add Client</strong> to add a client</span>
+                    <span style="font-size:0.7rem; color:#1c6e8f;">📋 Select an agent from the dropdown, or use <strong>Beneficiary</strong> to add a beneficiary</span>
                     <span id="slModeNote" class="sl-mode-note" style="display:none;">🌍 International Agent – Special USSD format</span>
                     <span id="guineaModeNote" class="guinea-mode-note" style="display:none;">🇬🇳 Guinea Orange Money USSD</span>
                 </div>
                 <div class="mode-row">
                     <button class="btn" id="intlToggleBtn" data-i18n="international">International</button>
-                    <button class="btn add-client-btn-header" id="addClientBtnHeader" data-i18n="add_client">➕ Add Client</button>
+                    <button class="btn beneficiary-btn-header" id="beneficiaryBtnHeader">👤 Beneficiary</button>
                 </div>
                 <div class="country-selector-wrapper" id="countryWrapper" style="display:none;">
                     <div class="input-group">
@@ -3278,7 +3303,7 @@
     </div>
 
     <!-- ============================================================
-    MODALS (all IDs preserved + UPDATED Add Client Modal)
+    MODALS
     ============================================================ -->
     <!-- Map Modal -->
     <div id="mapModal" class="modal"><div class="modal-content"><h3 data-i18n="map_title">📍 Your Location</h3><iframe id="mapIframe" allowfullscreen loading="lazy"></iframe><button class="action-btn close-modal" style="margin-top:10px;" data-i18n="close">Close</button></div></div>
@@ -3599,32 +3624,53 @@
     </div>
 
     <!-- ================================================================
-    ADD CLIENT MODAL - FIXED with full fields (name, phone, address, city, country)
+    BENEFICIARY MODAL - NEW with full details
     ================================================================ -->
-    <div id="addClientModal" class="modal">
+    <div id="beneficiaryModal" class="modal">
         <div class="modal-content">
-            <h3 data-i18n="add_client">➕ Add Client</h3>
-            <div id="addClientError" class="error-msg"></div>
+            <h3>👤 Add Beneficiary</h3>
+            <div id="beneficiaryError" class="error-msg"></div>
             <div class="input-group">
-                <label data-i18n="client_name">Client Name *</label>
-                <input type="text" id="newClientName" placeholder="Enter client full name" style="height:42px;" />
+                <label>Beneficiary Name *</label>
+                <input type="text" id="beneficiaryName" placeholder="Enter beneficiary full name" style="height:42px;" />
             </div>
             <div class="input-group">
-                <label data-i18n="client_phone">Client Phone *</label>
-                <input type="tel" id="newClientPhone" placeholder="Enter phone number" style="height:42px;" />
-            </div>
-            <div class="input-group">
-                <label>Client Address</label>
-                <input type="text" id="newClientAddress" placeholder="Street, building, etc." style="height:42px;" />
+                <label>Beneficiary Address</label>
+                <input type="text" id="beneficiaryAddress" placeholder="Street, building, etc." style="height:42px;" />
             </div>
             <div class="double-row">
                 <div class="input-group">
-                    <label>Client City / Town *</label>
-                    <input type="text" id="newClientCity" placeholder="City" style="height:42px;" />
+                    <label>Capital City *</label>
+                    <select id="beneficiaryCitySelect" style="height:42px;">
+                        <option value="">Select a capital city...</option>
+                        <option value="Freetown">Freetown (Sierra Leone)</option>
+                        <option value="Abuja">Abuja (Nigeria)</option>
+                        <option value="Accra">Accra (Ghana)</option>
+                        <option value="Nairobi">Nairobi (Kenya)</option>
+                        <option value="Monrovia">Monrovia (Liberia)</option>
+                        <option value="Dakar">Dakar (Senegal)</option>
+                        <option value="Conakry">Conakry (Guinea)</option>
+                        <option value="Bamako">Bamako (Mali)</option>
+                        <option value="Yamoussoukro">Yamoussoukro (Ivory Coast)</option>
+                        <option value="Niamey">Niamey (Niger)</option>
+                        <option value="Porto-Novo">Porto-Novo (Benin)</option>
+                        <option value="Bissau">Bissau (Guinea Bissau)</option>
+                        <option value="Banjul">Banjul (Gambia)</option>
+                        <option value="Lomé">Lomé (Togo)</option>
+                        <option value="Bangui">Bangui (CAR)</option>
+                        <option value="Addis Ababa">Addis Ababa (Ethiopia)</option>
+                        <option value="Libreville">Libreville (Gabon)</option>
+                        <option value="Antananarivo">Antananarivo (Madagascar)</option>
+                        <option value="Rabat">Rabat (Morocco)</option>
+                        <option value="Kigali">Kigali (Rwanda)</option>
+                        <option value="Kampala">Kampala (Uganda)</option>
+                        <option value="Kinshasa">Kinshasa (DR Congo)</option>
+                        <option value="Ouagadougou">Ouagadougou (Burkina Faso)</option>
+                    </select>
                 </div>
                 <div class="input-group">
-                    <label>Client Country</label>
-                    <select id="newClientCountry" style="height:42px;">
+                    <label>Country *</label>
+                    <select id="beneficiaryCountrySelect" style="height:42px;">
                         <option value="Sierra Leone">Sierra Leone</option>
                         <option value="Nigeria">Nigeria</option>
                         <option value="Ghana">Ghana</option>
@@ -3652,7 +3698,7 @@
                 </div>
             </div>
             <div class="action-buttons-row">
-                <button class="action-btn" id="saveClientBtn" data-i18n="save">Save Client</button>
+                <button class="action-btn green" id="saveBeneficiaryBtn">Save Beneficiary</button>
                 <button class="action-btn close-modal" data-i18n="cancel">Cancel</button>
             </div>
         </div>
@@ -4005,7 +4051,7 @@
     <div id="toastMsg" class="toast-msg"></div>
 
     <!-- ================================================================
-    JAVASCRIPT – FULL APPLICATION LOGIC WITH BOTH FIXES
+    JAVASCRIPT – FULL APPLICATION LOGIC
     ================================================================ -->
     <script>
         // ================================================================
@@ -4738,8 +4784,11 @@
             document.getElementById('reportCountry').value = SecurityUtils.escapeHTML(data.countryCode || '');
             document.getElementById('reportMobileMoney').value = SecurityUtils.escapeHTML(data.mobileMoney || '');
 
-            document.getElementById('reportClientName').value = document.getElementById('clientName').value || '';
-            document.getElementById('reportClientPhone').value = document.getElementById('clientPhone').value || '';
+            // Get beneficiary details if available
+            const benName = document.getElementById('beneficiaryNameDisplay').innerText;
+            const benPhone = document.getElementById('beneficiaryPhoneDisplay') ? document.getElementById('beneficiaryPhoneDisplay').innerText : '';
+            document.getElementById('reportClientName').value = benName !== '—' ? benName : '';
+            document.getElementById('reportClientPhone').value = benPhone !== '—' ? benPhone : '';
 
             const currency = document.getElementById('currencySymbol').innerText || 'GMD';
             document.getElementById('reportCurrency').innerText = currency;
@@ -5603,7 +5652,7 @@
         // ================================================================
         document.addEventListener('DOMContentLoaded', function() {
             try {
-                console.log('🚀 AfriPay starting with all fixes...');
+                console.log('🚀 AfriPay starting with Beneficiary button...');
 
                 // Clear oversized data
                 const userStr = localStorage.getItem(STORAGE_KEYS.user);
@@ -6077,7 +6126,7 @@
                         });
                     }
 
-                    // ---- MAIN MM BUTTON (WBMoney) - FIXED with proper USSD generation ----
+                    // ---- MAIN MM BUTTON ----
                     const mainMmBtn = document.getElementById('mainMmBtn');
                     if (mainMmBtn) {
                         mainMmBtn.addEventListener('click', function() {
@@ -6089,7 +6138,7 @@
                         });
                     }
 
-                    // ---- PROVIDER / ROLE / ACTION MODALS - FIXED ----
+                    // ---- PROVIDER / ROLE / ACTION MODALS ----
                     document.querySelectorAll('#providerModal .action-btn[data-provider]').forEach(btn => {
                         btn.addEventListener('click', function() {
                             const provider = this.getAttribute('data-provider');
@@ -6098,7 +6147,6 @@
                                 `${provider} – ${t('select_type')}`;
                             document.getElementById('roleModal').style.display = 'flex';
                             window._selectedProvider = provider;
-                            console.log('Provider selected:', provider);
                         });
                     });
 
@@ -6114,11 +6162,10 @@
                                 ._selectedProvider || 'Orange';
                             document.getElementById('actionModal').style.display = 'flex';
                             window._selectedRole = role;
-                            console.log('Role selected:', role);
                         });
                     });
 
-                    // ---- ACTION BUTTONS - FIXED with proper USSD generation ----
+                    // ---- ACTION BUTTONS ----
                     function buildAndDialUSSD(action) {
                         const amount = parseFloat(amountInput.value);
                         if (isNaN(amount) || amount <= 0) { showToast(t('toast_valid_amount')); return; }
@@ -6152,15 +6199,11 @@
 
                         let ussdCode = '';
 
-                        // ---- FIXED: WBMoney USSD generation ----
+                        // WBMoney USSD generation - FIXED
                         if (provider === "WBMoney") {
-                            // Get the Z code from country select (6th column)
                             const parts = countrySelect.value.split('|');
                             const zCode = parts[5] || '1';
-                            // WBMoney format: #144*4*Z*AMOUNT*PIN#
-                            // But using the correct format from the app
                             ussdCode = `#144*4*${zCode}*${totalFixed}*0000#`;
-                            console.log('WBMoney USSD generated:', ussdCode);
                         } else if (provider === "Orange Money") {
                             if (role === 'agent') {
                                 if (cleanPhone.length !== 6 && cleanPhone.length !== 0) {
@@ -6182,7 +6225,6 @@
                         } else if (provider === "QMoney") {
                             ussdCode = `*144*3*${cleanPhone}*${totalFixed}*0000#`;
                         } else {
-                            // Default fallback
                             ussdCode = `#144*2*2*${cleanPhone}*${totalFixed}*0000#`;
                         }
 
@@ -6195,7 +6237,6 @@
                             'other'));
                         showToast(`📞 ${provider} (${roleName}) – ${action}`, 2800);
 
-                        // Copy to clipboard and open phone dialer
                         navigator.clipboard.writeText(ussdCode).then(() => {
                             showToast('✅ USSD code copied to clipboard!', 2000);
                         }).catch(() => {});
@@ -6228,16 +6269,6 @@
                         });
                     }
 
-                    function getOrangeZCode() {
-                        const parts = countrySelect.value.split('|');
-                        return parts[5] || '0';
-                    }
-
-                    function getAfrimoneyZCode() {
-                        const parts = countrySelect.value.split('|');
-                        return parts[6] || '0';
-                    }
-
                     // ---- MAIN FORM SUBMIT ----
                     const mainForm = document.getElementById('mainForm');
                     if (mainForm) {
@@ -6259,8 +6290,6 @@
                             const senderCity = getCityValue('senderCitySelect', 'senderCityOther');
                             const agentName = document.getElementById('agentName').value.trim();
                             const agentPhone = document.getElementById('agentPhone').value.trim();
-                            const clientName = document.getElementById('clientName').value.trim();
-                            const clientPhone = document.getElementById('clientPhone').value.trim();
 
                             if (!senderName || !senderPhone || !agentName) {
                                 showToast('❌ Please fill Sender and Agent fields.');
@@ -6289,13 +6318,18 @@
                             const dateStr = document.getElementById('currentDate').innerText + " " + document
                                 .getElementById('currentTime').innerText;
 
+                            const benName = document.getElementById('beneficiaryNameDisplay').innerText;
+                            const benAddress = document.getElementById('beneficiaryAddressDisplay').innerText;
+                            const benCity = document.getElementById('beneficiaryCityDisplay').innerText;
+                            const benCountry = document.getElementById('beneficiaryCountryDisplay').innerText;
+
                             const receiptData = {
                                 txId,
                                 date: dateStr,
                                 mode: isLocalMode ? "Local" : "International",
                                 sender: `${senderName} (${senderPhone})`,
                                 agent: `${agentName} (${agentPhone})`,
-                                client: clientName ? `${clientName} (${clientPhone})` : 'N/A',
+                                client: benName !== '—' ? benName : 'N/A',
                                 baseAmount: amount.toFixed(2),
                                 charge: charge.toFixed(2),
                                 gstRate: gstRate,
@@ -6305,7 +6339,8 @@
                                 providerTxId: providerTxId,
                                 transferCode: transferCode,
                                 senderAddress: senderAddress || 'N/A',
-                                senderCity: senderCity || 'N/A'
+                                senderCity: senderCity || 'N/A',
+                                beneficiary: benName !== '—' ? `${benName} (${benCity}, ${benCountry})` : 'N/A'
                             };
 
                             showReceiptModal(receiptData);
@@ -6323,8 +6358,10 @@
                                 currency: currency,
                                 agent_name: agentName,
                                 agent_phone: agentPhone,
-                                client_name: clientName || 'N/A',
-                                client_phone: clientPhone || 'N/A',
+                                beneficiary_name: benName !== '—' ? benName : 'N/A',
+                                beneficiary_address: benAddress !== '—' ? benAddress : 'N/A',
+                                beneficiary_city: benCity !== '—' ? benCity : 'N/A',
+                                beneficiary_country: benCountry !== '—' ? benCountry : 'N/A',
                                 transfer_mode: isLocalMode ? "Local" : "International",
                                 transaction_id: txId,
                                 provider_tx_id: providerTxId,
@@ -6373,7 +6410,7 @@
                             { label: t('receipt_type'), value: data.mode },
                             { label: t('receipt_sender'), value: data.sender },
                             { label: '👤 Agent', value: data.agent },
-                            { label: '👥 Client', value: data.client },
+                            { label: '👥 Beneficiary', value: data.client },
                             { label: '📍 Sender Address', value: data.senderAddress || 'N/A' },
                             { label: '🏙️ Sender City', value: data.senderCity || 'N/A' },
                             { label: '🔐 Provider TX ID', value: data.providerTxId || 'N/A' },
@@ -6401,59 +6438,48 @@
                         });
                     }
 
-                    // ---- FIXED: ADD CLIENT with full details (name, phone, address, city, country) ----
-                    const addClientBtnHeader = document.getElementById('addClientBtnHeader');
-                    if (addClientBtnHeader) {
-                        addClientBtnHeader.addEventListener('click', function() {
-                            document.getElementById('newClientName').value = '';
-                            document.getElementById('newClientPhone').value = '';
-                            document.getElementById('newClientAddress').value = '';
-                            document.getElementById('newClientCity').value = '';
-                            document.getElementById('newClientCountry').value = 'Sierra Leone';
-                            document.getElementById('addClientError').textContent = '';
-                            document.getElementById('addClientModal').style.display = 'flex';
+                    // ---- BENEFICIARY BUTTON - NEW ----
+                    const beneficiaryBtnHeader = document.getElementById('beneficiaryBtnHeader');
+                    if (beneficiaryBtnHeader) {
+                        beneficiaryBtnHeader.addEventListener('click', function() {
+                            document.getElementById('beneficiaryName').value = '';
+                            document.getElementById('beneficiaryAddress').value = '';
+                            document.getElementById('beneficiaryCitySelect').value = '';
+                            document.getElementById('beneficiaryCountrySelect').value = 'Sierra Leone';
+                            document.getElementById('beneficiaryError').textContent = '';
+                            document.getElementById('beneficiaryModal').style.display = 'flex';
                         });
                     }
 
-                    const saveClientBtn = document.getElementById('saveClientBtn');
-                    if (saveClientBtn) {
-                        saveClientBtn.addEventListener('click', function() {
-                            const name = document.getElementById('newClientName').value.trim();
-                            const phone = document.getElementById('newClientPhone').value.trim();
-                            const address = document.getElementById('newClientAddress').value.trim();
-                            const city = document.getElementById('newClientCity').value.trim();
-                            const country = document.getElementById('newClientCountry').value;
+                    // ---- SAVE BENEFICIARY ----
+                    const saveBeneficiaryBtn = document.getElementById('saveBeneficiaryBtn');
+                    if (saveBeneficiaryBtn) {
+                        saveBeneficiaryBtn.addEventListener('click', function() {
+                            const name = document.getElementById('beneficiaryName').value.trim();
+                            const address = document.getElementById('beneficiaryAddress').value.trim();
+                            const city = document.getElementById('beneficiaryCitySelect').value;
+                            const country = document.getElementById('beneficiaryCountrySelect').value;
 
                             if (!name) {
-                                document.getElementById('addClientError').textContent =
-                                    '❌ Please enter a client name.';
-                                return;
-                            }
-                            if (!phone) {
-                                document.getElementById('addClientError').textContent =
-                                    '❌ Please enter a client phone number.';
+                                document.getElementById('beneficiaryError').textContent =
+                                    '❌ Please enter a beneficiary name.';
                                 return;
                             }
                             if (!city) {
-                                document.getElementById('addClientError').textContent =
-                                    '❌ Please enter the client\'s city.';
+                                document.getElementById('beneficiaryError').textContent =
+                                    '❌ Please select a capital city.';
                                 return;
                             }
 
-                            // Populate client fields in main form
-                            document.getElementById('clientName').value = name;
-                            document.getElementById('clientPhone').value = phone;
-                            document.getElementById('clientAddress').value = address || 'N/A';
-                            document.getElementById('clientCity').value = city;
-                            document.getElementById('clientCountry').value = country;
+                            // Display beneficiary details on main page (read-only)
+                            document.getElementById('beneficiaryNameDisplay').innerText = name;
+                            document.getElementById('beneficiaryAddressDisplay').innerText = address || 'N/A';
+                            document.getElementById('beneficiaryCityDisplay').innerText = city;
+                            document.getElementById('beneficiaryCountryDisplay').innerText = country;
+                            document.getElementById('beneficiarySection').style.display = 'block';
 
-                            // Show client sections
-                            document.getElementById('clientSectionTitle').style.display = 'block';
-                            document.getElementById('clientFieldsRow').style.display = 'grid';
-                            document.getElementById('clientDetailsRow').style.display = 'block';
-
-                            showToast(`✅ Client "${name}" added successfully!`, 2000);
-                            document.getElementById('addClientModal').style.display = 'none';
+                            showToast(`✅ Beneficiary "${name}" added successfully!`, 2000);
+                            document.getElementById('beneficiaryModal').style.display = 'none';
                         });
                     }
 
@@ -7217,7 +7243,7 @@
                 // ---- Attach all event listeners ----
                 attachEventListeners();
 
-                console.log('✅ AfriPay fully loaded with all fixes.');
+                console.log('✅ AfriPay fully loaded with Beneficiary button.');
             } catch (error) {
                 console.error('❌ AfriPay initialization error:', error);
                 showToast('⚠️ App partially loaded. Please refresh if features are not working.', 5000);
