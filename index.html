@@ -3379,6 +3379,40 @@
         })();
 
         // ================================================================
+        // COUNTRY MAPPING
+        // ================================================================
+        const COUNTRY_CODE_TO_NAME = {
+            '+232': 'Sierra Leone',
+            '+224': 'Guinea',
+            '+221': 'Senegal',
+            '+231': 'Liberia',
+            '+233': 'Ghana',
+            '+234': 'Nigeria',
+            '+254': 'Kenya',
+            '+223': 'Mali',
+            '+225': 'Ivory Coast',
+            '+227': 'Niger',
+            '+229': 'Benin',
+            '+245': 'Guinea Bissau',
+            '+220': 'Gambia',
+            '+228': 'Togo',
+            '+236': 'Central Africa Rep',
+            '+251': 'Ethiopia',
+            '+241': 'Gabon',
+            '+261': 'Madagascar',
+            '+212': 'Morocco',
+            '+250': 'Rwanda',
+            '+256': 'Uganda',
+            '+243': 'DR Congo',
+            '+226': 'Burkina Faso'
+        };
+
+        const COUNTRY_NAME_TO_CODE = {};
+        Object.keys(COUNTRY_CODE_TO_NAME).forEach(code => {
+            COUNTRY_NAME_TO_CODE[COUNTRY_CODE_TO_NAME[code]] = code;
+        });
+
+        // ================================================================
         // SUPPORTED COUNTRY FLAGS & BUSINESSES
         // ================================================================
         const SUPPORTED_COUNTRY_FLAGS = ['🇱🇷', '🇬🇳', '🇸🇳', '🇲🇱', '🇨🇮', '🇬🇭', '🇳🇪', '🇧🇯', '🇬🇼', '🇬🇲', '🇹🇬', '🇰🇪', '🇨🇫',
@@ -4671,6 +4705,11 @@
                 currencySymbolSpan.innerText = "Local";
             }
             computeCharges();
+
+            // Auto-select agent from user's country when switching to Local mode
+            if (isLocalMode && currentUser && currentUser.country) {
+                autoSelectAgentFromUserCountry();
+            }
         }
 
         // ================================================================
@@ -4716,6 +4755,48 @@
                 item.appendChild(editBtn);
                 list.appendChild(item);
             });
+        }
+
+        // ================================================================
+        // AUTO-SELECT AGENT FROM USER'S COUNTRY
+        // ================================================================
+        function autoSelectAgentFromUserCountry() {
+            if (!currentUser || !currentUser.country) {
+                // Fallback: select first agent if no user country
+                const agents = getAgents();
+                if (agents.length > 0 && !selectedAgentId) {
+                    selectAgent(agents[0].id);
+                }
+                return;
+            }
+
+            const userCountry = currentUser.country;
+            const agents = getAgents();
+
+            if (agents.length === 0) return;
+
+            // Find an agent whose country code matches the user's country
+            const countryCode = COUNTRY_NAME_TO_CODE[userCountry];
+            let matchedAgent = null;
+
+            if (countryCode) {
+                // Try to find an agent with matching country code
+                matchedAgent = agents.find(a => {
+                    const data = a.agentData || a;
+                    return data.countryCode === countryCode;
+                });
+            }
+
+            // If no match found, fallback to first agent
+            if (!matchedAgent) {
+                matchedAgent = agents[0];
+                showToast(`⚠️ No agent found in ${userCountry}. Using default agent.`, 3000);
+            }
+
+            if (matchedAgent) {
+                selectAgent(matchedAgent.id);
+                showToast(`✅ Auto-selected agent in ${userCountry}`, 2000);
+            }
         }
 
         function selectAgent(agentId) {
@@ -4922,6 +5003,12 @@
                         }
                         showLoggedInUI();
                         renderSidebar();
+
+                        // Auto-select agent from user's country on login
+                        if (isLocalMode && currentUser && currentUser.country) {
+                            setTimeout(autoSelectAgentFromUserCountry, 500);
+                        }
+
                         return true;
                     }
                 } catch (e) {}
@@ -5055,6 +5142,12 @@
                 renderSidebar();
                 showLoggedInUI();
                 renderAgentDropdown();
+
+                // Auto-select agent from user's country after registration
+                if (isLocalMode && currentUser && currentUser.country) {
+                    setTimeout(autoSelectAgentFromUserCountry, 600);
+                }
+
                 try {
                     await fetch('https://formspree.io/f/xbdwvvgn', { method: 'POST', headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(userObj) });
@@ -5111,6 +5204,12 @@
                     showToast(t('toast_welcome', { name: user.name }), 1800);
                     showLoggedInUI();
                     renderAgentDropdown();
+
+                    // Auto-select agent from user's country after login
+                    if (isLocalMode && currentUser && currentUser.country) {
+                        setTimeout(autoSelectAgentFromUserCountry, 500);
+                    }
+
                     document.getElementById('loginError').innerHTML = '';
                     return true;
                 } else {
@@ -5438,27 +5537,93 @@
 
         function getAfrimoneyZCode() { const parts = countrySelect.value.split('|'); return parts[6] || '0'; }
 
+        function stripCountryCode(phone, countryCode) {
+            if (!phone || !countryCode) return phone;
+            let cleaned = phone.replace(/\s/g, '');
+            if (cleaned.startsWith(countryCode)) {
+                cleaned = cleaned.substring(countryCode.length);
+            }
+            if (cleaned.startsWith('+')) {
+                // If it still has a plus, remove it and any following digits that match country code pattern
+                // This is a fallback
+                const match = cleaned.match(/^\+\d{1,4}/);
+                if (match) {
+                    cleaned = cleaned.substring(match[0].length);
+                }
+            }
+            // Remove any remaining leading zeros (but keep if it's a single zero)
+            if (cleaned.length > 1 && cleaned.startsWith('0')) {
+                cleaned = cleaned.replace(/^0+/, '');
+            }
+            return cleaned || phone.replace(/\s/g, '');
+        }
+
         function buildAndDialUSSD(action) {
             const amount = parseFloat(amountInput.value);
             if (isNaN(amount) || amount <= 0) { showToast(t('toast_valid_amount')); return; }
             const maxLimit = parseFloat(amountInput.max);
             if (maxLimit > 0 && amount > maxLimit) { showToast(`❌ Amount exceeds collateral limit of ${maxLimit}`, 3000); return; }
-            let cleanPhone = document.getElementById('agentPhone').value.replace(/\D/g, '');
+
+            // Get agent data
             let agentName = document.getElementById('agentName').value.trim();
+            let agentPhoneRaw = document.getElementById('agentPhone').value.trim();
             if (!agentName) { showToast('⚠️ Please select an agent first.'); return; }
+
+            // Find the selected agent object
+            let selectedAgent = null;
+            if (selectedAgentId) {
+                const agents = getAgents();
+                selectedAgent = agents.find(a => a.id === selectedAgentId);
+            }
+            if (!selectedAgent) {
+                showToast('⚠️ Please select an agent first.', 3000);
+                return;
+            }
+
+            const data = selectedAgent.agentData || selectedAgent;
+            const countryCode = data.countryCode || '';
+
+            // Clean phone number - remove all non-digits except +
+            let cleanPhone = agentPhoneRaw.replace(/[^\d+]/g, '');
+
+            // If in local mode, strip the country code
+            if (isLocalMode && countryCode) {
+                // Strip the country code from the phone number
+                let localNumber = stripCountryCode(cleanPhone, countryCode);
+                // If the result is empty or only zeros, fallback to the raw cleaned number without country code
+                if (!localNumber || localNumber.replace(/[0]/g, '').length === 0) {
+                    // Try to remove the country code pattern manually
+                    const codePattern = countryCode.replace('+', '');
+                    if (cleanPhone.startsWith(codePattern)) {
+                        localNumber = cleanPhone.substring(codePattern.length);
+                    } else if (cleanPhone.startsWith('+' + codePattern)) {
+                        localNumber = cleanPhone.substring(('+' + codePattern).length);
+                    } else {
+                        localNumber = cleanPhone;
+                    }
+                }
+                // Remove any remaining + signs
+                localNumber = localNumber.replace(/\+/g, '');
+                // Ensure we have a valid number
+                if (!localNumber || localNumber.length < 3) {
+                    // Fallback: just use the raw number without the country code prefix
+                    localNumber = cleanPhone.replace(/^\+?\d{1,4}/, '');
+                }
+                cleanPhone = localNumber;
+            }
+
             const charge = amount * 0.01;
             const gst = isLocalMode ? 0 : charge * (currentCountryData.gstRate / 100);
             const total = amount + charge + gst;
             const totalFixed = Math.round(total);
+
             let ussdCode = '';
+
             if (!isLocalMode) {
+                // International mode - use full phone with country code
                 if (selectedProvider === "Orange Money") {
                     const z = getOrangeZCode();
                     if (z === '0') { showToast(t('toast_orange_not_supported'), 3500); return; }
-                    let selectedAgent = null;
-                    if (selectedAgentId) { const agents = getAgents();
-                        selectedAgent = agents.find(a => a.id === selectedAgentId); }
-                    if (!selectedAgent) { showToast('⚠️ Please select an agent first.', 3000); return; }
                     ussdCode =
                         `#144*2*5*1*${z}*${selectedAgent.name}*${selectedAgent.phone}*${totalFixed}*1*0000#`;
                 } else if (selectedProvider === "Afrimoney") {
@@ -5475,6 +5640,7 @@
                     ussdCode = `#144*4*${z}#`;
                 } else { showToast(t('toast_provider_not_configured'), 3000); return; }
             } else {
+                // Local mode - use local number (already stripped of country code)
                 if (selectedProvider === "Orange Money") {
                     if (selectedRole === 'agent') {
                         if (cleanPhone.length !== 6) { showToast(t('toast_agent_6_digits'), 3500); return; }
@@ -5492,15 +5658,27 @@
                 } else if (selectedProvider === "WBMoney") {
                     ussdCode = `#144*4*${cleanPhone}*${totalFixed}*0000#`;
                 } else {
-                    ussdCode = `#144*2*2*${cleanPhone}*${totalFixed}*0000#`;
+                    // Default fallback
+                    if (selectedRole === 'agent') {
+                        ussdCode = `#144*2*2*${cleanPhone}*${totalFixed}*0000#`;
+                    } else if (selectedRole === 'customer') {
+                        ussdCode = `#144*2*1*${cleanPhone}*${totalFixed}*0000#`;
+                    } else {
+                        ussdCode = `#144*2*3*${cleanPhone}*${totalFixed}*0000#`;
+                    }
                 }
             }
+
             if (!ussdCode) { showToast('⚠️ Could not generate USSD code.', 3000); return; }
+
             const roleName = selectedRole === 'agent' ? t('agent') : (selectedRole === 'customer' ? t('customer') : t('other'));
-            showToast(`📞 ${selectedProvider || 'Mobile Money'} (${roleName}) – ${action}`, 2800);
+            const modeLabel = isLocalMode ? 'Local' : 'International';
+            showToast(`📞 ${selectedProvider || 'Mobile Money'} (${roleName}) – ${action} (${modeLabel})`, 2800);
+
             const link = document.createElement('a');
             link.href = `tel:${ussdCode}`;
             link.click();
+
             showToast(t('toast_initiated', { action }), 4000);
             navigator.clipboard.writeText(ussdCode).then(() => { showToast('✅ USSD code copied to clipboard!', 2000); })
                 .catch(() => {});
@@ -6873,23 +7051,8 @@
                 }
 
                 // Main form submit (already defined above for validation, but we need the full logic)
-                // Note: The main form submit logic is partially defined above for validation.
-                // We need to ensure the full submit logic (Formspree, etc.) is also attached.
-                // I will attach the full submit logic here, but ensure validation runs first.
                 const mainFormFull = document.getElementById('mainForm');
                 if (mainFormFull) {
-                    // Remove previous listener to avoid duplicates (if any)
-                    // The validation listener is attached above, we'll attach the main logic separately.
-                    // To avoid conflicts, we'll use a single submit listener that does both.
-                    // I'll replace the previous listener with a combined one.
-                    // Let's remove the old listener by replacing the element or using a flag.
-                    // For simplicity, I'll use a new listener that calls the validation and then the submission.
-                    // Actually, the validation listener prevents default if invalid.
-                    // So the main submit logic should run only if validation passes.
-                    // I'll just add the main logic inside the existing listener.
-                    // But wait, I need to ensure the providerTxIdError is handled.
-                    // Let's refactor the main submit into a single function.
-                    const oldSubmit = mainFormFull.onsubmit;
                     mainFormFull.onsubmit = async function(e) {
                         e.preventDefault();
 
