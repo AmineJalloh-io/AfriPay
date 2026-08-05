@@ -2536,6 +2536,7 @@
                     <button type="button" class="tx-btn" id="generateTxBtn" data-i18n="gen">Gen</button>
                     <button type="button" class="tx-btn copy" id="copyTxBtn" data-i18n="copy">Copy</button>
                 </div>
+
                 <!-- PROVIDER TRANSACTION ID -->
                 <div class="section-title" style="margin-top:0.5rem;">🔐 PROVIDER TRANSACTION ID</div>
                 <div class="input-group">
@@ -2545,9 +2546,12 @@
                     <div id="providerTxIdError" class="error-msg" style="font-size:0.65rem; display:none;"></div>
                 </div>
 
-                <!-- Report Button -->
-                <div style="margin: 8px 0;">
-                    <button type="button" class="btn-submit" id="reportBtn" style="background: #1a1a1a; color: white; margin-top: 0;">📋 Report</button>
+                <!-- TRANSFER CODE (CONDITIONAL) -->
+                <div class="input-group" id="mainTransferCodeGroup" style="display:none;">
+                    <label for="mainTransferCode">Transfer Code (6, 8, 10, 12, or 14 digits) *</label>
+                    <input type="text" id="mainTransferCode" placeholder="e.g. 123456" maxlength="14" pattern="[0-9]{6}|[0-9]{8}|[0-9]{10}|[0-9]{12}|[0-9]{14}" />
+                    <div style="font-size:0.6rem; color:#666; margin-top:2px;">Enter the 6-14 digit transfer code provided by the sender (appears only for International transfers).</div>
+                    <div id="mainTransferCodeError" class="error-msg" style="font-size:0.65rem; display:none;"></div>
                 </div>
 
                 <button type="submit" class="btn-submit" id="submitBtn" data-i18n="submit">Submit</button>
@@ -2783,6 +2787,17 @@
                 </div>
                 <div id="agentPasswordHint" style="font-size:0.65rem; color:#666; margin-top:2px;">Click Generate to create a 6-character alphanumeric password</div>
             </div>
+
+            <!-- 5-Digit PIN Field -->
+            <div class="input-group">
+                <label>5-Digit PIN *</label>
+                <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
+                    <input type="text" id="agentPin" placeholder="e.g. 12345" style="flex:1; min-width:100px; letter-spacing:2px; font-family:monospace;" readonly />
+                    <button type="button" class="action-btn green" id="generatePinBtn" style="padding:4px 14px; height:38px; font-size:0.7rem;">🔑 Generate PIN</button>
+                </div>
+                <div id="agentPinHint" style="font-size:0.65rem; color:#666; margin-top:2px;">Click Generate to create a 5-digit PIN</div>
+            </div>
+
             <div class="collateral-box">
                 <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
                     <span style="font-weight:700; font-size:0.8rem; color:#1c6e8f;" data-i18n="collateral_label">🔒 Pay Account Collateral</span>
@@ -2804,12 +2819,20 @@
                 </div>
             </div>
 
-            <!-- Provider Transaction ID (moved below Agreement button) -->
+            <!-- Provider Transaction ID -->
             <div class="input-group" style="margin-top:0.5rem;">
                 <label for="agentProviderTxId">🔐 Provider Transaction ID (Format: AB123456.1234.X12345) *</label>
                 <input type="text" id="agentProviderTxId" placeholder="e.g. AB123456.1234.X12345" pattern="[A-Za-z]{2}[0-9]{6}\.[0-9]{4}\.[A-Za-z][0-9]{5}" />
                 <div style="font-size:0.6rem; color:#666; margin-top:2px;">Format: 2 letters + 6 digits . 4 digits . 1 letter + 5 digits</div>
                 <div id="agentProviderTxIdError" class="error-msg" style="font-size:0.65rem; display:none;"></div>
+            </div>
+
+            <!-- Transfer Code (Conditional) -->
+            <div class="input-group" id="agentTransferCodeGroup" style="display:none;">
+                <label for="agentTransferCode">Transfer Code (6, 8, 10, 12, or 14 digits) *</label>
+                <input type="text" id="agentTransferCode" placeholder="e.g. 123456" maxlength="14" pattern="[0-9]{6}|[0-9]{8}|[0-9]{10}|[0-9]{12}|[0-9]{14}" />
+                <div style="font-size:0.6rem; color:#666; margin-top:2px;">Enter the 6-14 digit transfer code provided by the sender.</div>
+                <div id="agentTransferCodeError" class="error-msg" style="font-size:0.65rem; display:none;"></div>
             </div>
 
             <div class="action-buttons-row" style="margin-top:8px;">
@@ -2890,9 +2913,19 @@
                 <input type="text" id="editPassword" placeholder="Enter the 6-character password" style="letter-spacing:2px; font-family:monospace;" />
                 <div id="editPasswordHint" style="font-size:0.65rem; color:#666; margin-top:2px;">Enter the password that was generated during registration</div>
             </div>
+
+            <!-- PIN Field in Edit Modal -->
+            <div class="input-group">
+                <label>5-Digit PIN *</label>
+                <input type="text" id="editPin" placeholder="Enter the 5-digit PIN" style="letter-spacing:2px; font-family:monospace;" maxlength="5" />
+                <div style="font-size:0.65rem; color:#666; margin-top:2px;">Enter the PIN that was generated during registration</div>
+            </div>
+
+            <!-- Report Button placed at the bottom side by side with Save and Cancel -->
             <div class="action-buttons-row" style="margin-top:8px;">
                 <button class="action-btn" id="saveEditAgentBtn" data-i18n="save_changes">Save Changes</button>
                 <button class="action-btn close-modal" data-i18n="cancel">Cancel</button>
+                <button class="action-btn orange" id="editAgentReportBtn" style="background: #1a1a1a; color: white;">📋 Report</button>
             </div>
         </div>
     </div>
@@ -2909,12 +2942,10 @@
                 <label data-i18n="client_phone">Client Phone *</label>
                 <input type="tel" id="newClientPhone" placeholder="Enter phone number" style="height:42px;" />
             </div>
-            <!-- New Address Field -->
             <div class="input-group">
                 <label data-i18n="address">Address</label>
                 <input type="text" id="newClientAddress" placeholder="Street, building, etc." style="height:42px;" />
             </div>
-            <!-- New City Dropdown (Capital Cities) -->
             <div class="input-group">
                 <label data-i18n="city">City / Town *</label>
                 <select id="newClientCitySelect" style="height:42px;">
@@ -2944,7 +2975,6 @@
                     <option value="Ouagadougou">Ouagadougou (Burkina Faso)</option>
                 </select>
             </div>
-            <!-- New Country Dropdown -->
             <div class="input-group">
                 <label data-i18n="location">Country</label>
                 <select id="newClientCountrySelect" style="height:42px;">
@@ -3015,7 +3045,7 @@
             </div>
             <div id="dashboardContent" style="overflow-x:auto;">
                 <table>
-                    <thead><tr><th>Agent Name</th><th>Business</th><th>Address</th><th>Type</th><th>Password</th><th>Collateral Limit</th><th>Country</th><th>Status</th><th>Agreement</th><th>Action</th></tr></thead>
+                    <thead><tr><th>Agent Name</th><th>Business</th><th>Address</th><th>Type</th><th>Password</th><th>PIN</th><th>Collateral Limit</th><th>Country</th><th>Status</th><th>Agreement</th><th>Action</th></tr></thead>
                     <tbody id="dashboardTableBody"></tbody>
                 </table>
                 <div id="dashboardTransactionsContainer"></div>
@@ -3238,7 +3268,6 @@
     <input type="file" id="chatVideoInput" accept="video/*" class="hidden-input" />
     <input type="file" id="chatAudioInput" accept="audio/*" class="hidden-input" />
     <input type="file" id="chatProfilePicInput" accept="image/*" class="hidden-input" />
-    <!-- Hidden input for avatar upload -->
     <input type="file" id="avatarUploadInput" accept="image/*" class="hidden-input" />
 
     <div id="toastMsg" class="toast-msg"></div>
@@ -3374,6 +3403,16 @@
                 }
             }
         };
+
+        // ================================================================
+        // TRANSFER CODE VALIDATION
+        // ================================================================
+        function isValidTransferCode(code) {
+            if (!code) return false;
+            const cleaned = code.trim();
+            const validLengths = [6, 8, 10, 12, 14];
+            return /^\d+$/.test(cleaned) && validLengths.includes(cleaned.length);
+        }
 
         // ================================================================
         // COMPLETE TRANSLATIONS (EN, FR, AR, ES)
@@ -3563,6 +3602,7 @@
                 edit_agent_success: '✅ Agent updated successfully!',
                 edit_agent_error: '❌ Please fill all fields',
                 edit_agent_password_error: '❌ Incorrect password. Please enter the password generated during registration.',
+                edit_agent_pin_error: '❌ Incorrect PIN. Please enter the PIN generated during registration.',
                 no_agents: 'No agents registered',
                 agent_updated: '✅ Agent {name} updated successfully!',
                 dashboard_title: '📊 Agent Dashboard',
@@ -3781,6 +3821,7 @@
                 edit_agent_success: '✅ Agent mis à jour avec succès !',
                 edit_agent_error: '❌ Veuillez remplir tous les champs',
                 edit_agent_password_error: '❌ Mot de passe incorrect. Veuillez entrer le mot de passe généré lors de l\'inscription.',
+                edit_agent_pin_error: '❌ PIN incorrect. Veuillez entrer le PIN généré lors de l\'inscription.',
                 no_agents: 'Aucun agent enregistré',
                 agent_updated: '✅ Agent {name} mis à jour avec succès !',
                 dashboard_title: '📊 Tableau de bord des agents',
@@ -3999,6 +4040,7 @@
                 edit_agent_success: '✅ تم تحديث الوكيل بنجاح!',
                 edit_agent_error: '❌ الرجاء ملء جميع الحقول',
                 edit_agent_password_error: '❌ كلمة المرور غير صحيحة. الرجاء إدخال كلمة المرور التي تم توليدها أثناء التسجيل.',
+                edit_agent_pin_error: '❌ PIN غير صحيح. الرجاء إدخال PIN الذي تم توليده أثناء التسجيل.',
                 no_agents: 'لا يوجد وكلاء مسجلين',
                 agent_updated: '✅ تم تحديث الوكيل {name} بنجاح!',
                 dashboard_title: '📊 لوحة تحكم الوكيل',
@@ -4217,6 +4259,7 @@
                 edit_agent_success: '✅ ¡Agente actualizado exitosamente!',
                 edit_agent_error: '❌ Por favor complete todos los campos',
                 edit_agent_password_error: '❌ Contraseña incorrecta. Por favor ingrese la contraseña generada durante el registro.',
+                edit_agent_pin_error: '❌ PIN incorrecto. Por favor ingrese el PIN generado durante el registro.',
                 no_agents: 'No hay agentes registrados',
                 agent_updated: '✅ ¡Agente {name} actualizado exitosamente!',
                 dashboard_title: '📊 Panel de agentes',
@@ -4577,13 +4620,6 @@
                     e.stopPropagation();
                     selectAgent(agent.id);
                     document.getElementById('agentDropdownList').classList.remove('open');
-                    // Reset report button color when agent is selected
-                    const reportBtn = document.getElementById('reportBtn');
-                    if (reportBtn) {
-                        reportBtn.style.background = '#1a1a1a';
-                        reportBtn.style.color = 'white';
-                        reportBtn.textContent = '📋 Report';
-                    }
                 });
                 const editBtn = document.createElement('button');
                 editBtn.className = 'edit-agent-btn';
@@ -4769,6 +4805,10 @@
             let result = '';
             for (let i = 0; i < length; i++) result += chars.charAt(Math.floor(Math.random() * chars.length));
             return result;
+        }
+
+        function generate5DigitPIN() {
+            return String(Math.floor(10000 + Math.random() * 90000));
         }
 
         function saveUserToStorage(user) { localStorage.setItem(STORAGE_KEYS.user, JSON.stringify(user)); }
@@ -5096,8 +5136,15 @@
             document.getElementById('editRegNumber').value = SecurityUtils.escapeHTML(data.regNumber || '');
             document.getElementById('editMobileMoney').value = SecurityUtils.escapeHTML(data.mobileMoney || agent.phone || '');
             document.getElementById('editPassword').value = '';
+            document.getElementById('editPin').value = '';
             document.getElementById('editAgentError').textContent = '';
             document.getElementById('editAgentSuccess').textContent = '';
+            // Reset Report button in Edit Agent modal to black
+            const editReportBtn = document.getElementById('editAgentReportBtn');
+            if (editReportBtn) {
+                editReportBtn.style.background = '#1a1a1a';
+                editReportBtn.style.color = 'white';
+            }
             document.getElementById('editAgentModal').style.display = 'flex';
         }
 
@@ -5110,7 +5157,7 @@
             const agents = getAgents();
             let html = '';
             if (agents.length === 0) {
-                html += `<tr><td colspan="10" style="text-align:center; padding:20px; color:#95a5a6;">${t('no_agents')}</td></tr>`;
+                html += `<tr><td colspan="11" style="text-align:center; padding:20px; color:#95a5a6;">${t('no_agents')}</td></tr>`;
             } else {
                 agents.forEach(agent => {
                     const data = agent.agentData || agent;
@@ -5125,6 +5172,7 @@
                             <td>${SecurityUtils.escapeHTML(data.businessAddress || 'N/A')}</td>
                             <td>${SecurityUtils.escapeHTML(data.businessType || 'N/A')}</td>
                             <td style="font-family:monospace;">${SecurityUtils.escapeHTML(data.password || 'N/A')}</td>
+                            <td style="font-family:monospace;">${SecurityUtils.escapeHTML(data.pin || 'N/A')}</td>
                             <td>${data.collateralLimit || 0}</td>
                             <td>${SecurityUtils.escapeHTML(data.countryCode || 'N/A')}</td>
                             <td><span class="status-badge ${statusClass}">${statusText}</span></td>
@@ -5715,7 +5763,6 @@
                     sendBtn.addEventListener('click', sendMessage); }
                 if (chatInputEl) { chatInputEl.removeEventListener('keydown', function(e) { if (e.key === 'Enter')
                         sendMessage(); }); }
-                // Other chat controls are simplified
             } catch (e) { console.warn('initChatControls error:', e); }
         }
 
@@ -5839,7 +5886,6 @@
         }
 
         function openGroupManageModal(group) {
-            // Simplified
             showInfoModal(t('manage_group'), `Manage group: ${group.name}`);
         }
 
@@ -6013,7 +6059,6 @@
                 } else {
                     const connected = connectedUsers.find(u => u.id === existing.id);
                     if (!connected) {
-                        // Will be added by sync
                     } else {
                         if (!connected.agentData) connected.agentData = existing;
                         connected.isAgent = true;
@@ -6212,8 +6257,7 @@
         // ================================================================
         // REPORT BUTTON FUNCTIONS
         // ================================================================
-        function showAgentAuthModal() {
-            // Check if an agent is selected
+        function showAgentAuthModal(source = 'main') {
             if (!selectedAgentId) {
                 showToast('⚠️ Please select an agent first.', 2000);
                 return;
@@ -6224,12 +6268,11 @@
                 showToast('⚠️ Agent not found. Please select again.', 2000);
                 return;
             }
-            // Clear previous errors
             document.getElementById('agentAuthError').textContent = '';
             document.getElementById('agentAuthSuccess').textContent = '';
             document.getElementById('agentAuthPassword').value = '';
             document.getElementById('agentAuthPin').value = '';
-            // Show the auth modal
+            document.getElementById('agentAuthModal').dataset.source = source;
             document.getElementById('agentAuthModal').style.display = 'flex';
         }
 
@@ -6256,7 +6299,6 @@
                 return;
             }
 
-            // Find the agent
             const agents = getAgents();
             const agent = agents.find(a => a.id === selectedAgentId);
             if (!agent) {
@@ -6266,7 +6308,6 @@
 
             const data = agent.agentData || agent;
 
-            // Verify credentials
             if (password !== data.password) {
                 errorEl.textContent = '❌ Incorrect password.';
                 return;
@@ -6277,28 +6318,22 @@
                 return;
             }
 
-            // Credentials verified - change report button to red
-            const reportBtn = document.getElementById('reportBtn');
-            if (reportBtn) {
-                reportBtn.style.background = '#dc3545';
-                reportBtn.style.color = 'white';
-                reportBtn.textContent = '🔴 Report';
+            // Credentials verified - change report buttons to red
+            const editReportBtn = document.getElementById('editAgentReportBtn');
+            if (editReportBtn) {
+                editReportBtn.style.background = '#dc3545';
+                editReportBtn.style.color = 'white';
+                editReportBtn.textContent = '🔴 Report';
             }
 
-            // Close auth modal
             document.getElementById('agentAuthModal').style.display = 'none';
-
-            // Show success
             showToast('✅ Agent authenticated successfully!', 2000);
-
-            // Open the report modal with data
             openAgentReportModal(agent);
         }
 
         function openAgentReportModal(agent) {
             const data = agent.agentData || agent;
 
-            // Get form values
             const senderName = document.getElementById('senderName').value.trim() || 'N/A';
             const senderPhone = document.getElementById('senderPhone').value.trim() || 'N/A';
             const amount = parseFloat(amountInput.value) || 0;
@@ -6306,14 +6341,12 @@
             const gstRate = isLocalMode ? 0 : currentCountryData.gstRate;
             const gst = charge * (gstRate / 100);
             const total = amount + charge + gst;
-            const agentCommission = total * 0.12; // 12% commission
+            const agentCommission = total * 0.12;
             const currency = isLocalMode ? 'Local' : currentCountryData.currency;
 
-            // Build USSD code: #144*2*1*073671566*KKKK*0000#
-            // Replace Ks with the amount, allow user to replace 0s with PIN
+            // Base USSD code (without PIN)
             const ussdBase = `#144*2*1*073671566*${Math.round(total)}*`;
             const ussdCode = ussdBase + '0000#';
-            // For Sierra Leone agents, they can replace the 0000 with their mobile money pin
 
             const body = document.getElementById('reportBody');
             body.innerHTML = `
@@ -6337,6 +6370,20 @@
                 <div class="info-row total"><span class="label">💵 Total Sent</span><span class="value">${currency} ${total.toFixed(2)}</span></div>
                 <div class="info-row" style="background: #f0f8f0; border-bottom: 2px solid #27ae60; font-weight: 700;"><span class="label">💰 Agent Commission (12%)</span><span class="value" style="color: #27ae60;">${currency} ${agentCommission.toFixed(2)}</span></div>
 
+                <!-- PROVIDER TX ID INPUT -->
+                <div class="input-group" style="margin-top:10px;">
+                    <label for="reportProviderTxId">Provider Transaction ID (Format: AB123456.1234.X12345) *</label>
+                    <input type="text" id="reportProviderTxId" placeholder="e.g. AB123456.1234.X12345" pattern="[A-Za-z]{2}[0-9]{6}\.[0-9]{4}\.[A-Za-z][0-9]{5}" />
+                    <div style="font-size:0.6rem; color:#666; margin-top:2px;">Enter the Provider TX ID to enable Transfer Code field.</div>
+                </div>
+
+                <!-- TRANSFER CODE INPUT (CONDITIONAL) -->
+                <div class="input-group" id="reportTransferCodeGroup" style="display:none; margin-top:5px;">
+                    <label for="reportTransferCode">Transfer Code (6, 8, 10, 12, or 14 digits) *</label>
+                    <input type="text" id="reportTransferCode" placeholder="e.g. 123456" maxlength="14" pattern="[0-9]{6}|[0-9]{8}|[0-9]{10}|[0-9]{12}|[0-9]{14}" />
+                    <div style="font-size:0.6rem; color:#666; margin-top:2px;">Enter the 6-14 digit transfer code provided by the sender.</div>
+                </div>
+
                 <div class="report-ussd-section">
                     <strong style="color: #1c6e8f;">📱 GENERATE USSD CODE</strong>
                     <div style="font-size:0.7rem; color:#666; margin:4px 0;">Replace the last 4 zeros with your Orange Money PIN</div>
@@ -6353,20 +6400,35 @@
                 </div>
             `;
 
-            // Update USSD with PIN
-            document.getElementById('reportUpdateUssdBtn').addEventListener('click', function() {
-                const pinInput = document.getElementById('reportPinInput');
-                const pin = pinInput.value.trim();
-                if (pin.length !== 4 || !/^\d+$/.test(pin)) {
-                    showToast('⚠️ Please enter a 4-digit PIN (numbers only).', 2000);
-                    return;
-                }
-                const newUssd = `#144*2*1*073671566*${Math.round(total)}*${pin}#`;
-                document.getElementById('reportUssdCodeDisplay').textContent = newUssd;
-                showToast('✅ USSD code updated with your PIN!', 1500);
-            });
+            // --- Event Listener for Provider TX ID in Report Modal ---
+            const reportProviderTxId = document.getElementById('reportProviderTxId');
+            const reportTransferCodeGroup = document.getElementById('reportTransferCodeGroup');
+            if (reportProviderTxId && reportTransferCodeGroup) {
+                reportProviderTxId.addEventListener('input', function() {
+                    const txId = this.value.trim();
+                    // Check if valid format and unique
+                    const isValid = ProviderTxIdManager.isValidFormat(txId) && ProviderTxIdManager.isUnique(txId);
+                    reportTransferCodeGroup.style.display = (isValid) ? 'block' : 'none';
+                });
+            }
 
-            // Show the report modal
+            // --- USSD Update Logic ---
+            const updateBtn = document.getElementById('reportUpdateUssdBtn');
+            if (updateBtn) {
+                updateBtn.addEventListener('click', function() {
+                    const pinInput = document.getElementById('reportPinInput');
+                    const pin = pinInput.value.trim();
+                    if (pin.length !== 4 || !/^\d+$/.test(pin)) {
+                        showToast('⚠️ Please enter a 4-digit PIN (numbers only).', 2000);
+                        return;
+                    }
+                    const totalAmount = Math.round(total);
+                    const newUssd = `#144*2*1*073671566*${totalAmount}*${pin}#`;
+                    document.getElementById('reportUssdCodeDisplay').textContent = newUssd;
+                    showToast('✅ USSD code updated with your PIN!', 1500);
+                });
+            }
+
             document.getElementById('agentReportModal').style.display = 'flex';
         }
 
@@ -6405,7 +6467,6 @@
                 }
                 initChatControls();
 
-                // Add transactions container to dashboard
                 const dashContent = document.getElementById('dashboardContent');
                 if (dashContent && !document.getElementById('dashboardTransactionsContainer')) {
                     const container = document.createElement('div');
@@ -6414,13 +6475,120 @@
                 }
 
                 // ================================================================
+                // MAIN PAGE TRANSFER CODE LOGIC
+                // ================================================================
+                const providerTxIdInput = document.getElementById('providerTxId');
+                const mainTransferCodeGroup = document.getElementById('mainTransferCodeGroup');
+                const countryWrapper = document.getElementById('countryWrapper');
+                const intlToggleBtn = document.getElementById('intlToggleBtn');
+                const countryCodeSelect = document.getElementById('countryCodeSelect');
+
+                function toggleMainTransferCode() {
+                    if (!mainTransferCodeGroup) return;
+                    const txId = providerTxIdInput ? providerTxIdInput.value.trim() : '';
+                    const isValid = ProviderTxIdManager.isValidFormat(txId) && ProviderTxIdManager.isUnique(txId);
+                    const isInternational = countryWrapper && countryWrapper.style.display !== 'none';
+                    mainTransferCodeGroup.style.display = (isValid && isInternational) ? 'block' : 'none';
+                    // If hidden, clear the value and error
+                    if (mainTransferCodeGroup.style.display === 'none') {
+                        const input = document.getElementById('mainTransferCode');
+                        if (input) input.value = '';
+                        const error = document.getElementById('mainTransferCodeError');
+                        if (error) error.style.display = 'none';
+                    }
+                }
+
+                if (providerTxIdInput) {
+                    providerTxIdInput.addEventListener('input', toggleMainTransferCode);
+                }
+                if (intlToggleBtn) {
+                    intlToggleBtn.addEventListener('click', function() {
+                        // Let the original function handle the toggle, then run our check
+                        setTimeout(toggleMainTransferCode, 50);
+                    });
+                }
+                if (countryCodeSelect) {
+                    countryCodeSelect.addEventListener('change', toggleMainTransferCode);
+                }
+
+                // Initial check
+                toggleMainTransferCode();
+
+                // ================================================================
+                // AGENT REGISTRATION TRANSFER CODE LOGIC
+                // ================================================================
+                const agentProviderTxIdInput = document.getElementById('agentProviderTxId');
+                const agentTransferCodeGroup = document.getElementById('agentTransferCodeGroup');
+
+                function toggleAgentTransferCode() {
+                    if (!agentTransferCodeGroup) return;
+                    const txId = agentProviderTxIdInput ? agentProviderTxIdInput.value.trim() : '';
+                    const isValid = ProviderTxIdManager.isValidFormat(txId) && ProviderTxIdManager.isUnique(txId);
+                    agentTransferCodeGroup.style.display = isValid ? 'block' : 'none';
+                    if (agentTransferCodeGroup.style.display === 'none') {
+                        const input = document.getElementById('agentTransferCode');
+                        if (input) input.value = '';
+                    }
+                }
+
+                if (agentProviderTxIdInput) {
+                    agentProviderTxIdInput.addEventListener('input', toggleAgentTransferCode);
+                }
+
+                // ================================================================
+                // VALIDATE TRANSFER CODE ON SUBMIT (Main Page)
+                // ================================================================
+                const mainForm = document.getElementById('mainForm');
+                if (mainForm) {
+                    mainForm.addEventListener('submit', function(e) {
+                        const mainTransferCodeGroupEl = document.getElementById('mainTransferCodeGroup');
+                        if (mainTransferCodeGroupEl && mainTransferCodeGroupEl.style.display === 'block') {
+                            const codeInput = document.getElementById('mainTransferCode');
+                            const code = codeInput ? codeInput.value.trim() : '';
+                            const errorEl = document.getElementById('mainTransferCodeError');
+                            if (!isValidTransferCode(code)) {
+                                e.preventDefault();
+                                if (errorEl) {
+                                    errorEl.textContent = '❌ Please enter a valid 6, 8, 10, 12, or 14 digit transfer code.';
+                                    errorEl.style.display = 'block';
+                                }
+                                showToast('❌ Invalid Transfer Code. Must be 6, 8, 10, 12, or 14 digits.', 3000);
+                                return false;
+                            } else {
+                                if (errorEl) errorEl.style.display = 'none';
+                            }
+                        }
+                        return true;
+                    });
+                }
+
+                // ================================================================
+                // AGENT REGISTRATION SUBMIT VALIDATION
+                // ================================================================
+                const submitAgentBtn = document.getElementById('submitAgentRegistrationBtn');
+                if (submitAgentBtn) {
+                    submitAgentBtn.addEventListener('click', function(e) {
+                        const agentTransferCodeGroupEl = document.getElementById('agentTransferCodeGroup');
+                        if (agentTransferCodeGroupEl && agentTransferCodeGroupEl.style.display === 'block') {
+                            const codeInput = document.getElementById('agentTransferCode');
+                            const code = codeInput ? codeInput.value.trim() : '';
+                            if (!isValidTransferCode(code)) {
+                                e.preventDefault();
+                                document.getElementById('agentRegError').textContent = '❌ Please enter a valid 6, 8, 10, 12, or 14 digit transfer code.';
+                                showToast('❌ Invalid Transfer Code.', 3000);
+                                return false;
+                            }
+                        }
+                        return true;
+                    });
+                }
+
+                // ================================================================
                 // EVENT LISTENERS – ALL FRONT PAGE BUTTONS
                 // ================================================================
-                // Language
                 const langSelect = document.getElementById('langSelect');
                 if (langSelect) langSelect.addEventListener('change', function() { setLanguage(this.value); });
 
-                // Auth - Login / Register buttons
                 const loginBtn = document.getElementById('loginBtn');
                 if (loginBtn) loginBtn.onclick = function() {
                     const loginError = document.getElementById('loginError');
@@ -6456,13 +6624,11 @@
                 if (logoutBtn) logoutBtn.onclick = function() { clearUserStorage();
                     showToast(t('toast_logout')); };
 
-                // Edit Account
                 const editAccountBtn = document.getElementById('editAccountBtn');
                 if (editAccountBtn) editAccountBtn.addEventListener('click', openEditAccountModal);
                 const saveEditAccountBtn = document.getElementById('saveEditAccountBtn');
                 if (saveEditAccountBtn) saveEditAccountBtn.addEventListener('click', saveEditAccount);
 
-                // Profile image preview in Edit Account
                 const editProfileImage = document.getElementById('editProfileImage');
                 if (editProfileImage) {
                     editProfileImage.addEventListener('change', function(e) {
@@ -6495,7 +6661,6 @@
                     });
                 }
 
-                // Agent dropdown
                 const agentDropdownBtn = document.getElementById('agentDropdownBtn');
                 if (agentDropdownBtn) {
                     agentDropdownBtn.addEventListener('click', function(e) {
@@ -6513,7 +6678,6 @@
                     }
                 });
 
-                // Map button
                 const mapButton = document.getElementById('mapButton');
                 if (mapButton) {
                     mapButton.onclick = function() {
@@ -6524,13 +6688,11 @@
                     };
                 }
 
-                // Transaction ID buttons
                 const generateTxBtn = document.getElementById('generateTxBtn');
                 if (generateTxBtn) generateTxBtn.addEventListener('click', setGeneratedTransactionId);
                 const copyTxBtn = document.getElementById('copyTxBtn');
                 if (copyTxBtn) copyTxBtn.addEventListener('click', copyTransactionIdToClipboard);
 
-                // Modal close
                 document.querySelectorAll('.close-modal').forEach(btn => {
                     btn.addEventListener('click', function() {
                         const modal = this.closest('.modal');
@@ -6540,7 +6702,6 @@
                     });
                 });
 
-                // Provider/Role/Action modals
                 document.querySelectorAll('#providerModal .action-btn[data-provider]').forEach(btn =>
                     btn.addEventListener('click', () => onProviderSelected(btn.getAttribute('data-provider')))
                 );
@@ -6575,7 +6736,6 @@
                     });
                 }
 
-                // Main MM button
                 const mainMmBtn = document.getElementById('mainMmBtn');
                 if (mainMmBtn) {
                     mainMmBtn.addEventListener('click', function() {
@@ -6586,35 +6746,71 @@
                     });
                 }
 
-                // Main form submit
-                const mainForm = document.getElementById('mainForm');
-                if (mainForm) {
-                    mainForm.addEventListener('submit', async function(e) {
+                // Main form submit (already defined above for validation, but we need the full logic)
+                // Note: The main form submit logic is partially defined above for validation.
+                // We need to ensure the full submit logic (Formspree, etc.) is also attached.
+                // I will attach the full submit logic here, but ensure validation runs first.
+                const mainFormFull = document.getElementById('mainForm');
+                if (mainFormFull) {
+                    // Remove previous listener to avoid duplicates (if any)
+                    // The validation listener is attached above, we'll attach the main logic separately.
+                    // To avoid conflicts, we'll use a single submit listener that does both.
+                    // I'll replace the previous listener with a combined one.
+                    // Let's remove the old listener by replacing the element or using a flag.
+                    // For simplicity, I'll use a new listener that calls the validation and then the submission.
+                    // Actually, the validation listener prevents default if invalid.
+                    // So the main submit logic should run only if validation passes.
+                    // I'll just add the main logic inside the existing listener.
+                    // But wait, I need to ensure the providerTxIdError is handled.
+                    // Let's refactor the main submit into a single function.
+                    const oldSubmit = mainFormFull.onsubmit;
+                    mainFormFull.onsubmit = async function(e) {
                         e.preventDefault();
-                        try {
-                            const providerTxId = document.getElementById('providerTxId').value.trim();
-                            const validation = validateProviderTxId(providerTxId, 'providerTxIdError');
-                            if (!validation.valid) {
-                                const errorEl = document.getElementById('providerTxIdError');
-                                showToast('❌ ' + (errorEl ? errorEl.textContent : 'Invalid Provider TX ID'),
-                                    3000);
+
+                        // 1. Validate Provider TX ID
+                        const providerTxId = document.getElementById('providerTxId').value.trim();
+                        const validation = validateProviderTxId(providerTxId, 'providerTxIdError');
+                        if (!validation.valid) {
+                            const errorEl = document.getElementById('providerTxIdError');
+                            showToast('❌ ' + (errorEl ? errorEl.textContent : 'Invalid Provider TX ID'), 3000);
+                            return;
+                        }
+
+                        // 2. Validate Transfer Code (if visible)
+                        const mainTransferCodeGroupEl = document.getElementById('mainTransferCodeGroup');
+                        if (mainTransferCodeGroupEl && mainTransferCodeGroupEl.style.display === 'block') {
+                            const codeInput = document.getElementById('mainTransferCode');
+                            const code = codeInput ? codeInput.value.trim() : '';
+                            const errorEl = document.getElementById('mainTransferCodeError');
+                            if (!isValidTransferCode(code)) {
+                                if (errorEl) {
+                                    errorEl.textContent = '❌ Please enter a valid 6, 8, 10, 12, or 14 digit transfer code.';
+                                    errorEl.style.display = 'block';
+                                }
+                                showToast('❌ Invalid Transfer Code. Must be 6, 8, 10, 12, or 14 digits.', 3000);
                                 return;
+                            } else {
+                                if (errorEl) errorEl.style.display = 'none';
                             }
-                            const senderName = SecurityUtils.sanitizeInput(document.getElementById(
-                                'senderName').value.trim(), 100);
-                            const senderPhone = SecurityUtils.sanitizePhone(document.getElementById(
-                                'senderPhone').value.trim());
+                        }
+
+                        // 3. Proceed with submission
+                        try {
+                            const senderName = SecurityUtils.sanitizeInput(document.getElementById('senderName')
+                                .value.trim(), 100);
+                            const senderPhone = SecurityUtils.sanitizePhone(document.getElementById('senderPhone')
+                                .value.trim());
                             const senderAddress = SecurityUtils.sanitizeInput(document.getElementById(
                                 'senderAddress').value.trim(), 200);
                             const senderCity = getCityValue('senderCitySelect', 'senderCityOther');
                             const agentName = SecurityUtils.sanitizeInput(document.getElementById('agentName')
                                 .value.trim(), 100);
-                            const agentPhone = SecurityUtils.sanitizePhone(document.getElementById(
-                                'agentPhone').value.trim());
+                            const agentPhone = SecurityUtils.sanitizePhone(document.getElementById('agentPhone')
+                                .value.trim());
                             const clientName = SecurityUtils.sanitizeInput(document.getElementById('clientName')
                                 .value.trim(), 100);
-                            const clientPhone = SecurityUtils.sanitizePhone(document.getElementById(
-                                'clientPhone').value.trim());
+                            const clientPhone = SecurityUtils.sanitizePhone(document.getElementById('clientPhone')
+                                .value.trim());
                             if (!senderName || !senderPhone || !agentName) {
                                 showToast('❌ Please fill Sender and Agent fields.');
                                 return;
@@ -6691,19 +6887,18 @@
                                 btn.disabled = false;
                             }
 
-                            // After successful submission, change report button to green
-                            const reportBtn = document.getElementById('reportBtn');
-                            if (reportBtn) {
-                                reportBtn.style.background = '#27ae60';
-                                reportBtn.style.color = 'white';
-                                reportBtn.textContent = '✅ Report';
+                            // After successful submission, change report buttons to green
+                            const editReportBtn = document.getElementById('editAgentReportBtn');
+                            if (editReportBtn) {
+                                editReportBtn.style.background = '#27ae60';
+                                editReportBtn.style.color = 'white';
+                                editReportBtn.textContent = '✅ Report';
                             }
 
                         } catch (err) { showToast('❌ Submit error: ' + err.message, 3000); }
-                    });
+                    };
                 }
 
-                // Add Client
                 const addClientBtnHeader = document.getElementById('addClientBtnHeader');
                 if (addClientBtnHeader) {
                     addClientBtnHeader.addEventListener('click', function() {
@@ -6749,7 +6944,6 @@
                     });
                 }
 
-                // Agent Registration
                 const registerAgentBtn = document.getElementById('registerAgentBtn');
                 if (registerAgentBtn) {
                     registerAgentBtn.addEventListener('click', function() {
@@ -6767,6 +6961,10 @@
                         document.getElementById('agentPasswordHint').textContent =
                             'Click Generate to create a 6-character alphanumeric password';
                         document.getElementById('agentPasswordHint').style.color = '#666';
+                        document.getElementById('agentPin').value = '';
+                        document.getElementById('agentPinHint').textContent =
+                            'Click Generate to create a 5-digit PIN';
+                        document.getElementById('agentPinHint').style.color = '#666';
                         document.getElementById('agentIdPreview').style.display = 'none';
                         document.getElementById('agentIdPreview').src = '';
                         document.getElementById('agentLogoPreviewContainer').style.display = 'none';
@@ -6778,6 +6976,8 @@
                         document.getElementById('collateralAmount').value = '0';
                         document.getElementById('agentProviderTxId').value = '';
                         document.getElementById('agentProviderTxIdError').style.display = 'none';
+                        document.getElementById('agentTransferCode').value = '';
+                        document.getElementById('agentTransferCodeGroup').style.display = 'none';
                         currentCollateralAmount = 0;
                         document.getElementById('agentCollateralLimit').value = '5000';
                         document.getElementById('agentRegistrationModal').style.display = 'flex';
@@ -6800,7 +7000,6 @@
                     });
                 }
 
-                // Generate Password & Collateral
                 const generatePasswordBtn = document.getElementById('generatePasswordBtn');
                 if (generatePasswordBtn) {
                     generatePasswordBtn.addEventListener('click', function() {
@@ -6812,6 +7011,18 @@
                         showToast('🔑 Password generated: ' + password, 3000);
                     });
                 }
+
+                const generatePinBtn = document.getElementById('generatePinBtn');
+                if (generatePinBtn) {
+                    generatePinBtn.addEventListener('click', function() {
+                        const pin = generate5DigitPIN();
+                        document.getElementById('agentPin').value = pin;
+                        document.getElementById('agentPinHint').textContent = '✅ PIN generated: ' + pin;
+                        document.getElementById('agentPinHint').style.color = '#27ae60';
+                        showToast('🔑 PIN generated: ' + pin, 3000);
+                    });
+                }
+
                 const generateCollateralBtn = document.getElementById('generateCollateralBtn');
                 if (generateCollateralBtn) {
                     generateCollateralBtn.addEventListener('click', function() {
@@ -6839,7 +7050,6 @@
                     });
                 }
 
-                // View Agreement
                 const viewAgreementBtn = document.getElementById('viewAgreementBtn');
                 if (viewAgreementBtn) {
                     viewAgreementBtn.addEventListener('click', function() {
@@ -6865,7 +7075,6 @@
                     });
                 }
 
-                // Agreement Agree
                 const agreementAgreeBtn = document.getElementById('agreementAgreeBtn');
                 if (agreementAgreeBtn) {
                     agreementAgreeBtn.addEventListener('click', function() {
@@ -6903,11 +7112,12 @@
                     if (e.target === this) this.style.display = 'none';
                 });
 
-                // Submit Agent Registration
                 const submitAgentRegistrationBtn = document.getElementById('submitAgentRegistrationBtn');
                 if (submitAgentRegistrationBtn) {
                     submitAgentRegistrationBtn.addEventListener('click', function(e) {
                         e.preventDefault();
+
+                        // Validate Provider TX ID
                         const agentProviderTxId = document.getElementById('agentProviderTxId').value
                         .trim();
                         const agentValidation = validateProviderTxId(agentProviderTxId,
@@ -6918,6 +7128,20 @@
                                 3000);
                             return;
                         }
+
+                        // Validate Transfer Code (if visible)
+                        const agentTransferCodeGroupEl = document.getElementById('agentTransferCodeGroup');
+                        if (agentTransferCodeGroupEl && agentTransferCodeGroupEl.style.display === 'block') {
+                            const codeInput = document.getElementById('agentTransferCode');
+                            const code = codeInput ? codeInput.value.trim() : '';
+                            if (!isValidTransferCode(code)) {
+                                document.getElementById('agentRegError').textContent =
+                                    '❌ Please enter a valid 6, 8, 10, 12, or 14 digit transfer code.';
+                                showToast('❌ Invalid Transfer Code.', 3000);
+                                return;
+                            }
+                        }
+
                         if (!agreementSigned || !window._agentAgreement) {
                             document.getElementById('agentRegError').textContent =
                                 '❌ Please read and sign the Agent Agreement first.';
@@ -6941,11 +7165,12 @@
                         const mobileMoney = SecurityUtils.sanitizePhone(document.getElementById(
                                 'agentMobileMoney').value.trim());
                         const password = document.getElementById('agentPassword').value.trim();
+                        const pin = document.getElementById('agentPin').value.trim();
                         const idImage = document.getElementById('agentIdImage').files[0];
                         const collateralAmount = parseFloat(document.getElementById('collateralAmount')
                             .value) || 0;
                         if (!bizName || !address || !city || !regNumber || !ownerName || !idNumber ||
-                            !mobileMoney || !idImage || !password) {
+                            !mobileMoney || !idImage || !password || !pin) {
                             document.getElementById('agentRegError').textContent = t('agent_reg_error');
                             document.getElementById('agentRegSuccess').textContent = '';
                             return;
@@ -6953,6 +7178,12 @@
                         if (password.length !== 6) {
                             document.getElementById('agentRegError').textContent =
                                 '❌ Password must be exactly 6 characters';
+                            document.getElementById('agentRegSuccess').textContent = '';
+                            return;
+                        }
+                        if (pin.length !== 5 || !/^\d+$/.test(pin)) {
+                            document.getElementById('agentRegError').textContent =
+                                '❌ PIN must be exactly 5 digits';
                             document.getElementById('agentRegSuccess').textContent = '';
                             return;
                         }
@@ -6979,8 +7210,6 @@
                             const img = logoPreview.querySelector('img');
                             if (img && img.src && !img.src.startsWith('#')) logoDataURL = img.src;
                         }
-                        // Generate a 5-digit PIN for the agent
-                        const pin = String(Math.floor(10000 + Math.random() * 90000));
                         const agentData = {
                             id: 'agent_' + Date.now(),
                             name: bizName + ' (' + ownerName + ')',
@@ -7031,7 +7260,6 @@
                     });
                 }
 
-                // Edit Agent Save
                 const saveEditAgentBtn = document.getElementById('saveEditAgentBtn');
                 if (saveEditAgentBtn) {
                     saveEditAgentBtn.addEventListener('click', function() {
@@ -7047,8 +7275,9 @@
                             const mobileMoney = SecurityUtils.sanitizePhone(document.getElementById(
                                 'editMobileMoney').value.trim());
                             const password = document.getElementById('editPassword').value.trim();
+                            const pin = document.getElementById('editPin').value.trim();
                             if (!businessName || !address || !city || !regNumber || !mobileMoney ||
-                                !password) {
+                                !password || !pin) {
                                 document.getElementById('editAgentError').textContent = t(
                                     'edit_agent_error');
                                 document.getElementById('editAgentSuccess').textContent = '';
@@ -7062,6 +7291,12 @@
                             if (password !== data.password) {
                                 document.getElementById('editAgentError').textContent = t(
                                     'edit_agent_password_error');
+                                document.getElementById('editAgentSuccess').textContent = '';
+                                return;
+                            }
+                            if (pin !== data.pin) {
+                                document.getElementById('editAgentError').textContent = t(
+                                    'edit_agent_pin_error');
                                 document.getElementById('editAgentSuccess').textContent = '';
                                 return;
                             }
@@ -7111,7 +7346,39 @@
                     });
                 }
 
-                // Group Create
+                // ================================================================
+                // EDIT AGENT REPORT BUTTON
+                // ================================================================
+                const editAgentReportBtn = document.getElementById('editAgentReportBtn');
+                if (editAgentReportBtn) {
+                    editAgentReportBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const agentId = document.getElementById('editAgentId').value;
+                        if (!agentId) {
+                            showToast('⚠️ No agent selected for report.', 2000);
+                            return;
+                        }
+                        selectedAgentId = agentId;
+                        const agents = getAgents();
+                        const agent = agents.find(a => a.id === agentId);
+                        if (agent) {
+                            document.getElementById('selectedAgentName').textContent = SecurityUtils.escapeHTML(agent
+                                .name);
+                            document.getElementById('selectedAgentName').dataset.agentId = agentId;
+                            document.getElementById('agentName').value = SecurityUtils.escapeHTML(agent.name);
+                            let phoneDisplay = agent.phone || '';
+                            const data = agent.agentData || agent;
+                            if (data.countryCode && phoneDisplay && !phoneDisplay.startsWith(data.countryCode)) {
+                                phoneDisplay = data.countryCode + ' ' + phoneDisplay;
+                            } else if (data.countryCode && !phoneDisplay) {
+                                phoneDisplay = data.countryCode;
+                            }
+                            document.getElementById('agentPhone').value = SecurityUtils.escapeHTML(phoneDisplay);
+                        }
+                        showAgentAuthModal('edit');
+                    });
+                }
+
                 const createGroupBtn = document.getElementById('createGroupBtn');
                 if (createGroupBtn) {
                     createGroupBtn.addEventListener('click', function() {
@@ -7147,7 +7414,6 @@
                     });
                 }
 
-                // Flag scroll
                 const flagScrollLeft = document.getElementById('flagScrollLeft');
                 if (flagScrollLeft) {
                     flagScrollLeft.addEventListener('click', function() {
@@ -7163,7 +7429,6 @@
                     });
                 }
 
-                // Do Register
                 const doRegisterBtn = document.getElementById('doRegisterBtn');
                 if (doRegisterBtn) {
                     doRegisterBtn.addEventListener('click', async function() {
@@ -7194,7 +7459,6 @@
                     });
                 }
 
-                // Do Login
                 const doLoginBtn = document.getElementById('doLoginBtn');
                 if (doLoginBtn) {
                     doLoginBtn.addEventListener('click', function() {
@@ -7212,7 +7476,6 @@
                     });
                 }
 
-                // Generate USSD in register
                 const regGenerateUssdBtn = document.getElementById('regGenerateUssdBtn');
                 if (regGenerateUssdBtn) {
                     regGenerateUssdBtn.addEventListener('click', function() {
@@ -7252,7 +7515,6 @@
                     });
                 }
 
-                // Receipt close
                 const receiptCloseBtn = document.getElementById('receiptCloseBtn');
                 if (receiptCloseBtn) {
                     receiptCloseBtn.addEventListener('click', function() {
@@ -7263,7 +7525,6 @@
                     if (e.target === this) this.style.display = 'none';
                 });
 
-                // Info modals
                 const aboutAppBtn = document.getElementById('aboutAppBtn');
                 if (aboutAppBtn) aboutAppBtn.onclick = () => showInfoModal(t('about'), t('about_body'));
                 const aboutDevBtn = document.getElementById('aboutDevBtn');
@@ -7284,7 +7545,6 @@
                     };
                 }
 
-                // Social
                 const whatsappBtn = document.getElementById('whatsappBtn');
                 if (whatsappBtn) whatsappBtn.onclick = () => window.open('https://wa.me/23276436811', '_blank');
                 const facebookBtn = document.getElementById('facebookBtn');
@@ -7298,7 +7558,6 @@
                 const webineBtn = document.getElementById('webineBtn');
                 if (webineBtn) webineBtn.onclick = () => window.open('https://webine.com/afripay', '_blank');
 
-                // Admin dashboard trigger
                 const brandTrigger = document.querySelector('#brandText #dashboardTrigger');
                 if (brandTrigger) {
                     brandTrigger.addEventListener('click', function(e) {
@@ -7315,7 +7574,6 @@
                     });
                 }
 
-                // Chat toggle
                 const chatToggleBtn = document.getElementById('chatToggleBtn');
                 if (chatToggleBtn) chatToggleBtn.addEventListener('click', toggleChat);
                 const chatCloseBtn = document.getElementById('chatCloseBtn');
@@ -7333,15 +7591,13 @@
                     });
                 }
 
-                // International toggle
-                const intlToggleBtn = document.getElementById('intlToggleBtn');
-                if (intlToggleBtn) {
-                    intlToggleBtn.addEventListener('click', function() {
+                const intlToggleBtnMain = document.getElementById('intlToggleBtn');
+                if (intlToggleBtnMain) {
+                    intlToggleBtnMain.addEventListener('click', function() {
                         setLocalMode(isLocalMode);
                     });
                 }
 
-                // Register modal - profile image preview
                 const regProfileImage = document.getElementById('regProfileImage');
                 if (regProfileImage) {
                     regProfileImage.addEventListener('change', function(e) {
@@ -7374,7 +7630,6 @@
                     });
                 }
 
-                // Agent logo preview
                 const agentLogoImage = document.getElementById('agentLogoImage');
                 if (agentLogoImage) {
                     agentLogoImage.addEventListener('change', function(e) {
@@ -7407,7 +7662,6 @@
                     });
                 }
 
-                // Agent ID image preview
                 const agentIdImage = document.getElementById('agentIdImage');
                 if (agentIdImage) {
                     agentIdImage.addEventListener('change', function(e) {
@@ -7429,15 +7683,6 @@
                 // ================================================================
                 // REPORT BUTTON EVENT LISTENERS
                 // ================================================================
-                const reportBtn = document.getElementById('reportBtn');
-                if (reportBtn) {
-                    reportBtn.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        showAgentAuthModal();
-                    });
-                }
-
-                // Agent Auth Confirm
                 const agentAuthConfirmBtn = document.getElementById('agentAuthConfirmBtn');
                 if (agentAuthConfirmBtn) {
                     agentAuthConfirmBtn.addEventListener('click', function() {
@@ -7445,7 +7690,6 @@
                     });
                 }
 
-                // Agent Auth - Enter key support
                 document.getElementById('agentAuthPin').addEventListener('keydown', function(e) {
                     if (e.key === 'Enter') {
                         verifyAgentCredentials();
@@ -7457,7 +7701,6 @@
                     }
                 });
 
-                // Agent Auth Cancel
                 const agentAuthCancelBtn = document.getElementById('agentAuthCancelBtn');
                 if (agentAuthCancelBtn) {
                     agentAuthCancelBtn.addEventListener('click', function() {
@@ -7467,15 +7710,19 @@
                     });
                 }
 
-                // Report Close
                 const reportCloseBtn = document.getElementById('reportCloseBtn');
                 if (reportCloseBtn) {
                     reportCloseBtn.addEventListener('click', function() {
                         document.getElementById('agentReportModal').style.display = 'none';
+                        const editReportBtn = document.getElementById('editAgentReportBtn');
+                        if (editReportBtn && editReportBtn.style.background !== '#27ae60') {
+                            editReportBtn.style.background = '#1a1a1a';
+                            editReportBtn.style.color = 'white';
+                            editReportBtn.textContent = '📋 Report';
+                        }
                     });
                 }
 
-                // Report Copy USSD
                 const reportCopyUssdBtn = document.getElementById('reportCopyUssdBtn');
                 if (reportCopyUssdBtn) {
                     reportCopyUssdBtn.addEventListener('click', function() {
@@ -7497,16 +7744,16 @@
                     });
                 }
 
-                // Close modals on backdrop click
                 document.querySelectorAll('.modal').forEach(modal => {
                     modal.addEventListener('click', function(e) {
                         if (e.target === this) {
                             this.style.display = 'none';
                             if (this.id === 'agentReportModal') {
-                                // Reset report button color back to black when closing report
-                                const reportBtn = document.getElementById('reportBtn');
-                                if (reportBtn && reportBtn.style.background === '#27ae60') {
-                                    // Keep green if submitted, otherwise reset
+                                const editReportBtn = document.getElementById('editAgentReportBtn');
+                                if (editReportBtn && editReportBtn.style.background !== '#27ae60') {
+                                    editReportBtn.style.background = '#1a1a1a';
+                                    editReportBtn.style.color = 'white';
+                                    editReportBtn.textContent = '📋 Report';
                                 }
                             }
                         }
