@@ -1893,6 +1893,7 @@
             border-radius: 20px;
             overflow: hidden;
             background: #fcfcfc;
+            position: relative;
         }
         .receipt-header {
             background: linear-gradient(135deg, #0a2b3c 0%, #1c4e6c 100%);
@@ -1925,6 +1926,31 @@
             font-weight: 600;
             margin-top: 4px;
             border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .receipt-close-x {
+            position: absolute;
+            top: 8px;
+            right: 14px;
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            color: white;
+            font-size: 1.4rem;
+            cursor: pointer;
+            padding: 0 6px;
+            border-radius: 50%;
+            transition: 0.2s;
+            line-height: 1.4;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            z-index: 5;
+        }
+        .receipt-close-x:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
         }
         .receipt-body {
             padding: 16px 20px 12px 20px;
@@ -2065,6 +2091,7 @@
             .receipt-row.total { font-size: 0.85rem; padding-top: 6px; }
             .receipt-row.total .value { font-size: 0.95rem; }
             .receipt-share-btn { font-size: 0.7rem; padding: 5px 12px; height: 34px; min-width: 70px; }
+            .receipt-close-x { top: 4px; right: 8px; font-size: 1.2rem; width: 28px; height: 28px; }
         }
 
         /* ================================================================
@@ -2083,6 +2110,7 @@
             padding: 14px 20px;
             color: white;
             text-align: center;
+            position: relative;
         }
         .agreement-modal-header h3 {
             color: white;
@@ -2092,6 +2120,31 @@
         .agreement-modal-header small {
             font-size: 0.6rem;
             opacity: 0.8;
+        }
+        .agreement-close-x {
+            position: absolute;
+            top: 6px;
+            right: 12px;
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            color: white;
+            font-size: 1.3rem;
+            cursor: pointer;
+            padding: 0 6px;
+            border-radius: 50%;
+            transition: 0.2s;
+            line-height: 1.4;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            z-index: 5;
+        }
+        .agreement-close-x:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
         }
         .agreement-body {
             padding: 16px 20px;
@@ -2262,15 +2315,42 @@
             border-radius: 20px;
             overflow: hidden;
             background: #fcfcfc;
+            position: relative;
         }
         .report-header {
             background: linear-gradient(135deg, #0a2b3c 0%, #1c4e6c 100%);
             padding: 14px 20px;
             color: white;
             text-align: center;
+            position: relative;
         }
         .report-header h3 { color: white; margin: 0; }
         .report-header small { font-size: 0.6rem; opacity: 0.8; }
+        .report-close-x {
+            position: absolute;
+            top: 6px;
+            right: 12px;
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            color: white;
+            font-size: 1.3rem;
+            cursor: pointer;
+            padding: 0 6px;
+            border-radius: 50%;
+            transition: 0.2s;
+            line-height: 1.4;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            z-index: 5;
+        }
+        .report-close-x:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
         .report-body {
             padding: 16px 20px;
             max-height: 60vh;
@@ -2848,6 +2928,7 @@
             <div class="agreement-modal-header">
                 <h3>📜 AGENT REGISTRATION AGREEMENT</h3>
                 <small>Please read carefully and sign to proceed</small>
+                <button class="agreement-close-x" id="agreementCloseXBtn">✕</button>
             </div>
             <div class="agreement-body" id="agreementBody">
                 <!-- Dynamically filled -->
@@ -3061,6 +3142,7 @@
                 <div class="receipt-logo">AFRI·PAY</div>
                 <div class="receipt-sub">CROSS-BORDER PAYMENT RECEIPT</div>
                 <div class="receipt-badge" id="receiptBadge">🔹 CONFIRMED</div>
+                <button class="receipt-close-x" id="receiptCloseXBtn">✕</button>
             </div>
             <div class="receipt-body" id="receiptBody"></div>
             <div class="receipt-footer">
@@ -3217,6 +3299,7 @@
             <div class="report-header">
                 <h3>📋 AGENT REPORT</h3>
                 <small>Transaction Details & USSD Code</small>
+                <button class="report-close-x" id="reportCloseXBtn">✕</button>
             </div>
             <div class="report-body" id="reportBody">
                 <!-- Dynamically filled -->
@@ -6584,6 +6667,49 @@
                 }
 
                 // ================================================================
+                // RECEIPT CLOSE BUTTONS
+                // ================================================================
+                const receiptCloseXBtn = document.getElementById('receiptCloseXBtn');
+                if (receiptCloseXBtn) {
+                    receiptCloseXBtn.addEventListener('click', function() {
+                        document.getElementById('receiptModal').style.display = 'none';
+                    });
+                }
+
+                const receiptCloseBtn = document.getElementById('receiptCloseBtn');
+                if (receiptCloseBtn) {
+                    receiptCloseBtn.addEventListener('click', function() {
+                        document.getElementById('receiptModal').style.display = 'none';
+                    });
+                }
+
+                // ================================================================
+                // AGREEMENT CLOSE BUTTONS
+                // ================================================================
+                const agreementCloseXBtn = document.getElementById('agreementCloseXBtn');
+                if (agreementCloseXBtn) {
+                    agreementCloseXBtn.addEventListener('click', function() {
+                        document.getElementById('agreementModal').style.display = 'none';
+                    });
+                }
+
+                // ================================================================
+                // REPORT CLOSE BUTTONS
+                // ================================================================
+                const reportCloseXBtn = document.getElementById('reportCloseXBtn');
+                if (reportCloseXBtn) {
+                    reportCloseXBtn.addEventListener('click', function() {
+                        document.getElementById('agentReportModal').style.display = 'none';
+                        const editReportBtn = document.getElementById('editAgentReportBtn');
+                        if (editReportBtn && editReportBtn.style.background !== '#27ae60') {
+                            editReportBtn.style.background = '#1a1a1a';
+                            editReportBtn.style.color = 'white';
+                            editReportBtn.textContent = '📋 Report';
+                        }
+                    });
+                }
+
+                // ================================================================
                 // EVENT LISTENERS – ALL FRONT PAGE BUTTONS
                 // ================================================================
                 const langSelect = document.getElementById('langSelect');
@@ -7515,9 +7641,9 @@
                     });
                 }
 
-                const receiptCloseBtn = document.getElementById('receiptCloseBtn');
-                if (receiptCloseBtn) {
-                    receiptCloseBtn.addEventListener('click', function() {
+                const receiptCloseBtnMain = document.getElementById('receiptCloseBtn');
+                if (receiptCloseBtnMain) {
+                    receiptCloseBtnMain.addEventListener('click', function() {
                         document.getElementById('receiptModal').style.display = 'none';
                     });
                 }
