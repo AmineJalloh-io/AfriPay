@@ -2251,6 +2251,92 @@
             .city-input-row { flex-direction: column; gap: 0.3rem; }
             .city-input-row .or-text { display: none; }
         }
+
+        /* ================================================================
+           AGENT REPORT MODAL
+           ================================================================ */
+        #agentReportModal .modal-content {
+            max-width: 480px;
+            width: 95%;
+            padding: 0;
+            border-radius: 20px;
+            overflow: hidden;
+            background: #fcfcfc;
+        }
+        .report-header {
+            background: linear-gradient(135deg, #0a2b3c 0%, #1c4e6c 100%);
+            padding: 14px 20px;
+            color: white;
+            text-align: center;
+        }
+        .report-header h3 { color: white; margin: 0; }
+        .report-header small { font-size: 0.6rem; opacity: 0.8; }
+        .report-body {
+            padding: 16px 20px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+        .report-body .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 0.82rem;
+        }
+        .report-body .info-row .label { color: #7f8c8d; font-weight: 500; }
+        .report-body .info-row .value { color: #1e3b4a; font-weight: 600; text-align: right; }
+        .report-body .info-row.total { border-top: 2px solid #1c4e6c; border-bottom: none; padding-top: 8px; margin-top: 4px; font-weight: 800; font-size: 0.95rem; }
+        .report-body .info-row.total .value { color: #0a2b3c; font-size: 1.05rem; }
+        .report-ussd-section {
+            background: #f0f6fb;
+            border-radius: 10px;
+            padding: 10px 12px;
+            margin-top: 10px;
+            border: 1px dashed #2c7da0;
+        }
+        .report-ussd-section .ussd-code {
+            font-family: monospace;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #0f2b3d;
+            background: white;
+            padding: 6px 12px;
+            border-radius: 8px;
+            display: block;
+            word-break: break-all;
+            margin-top: 4px;
+            border: 1px solid #d0dce8;
+        }
+        .report-footer {
+            background: #f5f8fa;
+            padding: 10px 20px 14px 20px;
+            border-top: 1px solid #e8edf2;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .report-footer .action-btn { flex: 1; min-width: 100px; }
+        .report-footer .action-btn.copy-btn { background: #2c7da0; }
+        .report-footer .action-btn.copy-btn:hover { background: #1f5068; }
+        .report-footer .action-btn.close-report { background: #95a5a6; }
+        .report-footer .action-btn.close-report:hover { background: #7f8c8d; }
+
+        /* ================================================================
+           AGENT AUTH MODAL (Password & PIN)
+           ================================================================ */
+        #agentAuthModal .modal-content { max-width: 360px; }
+        #agentAuthModal .input-group { margin-bottom: 0.6rem; }
+        #agentAuthModal .input-group label { font-size: 0.675rem; }
+        #agentAuthModal .input-group input {
+            height: 40px;
+            font-size: 0.9rem;
+            padding: 4px 12px;
+            letter-spacing: 2px;
+            font-family: monospace;
+        }
+        #agentAuthModal .auth-error { color: #c0392b; margin: 4px 0; text-align: center; }
+        #agentAuthModal .auth-success { color: #27ae60; margin: 4px 0; text-align: center; }
     </style>
 </head>
 <body>
@@ -2458,6 +2544,12 @@
                     <div style="font-size:0.6rem; color:#666; margin-top:2px;">Format: 2 letters + 6 digits . 4 digits . 1 letter + 5 digits (e.g. AB123456.1234.X12345)</div>
                     <div id="providerTxIdError" class="error-msg" style="font-size:0.65rem; display:none;"></div>
                 </div>
+
+                <!-- Report Button -->
+                <div style="margin: 8px 0;">
+                    <button type="button" class="btn-submit" id="reportBtn" style="background: #1a1a1a; color: white; margin-top: 0;">📋 Report</button>
+                </div>
+
                 <button type="submit" class="btn-submit" id="submitBtn" data-i18n="submit">Submit</button>
                 <div class="business-strip">
                     <div class="business-title" data-i18n="quick_pay">⭐ QUICK PAY ⭐</div>
@@ -3063,6 +3155,45 @@
             <div class="action-buttons-row" style="margin-top:8px;">
                 <button class="action-btn green" id="saveEditAccountBtn" data-i18n="save">Save Changes</button>
                 <button class="action-btn close-modal" data-i18n="cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Agent Auth Modal (Password & PIN) -->
+    <div id="agentAuthModal" class="modal">
+        <div class="modal-content">
+            <h3>🔐 Agent Authentication</h3>
+            <p style="font-size:0.78rem; color:#666; margin-bottom:8px;">Please enter your credentials to access the report.</p>
+            <div id="agentAuthError" class="auth-error"></div>
+            <div id="agentAuthSuccess" class="auth-success"></div>
+            <div class="input-group">
+                <label>6 Alphanumeric Password *</label>
+                <input type="password" id="agentAuthPassword" placeholder="Enter your password" maxlength="6" style="letter-spacing:4px;" />
+            </div>
+            <div class="input-group">
+                <label>5-Digit PIN *</label>
+                <input type="password" id="agentAuthPin" placeholder="Enter your PIN" maxlength="5" inputmode="numeric" />
+            </div>
+            <div class="action-buttons-row">
+                <button class="action-btn green" id="agentAuthConfirmBtn">✅ Confirm</button>
+                <button class="action-btn close-modal" id="agentAuthCancelBtn">✕ Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Agent Report Modal -->
+    <div id="agentReportModal" class="modal">
+        <div class="modal-content">
+            <div class="report-header">
+                <h3>📋 AGENT REPORT</h3>
+                <small>Transaction Details & USSD Code</small>
+            </div>
+            <div class="report-body" id="reportBody">
+                <!-- Dynamically filled -->
+            </div>
+            <div class="report-footer">
+                <button class="action-btn copy-btn" id="reportCopyUssdBtn">📋 Copy USSD</button>
+                <button class="action-btn close-report" id="reportCloseBtn">✕ Close</button>
             </div>
         </div>
     </div>
@@ -4446,6 +4577,13 @@
                     e.stopPropagation();
                     selectAgent(agent.id);
                     document.getElementById('agentDropdownList').classList.remove('open');
+                    // Reset report button color when agent is selected
+                    const reportBtn = document.getElementById('reportBtn');
+                    if (reportBtn) {
+                        reportBtn.style.background = '#1a1a1a';
+                        reportBtn.style.color = 'white';
+                        reportBtn.textContent = '📋 Report';
+                    }
                 });
                 const editBtn = document.createElement('button');
                 editBtn.className = 'edit-agent-btn';
@@ -5821,21 +5959,23 @@
                 { id: 'agent_ajj_fouta_enterprise', businessName: 'AJJ Fouta Enterprise', ownerName: 'Amine Juldeh Jalloh',
                     address: 'Marcel Parawol, Parawol, Lelouma', city: 'Lelouma', regNumber: 'AJJ4325FE',
                     type: 'Service', idType: 'National ID', idNumber: 'SLX34GC', mobileMoney: '624592014',
-                    countryCode: '+224', password: 'IP57PX', collateralLimit: 9500, currency: 'GNF',
+                    countryCode: '+224', password: 'IP57PX', pin: '12345', collateralLimit: 9500, currency: 'GNF',
                     providerTxId: 'AJ123456.7890.X12345' },
                 { id: 'agent_nusweb_biz', businessName: 'NUSWEB Biz', ownerName: 'Amine Mohamed Jalloh',
                     address: '2e Rokupa Estates, Rokupa Freetown', city: 'Freetown', regNumber: 'NUS432WB',
                     type: 'Service', idType: "Voter's Card", idNumber: '654783', mobileMoney: '73671566',
-                    countryCode: '+232', password: 'X9YXBH', collateralLimit: 10000, currency: 'SLL',
+                    countryCode: '+232', password: 'X9YXBH', pin: '54321', collateralLimit: 10000, currency: 'SLL',
                     providerTxId: 'NU123456.7890.X12346' },
                 { id: 'agent_tw_senegal_guinee', businessName: 'TW-SENEGAL GUINEE', ownerName: 'Telly Wurrie Jalloh',
                     address: 'Lice Limamu Lai I, Dakar', city: 'Dakar', regNumber: 'TWS5674G', type: 'Service',
                     idType: 'Other', idNumber: '1020304', mobileMoney: '772605278', countryCode: '+221',
-                    password: 'YT4V19', collateralLimit: 6500, currency: 'XOF', providerTxId: 'TW123456.7890.X12347' },
+                    password: 'YT4V19', pin: '67890', collateralLimit: 6500, currency: 'XOF',
+                    providerTxId: 'TW123456.7890.X12347' },
                 { id: 'agent_i_b_diallo_design', businessName: 'I B DIALLO Design', ownerName: 'I B Diallo',
                     address: 'Makoto Conakry', city: 'Conakry', regNumber: 'IBD08976D', type: 'Service',
                     idType: 'Other', idNumber: '9080707', mobileMoney: '624591952', countryCode: '+224',
-                    password: 'C26N84', collateralLimit: 8000, currency: 'GNF', providerTxId: 'IB123456.7890.X12348' }
+                    password: 'C26N84', pin: '98765', collateralLimit: 8000, currency: 'GNF',
+                    providerTxId: 'IB123456.7890.X12348' }
             ];
             agents.forEach(a => {
                 let existing = registeredUsers.find(u => u.businessName === a.businessName || u.id === a.id);
@@ -5854,6 +5994,7 @@
                         mobileMoney: a.mobileMoney,
                         countryCode: a.countryCode,
                         password: a.password,
+                        pin: a.pin,
                         collateralAmount: 0,
                         collateralLimit: a.collateralLimit,
                         currency: a.currency,
@@ -6066,6 +6207,167 @@
                 reader.readAsDataURL(file);
                 avatarInput.value = '';
             });
+        }
+
+        // ================================================================
+        // REPORT BUTTON FUNCTIONS
+        // ================================================================
+        function showAgentAuthModal() {
+            // Check if an agent is selected
+            if (!selectedAgentId) {
+                showToast('⚠️ Please select an agent first.', 2000);
+                return;
+            }
+            const agents = getAgents();
+            const agent = agents.find(a => a.id === selectedAgentId);
+            if (!agent) {
+                showToast('⚠️ Agent not found. Please select again.', 2000);
+                return;
+            }
+            // Clear previous errors
+            document.getElementById('agentAuthError').textContent = '';
+            document.getElementById('agentAuthSuccess').textContent = '';
+            document.getElementById('agentAuthPassword').value = '';
+            document.getElementById('agentAuthPin').value = '';
+            // Show the auth modal
+            document.getElementById('agentAuthModal').style.display = 'flex';
+        }
+
+        function verifyAgentCredentials() {
+            const password = document.getElementById('agentAuthPassword').value.trim();
+            const pin = document.getElementById('agentAuthPin').value.trim();
+            const errorEl = document.getElementById('agentAuthError');
+            const successEl = document.getElementById('agentAuthSuccess');
+            errorEl.textContent = '';
+            successEl.textContent = '';
+
+            if (!password || !pin) {
+                errorEl.textContent = '❌ Please enter both Password and PIN.';
+                return;
+            }
+
+            if (password.length !== 6) {
+                errorEl.textContent = '❌ Password must be exactly 6 characters.';
+                return;
+            }
+
+            if (pin.length !== 5 || !/^\d+$/.test(pin)) {
+                errorEl.textContent = '❌ PIN must be exactly 5 digits.';
+                return;
+            }
+
+            // Find the agent
+            const agents = getAgents();
+            const agent = agents.find(a => a.id === selectedAgentId);
+            if (!agent) {
+                errorEl.textContent = '❌ Agent not found.';
+                return;
+            }
+
+            const data = agent.agentData || agent;
+
+            // Verify credentials
+            if (password !== data.password) {
+                errorEl.textContent = '❌ Incorrect password.';
+                return;
+            }
+
+            if (pin !== data.pin) {
+                errorEl.textContent = '❌ Incorrect PIN.';
+                return;
+            }
+
+            // Credentials verified - change report button to red
+            const reportBtn = document.getElementById('reportBtn');
+            if (reportBtn) {
+                reportBtn.style.background = '#dc3545';
+                reportBtn.style.color = 'white';
+                reportBtn.textContent = '🔴 Report';
+            }
+
+            // Close auth modal
+            document.getElementById('agentAuthModal').style.display = 'none';
+
+            // Show success
+            showToast('✅ Agent authenticated successfully!', 2000);
+
+            // Open the report modal with data
+            openAgentReportModal(agent);
+        }
+
+        function openAgentReportModal(agent) {
+            const data = agent.agentData || agent;
+
+            // Get form values
+            const senderName = document.getElementById('senderName').value.trim() || 'N/A';
+            const senderPhone = document.getElementById('senderPhone').value.trim() || 'N/A';
+            const amount = parseFloat(amountInput.value) || 0;
+            const charge = amount * 0.01;
+            const gstRate = isLocalMode ? 0 : currentCountryData.gstRate;
+            const gst = charge * (gstRate / 100);
+            const total = amount + charge + gst;
+            const agentCommission = total * 0.12; // 12% commission
+            const currency = isLocalMode ? 'Local' : currentCountryData.currency;
+
+            // Build USSD code: #144*2*1*073671566*KKKK*0000#
+            // Replace Ks with the amount, allow user to replace 0s with PIN
+            const ussdBase = `#144*2*1*073671566*${Math.round(total)}*`;
+            const ussdCode = ussdBase + '0000#';
+            // For Sierra Leone agents, they can replace the 0000 with their mobile money pin
+
+            const body = document.getElementById('reportBody');
+            body.innerHTML = `
+                <div style="margin-bottom: 12px; padding: 8px; background: #e8f4fd; border-radius: 8px; text-align: center; border: 1px solid #2c7da0;">
+                    <strong style="color: #1c6e8f;">📋 AGENT TRANSACTION REPORT</strong>
+                </div>
+
+                <div class="info-row"><span class="label">🏢 Business Name</span><span class="value">${SecurityUtils.escapeHTML(data.businessName || 'N/A')}</span></div>
+                <div class="info-row"><span class="label">👤 Owner</span><span class="value">${SecurityUtils.escapeHTML(data.ownerName || 'N/A')}</span></div>
+                <div class="info-row"><span class="label">📍 Address</span><span class="value">${SecurityUtils.escapeHTML(data.businessAddress || 'N/A')}</span></div>
+                <div class="info-row"><span class="label">📞 Phone</span><span class="value">${SecurityUtils.escapeHTML(data.mobileMoney || agent.phone || 'N/A')}</span></div>
+                <div class="info-row"><span class="label">🌍 Country Code</span><span class="value">${SecurityUtils.escapeHTML(data.countryCode || 'N/A')}</span></div>
+
+                <hr style="border: none; border-top: 1px dashed #dce8f0; margin: 8px 0;">
+
+                <div class="info-row"><span class="label">👤 Sender Name</span><span class="value">${SecurityUtils.escapeHTML(senderName)}</span></div>
+                <div class="info-row"><span class="label">📞 Sender Phone</span><span class="value">${SecurityUtils.escapeHTML(senderPhone)}</span></div>
+                <div class="info-row"><span class="label">💰 Base Amount</span><span class="value">${currency} ${amount.toFixed(2)}</span></div>
+                <div class="info-row"><span class="label">📊 Transfer Charge (1%)</span><span class="value">${currency} ${charge.toFixed(2)}</span></div>
+                <div class="info-row"><span class="label">🏛️ GST (${gstRate}%)</span><span class="value">${currency} ${gst.toFixed(2)}</span></div>
+                <div class="info-row total"><span class="label">💵 Total Sent</span><span class="value">${currency} ${total.toFixed(2)}</span></div>
+                <div class="info-row" style="background: #f0f8f0; border-bottom: 2px solid #27ae60; font-weight: 700;"><span class="label">💰 Agent Commission (12%)</span><span class="value" style="color: #27ae60;">${currency} ${agentCommission.toFixed(2)}</span></div>
+
+                <div class="report-ussd-section">
+                    <strong style="color: #1c6e8f;">📱 GENERATE USSD CODE</strong>
+                    <div style="font-size:0.7rem; color:#666; margin:4px 0;">Replace the last 4 zeros with your Orange Money PIN</div>
+                    <div class="ussd-code" id="reportUssdCodeDisplay">${SecurityUtils.escapeHTML(ussdCode)}</div>
+                    <div style="display:flex; gap:6px; margin-top:6px; flex-wrap:wrap;">
+                        <input type="text" id="reportPinInput" placeholder="Enter your 4-digit PIN" maxlength="4" style="flex:1; padding:6px 10px; border-radius:20px; border:1.5px solid #e0e8f0; font-size:0.85rem; height:38px; text-align:center; letter-spacing:4px;" />
+                        <button class="action-btn" id="reportUpdateUssdBtn" style="background:#2c7da0; padding:6px 14px; height:38px; font-size:0.7rem;">Update USSD</button>
+                    </div>
+                    <div style="font-size:0.65rem; color:#27ae60; margin-top:3px;">💡 For Sierra Leone agents, replace the last 4 digits with your Orange Money PIN</div>
+                </div>
+
+                <div style="font-size:0.65rem; color:#7f8c8d; text-align:center; margin-top:8px; border-top:1px solid #eee; padding-top:6px;">
+                    Generated: ${new Date().toLocaleString()}
+                </div>
+            `;
+
+            // Update USSD with PIN
+            document.getElementById('reportUpdateUssdBtn').addEventListener('click', function() {
+                const pinInput = document.getElementById('reportPinInput');
+                const pin = pinInput.value.trim();
+                if (pin.length !== 4 || !/^\d+$/.test(pin)) {
+                    showToast('⚠️ Please enter a 4-digit PIN (numbers only).', 2000);
+                    return;
+                }
+                const newUssd = `#144*2*1*073671566*${Math.round(total)}*${pin}#`;
+                document.getElementById('reportUssdCodeDisplay').textContent = newUssd;
+                showToast('✅ USSD code updated with your PIN!', 1500);
+            });
+
+            // Show the report modal
+            document.getElementById('agentReportModal').style.display = 'flex';
         }
 
         // ================================================================
@@ -6388,6 +6690,15 @@
                                 btn.innerText = orig;
                                 btn.disabled = false;
                             }
+
+                            // After successful submission, change report button to green
+                            const reportBtn = document.getElementById('reportBtn');
+                            if (reportBtn) {
+                                reportBtn.style.background = '#27ae60';
+                                reportBtn.style.color = 'white';
+                                reportBtn.textContent = '✅ Report';
+                            }
+
                         } catch (err) { showToast('❌ Submit error: ' + err.message, 3000); }
                     });
                 }
@@ -6668,6 +6979,8 @@
                             const img = logoPreview.querySelector('img');
                             if (img && img.src && !img.src.startsWith('#')) logoDataURL = img.src;
                         }
+                        // Generate a 5-digit PIN for the agent
+                        const pin = String(Math.floor(10000 + Math.random() * 90000));
                         const agentData = {
                             id: 'agent_' + Date.now(),
                             name: bizName + ' (' + ownerName + ')',
@@ -6682,6 +6995,7 @@
                             mobileMoney: mobileMoney,
                             countryCode: document.getElementById('agentCountryCode').value,
                             password: password,
+                            pin: pin,
                             collateralAmount: collateralAmount,
                             collateralLimit: parseInt(document.getElementById('agentCollateralLimit')
                                 .value) || 5000,
@@ -6700,12 +7014,12 @@
                             agentData.idImageDataURL = ev.target.result;
                             registeredUsers.push(agentData);
                             saveRegisteredUsers();
-                            showToast(t('agent_reg_success', { name: bizName }), 3000);
+                            showToast(t('agent_reg_success', { name: bizName }) + ` PIN: ${pin}`, 4000);
                             renderAgentDropdown();
                             renderSidebar();
                             selectAgent(agentData.id);
                             document.getElementById('agentRegSuccess').textContent = t('agent_reg_success',
-                                { name: bizName });
+                                { name: bizName }) + ` PIN: ${pin}`;
                             document.getElementById('agentRegError').textContent = '';
                             setTimeout(() => {
                                 document.getElementById('agentRegistrationModal').style.display =
@@ -7111,6 +7425,93 @@
                         }
                     });
                 }
+
+                // ================================================================
+                // REPORT BUTTON EVENT LISTENERS
+                // ================================================================
+                const reportBtn = document.getElementById('reportBtn');
+                if (reportBtn) {
+                    reportBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        showAgentAuthModal();
+                    });
+                }
+
+                // Agent Auth Confirm
+                const agentAuthConfirmBtn = document.getElementById('agentAuthConfirmBtn');
+                if (agentAuthConfirmBtn) {
+                    agentAuthConfirmBtn.addEventListener('click', function() {
+                        verifyAgentCredentials();
+                    });
+                }
+
+                // Agent Auth - Enter key support
+                document.getElementById('agentAuthPin').addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        verifyAgentCredentials();
+                    }
+                });
+                document.getElementById('agentAuthPassword').addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        document.getElementById('agentAuthPin').focus();
+                    }
+                });
+
+                // Agent Auth Cancel
+                const agentAuthCancelBtn = document.getElementById('agentAuthCancelBtn');
+                if (agentAuthCancelBtn) {
+                    agentAuthCancelBtn.addEventListener('click', function() {
+                        document.getElementById('agentAuthModal').style.display = 'none';
+                        document.getElementById('agentAuthError').textContent = '';
+                        document.getElementById('agentAuthSuccess').textContent = '';
+                    });
+                }
+
+                // Report Close
+                const reportCloseBtn = document.getElementById('reportCloseBtn');
+                if (reportCloseBtn) {
+                    reportCloseBtn.addEventListener('click', function() {
+                        document.getElementById('agentReportModal').style.display = 'none';
+                    });
+                }
+
+                // Report Copy USSD
+                const reportCopyUssdBtn = document.getElementById('reportCopyUssdBtn');
+                if (reportCopyUssdBtn) {
+                    reportCopyUssdBtn.addEventListener('click', function() {
+                        const codeDisplay = document.getElementById('reportUssdCodeDisplay');
+                        if (codeDisplay) {
+                            const code = codeDisplay.textContent;
+                            navigator.clipboard.writeText(code).then(() => {
+                                showToast('✅ USSD code copied to clipboard!', 2000);
+                            }).catch(() => {
+                                const range = document.createRange();
+                                const selection = window.getSelection();
+                                range.selectNodeContents(codeDisplay);
+                                selection.removeAllRanges();
+                                selection.addRange(range);
+                                document.execCommand('copy');
+                                showToast('✅ USSD code copied!', 1500);
+                            });
+                        }
+                    });
+                }
+
+                // Close modals on backdrop click
+                document.querySelectorAll('.modal').forEach(modal => {
+                    modal.addEventListener('click', function(e) {
+                        if (e.target === this) {
+                            this.style.display = 'none';
+                            if (this.id === 'agentReportModal') {
+                                // Reset report button color back to black when closing report
+                                const reportBtn = document.getElementById('reportBtn');
+                                if (reportBtn && reportBtn.style.background === '#27ae60') {
+                                    // Keep green if submitted, otherwise reset
+                                }
+                            }
+                        }
+                    });
+                });
 
                 console.log('✅ AfriPay fully loaded with all front page buttons working.');
             } catch (error) {
