@@ -3088,6 +3088,34 @@
             margin: 4px 0;
             text-align: center;
         }
+
+        /* ================================================================
+           AGENT REMOVE MODAL
+           ================================================================ */
+        #agentRemoveModal .modal-content {
+            max-width: 360px;
+        }
+        #agentRemoveModal .input-group {
+            margin-bottom: 0.6rem;
+        }
+        #agentRemoveModal .input-group label {
+            font-size: 0.675rem;
+        }
+        #agentRemoveModal .input-group input {
+            height: 40px;
+            font-size: 0.9rem;
+            padding: 4px 12px;
+        }
+        #agentRemoveModal .auth-error {
+            color: #c0392b;
+            margin: 4px 0;
+            text-align: center;
+        }
+        #agentRemoveModal .auth-success {
+            color: #27ae60;
+            margin: 4px 0;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -3331,7 +3359,7 @@
     </div>
 
     <!-- ============================================================
-    MODALS (unchanged except added deactivateModal)
+    MODALS (unchanged except added deactivateModal and agentRemoveModal)
     ============================================================ -->
     <!-- Map Modal -->
     <div id="mapModal" class="modal"><div class="modal-content"><h3 data-i18n="map_title">📍 Your Location</h3><iframe id="mapIframe" allowfullscreen loading="lazy"></iframe><button class="action-btn close-modal" style="margin-top:10px;" data-i18n="close">Close</button></div></div>
@@ -3976,7 +4004,7 @@
     </div>
 
     <!-- ============================================================
-    NEW: DEACTIVATE MODAL
+    DEACTIVATE MODAL (for users)
     ============================================================ -->
     <div id="deactivateModal" class="modal">
         <div class="modal-content">
@@ -3998,6 +4026,33 @@
             <div class="action-buttons-row">
                 <button class="action-btn" id="deactivateConfirmBtn" style="background:#e74c3c;">🗑️ Deactivate</button>
                 <button class="action-btn close-modal" id="deactivateCancelBtn">✕ Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    AGENT REMOVE MODAL (for agents)
+    ============================================================ -->
+    <div id="agentRemoveModal" class="modal">
+        <div class="modal-content">
+            <h3 style="color:#e74c3c;">⚠️ Remove Agent</h3>
+            <p style="font-size:0.78rem; color:#666; margin-bottom:8px;">Enter admin credentials to permanently remove this agent. This action cannot be undone.</p>
+            <div id="agentRemoveError" class="auth-error"></div>
+            <div id="agentRemoveSuccess" class="auth-success"></div>
+            <div class="input-group">
+                <label>Admin Name *</label>
+                <input type="text" id="agentRemoveAdminName" placeholder="Enter admin name" />
+            </div>
+            <div class="input-group">
+                <label>Admin Password *</label>
+                <input type="password" id="agentRemoveAdminPassword" placeholder="Enter admin password" />
+            </div>
+            <div style="font-size:0.7rem; color:#7f8c8d; margin:4px 0; text-align:center;">
+                <span id="agentRemoveNameDisplay">Agent: —</span>
+            </div>
+            <div class="action-buttons-row">
+                <button class="action-btn" id="agentRemoveConfirmBtn" style="background:#e74c3c;">🗑️ Remove Agent</button>
+                <button class="action-btn close-modal" id="agentRemoveCancelBtn">✕ Cancel</button>
             </div>
         </div>
     </div>
@@ -5868,8 +5923,10 @@
         }
 
         // ================================================================
-        // DASHBOARD FUNCTIONS (with User Table & Deactivate)
+        // DASHBOARD FUNCTIONS (with User Table & Deactivate, Agent Remove)
         // ================================================================
+        let _agentRemoveTargetId = null;
+
         function renderDashboard() {
             // ---- Agent Table ----
             const tbody = document.getElementById('dashboardTableBody');
@@ -5918,10 +5975,11 @@
                     approveAgent(agentId);
                 });
             });
+            // Change: agent remove now uses admin verification
             tbody.querySelectorAll('.remove-agent-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const agentId = this.dataset.agentId;
-                    removeAgent(agentId);
+                    openAgentRemoveModal(agentId);
                 });
             });
 
@@ -6119,6 +6177,54 @@
 
             document.getElementById('deactivateModal').style.display = 'none';
             showToast(`✅ User "${userName}" deactivated successfully.`, 3000);
+        }
+
+        // ================================================================
+        // AGENT REMOVE (with admin verification)
+        // ================================================================
+        function openAgentRemoveModal(agentId) {
+            const agent = registeredUsers.find(u => u.id === agentId);
+            if (!agent) { showToast('Agent not found.', 2000); return; }
+            _agentRemoveTargetId = agentId;
+            document.getElementById('agentRemoveNameDisplay').textContent = `Agent: ${SecurityUtils.escapeHTML(agent.name)} (${SecurityUtils.escapeHTML(agent.businessName || '')})`;
+            document.getElementById('agentRemoveError').textContent = '';
+            document.getElementById('agentRemoveSuccess').textContent = '';
+            document.getElementById('agentRemoveAdminName').value = '';
+            document.getElementById('agentRemoveAdminPassword').value = '';
+            document.getElementById('agentRemoveModal').style.display = 'flex';
+        }
+
+        function confirmAgentRemove() {
+            const adminName = SecurityUtils.sanitizeInput(document.getElementById('agentRemoveAdminName').value.trim(), 100);
+            const adminPassword = document.getElementById('agentRemoveAdminPassword').value.trim();
+            const errorEl = document.getElementById('agentRemoveError');
+            const successEl = document.getElementById('agentRemoveSuccess');
+            errorEl.textContent = '';
+            successEl.textContent = '';
+
+            if (!adminName || !adminPassword) {
+                errorEl.textContent = '❌ Please enter both Admin Name and Password.';
+                return;
+            }
+
+            const adminData = getAdminData();
+            if (!adminData) {
+                errorEl.textContent = '❌ No admin account found. Please register an admin first.';
+                return;
+            }
+
+            if (adminName !== adminData.name || adminPassword !== adminData.password) {
+                errorEl.textContent = '❌ Invalid admin credentials.';
+                return;
+            }
+
+            const agentId = _agentRemoveTargetId;
+            if (!agentId) { errorEl.textContent = '❌ No agent selected.'; return; }
+
+            // Proceed with removal
+            removeAgent(agentId); // this function already updates UI and saves
+            document.getElementById('agentRemoveModal').style.display = 'none';
+            showToast(`✅ Agent removed successfully.`, 3000);
         }
 
         // ================================================================
@@ -8652,6 +8758,33 @@
                 });
                 document.getElementById('deactivateAdminName').addEventListener('keydown', function(e) {
                     if (e.key === 'Enter') document.getElementById('deactivateAdminPassword').focus();
+                });
+
+                // ---- Agent Remove Modal Events ----
+                const agentRemoveConfirmBtn = document.getElementById('agentRemoveConfirmBtn');
+                if (agentRemoveConfirmBtn) {
+                    agentRemoveConfirmBtn.addEventListener('click', confirmAgentRemove);
+                }
+                const agentRemoveCancelBtn = document.getElementById('agentRemoveCancelBtn');
+                if (agentRemoveCancelBtn) {
+                    agentRemoveCancelBtn.addEventListener('click', function() {
+                        document.getElementById('agentRemoveModal').style.display = 'none';
+                        document.getElementById('agentRemoveError').textContent = '';
+                        document.getElementById('agentRemoveSuccess').textContent = '';
+                    });
+                }
+                document.getElementById('agentRemoveModal').addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        this.style.display = 'none';
+                        document.getElementById('agentRemoveError').textContent = '';
+                        document.getElementById('agentRemoveSuccess').textContent = '';
+                    }
+                });
+                document.getElementById('agentRemoveAdminPassword').addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') confirmAgentRemove();
+                });
+                document.getElementById('agentRemoveAdminName').addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') document.getElementById('agentRemoveAdminPassword').focus();
                 });
 
                 // Final log
