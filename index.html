@@ -3116,6 +3116,24 @@
             margin: 4px 0;
             text-align: center;
         }
+
+        /* ================================================================
+           CURRENCY CONVERTER MODAL
+           ================================================================ */
+        #currencyConverterModal .modal-content {
+            max-width: 440px;
+            width: 95%;
+        }
+        #currencyConverterModal .charges-row {
+            font-size: 0.774rem;
+            padding: 2px 0;
+        }
+        #currencyConverterModal .total-row {
+            font-weight: 800;
+            border-top: 2px dashed #cbdde9;
+            margin-top: 3px;
+            padding-top: 4px;
+        }
     </style>
 </head>
 <body>
@@ -3347,6 +3365,7 @@
                 <button class="footer-btn" id="aboutDevBtn" data-i18n="dev">Dev</button>
                 <button class="footer-btn" id="contactBtn" data-i18n="contact">Contact</button>
                 <button class="footer-btn" id="subscribeBtn" data-i18n="subscribe">Subscribe</button>
+                <button class="footer-btn" id="currencyConverterBtn" data-i18n="currency_converter">Currency Converter</button>
             </div>
             <div class="social-icons">
                 <a href="#" class="social-icon" id="whatsappBtn" data-i18n="whatsapp">WhatsApp</a>
@@ -3359,7 +3378,7 @@
     </div>
 
     <!-- ============================================================
-    MODALS (unchanged except added deactivateModal and agentRemoveModal)
+    MODALS (unchanged except added deactivateModal, agentRemoveModal, and currencyConverterModal)
     ============================================================ -->
     <!-- Map Modal -->
     <div id="mapModal" class="modal"><div class="modal-content"><h3 data-i18n="map_title">📍 Your Location</h3><iframe id="mapIframe" allowfullscreen loading="lazy"></iframe><button class="action-btn close-modal" style="margin-top:10px;" data-i18n="close">Close</button></div></div>
@@ -4058,6 +4077,40 @@
     </div>
 
     <!-- ============================================================
+    CURRENCY CONVERTER MODAL
+    ============================================================ -->
+    <div id="currencyConverterModal" class="modal">
+        <div class="modal-content">
+            <h3 data-i18n="currency_converter_title">💱 Currency Converter</h3>
+            <div class="input-group">
+                <label data-i18n="amount">Amount</label>
+                <input type="number" id="converterAmount" value="100" step="any" min="0" />
+            </div>
+            <div class="double-row">
+                <div class="input-group">
+                    <label data-i18n="from_currency">From</label>
+                    <select id="converterFromCurrency"></select>
+                </div>
+                <div class="input-group">
+                    <label data-i18n="to_currency">To</label>
+                    <select id="converterToCurrency"></select>
+                </div>
+            </div>
+            <button class="action-btn" id="converterConvertBtn" data-i18n="convert">Convert</button>
+            <div id="converterResult" style="margin-top:10px; background:#f8fafc; padding:10px; border-radius:8px;">
+                <div class="charges-row"><span data-i18n="original_amount">Original Amount:</span><span id="convOriginal">0.00</span></div>
+                <div class="charges-row"><span data-i18n="exchange_rate">Exchange Rate:</span><span id="convRate">1.00</span></div>
+                <div class="charges-row"><span data-i18n="converted_amount">Converted Amount:</span><span id="convConverted">0.00</span></div>
+                <div class="charges-row"><span data-i18n="gst_deduction">GST Deduction (<span id="convGstRate">0</span>%):</span><span id="convGstAmount">0.00</span></div>
+                <div class="charges-row"><span data-i18n="net_after_gst">Net after GST:</span><span id="convNet">0.00</span></div>
+                <div class="charges-row"><span data-i18n="fee_4_percent">4% Fee:</span><span id="convFee">0.00</span></div>
+                <div class="charges-row total-row"><span data-i18n="final_amount">Final Amount:</span><span id="convFinal">0.00</span></div>
+            </div>
+            <button class="action-btn close-modal" style="margin-top:10px;" data-i18n="close">Close</button>
+        </div>
+    </div>
+
+    <!-- ============================================================
     CHAT
     ============================================================ -->
     <button class="chat-toggle-btn" id="chatToggleBtn" title="Open Chat">💬<span class="chat-badge" id="chatBadge" style="display:none;">0</span></button>
@@ -4102,7 +4155,7 @@
     <div id="toastMsg" class="toast-msg"></div>
 
     <!-- ============================================================
-    JAVASCRIPT – FULL APPLICATION LOGIC (Fixed)
+    JAVASCRIPT – FULL APPLICATION LOGIC
     ============================================================ -->
     <script>
         // ================================================================
@@ -4285,7 +4338,7 @@
         }
 
         // ================================================================
-        // COMPLETE TRANSLATIONS (EN, FR, AR, ES) – truncated for brevity
+        // COMPLETE TRANSLATIONS (EN, FR, AR, ES)
         // ================================================================
         const TRANSLATIONS = {
             en: {
@@ -4326,6 +4379,18 @@
                 dev: 'Dev',
                 contact: 'Contact',
                 subscribe: 'Subscribe',
+                currency_converter: 'Currency Converter',
+                currency_converter_title: '💱 Currency Converter',
+                from_currency: 'From Currency',
+                to_currency: 'To Currency',
+                convert: 'Convert',
+                original_amount: 'Original Amount',
+                exchange_rate: 'Exchange Rate',
+                converted_amount: 'Converted Amount',
+                gst_deduction: 'GST Deduction',
+                net_after_gst: 'Net after GST',
+                fee_4_percent: '4% Fee',
+                final_amount: 'Final Amount',
                 whatsapp: 'WhatsApp',
                 facebook: 'Facebook',
                 instagram: 'Instagram',
@@ -4545,6 +4610,18 @@
                 dev: 'Développeur',
                 contact: 'Contact',
                 subscribe: "S'abonner",
+                currency_converter: 'Convertisseur de devises',
+                currency_converter_title: '💱 Convertisseur de devises',
+                from_currency: 'De la devise',
+                to_currency: 'Vers la devise',
+                convert: 'Convertir',
+                original_amount: 'Montant original',
+                exchange_rate: 'Taux de change',
+                converted_amount: 'Montant converti',
+                gst_deduction: 'Déduction TVA',
+                net_after_gst: 'Net après TVA',
+                fee_4_percent: 'Frais 4%',
+                final_amount: 'Montant final',
                 whatsapp: 'WhatsApp',
                 facebook: 'Facebook',
                 instagram: 'Instagram',
@@ -4764,6 +4841,18 @@
                 dev: 'المطور',
                 contact: 'اتصال',
                 subscribe: 'اشتراك',
+                currency_converter: 'محول العملات',
+                currency_converter_title: '💱 محول العملات',
+                from_currency: 'من العملة',
+                to_currency: 'إلى العملة',
+                convert: 'تحويل',
+                original_amount: 'المبلغ الأصلي',
+                exchange_rate: 'سعر الصرف',
+                converted_amount: 'المبلغ المحول',
+                gst_deduction: 'خصم ضريبة القيمة المضافة',
+                net_after_gst: 'الصافي بعد الضريبة',
+                fee_4_percent: 'رسوم 4%',
+                final_amount: 'المبلغ النهائي',
                 whatsapp: 'واتساب',
                 facebook: 'فيسبوك',
                 instagram: 'إنستغرام',
@@ -4983,6 +5072,18 @@
                 dev: 'Desarrollador',
                 contact: 'Contacto',
                 subscribe: 'Suscribirse',
+                currency_converter: 'Convertidor de divisas',
+                currency_converter_title: '💱 Convertidor de divisas',
+                from_currency: 'De la moneda',
+                to_currency: 'A la moneda',
+                convert: 'Convertir',
+                original_amount: 'Monto original',
+                exchange_rate: 'Tasa de cambio',
+                converted_amount: 'Monto convertido',
+                gst_deduction: 'Deducción IVA',
+                net_after_gst: 'Neto después de IVA',
+                fee_4_percent: 'Comisión 4%',
+                final_amount: 'Monto final',
                 whatsapp: 'WhatsApp',
                 facebook: 'Facebook',
                 instagram: 'Instagram',
@@ -5435,7 +5536,7 @@
         function removeAgent(agentId) {
             const agent = registeredUsers.find(u => u.id === agentId);
             if (!agent) { showToast('Agent not found.', 2000); return; }
-            if (!confirm(`Are you sure you want to remove agent "${agent.name}"? This action cannot be undone.`)) { return; }
+            // Remove from registeredUsers and connectedUsers
             registeredUsers = registeredUsers.filter(u => u.id !== agentId);
             connectedUsers = connectedUsers.filter(u => u.id !== agentId);
             saveRegisteredUsers();
@@ -5923,7 +6024,7 @@
         }
 
         // ================================================================
-        // DASHBOARD FUNCTIONS (with User Table & Deactivate, Agent Remove)
+        // DASHBOARD FUNCTIONS
         // ================================================================
         let _agentRemoveTargetId = null;
 
@@ -5975,7 +6076,7 @@
                     approveAgent(agentId);
                 });
             });
-            // Change: agent remove now uses admin verification
+            // Agent remove now uses admin verification
             tbody.querySelectorAll('.remove-agent-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const agentId = this.dataset.agentId;
@@ -6222,7 +6323,7 @@
             if (!agentId) { errorEl.textContent = '❌ No agent selected.'; return; }
 
             // Proceed with removal
-            removeAgent(agentId); // this function already updates UI and saves
+            removeAgent(agentId);
             document.getElementById('agentRemoveModal').style.display = 'none';
             showToast(`✅ Agent removed successfully.`, 3000);
         }
@@ -7446,7 +7547,115 @@
         }
 
         // ================================================================
-        // MAIN INITIALIZATION (FIXED: robust event binding, error handling)
+        // CURRENCY CONVERTER
+        // ================================================================
+        // Exchange rates (relative to USD)
+        const exchangeRates = {
+            "LRD": 0.005,
+            "GNF": 0.0001,
+            "XOF": 0.0016,
+            "GHS": 0.083,
+            "KES": 0.0077,
+            "ETB": 0.018,
+            "MGA": 0.00022,
+            "MAD": 0.10,
+            "RWF": 0.00077,
+            "UGX": 0.00027,
+            "CDF": 0.0004,
+            "GMD": 0.015,
+            "SLL": 0.000045,
+            // Add more as needed
+        };
+
+        function getCountryDataFromOptionValue(value) {
+            if (!value) return null;
+            const parts = value.split('|');
+            if (parts.length < 5) return null;
+            return {
+                countryCode: parts[0],
+                countryName: parts[1],
+                currency: parts[2],
+                flag: parts[3],
+                gstRate: parseFloat(parts[4])
+            };
+        }
+
+        function populateCurrencySelects() {
+            const fromSelect = document.getElementById('converterFromCurrency');
+            const toSelect = document.getElementById('converterToCurrency');
+            if (!fromSelect || !toSelect) return;
+            // Get options from the main country select
+            const mainSelect = document.getElementById('countryCodeSelect');
+            if (!mainSelect) return;
+            const options = mainSelect.options;
+            let fromHtml = '';
+            let toHtml = '';
+            for (let i = 0; i < options.length; i++) {
+                const opt = options[i];
+                const val = opt.value;
+                const data = getCountryDataFromOptionValue(val);
+                if (!data) continue;
+                const display = data.flag + ' ' + data.countryName + ' (' + data.currency + ')';
+                fromHtml += `<option value="${val}">${display}</option>`;
+                toHtml += `<option value="${val}">${display}</option>`;
+            }
+            fromSelect.innerHTML = fromHtml;
+            toSelect.innerHTML = toHtml;
+            // Set default selections (e.g., Liberia to Guinea)
+            if (fromSelect.options.length > 0) fromSelect.selectedIndex = 0;
+            if (toSelect.options.length > 1) toSelect.selectedIndex = 1;
+        }
+
+        function convertCurrency() {
+            const fromSelect = document.getElementById('converterFromCurrency');
+            const toSelect = document.getElementById('converterToCurrency');
+            const amountInput = document.getElementById('converterAmount');
+            const amount = parseFloat(amountInput.value) || 0;
+            if (amount <= 0) {
+                showToast('Please enter a valid amount.', 2000);
+                return;
+            }
+            const fromVal = fromSelect.value;
+            const toVal = toSelect.value;
+            const fromData = getCountryDataFromOptionValue(fromVal);
+            const toData = getCountryDataFromOptionValue(toVal);
+            if (!fromData || !toData) {
+                showToast('Invalid currency selection.', 2000);
+                return;
+            }
+            const fromCurrency = fromData.currency;
+            const toCurrency = toData.currency;
+            const gstRate = fromData.gstRate;
+
+            // Exchange rate
+            const fromRate = exchangeRates[fromCurrency] || 1;
+            const toRate = exchangeRates[toCurrency] || 1;
+            const exchangeRate = toRate / fromRate;
+
+            // Convert
+            const converted = amount * exchangeRate;
+
+            // GST deduction (on original amount in from currency, then convert net + fee)
+            const gst = amount * (gstRate / 100);
+            const net = amount - gst;
+            const fee = net * 0.04;
+            const finalInFrom = net + fee;
+            const finalInTo = finalInFrom * exchangeRate;
+
+            // Display results
+            document.getElementById('convOriginal').textContent = amount.toFixed(2) + ' ' + fromCurrency;
+            document.getElementById('convRate').textContent = '1 ' + fromCurrency + ' = ' + exchangeRate.toFixed(4) + ' ' +
+                toCurrency;
+            document.getElementById('convConverted').textContent = (amount * exchangeRate).toFixed(2) + ' ' + toCurrency;
+            document.getElementById('convGstRate').textContent = gstRate;
+            document.getElementById('convGstAmount').textContent = (gst * exchangeRate).toFixed(2) + ' ' + toCurrency;
+            document.getElementById('convNet').textContent = (net * exchangeRate).toFixed(2) + ' ' + toCurrency;
+            document.getElementById('convFee').textContent = (fee * exchangeRate).toFixed(2) + ' ' + toCurrency;
+            document.getElementById('convFinal').textContent = finalInTo.toFixed(2) + ' ' + toCurrency;
+        }
+
+        // ================================================================
+        // MAIN INITIALIZATION
         // ================================================================
         document.addEventListener('DOMContentLoaded', function() {
             try {
@@ -7673,7 +7882,7 @@
                 }
 
                 // ================================================================
-                // 8. ---- EVENT LISTENERS – All buttons (with null checks) ----
+                // 8. ---- EVENT LISTENERS – All buttons ----
                 // ================================================================
 
                 // Language selector
@@ -8787,8 +8996,45 @@
                     if (e.key === 'Enter') document.getElementById('agentRemoveAdminPassword').focus();
                 });
 
+                // ---- Currency Converter ----
+                const currencyConverterBtn = document.getElementById('currencyConverterBtn');
+                if (currencyConverterBtn) {
+                    currencyConverterBtn.addEventListener('click', function() {
+                        const modal = document.getElementById('currencyConverterModal');
+                        if (modal) {
+                            populateCurrencySelects();
+                            modal.style.display = 'flex';
+                            // Auto-convert on open with default amount
+                            setTimeout(convertCurrency, 100);
+                        }
+                    });
+                }
+                const converterConvertBtn = document.getElementById('converterConvertBtn');
+                if (converterConvertBtn) {
+                    converterConvertBtn.addEventListener('click', convertCurrency);
+                }
+                // Also convert when amount or currency changes
+                const converterAmount = document.getElementById('converterAmount');
+                if (converterAmount) {
+                    converterAmount.addEventListener('input', convertCurrency);
+                }
+                const converterFrom = document.getElementById('converterFromCurrency');
+                const converterTo = document.getElementById('converterToCurrency');
+                if (converterFrom) converterFrom.addEventListener('change', convertCurrency);
+                if (converterTo) converterTo.addEventListener('change', convertCurrency);
+
+                // Close converter modal
+                document.querySelectorAll('#currencyConverterModal .close-modal').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        document.getElementById('currencyConverterModal').style.display = 'none';
+                    });
+                });
+                document.getElementById('currencyConverterModal').addEventListener('click', function(e) {
+                    if (e.target === this) this.style.display = 'none';
+                });
+
                 // Final log
-                console.log('✅ AfriPay fully loaded with robust event binding.');
+                console.log('✅ AfriPay fully loaded with Currency Converter.');
             } catch (error) {
                 console.error('❌ AfriPay initialization error:', error);
                 showToast('⚠️ App partially loaded. Please refresh if features are not working.', 5000);
