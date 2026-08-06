@@ -299,7 +299,7 @@
             left: 50%;
             transform: translateX(-50%);
             font-size: 0.45rem;
-            background: rgba(0,0,0,0.6);
+            background: rgba(0, 0, 0, 0.6);
             color: white;
             padding: 1px 4px;
             border-radius: 4px;
@@ -417,7 +417,9 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
-        .flag-grid-wrapper::-webkit-scrollbar { display: none; }
+        .flag-grid-wrapper::-webkit-scrollbar {
+            display: none;
+        }
         .flag-grid {
             display: flex;
             gap: 4px;
@@ -524,7 +526,9 @@
             padding-left: 8px;
             text-transform: uppercase;
         }
-        .section-title:first-of-type { margin-top: 0; }
+        .section-title:first-of-type {
+            margin-top: 0;
+        }
         .input-group {
             margin-bottom: 0.4rem;
             display: flex;
@@ -536,7 +540,8 @@
             color: #1e3b4a;
             font-size: 0.774rem;
         }
-        .input-group input, .input-group select {
+        .input-group input,
+        .input-group select {
             padding: 6px 10px;
             border-radius: 20px;
             border: 1.5px solid #e0e8f0;
@@ -546,7 +551,8 @@
             background: #fff;
             height: 42px;
         }
-        .input-group input:focus, .input-group select:focus {
+        .input-group input:focus,
+        .input-group select:focus {
             border-color: #f4a261;
             box-shadow: 0 0 0 3px rgba(244, 162, 97, 0.2);
         }
@@ -649,7 +655,9 @@
             background: #1f5068;
             border-color: #1f5068;
         }
-        .country-selector-wrapper.hide-country { display: none; }
+        .country-selector-wrapper.hide-country {
+            display: none;
+        }
         .country-selector {
             display: flex;
             gap: 3px;
@@ -880,7 +888,9 @@
             overflow-y: auto;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         }
-        .modal-content h3 { margin-bottom: 6px; }
+        .modal-content h3 {
+            margin-bottom: 6px;
+        }
         .action-buttons {
             display: flex;
             flex-direction: column;
@@ -893,7 +903,10 @@
             gap: 5px;
             margin-top: 8px;
         }
-        .action-buttons-row .action-btn { flex: 1; min-width: 60px; }
+        .action-buttons-row .action-btn {
+            flex: 1;
+            min-width: 60px;
+        }
         .action-btn {
             padding: 10px 14px;
             border-radius: 30px;
@@ -916,27 +929,37 @@
             background: #ccc;
             color: #222;
         }
-        .action-btn.close-modal:hover { background: #bbb; }
+        .action-btn.close-modal:hover {
+            background: #bbb;
+        }
         .action-btn.orange {
             background: #f4a261;
         }
-        .action-btn.orange:hover { background: #e08e4a; }
+        .action-btn.orange:hover {
+            background: #e08e4a;
+        }
         .action-btn.green {
             background: #27ae60;
         }
-        .action-btn.green:hover { background: #1e8449; }
+        .action-btn.green:hover {
+            background: #1e8449;
+        }
         .action-btn.approve-btn {
             background: #27ae60;
             padding: 2px 10px;
             height: 30px;
             font-size: 0.65rem;
         }
-        .action-btn.approve-btn:hover { background: #1e8449; }
+        .action-btn.approve-btn:hover {
+            background: #1e8449;
+        }
         .action-btn.approve-btn.approved {
             background: #95a5a6;
             cursor: default;
         }
-        .action-btn.approve-btn.approved:hover { background: #7f8c8d; }
+        .action-btn.approve-btn.approved:hover {
+            background: #7f8c8d;
+        }
         #mapModal .modal-content {
             max-width: 90%;
             width: 580px;
@@ -974,7 +997,9 @@
             border-bottom: 1px solid #eee;
             vertical-align: middle;
         }
-        #dashboardModal .agent-row:hover td { background: #f8fafc; }
+        #dashboardModal .agent-row:hover td {
+            background: #f8fafc;
+        }
         #dashboardModal .status-badge {
             display: inline-block;
             padding: 1px 8px;
@@ -998,8 +1023,12 @@
             cursor: pointer;
             transition: background 0.2s;
         }
-        .goods-item:hover { background: #fef9f0; }
-        .goods-name { font-weight: 600; }
+        .goods-item:hover {
+            background: #fef9f0;
+        }
+        .goods-name {
+            font-weight: 600;
+        }
         .goods-price {
             color: #f4a261;
             font-weight: 700;
@@ -1075,7 +1104,9 @@
             cursor: pointer;
             transition: background 0.15s;
         }
-        .group-member-item:hover { background: #f0f4f8; }
+        .group-member-item:hover {
+            background: #f0f4f8;
+        }
         .group-member-item input[type="checkbox"] {
             width: 15px;
             height: 15px;
@@ -1103,9 +1134,14 @@
         /* ================================================================
            AGENT REGISTRATION MODAL
            ================================================================ */
-        .agent-form .input-group { margin-bottom: 0.5rem; }
-        .agent-form .input-group label { font-size: 0.675rem; }
-        .agent-form .input-group input, .agent-form .input-group select {
+        .agent-form .input-group {
+            margin-bottom: 0.5rem;
+        }
+        .agent-form .input-group label {
+            font-size: 0.675rem;
+        }
+        .agent-form .input-group input,
+        .agent-form .input-group select {
             height: 38px;
             font-size: 0.85rem;
             padding: 4px 10px;
@@ -1155,9 +1191,15 @@
         /* ================================================================
            ADMIN AUTH MODALS
            ================================================================ */
-        .admin-auth-modal .modal-content { max-width: 360px; }
-        .admin-auth-modal .input-group { margin-bottom: 0.6rem; }
-        .admin-auth-modal .input-group label { font-size: 0.675rem; }
+        .admin-auth-modal .modal-content {
+            max-width: 360px;
+        }
+        .admin-auth-modal .input-group {
+            margin-bottom: 0.6rem;
+        }
+        .admin-auth-modal .input-group label {
+            font-size: 0.675rem;
+        }
         .admin-auth-modal .input-group input {
             height: 40px;
             font-size: 0.9rem;
@@ -1177,7 +1219,9 @@
             font-size: 0.702rem;
             transition: 0.15s;
         }
-        .admin-auth-modal .auth-toggle-link:hover { color: #f4a261; }
+        .admin-auth-modal .auth-toggle-link:hover {
+            color: #f4a261;
+        }
         .admin-auth-modal .auth-divider {
             text-align: center;
             margin: 6px 0 4px 0;
@@ -1248,7 +1292,9 @@
             border: none;
             border-top: 1px solid #e0e8f0;
         }
-        .chat-window.open { display: flex; }
+        .chat-window.open {
+            display: flex;
+        }
         .chat-main {
             flex: 1;
             display: flex;
@@ -1375,7 +1421,8 @@
             text-decoration: underline;
             cursor: pointer;
         }
-        .chat-message video, .chat-message audio {
+        .chat-message video,
+        .chat-message audio {
             max-width: 100%;
             border-radius: 8px;
             margin-top: 3px;
@@ -1431,7 +1478,9 @@
             cursor: pointer;
             background: none;
         }
-        .chat-controls input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+        .chat-controls input[type="color"]::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
         .chat-controls input[type="color"]::-webkit-color-swatch {
             border: none;
             border-radius: 50%;
@@ -1459,7 +1508,9 @@
             color: #e74c3c;
             font-weight: 700;
         }
-        .recording-indicator.active { display: inline-flex; }
+        .recording-indicator.active {
+            display: inline-flex;
+        }
         .recording-dot {
             width: 8px;
             height: 8px;
@@ -1504,7 +1555,9 @@
         .chat-input-area button:hover {
             background: #f4a261;
         }
-        .hidden-input { display: none; }
+        .hidden-input {
+            display: none;
+        }
         .chat-sidebar {
             width: 170px;
             background: #f8fafc;
@@ -1535,8 +1588,11 @@
             font-size: 0.95rem;
             padding: 0 3px;
         }
-        .sidebar-section-title .add-group-btn:hover { color: #f4a261; }
-        .sidebar-user, .sidebar-group {
+        .sidebar-section-title .add-group-btn:hover {
+            color: #f4a261;
+        }
+        .sidebar-user,
+        .sidebar-group {
             display: flex;
             align-items: center;
             padding: 5px 10px;
@@ -1545,12 +1601,17 @@
             transition: background 0.15s;
             border-left: 3px solid transparent;
         }
-        .sidebar-user:hover, .sidebar-group:hover { background: #eef2f7; }
-        .sidebar-user.active, .sidebar-group.active {
+        .sidebar-user:hover,
+        .sidebar-group:hover {
+            background: #eef2f7;
+        }
+        .sidebar-user.active,
+        .sidebar-group.active {
             background: #e2edf7;
             border-left-color: #2c7da0;
         }
-        .sidebar-user .avatar, .sidebar-group .avatar {
+        .sidebar-user .avatar,
+        .sidebar-group .avatar {
             width: 32px;
             height: 32px;
             border-radius: 50%;
@@ -1562,16 +1623,19 @@
             overflow: hidden;
             color: #1e3b4a;
         }
-        .sidebar-user .avatar img, .sidebar-group .avatar img {
+        .sidebar-user .avatar img,
+        .sidebar-group .avatar img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-        .sidebar-user .user-info, .sidebar-group .group-info {
+        .sidebar-user .user-info,
+        .sidebar-group .group-info {
             flex: 1;
             min-width: 0;
         }
-        .sidebar-user .user-info .name, .sidebar-group .group-info .name {
+        .sidebar-user .user-info .name,
+        .sidebar-group .group-info .name {
             font-weight: 600;
             color: #1e3b4a;
             white-space: nowrap;
@@ -1584,8 +1648,12 @@
             border-radius: 50%;
             flex-shrink: 0;
         }
-        .status.online { background: #2ecc71; }
-        .status.offline { background: #95a5a6; }
+        .status.online {
+            background: #2ecc71;
+        }
+        .status.offline {
+            background: #95a5a6;
+        }
         .group-member-count {
             color: #7f8c8d;
             margin-left: 3px;
@@ -1603,169 +1671,610 @@
             padding: 0 3px;
             transition: 0.2s;
         }
-        .group-actions button:hover { color: #e74c3c; }
+        .group-actions button:hover {
+            color: #e74c3c;
+        }
 
         /* ================================================================
            BUTTON TEXT SIZE OVERRIDES
            ================================================================ */
-        button, .auth-btn, .action-btn, .tx-btn, .single-mm-btn, .btn-submit,
-        .add-client-btn, .toggle-btn, .intl-toggle-btn, .mode-row .btn,
-        .footer-btn, .social-icon, .agent-dropdown-btn, .edit-agent-btn,
-        .approve-btn, .flag-scroll-btn, .btn, .add-client-btn-header,
-        .logout-btn, .edit-account-btn, .map-btn, .auth-btn, .agent-dropdown-btn {
+        button,
+        .auth-btn,
+        .action-btn,
+        .tx-btn,
+        .single-mm-btn,
+        .btn-submit,
+        .add-client-btn,
+        .toggle-btn,
+        .intl-toggle-btn,
+        .mode-row .btn,
+        .footer-btn,
+        .social-icon,
+        .agent-dropdown-btn,
+        .edit-agent-btn,
+        .approve-btn,
+        .flag-scroll-btn,
+        .btn,
+        .add-client-btn-header,
+        .logout-btn,
+        .edit-account-btn,
+        .map-btn,
+        .auth-btn,
+        .agent-dropdown-btn {
             font-size: 1.09em !important;
         }
-        label, .input-group label, .profile-label, .section-title, .business-title,
-        .modal-content h3, .admin-auth-modal .input-group label,
-        .agent-form .input-group label, .sidebar-section-title, .business-name,
-        .business-category, .profile-field, .charges-row, .total-row,
-        .datetime-box, .lang-selector select, .agent-dropdown-item .agent-name,
-        .agent-dropdown-empty, .goods-item, .toast-msg, .error-msg,
-        .success-msg, .info-msg, .connection-indicator, .user-name-display,
-        .member-counter, .group-member-item .member-name, .status-badge,
-        .goods-name, .goods-price, .collateral-box .ussd-code,
-        .password-display, .admin-auth-modal .auth-toggle-link,
-        .admin-auth-modal .auth-divider, .admin-auth-modal .auth-error,
-        .admin-auth-modal .auth-success, .dashboard-table th,
-        .dashboard-table td, .agent-dropdown-item .edit-agent-btn {
+        label,
+        .input-group label,
+        .profile-label,
+        .section-title,
+        .business-title,
+        .modal-content h3,
+        .admin-auth-modal .input-group label,
+        .agent-form .input-group label,
+        .sidebar-section-title,
+        .business-name,
+        .business-category,
+        .profile-field,
+        .charges-row,
+        .total-row,
+        .datetime-box,
+        .lang-selector select,
+        .agent-dropdown-item .agent-name,
+        .agent-dropdown-empty,
+        .goods-item,
+        .toast-msg,
+        .error-msg,
+        .success-msg,
+        .info-msg,
+        .connection-indicator,
+        .user-name-display,
+        .member-counter,
+        .group-member-item .member-name,
+        .status-badge,
+        .goods-name,
+        .goods-price,
+        .collateral-box .ussd-code,
+        .password-display,
+        .admin-auth-modal .auth-toggle-link,
+        .admin-auth-modal .auth-divider,
+        .admin-auth-modal .auth-error,
+        .admin-auth-modal .auth-success,
+        .dashboard-table th,
+        .dashboard-table td,
+        .agent-dropdown-item .edit-agent-btn {
             font-size: 0.774rem !important;
         }
-        .brand-text, .chat-toggle-btn { font-size: inherit !important; }
-        .chat-toggle-btn { font-size: 2.1rem !important; }
+        .brand-text,
+        .chat-toggle-btn {
+            font-size: inherit !important;
+        }
+        .chat-toggle-btn {
+            font-size: 2.1rem !important;
+        }
 
         /* ================================================================
            RESPONSIVE
            ================================================================ */
         @media (max-width: 600px) {
-            .double-row { grid-template-columns: 1fr; gap: 0; }
-            .add-client-btn { width: 100%; justify-content: center; }
-            .add-client-btn.header-btn { flex: 1 1 auto; min-width: 80px; }
-            .business-item { min-width: 50px; padding: 3px 7px; }
-            .africa-svg { width: 30px; height: 30px; }
-            .flag-icon { font-size: 0.95rem; }
-            .brand-text { font-size: 1.3915rem; }
-            .live-header { padding: 0.45rem 0.6rem; min-height: 64px; }
-            .datetime-box { font-size: 0.6rem; min-width: 66px; padding: 0.05rem 0.4rem; }
-            .time-text { font-size: 0.7rem; }
-            .auth-btn { padding: 5px 10px; height: 36px; }
-            .user-welcome { padding: 2px 10px 2px 5px; height: 36px; }
-            .user-avatar { font-size: 1.1rem; width: 26px; height: 26px; line-height: 26px; }
-            .connection-indicator { padding: 2px 8px 2px 3px; height: 28px; }
-            .connection-dot { width: 6px; height: 6px; }
-            .form-container { padding: 0.5rem 0.6rem 0.35rem 0.6rem; }
-            .single-mm-btn { padding: 7px 12px; height: 42px; }
-            .btn-submit { padding: 7px 12px; height: 42px; }
-            .modal-content { padding: 0.8rem; max-width: 300px; }
-            #dashboardModal .modal-content { max-width: 95%; padding: 0.6rem; }
-            #dashboardModal table { font-size: 0.6rem; }
-            #dashboardModal th, #dashboardModal td { padding: 2px 4px; }
-            .action-btn.approve-btn { padding: 1px 6px; height: 24px; }
-            .emoji-option { font-size: 1.4rem; padding: 2px; }
-            .emoji-grid { grid-template-columns: repeat(5, 1fr); gap: 2px; }
-            .profile-section { padding: 0.35rem 0.6rem; gap: 0.3rem 0.5rem; }
-            .profile-section .profile-field { padding: 1px 8px; min-width: 50px; }
-            .map-btn { padding: 4px 10px; margin-left: 0; width: 100%; justify-content: center; margin-top: 3px; height: 34px; }
-            #mapModal .modal-content { max-width: 95%; width: auto; padding: 0.7rem; }
-            #mapModal .modal-content iframe { height: 45vh; }
-            .chat-window { left: 0; right: 0; width: 100%; bottom: 0; top: auto !important; height: 100vh; max-height: 100vh; border-radius: 0; }
-            .chat-toggle-btn { width: 60px; height: 60px; font-size: 1.8rem; bottom: 14px; left: 14px; }
-            .chat-nav .chat-actions button { padding: 4px 8px; height: 30px; }
-            .chat-nav .chat-contact { font-size: 0.9rem; }
-            .chat-message { padding: 5px 11px; }
-            .chat-sidebar { width: 150px; }
-            .sidebar-user .user-info .name, .sidebar-group .group-info .name { font-size: 0.72rem; }
-            .sidebar-user .avatar, .sidebar-group .avatar { width: 28px; height: 28px; font-size: 0.85rem; }
-            .chat-controls .brightness-slider { width: 60px; }
-            .chat-controls input[type="color"] { width: 28px; height: 28px; }
-            .chat-controls button { padding: 3px 8px; height: 30px; }
-            .group-member-list { max-height: 130px; }
-            .flag-scroll-btn { width: 26px; height: 26px; font-size: 1.1rem; }
-            .flag-icon { font-size: 0.95rem; }
-            .chat-input-area input { padding: 5px 11px; height: 38px; }
-            .chat-input-area button { padding: 6px 13px; height: 38px; }
-            .action-btn { padding: 8px 12px; height: 38px; }
-            .lang-selector select { width: 60px; }
-            .lang-selector { height: 36px; padding: 2px 4px 2px 8px; }
-            .lang-icon { font-size: 0.85rem; }
-            .agent-dropdown-container { min-width: 100px; max-width: 150px; }
-            .agent-dropdown-btn { padding: 3px 8px 3px 12px; height: 36px; min-width: 80px; }
-            .agent-dropdown-list { min-width: 160px; }
-            .agent-dropdown-item .agent-name { font-size: 0.7rem; }
-            .agent-dropdown-item .edit-agent-btn { padding: 1px 8px; height: 24px; }
-            .header-right { gap: 4px; }
-            .agent-form .input-group input, .agent-form .input-group select { height: 34px; font-size: 0.8rem; }
-            .mode-row .btn { padding: 4px 10px; height: 36px; min-width: 80px; }
-            .admin-auth-modal .modal-content { max-width: 290px; padding: 0.7rem; }
+            .double-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .add-client-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            .add-client-btn.header-btn {
+                flex: 1 1 auto;
+                min-width: 80px;
+            }
+            .business-item {
+                min-width: 50px;
+                padding: 3px 7px;
+            }
+            .africa-svg {
+                width: 30px;
+                height: 30px;
+            }
+            .flag-icon {
+                font-size: 0.95rem;
+            }
+            .brand-text {
+                font-size: 1.3915rem;
+            }
+            .live-header {
+                padding: 0.45rem 0.6rem;
+                min-height: 64px;
+            }
+            .datetime-box {
+                font-size: 0.6rem;
+                min-width: 66px;
+                padding: 0.05rem 0.4rem;
+            }
+            .time-text {
+                font-size: 0.7rem;
+            }
+            .auth-btn {
+                padding: 5px 10px;
+                height: 36px;
+            }
+            .user-welcome {
+                padding: 2px 10px 2px 5px;
+                height: 36px;
+            }
+            .user-avatar {
+                font-size: 1.1rem;
+                width: 26px;
+                height: 26px;
+                line-height: 26px;
+            }
+            .connection-indicator {
+                padding: 2px 8px 2px 3px;
+                height: 28px;
+            }
+            .connection-dot {
+                width: 6px;
+                height: 6px;
+            }
+            .form-container {
+                padding: 0.5rem 0.6rem 0.35rem 0.6rem;
+            }
+            .single-mm-btn {
+                padding: 7px 12px;
+                height: 42px;
+            }
+            .btn-submit {
+                padding: 7px 12px;
+                height: 42px;
+            }
+            .modal-content {
+                padding: 0.8rem;
+                max-width: 300px;
+            }
+            #dashboardModal .modal-content {
+                max-width: 95%;
+                padding: 0.6rem;
+            }
+            #dashboardModal table {
+                font-size: 0.6rem;
+            }
+            #dashboardModal th,
+            #dashboardModal td {
+                padding: 2px 4px;
+            }
+            .action-btn.approve-btn {
+                padding: 1px 6px;
+                height: 24px;
+            }
+            .emoji-option {
+                font-size: 1.4rem;
+                padding: 2px;
+            }
+            .emoji-grid {
+                grid-template-columns: repeat(5, 1fr);
+                gap: 2px;
+            }
+            .profile-section {
+                padding: 0.35rem 0.6rem;
+                gap: 0.3rem 0.5rem;
+            }
+            .profile-section .profile-field {
+                padding: 1px 8px;
+                min-width: 50px;
+            }
+            .map-btn {
+                padding: 4px 10px;
+                margin-left: 0;
+                width: 100%;
+                justify-content: center;
+                margin-top: 3px;
+                height: 34px;
+            }
+            #mapModal .modal-content {
+                max-width: 95%;
+                width: auto;
+                padding: 0.7rem;
+            }
+            #mapModal .modal-content iframe {
+                height: 45vh;
+            }
+            .chat-window {
+                left: 0;
+                right: 0;
+                width: 100%;
+                bottom: 0;
+                top: auto !important;
+                height: 100vh;
+                max-height: 100vh;
+                border-radius: 0;
+            }
+            .chat-toggle-btn {
+                width: 60px;
+                height: 60px;
+                font-size: 1.8rem;
+                bottom: 14px;
+                left: 14px;
+            }
+            .chat-nav .chat-actions button {
+                padding: 4px 8px;
+                height: 30px;
+            }
+            .chat-nav .chat-contact {
+                font-size: 0.9rem;
+            }
+            .chat-message {
+                padding: 5px 11px;
+            }
+            .chat-sidebar {
+                width: 150px;
+            }
+            .sidebar-user .user-info .name,
+            .sidebar-group .group-info .name {
+                font-size: 0.72rem;
+            }
+            .sidebar-user .avatar,
+            .sidebar-group .avatar {
+                width: 28px;
+                height: 28px;
+                font-size: 0.85rem;
+            }
+            .chat-controls .brightness-slider {
+                width: 60px;
+            }
+            .chat-controls input[type="color"] {
+                width: 28px;
+                height: 28px;
+            }
+            .chat-controls button {
+                padding: 3px 8px;
+                height: 30px;
+            }
+            .group-member-list {
+                max-height: 130px;
+            }
+            .flag-scroll-btn {
+                width: 26px;
+                height: 26px;
+                font-size: 1.1rem;
+            }
+            .flag-icon {
+                font-size: 0.95rem;
+            }
+            .chat-input-area input {
+                padding: 5px 11px;
+                height: 38px;
+            }
+            .chat-input-area button {
+                padding: 6px 13px;
+                height: 38px;
+            }
+            .action-btn {
+                padding: 8px 12px;
+                height: 38px;
+            }
+            .lang-selector select {
+                width: 60px;
+            }
+            .lang-selector {
+                height: 36px;
+                padding: 2px 4px 2px 8px;
+            }
+            .lang-icon {
+                font-size: 0.85rem;
+            }
+            .agent-dropdown-container {
+                min-width: 100px;
+                max-width: 150px;
+            }
+            .agent-dropdown-btn {
+                padding: 3px 8px 3px 12px;
+                height: 36px;
+                min-width: 80px;
+            }
+            .agent-dropdown-list {
+                min-width: 160px;
+            }
+            .agent-dropdown-item .agent-name {
+                font-size: 0.7rem;
+            }
+            .agent-dropdown-item .edit-agent-btn {
+                padding: 1px 8px;
+                height: 24px;
+            }
+            .header-right {
+                gap: 4px;
+            }
+            .agent-form .input-group input,
+            .agent-form .input-group select {
+                height: 34px;
+                font-size: 0.8rem;
+            }
+            .mode-row .btn {
+                padding: 4px 10px;
+                height: 36px;
+                min-width: 80px;
+            }
+            .admin-auth-modal .modal-content {
+                max-width: 290px;
+                padding: 0.7rem;
+            }
         }
         @media (max-width: 400px) {
-            .flag-icon { font-size: 0.8rem; }
-            .brand-text { font-size: 1.20175rem; }
-            .africa-svg { width: 24px; height: 24px; }
-            .live-header { min-height: 56px; padding: 0.3rem 0.4rem; }
-            .datetime-box { font-size: 0.5rem; min-width: 54px; padding: 0 0.3rem; }
-            .time-text { font-size: 0.58rem; }
-            .auth-btn { padding: 4px 8px; height: 32px; }
-            .user-welcome { padding: 1px 8px 1px 4px; height: 32px; }
-            .user-avatar { font-size: 0.9rem; width: 22px; height: 22px; line-height: 22px; }
-            .connection-indicator { padding: 1px 6px 1px 2px; height: 24px; }
-            .connection-dot { width: 5px; height: 5px; }
-            .form-container { padding: 0.3rem 0.35rem 0.2rem 0.35rem; }
-            .section-title { margin: 0.3rem 0 0.2rem 0; padding-left: 5px; }
-            .input-group label { font-size: 0.585rem; }
-            .input-group input, .input-group select { padding: 4px 8px; font-size: 0.76rem; height: 36px; }
-            .single-mm-btn { padding: 5px 9px; height: 36px; }
-            .btn-submit { padding: 5px 9px; height: 36px; }
-            .tx-btn { padding: 4px 8px; height: 36px; }
-            .charges-row { font-size: 0.684rem; }
-            .total-row { font-size: 0.738rem; }
-            .business-item { min-width: 44px; padding: 2px 5px; }
-            .business-icon-img { font-size: 1.0rem; }
-            .business-name { font-size: 0.48rem; }
-            .business-category { font-size: 0.42rem; }
-            .footer-btn { padding: 2px 8px; height: 30px; }
-            .social-icon { padding: 2px 8px; height: 30px; }
-            .emoji-option { font-size: 1.2rem; }
-            .emoji-grid { grid-template-columns: repeat(5, 1fr); gap: 2px; }
-            .modal-content { padding: 0.6rem; max-width: 260px; }
-            #dashboardModal .modal-content { max-width: 98%; padding: 0.4rem; }
-            #dashboardModal table { font-size: 0.5rem; }
-            #dashboardModal th, #dashboardModal td { padding: 1px 3px; }
-            .action-btn.approve-btn { padding: 1px 4px; height: 20px; }
-            .modal-content h3 { font-size: 0.95rem; }
-            .action-btn { padding: 6px 10px; height: 34px; }
-            .profile-section .profile-field { padding: 1px 6px; min-width: 40px; }
-            .map-btn { padding: 2px 8px; height: 30px; }
-            #mapModal .modal-content iframe { height: 35vh; }
-            .chat-window { left: 0; right: 0; width: 100%; bottom: 0; top: auto !important; height: 100vh; max-height: 100vh; }
-            .chat-toggle-btn { width: 52px; height: 52px; font-size: 1.5rem; bottom: 10px; left: 10px; }
-            .chat-nav .chat-actions button { padding: 3px 7px; height: 26px; }
-            .chat-sidebar { display: none; position: absolute; right: 0; top: 0; bottom: 0; width: 150px; background: #f8fafc; border-left: 1px solid #e0e8f0; z-index: 10; box-shadow: -4px 0 12px rgba(0,0,0,0.1); border-radius: 0 18px 18px 0; }
-            .chat-sidebar.open { display: flex; }
-            .sidebar-toggle { display: block; font-size: 0.9rem; padding: 2px 5px; }
-            .chat-controls .brightness-slider { width: 50px; }
-            .chat-controls input[type="color"] { width: 26px; height: 26px; }
-            .chat-controls button { padding: 2px 7px; height: 26px; }
-            .group-member-list { max-height: 100px; }
-            .flag-scroll-btn { width: 24px; height: 24px; font-size: 0.95rem; }
-            .flag-icon { font-size: 0.8rem; }
-            .chat-input-area input { padding: 4px 9px; height: 34px; }
-            .chat-input-area button { padding: 5px 11px; height: 34px; }
-            .chat-message { padding: 4px 9px; }
-            .lang-selector select { width: 50px; }
-            .lang-selector { height: 32px; padding: 1px 3px 1px 6px; }
-            .lang-icon { font-size: 0.7rem; }
-            .agent-dropdown-container { min-width: 80px; max-width: 120px; }
-            .agent-dropdown-btn { padding: 2px 6px 2px 10px; height: 32px; min-width: 60px; }
-            .agent-dropdown-btn .arrow { font-size: 0.5rem; }
-            .agent-dropdown-list { min-width: 140px; }
-            .agent-dropdown-item .agent-name { font-size: 0.65rem; }
-            .agent-dropdown-item .edit-agent-btn { padding: 1px 6px; height: 22px; }
-            .add-client-btn { padding: 4px 10px; height: 34px; }
-            .agent-form .input-group input, .agent-form .input-group select { height: 30px; font-size: 0.75rem; padding: 3px 7px; }
-            .collateral-box .ussd-code { padding: 3px 8px; }
-            .mode-row .btn { padding: 3px 8px; height: 30px; min-width: 60px; }
-            .admin-auth-modal .modal-content { max-width: 250px; padding: 0.5rem; }
-            .admin-auth-modal .input-group input { height: 34px; font-size: 0.8rem; }
+            .flag-icon {
+                font-size: 0.8rem;
+            }
+            .brand-text {
+                font-size: 1.20175rem;
+            }
+            .africa-svg {
+                width: 24px;
+                height: 24px;
+            }
+            .live-header {
+                min-height: 56px;
+                padding: 0.3rem 0.4rem;
+            }
+            .datetime-box {
+                font-size: 0.5rem;
+                min-width: 54px;
+                padding: 0 0.3rem;
+            }
+            .time-text {
+                font-size: 0.58rem;
+            }
+            .auth-btn {
+                padding: 4px 8px;
+                height: 32px;
+            }
+            .user-welcome {
+                padding: 1px 8px 1px 4px;
+                height: 32px;
+            }
+            .user-avatar {
+                font-size: 0.9rem;
+                width: 22px;
+                height: 22px;
+                line-height: 22px;
+            }
+            .connection-indicator {
+                padding: 1px 6px 1px 2px;
+                height: 24px;
+            }
+            .connection-dot {
+                width: 5px;
+                height: 5px;
+            }
+            .form-container {
+                padding: 0.3rem 0.35rem 0.2rem 0.35rem;
+            }
+            .section-title {
+                margin: 0.3rem 0 0.2rem 0;
+                padding-left: 5px;
+            }
+            .input-group label {
+                font-size: 0.585rem;
+            }
+            .input-group input,
+            .input-group select {
+                padding: 4px 8px;
+                font-size: 0.76rem;
+                height: 36px;
+            }
+            .single-mm-btn {
+                padding: 5px 9px;
+                height: 36px;
+            }
+            .btn-submit {
+                padding: 5px 9px;
+                height: 36px;
+            }
+            .tx-btn {
+                padding: 4px 8px;
+                height: 36px;
+            }
+            .charges-row {
+                font-size: 0.684rem;
+            }
+            .total-row {
+                font-size: 0.738rem;
+            }
+            .business-item {
+                min-width: 44px;
+                padding: 2px 5px;
+            }
+            .business-icon-img {
+                font-size: 1.0rem;
+            }
+            .business-name {
+                font-size: 0.48rem;
+            }
+            .business-category {
+                font-size: 0.42rem;
+            }
+            .footer-btn {
+                padding: 2px 8px;
+                height: 30px;
+            }
+            .social-icon {
+                padding: 2px 8px;
+                height: 30px;
+            }
+            .emoji-option {
+                font-size: 1.2rem;
+            }
+            .emoji-grid {
+                grid-template-columns: repeat(5, 1fr);
+                gap: 2px;
+            }
+            .modal-content {
+                padding: 0.6rem;
+                max-width: 260px;
+            }
+            #dashboardModal .modal-content {
+                max-width: 98%;
+                padding: 0.4rem;
+            }
+            #dashboardModal table {
+                font-size: 0.5rem;
+            }
+            #dashboardModal th,
+            #dashboardModal td {
+                padding: 1px 3px;
+            }
+            .action-btn.approve-btn {
+                padding: 1px 4px;
+                height: 20px;
+            }
+            .modal-content h3 {
+                font-size: 0.95rem;
+            }
+            .action-btn {
+                padding: 6px 10px;
+                height: 34px;
+            }
+            .profile-section .profile-field {
+                padding: 1px 6px;
+                min-width: 40px;
+            }
+            .map-btn {
+                padding: 2px 8px;
+                height: 30px;
+            }
+            #mapModal .modal-content iframe {
+                height: 35vh;
+            }
+            .chat-window {
+                left: 0;
+                right: 0;
+                width: 100%;
+                bottom: 0;
+                top: auto !important;
+                height: 100vh;
+                max-height: 100vh;
+            }
+            .chat-toggle-btn {
+                width: 52px;
+                height: 52px;
+                font-size: 1.5rem;
+                bottom: 10px;
+                left: 10px;
+            }
+            .chat-nav .chat-actions button {
+                padding: 3px 7px;
+                height: 26px;
+            }
+            .chat-sidebar {
+                display: none;
+                position: absolute;
+                right: 0;
+                top: 0;
+                bottom: 0;
+                width: 150px;
+                background: #f8fafc;
+                border-left: 1px solid #e0e8f0;
+                z-index: 10;
+                box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1);
+                border-radius: 0 18px 18px 0;
+            }
+            .chat-sidebar.open {
+                display: flex;
+            }
+            .sidebar-toggle {
+                display: block;
+                font-size: 0.9rem;
+                padding: 2px 5px;
+            }
+            .chat-controls .brightness-slider {
+                width: 50px;
+            }
+            .chat-controls input[type="color"] {
+                width: 26px;
+                height: 26px;
+            }
+            .chat-controls button {
+                padding: 2px 7px;
+                height: 26px;
+            }
+            .group-member-list {
+                max-height: 100px;
+            }
+            .flag-scroll-btn {
+                width: 24px;
+                height: 24px;
+                font-size: 0.95rem;
+            }
+            .flag-icon {
+                font-size: 0.8rem;
+            }
+            .chat-input-area input {
+                padding: 4px 9px;
+                height: 34px;
+            }
+            .chat-input-area button {
+                padding: 5px 11px;
+                height: 34px;
+            }
+            .chat-message {
+                padding: 4px 9px;
+            }
+            .lang-selector select {
+                width: 50px;
+            }
+            .lang-selector {
+                height: 32px;
+                padding: 1px 3px 1px 6px;
+            }
+            .lang-icon {
+                font-size: 0.7rem;
+            }
+            .agent-dropdown-container {
+                min-width: 80px;
+                max-width: 120px;
+            }
+            .agent-dropdown-btn {
+                padding: 2px 6px 2px 10px;
+                height: 32px;
+                min-width: 60px;
+            }
+            .agent-dropdown-btn .arrow {
+                font-size: 0.5rem;
+            }
+            .agent-dropdown-list {
+                min-width: 140px;
+            }
+            .agent-dropdown-item .agent-name {
+                font-size: 0.65rem;
+            }
+            .agent-dropdown-item .edit-agent-btn {
+                padding: 1px 6px;
+                height: 22px;
+            }
+            .add-client-btn {
+                padding: 4px 10px;
+                height: 34px;
+            }
+            .agent-form .input-group input,
+            .agent-form .input-group select {
+                height: 30px;
+                font-size: 0.75rem;
+                padding: 3px 7px;
+            }
+            .collateral-box .ussd-code {
+                padding: 3px 8px;
+            }
+            .mode-row .btn {
+                padding: 3px 8px;
+                height: 30px;
+                min-width: 60px;
+            }
+            .admin-auth-modal .modal-content {
+                max-width: 250px;
+                padding: 0.5rem;
+            }
+            .admin-auth-modal .input-group input {
+                height: 34px;
+                font-size: 0.8rem;
+            }
         }
 
         /* ================================================================
@@ -1815,7 +2324,9 @@
             height: 28px;
             font-size: 0.7rem;
         }
-        .ussd-result-box .copy-ussd-btn:hover { background: #1f5068; }
+        .ussd-result-box .copy-ussd-btn:hover {
+            background: #1f5068;
+        }
         .sl-mode-note {
             font-size: 0.7rem;
             color: #1c6e8f;
@@ -1870,7 +2381,9 @@
             display: block;
             margin: 2px auto;
         }
-        .image-upload-preview .remove-image-btn:hover { text-decoration: underline; }
+        .image-upload-preview .remove-image-btn:hover {
+            text-decoration: underline;
+        }
         .agent-logo-preview img {
             border-radius: 8px;
             max-width: 100px;
@@ -2030,16 +2543,41 @@
             min-width: 100px;
             justify-content: center;
         }
-        .receipt-share-btn.whatsapp { background: #25D366; }
-        .receipt-share-btn.whatsapp:hover { background: #1da851; transform: translateY(-1px); }
-        .receipt-share-btn.sms { background: #3498db; }
-        .receipt-share-btn.sms:hover { background: #2980b9; transform: translateY(-1px); }
-        .receipt-share-btn.close-receipt { background: #95a5a6; }
-        .receipt-share-btn.close-receipt:hover { background: #7f8c8d; transform: translateY(-1px); }
-        .receipt-share-btn.client { background: #2c7da0; }
-        .receipt-share-btn.client:hover { background: #1f5068; transform: translateY(-1px); }
-        .receipt-share-btn.agent { background: #8e44ad; }
-        .receipt-share-btn.agent:hover { background: #732d91; transform: translateY(-1px); }
+        .receipt-share-btn.whatsapp {
+            background: #25D366;
+        }
+        .receipt-share-btn.whatsapp:hover {
+            background: #1da851;
+            transform: translateY(-1px);
+        }
+        .receipt-share-btn.sms {
+            background: #3498db;
+        }
+        .receipt-share-btn.sms:hover {
+            background: #2980b9;
+            transform: translateY(-1px);
+        }
+        .receipt-share-btn.close-receipt {
+            background: #95a5a6;
+        }
+        .receipt-share-btn.close-receipt:hover {
+            background: #7f8c8d;
+            transform: translateY(-1px);
+        }
+        .receipt-share-btn.client {
+            background: #2c7da0;
+        }
+        .receipt-share-btn.client:hover {
+            background: #1f5068;
+            transform: translateY(-1px);
+        }
+        .receipt-share-btn.agent {
+            background: #8e44ad;
+        }
+        .receipt-share-btn.agent:hover {
+            background: #732d91;
+            transform: translateY(-1px);
+        }
         .receipt-share-label {
             font-size: 0.65rem;
             color: #7f8c8d;
@@ -2084,14 +2622,39 @@
                 width: 98%;
                 border-radius: 16px;
             }
-            .receipt-body { padding: 12px 14px 8px 14px; }
-            .receipt-header { padding: 14px 14px 10px 14px; }
-            .receipt-footer { padding: 8px 14px 10px 14px; }
-            .receipt-row { font-size: 0.75rem; padding: 3px 0; }
-            .receipt-row.total { font-size: 0.85rem; padding-top: 6px; }
-            .receipt-row.total .value { font-size: 0.95rem; }
-            .receipt-share-btn { font-size: 0.7rem; padding: 5px 12px; height: 34px; min-width: 70px; }
-            .receipt-close-x { top: 4px; right: 8px; font-size: 1.2rem; width: 28px; height: 28px; }
+            .receipt-body {
+                padding: 12px 14px 8px 14px;
+            }
+            .receipt-header {
+                padding: 14px 14px 10px 14px;
+            }
+            .receipt-footer {
+                padding: 8px 14px 10px 14px;
+            }
+            .receipt-row {
+                font-size: 0.75rem;
+                padding: 3px 0;
+            }
+            .receipt-row.total {
+                font-size: 0.85rem;
+                padding-top: 6px;
+            }
+            .receipt-row.total .value {
+                font-size: 0.95rem;
+            }
+            .receipt-share-btn {
+                font-size: 0.7rem;
+                padding: 5px 12px;
+                height: 34px;
+                min-width: 70px;
+            }
+            .receipt-close-x {
+                top: 4px;
+                right: 8px;
+                font-size: 1.2rem;
+                width: 28px;
+                height: 28px;
+            }
         }
 
         /* ================================================================
@@ -2172,7 +2735,9 @@
             display: block;
             margin-bottom: 2px;
         }
-        .agreement-body .clause.dev-clause .tag { color: #8e44ad; }
+        .agreement-body .clause.dev-clause .tag {
+            color: #8e44ad;
+        }
         .agreement-body .placeholder {
             color: #1c6e8f;
             font-weight: 700;
@@ -2189,9 +2754,16 @@
             flex-wrap: wrap;
             justify-content: center;
         }
-        .agreement-footer .action-btn { flex: 1; min-width: 120px; }
-        .agreement-footer .action-btn.agree-btn { background: #27ae60; }
-        .agreement-footer .action-btn.agree-btn:hover { background: #1e8449; }
+        .agreement-footer .action-btn {
+            flex: 1;
+            min-width: 120px;
+        }
+        .agreement-footer .action-btn.agree-btn {
+            background: #27ae60;
+        }
+        .agreement-footer .action-btn.agree-btn:hover {
+            background: #1e8449;
+        }
         .agreement-footer .action-btn.agree-btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
@@ -2202,7 +2774,9 @@
             cursor: default;
             opacity: 0.7;
         }
-        .agreement-footer .action-btn.agree-btn.agreed:hover { background: #27ae60; }
+        .agreement-footer .action-btn.agree-btn.agreed:hover {
+            background: #27ae60;
+        }
         .agreement-signature-area {
             margin-top: 8px;
             border: 2px dashed #d0dce8;
@@ -2211,7 +2785,9 @@
             display: none;
             background: white;
         }
-        .agreement-signature-area.open { display: block; }
+        .agreement-signature-area.open {
+            display: block;
+        }
         .agreement-signature-area canvas {
             width: 100%;
             height: 100px;
@@ -2239,12 +2815,16 @@
             background: #e74c3c;
             color: white;
         }
-        .agreement-signature-area .sig-actions .sig-clear:hover { background: #c0392b; }
+        .agreement-signature-area .sig-actions .sig-clear:hover {
+            background: #c0392b;
+        }
         .agreement-signature-area .sig-actions .sig-confirm {
             background: #27ae60;
             color: white;
         }
-        .agreement-signature-area .sig-actions .sig-confirm:hover { background: #1e8449; }
+        .agreement-signature-area .sig-actions .sig-confirm:hover {
+            background: #1e8449;
+        }
         .sig-preview {
             max-width: 120px;
             max-height: 50px;
@@ -2253,7 +2833,9 @@
             display: none;
             margin-top: 4px;
         }
-        .sig-preview.show { display: block; }
+        .sig-preview.show {
+            display: block;
+        }
         .agreement-status {
             font-size: 0.65rem;
             color: #7f8c8d;
@@ -2272,9 +2854,14 @@
             max-width: 400px;
             width: 90%;
         }
-        #editAccountModal .input-group { margin-bottom: 0.6rem; }
-        #editAccountModal .input-group label { font-size: 0.675rem; }
-        #editAccountModal .input-group input, #editAccountModal .input-group select {
+        #editAccountModal .input-group {
+            margin-bottom: 0.6rem;
+        }
+        #editAccountModal .input-group label {
+            font-size: 0.675rem;
+        }
+        #editAccountModal .input-group input,
+        #editAccountModal .input-group select {
             height: 40px;
             font-size: 0.85rem;
             padding: 4px 10px;
@@ -2294,15 +2881,23 @@
             gap: 0.5rem;
             align-items: center;
         }
-        .city-input-row select, .city-input-row input { flex: 1; }
+        .city-input-row select,
+        .city-input-row input {
+            flex: 1;
+        }
         .city-input-row .or-text {
             font-size: 0.7rem;
             color: #95a5a6;
             font-weight: 600;
         }
         @media (max-width: 600px) {
-            .city-input-row { flex-direction: column; gap: 0.3rem; }
-            .city-input-row .or-text { display: none; }
+            .city-input-row {
+                flex-direction: column;
+                gap: 0.3rem;
+            }
+            .city-input-row .or-text {
+                display: none;
+            }
         }
 
         /* ================================================================
@@ -2324,8 +2919,14 @@
             text-align: center;
             position: relative;
         }
-        .report-header h3 { color: white; margin: 0; }
-        .report-header small { font-size: 0.6rem; opacity: 0.8; }
+        .report-header h3 {
+            color: white;
+            margin: 0;
+        }
+        .report-header small {
+            font-size: 0.6rem;
+            opacity: 0.8;
+        }
         .report-close-x {
             position: absolute;
             top: 6px;
@@ -2363,10 +2964,27 @@
             border-bottom: 1px solid #f0f0f0;
             font-size: 0.82rem;
         }
-        .report-body .info-row .label { color: #7f8c8d; font-weight: 500; }
-        .report-body .info-row .value { color: #1e3b4a; font-weight: 600; text-align: right; }
-        .report-body .info-row.total { border-top: 2px solid #1c4e6c; border-bottom: none; padding-top: 8px; margin-top: 4px; font-weight: 800; font-size: 0.95rem; }
-        .report-body .info-row.total .value { color: #0a2b3c; font-size: 1.05rem; }
+        .report-body .info-row .label {
+            color: #7f8c8d;
+            font-weight: 500;
+        }
+        .report-body .info-row .value {
+            color: #1e3b4a;
+            font-weight: 600;
+            text-align: right;
+        }
+        .report-body .info-row.total {
+            border-top: 2px solid #1c4e6c;
+            border-bottom: none;
+            padding-top: 8px;
+            margin-top: 4px;
+            font-weight: 800;
+            font-size: 0.95rem;
+        }
+        .report-body .info-row.total .value {
+            color: #0a2b3c;
+            font-size: 1.05rem;
+        }
         .report-ussd-section {
             background: #f0f6fb;
             border-radius: 10px;
@@ -2396,18 +3014,35 @@
             flex-wrap: wrap;
             justify-content: center;
         }
-        .report-footer .action-btn { flex: 1; min-width: 100px; }
-        .report-footer .action-btn.copy-btn { background: #2c7da0; }
-        .report-footer .action-btn.copy-btn:hover { background: #1f5068; }
-        .report-footer .action-btn.close-report { background: #95a5a6; }
-        .report-footer .action-btn.close-report:hover { background: #7f8c8d; }
+        .report-footer .action-btn {
+            flex: 1;
+            min-width: 100px;
+        }
+        .report-footer .action-btn.copy-btn {
+            background: #2c7da0;
+        }
+        .report-footer .action-btn.copy-btn:hover {
+            background: #1f5068;
+        }
+        .report-footer .action-btn.close-report {
+            background: #95a5a6;
+        }
+        .report-footer .action-btn.close-report:hover {
+            background: #7f8c8d;
+        }
 
         /* ================================================================
            AGENT AUTH MODAL (Password & PIN)
            ================================================================ */
-        #agentAuthModal .modal-content { max-width: 360px; }
-        #agentAuthModal .input-group { margin-bottom: 0.6rem; }
-        #agentAuthModal .input-group label { font-size: 0.675rem; }
+        #agentAuthModal .modal-content {
+            max-width: 360px;
+        }
+        #agentAuthModal .input-group {
+            margin-bottom: 0.6rem;
+        }
+        #agentAuthModal .input-group label {
+            font-size: 0.675rem;
+        }
         #agentAuthModal .input-group input {
             height: 40px;
             font-size: 0.9rem;
@@ -2415,15 +3050,50 @@
             letter-spacing: 2px;
             font-family: monospace;
         }
-        #agentAuthModal .auth-error { color: #c0392b; margin: 4px 0; text-align: center; }
-        #agentAuthModal .auth-success { color: #27ae60; margin: 4px 0; text-align: center; }
+        #agentAuthModal .auth-error {
+            color: #c0392b;
+            margin: 4px 0;
+            text-align: center;
+        }
+        #agentAuthModal .auth-success {
+            color: #27ae60;
+            margin: 4px 0;
+            text-align: center;
+        }
+
+        /* ================================================================
+           USER DEACTIVATE MODAL
+           ================================================================ */
+        #deactivateModal .modal-content {
+            max-width: 360px;
+        }
+        #deactivateModal .input-group {
+            margin-bottom: 0.6rem;
+        }
+        #deactivateModal .input-group label {
+            font-size: 0.675rem;
+        }
+        #deactivateModal .input-group input {
+            height: 40px;
+            font-size: 0.9rem;
+            padding: 4px 12px;
+        }
+        #deactivateModal .auth-error {
+            color: #c0392b;
+            margin: 4px 0;
+            text-align: center;
+        }
+        #deactivateModal .auth-success {
+            color: #27ae60;
+            margin: 4px 0;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
     <div class="app-card">
         <!-- ============================================================
-        HEADER
-        ============================================================ -->
+        HEADER (unchanged) ... -->
         <div class="live-header">
             <div class="logo-container">
                 <div class="africa-map-logo">
@@ -2497,7 +3167,7 @@
         </div>
 
         <!-- ============================================================
-        MAIN FORM
+        MAIN FORM (unchanged)
         ============================================================ -->
         <div class="form-container" id="mainFormContainer" style="display:none;">
             <div class="profile-section" id="profileSection">
@@ -2617,7 +3287,6 @@
                     <button type="button" class="tx-btn copy" id="copyTxBtn" data-i18n="copy">Copy</button>
                 </div>
 
-                <!-- PROVIDER TRANSACTION ID -->
                 <div class="section-title" style="margin-top:0.5rem;">🔐 PROVIDER TRANSACTION ID</div>
                 <div class="input-group">
                     <label for="providerTxId">Provider Transaction ID (Format: AB123456.1234.X12345) *</label>
@@ -2626,7 +3295,6 @@
                     <div id="providerTxIdError" class="error-msg" style="font-size:0.65rem; display:none;"></div>
                 </div>
 
-                <!-- TRANSFER CODE (CONDITIONAL) -->
                 <div class="input-group" id="mainTransferCodeGroup" style="display:none;">
                     <label for="mainTransferCode">Transfer Code (6, 8, 10, 12, or 14 digits) *</label>
                     <input type="text" id="mainTransferCode" placeholder="e.g. 123456" maxlength="14" pattern="[0-9]{6}|[0-9]{8}|[0-9]{10}|[0-9]{12}|[0-9]{14}" />
@@ -2663,7 +3331,7 @@
     </div>
 
     <!-- ============================================================
-    MODALS
+    MODALS (unchanged except added deactivateModal)
     ============================================================ -->
     <!-- Map Modal -->
     <div id="mapModal" class="modal"><div class="modal-content"><h3 data-i18n="map_title">📍 Your Location</h3><iframe id="mapIframe" allowfullscreen loading="lazy"></iframe><button class="action-btn close-modal" style="margin-top:10px;" data-i18n="close">Close</button></div></div>
@@ -2868,7 +3536,6 @@
                 <div id="agentPasswordHint" style="font-size:0.65rem; color:#666; margin-top:2px;">Click Generate to create a 6-character alphanumeric password</div>
             </div>
 
-            <!-- 5-Digit PIN Field -->
             <div class="input-group">
                 <label>5-Digit PIN *</label>
                 <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
@@ -2891,7 +3558,6 @@
                 <input type="hidden" id="collateralAmount" value="0" />
             </div>
 
-            <!-- View Agreement Button -->
             <div style="margin: 10px 0 6px 0; text-align: center;">
                 <button class="action-btn orange" id="viewAgreementBtn" style="width:100%; height:42px; font-size:0.85rem;">📜 View & Sign Agent Agreement</button>
                 <div id="agreementStatusDisplay" style="font-size:0.65rem; color:#7f8c8d; margin-top:3px;">
@@ -2899,7 +3565,6 @@
                 </div>
             </div>
 
-            <!-- Provider Transaction ID -->
             <div class="input-group" style="margin-top:0.5rem;">
                 <label for="agentProviderTxId">🔐 Provider Transaction ID (Format: AB123456.1234.X12345) *</label>
                 <input type="text" id="agentProviderTxId" placeholder="e.g. AB123456.1234.X12345" pattern="[A-Za-z]{2}[0-9]{6}\.[0-9]{4}\.[A-Za-z][0-9]{5}" />
@@ -2907,7 +3572,6 @@
                 <div id="agentProviderTxIdError" class="error-msg" style="font-size:0.65rem; display:none;"></div>
             </div>
 
-            <!-- Transfer Code (Conditional) -->
             <div class="input-group" id="agentTransferCodeGroup" style="display:none;">
                 <label for="agentTransferCode">Transfer Code (6, 8, 10, 12, or 14 digits) *</label>
                 <input type="text" id="agentTransferCode" placeholder="e.g. 123456" maxlength="14" pattern="[0-9]{6}|[0-9]{8}|[0-9]{10}|[0-9]{12}|[0-9]{14}" />
@@ -2930,18 +3594,12 @@
                 <small>Please read carefully and sign to proceed</small>
                 <button class="agreement-close-x" id="agreementCloseXBtn">✕</button>
             </div>
-            <div class="agreement-body" id="agreementBody">
-                <!-- Dynamically filled -->
-            </div>
+            <div class="agreement-body" id="agreementBody"></div>
             <div class="agreement-footer">
-                <button class="action-btn agree-btn" id="agreementAgreeBtn" disabled>
-                    ✋ I Agree & Sign
-                </button>
+                <button class="action-btn agree-btn" id="agreementAgreeBtn" disabled>✋ I Agree & Sign</button>
                 <button class="action-btn close-modal" id="agreementCloseBtn">✕ Close</button>
             </div>
-            <div class="agreement-status" id="agreementStatus">
-                Please read all clauses and provide signature below.
-            </div>
+            <div class="agreement-status" id="agreementStatus">Please read all clauses and provide signature below.</div>
         </div>
     </div>
 
@@ -2994,15 +3652,11 @@
                 <input type="text" id="editPassword" placeholder="Enter the 6-character password" style="letter-spacing:2px; font-family:monospace;" />
                 <div id="editPasswordHint" style="font-size:0.65rem; color:#666; margin-top:2px;">Enter the password that was generated during registration</div>
             </div>
-
-            <!-- PIN Field in Edit Modal -->
             <div class="input-group">
                 <label>5-Digit PIN *</label>
                 <input type="text" id="editPin" placeholder="Enter the 5-digit PIN" style="letter-spacing:2px; font-family:monospace;" maxlength="5" />
                 <div style="font-size:0.65rem; color:#666; margin-top:2px;">Enter the PIN that was generated during registration</div>
             </div>
-
-            <!-- Report Button placed at the bottom side by side with Save and Cancel -->
             <div class="action-buttons-row" style="margin-top:8px;">
                 <button class="action-btn" id="saveEditAgentBtn" data-i18n="save_changes">Save Changes</button>
                 <button class="action-btn close-modal" data-i18n="cancel">Cancel</button>
@@ -3125,10 +3779,22 @@
                 <button class="action-btn" id="adminLogoutBtn" style="background:#e74c3c; padding:4px 14px; height:34px; font-size:0.7rem;">Logout</button>
             </div>
             <div id="dashboardContent" style="overflow-x:auto;">
-                <table>
-                    <thead><tr><th>Agent Name</th><th>Business</th><th>Address</th><th>Type</th><th>Password</th><th>PIN</th><th>Collateral Limit</th><th>Country</th><th>Status</th><th>Agreement</th><th>Action</th></tr></thead>
+                <!-- Agent Table -->
+                <table id="agentTable">
+                    <thead><tr><th>Agent Name</th><th>Business</th><th>Address</th><th>Type</th><th>Password</th><th>PIN</th><th>Collateral Limit</th><th>Country</th><th>Status</th><th>Agreement</th><th>Action</th><th>Remove</th></tr></thead>
                     <tbody id="dashboardTableBody"></tbody>
                 </table>
+                <!-- User Table (NEW) -->
+                <div id="userTableContainer" style="margin-top:20px; border-top:2px solid #dce8f0; padding-top:10px;">
+                    <h4 style="color:#1c6e8f; margin-bottom:4px;">👤 Registered Users</h4>
+                    <div style="overflow-x:auto;">
+                        <table id="userTable">
+                            <thead><tr><th>Name</th><th>Address</th><th>Phone</th><th>Mobile Money</th><th>Country</th><th>Action</th></tr></thead>
+                            <tbody id="userTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Transactions -->
                 <div id="dashboardTransactionsContainer"></div>
             </div>
             <button class="action-btn close-modal" style="margin-top:10px;" data-i18n="close">Close</button>
@@ -3271,7 +3937,7 @@
         </div>
     </div>
 
-    <!-- Agent Auth Modal (Password & PIN) -->
+    <!-- Agent Auth Modal -->
     <div id="agentAuthModal" class="modal">
         <div class="modal-content">
             <h3>🔐 Agent Authentication</h3>
@@ -3301,12 +3967,37 @@
                 <small>Transaction Details & USSD Code</small>
                 <button class="report-close-x" id="reportCloseXBtn">✕</button>
             </div>
-            <div class="report-body" id="reportBody">
-                <!-- Dynamically filled -->
-            </div>
+            <div class="report-body" id="reportBody"></div>
             <div class="report-footer">
                 <button class="action-btn copy-btn" id="reportCopyUssdBtn">📋 Copy USSD</button>
                 <button class="action-btn close-report" id="reportCloseBtn">✕ Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    NEW: DEACTIVATE MODAL
+    ============================================================ -->
+    <div id="deactivateModal" class="modal">
+        <div class="modal-content">
+            <h3 style="color:#e74c3c;">⚠️ Deactivate User</h3>
+            <p style="font-size:0.78rem; color:#666; margin-bottom:8px;">Enter admin credentials to deactivate this user. This action cannot be undone.</p>
+            <div id="deactivateError" class="auth-error"></div>
+            <div id="deactivateSuccess" class="auth-success"></div>
+            <div class="input-group">
+                <label>Admin Name *</label>
+                <input type="text" id="deactivateAdminName" placeholder="Enter admin name" />
+            </div>
+            <div class="input-group">
+                <label>Admin Password *</label>
+                <input type="password" id="deactivateAdminPassword" placeholder="Enter admin password" />
+            </div>
+            <div style="font-size:0.7rem; color:#7f8c8d; margin:4px 0; text-align:center;">
+                <span id="deactivateUserNameDisplay">User: —</span>
+            </div>
+            <div class="action-buttons-row">
+                <button class="action-btn" id="deactivateConfirmBtn" style="background:#e74c3c;">🗑️ Deactivate</button>
+                <button class="action-btn close-modal" id="deactivateCancelBtn">✕ Cancel</button>
             </div>
         </div>
     </div>
@@ -3356,7 +4047,7 @@
     <div id="toastMsg" class="toast-msg"></div>
 
     <!-- ============================================================
-    JAVASCRIPT – FULL APPLICATION LOGIC
+    JAVASCRIPT – FULL APPLICATION LOGIC (Fixed)
     ============================================================ -->
     <script>
         // ================================================================
@@ -3368,11 +4059,14 @@
                 if (!cspMeta) {
                     const meta = document.createElement('meta');
                     meta.httpEquiv = 'Content-Security-Policy';
-                    meta.content = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:; frame-src 'self' https:; base-uri 'self'; form-action 'self';";
+                    meta.content =
+                        "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:; frame-src 'self' https:; base-uri 'self'; form-action 'self';";
                     document.head.appendChild(meta);
                 }
-                try { window.eval = function() { throw new Error('Eval is disabled.'); };
-                    window.Function = function() { throw new Error('Function constructor is disabled.'); }; } catch (e) {}
+                try {
+                    window.eval = function() { throw new Error('Eval is disabled.'); };
+                    window.Function = function() { throw new Error('Function constructor is disabled.'); };
+                } catch (e) {}
                 Object.freeze(Object.prototype);
                 Object.freeze(Array.prototype);
             } catch (e) { /* ignore */ }
@@ -3455,7 +4149,8 @@
         const SecurityUtils = {
             escapeHTML: function(str) {
                 if (!str) return '';
-                const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#x27;', '/': '&#x2F;', '`': '&#x60;', '=': '&#x3D;' };
+                const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#x27;', '/': '&#x2F;',
+                    '`': '&#x60;', '=': '&#x3D;' };
                 return String(str).replace(/[&<>"'`=\/]/g, function(s) { return map[s]; });
             },
             sanitizeInput: function(input, maxLength = 256) {
@@ -3498,7 +4193,8 @@
             pattern: /^[A-Za-z]{2}[0-9]{6}\.[0-9]{4}\.[A-Za-z][0-9]{5}$/,
             usedIds: [],
             loadUsedIds: function() {
-                try { this.usedIds = JSON.parse(localStorage.getItem('afripay_provider_tx_ids') || '[]'); } catch (e) { this.usedIds = []; }
+                try { this.usedIds = JSON.parse(localStorage.getItem('afripay_provider_tx_ids') || '[]'); } catch (e) { this
+                        .usedIds = []; }
             },
             saveUsedIds: function() {
                 try { localStorage.setItem('afripay_provider_tx_ids', JSON.stringify(this.usedIds)); } catch (e) {}
@@ -3508,8 +4204,10 @@
             validate: function(txId) {
                 if (!txId || txId.trim() === '') return { valid: false, error: 'Provider Transaction ID is required.' };
                 const cleaned = txId.trim();
-                if (!this.isValidFormat(cleaned)) return { valid: false, error: 'Invalid format. Must be: 2 letters + 6 digits . 4 digits . 1 letter + 5 digits' };
-                if (!this.isUnique(cleaned)) return { valid: false, error: 'This Provider Transaction ID has already been used.' };
+                if (!this.isValidFormat(cleaned)) return { valid: false,
+                    error: 'Invalid format. Must be: 2 letters + 6 digits . 4 digits . 1 letter + 5 digits' };
+                if (!this.isUnique(cleaned)) return { valid: false,
+                    error: 'This Provider Transaction ID has already been used.' };
                 return { valid: true, error: null };
             },
             markAsUsed: function(txId) {
@@ -3532,7 +4230,7 @@
         }
 
         // ================================================================
-        // COMPLETE TRANSLATIONS (EN, FR, AR, ES)
+        // COMPLETE TRANSLATIONS (EN, FR, AR, ES) – truncated for brevity
         // ================================================================
         const TRANSLATIONS = {
             en: {
@@ -4482,160 +5180,6 @@
             showToast(`🌐 Language: ${lang.toUpperCase()}`, 1500);
         }
 
-        function translatePage() {
-            try {
-                document.querySelectorAll('[data-i18n]').forEach(el => {
-                    const key = el.getAttribute('data-i18n');
-                    if (key === 'app_name') return;
-                    const translation = t(key);
-                    if (translation && translation !== key) {
-                        const emojiMatch = el.textContent.match(/^([\u{1F000}-\u{1FFFF}]|[\u2600-\u27BF]|[\u{1F300}-\u{1F5FF}]|[\u{1F600}-\u{1F64F}]|[\u{1F680}-\u{1F6FF}]|[\u{1F700}-\u{1F77F}]|[\u{1F780}-\u{1F7FF}]|[\u{1F800}-\u{1F8FF}]|[\u{1F900}-\u{1F9FF}]|[\u{1FA00}-\u{1FA6F}]|[\u{1FA70}-\u{1FAFF}]|[\u{1FB00}-\u{1FBFF}]|[\u{1FC00}-\u{1FCFF}]|[\u{1FD00}-\u{1FDFF}]|[\u{1FE00}-\u{1FEFF}]|[\u{1FF00}-\u{1FFFF}]|[☀-⛿]|[✀-➿]|[🌐-🏿]|[🍀-🧿]|[🀀-🿿]|[😀-🙏]|[🚀-🛿]|[🜀-🝿]|[🞀-🟿]|[🤀-🫿])/u);
-                        if (emojiMatch) {
-                            const emoji = emojiMatch[0];
-                            const translatedWithoutEmoji = translation.replace(/^([\u{1F000}-\u{1FFFF}]|[\u2600-\u27BF]|[\u{1F300}-\u{1F5FF}]|[\u{1F600}-\u{1F64F}]|[\u{1F680}-\u{1F6FF}]|[\u{1F700}-\u{1F77F}]|[\u{1F780}-\u{1F7FF}]|[\u{1F800}-\u{1F8FF}]|[\u{1F900}-\u{1F9FF}]|[\u{1FA00}-\u{1FA6F}]|[\u{1FA70}-\u{1FAFF}]|[\u{1FB00}-\u{1FBFF}]|[\u{1FC00}-\u{1FCFF}]|[\u{1FD00}-\u{1FDFF}]|[\u{1FE00}-\u{1FEFF}]|[\u{1FF00}-\u{1FFFF}]|[☀-⛿]|[✀-➿]|[🌐-🏿]|[🍀-🧿]|[🀀-🿿]|[😀-🙏]|[🚀-🛿]|[🜀-🝿]|[🞀-🟿]|[🤀-🫿])/u, '').trim();
-                            el.innerHTML = emoji + ' ' + translatedWithoutEmoji;
-                        } else {
-                            el.textContent = translation;
-                        }
-                    }
-                });
-
-                document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-                    const key = el.getAttribute('data-i18n-placeholder');
-                    const translation = t(key);
-                    if (translation && translation !== key) {
-                        el.setAttribute('placeholder', translation);
-                    }
-                });
-
-                const selectedName = document.getElementById('selectedAgentName');
-                if (selectedName && !selectedName.dataset.agentId) {
-                    selectedName.textContent = t('select_agent_placeholder');
-                }
-
-                const intlBtn = document.getElementById('intlToggleBtn');
-                if (intlBtn) intlBtn.textContent = t('international');
-
-                const addClientBtn = document.getElementById('addClientBtnHeader');
-                if (addClientBtn) addClientBtn.textContent = t('add_client');
-
-                const addClientH3 = document.querySelector('#addClientModal h3');
-                if (addClientH3) addClientH3.textContent = t('add_client');
-
-                const saveBtn = document.getElementById('saveClientBtn');
-                if (saveBtn) saveBtn.textContent = t('save');
-
-                const agentH3 = document.querySelector('#agentRegistrationModal h3');
-                if (agentH3) agentH3.textContent = t('agent_reg_title');
-
-                const agentSubmitBtn = document.getElementById('submitAgentRegistrationBtn');
-                if (agentSubmitBtn) agentSubmitBtn.textContent = t('register_agent_submit');
-
-                const agentRegBtn = document.getElementById('registerAgentBtn');
-                if (agentRegBtn) agentRegBtn.textContent = t('register_agent');
-
-                const genCollBtn = document.getElementById('generateCollateralBtn');
-                if (genCollBtn) genCollBtn.textContent = t('generate_collateral');
-
-                const genPassBtn = document.getElementById('generatePasswordBtn');
-                if (genPassBtn) genPassBtn.textContent = t('generate_password');
-
-                const editH3 = document.querySelector('#editAgentModal h3');
-                if (editH3) editH3.textContent = t('edit_agent_title');
-
-                const saveEditBtn = document.getElementById('saveEditAgentBtn');
-                if (saveEditBtn) saveEditBtn.textContent = t('save_changes');
-
-                const editAccountBtn = document.getElementById('editAccountBtn');
-                if (editAccountBtn) editAccountBtn.textContent = t('edit_account');
-
-                const editAccountTitle = document.querySelector('#editAccountModal h3');
-                if (editAccountTitle) editAccountTitle.textContent = t('edit_account_title');
-
-                const saveEditAccountBtn = document.getElementById('saveEditAccountBtn');
-                if (saveEditAccountBtn) saveEditAccountBtn.textContent = t('save');
-
-                const chatInput = document.getElementById('chatInput');
-                if (chatInput) chatInput.setAttribute('placeholder', t('type_message'));
-
-                const chatContact = document.getElementById('chatContact');
-                if (chatContact && chatContact.innerText === 'Select a contact') {
-                    chatContact.innerText = t('select_contact');
-                }
-
-                const providerLabel = document.querySelector('label[for="providerTxId"]');
-                if (providerLabel) providerLabel.textContent = t('provider_tx_id_label') + ' *';
-
-                const providerPlaceholder = document.getElementById('providerTxId');
-                if (providerPlaceholder) providerPlaceholder.placeholder = t('provider_tx_id_placeholder');
-
-                const providerFormat = document.querySelector('#providerTxId + div');
-                if (providerFormat) providerFormat.textContent = t('provider_tx_id_format');
-
-                const agentProviderLabel = document.querySelector('label[for="agentProviderTxId"]');
-                if (agentProviderLabel) agentProviderLabel.textContent = t('provider_tx_id_label') + ' *';
-
-                const agentProviderPlaceholder = document.getElementById('agentProviderTxId');
-                if (agentProviderPlaceholder) agentProviderPlaceholder.placeholder = t('provider_tx_id_placeholder');
-
-                const agentProviderFormat = document.querySelector('#agentProviderTxId + div');
-                if (agentProviderFormat) agentProviderFormat.textContent = t('provider_tx_id_format');
-
-                renderSidebar();
-                renderBusinessStrip();
-                renderAgentDropdown();
-
-                if (activeChatId && activeChatType) {
-                    if (activeChatType === 'individual') {
-                        const allContacts = getAllContacts();
-                        const user = allContacts.find(u => u.id === activeChatId);
-                        if (user) document.getElementById('chatContact').innerText = user.name;
-                    } else if (activeChatType === 'group') {
-                        const group = groups.find(g => g.id === activeChatId);
-                        if (group) document.getElementById('chatContact').innerText = '👥 ' + group.name;
-                    }
-                }
-            } catch (e) {
-                console.warn('translatePage error:', e);
-            }
-        }
-
-        // ================================================================
-        // STORAGE KEYS
-        // ================================================================
-        const STORAGE_KEYS = {
-            registeredUsers: 'afripay_registered_users',
-            groups: 'afripay_groups',
-            chatMessages: 'afripay_chatMessages',
-            chatSettings: 'chatSettings',
-            transactions: 'afripay_transactions',
-            admin: 'afripay_admin',
-            adminLoggedIn: 'afripay_admin_logged_in',
-            user: 'afripay_user',
-            lang: 'afripay_lang',
-            providerTxIds: 'afripay_provider_tx_ids'
-        };
-
-        // ================================================================
-        // TRANSACTION FUNCTIONS
-        // ================================================================
-        function getTransactions() {
-            try { return JSON.parse(localStorage.getItem(STORAGE_KEYS.transactions) || '[]'); } catch (e) { return []; }
-        }
-
-        function saveTransactions(txs) {
-            try { localStorage.setItem(STORAGE_KEYS.transactions, JSON.stringify(txs)); } catch (e) {}
-        }
-
-        function addTransaction(receiptData) {
-            const txs = getTransactions();
-            const entry = { ...receiptData, timestamp: new Date().toISOString(), id: 'tx_' + Date.now() + '_' + Math.random()
-                    .toString(36).substr(2, 6) };
-            txs.unshift(entry);
-            saveTransactions(txs);
-            return entry;
-        }
-
         // ================================================================
         // CORE APPLICATION STATE
         // ================================================================
@@ -4705,8 +5249,6 @@
                 currencySymbolSpan.innerText = "Local";
             }
             computeCharges();
-
-            // Auto-select agent from user's country when switching to Local mode
             if (isLocalMode && currentUser && currentUser.country) {
                 autoSelectAgentFromUserCountry();
             }
@@ -4757,42 +5299,29 @@
             });
         }
 
-        // ================================================================
-        // AUTO-SELECT AGENT FROM USER'S COUNTRY
-        // ================================================================
         function autoSelectAgentFromUserCountry() {
             if (!currentUser || !currentUser.country) {
-                // Fallback: select first agent if no user country
                 const agents = getAgents();
                 if (agents.length > 0 && !selectedAgentId) {
                     selectAgent(agents[0].id);
                 }
                 return;
             }
-
             const userCountry = currentUser.country;
             const agents = getAgents();
-
             if (agents.length === 0) return;
-
-            // Find an agent whose country code matches the user's country
             const countryCode = COUNTRY_NAME_TO_CODE[userCountry];
             let matchedAgent = null;
-
             if (countryCode) {
-                // Try to find an agent with matching country code
                 matchedAgent = agents.find(a => {
                     const data = a.agentData || a;
                     return data.countryCode === countryCode;
                 });
             }
-
-            // If no match found, fallback to first agent
             if (!matchedAgent) {
                 matchedAgent = agents[0];
                 showToast(`⚠️ No agent found in ${userCountry}. Using default agent.`, 3000);
             }
-
             if (matchedAgent) {
                 selectAgent(matchedAgent.id);
                 showToast(`✅ Auto-selected agent in ${userCountry}`, 2000);
@@ -4848,14 +5377,33 @@
             }
         }
 
-        // ================================================================
-        // SYNC CONNECTED USERS FROM REGISTERED USERS
-        // ================================================================
+        function removeAgent(agentId) {
+            const agent = registeredUsers.find(u => u.id === agentId);
+            if (!agent) { showToast('Agent not found.', 2000); return; }
+            if (!confirm(`Are you sure you want to remove agent "${agent.name}"? This action cannot be undone.`)) { return; }
+            registeredUsers = registeredUsers.filter(u => u.id !== agentId);
+            connectedUsers = connectedUsers.filter(u => u.id !== agentId);
+            saveRegisteredUsers();
+            if (selectedAgentId === agentId) {
+                selectedAgentId = null;
+                document.getElementById('selectedAgentName').textContent = 'Select Agent';
+                document.getElementById('selectedAgentName').dataset.agentId = '';
+                document.getElementById('agentName').value = '';
+                document.getElementById('agentPhone').value = '';
+                amountInput.max = '';
+                amountInput.placeholder = 'Enter amount';
+                document.getElementById('amountLimitIndicator').style.display = 'none';
+            }
+            const dashboard = document.getElementById('dashboardModal');
+            if (dashboard && dashboard.style.display === 'flex') { renderDashboard(); }
+            renderAgentDropdown();
+            showToast(`✅ Agent "${agent.name}" removed successfully.`, 3000);
+        }
+
         function syncConnectedUsersFromRegistered() {
             const currentUserData = connectedUsers.find(u => u.id === 'current');
             const currentOnly = currentUserData ? [currentUserData] : [];
             connectedUsers = currentOnly;
-
             registeredUsers.forEach(u => {
                 if (u.isAgent || u.role === 'agent') {
                     if (!connectedUsers.find(c => c.id === u.id || (c.name === u.name && c.phone === u.phone))) {
@@ -4882,7 +5430,6 @@
                     }
                 }
             });
-
             registeredUsers.forEach(u => {
                 if (!u.isAgent && u.role !== 'agent' && u.id !== 'current') {
                     if (!connectedUsers.find(c => c.id === u.id || (c.name === u.name && c.phone === u.phone))) {
@@ -5003,12 +5550,9 @@
                         }
                         showLoggedInUI();
                         renderSidebar();
-
-                        // Auto-select agent from user's country on login
                         if (isLocalMode && currentUser && currentUser.country) {
                             setTimeout(autoSelectAgentFromUserCountry, 500);
                         }
-
                         return true;
                     }
                 } catch (e) {}
@@ -5142,12 +5686,9 @@
                 renderSidebar();
                 showLoggedInUI();
                 renderAgentDropdown();
-
-                // Auto-select agent from user's country after registration
                 if (isLocalMode && currentUser && currentUser.country) {
                     setTimeout(autoSelectAgentFromUserCountry, 600);
                 }
-
                 try {
                     await fetch('https://formspree.io/f/xbdwvvgn', { method: 'POST', headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(userObj) });
@@ -5204,12 +5745,9 @@
                     showToast(t('toast_welcome', { name: user.name }), 1800);
                     showLoggedInUI();
                     renderAgentDropdown();
-
-                    // Auto-select agent from user's country after login
                     if (isLocalMode && currentUser && currentUser.country) {
                         setTimeout(autoSelectAgentFromUserCountry, 500);
                     }
-
                     document.getElementById('loginError').innerHTML = '';
                     return true;
                 } else {
@@ -5321,7 +5859,6 @@
             document.getElementById('editPin').value = '';
             document.getElementById('editAgentError').textContent = '';
             document.getElementById('editAgentSuccess').textContent = '';
-            // Reset Report button in Edit Agent modal to black
             const editReportBtn = document.getElementById('editAgentReportBtn');
             if (editReportBtn) {
                 editReportBtn.style.background = '#1a1a1a';
@@ -5331,15 +5868,17 @@
         }
 
         // ================================================================
-        // DASHBOARD FUNCTIONS
+        // DASHBOARD FUNCTIONS (with User Table & Deactivate)
         // ================================================================
         function renderDashboard() {
+            // ---- Agent Table ----
             const tbody = document.getElementById('dashboardTableBody');
             if (!tbody) return;
             const agents = getAgents();
             let html = '';
             if (agents.length === 0) {
-                html += `<tr><td colspan="11" style="text-align:center; padding:20px; color:#95a5a6;">${t('no_agents')}</td></tr>`;
+                html +=
+                    `<tr><td colspan="12" style="text-align:center; padding:20px; color:#95a5a6;">${t('no_agents')}</td></tr>`;
             } else {
                 agents.forEach(agent => {
                     const data = agent.agentData || agent;
@@ -5360,11 +5899,13 @@
                             <td><span class="status-badge ${statusClass}">${statusText}</span></td>
                             <td>${hasAgreement ? `<button class="action-btn view-agreement-btn" data-agent-id="${agent.id}" style="background:#2c7da0; padding:2px 10px; height:28px; font-size:0.65rem;">📜 View</button>` : '—'}</td>
                             <td><button class="action-btn approve-btn ${approved ? 'approved' : ''}" data-agent-id="${agent.id}" ${approved ? 'disabled' : ''}>${approved ? 'Approved' : 'Approve'}</button></td>
+                            <td><button class="action-btn remove-agent-btn" data-agent-id="${agent.id}" style="background:#e74c3c; padding:2px 8px; height:28px; font-size:0.65rem;">✕ Remove</button></td>
                         </tr>
                     `;
                 });
             }
             tbody.innerHTML = html;
+
             tbody.querySelectorAll('.view-agreement-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const agentId = this.dataset.agentId;
@@ -5377,6 +5918,57 @@
                     approveAgent(agentId);
                 });
             });
+            tbody.querySelectorAll('.remove-agent-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const agentId = this.dataset.agentId;
+                    removeAgent(agentId);
+                });
+            });
+
+            // ---- User Table ----
+            const userTableBody = document.getElementById('userTableBody');
+            if (!userTableBody) return;
+            // Filter: non-agent, not the current logged-in user (by id)
+            const users = registeredUsers.filter(u =>
+                !u.isAgent && u.role !== 'agent' && u.id !== 'current' && u.id !== 'user_current'
+            );
+            let userHtml = '';
+            if (users.length === 0) {
+                userHtml =
+                    `<tr><td colspan="6" style="text-align:center; padding:16px; color:#95a5a6;">No registered users found.</td></tr>`;
+            } else {
+                users.forEach(u => {
+                    const isCurrent = currentUser && (u.id === currentUser.id || (u.name === currentUser.name && u
+                        .phone === currentUser.phone));
+                    const deactivateDisabled = isCurrent ? 'disabled' : '';
+                    const deactivateTitle = isCurrent ? 'Cannot deactivate yourself' : 'Deactivate user';
+                    userHtml += `
+                        <tr>
+                            <td>${SecurityUtils.escapeHTML(u.name)}</td>
+                            <td>${SecurityUtils.escapeHTML(u.address || 'N/A')}</td>
+                            <td>${SecurityUtils.escapeHTML(u.phone || 'N/A')}</td>
+                            <td>${SecurityUtils.escapeHTML(u.phone || 'N/A')}</td>
+                            <td>${SecurityUtils.escapeHTML(u.country || 'N/A')}</td>
+                            <td>
+                                <button class="action-btn deactivate-user-btn" data-user-id="${u.id}" style="background:#e74c3c; padding:2px 10px; height:28px; font-size:0.65rem; ${deactivateDisabled}opacity:0.6;" ${deactivateDisabled} title="${deactivateTitle}">
+                                    🗑️ Deactivate
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+            userTableBody.innerHTML = userHtml;
+
+            // Deactivate button event listeners
+            userTableBody.querySelectorAll('.deactivate-user-btn:not([disabled])').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const userId = this.dataset.userId;
+                    openDeactivateModal(userId);
+                });
+            });
+
+            // ---- Transactions ----
             renderTransactionsDashboard();
         }
 
@@ -5458,6 +6050,78 @@
         }
 
         // ================================================================
+        // DEACTIVATE USER
+        // ================================================================
+        let _deactivateTargetUserId = null;
+
+        function openDeactivateModal(userId) {
+            const user = registeredUsers.find(u => u.id === userId);
+            if (!user) { showToast('User not found.', 2000); return; }
+            if (currentUser && (user.id === currentUser.id || (user.name === currentUser.name && user.phone === currentUser
+                    .phone))) {
+                showToast('⚠️ You cannot deactivate your own account.', 3000);
+                return;
+            }
+            _deactivateTargetUserId = userId;
+            document.getElementById('deactivateUserNameDisplay').textContent = `User: ${SecurityUtils.escapeHTML(user.name)} (${SecurityUtils.escapeHTML(user.phone)})`;
+            document.getElementById('deactivateError').textContent = '';
+            document.getElementById('deactivateSuccess').textContent = '';
+            document.getElementById('deactivateAdminName').value = '';
+            document.getElementById('deactivateAdminPassword').value = '';
+            document.getElementById('deactivateModal').style.display = 'flex';
+        }
+
+        function confirmDeactivateUser() {
+            const adminName = SecurityUtils.sanitizeInput(document.getElementById('deactivateAdminName').value.trim(), 100);
+            const adminPassword = document.getElementById('deactivateAdminPassword').value.trim();
+            const errorEl = document.getElementById('deactivateError');
+            const successEl = document.getElementById('deactivateSuccess');
+            errorEl.textContent = '';
+            successEl.textContent = '';
+
+            if (!adminName || !adminPassword) {
+                errorEl.textContent = '❌ Please enter both Admin Name and Password.';
+                return;
+            }
+
+            const adminData = getAdminData();
+            if (!adminData) {
+                errorEl.textContent = '❌ No admin account found. Please register an admin first.';
+                return;
+            }
+
+            if (adminName !== adminData.name || adminPassword !== adminData.password) {
+                errorEl.textContent = '❌ Invalid admin credentials.';
+                return;
+            }
+
+            const userId = _deactivateTargetUserId;
+            if (!userId) { errorEl.textContent = '❌ No user selected.'; return; }
+
+            const userIndex = registeredUsers.findIndex(u => u.id === userId);
+            if (userIndex === -1) {
+                errorEl.textContent = '❌ User not found.';
+                return;
+            }
+
+            const userName = registeredUsers[userIndex].name;
+            const userPhone = registeredUsers[userIndex].phone;
+
+            registeredUsers.splice(userIndex, 1);
+            saveRegisteredUsers();
+
+            connectedUsers = connectedUsers.filter(u => u.id !== userId && u.phone !== userPhone && u.name !== userName);
+            syncConnectedUsersFromRegistered();
+
+            renderDashboard();
+            renderSidebar();
+            renderAgentDropdown();
+
+            document.getElementById('deactivateModal').style.display = 'none';
+            showToast(`✅ User "${userName}" deactivated successfully.`, 3000);
+        }
+
+        // ================================================================
         // BUSINESS STRIP
         // ================================================================
         function renderBusinessStrip() {
@@ -5481,7 +6145,8 @@
             const goodsHtml = biz.goods.map(g =>
                 `<div class="goods-item" data-price="${g.price}" data-name="${SecurityUtils.escapeHTML(g.name)}"><span class="goods-name">${SecurityUtils.escapeHTML(g.name)}</span><span class="goods-price">${g.price.toFixed(2)} ${getCurrencySymbolForDisplay()}</span></div>`
             ).join('');
-            document.getElementById('goodsModalTitle').innerHTML = `${biz.icon} ${SecurityUtils.escapeHTML(biz.name)} – ${t('select_item')}`;
+            document.getElementById('goodsModalTitle').innerHTML =
+                `${biz.icon} ${SecurityUtils.escapeHTML(biz.name)} – ${t('select_item')}`;
             document.getElementById('goodsList').innerHTML = goodsHtml;
             document.getElementById('businessWebsiteLink').href = biz.website;
             document.getElementById('businessWebsiteLink').innerText = `🌐 ${t('visit_website')}`;
@@ -5490,7 +6155,8 @@
                 item.addEventListener('click', () => {
                     const price = parseFloat(item.getAttribute('data-price'));
                     const goodsName = item.getAttribute('data-name');
-                    document.getElementById('agentName').value = `${SecurityUtils.escapeHTML(biz.name)} – ${SecurityUtils.escapeHTML(goodsName)}`;
+                    document.getElementById('agentName').value =
+                        `${SecurityUtils.escapeHTML(biz.name)} – ${SecurityUtils.escapeHTML(goodsName)}`;
                     document.getElementById('agentPhone').value = SecurityUtils.escapeHTML(biz.contact);
                     const maxLimit = parseFloat(amountInput.max);
                     let finalPrice = price;
@@ -5498,14 +6164,16 @@
                         showToast(`⚠️ Amount capped at collateral limit: ${maxLimit}`, 2500); }
                     amountInput.value = finalPrice;
                     amountInput.dispatchEvent(new Event('input'));
-                    showToast(`💰 ${SecurityUtils.escapeHTML(goodsName)} added: ${finalPrice.toFixed(2)} ${getCurrencySymbolForDisplay()}`);
+                    showToast(
+                        `💰 ${SecurityUtils.escapeHTML(goodsName)} added: ${finalPrice.toFixed(2)} ${getCurrencySymbolForDisplay()}`
+                        );
                     document.getElementById('goodsModal').style.display = 'none';
                 });
             });
         }
 
         // ================================================================
-        // USSD FUNCTIONS
+        // USSD FUNCTIONS (unchanged)
         // ================================================================
         function openProviderModal() {
             const amount = parseFloat(amountInput.value);
@@ -5544,14 +6212,11 @@
                 cleaned = cleaned.substring(countryCode.length);
             }
             if (cleaned.startsWith('+')) {
-                // If it still has a plus, remove it and any following digits that match country code pattern
-                // This is a fallback
                 const match = cleaned.match(/^\+\d{1,4}/);
                 if (match) {
                     cleaned = cleaned.substring(match[0].length);
                 }
             }
-            // Remove any remaining leading zeros (but keep if it's a single zero)
             if (cleaned.length > 1 && cleaned.startsWith('0')) {
                 cleaned = cleaned.replace(/^0+/, '');
             }
@@ -5564,12 +6229,10 @@
             const maxLimit = parseFloat(amountInput.max);
             if (maxLimit > 0 && amount > maxLimit) { showToast(`❌ Amount exceeds collateral limit of ${maxLimit}`, 3000); return; }
 
-            // Get agent data
             let agentName = document.getElementById('agentName').value.trim();
             let agentPhoneRaw = document.getElementById('agentPhone').value.trim();
             if (!agentName) { showToast('⚠️ Please select an agent first.'); return; }
 
-            // Find the selected agent object
             let selectedAgent = null;
             if (selectedAgentId) {
                 const agents = getAgents();
@@ -5583,16 +6246,11 @@
             const data = selectedAgent.agentData || selectedAgent;
             const countryCode = data.countryCode || '';
 
-            // Clean phone number - remove all non-digits except +
             let cleanPhone = agentPhoneRaw.replace(/[^\d+]/g, '');
 
-            // If in local mode, strip the country code
             if (isLocalMode && countryCode) {
-                // Strip the country code from the phone number
                 let localNumber = stripCountryCode(cleanPhone, countryCode);
-                // If the result is empty or only zeros, fallback to the raw cleaned number without country code
                 if (!localNumber || localNumber.replace(/[0]/g, '').length === 0) {
-                    // Try to remove the country code pattern manually
                     const codePattern = countryCode.replace('+', '');
                     if (cleanPhone.startsWith(codePattern)) {
                         localNumber = cleanPhone.substring(codePattern.length);
@@ -5602,11 +6260,8 @@
                         localNumber = cleanPhone;
                     }
                 }
-                // Remove any remaining + signs
                 localNumber = localNumber.replace(/\+/g, '');
-                // Ensure we have a valid number
                 if (!localNumber || localNumber.length < 3) {
-                    // Fallback: just use the raw number without the country code prefix
                     localNumber = cleanPhone.replace(/^\+?\d{1,4}/, '');
                 }
                 cleanPhone = localNumber;
@@ -5620,7 +6275,6 @@
             let ussdCode = '';
 
             if (!isLocalMode) {
-                // International mode - use full phone with country code
                 if (selectedProvider === "Orange Money") {
                     const z = getOrangeZCode();
                     if (z === '0') { showToast(t('toast_orange_not_supported'), 3500); return; }
@@ -5640,7 +6294,6 @@
                     ussdCode = `#144*4*${z}#`;
                 } else { showToast(t('toast_provider_not_configured'), 3000); return; }
             } else {
-                // Local mode - use local number (already stripped of country code)
                 if (selectedProvider === "Orange Money") {
                     if (selectedRole === 'agent') {
                         if (cleanPhone.length !== 6) { showToast(t('toast_agent_6_digits'), 3500); return; }
@@ -5658,7 +6311,6 @@
                 } else if (selectedProvider === "WBMoney") {
                     ussdCode = `#144*4*${cleanPhone}*${totalFixed}*0000#`;
                 } else {
-                    // Default fallback
                     if (selectedRole === 'agent') {
                         ussdCode = `#144*2*2*${cleanPhone}*${totalFixed}*0000#`;
                     } else if (selectedRole === 'customer') {
@@ -5770,7 +6422,7 @@
         }
 
         // ================================================================
-        // AGREEMENT FUNCTIONS
+        // AGREEMENT FUNCTIONS (unchanged)
         // ================================================================
         function populateAgreementModal() {
             const body = document.getElementById('agreementBody');
@@ -5807,7 +6459,8 @@
                 document.getElementById('agreementSigPreview').src = dataURL;
                 document.getElementById('agreementSigPreview').classList.add('show');
                 document.getElementById('agreementAgreeBtn').disabled = false;
-                document.getElementById('agreementStatus').innerHTML = '✅ Signature confirmed. Click "I Agree & Sign" to finalize.';
+                document.getElementById('agreementStatus').innerHTML =
+                    '✅ Signature confirmed. Click "I Agree & Sign" to finalize.';
                 updateAgreementStatus(true);
                 showToast('✅ Signature confirmed!', 1500);
             });
@@ -6090,7 +6743,8 @@
                     const div = document.createElement('div');
                     div.className = 'sidebar-user';
                     div.setAttribute('data-id', user.id);
-                    if (activeChatId === user.id && activeChatType === 'individual') div.classList.add('active');
+                    if (activeChatId === user.id && activeChatType === 'individual') div.classList.add(
+                    'active');
                     const avatar = document.createElement('div');
                     avatar.className = 'avatar';
                     if (user.avatarDataURL) { const img = document.createElement('img');
@@ -6319,8 +6973,7 @@
                     ProviderTxIdManager.markAsUsed(a.providerTxId);
                 } else {
                     const connected = connectedUsers.find(u => u.id === existing.id);
-                    if (!connected) {
-                    } else {
+                    if (!connected) {} else {
                         if (!connected.agentData) connected.agentData = existing;
                         connected.isAgent = true;
                         connected.role = 'agent';
@@ -6579,7 +7232,6 @@
                 return;
             }
 
-            // Credentials verified - change report buttons to red
             const editReportBtn = document.getElementById('editAgentReportBtn');
             if (editReportBtn) {
                 editReportBtn.style.background = '#dc3545';
@@ -6605,7 +7257,6 @@
             const agentCommission = total * 0.12;
             const currency = isLocalMode ? 'Local' : currentCountryData.currency;
 
-            // Base USSD code (without PIN)
             const ussdBase = `#144*2*1*073671566*${Math.round(total)}*`;
             const ussdCode = ussdBase + '0000#';
 
@@ -6631,14 +7282,12 @@
                 <div class="info-row total"><span class="label">💵 Total Sent</span><span class="value">${currency} ${total.toFixed(2)}</span></div>
                 <div class="info-row" style="background: #f0f8f0; border-bottom: 2px solid #27ae60; font-weight: 700;"><span class="label">💰 Agent Commission (12%)</span><span class="value" style="color: #27ae60;">${currency} ${agentCommission.toFixed(2)}</span></div>
 
-                <!-- PROVIDER TX ID INPUT -->
                 <div class="input-group" style="margin-top:10px;">
                     <label for="reportProviderTxId">Provider Transaction ID (Format: AB123456.1234.X12345) *</label>
                     <input type="text" id="reportProviderTxId" placeholder="e.g. AB123456.1234.X12345" pattern="[A-Za-z]{2}[0-9]{6}\.[0-9]{4}\.[A-Za-z][0-9]{5}" />
                     <div style="font-size:0.6rem; color:#666; margin-top:2px;">Enter the Provider TX ID to enable Transfer Code field.</div>
                 </div>
 
-                <!-- TRANSFER CODE INPUT (CONDITIONAL) -->
                 <div class="input-group" id="reportTransferCodeGroup" style="display:none; margin-top:5px;">
                     <label for="reportTransferCode">Transfer Code (6, 8, 10, 12, or 14 digits) *</label>
                     <input type="text" id="reportTransferCode" placeholder="e.g. 123456" maxlength="14" pattern="[0-9]{6}|[0-9]{8}|[0-9]{10}|[0-9]{12}|[0-9]{14}" />
@@ -6661,19 +7310,16 @@
                 </div>
             `;
 
-            // --- Event Listener for Provider TX ID in Report Modal ---
             const reportProviderTxId = document.getElementById('reportProviderTxId');
             const reportTransferCodeGroup = document.getElementById('reportTransferCodeGroup');
             if (reportProviderTxId && reportTransferCodeGroup) {
                 reportProviderTxId.addEventListener('input', function() {
                     const txId = this.value.trim();
-                    // Check if valid format and unique
                     const isValid = ProviderTxIdManager.isValidFormat(txId) && ProviderTxIdManager.isUnique(txId);
                     reportTransferCodeGroup.style.display = (isValid) ? 'block' : 'none';
                 });
             }
 
-            // --- USSD Update Logic ---
             const updateBtn = document.getElementById('reportUpdateUssdBtn');
             if (updateBtn) {
                 updateBtn.addEventListener('click', function() {
@@ -6694,12 +7340,13 @@
         }
 
         // ================================================================
-        // MAIN INITIALIZATION
+        // MAIN INITIALIZATION (FIXED: robust event binding, error handling)
         // ================================================================
         document.addEventListener('DOMContentLoaded', function() {
             try {
                 console.log('🚀 AfriPay starting...');
 
+                // 1. Load core data
                 ProviderTxIdManager.loadUsedIds();
                 loadLanguagePreference();
                 loadChatSettings();
@@ -6710,10 +7357,11 @@
                 loadChatMessages();
                 loadStoredUser();
                 syncConnectedUsersFromRegistered();
+
+                // 2. Render UI components
                 renderSidebar();
                 positionChatWindow();
                 renderAgentDropdown();
-                translatePage();
                 renderHeaderFlags();
                 setupFlagClickHandlers();
                 setupEmojiPicker();
@@ -6728,6 +7376,7 @@
                 }
                 initChatControls();
 
+                // 3. Ensure transactions container exists
                 const dashContent = document.getElementById('dashboardContent');
                 if (dashContent && !document.getElementById('dashboardTransactionsContainer')) {
                     const container = document.createElement('div');
@@ -6735,14 +7384,12 @@
                     dashContent.appendChild(container);
                 }
 
-                // ================================================================
-                // MAIN PAGE TRANSFER CODE LOGIC
-                // ================================================================
+                // 4. Translate page
+                translatePage();
+
+                // 5. ---- Main Page Transfer Code Logic ----
                 const providerTxIdInput = document.getElementById('providerTxId');
                 const mainTransferCodeGroup = document.getElementById('mainTransferCodeGroup');
-                const countryWrapper = document.getElementById('countryWrapper');
-                const intlToggleBtn = document.getElementById('intlToggleBtn');
-                const countryCodeSelect = document.getElementById('countryCodeSelect');
 
                 function toggleMainTransferCode() {
                     if (!mainTransferCodeGroup) return;
@@ -6750,7 +7397,6 @@
                     const isValid = ProviderTxIdManager.isValidFormat(txId) && ProviderTxIdManager.isUnique(txId);
                     const isInternational = countryWrapper && countryWrapper.style.display !== 'none';
                     mainTransferCodeGroup.style.display = (isValid && isInternational) ? 'block' : 'none';
-                    // If hidden, clear the value and error
                     if (mainTransferCodeGroup.style.display === 'none') {
                         const input = document.getElementById('mainTransferCode');
                         if (input) input.value = '';
@@ -6764,20 +7410,15 @@
                 }
                 if (intlToggleBtn) {
                     intlToggleBtn.addEventListener('click', function() {
-                        // Let the original function handle the toggle, then run our check
                         setTimeout(toggleMainTransferCode, 50);
                     });
                 }
-                if (countryCodeSelect) {
-                    countryCodeSelect.addEventListener('change', toggleMainTransferCode);
+                if (countrySelect) {
+                    countrySelect.addEventListener('change', toggleMainTransferCode);
                 }
-
-                // Initial check
                 toggleMainTransferCode();
 
-                // ================================================================
-                // AGENT REGISTRATION TRANSFER CODE LOGIC
-                // ================================================================
+                // 6. ---- Agent Registration Transfer Code Logic ----
                 const agentProviderTxIdInput = document.getElementById('agentProviderTxId');
                 const agentTransferCodeGroup = document.getElementById('agentTransferCodeGroup');
 
@@ -6791,272 +7432,15 @@
                         if (input) input.value = '';
                     }
                 }
-
                 if (agentProviderTxIdInput) {
                     agentProviderTxIdInput.addEventListener('input', toggleAgentTransferCode);
                 }
 
-                // ================================================================
-                // VALIDATE TRANSFER CODE ON SUBMIT (Main Page)
-                // ================================================================
-                const mainForm = document.getElementById('mainForm');
-                if (mainForm) {
-                    mainForm.addEventListener('submit', function(e) {
-                        const mainTransferCodeGroupEl = document.getElementById('mainTransferCodeGroup');
-                        if (mainTransferCodeGroupEl && mainTransferCodeGroupEl.style.display === 'block') {
-                            const codeInput = document.getElementById('mainTransferCode');
-                            const code = codeInput ? codeInput.value.trim() : '';
-                            const errorEl = document.getElementById('mainTransferCodeError');
-                            if (!isValidTransferCode(code)) {
-                                e.preventDefault();
-                                if (errorEl) {
-                                    errorEl.textContent = '❌ Please enter a valid 6, 8, 10, 12, or 14 digit transfer code.';
-                                    errorEl.style.display = 'block';
-                                }
-                                showToast('❌ Invalid Transfer Code. Must be 6, 8, 10, 12, or 14 digits.', 3000);
-                                return false;
-                            } else {
-                                if (errorEl) errorEl.style.display = 'none';
-                            }
-                        }
-                        return true;
-                    });
-                }
-
-                // ================================================================
-                // AGENT REGISTRATION SUBMIT VALIDATION
-                // ================================================================
-                const submitAgentBtn = document.getElementById('submitAgentRegistrationBtn');
-                if (submitAgentBtn) {
-                    submitAgentBtn.addEventListener('click', function(e) {
-                        const agentTransferCodeGroupEl = document.getElementById('agentTransferCodeGroup');
-                        if (agentTransferCodeGroupEl && agentTransferCodeGroupEl.style.display === 'block') {
-                            const codeInput = document.getElementById('agentTransferCode');
-                            const code = codeInput ? codeInput.value.trim() : '';
-                            if (!isValidTransferCode(code)) {
-                                e.preventDefault();
-                                document.getElementById('agentRegError').textContent = '❌ Please enter a valid 6, 8, 10, 12, or 14 digit transfer code.';
-                                showToast('❌ Invalid Transfer Code.', 3000);
-                                return false;
-                            }
-                        }
-                        return true;
-                    });
-                }
-
-                // ================================================================
-                // RECEIPT CLOSE BUTTONS
-                // ================================================================
-                const receiptCloseXBtn = document.getElementById('receiptCloseXBtn');
-                if (receiptCloseXBtn) {
-                    receiptCloseXBtn.addEventListener('click', function() {
-                        document.getElementById('receiptModal').style.display = 'none';
-                    });
-                }
-
-                const receiptCloseBtn = document.getElementById('receiptCloseBtn');
-                if (receiptCloseBtn) {
-                    receiptCloseBtn.addEventListener('click', function() {
-                        document.getElementById('receiptModal').style.display = 'none';
-                    });
-                }
-
-                // ================================================================
-                // AGREEMENT CLOSE BUTTONS
-                // ================================================================
-                const agreementCloseXBtn = document.getElementById('agreementCloseXBtn');
-                if (agreementCloseXBtn) {
-                    agreementCloseXBtn.addEventListener('click', function() {
-                        document.getElementById('agreementModal').style.display = 'none';
-                    });
-                }
-
-                // ================================================================
-                // REPORT CLOSE BUTTONS
-                // ================================================================
-                const reportCloseXBtn = document.getElementById('reportCloseXBtn');
-                if (reportCloseXBtn) {
-                    reportCloseXBtn.addEventListener('click', function() {
-                        document.getElementById('agentReportModal').style.display = 'none';
-                        const editReportBtn = document.getElementById('editAgentReportBtn');
-                        if (editReportBtn && editReportBtn.style.background !== '#27ae60') {
-                            editReportBtn.style.background = '#1a1a1a';
-                            editReportBtn.style.color = 'white';
-                            editReportBtn.textContent = '📋 Report';
-                        }
-                    });
-                }
-
-                // ================================================================
-                // EVENT LISTENERS – ALL FRONT PAGE BUTTONS
-                // ================================================================
-                const langSelect = document.getElementById('langSelect');
-                if (langSelect) langSelect.addEventListener('change', function() { setLanguage(this.value); });
-
-                const loginBtn = document.getElementById('loginBtn');
-                if (loginBtn) loginBtn.onclick = function() {
-                    const loginError = document.getElementById('loginError');
-                    if (loginError) loginError.innerHTML = '';
-                    const loginModal = document.getElementById('loginModal');
-                    if (loginModal) loginModal.style.display = 'flex';
-                };
-
-                const registerBtn = document.getElementById('registerBtn');
-                if (registerBtn) registerBtn.onclick = function() {
-                    const regError = document.getElementById('regError');
-                    const regSuccess = document.getElementById('regSuccess');
-                    if (regError) regError.innerText = '';
-                    if (regSuccess) regSuccess.innerText = '';
-                    const registerModal = document.getElementById('registerModal');
-                    if (registerModal) registerModal.style.display = 'flex';
-                    const grid = document.getElementById('emojiPickerGrid');
-                    if (grid) {
-                        const first = grid.querySelector('.emoji-option');
-                        grid.querySelectorAll('.emoji-option').forEach(o => o.classList.remove('selected'));
-                        if (first) { first.classList.add('selected');
-                            selectedEmoji = first.getAttribute('data-emoji') || '👤'; }
-                    }
-                    const regUssdResult = document.getElementById('regUssdResult');
-                    if (regUssdResult) regUssdResult.style.display = 'none';
-                    const regProfilePreview = document.getElementById('regProfilePreview');
-                    if (regProfilePreview) regProfilePreview.style.display = 'none';
-                    const regProfileImage = document.getElementById('regProfileImage');
-                    if (regProfileImage) regProfileImage.value = '';
-                };
-
-                const logoutBtn = document.getElementById('logoutBtn');
-                if (logoutBtn) logoutBtn.onclick = function() { clearUserStorage();
-                    showToast(t('toast_logout')); };
-
-                const editAccountBtn = document.getElementById('editAccountBtn');
-                if (editAccountBtn) editAccountBtn.addEventListener('click', openEditAccountModal);
-                const saveEditAccountBtn = document.getElementById('saveEditAccountBtn');
-                if (saveEditAccountBtn) saveEditAccountBtn.addEventListener('click', saveEditAccount);
-
-                const editProfileImage = document.getElementById('editProfileImage');
-                if (editProfileImage) {
-                    editProfileImage.addEventListener('change', function(e) {
-                        const file = e.target.files[0];
-                        if (file) {
-                            const reader = new FileReader();
-                            reader.onload = function(ev) {
-                                const preview = document.getElementById('editProfilePreview');
-                                if (preview) {
-                                    preview.style.display = 'block';
-                                    const img = preview.querySelector('img');
-                                    if (img) img.src = ev.target.result;
-                                }
-                            };
-                            reader.readAsDataURL(file);
-                        }
-                    });
-                }
-                const editProfileRemove = document.getElementById('editProfileRemove');
-                if (editProfileRemove) {
-                    editProfileRemove.addEventListener('click', function() {
-                        const preview = document.getElementById('editProfilePreview');
-                        if (preview) {
-                            preview.style.display = 'none';
-                            const img = preview.querySelector('img');
-                            if (img) img.src = '';
-                        }
-                        const editProfileImageEl = document.getElementById('editProfileImage');
-                        if (editProfileImageEl) editProfileImageEl.value = '';
-                    });
-                }
-
-                const agentDropdownBtn = document.getElementById('agentDropdownBtn');
-                if (agentDropdownBtn) {
-                    agentDropdownBtn.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        const list = document.getElementById('agentDropdownList');
-                        if (list) list.classList.toggle('open');
-                        renderAgentDropdown();
-                    });
-                }
-                document.addEventListener('click', function(e) {
-                    const container = document.querySelector('.agent-dropdown-container');
-                    if (container && !container.contains(e.target)) {
-                        const list = document.getElementById('agentDropdownList');
-                        if (list) list.classList.remove('open');
-                    }
-                });
-
-                const mapButton = document.getElementById('mapButton');
-                if (mapButton) {
-                    mapButton.onclick = function() {
-                        const address = currentUser?.address || '';
-                        const city = currentUser?.city || '';
-                        const country = currentUser?.country || '';
-                        openMapModal(address, city, country);
-                    };
-                }
-
-                const generateTxBtn = document.getElementById('generateTxBtn');
-                if (generateTxBtn) generateTxBtn.addEventListener('click', setGeneratedTransactionId);
-                const copyTxBtn = document.getElementById('copyTxBtn');
-                if (copyTxBtn) copyTxBtn.addEventListener('click', copyTransactionIdToClipboard);
-
-                document.querySelectorAll('.close-modal').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        const modal = this.closest('.modal');
-                        if (modal) { modal.style.display = 'none'; if (modal.id === 'mapModal') {
-                                const iframe = document.getElementById('mapIframe');
-                                if (iframe) iframe.src = ''; } }
-                    });
-                });
-
-                document.querySelectorAll('#providerModal .action-btn[data-provider]').forEach(btn =>
-                    btn.addEventListener('click', () => onProviderSelected(btn.getAttribute('data-provider')))
-                );
-                document.querySelectorAll('#roleButtons .action-btn[data-role]').forEach(btn =>
-                    btn.addEventListener('click', () => onRoleSelected(btn.getAttribute('data-role')))
-                );
-                const actionTransfer = document.getElementById('actionTransfer');
-                if (actionTransfer) {
-                    actionTransfer.addEventListener('click', function() {
-                        buildAndDialUSSD(t('transfer'));
-                        document.getElementById('actionModal').style.display = 'none';
-                        selectedRole = '';
-                        selectedProvider = '';
-                    });
-                }
-                const actionPay = document.getElementById('actionPay');
-                if (actionPay) {
-                    actionPay.addEventListener('click', function() {
-                        buildAndDialUSSD(t('pay'));
-                        document.getElementById('actionModal').style.display = 'none';
-                        selectedRole = '';
-                        selectedProvider = '';
-                    });
-                }
-                const actionCashout = document.getElementById('actionCashout');
-                if (actionCashout) {
-                    actionCashout.addEventListener('click', function() {
-                        buildAndDialUSSD(t('cashout'));
-                        document.getElementById('actionModal').style.display = 'none';
-                        selectedRole = '';
-                        selectedProvider = '';
-                    });
-                }
-
-                const mainMmBtn = document.getElementById('mainMmBtn');
-                if (mainMmBtn) {
-                    mainMmBtn.addEventListener('click', function() {
-                        if (parseFloat(amountInput.value) <= 0) { showToast(t('toast_enter_amount')); return; }
-                        if (!document.getElementById('agentName').value.trim()) { showToast(
-                            '⚠️ Please select an agent first.'); return; }
-                        openProviderModal();
-                    });
-                }
-
-                // Main form submit (already defined above for validation, but we need the full logic)
+                // 7. ---- Main Form Submit ----
                 const mainFormFull = document.getElementById('mainForm');
                 if (mainFormFull) {
                     mainFormFull.onsubmit = async function(e) {
                         e.preventDefault();
-
-                        // 1. Validate Provider TX ID
                         const providerTxId = document.getElementById('providerTxId').value.trim();
                         const validation = validateProviderTxId(providerTxId, 'providerTxIdError');
                         if (!validation.valid) {
@@ -7064,8 +7448,6 @@
                             showToast('❌ ' + (errorEl ? errorEl.textContent : 'Invalid Provider TX ID'), 3000);
                             return;
                         }
-
-                        // 2. Validate Transfer Code (if visible)
                         const mainTransferCodeGroupEl = document.getElementById('mainTransferCodeGroup');
                         if (mainTransferCodeGroupEl && mainTransferCodeGroupEl.style.display === 'block') {
                             const codeInput = document.getElementById('mainTransferCode');
@@ -7073,7 +7455,8 @@
                             const errorEl = document.getElementById('mainTransferCodeError');
                             if (!isValidTransferCode(code)) {
                                 if (errorEl) {
-                                    errorEl.textContent = '❌ Please enter a valid 6, 8, 10, 12, or 14 digit transfer code.';
+                                    errorEl.textContent =
+                                        '❌ Please enter a valid 6, 8, 10, 12, or 14 digit transfer code.';
                                     errorEl.style.display = 'block';
                                 }
                                 showToast('❌ Invalid Transfer Code. Must be 6, 8, 10, 12, or 14 digits.', 3000);
@@ -7082,8 +7465,6 @@
                                 if (errorEl) errorEl.style.display = 'none';
                             }
                         }
-
-                        // 3. Proceed with submission
                         try {
                             const senderName = SecurityUtils.sanitizeInput(document.getElementById('senderName')
                                 .value.trim(), 100);
@@ -7175,19 +7556,200 @@
                                 btn.innerText = orig;
                                 btn.disabled = false;
                             }
-
-                            // After successful submission, change report buttons to green
                             const editReportBtn = document.getElementById('editAgentReportBtn');
                             if (editReportBtn) {
                                 editReportBtn.style.background = '#27ae60';
                                 editReportBtn.style.color = 'white';
                                 editReportBtn.textContent = '✅ Report';
                             }
-
                         } catch (err) { showToast('❌ Submit error: ' + err.message, 3000); }
                     };
                 }
 
+                // ================================================================
+                // 8. ---- EVENT LISTENERS – All buttons (with null checks) ----
+                // ================================================================
+
+                // Language selector
+                const langSelect = document.getElementById('langSelect');
+                if (langSelect) langSelect.addEventListener('change', function() { setLanguage(this.value); });
+
+                // Login
+                const loginBtn = document.getElementById('loginBtn');
+                if (loginBtn) {
+                    loginBtn.onclick = function() {
+                        const loginError = document.getElementById('loginError');
+                        if (loginError) loginError.innerHTML = '';
+                        const loginModal = document.getElementById('loginModal');
+                        if (loginModal) loginModal.style.display = 'flex';
+                    };
+                }
+
+                // Register
+                const registerBtn = document.getElementById('registerBtn');
+                if (registerBtn) {
+                    registerBtn.onclick = function() {
+                        const regError = document.getElementById('regError');
+                        const regSuccess = document.getElementById('regSuccess');
+                        if (regError) regError.innerText = '';
+                        if (regSuccess) regSuccess.innerText = '';
+                        const registerModal = document.getElementById('registerModal');
+                        if (registerModal) registerModal.style.display = 'flex';
+                        const grid = document.getElementById('emojiPickerGrid');
+                        if (grid) {
+                            const first = grid.querySelector('.emoji-option');
+                            grid.querySelectorAll('.emoji-option').forEach(o => o.classList.remove('selected'));
+                            if (first) { first.classList.add('selected');
+                                selectedEmoji = first.getAttribute('data-emoji') || '👤'; }
+                        }
+                        const regUssdResult = document.getElementById('regUssdResult');
+                        if (regUssdResult) regUssdResult.style.display = 'none';
+                        const regProfilePreview = document.getElementById('regProfilePreview');
+                        if (regProfilePreview) regProfilePreview.style.display = 'none';
+                        const regProfileImage = document.getElementById('regProfileImage');
+                        if (regProfileImage) regProfileImage.value = '';
+                    };
+                }
+
+                // Logout
+                const logoutBtn = document.getElementById('logoutBtn');
+                if (logoutBtn) logoutBtn.onclick = function() { clearUserStorage();
+                    showToast(t('toast_logout')); };
+
+                // Edit Account
+                const editAccountBtn = document.getElementById('editAccountBtn');
+                if (editAccountBtn) editAccountBtn.addEventListener('click', openEditAccountModal);
+                const saveEditAccountBtn = document.getElementById('saveEditAccountBtn');
+                if (saveEditAccountBtn) saveEditAccountBtn.addEventListener('click', saveEditAccount);
+
+                const editProfileImage = document.getElementById('editProfileImage');
+                if (editProfileImage) {
+                    editProfileImage.addEventListener('change', function(e) {
+                        const file = e.target.files[0];
+                        if (file) {
+                            const reader = new FileReader();
+                            reader.onload = function(ev) {
+                                const preview = document.getElementById('editProfilePreview');
+                                if (preview) {
+                                    preview.style.display = 'block';
+                                    const img = preview.querySelector('img');
+                                    if (img) img.src = ev.target.result;
+                                }
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    });
+                }
+                const editProfileRemove = document.getElementById('editProfileRemove');
+                if (editProfileRemove) {
+                    editProfileRemove.addEventListener('click', function() {
+                        const preview = document.getElementById('editProfilePreview');
+                        if (preview) {
+                            preview.style.display = 'none';
+                            const img = preview.querySelector('img');
+                            if (img) img.src = '';
+                        }
+                        const editProfileImageEl = document.getElementById('editProfileImage');
+                        if (editProfileImageEl) editProfileImageEl.value = '';
+                    });
+                }
+
+                // Agent dropdown
+                const agentDropdownBtn = document.getElementById('agentDropdownBtn');
+                if (agentDropdownBtn) {
+                    agentDropdownBtn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const list = document.getElementById('agentDropdownList');
+                        if (list) list.classList.toggle('open');
+                        renderAgentDropdown();
+                    });
+                }
+                document.addEventListener('click', function(e) {
+                    const container = document.querySelector('.agent-dropdown-container');
+                    if (container && !container.contains(e.target)) {
+                        const list = document.getElementById('agentDropdownList');
+                        if (list) list.classList.remove('open');
+                    }
+                });
+
+                // Map button
+                const mapButton = document.getElementById('mapButton');
+                if (mapButton) {
+                    mapButton.onclick = function() {
+                        const address = currentUser?.address || '';
+                        const city = currentUser?.city || '';
+                        const country = currentUser?.country || '';
+                        openMapModal(address, city, country);
+                    };
+                }
+
+                // Generate TX ID
+                const generateTxBtn = document.getElementById('generateTxBtn');
+                if (generateTxBtn) generateTxBtn.addEventListener('click', setGeneratedTransactionId);
+                const copyTxBtn = document.getElementById('copyTxBtn');
+                if (copyTxBtn) copyTxBtn.addEventListener('click', copyTransactionIdToClipboard);
+
+                // Close modal buttons
+                document.querySelectorAll('.close-modal').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const modal = this.closest('.modal');
+                        if (modal) { modal.style.display = 'none'; if (modal.id === 'mapModal') {
+                                const iframe = document.getElementById('mapIframe');
+                                if (iframe) iframe.src = ''; } }
+                    });
+                });
+
+                // Provider modal buttons
+                document.querySelectorAll('#providerModal .action-btn[data-provider]').forEach(btn =>
+                    btn.addEventListener('click', () => onProviderSelected(btn.getAttribute('data-provider')))
+                );
+
+                // Role modal buttons
+                document.querySelectorAll('#roleButtons .action-btn[data-role]').forEach(btn =>
+                    btn.addEventListener('click', () => onRoleSelected(btn.getAttribute('data-role')))
+                );
+
+                // Action modal buttons
+                const actionTransfer = document.getElementById('actionTransfer');
+                if (actionTransfer) {
+                    actionTransfer.addEventListener('click', function() {
+                        buildAndDialUSSD(t('transfer'));
+                        document.getElementById('actionModal').style.display = 'none';
+                        selectedRole = '';
+                        selectedProvider = '';
+                    });
+                }
+                const actionPay = document.getElementById('actionPay');
+                if (actionPay) {
+                    actionPay.addEventListener('click', function() {
+                        buildAndDialUSSD(t('pay'));
+                        document.getElementById('actionModal').style.display = 'none';
+                        selectedRole = '';
+                        selectedProvider = '';
+                    });
+                }
+                const actionCashout = document.getElementById('actionCashout');
+                if (actionCashout) {
+                    actionCashout.addEventListener('click', function() {
+                        buildAndDialUSSD(t('cashout'));
+                        document.getElementById('actionModal').style.display = 'none';
+                        selectedRole = '';
+                        selectedProvider = '';
+                    });
+                }
+
+                // Main MM button
+                const mainMmBtn = document.getElementById('mainMmBtn');
+                if (mainMmBtn) {
+                    mainMmBtn.addEventListener('click', function() {
+                        if (parseFloat(amountInput.value) <= 0) { showToast(t('toast_enter_amount')); return; }
+                        if (!document.getElementById('agentName').value.trim()) { showToast(
+                            '⚠️ Please select an agent first.'); return; }
+                        openProviderModal();
+                    });
+                }
+
+                // Add Client button
                 const addClientBtnHeader = document.getElementById('addClientBtnHeader');
                 if (addClientBtnHeader) {
                     addClientBtnHeader.addEventListener('click', function() {
@@ -7233,6 +7795,7 @@
                     });
                 }
 
+                // Register Agent button
                 const registerAgentBtn = document.getElementById('registerAgentBtn');
                 if (registerAgentBtn) {
                     registerAgentBtn.addEventListener('click', function() {
@@ -7289,6 +7852,7 @@
                     });
                 }
 
+                // Generate Password
                 const generatePasswordBtn = document.getElementById('generatePasswordBtn');
                 if (generatePasswordBtn) {
                     generatePasswordBtn.addEventListener('click', function() {
@@ -7301,6 +7865,7 @@
                     });
                 }
 
+                // Generate PIN
                 const generatePinBtn = document.getElementById('generatePinBtn');
                 if (generatePinBtn) {
                     generatePinBtn.addEventListener('click', function() {
@@ -7312,6 +7877,7 @@
                     });
                 }
 
+                // Generate Collateral
                 const generateCollateralBtn = document.getElementById('generateCollateralBtn');
                 if (generateCollateralBtn) {
                     generateCollateralBtn.addEventListener('click', function() {
@@ -7339,6 +7905,7 @@
                     });
                 }
 
+                // View Agreement
                 const viewAgreementBtn = document.getElementById('viewAgreementBtn');
                 if (viewAgreementBtn) {
                     viewAgreementBtn.addEventListener('click', function() {
@@ -7364,6 +7931,7 @@
                     });
                 }
 
+                // Agreement Agree
                 const agreementAgreeBtn = document.getElementById('agreementAgreeBtn');
                 if (agreementAgreeBtn) {
                     agreementAgreeBtn.addEventListener('click', function() {
@@ -7401,12 +7969,12 @@
                     if (e.target === this) this.style.display = 'none';
                 });
 
+                // Submit Agent Registration
                 const submitAgentRegistrationBtn = document.getElementById('submitAgentRegistrationBtn');
                 if (submitAgentRegistrationBtn) {
                     submitAgentRegistrationBtn.addEventListener('click', function(e) {
                         e.preventDefault();
 
-                        // Validate Provider TX ID
                         const agentProviderTxId = document.getElementById('agentProviderTxId').value
                         .trim();
                         const agentValidation = validateProviderTxId(agentProviderTxId,
@@ -7418,7 +7986,6 @@
                             return;
                         }
 
-                        // Validate Transfer Code (if visible)
                         const agentTransferCodeGroupEl = document.getElementById('agentTransferCodeGroup');
                         if (agentTransferCodeGroupEl && agentTransferCodeGroupEl.style.display === 'block') {
                             const codeInput = document.getElementById('agentTransferCode');
@@ -7549,6 +8116,7 @@
                     });
                 }
 
+                // Save Edit Agent
                 const saveEditAgentBtn = document.getElementById('saveEditAgentBtn');
                 if (saveEditAgentBtn) {
                     saveEditAgentBtn.addEventListener('click', function() {
@@ -7635,9 +8203,7 @@
                     });
                 }
 
-                // ================================================================
-                // EDIT AGENT REPORT BUTTON
-                // ================================================================
+                // Edit Agent Report
                 const editAgentReportBtn = document.getElementById('editAgentReportBtn');
                 if (editAgentReportBtn) {
                     editAgentReportBtn.addEventListener('click', function(e) {
@@ -7668,6 +8234,7 @@
                     });
                 }
 
+                // Create Group
                 const createGroupBtn = document.getElementById('createGroupBtn');
                 if (createGroupBtn) {
                     createGroupBtn.addEventListener('click', function() {
@@ -7703,6 +8270,7 @@
                     });
                 }
 
+                // Flag scroll
                 const flagScrollLeft = document.getElementById('flagScrollLeft');
                 if (flagScrollLeft) {
                     flagScrollLeft.addEventListener('click', function() {
@@ -7718,6 +8286,7 @@
                     });
                 }
 
+                // Do Register
                 const doRegisterBtn = document.getElementById('doRegisterBtn');
                 if (doRegisterBtn) {
                     doRegisterBtn.addEventListener('click', async function() {
@@ -7748,6 +8317,7 @@
                     });
                 }
 
+                // Do Login
                 const doLoginBtn = document.getElementById('doLoginBtn');
                 if (doLoginBtn) {
                     doLoginBtn.addEventListener('click', function() {
@@ -7765,6 +8335,7 @@
                     });
                 }
 
+                // Register Generate USSD
                 const regGenerateUssdBtn = document.getElementById('regGenerateUssdBtn');
                 if (regGenerateUssdBtn) {
                     regGenerateUssdBtn.addEventListener('click', function() {
@@ -7804,6 +8375,7 @@
                     });
                 }
 
+                // Receipt close
                 const receiptCloseBtnMain = document.getElementById('receiptCloseBtn');
                 if (receiptCloseBtnMain) {
                     receiptCloseBtnMain.addEventListener('click', function() {
@@ -7814,6 +8386,7 @@
                     if (e.target === this) this.style.display = 'none';
                 });
 
+                // About, Dev, Contact, Subscribe
                 const aboutAppBtn = document.getElementById('aboutAppBtn');
                 if (aboutAppBtn) aboutAppBtn.onclick = () => showInfoModal(t('about'), t('about_body'));
                 const aboutDevBtn = document.getElementById('aboutDevBtn');
@@ -7834,6 +8407,7 @@
                     };
                 }
 
+                // Social
                 const whatsappBtn = document.getElementById('whatsappBtn');
                 if (whatsappBtn) whatsappBtn.onclick = () => window.open('https://wa.me/23276436811', '_blank');
                 const facebookBtn = document.getElementById('facebookBtn');
@@ -7847,6 +8421,7 @@
                 const webineBtn = document.getElementById('webineBtn');
                 if (webineBtn) webineBtn.onclick = () => window.open('https://webine.com/afripay', '_blank');
 
+                // Dashboard trigger
                 const brandTrigger = document.querySelector('#brandText #dashboardTrigger');
                 if (brandTrigger) {
                     brandTrigger.addEventListener('click', function(e) {
@@ -7863,6 +8438,7 @@
                     });
                 }
 
+                // Chat
                 const chatToggleBtn = document.getElementById('chatToggleBtn');
                 if (chatToggleBtn) chatToggleBtn.addEventListener('click', toggleChat);
                 const chatCloseBtn = document.getElementById('chatCloseBtn');
@@ -7880,6 +8456,7 @@
                     });
                 }
 
+                // International toggle
                 const intlToggleBtnMain = document.getElementById('intlToggleBtn');
                 if (intlToggleBtnMain) {
                     intlToggleBtnMain.addEventListener('click', function() {
@@ -7887,6 +8464,7 @@
                     });
                 }
 
+                // Register profile image
                 const regProfileImage = document.getElementById('regProfileImage');
                 if (regProfileImage) {
                     regProfileImage.addEventListener('change', function(e) {
@@ -7919,6 +8497,7 @@
                     });
                 }
 
+                // Agent Logo
                 const agentLogoImage = document.getElementById('agentLogoImage');
                 if (agentLogoImage) {
                     agentLogoImage.addEventListener('change', function(e) {
@@ -7951,6 +8530,7 @@
                     });
                 }
 
+                // Agent ID image
                 const agentIdImage = document.getElementById('agentIdImage');
                 if (agentIdImage) {
                     agentIdImage.addEventListener('change', function(e) {
@@ -7969,16 +8549,13 @@
                     });
                 }
 
-                // ================================================================
-                // REPORT BUTTON EVENT LISTENERS
-                // ================================================================
+                // ---- Agent Auth ----
                 const agentAuthConfirmBtn = document.getElementById('agentAuthConfirmBtn');
                 if (agentAuthConfirmBtn) {
                     agentAuthConfirmBtn.addEventListener('click', function() {
                         verifyAgentCredentials();
                     });
                 }
-
                 document.getElementById('agentAuthPin').addEventListener('keydown', function(e) {
                     if (e.key === 'Enter') {
                         verifyAgentCredentials();
@@ -7989,7 +8566,6 @@
                         document.getElementById('agentAuthPin').focus();
                     }
                 });
-
                 const agentAuthCancelBtn = document.getElementById('agentAuthCancelBtn');
                 if (agentAuthCancelBtn) {
                     agentAuthCancelBtn.addEventListener('click', function() {
@@ -7999,6 +8575,7 @@
                     });
                 }
 
+                // Report close
                 const reportCloseBtn = document.getElementById('reportCloseBtn');
                 if (reportCloseBtn) {
                     reportCloseBtn.addEventListener('click', function() {
@@ -8033,6 +8610,7 @@
                     });
                 }
 
+                // Close modal on backdrop click
                 document.querySelectorAll('.modal').forEach(modal => {
                     modal.addEventListener('click', function(e) {
                         if (e.target === this) {
@@ -8049,7 +8627,35 @@
                     });
                 });
 
-                console.log('✅ AfriPay fully loaded with all front page buttons working.');
+                // ---- Deactivate Modal Events ----
+                const deactivateConfirmBtn = document.getElementById('deactivateConfirmBtn');
+                if (deactivateConfirmBtn) {
+                    deactivateConfirmBtn.addEventListener('click', confirmDeactivateUser);
+                }
+                const deactivateCancelBtn = document.getElementById('deactivateCancelBtn');
+                if (deactivateCancelBtn) {
+                    deactivateCancelBtn.addEventListener('click', function() {
+                        document.getElementById('deactivateModal').style.display = 'none';
+                        document.getElementById('deactivateError').textContent = '';
+                        document.getElementById('deactivateSuccess').textContent = '';
+                    });
+                }
+                document.getElementById('deactivateModal').addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        this.style.display = 'none';
+                        document.getElementById('deactivateError').textContent = '';
+                        document.getElementById('deactivateSuccess').textContent = '';
+                    }
+                });
+                document.getElementById('deactivateAdminPassword').addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') confirmDeactivateUser();
+                });
+                document.getElementById('deactivateAdminName').addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') document.getElementById('deactivateAdminPassword').focus();
+                });
+
+                // Final log
+                console.log('✅ AfriPay fully loaded with robust event binding.');
             } catch (error) {
                 console.error('❌ AfriPay initialization error:', error);
                 showToast('⚠️ App partially loaded. Please refresh if features are not working.', 5000);
