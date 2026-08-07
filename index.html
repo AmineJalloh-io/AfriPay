@@ -6,7 +6,7 @@
     <title>AfriPay | Mobile Money & Payment Hub</title>
     <style>
         /* ================================================================
-           RESET & BASE (unchanged)
+           RESET & BASE
            ================================================================ */
         * {
             margin: 0;
@@ -29,6 +29,13 @@
             border-radius: 1.6rem;
             box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.22);
             overflow: hidden;
+        }
+
+        /* ================================================================
+           HIDDEN INPUTS
+           ================================================================ */
+        .hidden-input {
+            display: none;
         }
 
         /* ================================================================
@@ -465,7 +472,7 @@
         }
 
         /* ================================================================
-           MAIN FORM (unchanged)
+           MAIN FORM
            ================================================================ */
         .form-container {
             padding: 0.9rem 1.0rem 0.6rem 1.0rem;
@@ -863,10 +870,2259 @@
         }
 
         /* ================================================================
-           MODALS – only new ones shown, rest unchanged
+           MODALS
            ================================================================ */
-        /* We keep all modal styles from previous version – omitted for brevity but included in full code */
-        /* ... (all modal styles) ... */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(3px);
+        }
+        .modal-content {
+            background: white;
+            border-radius: 1.6rem;
+            padding: 1.0rem 1.1rem;
+            width: 88%;
+            max-width: 380px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        .modal-content h3 {
+            margin-bottom: 6px;
+        }
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-top: 8px;
+        }
+        .action-buttons-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 8px;
+        }
+        .action-buttons-row .action-btn {
+            flex: 1;
+            min-width: 60px;
+        }
+        .action-btn {
+            padding: 10px 14px;
+            border-radius: 30px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            background: #0f2b3d;
+            color: white;
+            transition: 0.2s;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .action-btn:hover {
+            background: #f4a261;
+            transform: translateY(-1px);
+        }
+        .action-btn.close-modal {
+            background: #ccc;
+            color: #222;
+        }
+        .action-btn.close-modal:hover {
+            background: #bbb;
+        }
+        .action-btn.orange {
+            background: #f4a261;
+        }
+        .action-btn.orange:hover {
+            background: #e08e4a;
+        }
+        .action-btn.green {
+            background: #27ae60;
+        }
+        .action-btn.green:hover {
+            background: #1e8449;
+        }
+        .action-btn.approve-btn {
+            background: #27ae60;
+            padding: 2px 10px;
+            height: 30px;
+            font-size: 0.65rem;
+        }
+        .action-btn.approve-btn:hover {
+            background: #1e8449;
+        }
+        .action-btn.approve-btn.approved {
+            background: #95a5a6;
+            cursor: default;
+        }
+        .action-btn.approve-btn.approved:hover {
+            background: #7f8c8d;
+        }
+        #mapModal .modal-content {
+            max-width: 90%;
+            width: 580px;
+            max-height: 85vh;
+            height: auto;
+            padding: 0.9rem;
+        }
+        #mapModal .modal-content iframe {
+            width: 100%;
+            height: 55vh;
+            border: none;
+            border-radius: 12px;
+            margin-top: 6px;
+        }
+        #dashboardModal .modal-content {
+            max-width: 700px;
+            width: 95%;
+        }
+        #dashboardModal table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 6px;
+        }
+        #dashboardModal th {
+            background: #f0f4f8;
+            padding: 4px 6px;
+            text-align: left;
+            font-weight: 700;
+            color: #1c6e8f;
+            border-bottom: 2px solid #dce8f0;
+            white-space: nowrap;
+        }
+        #dashboardModal td {
+            padding: 4px 6px;
+            border-bottom: 1px solid #eee;
+            vertical-align: middle;
+        }
+        #dashboardModal .agent-row:hover td {
+            background: #f8fafc;
+        }
+        #dashboardModal .status-badge {
+            display: inline-block;
+            padding: 1px 8px;
+            border-radius: 20px;
+            font-weight: 700;
+        }
+        .status-badge.approved {
+            background: #d5f5e3;
+            color: #1e8449;
+        }
+        .status-badge.pending {
+            background: #fdebd0;
+            color: #ca6f1e;
+        }
+        .goods-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 4px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .goods-item:hover {
+            background: #fef9f0;
+        }
+        .goods-name {
+            font-weight: 600;
+        }
+        .goods-price {
+            color: #f4a261;
+            font-weight: 700;
+        }
+        .toast-msg {
+            position: fixed;
+            bottom: 14px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1e2f3c;
+            color: white;
+            padding: 6px 16px;
+            border-radius: 40px;
+            z-index: 1100;
+            pointer-events: none;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.25s ease, visibility 0.25s ease;
+            max-width: 85%;
+            text-align: center;
+        }
+        .error-msg {
+            color: #c0392b;
+            margin: 3px 0;
+        }
+        .success-msg {
+            color: #27ae60;
+            margin: 3px 0;
+        }
+        .info-msg {
+            color: #2c7da0;
+            margin: 3px 0;
+        }
+        .emoji-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 3px;
+            margin: 5px 0 6px 0;
+        }
+        .emoji-option {
+            font-size: 1.6rem;
+            text-align: center;
+            cursor: pointer;
+            padding: 3px 2px;
+            border-radius: 10px;
+            transition: 0.15s;
+            border: 2px solid transparent;
+            background: #f5f7fa;
+            line-height: 1.3;
+        }
+        .emoji-option:hover {
+            transform: scale(1.15);
+            background: #e8edf4;
+        }
+        .emoji-option.selected {
+            border-color: #f4a261;
+            background: #fff0e0;
+            box-shadow: 0 0 6px rgba(244, 162, 97, 0.3);
+        }
+        .group-member-list {
+            max-height: 180px;
+            overflow-y: auto;
+            margin: 6px 0;
+            border: 1px solid #e0e8f0;
+            border-radius: 12px;
+            padding: 3px 0;
+        }
+        .group-member-item {
+            display: flex;
+            align-items: center;
+            padding: 3px 8px;
+            gap: 6px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .group-member-item:hover {
+            background: #f0f4f8;
+        }
+        .group-member-item input[type="checkbox"] {
+            width: 15px;
+            height: 15px;
+            accent-color: #0f2b3d;
+        }
+        .group-member-item .member-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #d0dce8;
+        }
+        .group-member-item .member-name {
+            font-weight: 500;
+            color: #1e3b4a;
+        }
+        .member-counter {
+            color: #1c6e8f;
+            font-weight: 600;
+            margin-left: auto;
+        }
+
+        /* ================================================================
+           AGENT REGISTRATION MODAL
+           ================================================================ */
+        .agent-form .input-group {
+            margin-bottom: 0.5rem;
+        }
+        .agent-form .input-group label {
+            font-size: 0.675rem;
+        }
+        .agent-form .input-group input,
+        .agent-form .input-group select {
+            height: 38px;
+            font-size: 0.85rem;
+            padding: 4px 10px;
+        }
+        .id-preview {
+            margin-top: 4px;
+            max-width: 100%;
+            max-height: 120px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            display: none;
+            object-fit: contain;
+            background: #f5f7fa;
+        }
+        .collateral-box {
+            background: #f0f6fb;
+            border-radius: 10px;
+            padding: 0.6rem;
+            margin-top: 0.4rem;
+            border: 1px dashed #2c7da0;
+        }
+        .collateral-box .ussd-code {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #0f2b3d;
+            background: white;
+            padding: 4px 12px;
+            border-radius: 30px;
+            display: inline-block;
+            margin-top: 4px;
+            border: 1px solid #d0dce8;
+            word-break: break-all;
+        }
+        .password-display {
+            font-family: monospace;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #0f2b3d;
+            background: #f0f6fb;
+            padding: 4px 12px;
+            border-radius: 30px;
+            border: 1px solid #d0dce8;
+            display: inline-block;
+            letter-spacing: 2px;
+        }
+
+        /* ================================================================
+           ADMIN AUTH MODALS
+           ================================================================ */
+        .admin-auth-modal .modal-content {
+            max-width: 360px;
+        }
+        .admin-auth-modal .input-group {
+            margin-bottom: 0.6rem;
+        }
+        .admin-auth-modal .input-group label {
+            font-size: 0.675rem;
+        }
+        .admin-auth-modal .input-group input {
+            height: 40px;
+            font-size: 0.9rem;
+            padding: 4px 12px;
+            letter-spacing: 1px;
+        }
+        .admin-auth-modal .input-group input#adminPin,
+        .admin-auth-modal .input-group input#adminLoginPin {
+            letter-spacing: 4px;
+            font-family: monospace;
+            font-size: 1.1rem;
+        }
+        .admin-auth-modal .auth-toggle-link {
+            color: #2c7da0;
+            cursor: pointer;
+            text-decoration: underline;
+            font-size: 0.702rem;
+            transition: 0.15s;
+        }
+        .admin-auth-modal .auth-toggle-link:hover {
+            color: #f4a261;
+        }
+        .admin-auth-modal .auth-divider {
+            text-align: center;
+            margin: 6px 0 4px 0;
+            color: #95a5a6;
+        }
+        .admin-auth-modal .auth-error {
+            color: #c0392b;
+            margin: 4px 0;
+            text-align: center;
+        }
+        .admin-auth-modal .auth-success {
+            color: #27ae60;
+            margin: 4px 0;
+            text-align: center;
+        }
+
+        /* ================================================================
+           CHAT
+           ================================================================ */
+        .chat-toggle-btn {
+            position: fixed;
+            bottom: 18px;
+            left: 18px;
+            width: 68px;
+            height: 68px;
+            border-radius: 50%;
+            background: #0f2b3d;
+            color: white;
+            border: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            font-size: 2.1rem;
+            cursor: pointer;
+            z-index: 500;
+            transition: transform 0.2s, background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .chat-toggle-btn:hover {
+            transform: scale(1.05);
+            background: #f4a261;
+        }
+        .chat-toggle-btn .chat-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            padding: 1px 5px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            min-width: 18px;
+            text-align: center;
+        }
+        .chat-window {
+            position: fixed;
+            left: 0;
+            right: 0;
+            width: 100%;
+            background: white;
+            border-radius: 0;
+            box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.15);
+            display: none;
+            flex-direction: row;
+            z-index: 600;
+            overflow: hidden;
+            border: none;
+            border-top: 1px solid #e0e8f0;
+        }
+        .chat-window.open {
+            display: flex;
+        }
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            background: white;
+        }
+        .chat-nav {
+            background: #0f2b3d;
+            color: white;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            border-bottom: 1px solid #1c4e6c;
+            flex-shrink: 0;
+            min-height: 58px;
+        }
+        .chat-nav .chat-contact {
+            flex: 1;
+            font-weight: 700;
+            font-size: 1.05rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .chat-nav .chat-actions {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .chat-nav .chat-actions button {
+            background: rgba(255, 255, 255, 0.12);
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            white-space: nowrap;
+            height: 34px;
+        }
+        .chat-nav .chat-actions button:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+        .chat-nav .chat-close {
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            color: white;
+            font-size: 1.4rem;
+            cursor: pointer;
+            padding: 0 8px;
+            border-radius: 20px;
+            transition: 0.2s;
+            line-height: 1;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .chat-nav .chat-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        .sidebar-toggle {
+            display: none;
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            padding: 2px 6px;
+            border-radius: 20px;
+            transition: 0.2s;
+            line-height: 1;
+            height: 34px;
+        }
+        .sidebar-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        .chat-messages {
+            flex: 1;
+            padding: 12px 14px;
+            overflow-y: auto;
+            background: #f5f8fa;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            transition: background 0.2s;
+        }
+        .chat-message {
+            max-width: 85%;
+            padding: 7px 14px;
+            border-radius: 18px;
+            line-height: 1.4;
+            word-wrap: break-word;
+            background: white;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+            transition: font-size 0.2s, filter 0.2s;
+        }
+        .chat-message.sent {
+            align-self: flex-end;
+            background: #0f2b3d;
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+        .chat-message .msg-time {
+            font-size: 0.65rem;
+            opacity: 0.6;
+            margin-left: 6px;
+        }
+        .chat-message .msg-media {
+            display: block;
+            margin-top: 3px;
+            font-size: 0.85rem;
+            color: #2c7da0;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        .chat-message video,
+        .chat-message audio {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-top: 3px;
+            display: block;
+            background: #000;
+        }
+        .chat-message audio {
+            max-width: 220px;
+            background: transparent;
+        }
+        .chat-message video {
+            max-height: 200px;
+            width: auto;
+        }
+        .chat-controls {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            background: #f0f4f8;
+            border-top: 1px solid #e0e8f0;
+            flex-wrap: wrap;
+            flex-shrink: 0;
+            min-height: 44px;
+        }
+        .chat-controls .ctrl-group {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .chat-controls button {
+            background: transparent;
+            border: 1px solid #d0dce8;
+            border-radius: 20px;
+            padding: 4px 10px;
+            cursor: pointer;
+            transition: 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            color: #1e3b4a;
+            height: 34px;
+        }
+        .chat-controls button:hover {
+            background: #dce5ec;
+        }
+        .chat-controls input[type="color"] {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #d0dce8;
+            border-radius: 50%;
+            padding: 0;
+            cursor: pointer;
+            background: none;
+        }
+        .chat-controls input[type="color"]::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+        .chat-controls input[type="color"]::-webkit-color-swatch {
+            border: none;
+            border-radius: 50%;
+        }
+        .chat-controls .brightness-slider {
+            width: 80px;
+            height: 4px;
+            -webkit-appearance: none;
+            background: #d0dce8;
+            border-radius: 2px;
+            outline: none;
+        }
+        .chat-controls .brightness-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #0f2b3d;
+            cursor: pointer;
+        }
+        .recording-indicator {
+            display: none;
+            align-items: center;
+            gap: 4px;
+            color: #e74c3c;
+            font-weight: 700;
+        }
+        .recording-indicator.active {
+            display: inline-flex;
+        }
+        .recording-dot {
+            width: 8px;
+            height: 8px;
+            background: #e74c3c;
+            border-radius: 50%;
+            animation: pulse-dot 0.8s ease-in-out infinite;
+        }
+        .chat-input-area {
+            display: flex;
+            gap: 6px;
+            padding: 8px 10px;
+            border-top: 1px solid #e0e8f0;
+            background: white;
+            flex-shrink: 0;
+        }
+        .chat-input-area input {
+            flex: 1;
+            padding: 7px 14px;
+            border-radius: 30px;
+            border: 1px solid #d0dce8;
+            outline: none;
+            font-size: 0.95rem;
+            height: 44px;
+        }
+        .chat-input-area input:focus {
+            border-color: #f4a261;
+        }
+        .chat-input-area button {
+            background: #0f2b3d;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .chat-input-area button:hover {
+            background: #f4a261;
+        }
+        .hidden-input {
+            display: none;
+        }
+        .chat-sidebar {
+            width: 170px;
+            background: #f8fafc;
+            border-left: 1px solid #e0e8f0;
+            padding: 8px 0;
+            overflow-y: auto;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        .sidebar-section-title {
+            font-weight: 700;
+            color: #1c6e8f;
+            padding: 4px 10px 4px 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #e0e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .sidebar-section-title .add-group-btn {
+            background: none;
+            border: none;
+            color: #2c7da0;
+            cursor: pointer;
+            font-size: 0.95rem;
+            padding: 0 3px;
+        }
+        .sidebar-section-title .add-group-btn:hover {
+            color: #f4a261;
+        }
+        .sidebar-user,
+        .sidebar-group {
+            display: flex;
+            align-items: center;
+            padding: 5px 10px;
+            gap: 6px;
+            cursor: pointer;
+            transition: background 0.15s;
+            border-left: 3px solid transparent;
+        }
+        .sidebar-user:hover,
+        .sidebar-group:hover {
+            background: #eef2f7;
+        }
+        .sidebar-user.active,
+        .sidebar-group.active {
+            background: #e2edf7;
+            border-left-color: #2c7da0;
+        }
+        .sidebar-user .avatar,
+        .sidebar-group .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #d0dce8;
+            flex-shrink: 0;
+            overflow: hidden;
+            color: #1e3b4a;
+        }
+        .sidebar-user .avatar img,
+        .sidebar-group .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .sidebar-user .user-info,
+        .sidebar-group .group-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .sidebar-user .user-info .name,
+        .sidebar-group .group-info .name {
+            font-weight: 600;
+            color: #1e3b4a;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .sidebar-user .status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .status.online {
+            background: #2ecc71;
+        }
+        .status.offline {
+            background: #95a5a6;
+        }
+        .group-member-count {
+            color: #7f8c8d;
+            margin-left: 3px;
+        }
+        .group-actions {
+            display: flex;
+            gap: 3px;
+            align-items: center;
+        }
+        .group-actions button {
+            background: none;
+            border: none;
+            color: #95a5a6;
+            cursor: pointer;
+            padding: 0 3px;
+            transition: 0.2s;
+        }
+        .group-actions button:hover {
+            color: #e74c3c;
+        }
+
+        /* ================================================================
+           BUTTON TEXT SIZE OVERRIDES
+           ================================================================ */
+        button,
+        .auth-btn,
+        .action-btn,
+        .tx-btn,
+        .single-mm-btn,
+        .btn-submit,
+        .add-client-btn,
+        .toggle-btn,
+        .intl-toggle-btn,
+        .mode-row .btn,
+        .footer-btn,
+        .social-icon,
+        .agent-dropdown-btn,
+        .edit-agent-btn,
+        .approve-btn,
+        .flag-scroll-btn,
+        .btn,
+        .add-client-btn-header,
+        .logout-btn,
+        .edit-account-btn,
+        .map-btn,
+        .auth-btn,
+        .agent-dropdown-btn {
+            font-size: 1.09em !important;
+        }
+        label,
+        .input-group label,
+        .profile-label,
+        .section-title,
+        .business-title,
+        .modal-content h3,
+        .admin-auth-modal .input-group label,
+        .agent-form .input-group label,
+        .sidebar-section-title,
+        .business-name,
+        .business-category,
+        .profile-field,
+        .charges-row,
+        .total-row,
+        .datetime-box,
+        .lang-selector select,
+        .agent-dropdown-item .agent-name,
+        .agent-dropdown-empty,
+        .goods-item,
+        .toast-msg,
+        .error-msg,
+        .success-msg,
+        .info-msg,
+        .connection-indicator,
+        .user-name-display,
+        .member-counter,
+        .group-member-item .member-name,
+        .status-badge,
+        .goods-name,
+        .goods-price,
+        .collateral-box .ussd-code,
+        .password-display,
+        .admin-auth-modal .auth-toggle-link,
+        .admin-auth-modal .auth-divider,
+        .admin-auth-modal .auth-error,
+        .admin-auth-modal .auth-success,
+        .dashboard-table th,
+        .dashboard-table td,
+        .agent-dropdown-item .edit-agent-btn {
+            font-size: 0.774rem !important;
+        }
+        .brand-text,
+        .chat-toggle-btn {
+            font-size: inherit !important;
+        }
+        .chat-toggle-btn {
+            font-size: 2.1rem !important;
+        }
+
+        /* ================================================================
+           RESPONSIVE
+           ================================================================ */
+        @media (max-width: 600px) {
+            .double-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .add-client-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            .add-client-btn.header-btn {
+                flex: 1 1 auto;
+                min-width: 80px;
+            }
+            .business-item {
+                min-width: 50px;
+                padding: 3px 7px;
+            }
+            .africa-svg {
+                width: 30px;
+                height: 30px;
+            }
+            .flag-icon {
+                font-size: 0.95rem;
+            }
+            .brand-text {
+                font-size: 1.3915rem;
+            }
+            .live-header {
+                padding: 0.45rem 0.6rem;
+                min-height: 64px;
+            }
+            .datetime-box {
+                font-size: 0.6rem;
+                min-width: 66px;
+                padding: 0.05rem 0.4rem;
+            }
+            .time-text {
+                font-size: 0.7rem;
+            }
+            .auth-btn {
+                padding: 5px 10px;
+                height: 36px;
+            }
+            .user-welcome {
+                padding: 2px 10px 2px 5px;
+                height: 36px;
+            }
+            .user-avatar {
+                font-size: 1.1rem;
+                width: 26px;
+                height: 26px;
+                line-height: 26px;
+            }
+            .connection-indicator {
+                padding: 2px 8px 2px 3px;
+                height: 28px;
+            }
+            .connection-dot {
+                width: 6px;
+                height: 6px;
+            }
+            .form-container {
+                padding: 0.5rem 0.6rem 0.35rem 0.6rem;
+            }
+            .single-mm-btn {
+                padding: 7px 12px;
+                height: 42px;
+            }
+            .btn-submit {
+                padding: 7px 12px;
+                height: 42px;
+            }
+            .modal-content {
+                padding: 0.8rem;
+                max-width: 300px;
+            }
+            #dashboardModal .modal-content {
+                max-width: 95%;
+                padding: 0.6rem;
+            }
+            #dashboardModal table {
+                font-size: 0.6rem;
+            }
+            #dashboardModal th,
+            #dashboardModal td {
+                padding: 2px 4px;
+            }
+            .action-btn.approve-btn {
+                padding: 1px 6px;
+                height: 24px;
+            }
+            .emoji-option {
+                font-size: 1.4rem;
+                padding: 2px;
+            }
+            .emoji-grid {
+                grid-template-columns: repeat(5, 1fr);
+                gap: 2px;
+            }
+            .profile-section {
+                padding: 0.35rem 0.6rem;
+                gap: 0.3rem 0.5rem;
+            }
+            .profile-section .profile-field {
+                padding: 1px 8px;
+                min-width: 50px;
+            }
+            .map-btn {
+                padding: 4px 10px;
+                margin-left: 0;
+                width: 100%;
+                justify-content: center;
+                margin-top: 3px;
+                height: 34px;
+            }
+            #mapModal .modal-content {
+                max-width: 95%;
+                width: auto;
+                padding: 0.7rem;
+            }
+            #mapModal .modal-content iframe {
+                height: 45vh;
+            }
+            .chat-window {
+                left: 0;
+                right: 0;
+                width: 100%;
+                bottom: 0;
+                top: auto !important;
+                height: 100vh;
+                max-height: 100vh;
+                border-radius: 0;
+            }
+            .chat-toggle-btn {
+                width: 60px;
+                height: 60px;
+                font-size: 1.8rem;
+                bottom: 14px;
+                left: 14px;
+            }
+            .chat-nav .chat-actions button {
+                padding: 4px 8px;
+                height: 30px;
+            }
+            .chat-nav .chat-contact {
+                font-size: 0.9rem;
+            }
+            .chat-message {
+                padding: 5px 11px;
+            }
+            .chat-sidebar {
+                width: 150px;
+            }
+            .sidebar-user .user-info .name,
+            .sidebar-group .group-info .name {
+                font-size: 0.72rem;
+            }
+            .sidebar-user .avatar,
+            .sidebar-group .avatar {
+                width: 28px;
+                height: 28px;
+                font-size: 0.85rem;
+            }
+            .chat-controls .brightness-slider {
+                width: 60px;
+            }
+            .chat-controls input[type="color"] {
+                width: 28px;
+                height: 28px;
+            }
+            .chat-controls button {
+                padding: 3px 8px;
+                height: 30px;
+            }
+            .group-member-list {
+                max-height: 130px;
+            }
+            .flag-scroll-btn {
+                width: 26px;
+                height: 26px;
+                font-size: 1.1rem;
+            }
+            .flag-icon {
+                font-size: 0.95rem;
+            }
+            .chat-input-area input {
+                padding: 5px 11px;
+                height: 38px;
+            }
+            .chat-input-area button {
+                padding: 6px 13px;
+                height: 38px;
+            }
+            .action-btn {
+                padding: 8px 12px;
+                height: 38px;
+            }
+            .lang-selector select {
+                width: 60px;
+            }
+            .lang-selector {
+                height: 36px;
+                padding: 2px 4px 2px 8px;
+            }
+            .lang-icon {
+                font-size: 0.85rem;
+            }
+            .agent-dropdown-container {
+                min-width: 100px;
+                max-width: 150px;
+            }
+            .agent-dropdown-btn {
+                padding: 3px 8px 3px 12px;
+                height: 36px;
+                min-width: 80px;
+            }
+            .agent-dropdown-list {
+                min-width: 160px;
+            }
+            .agent-dropdown-item .agent-name {
+                font-size: 0.7rem;
+            }
+            .agent-dropdown-item .edit-agent-btn {
+                padding: 1px 8px;
+                height: 24px;
+            }
+            .header-right {
+                gap: 4px;
+            }
+            .agent-form .input-group input,
+            .agent-form .input-group select {
+                height: 34px;
+                font-size: 0.8rem;
+            }
+            .mode-row .btn {
+                padding: 4px 10px;
+                height: 36px;
+                min-width: 80px;
+            }
+            .admin-auth-modal .modal-content {
+                max-width: 290px;
+                padding: 0.7rem;
+            }
+        }
+        @media (max-width: 400px) {
+            .flag-icon {
+                font-size: 0.8rem;
+            }
+            .brand-text {
+                font-size: 1.20175rem;
+            }
+            .africa-svg {
+                width: 24px;
+                height: 24px;
+            }
+            .live-header {
+                min-height: 56px;
+                padding: 0.3rem 0.4rem;
+            }
+            .datetime-box {
+                font-size: 0.5rem;
+                min-width: 54px;
+                padding: 0 0.3rem;
+            }
+            .time-text {
+                font-size: 0.58rem;
+            }
+            .auth-btn {
+                padding: 4px 8px;
+                height: 32px;
+            }
+            .user-welcome {
+                padding: 1px 8px 1px 4px;
+                height: 32px;
+            }
+            .user-avatar {
+                font-size: 0.9rem;
+                width: 22px;
+                height: 22px;
+                line-height: 22px;
+            }
+            .connection-indicator {
+                padding: 1px 6px 1px 2px;
+                height: 24px;
+            }
+            .connection-dot {
+                width: 5px;
+                height: 5px;
+            }
+            .form-container {
+                padding: 0.3rem 0.35rem 0.2rem 0.35rem;
+            }
+            .section-title {
+                margin: 0.3rem 0 0.2rem 0;
+                padding-left: 5px;
+            }
+            .input-group label {
+                font-size: 0.585rem;
+            }
+            .input-group input,
+            .input-group select {
+                padding: 4px 8px;
+                font-size: 0.76rem;
+                height: 36px;
+            }
+            .single-mm-btn {
+                padding: 5px 9px;
+                height: 36px;
+            }
+            .btn-submit {
+                padding: 5px 9px;
+                height: 36px;
+            }
+            .tx-btn {
+                padding: 4px 8px;
+                height: 36px;
+            }
+            .charges-row {
+                font-size: 0.684rem;
+            }
+            .total-row {
+                font-size: 0.738rem;
+            }
+            .business-item {
+                min-width: 44px;
+                padding: 2px 5px;
+            }
+            .business-icon-img {
+                font-size: 1.0rem;
+            }
+            .business-name {
+                font-size: 0.48rem;
+            }
+            .business-category {
+                font-size: 0.42rem;
+            }
+            .footer-btn {
+                padding: 2px 8px;
+                height: 30px;
+            }
+            .social-icon {
+                padding: 2px 8px;
+                height: 30px;
+            }
+            .emoji-option {
+                font-size: 1.2rem;
+            }
+            .emoji-grid {
+                grid-template-columns: repeat(5, 1fr);
+                gap: 2px;
+            }
+            .modal-content {
+                padding: 0.6rem;
+                max-width: 260px;
+            }
+            #dashboardModal .modal-content {
+                max-width: 98%;
+                padding: 0.4rem;
+            }
+            #dashboardModal table {
+                font-size: 0.5rem;
+            }
+            #dashboardModal th,
+            #dashboardModal td {
+                padding: 1px 3px;
+            }
+            .action-btn.approve-btn {
+                padding: 1px 4px;
+                height: 20px;
+            }
+            .modal-content h3 {
+                font-size: 0.95rem;
+            }
+            .action-btn {
+                padding: 6px 10px;
+                height: 34px;
+            }
+            .profile-section .profile-field {
+                padding: 1px 6px;
+                min-width: 40px;
+            }
+            .map-btn {
+                padding: 2px 8px;
+                height: 30px;
+            }
+            #mapModal .modal-content iframe {
+                height: 35vh;
+            }
+            .chat-window {
+                left: 0;
+                right: 0;
+                width: 100%;
+                bottom: 0;
+                top: auto !important;
+                height: 100vh;
+                max-height: 100vh;
+            }
+            .chat-toggle-btn {
+                width: 52px;
+                height: 52px;
+                font-size: 1.5rem;
+                bottom: 10px;
+                left: 10px;
+            }
+            .chat-nav .chat-actions button {
+                padding: 3px 7px;
+                height: 26px;
+            }
+            .chat-sidebar {
+                display: none;
+                position: absolute;
+                right: 0;
+                top: 0;
+                bottom: 0;
+                width: 150px;
+                background: #f8fafc;
+                border-left: 1px solid #e0e8f0;
+                z-index: 10;
+                box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1);
+                border-radius: 0 18px 18px 0;
+            }
+            .chat-sidebar.open {
+                display: flex;
+            }
+            .sidebar-toggle {
+                display: block;
+                font-size: 0.9rem;
+                padding: 2px 5px;
+            }
+            .chat-controls .brightness-slider {
+                width: 50px;
+            }
+            .chat-controls input[type="color"] {
+                width: 26px;
+                height: 26px;
+            }
+            .chat-controls button {
+                padding: 2px 7px;
+                height: 26px;
+            }
+            .group-member-list {
+                max-height: 100px;
+            }
+            .flag-scroll-btn {
+                width: 24px;
+                height: 24px;
+                font-size: 0.95rem;
+            }
+            .flag-icon {
+                font-size: 0.8rem;
+            }
+            .chat-input-area input {
+                padding: 4px 9px;
+                height: 34px;
+            }
+            .chat-input-area button {
+                padding: 5px 11px;
+                height: 34px;
+            }
+            .chat-message {
+                padding: 4px 9px;
+            }
+            .lang-selector select {
+                width: 50px;
+            }
+            .lang-selector {
+                height: 32px;
+                padding: 1px 3px 1px 6px;
+            }
+            .lang-icon {
+                font-size: 0.7rem;
+            }
+            .agent-dropdown-container {
+                min-width: 80px;
+                max-width: 120px;
+            }
+            .agent-dropdown-btn {
+                padding: 2px 6px 2px 10px;
+                height: 32px;
+                min-width: 60px;
+            }
+            .agent-dropdown-btn .arrow {
+                font-size: 0.5rem;
+            }
+            .agent-dropdown-list {
+                min-width: 140px;
+            }
+            .agent-dropdown-item .agent-name {
+                font-size: 0.65rem;
+            }
+            .agent-dropdown-item .edit-agent-btn {
+                padding: 1px 6px;
+                height: 22px;
+            }
+            .add-client-btn {
+                padding: 4px 10px;
+                height: 34px;
+            }
+            .agent-form .input-group input,
+            .agent-form .input-group select {
+                height: 30px;
+                font-size: 0.75rem;
+                padding: 3px 7px;
+            }
+            .collateral-box .ussd-code {
+                padding: 3px 8px;
+            }
+            .mode-row .btn {
+                padding: 3px 8px;
+                height: 30px;
+                min-width: 60px;
+            }
+            .admin-auth-modal .modal-content {
+                max-width: 250px;
+                padding: 0.5rem;
+            }
+            .admin-auth-modal .input-group input {
+                height: 34px;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* ================================================================
+           ADDITIONAL UTILITY CLASSES
+           ================================================================ */
+        .collateral-limit-indicator {
+            font-size: 0.7rem;
+            color: #1c6e8f;
+            background: #e8f0f8;
+            padding: 2px 10px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-left: 6px;
+            border: 1px solid #c0d8e8;
+        }
+        .ussd-result-box {
+            display: none;
+            margin-top: 6px;
+            padding: 6px 10px;
+            background: #f0f6fb;
+            border-radius: 8px;
+            border: 1px solid #2c7da0;
+            word-break: break-all;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .ussd-result-box .ussd-label {
+            font-weight: 700;
+            color: #1c6e8f;
+        }
+        .ussd-result-box .ussd-code-value {
+            font-family: monospace;
+            font-weight: 700;
+            color: #0f2b3d;
+            font-size: 0.95rem;
+            flex: 1;
+        }
+        .ussd-result-box .copy-ussd-btn {
+            background: #2c7da0;
+            border: none;
+            color: white;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            height: 28px;
+            font-size: 0.7rem;
+        }
+        .ussd-result-box .copy-ussd-btn:hover {
+            background: #1f5068;
+        }
+        .sl-mode-note {
+            font-size: 0.7rem;
+            color: #1c6e8f;
+            background: #e8f0f8;
+            padding: 2px 10px;
+            border-radius: 20px;
+            display: inline-block;
+            border: 1px solid #c0d8e8;
+            margin-top: 3px;
+        }
+        .guinea-mode-note {
+            font-size: 0.7rem;
+            color: #1c6e8f;
+            background: #e8f0f8;
+            padding: 2px 10px;
+            border-radius: 20px;
+            display: inline-block;
+            border: 1px solid #c0d8e8;
+            margin-top: 3px;
+        }
+        .auto-populated-note {
+            font-size: 0.6rem;
+            color: #27ae60;
+            font-weight: 600;
+        }
+        .agent-name-display {
+            font-size: 0.7rem;
+            color: #1c6e8f;
+            background: #e8f0f8;
+            padding: 2px 8px;
+            border-radius: 12px;
+            display: inline-block;
+            margin-left: 4px;
+        }
+        .image-upload-preview {
+            margin-top: 4px;
+            text-align: center;
+        }
+        .image-upload-preview img {
+            max-width: 80px;
+            max-height: 80px;
+            border-radius: 50%;
+            border: 2px solid #2c7da0;
+            object-fit: cover;
+        }
+        .image-upload-preview .remove-image-btn {
+            background: none;
+            border: none;
+            color: #e74c3c;
+            cursor: pointer;
+            font-size: 0.7rem;
+            display: block;
+            margin: 2px auto;
+        }
+        .image-upload-preview .remove-image-btn:hover {
+            text-decoration: underline;
+        }
+        .agent-logo-preview img {
+            border-radius: 8px;
+            max-width: 100px;
+            max-height: 100px;
+            object-fit: contain;
+            border: 1px solid #ddd;
+        }
+        .required-star {
+            color: #e74c3c;
+            margin-left: 2px;
+        }
+
+        /* ================================================================
+           RECEIPT MODAL
+           ================================================================ */
+        #receiptModal .modal-content {
+            max-width: 440px;
+            width: 95%;
+            padding: 0;
+            border-radius: 20px;
+            overflow: hidden;
+            background: #fcfcfc;
+            position: relative;
+        }
+        .receipt-header {
+            background: linear-gradient(135deg, #0a2b3c 0%, #1c4e6c 100%);
+            padding: 18px 20px 14px 20px;
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+        .receipt-header .receipt-logo {
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #FFF, #FFD966, #6bc6ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .receipt-header .receipt-sub {
+            font-size: 0.7rem;
+            opacity: 0.8;
+            margin-top: 2px;
+            letter-spacing: 2px;
+        }
+        .receipt-header .receipt-badge {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 2px 14px;
+            border-radius: 30px;
+            display: inline-block;
+            font-size: 0.65rem;
+            font-weight: 600;
+            margin-top: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .receipt-close-x {
+            position: absolute;
+            top: 8px;
+            right: 14px;
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            color: white;
+            font-size: 1.4rem;
+            cursor: pointer;
+            padding: 0 6px;
+            border-radius: 50%;
+            transition: 0.2s;
+            line-height: 1.4;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            z-index: 5;
+        }
+        .receipt-close-x:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+        .receipt-body {
+            padding: 16px 20px 12px 20px;
+        }
+        .receipt-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 0.82rem;
+        }
+        .receipt-row .label {
+            color: #7f8c8d;
+            font-weight: 500;
+        }
+        .receipt-row .value {
+            color: #1e3b4a;
+            font-weight: 600;
+            text-align: right;
+            max-width: 60%;
+            word-break: break-word;
+        }
+        .receipt-row.total {
+            border-top: 2px solid #1c4e6c;
+            border-bottom: none;
+            padding-top: 8px;
+            margin-top: 4px;
+            font-weight: 800;
+            font-size: 0.95rem;
+        }
+        .receipt-row.total .value {
+            color: #0a2b3c;
+            font-size: 1.05rem;
+        }
+        .receipt-divider {
+            border: none;
+            border-top: 1px dashed #dce8f0;
+            margin: 8px 0;
+        }
+        .receipt-footer {
+            background: #f5f8fa;
+            padding: 10px 20px 14px 20px;
+            text-align: center;
+            border-top: 1px solid #e8edf2;
+        }
+        .receipt-footer .thanks {
+            font-weight: 700;
+            color: #1c6e8f;
+            font-size: 0.85rem;
+        }
+        .receipt-footer .powered {
+            font-size: 0.6rem;
+            color: #95a5a6;
+            margin-top: 2px;
+        }
+        .receipt-share-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        .receipt-share-btn {
+            border: none;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            height: 38px;
+            color: white;
+            flex: 1 1 auto;
+            min-width: 100px;
+            justify-content: center;
+        }
+        .receipt-share-btn.whatsapp {
+            background: #25D366;
+        }
+        .receipt-share-btn.whatsapp:hover {
+            background: #1da851;
+            transform: translateY(-1px);
+        }
+        .receipt-share-btn.sms {
+            background: #3498db;
+        }
+        .receipt-share-btn.sms:hover {
+            background: #2980b9;
+            transform: translateY(-1px);
+        }
+        .receipt-share-btn.close-receipt {
+            background: #95a5a6;
+        }
+        .receipt-share-btn.close-receipt:hover {
+            background: #7f8c8d;
+            transform: translateY(-1px);
+        }
+        .receipt-share-btn.client {
+            background: #2c7da0;
+        }
+        .receipt-share-btn.client:hover {
+            background: #1f5068;
+            transform: translateY(-1px);
+        }
+        .receipt-share-btn.agent {
+            background: #8e44ad;
+        }
+        .receipt-share-btn.agent:hover {
+            background: #732d91;
+            transform: translateY(-1px);
+        }
+        .receipt-share-label {
+            font-size: 0.65rem;
+            color: #7f8c8d;
+            text-align: center;
+            width: 100%;
+            margin-top: 4px;
+            font-weight: 600;
+        }
+        .receipt-phone-display {
+            font-size: 0.7rem;
+            color: #1c6e8f;
+            background: #e8f0f8;
+            padding: 1px 10px;
+            border-radius: 20px;
+            display: inline-block;
+            border: 1px solid #c0d8e8;
+            margin-left: 4px;
+        }
+        .receipt-share-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            width: 100%;
+        }
+        .receipt-share-group .share-row {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .receipt-share-group .share-row .receipt-share-btn {
+            flex: 1 1 45%;
+            min-width: 80px;
+        }
+        @media (max-width: 480px) {
+            .receipt-share-group .share-row .receipt-share-btn {
+                flex: 1 1 100%;
+                min-width: 60px;
+            }
+            #receiptModal .modal-content {
+                max-width: 100%;
+                width: 98%;
+                border-radius: 16px;
+            }
+            .receipt-body {
+                padding: 12px 14px 8px 14px;
+            }
+            .receipt-header {
+                padding: 14px 14px 10px 14px;
+            }
+            .receipt-footer {
+                padding: 8px 14px 10px 14px;
+            }
+            .receipt-row {
+                font-size: 0.75rem;
+                padding: 3px 0;
+            }
+            .receipt-row.total {
+                font-size: 0.85rem;
+                padding-top: 6px;
+            }
+            .receipt-row.total .value {
+                font-size: 0.95rem;
+            }
+            .receipt-share-btn {
+                font-size: 0.7rem;
+                padding: 5px 12px;
+                height: 34px;
+                min-width: 70px;
+            }
+            .receipt-close-x {
+                top: 4px;
+                right: 8px;
+                font-size: 1.2rem;
+                width: 28px;
+                height: 28px;
+            }
+        }
+
+        /* ================================================================
+           AGREEMENT MODAL
+           ================================================================ */
+        #agreementModal .modal-content {
+            max-width: 560px;
+            width: 95%;
+            padding: 0;
+            border-radius: 20px;
+            overflow: hidden;
+            background: #fcfcfc;
+        }
+        .agreement-modal-header {
+            background: linear-gradient(135deg, #0a2b3c 0%, #1c4e6c 100%);
+            padding: 14px 20px;
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+        .agreement-modal-header h3 {
+            color: white;
+            margin: 0;
+            font-size: 1.1rem;
+        }
+        .agreement-modal-header small {
+            font-size: 0.6rem;
+            opacity: 0.8;
+        }
+        .agreement-close-x {
+            position: absolute;
+            top: 6px;
+            right: 12px;
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            color: white;
+            font-size: 1.3rem;
+            cursor: pointer;
+            padding: 0 6px;
+            border-radius: 50%;
+            transition: 0.2s;
+            line-height: 1.4;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            z-index: 5;
+        }
+        .agreement-close-x:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+        .agreement-body {
+            padding: 16px 20px;
+            max-height: 60vh;
+            overflow-y: auto;
+            font-size: 0.78rem;
+            line-height: 1.7;
+            color: #1e3b4a;
+        }
+        .agreement-body .clause {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            border-left: 3px solid #2c7da0;
+        }
+        .agreement-body .clause.dev-clause {
+            border-left-color: #8e44ad;
+            background: #f8f5fa;
+        }
+        .agreement-body .clause .tag {
+            font-weight: 700;
+            color: #2c7da0;
+            font-size: 0.7rem;
+            display: block;
+            margin-bottom: 2px;
+        }
+        .agreement-body .clause.dev-clause .tag {
+            color: #8e44ad;
+        }
+        .agreement-body .placeholder {
+            color: #1c6e8f;
+            font-weight: 700;
+            background: #e8f0f8;
+            padding: 0 4px;
+            border-radius: 3px;
+        }
+        .agreement-footer {
+            background: #f5f8fa;
+            padding: 12px 20px;
+            border-top: 1px solid #e8edf2;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .agreement-footer .action-btn {
+            flex: 1;
+            min-width: 120px;
+        }
+        .agreement-footer .action-btn.agree-btn {
+            background: #27ae60;
+        }
+        .agreement-footer .action-btn.agree-btn:hover {
+            background: #1e8449;
+        }
+        .agreement-footer .action-btn.agree-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .agreement-footer .action-btn.agree-btn.agreed {
+            background: #27ae60;
+            cursor: default;
+            opacity: 0.7;
+        }
+        .agreement-footer .action-btn.agree-btn.agreed:hover {
+            background: #27ae60;
+        }
+        .agreement-signature-area {
+            margin-top: 8px;
+            border: 2px dashed #d0dce8;
+            border-radius: 12px;
+            padding: 8px;
+            display: none;
+            background: white;
+        }
+        .agreement-signature-area.open {
+            display: block;
+        }
+        .agreement-signature-area canvas {
+            width: 100%;
+            height: 100px;
+            border-radius: 8px;
+            background: white;
+            touch-action: none;
+            cursor: crosshair;
+        }
+        .agreement-signature-area .sig-actions {
+            display: flex;
+            gap: 6px;
+            margin-top: 4px;
+            flex-wrap: wrap;
+        }
+        .agreement-signature-area .sig-actions button {
+            padding: 3px 12px;
+            border-radius: 20px;
+            border: none;
+            font-weight: 700;
+            font-size: 0.65rem;
+            cursor: pointer;
+            height: 30px;
+        }
+        .agreement-signature-area .sig-actions .sig-clear {
+            background: #e74c3c;
+            color: white;
+        }
+        .agreement-signature-area .sig-actions .sig-clear:hover {
+            background: #c0392b;
+        }
+        .agreement-signature-area .sig-actions .sig-confirm {
+            background: #27ae60;
+            color: white;
+        }
+        .agreement-signature-area .sig-actions .sig-confirm:hover {
+            background: #1e8449;
+        }
+        .sig-preview {
+            max-width: 120px;
+            max-height: 50px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            display: none;
+            margin-top: 4px;
+        }
+        .sig-preview.show {
+            display: block;
+        }
+        .agreement-status {
+            font-size: 0.65rem;
+            color: #7f8c8d;
+            text-align: center;
+            margin-top: 4px;
+        }
+        .agreement-status .done {
+            color: #27ae60;
+            font-weight: 700;
+        }
+
+        /* ================================================================
+           EDIT ACCOUNT MODAL
+           ================================================================ */
+        #editAccountModal .modal-content {
+            max-width: 400px;
+            width: 90%;
+        }
+        #editAccountModal .input-group {
+            margin-bottom: 0.6rem;
+        }
+        #editAccountModal .input-group label {
+            font-size: 0.675rem;
+        }
+        #editAccountModal .input-group input,
+        #editAccountModal .input-group select {
+            height: 40px;
+            font-size: 0.85rem;
+            padding: 4px 10px;
+        }
+        #editAccountModal .emoji-grid {
+            grid-template-columns: repeat(6, 1fr);
+            gap: 3px;
+            margin: 5px 0 6px 0;
+        }
+        #editAccountModal .emoji-grid .emoji-option {
+            font-size: 1.3rem;
+            padding: 2px;
+            border-radius: 8px;
+        }
+        .city-input-row {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        .city-input-row select,
+        .city-input-row input {
+            flex: 1;
+        }
+        .city-input-row .or-text {
+            font-size: 0.7rem;
+            color: #95a5a6;
+            font-weight: 600;
+        }
+        @media (max-width: 600px) {
+            .city-input-row {
+                flex-direction: column;
+                gap: 0.3rem;
+            }
+            .city-input-row .or-text {
+                display: none;
+            }
+        }
+
+        /* ================================================================
+           AGENT REPORT MODAL
+           ================================================================ */
+        #agentReportModal .modal-content {
+            max-width: 480px;
+            width: 95%;
+            padding: 0;
+            border-radius: 20px;
+            overflow: hidden;
+            background: #fcfcfc;
+            position: relative;
+        }
+        .report-header {
+            background: linear-gradient(135deg, #0a2b3c 0%, #1c4e6c 100%);
+            padding: 14px 20px;
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+        .report-header h3 {
+            color: white;
+            margin: 0;
+        }
+        .report-header small {
+            font-size: 0.6rem;
+            opacity: 0.8;
+        }
+        .report-close-x {
+            position: absolute;
+            top: 6px;
+            right: 12px;
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            color: white;
+            font-size: 1.3rem;
+            cursor: pointer;
+            padding: 0 6px;
+            border-radius: 50%;
+            transition: 0.2s;
+            line-height: 1.4;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            z-index: 5;
+        }
+        .report-close-x:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+        .report-body {
+            padding: 16px 20px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+        .report-body .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 0.82rem;
+        }
+        .report-body .info-row .label {
+            color: #7f8c8d;
+            font-weight: 500;
+        }
+        .report-body .info-row .value {
+            color: #1e3b4a;
+            font-weight: 600;
+            text-align: right;
+        }
+        .report-body .info-row.total {
+            border-top: 2px solid #1c4e6c;
+            border-bottom: none;
+            padding-top: 8px;
+            margin-top: 4px;
+            font-weight: 800;
+            font-size: 0.95rem;
+        }
+        .report-body .info-row.total .value {
+            color: #0a2b3c;
+            font-size: 1.05rem;
+        }
+        .report-ussd-section {
+            background: #f0f6fb;
+            border-radius: 10px;
+            padding: 10px 12px;
+            margin-top: 10px;
+            border: 1px dashed #2c7da0;
+        }
+        .report-ussd-section .ussd-code {
+            font-family: monospace;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #0f2b3d;
+            background: white;
+            padding: 6px 12px;
+            border-radius: 8px;
+            display: block;
+            word-break: break-all;
+            margin-top: 4px;
+            border: 1px solid #d0dce8;
+        }
+        .report-footer {
+            background: #f5f8fa;
+            padding: 10px 20px 14px 20px;
+            border-top: 1px solid #e8edf2;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .report-footer .action-btn {
+            flex: 1;
+            min-width: 100px;
+        }
+        .report-footer .action-btn.copy-btn {
+            background: #2c7da0;
+        }
+        .report-footer .action-btn.copy-btn:hover {
+            background: #1f5068;
+        }
+        .report-footer .action-btn.close-report {
+            background: #95a5a6;
+        }
+        .report-footer .action-btn.close-report:hover {
+            background: #7f8c8d;
+        }
+
+        /* ================================================================
+           AGENT AUTH MODAL (Password & PIN)
+           ================================================================ */
+        #agentAuthModal .modal-content {
+            max-width: 360px;
+        }
+        #agentAuthModal .input-group {
+            margin-bottom: 0.6rem;
+        }
+        #agentAuthModal .input-group label {
+            font-size: 0.675rem;
+        }
+        #agentAuthModal .input-group input {
+            height: 40px;
+            font-size: 0.9rem;
+            padding: 4px 12px;
+            letter-spacing: 2px;
+            font-family: monospace;
+        }
+        #agentAuthModal .auth-error {
+            color: #c0392b;
+            margin: 4px 0;
+            text-align: center;
+        }
+        #agentAuthModal .auth-success {
+            color: #27ae60;
+            margin: 4px 0;
+            text-align: center;
+        }
+
+        /* ================================================================
+           USER DEACTIVATE MODAL
+           ================================================================ */
+        #deactivateModal .modal-content {
+            max-width: 360px;
+        }
+        #deactivateModal .input-group {
+            margin-bottom: 0.6rem;
+        }
+        #deactivateModal .input-group label {
+            font-size: 0.675rem;
+        }
+        #deactivateModal .input-group input {
+            height: 40px;
+            font-size: 0.9rem;
+            padding: 4px 12px;
+        }
+        #deactivateModal .auth-error {
+            color: #c0392b;
+            margin: 4px 0;
+            text-align: center;
+        }
+        #deactivateModal .auth-success {
+            color: #27ae60;
+            margin: 4px 0;
+            text-align: center;
+        }
+
+        /* ================================================================
+           AGENT REMOVE MODAL
+           ================================================================ */
+        #agentRemoveModal .modal-content {
+            max-width: 360px;
+        }
+        #agentRemoveModal .input-group {
+            margin-bottom: 0.6rem;
+        }
+        #agentRemoveModal .input-group label {
+            font-size: 0.675rem;
+        }
+        #agentRemoveModal .input-group input {
+            height: 40px;
+            font-size: 0.9rem;
+            padding: 4px 12px;
+        }
+        #agentRemoveModal .auth-error {
+            color: #c0392b;
+            margin: 4px 0;
+            text-align: center;
+        }
+        #agentRemoveModal .auth-success {
+            color: #27ae60;
+            margin: 4px 0;
+            text-align: center;
+        }
 
         /* ================================================================
            CURRENCY CONVERTER MODAL
@@ -885,16 +3141,11 @@
             margin-top: 3px;
             padding-top: 4px;
         }
-
-        /* ================================================================
-           RESPONSIVE (unchanged)
-           ================================================================ */
-        /* ... */
     </style>
 </head>
 <body>
     <!-- ============================================================
-    APP CARD (all HTML unchanged)
+    APP CARD (all HTML content)
     ============================================================ -->
     <div class="app-card">
         <!-- HEADER -->
@@ -970,7 +3221,144 @@
 
         <!-- MAIN FORM -->
         <div class="form-container" id="mainFormContainer" style="display:none;">
-            <!-- ... (unchanged) ... -->
+            <div class="profile-section" id="profileSection">
+                <span class="profile-label" data-i18n="location_label">📍 Location:</span>
+                <span class="profile-field" id="profileAddress" readonly>—</span>
+                <span class="profile-field" id="profileCity" readonly>—</span>
+                <span class="profile-field" id="profileCountry" readonly>—</span>
+                <button class="map-btn" id="mapButton" data-i18n="map_btn">Map</button>
+            </div>
+            <form id="mainForm">
+                <div class="section-title" data-i18n="sender_title">👤 SENDER</div>
+                <div class="double-row">
+                    <div class="input-group"><label data-i18n="full_name">Full Name *</label><input type="text" id="senderName" required /></div>
+                    <div class="input-group"><label data-i18n="phone">Phone *</label><input type="tel" id="senderPhone" required /></div>
+                </div>
+                <div class="input-group"><label data-i18n="address">Address</label><input type="text" id="senderAddress" placeholder="Street, building, etc." /></div>
+                <div class="input-group">
+                    <label data-i18n="city">City / Town *</label>
+                    <div class="city-input-row">
+                        <select id="senderCitySelect">
+                            <option value="">Select a capital city...</option>
+                            <option value="Freetown">Freetown (Sierra Leone)</option>
+                            <option value="Abuja">Abuja (Nigeria)</option>
+                            <option value="Accra">Accra (Ghana)</option>
+                            <option value="Nairobi">Nairobi (Kenya)</option>
+                            <option value="Monrovia">Monrovia (Liberia)</option>
+                            <option value="Dakar">Dakar (Senegal)</option>
+                            <option value="Conakry">Conakry (Guinea)</option>
+                            <option value="Bamako">Bamako (Mali)</option>
+                            <option value="Yamoussoukro">Yamoussoukro (Ivory Coast)</option>
+                            <option value="Niamey">Niamey (Niger)</option>
+                            <option value="Porto-Novo">Porto-Novo (Benin)</option>
+                            <option value="Bissau">Bissau (Guinea Bissau)</option>
+                            <option value="Banjul">Banjul (Gambia)</option>
+                            <option value="Lomé">Lomé (Togo)</option>
+                            <option value="Bangui">Bangui (CAR)</option>
+                            <option value="Addis Ababa">Addis Ababa (Ethiopia)</option>
+                            <option value="Libreville">Libreville (Gabon)</option>
+                            <option value="Antananarivo">Antananarivo (Madagascar)</option>
+                            <option value="Rabat">Rabat (Morocco)</option>
+                            <option value="Kigali">Kigali (Rwanda)</option>
+                            <option value="Kampala">Kampala (Uganda)</option>
+                            <option value="Kinshasa">Kinshasa (DR Congo)</option>
+                            <option value="Ouagadougou">Ouagadougou (Burkina Faso)</option>
+                        </select>
+                        <span class="or-text">OR</span>
+                        <input type="text" id="senderCityOther" placeholder="Enter other city/town" />
+                    </div>
+                </div>
+                <div class="input-group"><label data-i18n="amount">Amount * <span id="amountLimitIndicator" class="collateral-limit-indicator" style="display:none;">Max: —</span></label><input type="number" id="amountInput" step="any" required /></div>
+                <div class="section-title" id="agentSectionTitle">👤 AGENT</div>
+                <div class="double-row">
+                    <div class="input-group"><label id="agentNameLabel">Agent Name *</label><input type="text" id="agentName" required readonly /></div>
+                    <div class="input-group"><label id="agentPhoneLabel">Agent Phone *</label><input type="tel" id="agentPhone" required readonly /></div>
+                </div>
+                <div class="section-title" id="clientSectionTitle" style="display:none;">👥 CLIENT</div>
+                <div class="double-row" id="clientFieldsRow" style="display:none;">
+                    <div class="input-group"><label id="clientNameLabel">Client Name *</label><input type="text" id="clientName" readonly /></div>
+                    <div class="input-group"><label id="clientPhoneLabel">Client Phone *</label><input type="tel" id="clientPhone" readonly /></div>
+                </div>
+                <div style="display:flex; align-items:center; gap:6px; margin-bottom:0.4rem; flex-wrap:wrap;">
+                    <span style="font-size:0.7rem; color:#1c6e8f;">📋 Select an agent from the dropdown, or use <strong>Add Client</strong> to add a client</span>
+                    <span id="slModeNote" class="sl-mode-note" style="display:none;">🌍 International Agent – Special USSD format</span>
+                    <span id="guineaModeNote" class="guinea-mode-note" style="display:none;">🇬🇳 Guinea Orange Money USSD</span>
+                </div>
+                <div class="mode-row">
+                    <button class="btn" id="intlToggleBtn" data-i18n="international">International</button>
+                    <button class="btn add-client-btn-header" id="addClientBtnHeader" data-i18n="add_client">➕ Add Client</button>
+                </div>
+                <div class="country-selector-wrapper" id="countryWrapper" style="display:none;">
+                    <div class="input-group">
+                        <label data-i18n="recipient_country">🌍 Recipient Country</label>
+                        <div class="country-selector">
+                            <span class="country-flag" id="flagEmoji">🇱🇷</span>
+                            <select id="countryCodeSelect">
+                                <option value="LR|Liberia|LRD|🇱🇷|10|1|2">🇱🇷 Liberia (GST 10%)</option>
+                                <option value="GN|Guinea|GNF|🇬🇳|18|2|3">🇬🇳 Guinea (GST 18%)</option>
+                                <option value="SN|Senegal|XOF|🇸🇳|18|3|5">🇸🇳 Senegal (GST 18%)</option>
+                                <option value="ML|Mali|XOF|🇲🇱|18|4|6">🇲🇱 Mali (GST 18%)</option>
+                                <option value="CI|Ivory Coast|XOF|🇨🇮|18|5|7">🇨🇮 Ivory Coast (GST 18%)</option>
+                                <option value="GH|Ghana|GHS|🇬🇭|12.5|6|4">🇬🇭 Ghana (GST 12.5%)</option>
+                                <option value="NE|Niger|XOF|🇳🇪|19|7|12">🇳🇪 Niger (GST 19%)</option>
+                                <option value="BJ|Benin|XOF|🇧🇯|18|8|0">🇧🇯 Benin (GST 18%)</option>
+                                <option value="GW|Guinea Bissau|XOF|🇬🇼|15|9|13">🇬🇼 Guinea Bissau (GST 15%)</option>
+                                <option value="GM|Gambia|GMD|🇬🇲|15|10|1">🇬🇲 Gambia (GST 15%)</option>
+                                <option value="TG|Togo|XOF|🇹🇬|18|11|0">🇹🇬 Togo (GST 18%)</option>
+                                <option value="KE|Kenya|KES|🇰🇪|16|12|10">🇰🇪 Kenya (GST 16%)</option>
+                                <option value="CF|Central Africa Rep|XAF|🇨🇫|19|13|0">🇨🇫 Central Africa Rep (GST 19%)</option>
+                                <option value="ET|Ethiopia|ETB|🇪🇹|15|14|0">🇪🇹 Ethiopia (GST 15%)</option>
+                                <option value="GA|Gabon|XAF|🇬🇦|18|15|0">🇬🇦 Gabon (GST 18%)</option>
+                                <option value="MG|Madagascar|MGA|🇲🇬|20|16|0">🇲🇬 Madagascar (GST 20%)</option>
+                                <option value="MA|Morocco|MAD|🇲🇦|20|17|0">🇲🇦 Morocco (GST 20%)</option>
+                                <option value="RW|Rwanda|RWF|🇷🇼|18|18|0">🇷🇼 Rwanda (GST 18%)</option>
+                                <option value="UG|Uganda|UGX|🇺🇬|18|19|8">🇺🇬 Uganda (GST 18%)</option>
+                                <option value="CD|DR Congo|CDF|🇨🇩|16|0|9">🇨🇩 DR Congo (GST 16%)</option>
+                                <option value="BF|Burkina Faso|XOF|🇧🇫|18|0|11">🇧🇫 Burkina Faso (GST 18%)</option>
+                                <option value="SL|Sierra Leone|SLL|🇸🇱|12.5|20|0">🇸🇱 Sierra Leone (GST 12.5%)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="charges-panel" id="chargesPanel">
+                    <div class="charges-row"><span data-i18n="base_amount">💰 Base Amount:</span><span id="displayAmount">0.00</span></div>
+                    <div class="charges-row"><span data-i18n="transfer_charge">📊 Transfer Charge (1%):</span><span id="chargeAmount">0.00</span></div>
+                    <div class="charges-row" id="gstRow"><span data-i18n="gst">🏛️ GST (<span id="gstRateLabel">15</span>%):</span><span id="gstAmount">0.00</span></div>
+                    <div class="charges-row total-row"><span data-i18n="total_debit">💵 Total Debit:</span><span id="totalAmount">0.00</span></div>
+                    <div class="charges-row"><span data-i18n="currency_label">🌍 Currency:</span><span id="currencySymbol">GMD</span></div>
+                </div>
+                <div class="section-title" data-i18n="mm_operator">💸 Mobile Money Operator</div>
+                <div class="mm-button-container">
+                    <button type="button" class="single-mm-btn" id="mainMmBtn">WBMoney</button>
+                </div>
+                <div class="section-title" data-i18n="tx_id_label">🔖 TRANSACTION ID</div>
+                <div class="tx-row">
+                    <div class="input-group"><label data-i18n="tx_id">Transaction ID</label><input type="text" id="transactionId" placeholder="Click Generate" /></div>
+                    <button type="button" class="tx-btn" id="generateTxBtn" data-i18n="gen">Gen</button>
+                    <button type="button" class="tx-btn copy" id="copyTxBtn" data-i18n="copy">Copy</button>
+                </div>
+
+                <div class="section-title" style="margin-top:0.5rem;">🔐 PROVIDER TRANSACTION ID</div>
+                <div class="input-group">
+                    <label for="providerTxId">Provider Transaction ID (Format: AB123456.1234.X12345) *</label>
+                    <input type="text" id="providerTxId" placeholder="e.g. AB123456.1234.X12345" pattern="[A-Za-z]{2}[0-9]{6}\.[0-9]{4}\.[A-Za-z][0-9]{5}" />
+                    <div style="font-size:0.6rem; color:#666; margin-top:2px;">Format: 2 letters + 6 digits . 4 digits . 1 letter + 5 digits (e.g. AB123456.1234.X12345)</div>
+                    <div id="providerTxIdError" class="error-msg" style="font-size:0.65rem; display:none;"></div>
+                </div>
+
+                <div class="input-group" id="mainTransferCodeGroup" style="display:none;">
+                    <label for="mainTransferCode">Transfer Code (6, 8, 10, 12, or 14 digits) *</label>
+                    <input type="text" id="mainTransferCode" placeholder="e.g. 123456" maxlength="14" pattern="[0-9]{6}|[0-9]{8}|[0-9]{10}|[0-9]{12}|[0-9]{14}" />
+                    <div style="font-size:0.6rem; color:#666; margin-top:2px;">Enter the 6-14 digit transfer code provided by the sender (appears only for International transfers).</div>
+                    <div id="mainTransferCodeError" class="error-msg" style="font-size:0.65rem; display:none;"></div>
+                </div>
+
+                <button type="submit" class="btn-submit" id="submitBtn" data-i18n="submit">Submit</button>
+                <div class="business-strip">
+                    <div class="business-title" data-i18n="quick_pay">⭐ QUICK PAY ⭐</div>
+                    <div class="business-icons" id="businessIconsContainer"></div>
+                </div>
+            </form>
         </div>
 
         <!-- FOOTER -->
@@ -993,15 +3381,772 @@
     </div>
 
     <!-- ============================================================
-    MODALS (unchanged)
+    MODALS
     ============================================================ -->
-    <!-- All modals from previous version – omitted for brevity but included in full code -->
-    <!-- ... (all modals) ... -->
+    <!-- Map Modal -->
+    <div id="mapModal" class="modal"><div class="modal-content"><h3 data-i18n="map_title">📍 Your Location</h3><iframe id="mapIframe" allowfullscreen loading="lazy"></iframe><button class="action-btn close-modal" style="margin-top:10px;" data-i18n="close">Close</button></div></div>
 
-    <!-- CHAT -->
+    <!-- Info Modal -->
+    <div id="infoModal" class="modal"><div class="modal-content"><h3 id="modalTitle"></h3><div id="modalBody"></div><button class="action-btn close-modal" data-i18n="close">Close</button></div></div>
+
+    <!-- Subscribe Modal -->
+    <div id="subscribeModal" class="modal"><div class="modal-content"><h3 data-i18n="subscribe_title">📧 Subscribe</h3><input type="email" id="subEmail" placeholder="Your email" style="width:100%; padding:5px 9px; margin:4px 0; border-radius:30px; border:1px solid #ddd; font-size:0.85rem; height:42px;" /><button id="submitSubscribeBtn" class="action-btn" data-i18n="subscribe">Subscribe</button><button class="action-btn close-modal" style="margin-top:4px;" data-i18n="cancel">Cancel</button></div></div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal"><div class="modal-content"><h3 data-i18n="login_title">🔐 Login</h3><input type="text" id="loginName" placeholder="Full Name" style="width:100%; padding:5px 9px; margin:3px 0; border-radius:30px; border:1px solid #ddd; font-size:0.85rem; height:42px;" /><input type="tel" id="loginPhone" placeholder="Phone" style="width:100%; padding:5px 9px; margin:3px 0; border-radius:30px; border:1px solid #ddd; font-size:0.85rem; height:42px;" /><div id="loginError" class="error-msg"></div><button id="doLoginBtn" class="action-btn" data-i18n="login">Login</button><button class="action-btn close-modal" style="margin-top:4px;" data-i18n="cancel">Cancel</button></div></div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal"><div class="modal-content"><h3 data-i18n="register_title">📝 Create Account</h3><input type="text" id="regName" placeholder="Full Name *" style="width:100%; padding:5px 9px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.85rem; height:42px;" /><input type="tel" id="regPhone" placeholder="Phone *" style="width:100%; padding:5px 9px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.85rem; height:42px;" />
+        <input type="text" id="regAddress" placeholder="Address" style="width:100%; padding:5px 9px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.85rem; height:42px;" />
+        <div class="input-group" style="margin-bottom:0.4rem;">
+            <label style="font-size:0.78rem;font-weight:700;color:#1e3b4a;">City / Town *</label>
+            <div class="city-input-row">
+                <select id="regCitySelect">
+                    <option value="">Select a capital city...</option>
+                    <option value="Freetown">Freetown (Sierra Leone)</option>
+                    <option value="Abuja">Abuja (Nigeria)</option>
+                    <option value="Accra">Accra (Ghana)</option>
+                    <option value="Nairobi">Nairobi (Kenya)</option>
+                    <option value="Monrovia">Monrovia (Liberia)</option>
+                    <option value="Dakar">Dakar (Senegal)</option>
+                    <option value="Conakry">Conakry (Guinea)</option>
+                    <option value="Bamako">Bamako (Mali)</option>
+                    <option value="Yamoussoukro">Yamoussoukro (Ivory Coast)</option>
+                    <option value="Niamey">Niamey (Niger)</option>
+                    <option value="Porto-Novo">Porto-Novo (Benin)</option>
+                    <option value="Bissau">Bissau (Guinea Bissau)</option>
+                    <option value="Banjul">Banjul (Gambia)</option>
+                    <option value="Lomé">Lomé (Togo)</option>
+                    <option value="Bangui">Bangui (CAR)</option>
+                    <option value="Addis Ababa">Addis Ababa (Ethiopia)</option>
+                    <option value="Libreville">Libreville (Gabon)</option>
+                    <option value="Antananarivo">Antananarivo (Madagascar)</option>
+                    <option value="Rabat">Rabat (Morocco)</option>
+                    <option value="Kigali">Kigali (Rwanda)</option>
+                    <option value="Kampala">Kampala (Uganda)</option>
+                    <option value="Kinshasa">Kinshasa (DR Congo)</option>
+                    <option value="Ouagadougou">Ouagadougou (Burkina Faso)</option>
+                </select>
+                <span class="or-text">OR</span>
+                <input type="text" id="regCityOther" placeholder="Enter other city/town" />
+            </div>
+        </div>
+        <select id="regCountry" style="width:100%; padding:5px 9px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.85rem; height:42px;">
+            <option value="Sierra Leone">Sierra Leone</option><option value="Nigeria">Nigeria</option><option value="Ghana">Ghana</option><option value="Kenya">Kenya</option><option value="Liberia">Liberia</option><option value="Senegal">Senegal</option>
+            <option value="Guinea">Guinea</option><option value="Mali">Mali</option><option value="Ivory Coast">Ivory Coast</option>
+            <option value="Niger">Niger</option><option value="Benin">Benin</option><option value="Guinea Bissau">Guinea Bissau</option>
+            <option value="Gambia">Gambia</option><option value="Togo">Togo</option><option value="Central Africa Rep">Central Africa Rep</option>
+            <option value="Ethiopia">Ethiopia</option><option value="Gabon">Gabon</option><option value="Madagascar">Madagascar</option>
+            <option value="Morocco">Morocco</option><option value="Rwanda">Rwanda</option><option value="Uganda">Uganda</option>
+            <option value="DR Congo">DR Congo</option><option value="Burkina Faso">Burkina Faso</option>
+        </select>
+        <select id="regLanguage" style="width:100%; padding:5px 9px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.85rem; height:42px;">
+            <option value="en">English</option><option value="fr">Français</option><option value="es">Español</option>
+        </select>
+        <label style="font-size:0.78rem;font-weight:700;color:#1e3b4a;margin-top:3px;" data-i18n="choose_icon">Choose icon:</label>
+        <div class="emoji-grid" id="emojiPickerGrid">
+            <span class="emoji-option" data-emoji="👤">👤</span><span class="emoji-option" data-emoji="👨">👨</span><span class="emoji-option" data-emoji="👩">👩</span><span class="emoji-option" data-emoji="🧑">🧑</span><span class="emoji-option" data-emoji="👦">👦</span><span class="emoji-option" data-emoji="👧">👧</span>
+            <span class="emoji-option" data-emoji="🧒">🧒</span><span class="emoji-option" data-emoji="👨‍💻">👨‍💻</span><span class="emoji-option" data-emoji="👩‍💻">👩‍💻</span><span class="emoji-option" data-emoji="🧑‍💻">🧑‍💻</span><span class="emoji-option" data-emoji="👨‍🎓">👨‍🎓</span><span class="emoji-option" data-emoji="👩‍🎓">👩‍🎓</span>
+            <span class="emoji-option" data-emoji="🧑‍🎓">🧑‍🎓</span><span class="emoji-option" data-emoji="👨‍⚕️">👨‍⚕️</span><span class="emoji-option" data-emoji="👩‍⚕️">👩‍⚕️</span><span class="emoji-option" data-emoji="🧑‍⚕️">🧑‍⚕️</span><span class="emoji-option" data-emoji="👨‍🍳">👨‍🍳</span><span class="emoji-option" data-emoji="👩‍🍳">👩‍🍳</span>
+            <span class="emoji-option" data-emoji="🧑‍🍳">🧑‍🍳</span><span class="emoji-option" data-emoji="👨‍🔧">👨‍🔧</span><span class="emoji-option" data-emoji="👩‍🔧">👩‍🔧</span><span class="emoji-option" data-emoji="🧑‍🔧">🧑‍🔧</span><span class="emoji-option" data-emoji="👨‍🎨">👨‍🎨</span><span class="emoji-option" data-emoji="👩‍🎨">👩‍🎨</span>
+        </div>
+        <div style="margin-top:8px;">
+            <label style="font-size:0.78rem;font-weight:700;color:#1e3b4a;">Or upload your own image:</label>
+            <input type="file" id="regProfileImage" accept="image/*" style="width:100%; padding:4px; border-radius:20px; border:1px solid #ddd; font-size:0.85rem; height:38px;" />
+            <div id="regProfilePreview" class="image-upload-preview" style="display:none;">
+                <img src="#" alt="Profile preview" />
+                <button type="button" id="regProfileRemove" class="remove-image-btn">✕ Remove</button>
+            </div>
+        </div>
+        <div style="display:flex; gap:6px; align-items:center; margin-top:4px;">
+            <button type="button" class="action-btn" id="regGenerateUssdBtn" style="flex:1; background:#2c7da0; height:38px; font-size:0.85rem;">📱 Generate USSD</button>
+        </div>
+        <div class="ussd-result-box" id="regUssdResult">
+            <span class="ussd-label">📞 USSD Code:</span>
+            <span class="ussd-code-value" id="regUssdCode"></span>
+            <button class="copy-ussd-btn" id="regCopyUssdBtn">Copy</button>
+        </div>
+        <div id="regError" class="error-msg"></div><div id="regSuccess" class="success-msg"></div>
+        <button id="doRegisterBtn" class="action-btn" data-i18n="register">Register</button>
+        <button id="registerAgentBtn" class="action-btn orange" style="margin-top:4px;" data-i18n="register_agent">🏢 Register as Agent</button>
+        <button class="action-btn close-modal" style="margin-top:4px;" data-i18n="cancel">Cancel</button>
+    </div></div>
+
+    <!-- Agent Registration Modal -->
+    <div id="agentRegistrationModal" class="modal">
+        <div class="modal-content agent-form">
+            <h3 data-i18n="agent_reg_title">🏢 Agent Registration</h3>
+            <div id="agentRegError" class="error-msg"></div>
+            <div id="agentRegSuccess" class="success-msg"></div>
+            <div class="input-group"><label data-i18n="agent_business_name">Business Name *</label><input type="text" id="agentBusinessName" placeholder="e.g. Freetown Trading Co." /></div>
+            <div class="input-group"><label data-i18n="agent_address">Address *</label><input type="text" id="agentAddress" placeholder="Street, building, etc." /></div>
+            <div class="input-group">
+                <label data-i18n="agent_city">City / Town *</label>
+                <div class="city-input-row">
+                    <select id="agentCitySelect">
+                        <option value="">Select a capital city...</option>
+                        <option value="Freetown">Freetown (Sierra Leone)</option>
+                        <option value="Abuja">Abuja (Nigeria)</option>
+                        <option value="Accra">Accra (Ghana)</option>
+                        <option value="Nairobi">Nairobi (Kenya)</option>
+                        <option value="Monrovia">Monrovia (Liberia)</option>
+                        <option value="Dakar">Dakar (Senegal)</option>
+                        <option value="Conakry">Conakry (Guinea)</option>
+                        <option value="Bamako">Bamako (Mali)</option>
+                        <option value="Yamoussoukro">Yamoussoukro (Ivory Coast)</option>
+                        <option value="Niamey">Niamey (Niger)</option>
+                        <option value="Porto-Novo">Porto-Novo (Benin)</option>
+                        <option value="Bissau">Bissau (Guinea Bissau)</option>
+                        <option value="Banjul">Banjul (Gambia)</option>
+                        <option value="Lomé">Lomé (Togo)</option>
+                        <option value="Bangui">Bangui (CAR)</option>
+                        <option value="Addis Ababa">Addis Ababa (Ethiopia)</option>
+                        <option value="Libreville">Libreville (Gabon)</option>
+                        <option value="Antananarivo">Antananarivo (Madagascar)</option>
+                        <option value="Rabat">Rabat (Morocco)</option>
+                        <option value="Kigali">Kigali (Rwanda)</option>
+                        <option value="Kampala">Kampala (Uganda)</option>
+                        <option value="Kinshasa">Kinshasa (DR Congo)</option>
+                        <option value="Ouagadougou">Ouagadougou (Burkina Faso)</option>
+                    </select>
+                    <span class="or-text">OR</span>
+                    <input type="text" id="agentCityOther" placeholder="Enter other city/town" />
+                </div>
+            </div>
+            <div class="input-group"><label data-i18n="agent_reg_number">Official Business Registration Number *</label><input type="text" id="agentRegNumber" placeholder="e.g. SL-2025-0042" /></div>
+            <div class="input-group"><label data-i18n="agent_business_type">Business Type *</label>
+                <select id="agentBusinessType">
+                    <option value="Retail">Retail</option><option value="Wholesale">Wholesale</option>
+                    <option value="Service">Service</option><option value="Manufacturing">Manufacturing</option>
+                    <option value="Transport">Transport</option><option value="Hospitality">Hospitality</option>
+                    <option value="Financial">Financial</option><option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="double-row">
+                <div class="input-group"><label data-i18n="agent_owner_name">Owner Name *</label><input type="text" id="agentOwnerName" placeholder="Full name of owner" /></div>
+                <div class="input-group"><label data-i18n="agent_id_type">ID Type *</label>
+                    <select id="agentIdType">
+                        <option value="National ID">National ID</option><option value="Passport">Passport</option>
+                        <option value="Driver's License">Driver's License</option><option value="Voter's Card">Voter's Card</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+            </div>
+            <div class="input-group"><label data-i18n="agent_id_number">ID Number *</label><input type="text" id="agentIdNumber" placeholder="e.g. SL-123456" /></div>
+            <div class="input-group">
+                <label data-i18n="agent_id_image">Snap or Upload ID Image *</label>
+                <input type="file" id="agentIdImage" accept="image/*" capture="environment" style="padding:4px; height:auto;" />
+                <img id="agentIdPreview" class="id-preview" alt="ID Preview" />
+            </div>
+            <div class="input-group">
+                <label data-i18n="agent_logo">Business Logo <span class="required-star">*</span></label>
+                <input type="file" id="agentLogoImage" accept="image/*" required style="padding:4px; height:auto;" />
+                <div id="agentLogoPreviewContainer" class="image-upload-preview agent-logo-preview" style="display:none;">
+                    <img src="#" alt="Logo Preview" />
+                    <button type="button" id="agentLogoRemove" class="remove-image-btn">✕ Remove</button>
+                </div>
+                <div style="font-size:0.65rem; color:#666; margin-top:2px;">Please upload your business logo (required).</div>
+            </div>
+            <div class="input-group"><label data-i18n="agent_mobile_money">Mobile Money Number *</label><input type="tel" id="agentMobileMoney" placeholder="e.g. 23276123456" /></div>
+            <div class="input-group">
+                <label for="agentCollateralLimit">💳 Collateral Limit *</label>
+                <select id="agentCollateralLimit">
+                    <option value="500">500</option><option value="1000">1,000</option><option value="1500">1,500</option>
+                    <option value="2000">2,000</option><option value="2500">2,500</option><option value="3000">3,000</option>
+                    <option value="3500">3,500</option><option value="4000">4,000</option><option value="4500">4,500</option>
+                    <option value="5000" selected>5,000</option><option value="5500">5,500</option><option value="6000">6,000</option>
+                    <option value="6500">6,500</option><option value="7000">7,000</option><option value="7500">7,500</option>
+                    <option value="8000">8,000</option><option value="8500">8,500</option><option value="9000">9,000</option>
+                    <option value="9500">9,500</option><option value="10000">10,000</option>
+                </select>
+                <div style="font-size:0.6rem; color:#666; margin-top:2px;">This sets the maximum amount the agent can transact.</div>
+            </div>
+            <div class="input-group"><label data-i18n="agent_country_code">Request Country Code for International</label>
+                <select id="agentCountryCode">
+                    <option value="+232">🇸🇱 +232 (Sierra Leone)</option><option value="+234">🇳🇬 +234 (Nigeria)</option>
+                    <option value="+233">🇬🇭 +233 (Ghana)</option><option value="+254">🇰🇪 +254 (Kenya)</option>
+                    <option value="+231">🇱🇷 +231 (Liberia)</option><option value="+221">🇸🇳 +221 (Senegal)</option>
+                    <option value="+224" selected>🇬🇳 +224 (Guinea)</option><option value="+223">🇲🇱 +223 (Mali)</option>
+                    <option value="+225">🇨🇮 +225 (Ivory Coast)</option><option value="+227">🇳🇪 +227 (Niger)</option>
+                    <option value="+229">🇧🇯 +229 (Benin)</option><option value="+245">🇬🇼 +245 (Guinea Bissau)</option>
+                    <option value="+220">🇬🇲 +220 (Gambia)</option><option value="+228">🇹🇬 +228 (Togo)</option>
+                    <option value="+236">🇨🇫 +236 (CAR)</option><option value="+251">🇪🇹 +251 (Ethiopia)</option>
+                    <option value="+241">🇬🇦 +241 (Gabon)</option><option value="+261">🇲🇬 +261 (Madagascar)</option>
+                    <option value="+212">🇲🇦 +212 (Morocco)</option><option value="+250">🇷🇼 +250 (Rwanda)</option>
+                    <option value="+256">🇺🇬 +256 (Uganda)</option><option value="+243">🇨🇩 +243 (DR Congo)</option>
+                    <option value="+226">🇧🇫 +226 (Burkina Faso)</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label data-i18n="agent_password">6 Alphanumeric Password *</label>
+                <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
+                    <input type="text" id="agentPassword" placeholder="e.g. A1B2C3" style="flex:1; min-width:100px; letter-spacing:2px; font-family:monospace;" readonly />
+                    <button type="button" class="action-btn green" id="generatePasswordBtn" style="padding:4px 14px; height:38px; font-size:0.7rem;" data-i18n="generate_password">🔑 Generate</button>
+                </div>
+                <div id="agentPasswordHint" style="font-size:0.65rem; color:#666; margin-top:2px;">Click Generate to create a 6-character alphanumeric password</div>
+            </div>
+
+            <div class="input-group">
+                <label>5-Digit PIN *</label>
+                <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
+                    <input type="text" id="agentPin" placeholder="e.g. 12345" style="flex:1; min-width:100px; letter-spacing:2px; font-family:monospace;" readonly />
+                    <button type="button" class="action-btn green" id="generatePinBtn" style="padding:4px 14px; height:38px; font-size:0.7rem;">🔑 Generate PIN</button>
+                </div>
+                <div id="agentPinHint" style="font-size:0.65rem; color:#666; margin-top:2px;">Click Generate to create a 5-digit PIN</div>
+            </div>
+
+            <div class="collateral-box">
+                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                    <span style="font-weight:700; font-size:0.8rem; color:#1c6e8f;" data-i18n="collateral_label">🔒 Pay Account Collateral</span>
+                    <button class="action-btn orange" id="generateCollateralBtn" style="padding:4px 12px; height:34px; font-size:0.7rem;" data-i18n="generate_collateral">Generate USSD</button>
+                </div>
+                <div id="collateralResult" style="margin-top:4px;">
+                    <span style="font-size:0.7rem; color:#666;" data-i18n="collateral_hint">Click to generate a USSD code for Orange Money transfer collateral.</span>
+                    <div id="collateralUssdDisplay" class="ussd-code" style="display:none;"></div>
+                </div>
+                <div id="collateralError" class="error-msg" style="font-size:0.7rem;"></div>
+                <input type="hidden" id="collateralAmount" value="0" />
+            </div>
+
+            <div style="margin: 10px 0 6px 0; text-align: center;">
+                <button class="action-btn orange" id="viewAgreementBtn" style="width:100%; height:42px; font-size:0.85rem;">📜 View & Sign Agent Agreement</button>
+                <div id="agreementStatusDisplay" style="font-size:0.65rem; color:#7f8c8d; margin-top:3px;">
+                    Agreement: <span id="agreementStatusText" style="font-weight:700; color:#e74c3c;">Not Signed</span>
+                </div>
+            </div>
+
+            <div class="input-group" style="margin-top:0.5rem;">
+                <label for="agentProviderTxId">🔐 Provider Transaction ID (Format: AB123456.1234.X12345) *</label>
+                <input type="text" id="agentProviderTxId" placeholder="e.g. AB123456.1234.X12345" pattern="[A-Za-z]{2}[0-9]{6}\.[0-9]{4}\.[A-Za-z][0-9]{5}" />
+                <div style="font-size:0.6rem; color:#666; margin-top:2px;">Format: 2 letters + 6 digits . 4 digits . 1 letter + 5 digits</div>
+                <div id="agentProviderTxIdError" class="error-msg" style="font-size:0.65rem; display:none;"></div>
+            </div>
+
+            <div class="input-group" id="agentTransferCodeGroup" style="display:none;">
+                <label for="agentTransferCode">Transfer Code (6, 8, 10, 12, or 14 digits) *</label>
+                <input type="text" id="agentTransferCode" placeholder="e.g. 123456" maxlength="14" pattern="[0-9]{6}|[0-9]{8}|[0-9]{10}|[0-9]{12}|[0-9]{14}" />
+                <div style="font-size:0.6rem; color:#666; margin-top:2px;">Enter the 6-14 digit transfer code provided by the sender.</div>
+                <div id="agentTransferCodeError" class="error-msg" style="font-size:0.65rem; display:none;"></div>
+            </div>
+
+            <div class="action-buttons-row" style="margin-top:8px;">
+                <button class="action-btn" id="submitAgentRegistrationBtn" data-i18n="register_agent_submit">Register Agent</button>
+                <button class="action-btn close-modal" id="closeAgentRegBtn" style="background:#2c7da0;" data-i18n="close">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Agreement Modal -->
+    <div id="agreementModal" class="modal">
+        <div class="modal-content">
+            <div class="agreement-modal-header">
+                <h3>📜 AGENT REGISTRATION AGREEMENT</h3>
+                <small>Please read carefully and sign to proceed</small>
+                <button class="agreement-close-x" id="agreementCloseXBtn">✕</button>
+            </div>
+            <div class="agreement-body" id="agreementBody"></div>
+            <div class="agreement-footer">
+                <button class="action-btn agree-btn" id="agreementAgreeBtn" disabled>✋ I Agree & Sign</button>
+                <button class="action-btn close-modal" id="agreementCloseBtn">✕ Close</button>
+            </div>
+            <div class="agreement-status" id="agreementStatus">Please read all clauses and provide signature below.</div>
+        </div>
+    </div>
+
+    <!-- Edit Agent Modal -->
+    <div id="editAgentModal" class="modal">
+        <div class="modal-content agent-form">
+            <h3 data-i18n="edit_agent_title">✏️ Edit Agent</h3>
+            <div id="editAgentError" class="error-msg"></div>
+            <div id="editAgentSuccess" class="success-msg"></div>
+            <input type="hidden" id="editAgentId" />
+            <div class="input-group"><label data-i18n="agent_business_name">Business Name *</label><input type="text" id="editBusinessName" placeholder="Business name" /></div>
+            <div class="input-group"><label data-i18n="agent_address">Address *</label><input type="text" id="editAddress" placeholder="Street, building, etc." /></div>
+            <div class="input-group">
+                <label data-i18n="agent_city">City / Town *</label>
+                <div class="city-input-row">
+                    <select id="editCitySelect">
+                        <option value="">Select a capital city...</option>
+                        <option value="Freetown">Freetown (Sierra Leone)</option>
+                        <option value="Abuja">Abuja (Nigeria)</option>
+                        <option value="Accra">Accra (Ghana)</option>
+                        <option value="Nairobi">Nairobi (Kenya)</option>
+                        <option value="Monrovia">Monrovia (Liberia)</option>
+                        <option value="Dakar">Dakar (Senegal)</option>
+                        <option value="Conakry">Conakry (Guinea)</option>
+                        <option value="Bamako">Bamako (Mali)</option>
+                        <option value="Yamoussoukro">Yamoussoukro (Ivory Coast)</option>
+                        <option value="Niamey">Niamey (Niger)</option>
+                        <option value="Porto-Novo">Porto-Novo (Benin)</option>
+                        <option value="Bissau">Bissau (Guinea Bissau)</option>
+                        <option value="Banjul">Banjul (Gambia)</option>
+                        <option value="Lomé">Lomé (Togo)</option>
+                        <option value="Bangui">Bangui (CAR)</option>
+                        <option value="Addis Ababa">Addis Ababa (Ethiopia)</option>
+                        <option value="Libreville">Libreville (Gabon)</option>
+                        <option value="Antananarivo">Antananarivo (Madagascar)</option>
+                        <option value="Rabat">Rabat (Morocco)</option>
+                        <option value="Kigali">Kigali (Rwanda)</option>
+                        <option value="Kampala">Kampala (Uganda)</option>
+                        <option value="Kinshasa">Kinshasa (DR Congo)</option>
+                        <option value="Ouagadougou">Ouagadougou (Burkina Faso)</option>
+                    </select>
+                    <span class="or-text">OR</span>
+                    <input type="text" id="editCityOther" placeholder="Enter other city/town" />
+                </div>
+            </div>
+            <div class="input-group"><label data-i18n="agent_reg_number">Business Registration Number *</label><input type="text" id="editRegNumber" placeholder="Registration number" /></div>
+            <div class="input-group"><label data-i18n="agent_mobile_money">Orange Money Number *</label><input type="tel" id="editMobileMoney" placeholder="e.g. 23276123456" /></div>
+            <div class="input-group">
+                <label data-i18n="agent_password">6 Alphanumeric Password *</label>
+                <input type="text" id="editPassword" placeholder="Enter the 6-character password" style="letter-spacing:2px; font-family:monospace;" />
+                <div id="editPasswordHint" style="font-size:0.65rem; color:#666; margin-top:2px;">Enter the password that was generated during registration</div>
+            </div>
+            <div class="input-group">
+                <label>5-Digit PIN *</label>
+                <input type="text" id="editPin" placeholder="Enter the 5-digit PIN" style="letter-spacing:2px; font-family:monospace;" maxlength="5" />
+                <div style="font-size:0.65rem; color:#666; margin-top:2px;">Enter the PIN that was generated during registration</div>
+            </div>
+            <div class="action-buttons-row" style="margin-top:8px;">
+                <button class="action-btn" id="saveEditAgentBtn" data-i18n="save_changes">Save Changes</button>
+                <button class="action-btn close-modal" data-i18n="cancel">Cancel</button>
+                <button class="action-btn orange" id="editAgentReportBtn" style="background: #1a1a1a; color: white;">📋 Report</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Client Modal -->
+    <div id="addClientModal" class="modal">
+        <div class="modal-content">
+            <h3 data-i18n="add_client">Add Client</h3>
+            <div class="input-group">
+                <label data-i18n="client_name">Client Name *</label>
+                <input type="text" id="newClientName" placeholder="Enter client name" style="height:42px;" />
+            </div>
+            <div class="input-group">
+                <label data-i18n="client_phone">Client Phone *</label>
+                <input type="tel" id="newClientPhone" placeholder="Enter phone number" style="height:42px;" />
+            </div>
+            <div class="input-group">
+                <label data-i18n="address">Address</label>
+                <input type="text" id="newClientAddress" placeholder="Street, building, etc." style="height:42px;" />
+            </div>
+            <div class="input-group">
+                <label data-i18n="city">City / Town *</label>
+                <select id="newClientCitySelect" style="height:42px;">
+                    <option value="">Select a capital city...</option>
+                    <option value="Freetown">Freetown (Sierra Leone)</option>
+                    <option value="Abuja">Abuja (Nigeria)</option>
+                    <option value="Accra">Accra (Ghana)</option>
+                    <option value="Nairobi">Nairobi (Kenya)</option>
+                    <option value="Monrovia">Monrovia (Liberia)</option>
+                    <option value="Dakar">Dakar (Senegal)</option>
+                    <option value="Conakry">Conakry (Guinea)</option>
+                    <option value="Bamako">Bamako (Mali)</option>
+                    <option value="Yamoussoukro">Yamoussoukro (Ivory Coast)</option>
+                    <option value="Niamey">Niamey (Niger)</option>
+                    <option value="Porto-Novo">Porto-Novo (Benin)</option>
+                    <option value="Bissau">Bissau (Guinea Bissau)</option>
+                    <option value="Banjul">Banjul (Gambia)</option>
+                    <option value="Lomé">Lomé (Togo)</option>
+                    <option value="Bangui">Bangui (CAR)</option>
+                    <option value="Addis Ababa">Addis Ababa (Ethiopia)</option>
+                    <option value="Libreville">Libreville (Gabon)</option>
+                    <option value="Antananarivo">Antananarivo (Madagascar)</option>
+                    <option value="Rabat">Rabat (Morocco)</option>
+                    <option value="Kigali">Kigali (Rwanda)</option>
+                    <option value="Kampala">Kampala (Uganda)</option>
+                    <option value="Kinshasa">Kinshasa (DR Congo)</option>
+                    <option value="Ouagadougou">Ouagadougou (Burkina Faso)</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label data-i18n="location">Country</label>
+                <select id="newClientCountrySelect" style="height:42px;">
+                    <option value="Sierra Leone">Sierra Leone</option>
+                    <option value="Nigeria">Nigeria</option>
+                    <option value="Ghana">Ghana</option>
+                    <option value="Kenya">Kenya</option>
+                    <option value="Liberia">Liberia</option>
+                    <option value="Senegal">Senegal</option>
+                    <option value="Guinea">Guinea</option>
+                    <option value="Mali">Mali</option>
+                    <option value="Ivory Coast">Ivory Coast</option>
+                    <option value="Niger">Niger</option>
+                    <option value="Benin">Benin</option>
+                    <option value="Guinea Bissau">Guinea Bissau</option>
+                    <option value="Gambia">Gambia</option>
+                    <option value="Togo">Togo</option>
+                    <option value="Central Africa Rep">Central Africa Rep</option>
+                    <option value="Ethiopia">Ethiopia</option>
+                    <option value="Gabon">Gabon</option>
+                    <option value="Madagascar">Madagascar</option>
+                    <option value="Morocco">Morocco</option>
+                    <option value="Rwanda">Rwanda</option>
+                    <option value="Uganda">Uganda</option>
+                    <option value="DR Congo">DR Congo</option>
+                    <option value="Burkina Faso">Burkina Faso</option>
+                </select>
+            </div>
+            <div id="addClientError" class="error-msg"></div>
+            <div class="action-buttons-row">
+                <button class="action-btn" id="saveClientBtn" data-i18n="save">Save Client</button>
+                <button class="action-btn close-modal" data-i18n="cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Group Create Modal -->
+    <div id="groupCreateModal" class="modal"><div class="modal-content"><h3 data-i18n="new_group">👥 New Group</h3><div class="input-group"><label data-i18n="group_name">Group Name *</label><input type="text" id="groupNameInput" placeholder="Enter group name" maxlength="30" style="height:42px;" /></div><div class="input-group"><label data-i18n="select_members">Select Members (max 25)</label><div class="member-counter" id="memberCounter">0 selected</div><div class="group-member-list" id="memberListContainer"></div></div><div class="action-buttons-row"><button class="action-btn" id="createGroupBtn" style="flex:1;" data-i18n="create">Create</button><button class="action-btn close-modal" style="flex:0;" data-i18n="cancel">Cancel</button></div></div></div>
+
+    <!-- Group Manage Modal -->
+    <div id="groupManageModal" class="modal"><div class="modal-content"><h3 id="groupManageTitle" data-i18n="manage_group">Manage Group</h3><div id="groupManageBody"></div><button class="action-btn close-modal" style="margin-top:6px;" data-i18n="close">Close</button></div></div>
+
+    <!-- Provider Modal -->
+    <div id="providerModal" class="modal"><div class="modal-content"><h3 data-i18n="select_provider">Select Provider</h3><div class="action-buttons-row"><button class="action-btn" data-provider="Orange Money" data-i18n="orange">Orange</button><button class="action-btn" data-provider="Afrimoney" data-i18n="afrimoney">Afrimoney</button><button class="action-btn" data-provider="QMoney" data-i18n="qmoney">QMoney</button><button class="action-btn" data-provider="WBMoney" data-i18n="wbmoney">WBMoney</button><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div></div></div>
+
+    <!-- Role Modal -->
+    <div id="roleModal" class="modal"><div class="modal-content"><h3 id="roleModalTitle" data-i18n="select_type">Select Type</h3><div class="action-buttons-row" id="roleButtons"><button class="action-btn" data-role="agent" data-i18n="agent">Agent</button><button class="action-btn" data-role="customer" data-i18n="customer">Customer</button><button class="action-btn" data-role="other" data-i18n="other">Other</button><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div></div></div>
+
+    <!-- Action Modal -->
+    <div id="actionModal" class="modal"><div class="modal-content"><h3 id="modalProviderName">Orange</h3><div id="selectedRoleDisplay" style="font-size:0.72rem; color:#f4a261; margin-top:2px;"></div><div class="action-buttons-row"><button class="action-btn" id="actionTransfer" data-i18n="transfer">Transfer</button><button class="action-btn pay" id="actionPay" data-i18n="pay">Pay</button><button class="action-btn cashout" id="actionCashout" data-i18n="cashout">Cash Out</button><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div></div></div>
+
+    <!-- Goods Modal -->
+    <div id="goodsModal" class="modal"><div class="modal-content"><h3 id="goodsModalTitle" data-i18n="select_item">Select Item</h3><div id="goodsList"></div><a href="#" id="businessWebsiteLink" target="_blank" class="business-website" style="display:block;margin-top:4px;color:#2c7da0;font-weight:700;font-size:0.78rem;" data-i18n="visit_website">Visit Website</a><button class="action-btn close-modal" style="margin-top:8px;" data-i18n="close">Close</button></div></div>
+
+    <!-- Admin Auth Modal -->
+    <div id="adminAuthModal" class="modal admin-auth-modal">
+        <div class="modal-content" id="adminAuthContent">
+            <div id="adminAuthBody"></div>
+        </div>
+    </div>
+
+    <!-- Dashboard Modal -->
+    <div id="dashboardModal" class="modal">
+        <div class="modal-content">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <h3>📊 Agent Dashboard</h3>
+                <button class="action-btn" id="adminLogoutBtn" style="background:#e74c3c; padding:4px 14px; height:34px; font-size:0.7rem;">Logout</button>
+            </div>
+            <div id="dashboardContent" style="overflow-x:auto;">
+                <!-- Agent Table -->
+                <table id="agentTable">
+                    <thead><tr><th>Agent Name</th><th>Business</th><th>Address</th><th>Type</th><th>Password</th><th>PIN</th><th>Collateral Limit</th><th>Country</th><th>Status</th><th>Agreement</th><th>Action</th><th>Remove</th></tr></thead>
+                    <tbody id="dashboardTableBody"></tbody>
+                </table>
+                <!-- User Table -->
+                <div id="userTableContainer" style="margin-top:20px; border-top:2px solid #dce8f0; padding-top:10px;">
+                    <h4 style="color:#1c6e8f; margin-bottom:4px;">👤 Registered Users</h4>
+                    <div style="overflow-x:auto;">
+                        <table id="userTable">
+                            <thead><tr><th>Name</th><th>Address</th><th>Phone</th><th>Mobile Money</th><th>Country</th><th>Action</th></tr></thead>
+                            <tbody id="userTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Transactions -->
+                <div id="dashboardTransactionsContainer"></div>
+            </div>
+            <button class="action-btn close-modal" style="margin-top:10px;" data-i18n="close">Close</button>
+        </div>
+    </div>
+
+    <!-- Receipt Modal -->
+    <div id="receiptModal" class="modal">
+        <div class="modal-content">
+            <div class="receipt-header">
+                <div class="receipt-logo">AFRI·PAY</div>
+                <div class="receipt-sub">CROSS-BORDER PAYMENT RECEIPT</div>
+                <div class="receipt-badge" id="receiptBadge">🔹 CONFIRMED</div>
+                <button class="receipt-close-x" id="receiptCloseXBtn">✕</button>
+            </div>
+            <div class="receipt-body" id="receiptBody"></div>
+            <div class="receipt-footer">
+                <div class="thanks">✨ Thank you for choosing AfriPay!</div>
+                <div class="powered">Powered by WeBine Financial Technologies</div>
+                <div class="receipt-share-row">
+                    <div class="receipt-share-group">
+                        <div class="receipt-share-label">📤 Send receipt to:</div>
+                        <div class="share-row">
+                            <button class="receipt-share-btn client" id="receiptShareClientWhatsApp">📱 Client WhatsApp</button>
+                            <button class="receipt-share-btn agent" id="receiptShareAgentWhatsApp">📱 Agent WhatsApp</button>
+                        </div>
+                        <div class="share-row">
+                            <button class="receipt-share-btn sms" id="receiptShareClientSMS">✉️ Client SMS</button>
+                            <button class="receipt-share-btn sms" id="receiptShareAgentSMS">✉️ Agent SMS</button>
+                        </div>
+                        <div class="share-row" style="margin-top:4px;">
+                            <button class="receipt-share-btn close-receipt" id="receiptCloseBtn">✕ Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Account Modal -->
+    <div id="editAccountModal" class="modal">
+        <div class="modal-content">
+            <h3 data-i18n="edit_account_title">✏️ Edit Account</h3>
+            <div id="editAccountError" class="error-msg"></div>
+            <div id="editAccountSuccess" class="success-msg"></div>
+            <div class="input-group">
+                <label data-i18n="full_name">Full Name *</label>
+                <input type="text" id="editAccountName" placeholder="Full Name" />
+            </div>
+            <div class="input-group">
+                <label data-i18n="phone">Phone *</label>
+                <input type="tel" id="editAccountPhone" placeholder="Phone Number" />
+            </div>
+            <div class="input-group">
+                <label data-i18n="address">Address</label>
+                <input type="text" id="editAccountAddress" placeholder="Street, building, etc." />
+            </div>
+            <div class="input-group">
+                <label data-i18n="city">City / Town *</label>
+                <div class="city-input-row">
+                    <select id="editAccountCitySelect">
+                        <option value="">Select a capital city...</option>
+                        <option value="Freetown">Freetown (Sierra Leone)</option>
+                        <option value="Abuja">Abuja (Nigeria)</option>
+                        <option value="Accra">Accra (Ghana)</option>
+                        <option value="Nairobi">Nairobi (Kenya)</option>
+                        <option value="Monrovia">Monrovia (Liberia)</option>
+                        <option value="Dakar">Dakar (Senegal)</option>
+                        <option value="Conakry">Conakry (Guinea)</option>
+                        <option value="Bamako">Bamako (Mali)</option>
+                        <option value="Yamoussoukro">Yamoussoukro (Ivory Coast)</option>
+                        <option value="Niamey">Niamey (Niger)</option>
+                        <option value="Porto-Novo">Porto-Novo (Benin)</option>
+                        <option value="Bissau">Bissau (Guinea Bissau)</option>
+                        <option value="Banjul">Banjul (Gambia)</option>
+                        <option value="Lomé">Lomé (Togo)</option>
+                        <option value="Bangui">Bangui (CAR)</option>
+                        <option value="Addis Ababa">Addis Ababa (Ethiopia)</option>
+                        <option value="Libreville">Libreville (Gabon)</option>
+                        <option value="Antananarivo">Antananarivo (Madagascar)</option>
+                        <option value="Rabat">Rabat (Morocco)</option>
+                        <option value="Kigali">Kigali (Rwanda)</option>
+                        <option value="Kampala">Kampala (Uganda)</option>
+                        <option value="Kinshasa">Kinshasa (DR Congo)</option>
+                        <option value="Ouagadougou">Ouagadougou (Burkina Faso)</option>
+                    </select>
+                    <span class="or-text">OR</span>
+                    <input type="text" id="editAccountCityOther" placeholder="Enter other city/town" />
+                </div>
+            </div>
+            <div class="input-group">
+                <label data-i18n="location">Country</label>
+                <select id="editAccountCountry">
+                    <option value="Sierra Leone">Sierra Leone</option>
+                    <option value="Nigeria">Nigeria</option>
+                    <option value="Ghana">Ghana</option>
+                    <option value="Kenya">Kenya</option>
+                    <option value="Liberia">Liberia</option>
+                    <option value="Senegal">Senegal</option>
+                    <option value="Guinea">Guinea</option>
+                    <option value="Mali">Mali</option>
+                    <option value="Ivory Coast">Ivory Coast</option>
+                    <option value="Niger">Niger</option>
+                    <option value="Benin">Benin</option>
+                    <option value="Guinea Bissau">Guinea Bissau</option>
+                    <option value="Gambia">Gambia</option>
+                    <option value="Togo">Togo</option>
+                    <option value="Central Africa Rep">Central Africa Rep</option>
+                    <option value="Ethiopia">Ethiopia</option>
+                    <option value="Gabon">Gabon</option>
+                    <option value="Madagascar">Madagascar</option>
+                    <option value="Morocco">Morocco</option>
+                    <option value="Rwanda">Rwanda</option>
+                    <option value="Uganda">Uganda</option>
+                    <option value="DR Congo">DR Congo</option>
+                    <option value="Burkina Faso">Burkina Faso</option>
+                </select>
+            </div>
+            <label style="font-size:0.78rem;font-weight:700;color:#1e3b4a;margin-top:3px;" data-i18n="choose_icon">Choose icon:</label>
+            <div class="emoji-grid" id="editEmojiPickerGrid">
+                <span class="emoji-option" data-emoji="👤">👤</span><span class="emoji-option" data-emoji="👨">👨</span>
+                <span class="emoji-option" data-emoji="👩">👩</span><span class="emoji-option" data-emoji="🧑">🧑</span>
+                <span class="emoji-option" data-emoji="👦">👦</span><span class="emoji-option" data-emoji="👧">👧</span>
+                <span class="emoji-option" data-emoji="🧒">🧒</span><span class="emoji-option" data-emoji="👨‍💻">👨‍💻</span>
+                <span class="emoji-option" data-emoji="👩‍💻">👩‍💻</span><span class="emoji-option" data-emoji="🧑‍💻">🧑‍💻</span>
+                <span class="emoji-option" data-emoji="👨‍🎓">👨‍🎓</span><span class="emoji-option" data-emoji="👩‍🎓">👩‍🎓</span>
+            </div>
+            <div style="margin-top:8px;">
+                <label style="font-size:0.78rem;font-weight:700;color:#1e3b4a;">Upload profile image:</label>
+                <input type="file" id="editProfileImage" accept="image/*" style="width:100%; padding:4px; border-radius:20px; border:1px solid #ddd; font-size:0.85rem; height:38px;" />
+                <div id="editProfilePreview" class="image-upload-preview" style="display:none;">
+                    <img src="#" alt="Profile preview" />
+                    <button type="button" id="editProfileRemove" class="remove-image-btn">✕ Remove</button>
+                </div>
+            </div>
+            <div class="action-buttons-row" style="margin-top:8px;">
+                <button class="action-btn green" id="saveEditAccountBtn" data-i18n="save">Save Changes</button>
+                <button class="action-btn close-modal" data-i18n="cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Agent Auth Modal -->
+    <div id="agentAuthModal" class="modal">
+        <div class="modal-content">
+            <h3>🔐 Agent Authentication</h3>
+            <p style="font-size:0.78rem; color:#666; margin-bottom:8px;">Please enter your credentials to access the report.</p>
+            <div id="agentAuthError" class="auth-error"></div>
+            <div id="agentAuthSuccess" class="auth-success"></div>
+            <div class="input-group">
+                <label>6 Alphanumeric Password *</label>
+                <input type="password" id="agentAuthPassword" placeholder="Enter your password" maxlength="6" style="letter-spacing:4px;" />
+            </div>
+            <div class="input-group">
+                <label>5-Digit PIN *</label>
+                <input type="password" id="agentAuthPin" placeholder="Enter your PIN" maxlength="5" inputmode="numeric" />
+            </div>
+            <div class="action-buttons-row">
+                <button class="action-btn green" id="agentAuthConfirmBtn">✅ Confirm</button>
+                <button class="action-btn close-modal" id="agentAuthCancelBtn">✕ Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Agent Report Modal -->
+    <div id="agentReportModal" class="modal">
+        <div class="modal-content">
+            <div class="report-header">
+                <h3>📋 AGENT REPORT</h3>
+                <small>Transaction Details & USSD Code</small>
+                <button class="report-close-x" id="reportCloseXBtn">✕</button>
+            </div>
+            <div class="report-body" id="reportBody"></div>
+            <div class="report-footer">
+                <button class="action-btn copy-btn" id="reportCopyUssdBtn">📋 Copy USSD</button>
+                <button class="action-btn close-report" id="reportCloseBtn">✕ Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    DEACTIVATE MODAL (for users)
+    ============================================================ -->
+    <div id="deactivateModal" class="modal">
+        <div class="modal-content">
+            <h3 style="color:#e74c3c;">⚠️ Deactivate User</h3>
+            <p style="font-size:0.78rem; color:#666; margin-bottom:8px;">Enter admin credentials to deactivate this user. This action cannot be undone.</p>
+            <div id="deactivateError" class="auth-error"></div>
+            <div id="deactivateSuccess" class="auth-success"></div>
+            <div class="input-group">
+                <label>Admin Name *</label>
+                <input type="text" id="deactivateAdminName" placeholder="Enter admin name" />
+            </div>
+            <div class="input-group">
+                <label>Admin Password *</label>
+                <input type="password" id="deactivateAdminPassword" placeholder="Enter admin password" />
+            </div>
+            <div style="font-size:0.7rem; color:#7f8c8d; margin:4px 0; text-align:center;">
+                <span id="deactivateUserNameDisplay">User: —</span>
+            </div>
+            <div class="action-buttons-row">
+                <button class="action-btn" id="deactivateConfirmBtn" style="background:#e74c3c;">🗑️ Deactivate</button>
+                <button class="action-btn close-modal" id="deactivateCancelBtn">✕ Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    AGENT REMOVE MODAL (for agents)
+    ============================================================ -->
+    <div id="agentRemoveModal" class="modal">
+        <div class="modal-content">
+            <h3 style="color:#e74c3c;">⚠️ Remove Agent</h3>
+            <p style="font-size:0.78rem; color:#666; margin-bottom:8px;">Enter admin credentials to permanently remove this agent. This action cannot be undone.</p>
+            <div id="agentRemoveError" class="auth-error"></div>
+            <div id="agentRemoveSuccess" class="auth-success"></div>
+            <div class="input-group">
+                <label>Admin Name *</label>
+                <input type="text" id="agentRemoveAdminName" placeholder="Enter admin name" />
+            </div>
+            <div class="input-group">
+                <label>Admin Password *</label>
+                <input type="password" id="agentRemoveAdminPassword" placeholder="Enter admin password" />
+            </div>
+            <div style="font-size:0.7rem; color:#7f8c8d; margin:4px 0; text-align:center;">
+                <span id="agentRemoveNameDisplay">Agent: —</span>
+            </div>
+            <div class="action-buttons-row">
+                <button class="action-btn" id="agentRemoveConfirmBtn" style="background:#e74c3c;">🗑️ Remove Agent</button>
+                <button class="action-btn close-modal" id="agentRemoveCancelBtn">✕ Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    CURRENCY CONVERTER MODAL
+    ============================================================ -->
+    <div id="currencyConverterModal" class="modal">
+        <div class="modal-content">
+            <h3 data-i18n="currency_converter_title">💱 Currency Converter</h3>
+            <div class="input-group">
+                <label data-i18n="amount">Amount</label>
+                <input type="number" id="converterAmount" value="100" step="any" min="0" />
+            </div>
+            <div class="double-row">
+                <div class="input-group">
+                    <label data-i18n="from_currency">From</label>
+                    <select id="converterFromCurrency"></select>
+                </div>
+                <div class="input-group">
+                    <label data-i18n="to_currency">To</label>
+                    <select id="converterToCurrency"></select>
+                </div>
+            </div>
+            <button class="action-btn" id="converterConvertBtn" data-i18n="convert">Convert</button>
+            <div id="converterResult" style="margin-top:10px; background:#f8fafc; padding:10px; border-radius:8px;">
+                <div class="charges-row"><span data-i18n="original_amount">Original Amount:</span><span id="convOriginal">0.00</span></div>
+                <div class="charges-row"><span data-i18n="exchange_rate">Exchange Rate:</span><span id="convRate">1.00</span></div>
+                <div class="charges-row"><span data-i18n="converted_amount">Converted Amount:</span><span id="convConverted">0.00</span></div>
+                <div class="charges-row"><span data-i18n="gst_deduction">GST Deduction (<span id="convGstRate">0</span>%):</span><span id="convGstAmount">0.00</span></div>
+                <div class="charges-row"><span data-i18n="net_after_gst">Net after GST:</span><span id="convNet">0.00</span></div>
+                <div class="charges-row"><span data-i18n="fee_4_percent">4% Fee:</span><span id="convFee">0.00</span></div>
+                <div class="charges-row total-row"><span data-i18n="final_amount">Final Amount:</span><span id="convFinal">0.00</span></div>
+            </div>
+            <button class="action-btn close-modal" style="margin-top:10px;" data-i18n="close">Close</button>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    CHAT
+    ============================================================ -->
     <button class="chat-toggle-btn" id="chatToggleBtn" title="Open Chat">💬<span class="chat-badge" id="chatBadge" style="display:none;">0</span></button>
     <div class="chat-window" id="chatWindow">
-        <!-- ... (chat HTML) ... -->
+        <div class="chat-main">
+            <div class="chat-nav">
+                <button class="sidebar-toggle" id="sidebarToggleBtn">☰</button>
+                <span class="chat-contact" id="chatContact" data-i18n="select_contact">Select a contact</span>
+                <div class="chat-actions">
+                    <button id="chatVideoBtn" data-i18n="video">Video</button>
+                    <button id="chatAudioBtn" data-i18n="audio">Audio</button>
+                    <button id="chatAudioRecordBtn" data-i18n="rec">Rec</button>
+                    <button id="chatVideoRecordBtn" data-i18n="rec">Rec</button>
+                    <button id="chatVoiceCallBtn" data-i18n="call">📞</button>
+                    <button id="chatVideoCallBtn" data-i18n="video_call">📹</button>
+                    <button id="chatProfilePicBtn" data-i18n="profile_pic">🖼️</button>
+                </div>
+                <button class="chat-close" id="chatCloseBtn">✕</button>
+            </div>
+            <div class="chat-messages" id="chatMessages"></div>
+            <div class="chat-controls" id="chatControls">
+                <div class="ctrl-group"><span>🎨</span><input type="color" id="chatBgColor" value="#f5f8fa" /></div>
+                <div class="ctrl-group"><button id="fontDecrease">A-</button><button id="fontIncrease">A+</button></div>
+                <div class="ctrl-group"><span>☀️</span><input type="range" class="brightness-slider" id="brightnessSlider" min="0.3" max="1.5" step="0.05" value="1.0" /></div>
+                <button id="resetChatSettings" data-i18n="reset">↺</button>
+                <span class="recording-indicator" id="recordingIndicator"><span class="recording-dot"></span> <span data-i18n="recording">Recording...</span></span>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="chatInput" placeholder="Type a message..." data-i18n-placeholder="type_message" />
+                <button id="chatSendBtn" data-i18n="send">Send</button>
+            </div>
+        </div>
+        <div class="chat-sidebar" id="chatSidebar"></div>
     </div>
 
     <!-- Hidden inputs -->
@@ -1013,7 +4158,7 @@
     <div id="toastMsg" class="toast-msg"></div>
 
     <!-- ============================================================
-    JAVASCRIPT – FIXED VERSION WITH ROBUST CHECKS
+    JAVASCRIPT – FULL APPLICATION LOGIC (FIXED)
     ============================================================ -->
     <script>
         // ================================================================
@@ -1039,7 +4184,7 @@
         })();
 
         // ================================================================
-        // COUNTRY MAPPING (unchanged)
+        // COUNTRY MAPPING
         // ================================================================
         const COUNTRY_CODE_TO_NAME = {
             '+232': 'Sierra Leone',
@@ -1072,7 +4217,7 @@
         });
 
         // ================================================================
-        // SUPPORTED COUNTRY FLAGS & BUSINESSES (unchanged)
+        // SUPPORTED COUNTRY FLAGS & BUSINESSES
         // ================================================================
         const SUPPORTED_COUNTRY_FLAGS = ['🇱🇷', '🇬🇳', '🇸🇳', '🇲🇱', '🇨🇮', '🇬🇭', '🇳🇪', '🇧🇯', '🇬🇼', '🇬🇲', '🇹🇬', '🇰🇪', '🇨🇫',
             '🇪🇹', '🇬🇦', '🇲🇬', '🇲🇦', '🇷🇼', '🇺🇬', '🇨🇩', '🇧🇫', '🇸🇱'
@@ -1152,7 +4297,7 @@
         };
 
         // ================================================================
-        // PROVIDER TX ID MANAGER (unchanged)
+        // PROVIDER TX ID MANAGER
         // ================================================================
         const ProviderTxIdManager = {
             pattern: /^[A-Za-z]{2}[0-9]{6}\.[0-9]{4}\.[A-Za-z][0-9]{5}$/,
@@ -1195,7 +4340,7 @@
         }
 
         // ================================================================
-        // TRANSLATIONS (full object – unchanged)
+        // TRANSLATIONS (full object)
         // ================================================================
         const TRANSLATIONS = {
             en: {
@@ -1429,9 +4574,699 @@
                 delete_account: '🗑️ Delete Account',
                 delete_account_confirm: '⚠️ Are you sure you want to delete your account? This cannot be undone.'
             },
-            fr: { /* ... full object ... */ },
-            ar: { /* ... full object ... */ },
-            es: { /* ... full object ... */ }
+            fr: {
+                app_name: 'AfriPay',
+                login: 'Connexion',
+                register: "S'inscrire",
+                logout: 'Déconnexion',
+                online: 'En ligne',
+                location_label: '📍 Localisation :',
+                map_btn: 'Carte',
+                sender_title: '👤 EXPÉDITEUR',
+                full_name: 'Nom complet *',
+                phone: 'Téléphone *',
+                address: 'Adresse',
+                city: 'Ville *',
+                location: 'Pays',
+                amount: 'Montant *',
+                recipient_title: '👤 AGENT',
+                client_name: "Nom de l'agent *",
+                client_phone: "Téléphone de l'agent *",
+                quick_fill: '📋 Sélectionnez un agent dans la liste, ou utilisez Ajouter un client',
+                add_client: 'Ajouter un client',
+                international: 'International',
+                recipient_country: '🌍 Pays du bénéficiaire',
+                base_amount: '💰 Montant de base :',
+                transfer_charge: '📊 Frais de transfert (1%) :',
+                gst: '🏛️ TVA (',
+                total_debit: '💵 Débit total :',
+                currency_label: '🌍 Devise :',
+                mm_operator: '💸 Opérateur Mobile Money',
+                tx_id_label: '🔖 ID DE TRANSACTION',
+                tx_id: 'ID de transaction',
+                gen: 'Générer',
+                copy: 'Copier',
+                submit: 'Soumettre',
+                quick_pay: '⭐ PAIEMENT RAPIDE ⭐',
+                about: 'À propos',
+                dev: 'Développeur',
+                contact: 'Contact',
+                subscribe: "S'abonner",
+                currency_converter: 'Convertisseur de devises',
+                currency_converter_title: '💱 Convertisseur de devises',
+                from_currency: 'De la devise',
+                to_currency: 'Vers la devise',
+                convert: 'Convertir',
+                original_amount: 'Montant original',
+                exchange_rate: 'Taux de change',
+                converted_amount: 'Montant converti',
+                gst_deduction: 'Déduction TVA',
+                net_after_gst: 'Net après TVA',
+                fee_4_percent: 'Frais 4%',
+                final_amount: 'Montant final',
+                whatsapp: 'WhatsApp',
+                facebook: 'Facebook',
+                instagram: 'Instagram',
+                youtube: 'YouTube',
+                webine: 'WeBine',
+                map_title: '📍 Votre position',
+                close: 'Fermer',
+                subscribe_title: '📧 Abonnement',
+                cancel: 'Annuler',
+                login_title: '🔐 Connexion',
+                register_title: '📝 Créer un compte',
+                choose_icon: "Choisissez une icône :",
+                upload_image: 'Ou téléchargez votre propre image :',
+                remove_image: '✕ Supprimer',
+                agent_logo: 'Logo de lentreprise *',
+                agent_address: 'Adresse *',
+                agent_city: 'Ville *',
+                new_group: '👥 Nouveau groupe',
+                group_name: 'Nom du groupe *',
+                select_members: 'Sélectionnez des membres (max 25)',
+                create: 'Créer',
+                manage_group: 'Gérer le groupe',
+                select_provider: 'Sélectionnez un fournisseur',
+                orange: 'Orange',
+                afrimoney: 'Afrimoney',
+                qmoney: 'QMoney',
+                wbmoney: 'WBMoney',
+                select_type: 'Sélectionnez le type',
+                agent: 'Agent',
+                customer: 'Client',
+                other: 'Autre',
+                transfer: 'Transférer',
+                pay: 'Payer',
+                cashout: 'Retirer',
+                select_item: 'Sélectionnez un article',
+                visit_website: 'Visitez le site web',
+                select_contact: 'Sélectionnez un contact',
+                video: 'Vidéo',
+                audio: 'Audio',
+                rec: 'Enreg.',
+                call: '📞',
+                video_call: '📹',
+                profile_pic: '🖼️',
+                reset: '↺',
+                recording: 'Enregistrement...',
+                type_message: 'Tapez un message...',
+                send: 'Envoyer',
+                groups: '👥 Groupes',
+                contacts: '👤 Contacts',
+                no_groups: 'Aucun groupe. Appuyez sur + pour créer.',
+                no_contacts: 'Aucun contact disponible.',
+                toast_welcome: '✅ Bienvenue {name} !',
+                toast_logout: 'Déconnecté',
+                toast_copied: '✅ ID copié !',
+                toast_no_id: '⚠️ Pas d\'ID',
+                toast_fill_fields: 'Remplissez tous les champs requis',
+                toast_enter_amount: '⚠️ Entrez le montant d\'abord',
+                toast_enter_recipient_phone: '⚠️ Entrez le téléphone du destinataire',
+                toast_enter_recipient_name: '⚠️ Entrez le nom du destinataire pour international',
+                toast_valid_amount: '❌ Entrez un montant valide',
+                toast_recipient_phone_required: '❌ Téléphone du destinataire requis',
+                toast_recipient_name_required: '❌ Nom du destinataire requis',
+                toast_provider_not_configured: '❌ Fournisseur non configuré',
+                toast_orange_not_supported: '❌ Orange non supporté',
+                toast_afrimoney_not_supported: '❌ Afrimoney non supporté',
+                toast_qmoney_not_supported: '❌ QMoney non supporté',
+                toast_wbmoney_not_supported: '❌ WBMoney non supporté',
+                toast_agent_6_digits: '❌ Agent : 6 chiffres',
+                toast_customer_9_digits: '❌ Client : 9 chiffres',
+                toast_initiated: '✅ {action} initiée. Entrez l\'ID de transaction.',
+                toast_subscribed: '📧 Abonné !',
+                toast_group_created: '✅ Groupe "{name}" créé avec {count} membres !',
+                toast_select_group_name: 'Veuillez entrer un nom de groupe',
+                toast_select_members: 'Sélectionnez au moins un membre',
+                toast_max_members: 'Maximum 25 membres autorisés',
+                toast_removed_member: 'Membre {member} retiré du groupe',
+                toast_added_member: 'Membre {member} ajouté au groupe',
+                toast_no_more_contacts: 'Plus de contacts à ajouter',
+                toast_user_not_found: 'Utilisateur introuvable dans les contacts',
+                toast_pic_updated: '✅ Photo de profil mise à jour !',
+                toast_login_first: '⚠️ Veuillez vous connecter d\'abord',
+                toast_recording_video: '🔴 Enregistrement vidéo... (appuyez à nouveau pour arrêter)',
+                toast_recording_audio: '🔴 Enregistrement audio... (appuyez à nouveau pour arrêter)',
+                toast_video_recorded: '✅ Vidéo enregistrée',
+                toast_audio_recorded: '✅ Audio enregistré',
+                toast_video_uploaded: '✅ Vidéo téléchargée',
+                toast_audio_uploaded: '✅ Audio téléchargé',
+                toast_camera_fallback: '📸 Si la caméra ne s\'ouvre pas, sélectionnez "Appareil photo" dans le sélecteur de fichiers.',
+                toast_microphone_fallback: '🎤 Si le microphone ne s\'ouvre pas, sélectionnez "Enregistrer un audio" dans le sélecteur de fichiers.',
+                toast_selected_country: '🌍 {name} sélectionné',
+                toast_country_not_supported: '⚠️ {flag} non supporté',
+                toast_receipt_sent: '✅ Reçu envoyé !',
+                toast_formspree_error: '⚠️ Erreur Formspree',
+                toast_network_error: '⚠️ Erreur réseau',
+                toast_reset_form: 'Soumission réussie ! Réinitialiser le formulaire ?',
+                toast_register_error: '❌ Remplissez le nom, le téléphone et la ville',
+                toast_register_success: '✅ Compte créé !',
+                toast_login_error: '❌ Entrez les deux champs',
+                toast_no_account: '❌ Pas de compte. <a href="#" id="loginToRegisterLink" style="color:#f4a261;text-decoration:underline;">S\'inscrire</a>',
+                toast_login_mismatch: '❌ Le nom ou le téléphone ne correspond pas. <a href="#" id="loginToRegisterLink2" style="color:#f4a261;text-decoration:underline;">S\'inscrire</a>',
+                toast_error_loading: '❌ Erreur de chargement du compte.',
+                toast_register_loading: '⏳ Inscription en cours...',
+                about_body: 'Transferts d\'argent mobile transfrontaliers avec Orange, Afrimoney, QMoney et WBMoney. Calcul automatique des frais et de la TVA.',
+                dev_body: 'Développeur fintech passionné reliant les systèmes de paiement africains.',
+                contact_body: '<strong>Téléphone:</strong><br>+232-76-436-811<br>+232-80-422-698<br>+232-73-671-566',
+                receipt_title: '🔹 REÇU AFRI-PAY 🔹',
+                receipt_tx_id: 'ID de transaction :',
+                receipt_date: 'Date et heure :',
+                receipt_type: 'Type de transfert :',
+                receipt_sender: 'Expéditeur :',
+                receipt_recipient: 'Destinataire :',
+                receipt_base: 'Montant de base :',
+                receipt_charge: 'Frais de transfert (1%) :',
+                receipt_gst: 'TVA ({rate}%) :',
+                receipt_total: 'Total débité :',
+                receipt_thanks: 'Merci d\'avoir choisi AfriPay !',
+                select_agent_placeholder: 'Sélectionner un agent',
+                register_agent: '🏢 S\'inscrire comme agent',
+                agent_reg_title: '🏢 Inscription de l\'agent',
+                agent_business_name: 'Nom de l\'entreprise *',
+                agent_business_address: 'Adresse complète de l\'entreprise *',
+                agent_reg_number: 'Numéro d\'enregistrement officiel *',
+                agent_business_type: 'Type d\'entreprise *',
+                agent_owner_name: 'Nom du propriétaire *',
+                agent_id_type: 'Type de pièce d\'identité *',
+                agent_id_number: 'Numéro de pièce d\'identité *',
+                agent_id_image: 'Prendre ou télécharger une photo de la pièce d\'identité *',
+                agent_mobile_money: 'Numéro Mobile Money *',
+                agent_country_code: 'Indicatif de pays pour international',
+                agent_password: 'Mot de passe alphanumérique à 6 caractères *',
+                generate_password: '🔑 Générer',
+                collateral_label: '🔒 Garantie de paiement',
+                generate_collateral: 'Générer USSD',
+                collateral_hint: 'Cliquez pour générer un code USSD pour le transfert de garantie Orange Money.',
+                register_agent_submit: 'Inscrire l\'agent',
+                agent_reg_success: '✅ Agent {name} inscrit avec succès !',
+                agent_reg_error: '❌ Veuillez remplir tous les champs requis',
+                agent_collateral_ussd: '📞 Code USSD : {code}',
+                agent_collateral_error: '❌ Veuillez remplir le Mobile Money et l\'indicatif de pays d\'abord',
+                agent_reg_loading: '⏳ Inscription de l\'agent en cours...',
+                agent_already_exists: '❌ Un agent avec ce nom existe déjà',
+                edit_agent_title: '✏️ Modifier l\'agent',
+                save_changes: 'Enregistrer les modifications',
+                edit_agent_success: '✅ Agent mis à jour avec succès !',
+                edit_agent_error: '❌ Veuillez remplir tous les champs',
+                edit_agent_password_error: '❌ Mot de passe incorrect. Veuillez entrer le mot de passe généré lors de l\'inscription.',
+                edit_agent_pin_error: '❌ PIN incorrect. Veuillez entrer le PIN généré lors de l\'inscription.',
+                no_agents: 'Aucun agent enregistré',
+                agent_updated: '✅ Agent {name} mis à jour avec succès !',
+                dashboard_title: '📊 Tableau de bord des agents',
+                admin_register_title: '👑 Inscription administrateur',
+                admin_login_title: '🔐 Connexion administrateur',
+                admin_name: 'Nom de l\'administrateur *',
+                admin_password: 'Mot de passe *',
+                admin_confirm_password: 'Confirmer le mot de passe *',
+                admin_pin: 'Code PIN à 5 chiffres *',
+                admin_register_btn: "S'inscrire comme admin",
+                admin_login_btn: 'Se connecter',
+                admin_register_success: '✅ Admin inscrit avec succès ! Veuillez vous connecter.',
+                admin_login_success: '✅ Bienvenue Admin !',
+                admin_reg_error: '❌ Veuillez remplir tous les champs correctement.',
+                admin_pin_error: '❌ Le PIN doit comporter exactement 5 chiffres.',
+                admin_password_mismatch: '❌ Les mots de passe ne correspondent pas.',
+                admin_already_exists: '❌ Admin déjà enregistré. Veuillez vous connecter.',
+                admin_invalid_credentials: '❌ Nom, mot de passe ou PIN invalide.',
+                admin_logout: 'Déconnecté',
+                admin_register_disabled: 'L\'inscription est désactivée. Veuillez vous connecter.',
+                switch_to_login: 'Déjà un compte ? Se connecter',
+                switch_to_register: 'Pas de compte admin ? S\'inscrire',
+                edit_account: '✏️ Modifier',
+                edit_account_title: '✏️ Modifier le compte',
+                save: 'Enregistrer les modifications',
+                provider_tx_id_label: '🔐 ID de transaction du fournisseur',
+                provider_tx_id_placeholder: 'ex: AB123456.1234.X12345',
+                provider_tx_id_format: 'Format: 2 lettres + 6 chiffres . 4 chiffres . 1 lettre + 5 chiffres',
+                provider_tx_id_error_required: 'L\'ID de transaction du fournisseur est requis.',
+                provider_tx_id_error_invalid: 'Format invalide. Doit être: 2 lettres + 6 chiffres . 4 chiffres . 1 lettre + 5 chiffres',
+                provider_tx_id_error_duplicate: 'Cet ID de transaction du fournisseur a déjà été utilisé. Veuillez entrer un ID unique.',
+                delete_account: '🗑️ Supprimer le compte',
+                delete_account_confirm: '⚠️ Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.'
+            },
+            ar: {
+                app_name: 'أفري باي',
+                login: 'تسجيل الدخول',
+                register: 'تسجيل',
+                logout: 'تسجيل الخروج',
+                online: 'متصل',
+                location_label: '📍 الموقع:',
+                map_btn: 'الخريطة',
+                sender_title: '👤 المرسل',
+                full_name: 'الاسم الكامل *',
+                phone: 'الهاتف *',
+                address: 'العنوان',
+                city: 'المدينة *',
+                location: 'الدولة',
+                amount: 'المبلغ *',
+                recipient_title: '👤 الوكيل',
+                client_name: 'اسم الوكيل *',
+                client_phone: 'هاتف الوكيل *',
+                quick_fill: '📋 اختر وكيلاً من القائمة، أو استخدم إضافة عميل',
+                add_client: 'إضافة عميل',
+                international: 'دولي',
+                recipient_country: '🌍 دولة المستلم',
+                base_amount: '💰 المبلغ الأساسي:',
+                transfer_charge: '📊 رسوم التحويل (1%):',
+                gst: '🏛️ ضريبة القيمة المضافة (',
+                total_debit: '💵 إجمالي الخصم:',
+                currency_label: '🌍 العملة:',
+                mm_operator: '💸 مشغل المال المحمول',
+                tx_id_label: '🔖 معرف المعاملة',
+                tx_id: 'معرف المعاملة',
+                gen: 'توليد',
+                copy: 'نسخ',
+                submit: 'إرسال',
+                quick_pay: '⭐ دفع سريع ⭐',
+                about: 'حول',
+                dev: 'المطور',
+                contact: 'اتصال',
+                subscribe: 'اشتراك',
+                currency_converter: 'محول العملات',
+                currency_converter_title: '💱 محول العملات',
+                from_currency: 'من العملة',
+                to_currency: 'إلى العملة',
+                convert: 'تحويل',
+                original_amount: 'المبلغ الأصلي',
+                exchange_rate: 'سعر الصرف',
+                converted_amount: 'المبلغ المحول',
+                gst_deduction: 'خصم ضريبة القيمة المضافة',
+                net_after_gst: 'الصافي بعد الضريبة',
+                fee_4_percent: 'رسوم 4%',
+                final_amount: 'المبلغ النهائي',
+                whatsapp: 'واتساب',
+                facebook: 'فيسبوك',
+                instagram: 'إنستغرام',
+                youtube: 'يوتيوب',
+                webine: 'ويباين',
+                map_title: '📍 موقعك',
+                close: 'إغلاق',
+                subscribe_title: '📧 اشتراك',
+                cancel: 'إلغاء',
+                login_title: '🔐 تسجيل الدخول',
+                register_title: '📝 إنشاء حساب',
+                choose_icon: 'اختر أيقونة:',
+                upload_image: 'أو قم بتحميل صورتك:',
+                remove_image: '✕ إزالة',
+                agent_logo: 'شعار العمل *',
+                agent_address: 'العنوان *',
+                agent_city: 'المدينة *',
+                new_group: '👥 مجموعة جديدة',
+                group_name: 'اسم المجموعة *',
+                select_members: 'اختر الأعضاء (حد أقصى 25)',
+                create: 'إنشاء',
+                manage_group: 'إدارة المجموعة',
+                select_provider: 'اختر المزود',
+                orange: 'أورانج',
+                afrimoney: 'أفري موني',
+                qmoney: 'كي موني',
+                wbmoney: 'دبليو بي موني',
+                select_type: 'اختر النوع',
+                agent: 'وكيل',
+                customer: 'عميل',
+                other: 'أخرى',
+                transfer: 'تحويل',
+                pay: 'دفع',
+                cashout: 'سحب نقدي',
+                select_item: 'اختر العنصر',
+                visit_website: 'زيارة الموقع',
+                select_contact: 'اختر جهة اتصال',
+                video: 'فيديو',
+                audio: 'صوت',
+                rec: 'تسجيل',
+                call: '📞',
+                video_call: '📹',
+                profile_pic: '🖼️',
+                reset: '↺',
+                recording: 'جاري التسجيل...',
+                type_message: 'اكتب رسالة...',
+                send: 'إرسال',
+                groups: '👥 المجموعات',
+                contacts: '👤 جهات الاتصال',
+                no_groups: 'لا توجد مجموعات بعد. اضغط + للإضافة.',
+                no_contacts: 'لا توجد جهات اتصال متاحة.',
+                toast_welcome: '✅ مرحباً {name}!',
+                toast_logout: 'تم تسجيل الخروج',
+                toast_copied: '✅ تم نسخ المعرف!',
+                toast_no_id: '⚠️ لا يوجد معرف',
+                toast_fill_fields: 'املأ جميع الحقول المطلوبة',
+                toast_enter_amount: '⚠️ أدخل المبلغ أولاً',
+                toast_enter_recipient_phone: '⚠️ أدخل هاتف المستلم',
+                toast_enter_recipient_name: '⚠️ أدخل اسم المستلم للدولي',
+                toast_valid_amount: '❌ أدخل مبلغاً صحيحاً',
+                toast_recipient_phone_required: '❌ هاتف المستلم مطلوب',
+                toast_recipient_name_required: '❌ اسم المستلم مطلوب',
+                toast_provider_not_configured: '❌ المزود غير مهيأ',
+                toast_orange_not_supported: '❌ أورانج غير مدعوم',
+                toast_afrimoney_not_supported: '❌ أفري موني غير مدعوم',
+                toast_qmoney_not_supported: '❌ كي موني غير مدعوم',
+                toast_wbmoney_not_supported: '❌ دبليو بي موني غير مدعوم',
+                toast_agent_6_digits: '❌ الوكيل: 6 أرقام',
+                toast_customer_9_digits: '❌ العميل: 9 أرقام',
+                toast_initiated: '✅ تم بدء {action}. أدخل معرف المعاملة.',
+                toast_subscribed: '📧 تم الاشتراك!',
+                toast_group_created: '✅ تم إنشاء المجموعة "{name}" مع {count} أعضاء!',
+                toast_select_group_name: 'الرجاء إدخال اسم المجموعة',
+                toast_select_members: 'اختر عضو واحد على الأقل',
+                toast_max_members: 'الحد الأقصى 25 عضواً',
+                toast_removed_member: 'تم إزالة {member} من المجموعة',
+                toast_added_member: 'تم إضافة {member} إلى المجموعة',
+                toast_no_more_contacts: 'لا يوجد المزيد من جهات الاتصال للإضافة',
+                toast_user_not_found: 'المستخدم غير موجود في جهات الاتصال',
+                toast_pic_updated: '✅ تم تحديث الصورة الشخصية!',
+                toast_login_first: '⚠️ الرجاء تسجيل الدخول أولاً',
+                toast_recording_video: '🔴 جاري تسجيل الفيديو... (اضغط مرة أخرى للإيقاف)',
+                toast_recording_audio: '🔴 جاري تسجيل الصوت... (اضغط مرة أخرى للإيقاف)',
+                toast_video_recorded: '✅ تم تسجيل الفيديو',
+                toast_audio_recorded: '✅ تم تسجيل الصوت',
+                toast_video_uploaded: '✅ تم تحميل الفيديو',
+                toast_audio_uploaded: '✅ تم تحميل الصوت',
+                toast_camera_fallback: '📸 إذا لم تفتح الكاميرا، اختر "الكاميرا" من منتقي الملفات.',
+                toast_microphone_fallback: '🎤 إذا لم يفتح الميكروفون، اختر "تسجيل الصوت" من منتقي الملفات.',
+                toast_selected_country: '🌍 تم اختيار {name}',
+                toast_country_not_supported: '⚠️ {flag} غير مدعوم',
+                toast_receipt_sent: '✅ تم إرسال الإيصال!',
+                toast_formspree_error: '⚠️ خطأ في Formspree',
+                toast_network_error: '⚠️ خطأ في الشبكة',
+                toast_reset_form: 'تم الإرسال بنجاح! إعادة تعيين النموذج؟',
+                toast_register_error: '❌ املأ الاسم والهاتف والمدينة',
+                toast_register_success: '✅ تم إنشاء الحساب!',
+                toast_login_error: '❌ أدخل كلا الحقلين',
+                toast_no_account: '❌ لا يوجد حساب. <a href="#" id="loginToRegisterLink" style="color:#f4a261;text-decoration:underline;">تسجيل</a>',
+                toast_login_mismatch: '❌ الاسم أو الهاتف غير متطابق. <a href="#" id="loginToRegisterLink2" style="color:#f4a261;text-decoration:underline;">تسجيل</a>',
+                toast_error_loading: '❌ خطأ في تحميل الحساب.',
+                toast_register_loading: '⏳ جاري التسجيل...',
+                about_body: 'تحويلات المال المحمول عبر الحدود مع أورانج وأفري موني وكي موني ودبليو بي موني. حساب تلقائي للرسوم وضريبة القيمة المضافة.',
+                dev_body: 'مطور خدمات مالية متحمس يربط أنظمة الدفع الأفريقية.',
+                contact_body: '<strong>الهاتف:</strong><br>+232-76-436-811<br>+232-80-422-698<br>+232-73-671-566',
+                receipt_title: '🔹 إيصال أفري-باي 🔹',
+                receipt_tx_id: 'معرف المعاملة:',
+                receipt_date: 'التاريخ والوقت:',
+                receipt_type: 'نوع التحويل:',
+                receipt_sender: 'المرسل:',
+                receipt_recipient: 'المستلم:',
+                receipt_base: 'المبلغ الأساسي:',
+                receipt_charge: 'رسوم التحويل (1%):',
+                receipt_gst: 'ضريبة القيمة المضافة ({rate}%):',
+                receipt_total: 'إجمالي المخصوم:',
+                receipt_thanks: 'شكراً لاختيارك أفري باي!',
+                select_agent_placeholder: 'اختر وكيلاً',
+                register_agent: '🏢 التسجيل كوكيل',
+                agent_reg_title: '🏢 تسجيل الوكيل',
+                agent_business_name: 'اسم العمل *',
+                agent_business_address: 'عنوان العمل الكامل *',
+                agent_reg_number: 'رقم التسجيل الرسمي *',
+                agent_business_type: 'نوع العمل *',
+                agent_owner_name: 'اسم المالك *',
+                agent_id_type: 'نوع الهوية *',
+                agent_id_number: 'رقم الهوية *',
+                agent_id_image: 'التقط أو حمّل صورة الهوية *',
+                agent_mobile_money: 'رقم المال المحمول *',
+                agent_country_code: 'رمز الدولة للدولي',
+                agent_password: 'كلمة مرور أبجدية رقمية من 6 أحرف *',
+                generate_password: '🔑 توليد',
+                collateral_label: '🔒 ضمان الدفع',
+                generate_collateral: 'توليد USSD',
+                collateral_hint: 'انقر لتوليد كود USSD لتحويل ضمان أورانج موني.',
+                register_agent_submit: 'تسجيل الوكيل',
+                agent_reg_success: '✅ تم تسجيل الوكيل {name} بنجاح!',
+                agent_reg_error: '❌ الرجاء ملء جميع الحقول المطلوبة',
+                agent_collateral_ussd: '📞 كود USSD: {code}',
+                agent_collateral_error: '❌ الرجاء ملء رقم المال المحمول ورمز الدولة أولاً',
+                agent_reg_loading: '⏳ جاري تسجيل الوكيل...',
+                agent_already_exists: '❌ وكيل بهذا الاسم موجود بالفعل',
+                edit_agent_title: '✏️ تعديل الوكيل',
+                save_changes: 'حفظ التغييرات',
+                edit_agent_success: '✅ تم تحديث الوكيل بنجاح!',
+                edit_agent_error: '❌ الرجاء ملء جميع الحقول',
+                edit_agent_password_error: '❌ كلمة المرور غير صحيحة. الرجاء إدخال كلمة المرور التي تم توليدها أثناء التسجيل.',
+                edit_agent_pin_error: '❌ PIN غير صحيح. الرجاء إدخال PIN الذي تم توليده أثناء التسجيل.',
+                no_agents: 'لا يوجد وكلاء مسجلين',
+                agent_updated: '✅ تم تحديث الوكيل {name} بنجاح!',
+                dashboard_title: '📊 لوحة تحكم الوكيل',
+                admin_register_title: '👑 تسجيل المشرف',
+                admin_login_title: '🔐 تسجيل دخول المشرف',
+                admin_name: 'اسم المشرف *',
+                admin_password: 'كلمة المرور *',
+                admin_confirm_password: 'تأكيد كلمة المرور *',
+                admin_pin: 'رمز PIN من 5 أرقام *',
+                admin_register_btn: 'تسجيل المشرف',
+                admin_login_btn: 'تسجيل الدخول',
+                admin_register_success: '✅ تم تسجيل المشرف بنجاح! الرجاء تسجيل الدخول.',
+                admin_login_success: '✅ مرحباً أيها المشرف!',
+                admin_reg_error: '❌ الرجاء ملء جميع الحقول بشكل صحيح.',
+                admin_pin_error: '❌ يجب أن يتكون PIN من 5 أرقام بالضبط.',
+                admin_password_mismatch: '❌ كلمات المرور غير متطابقة.',
+                admin_already_exists: '❌ المشرف مسجل بالفعل. الرجاء تسجيل الدخول.',
+                admin_invalid_credentials: '❌ اسم المشرف أو كلمة المرور أو PIN غير صحيح.',
+                admin_logout: 'تم تسجيل الخروج',
+                admin_register_disabled: 'التسجيل معطل. الرجاء تسجيل الدخول.',
+                switch_to_login: 'لديك حساب بالفعل؟ تسجيل الدخول',
+                switch_to_register: 'ليس لديك حساب مشرف؟ تسجيل',
+                edit_account: '✏️ تعديل',
+                edit_account_title: '✏️ تعديل الحساب',
+                save: 'حفظ التغييرات',
+                provider_tx_id_label: '🔐 معرف معاملة المزود',
+                provider_tx_id_placeholder: 'مثال: AB123456.1234.X12345',
+                provider_tx_id_format: 'التنسيق: حرفان + 6 أرقام . 4 أرقام . حرف واحد + 5 أرقام',
+                provider_tx_id_error_required: 'معرف معاملة المزود مطلوب.',
+                provider_tx_id_error_invalid: 'تنسيق غير صحيح. يجب أن يكون: حرفان + 6 أرقام . 4 أرقام . حرف واحد + 5 أرقام',
+                provider_tx_id_error_duplicate: 'تم استخدام معرف المعاملة هذا بالفعل. الرجاء إدخال معرف فريد.',
+                delete_account: '🗑️ حذف الحساب',
+                delete_account_confirm: '⚠️ هل أنت متأكد من رغبتك في حذف حسابك؟ لا يمكن التراجع عن هذا الإجراء.'
+            },
+            es: {
+                app_name: 'AfriPay',
+                login: 'Iniciar sesión',
+                register: 'Registrarse',
+                logout: 'Cerrar sesión',
+                online: 'En línea',
+                location_label: '📍 Ubicación:',
+                map_btn: 'Mapa',
+                sender_title: '👤 REMITENTE',
+                full_name: 'Nombre completo *',
+                phone: 'Teléfono *',
+                address: 'Dirección',
+                city: 'Ciudad *',
+                location: 'País',
+                amount: 'Monto *',
+                recipient_title: '👤 AGENTE',
+                client_name: 'Nombre del agente *',
+                client_phone: 'Teléfono del agente *',
+                quick_fill: '📋 Seleccione un agente de la lista, o use Agregar cliente',
+                add_client: 'Agregar cliente',
+                international: 'Internacional',
+                recipient_country: '🌍 País del destinatario',
+                base_amount: '💰 Monto base:',
+                transfer_charge: '📊 Cargo de transferencia (1%):',
+                gst: '🏛️ IVA (',
+                total_debit: '💵 Débito total:',
+                currency_label: '🌍 Moneda:',
+                mm_operator: '💸 Operador de dinero móvil',
+                tx_id_label: '🔖 ID DE TRANSACCIÓN',
+                tx_id: 'ID de transacción',
+                gen: 'Generar',
+                copy: 'Copiar',
+                submit: 'Enviar',
+                quick_pay: '⭐ PAGO RÁPIDO ⭐',
+                about: 'Acerca de',
+                dev: 'Desarrollador',
+                contact: 'Contacto',
+                subscribe: 'Suscribirse',
+                currency_converter: 'Convertidor de divisas',
+                currency_converter_title: '💱 Convertidor de divisas',
+                from_currency: 'De la moneda',
+                to_currency: 'A la moneda',
+                convert: 'Convertir',
+                original_amount: 'Monto original',
+                exchange_rate: 'Tasa de cambio',
+                converted_amount: 'Monto convertido',
+                gst_deduction: 'Deducción IVA',
+                net_after_gst: 'Neto después de IVA',
+                fee_4_percent: 'Comisión 4%',
+                final_amount: 'Monto final',
+                whatsapp: 'WhatsApp',
+                facebook: 'Facebook',
+                instagram: 'Instagram',
+                youtube: 'YouTube',
+                webine: 'WeBine',
+                map_title: '📍 Su ubicación',
+                close: 'Cerrar',
+                subscribe_title: '📧 Suscribirse',
+                cancel: 'Cancelar',
+                login_title: '🔐 Iniciar sesión',
+                register_title: '📝 Crear cuenta',
+                choose_icon: 'Elige un icono:',
+                upload_image: 'O sube tu propia imagen:',
+                remove_image: '✕ Eliminar',
+                agent_logo: 'Logo de la empresa *',
+                agent_address: 'Dirección *',
+                agent_city: 'Ciudad *',
+                new_group: '👥 Nuevo grupo',
+                group_name: 'Nombre del grupo *',
+                select_members: 'Seleccionar miembros (máx 25)',
+                create: 'Crear',
+                manage_group: 'Gestionar grupo',
+                select_provider: 'Seleccionar proveedor',
+                orange: 'Orange',
+                afrimoney: 'Afrimoney',
+                qmoney: 'QMoney',
+                wbmoney: 'WBMoney',
+                select_type: 'Seleccionar tipo',
+                agent: 'Agente',
+                customer: 'Cliente',
+                other: 'Otro',
+                transfer: 'Transferir',
+                pay: 'Pagar',
+                cashout: 'Retirar efectivo',
+                select_item: 'Seleccionar artículo',
+                visit_website: 'Visitar sitio web',
+                select_contact: 'Seleccionar un contacto',
+                video: 'Video',
+                audio: 'Audio',
+                rec: 'Grabar',
+                call: '📞',
+                video_call: '📹',
+                profile_pic: '🖼️',
+                reset: '↺',
+                recording: 'Grabando...',
+                type_message: 'Escribe un mensaje...',
+                send: 'Enviar',
+                groups: '👥 Grupos',
+                contacts: '👤 Contactos',
+                no_groups: 'Aún no hay grupos. Toca + para crear.',
+                no_contacts: 'No hay contactos disponibles.',
+                toast_welcome: '✅ ¡Bienvenido {name}!',
+                toast_logout: 'Sesión cerrada',
+                toast_copied: '✅ ¡ID copiado!',
+                toast_no_id: '⚠️ Sin ID',
+                toast_fill_fields: 'Complete todos los campos requeridos',
+                toast_enter_amount: '⚠️ Ingrese el monto primero',
+                toast_enter_recipient_phone: '⚠️ Ingrese el teléfono del destinatario',
+                toast_enter_recipient_name: '⚠️ Ingrese el nombre del destinatario para internacional',
+                toast_valid_amount: '❌ Ingrese un monto válido',
+                toast_recipient_phone_required: '❌ Teléfono del destinatario requerido',
+                toast_recipient_name_required: '❌ Nombre del destinatario requerido',
+                toast_provider_not_configured: '❌ Proveedor no configurado',
+                toast_orange_not_supported: '❌ Orange no soportado',
+                toast_afrimoney_not_supported: '❌ Afrimoney no soportado',
+                toast_qmoney_not_supported: '❌ QMoney no soportado',
+                toast_wbmoney_not_supported: '❌ WBMoney no soportado',
+                toast_agent_6_digits: '❌ Agente: 6 dígitos',
+                toast_customer_9_digits: '❌ Cliente: 9 dígitos',
+                toast_initiated: '✅ {action} iniciada. Ingrese ID de transacción.',
+                toast_subscribed: '📧 ¡Suscrito!',
+                toast_group_created: '✅ ¡Grupo "{name}" creado con {count} miembros!',
+                toast_select_group_name: 'Por favor ingrese un nombre de grupo',
+                toast_select_members: 'Seleccione al menos un miembro',
+                toast_max_members: 'Máximo 25 miembros permitidos',
+                toast_removed_member: 'Miembro {member} eliminado del grupo',
+                toast_added_member: 'Miembro {member} añadido al grupo',
+                toast_no_more_contacts: 'No hay más contactos para añadir',
+                toast_user_not_found: 'Usuario no encontrado en contactos',
+                toast_pic_updated: '✅ ¡Foto de perfil actualizada!',
+                toast_login_first: '⚠️ Por favor inicie sesión primero',
+                toast_recording_video: '🔴 Grabando video... (toca de nuevo para detener)',
+                toast_recording_audio: '🔴 Grabando audio... (toca de nuevo para detener)',
+                toast_video_recorded: '✅ Video grabado',
+                toast_audio_recorded: '✅ Audio grabado',
+                toast_video_uploaded: '✅ Video subido',
+                toast_audio_uploaded: '✅ Audio subido',
+                toast_camera_fallback: '📸 Si la cámara no se abre, seleccione "Cámara" en el selector de archivos.',
+                toast_microphone_fallback: '🎤 Si el micrófono no se abre, seleccione "Grabar audio" en el selector de archivos.',
+                toast_selected_country: '🌍 {name} seleccionado',
+                toast_country_not_supported: '⚠️ {flag} no soportado',
+                toast_receipt_sent: '✅ ¡Recibo enviado!',
+                toast_formspree_error: '⚠️ Error de Formspree',
+                toast_network_error: '⚠️ Error de red',
+                toast_reset_form: '¡Envío exitoso! ¿Reiniciar formulario?',
+                toast_register_error: '❌ Complete Nombre, Teléfono y Ciudad',
+                toast_register_success: '✅ ¡Cuenta creada!',
+                toast_login_error: '❌ Ingrese ambos campos',
+                toast_no_account: '❌ Sin cuenta. <a href="#" id="loginToRegisterLink" style="color:#f4a261;text-decoration:underline;">Registrarse</a>',
+                toast_login_mismatch: '❌ El nombre o teléfono no coinciden. <a href="#" id="loginToRegisterLink2" style="color:#f4a261;text-decoration:underline;">Registrarse</a>',
+                toast_error_loading: '❌ Error al cargar la cuenta.',
+                toast_register_loading: '⏳ Registrando...',
+                about_body: 'Transferencias de dinero móvil transfronterizas con Orange, Afrimoney, QMoney y WBMoney. Cálculo automático de tarifas e IVA.',
+                dev_body: 'Desarrollador fintech apasionado que conecta sistemas de pago africanos.',
+                contact_body: '<strong>Teléfono:</strong><br>+232-76-436-811<br>+232-80-422-698<br>+232-73-671-566',
+                receipt_title: '🔹 RECIBO AFRI-PAY 🔹',
+                receipt_tx_id: 'ID de transacción:',
+                receipt_date: 'Fecha y hora:',
+                receipt_type: 'Tipo de transferencia:',
+                receipt_sender: 'Remitente:',
+                receipt_recipient: 'Destinatario:',
+                receipt_base: 'Monto base:',
+                receipt_charge: 'Cargo de transferencia (1%):',
+                receipt_gst: 'IVA ({rate}%):',
+                receipt_total: 'Total debitado:',
+                receipt_thanks: '¡Gracias por elegir AfriPay!',
+                select_agent_placeholder: 'Seleccionar agente',
+                register_agent: '🏢 Registrarse como agente',
+                agent_reg_title: '🏢 Registro de agente',
+                agent_business_name: 'Nombre del negocio *',
+                agent_business_address: 'Dirección completa del negocio *',
+                agent_reg_number: 'Número de registro oficial *',
+                agent_business_type: 'Tipo de negocio *',
+                agent_owner_name: 'Nombre del propietario *',
+                agent_id_type: 'Tipo de identificación *',
+                agent_id_number: 'Número de identificación *',
+                agent_id_image: 'Tomar o subir foto de identificación *',
+                agent_mobile_money: 'Número de dinero móvil *',
+                agent_country_code: 'Código de país para internacional',
+                agent_password: 'Contraseña alfanumérica de 6 caracteres *',
+                generate_password: '🔑 Generar',
+                collateral_label: '🔒 Garantía de pago',
+                generate_collateral: 'Generar USSD',
+                collateral_hint: 'Haga clic para generar un código USSD para transferencia de garantía de Orange Money.',
+                register_agent_submit: 'Registrar agente',
+                agent_reg_success: '✅ ¡Agente {name} registrado exitosamente!',
+                agent_reg_error: '❌ Por favor complete todos los campos requeridos',
+                agent_collateral_ussd: '📞 Código USSD: {code}',
+                agent_collateral_error: '❌ Por favor complete el número de dinero móvil y el código de país primero',
+                agent_reg_loading: '⏳ Registrando agente...',
+                agent_already_exists: '❌ Ya existe un agente con este nombre',
+                edit_agent_title: '✏️ Editar agente',
+                save_changes: 'Guardar cambios',
+                edit_agent_success: '✅ ¡Agente actualizado exitosamente!',
+                edit_agent_error: '❌ Por favor complete todos los campos',
+                edit_agent_password_error: '❌ Contraseña incorrecta. Por favor ingrese la contraseña generada durante el registro.',
+                edit_agent_pin_error: '❌ PIN incorrecto. Por favor ingrese el PIN generado durante el registro.',
+                no_agents: 'No hay agentes registrados',
+                agent_updated: '✅ ¡Agente {name} actualizado exitosamente!',
+                dashboard_title: '📊 Panel de agentes',
+                admin_register_title: '👑 Registro de administrador',
+                admin_login_title: '🔐 Inicio de sesión de administrador',
+                admin_name: 'Nombre del administrador *',
+                admin_password: 'Contraseña *',
+                admin_confirm_password: 'Confirmar contraseña *',
+                admin_pin: 'PIN de 5 dígitos *',
+                admin_register_btn: 'Registrar administrador',
+                admin_login_btn: 'Iniciar sesión',
+                admin_register_success: '✅ ¡Administrador registrado exitosamente! Por favor inicie sesión.',
+                admin_login_success: '✅ ¡Bienvenido Administrador!',
+                admin_reg_error: '❌ Por favor complete todos los campos correctamente.',
+                admin_pin_error: '❌ El PIN debe tener exactamente 5 dígitos.',
+                admin_password_mismatch: '❌ Las contraseñas no coinciden.',
+                admin_already_exists: '❌ Administrador ya registrado. Por favor inicie sesión.',
+                admin_invalid_credentials: '❌ Nombre de administrador, contraseña o PIN inválido.',
+                admin_logout: 'Sesión cerrada',
+                admin_register_disabled: 'El registro está desactivado. Por favor inicie sesión.',
+                switch_to_login: '¿Ya tienes una cuenta? Inicia sesión',
+                switch_to_register: '¿Sin cuenta de administrador? Regístrate',
+                edit_account: '✏️ Editar',
+                edit_account_title: '✏️ Editar cuenta',
+                save: 'Guardar cambios',
+                provider_tx_id_label: '🔐 ID de transacción del proveedor',
+                provider_tx_id_placeholder: 'ej: AB123456.1234.X12345',
+                provider_tx_id_format: 'Formato: 2 letras + 6 dígitos . 4 dígitos . 1 letra + 5 dígitos',
+                provider_tx_id_error_required: 'El ID de transacción del proveedor es requerido.',
+                provider_tx_id_error_invalid: 'Formato inválido. Debe ser: 2 letras + 6 dígitos . 4 dígitos . 1 letra + 5 dígitos',
+                provider_tx_id_error_duplicate: 'Este ID de transacción del proveedor ya ha sido usado. Por favor ingrese un ID único.',
+                delete_account: '🗑️ Eliminar cuenta',
+                delete_account_confirm: '⚠️ ¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer.'
+            }
         };
 
         // ================================================================
@@ -1504,7 +5339,7 @@
         }
 
         // ================================================================
-        // CORE STATE (unchanged)
+        // CORE APPLICATION STATE
         // ================================================================
         let currentUser = null;
         let selectedProvider = '';
@@ -1527,7 +5362,7 @@
             agreementLastY = 0;
 
         // ================================================================
-        // CHARGES (unchanged)
+        // CHARGES
         // ================================================================
         const amountInput = document.getElementById('amountInput');
         const countrySelect = document.getElementById('countryCodeSelect');
@@ -1578,7 +5413,7 @@
         }
 
         // ================================================================
-        // AGENT FUNCTIONS (unchanged)
+        // AGENT FUNCTIONS
         // ================================================================
         function getAgents() {
             return connectedUsers.filter(u => u.isAgent === true || u.role === 'agent');
@@ -1771,7 +5606,7 @@
         }
 
         // ================================================================
-        // USER MANAGEMENT (unchanged)
+        // USER MANAGEMENT
         // ================================================================
         const STORAGE_KEYS = {
             registeredUsers: 'afripay_registered_users',
@@ -2097,7 +5932,7 @@
         }
 
         // ================================================================
-        // EDIT ACCOUNT (unchanged)
+        // EDIT ACCOUNT
         // ================================================================
         function openEditAccountModal() {
             if (!currentUser) { showToast(t('toast_login_first'), 2000); return; }
@@ -2177,7 +6012,7 @@
         }
 
         // ================================================================
-        // EDIT AGENT (unchanged)
+        // EDIT AGENT
         // ================================================================
         function openEditAgentModal(agentId) {
             const agents = getAgents();
@@ -2203,7 +6038,7 @@
         }
 
         // ================================================================
-        // DASHBOARD FUNCTIONS (unchanged)
+        // DASHBOARD FUNCTIONS
         // ================================================================
         let _agentRemoveTargetId = null;
 
@@ -2384,7 +6219,7 @@
         }
 
         // ================================================================
-        // DEACTIVATE USER (unchanged)
+        // DEACTIVATE USER
         // ================================================================
         let _deactivateTargetUserId = null;
 
@@ -2456,7 +6291,7 @@
         }
 
         // ================================================================
-        // AGENT REMOVE (admin verification)
+        // AGENT REMOVE (with admin verification)
         // ================================================================
         function openAgentRemoveModal(agentId) {
             const agent = registeredUsers.find(u => u.id === agentId);
@@ -2503,7 +6338,7 @@
         }
 
         // ================================================================
-        // BUSINESS STRIP (unchanged)
+        // BUSINESS STRIP
         // ================================================================
         function renderBusinessStrip() {
             const container = document.getElementById('businessIconsContainer');
@@ -2554,7 +6389,7 @@
         }
 
         // ================================================================
-        // USSD FUNCTIONS (unchanged)
+        // USSD FUNCTIONS
         // ================================================================
         function openProviderModal() {
             const amount = parseFloat(amountInput.value);
@@ -2718,7 +6553,7 @@
         }
 
         // ================================================================
-        // RECEIPT MODAL (unchanged)
+        // RECEIPT MODAL
         // ================================================================
         function showReceiptModal(receiptData) {
             const body = document.getElementById('receiptBody');
@@ -2820,7 +6655,7 @@
         }
 
         // ================================================================
-        // AGREEMENT FUNCTIONS (unchanged)
+        // AGREEMENT FUNCTIONS
         // ================================================================
         function populateAgreementModal() {
             const body = document.getElementById('agreementBody');
@@ -2923,7 +6758,7 @@
         }
 
         // ================================================================
-        // CHAT FUNCTIONS (unchanged)
+        // CHAT FUNCTIONS
         // ================================================================
         function getChatId(contact, type) {
             if (type === 'individual') return 'user_' + contact.id;
@@ -3203,7 +7038,7 @@
         }
 
         // ================================================================
-        // ADMIN FUNCTIONS (unchanged)
+        // ADMIN FUNCTIONS
         // ================================================================
         function getAdminData() {
             try { return JSON.parse(localStorage.getItem(STORAGE_KEYS.admin) || 'null'); } catch (e) { return null; }
@@ -3311,7 +7146,7 @@
         }
 
         // ================================================================
-        // PERMANENT AGENTS (unchanged)
+        // PERMANENT AGENTS
         // ================================================================
         function initializePermanentAgents() {
             const agents = [
@@ -3386,7 +7221,7 @@
         }
 
         // ================================================================
-        // FLAGS & UI SETUP (unchanged)
+        // FLAGS & UI SETUP
         // ================================================================
         function renderHeaderFlags() {
             const grid = document.getElementById('headerFlagGrid');
@@ -3513,7 +7348,7 @@
         }
 
         // ================================================================
-        // AVATAR UPLOAD (unchanged)
+        // AVATAR UPLOAD
         // ================================================================
         function setupAvatarUpload() {
             const avatarContainer = document.getElementById('userAvatarContainer');
@@ -3567,7 +7402,7 @@
         }
 
         // ================================================================
-        // REPORT BUTTON FUNCTIONS (unchanged)
+        // REPORT BUTTON FUNCTIONS
         // ================================================================
         function showAgentAuthModal(source = 'main') {
             if (!selectedAgentId) {
@@ -3837,7 +7672,7 @@
         }
 
         // ================================================================
-        // TRANSLATE PAGE (fixed to be safe)
+        // TRANSLATE PAGE
         // ================================================================
         function translatePage() {
             try {
@@ -3967,6 +7802,9 @@
         document.addEventListener('DOMContentLoaded', function() {
             try {
                 console.log('🚀 AfriPay starting...');
+
+                // Ensure hidden inputs are hidden
+                document.querySelectorAll('.hidden-input').forEach(el => el.style.display = 'none');
 
                 // 1. Load core data
                 ProviderTxIdManager.loadUsedIds();
@@ -4196,8 +8034,6 @@
                 const langSelect = document.getElementById('langSelect');
                 if (langSelect) {
                     langSelect.addEventListener('change', function() { setLanguage(this.value); });
-                } else {
-                    console.warn('langSelect not found');
                 }
 
                 // Login
@@ -4209,8 +8045,6 @@
                         const loginModal = document.getElementById('loginModal');
                         if (loginModal) loginModal.style.display = 'flex';
                     };
-                } else {
-                    console.warn('loginBtn not found');
                 }
 
                 // Register
@@ -4237,8 +8071,6 @@
                         const regProfileImage = document.getElementById('regProfileImage');
                         if (regProfileImage) regProfileImage.value = '';
                     };
-                } else {
-                    console.warn('registerBtn not found');
                 }
 
                 // Logout
@@ -4246,16 +8078,12 @@
                 if (logoutBtn) {
                     logoutBtn.onclick = function() { clearUserStorage();
                         showToast(t('toast_logout')); };
-                } else {
-                    console.warn('logoutBtn not found');
                 }
 
                 // Edit Account
                 const editAccountBtn = document.getElementById('editAccountBtn');
                 if (editAccountBtn) {
                     editAccountBtn.addEventListener('click', openEditAccountModal);
-                } else {
-                    console.warn('editAccountBtn not found');
                 }
                 const saveEditAccountBtn = document.getElementById('saveEditAccountBtn');
                 if (saveEditAccountBtn) {
@@ -4303,8 +8131,6 @@
                         if (list) list.classList.toggle('open');
                         renderAgentDropdown();
                     });
-                } else {
-                    console.warn('agentDropdownBtn not found');
                 }
                 document.addEventListener('click', function(e) {
                     const container = document.querySelector('.agent-dropdown-container');
