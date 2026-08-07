@@ -3405,7 +3405,7 @@
         }
 
         /* ================================================================
-           ORANGE/AFRIMONEY PIN MODAL
+           PIN MODAL
            ================================================================ */
         #pinModal .modal-content {
             max-width: 420px;
@@ -4428,7 +4428,7 @@
     </div>
 
     <!-- ============================================================
-    PIN MODAL (Orange, Afrimoney, WBMoney)
+    PIN MODAL
     ============================================================ -->
     <div id="pinModal" class="modal">
         <div class="modal-content">
@@ -6140,12 +6140,38 @@
             return AFRIMONEY_Z_CODES[countryName] || '0';
         }
 
+        // Local number helper - returns 9-digit number starting with 0
+        function getLocalNumber(phone) {
+            let clean = phone.replace(/\D/g, '');
+            // Remove country code if present (232 for Sierra Leone)
+            if (clean.startsWith('232')) {
+                clean = clean.substring(3);
+            }
+            // Ensure it starts with 0
+            if (!clean.startsWith('0')) {
+                clean = '0' + clean;
+            }
+            // Ensure exactly 9 digits
+            if (clean.length > 9) {
+                clean = clean.substring(0, 9);
+            }
+            // Pad to 9 digits if needed
+            while (clean.length < 9) {
+                clean = clean + '0';
+            }
+            return clean;
+        }
+
         function isSierraLeonePhone(phone) {
             const clean = phone.replace(/\D/g, '');
+            // Check for Sierra Leone prefixes
             const prefixes = ['076', '078', '079', '075', '073', '072'];
             for (let prefix of prefixes) {
                 if (clean.startsWith(prefix)) return true;
+                if (clean.startsWith('232' + prefix.substring(1))) return true;
             }
+            // If it has 232 country code, it's Sierra Leone
+            if (clean.startsWith('232')) return true;
             return false;
         }
 
@@ -6154,7 +6180,9 @@
             const prefixes = ['077', '088', '099', '030', '033', '070', '080', '090'];
             for (let prefix of prefixes) {
                 if (clean.startsWith(prefix)) return true;
+                if (clean.startsWith('232' + prefix.substring(1))) return true;
             }
+            if (clean.startsWith('232')) return true;
             return false;
         }
 
@@ -6201,29 +6229,22 @@
 
             let ussdCode = pendingPinData.ussdCode;
             // Replace the PIN placeholder with the user's PIN
-            // For Orange: replace 0000 or the last segment
-            if (pendingPinData.provider === 'Orange Money') {
+            if (pendingPinData.provider === 'Orange Money' || pendingPinData.provider === 'WBMoney') {
                 ussdCode = ussdCode.replace(/0000#/, `${pin}#`);
-                // Also handle international format with *1#
                 ussdCode = ussdCode.replace(/\*1#/, `*${pin}#`);
             } else if (pendingPinData.provider === 'Afrimoney') {
-                // Afrimoney: replace 0000 with PIN
-                ussdCode = ussdCode.replace(/0000#/, `${pin}#`);
-                // Also handle international format
-                ussdCode = ussdCode.replace(/\*1#/, `*${pin}#`);
-            } else if (pendingPinData.provider === 'WBMoney') {
-                // WBMoney uses Orange format
                 ussdCode = ussdCode.replace(/0000#/, `${pin}#`);
                 ussdCode = ussdCode.replace(/\*1#/, `*${pin}#`);
             }
 
             document.getElementById('pinModal').style.display = 'none';
+            const providerName = pendingPinData.provider;
             pendingPinData = null;
 
             const link = document.createElement('a');
             link.href = `tel:${ussdCode}`;
             link.click();
-            showToast(`📞 Dialing ${pendingPinData?.provider || 'Mobile Money'} with your PIN...`, 3000);
+            showToast(`📞 Dialing ${providerName} with your PIN...`, 3000);
             navigator.clipboard.writeText(ussdCode).then(() => { showToast('✅ USSD code with PIN copied!', 1500); })
                 .catch(() => {});
         }
@@ -6241,7 +6262,6 @@
 
             if (provider === "Orange Money") {
                 if (isInternational) {
-                    // International: #144*2*5*1*Z*KKKKKKKKKKKKKK*MMMMMMMMMMM*BBBB*1#
                     const parts = countrySelect.value.split('|');
                     const countryName = parts[1] || 'Guinea';
                     const zCode = getCountryZCode(countryName);
@@ -6251,23 +6271,13 @@
                     const ussdCode = `#144*2*5*1*${zCode}*${agentNamePadded}*${agentPhonePadded}*${amountPadded}*1#`;
                     showPinModal(ussdCode, 'Orange Money', 'orange');
                 } else {
-                    // Local: #144*2*1*ggggggggg*llll*0000#
-                    const cleanPhone = agentPhoneRaw.replace(/\D/g, '');
-                    if (isSierraLeonePhone(cleanPhone)) {
-                        let localNumber = cleanPhone;
-                        if (localNumber.startsWith('232')) localNumber = localNumber.substring(3);
-                        if (localNumber.length > 9) localNumber = localNumber.substring(0, 9);
-                        const ussdCode = `#144*2*1*${localNumber}*${roundedAmount}*0000#`;
-                        showPinModal(ussdCode, 'Orange Money', 'orange');
-                    } else {
-                        // Fallback
-                        const ussdCode = `#144*2*1*${cleanPhone.substring(0, 9)}*${roundedAmount}*0000#`;
-                        showPinModal(ussdCode, 'Orange Money', 'orange');
-                    }
+                    // Local: use 9-digit number starting with 0
+                    const localNumber = getLocalNumber(agentPhoneRaw);
+                    const ussdCode = `#144*2*1*${localNumber}*${roundedAmount}*0000#`;
+                    showPinModal(ussdCode, 'Orange Money', 'orange');
                 }
             } else if (provider === "Afrimoney") {
                 if (isInternational) {
-                    // International: *161*1*6*1*Z*YYYYYYYYYYYYYY*KKKKKKKKKKKK*MMMM*1#
                     const parts = countrySelect.value.split('|');
                     const countryName = parts[1] || 'Guinea';
                     const zCode = getAfrimoneyZCode(countryName);
@@ -6277,22 +6287,12 @@
                     const ussdCode = `*161*1*6*1*${zCode}*${agentNamePadded}*${agentPhonePadded}*${amountPadded}*1#`;
                     showPinModal(ussdCode, 'Afrimoney', 'afrimoney');
                 } else {
-                    // Local: *161*1*1*XXXXXXXXX*MMMM*0000# (for SL numbers starting with 077, 088, 099, 030, 033, 070, 080, 090)
-                    const cleanPhone = agentPhoneRaw.replace(/\D/g, '');
-                    if (isAfrimoneySierraLeonePhone(cleanPhone)) {
-                        let localNumber = cleanPhone;
-                        if (localNumber.startsWith('232')) localNumber = localNumber.substring(3);
-                        if (localNumber.length > 9) localNumber = localNumber.substring(0, 9);
-                        const ussdCode = `*161*1*1*${localNumber}*${roundedAmount}*0000#`;
-                        showPinModal(ussdCode, 'Afrimoney', 'afrimoney');
-                    } else {
-                        // Fallback for Afrimoney local
-                        const ussdCode = `*161*1*1*${cleanPhone.substring(0, 9)}*${roundedAmount}*0000#`;
-                        showPinModal(ussdCode, 'Afrimoney', 'afrimoney');
-                    }
+                    // Local: use 9-digit number starting with 0
+                    const localNumber = getLocalNumber(agentPhoneRaw);
+                    const ussdCode = `*161*1*1*${localNumber}*${roundedAmount}*0000#`;
+                    showPinModal(ussdCode, 'Afrimoney', 'afrimoney');
                 }
             } else if (provider === "WBMoney") {
-                // WBMoney uses the same format as Orange Money
                 if (isInternational) {
                     const parts = countrySelect.value.split('|');
                     const countryName = parts[1] || 'Guinea';
@@ -6303,20 +6303,11 @@
                     const ussdCode = `#144*2*5*1*${zCode}*${agentNamePadded}*${agentPhonePadded}*${amountPadded}*1#`;
                     showPinModal(ussdCode, 'WBMoney', 'wbmoney');
                 } else {
-                    const cleanPhone = agentPhoneRaw.replace(/\D/g, '');
-                    if (isSierraLeonePhone(cleanPhone)) {
-                        let localNumber = cleanPhone;
-                        if (localNumber.startsWith('232')) localNumber = localNumber.substring(3);
-                        if (localNumber.length > 9) localNumber = localNumber.substring(0, 9);
-                        const ussdCode = `#144*2*1*${localNumber}*${roundedAmount}*0000#`;
-                        showPinModal(ussdCode, 'WBMoney', 'wbmoney');
-                    } else {
-                        const ussdCode = `#144*2*1*${cleanPhone.substring(0, 9)}*${roundedAmount}*0000#`;
-                        showPinModal(ussdCode, 'WBMoney', 'wbmoney');
-                    }
+                    const localNumber = getLocalNumber(agentPhoneRaw);
+                    const ussdCode = `#144*2*1*${localNumber}*${roundedAmount}*0000#`;
+                    showPinModal(ussdCode, 'WBMoney', 'wbmoney');
                 }
             } else if (provider === "QMoney") {
-                // QMoney - show role modal for other providers
                 document.getElementById('roleModalTitle').innerHTML = `${provider} – ${t('select_type')}`;
                 document.getElementById('roleModal').style.display = 'flex';
             } else {
@@ -6331,28 +6322,6 @@
             document.getElementById('selectedRoleDisplay').innerHTML = `${t('select_type')}: ${roleText}`;
             document.getElementById('modalProviderName').innerText = selectedProvider;
             document.getElementById('actionModal').style.display = 'flex';
-        }
-
-        function getOrangeZCode() { const parts = countrySelect.value.split('|'); return parts[5] || '0'; }
-
-        function getAfrimoneyZCodeOld() { const parts = countrySelect.value.split('|'); return parts[6] || '0'; }
-
-        function stripCountryCode(phone, countryCode) {
-            if (!phone || !countryCode) return phone;
-            let cleaned = phone.replace(/\s/g, '');
-            if (cleaned.startsWith(countryCode)) {
-                cleaned = cleaned.substring(countryCode.length);
-            }
-            if (cleaned.startsWith('+')) {
-                const match = cleaned.match(/^\+\d{1,4}/);
-                if (match) {
-                    cleaned = cleaned.substring(match[0].length);
-                }
-            }
-            if (cleaned.length > 1 && cleaned.startsWith('0')) {
-                cleaned = cleaned.replace(/^0+/, '');
-            }
-            return cleaned || phone.replace(/\s/g, '');
         }
 
         function buildAndDialUSSD(action) {
