@@ -3166,7 +3166,7 @@
            CURRENCY CONVERTER MODAL – ENHANCED
            ================================================================ */
         #currencyConverterModal .modal-content {
-            max-width: 480px;
+            max-width: 520px;
             width: 95%;
             padding: 0;
             border-radius: 20px;
@@ -3392,6 +3392,16 @@
         .converter-body .input-group .from-currency-select .flag-sm {
             font-size: 1.3rem;
             flex-shrink: 0;
+        }
+        .converter-body .user-info-badge {
+            background: #e8f0f8;
+            border-radius: 30px;
+            padding: 4px 14px;
+            display: inline-block;
+            font-size: 0.7rem;
+            color: #1c6e8f;
+            border: 1px solid #c0d8e8;
+            margin-bottom: 4px;
         }
         @media (max-width: 480px) {
             #currencyConverterModal .modal-content {
@@ -4372,6 +4382,10 @@
                 <button class="converter-close-x" id="converterCloseXBtn">✕</button>
             </div>
             <div class="converter-body" id="converterBody">
+                <!-- User Info Badge -->
+                <div style="margin-bottom:10px; text-align:center;">
+                    <span class="user-info-badge" id="userInfoBadge">👤 Your country: <strong id="userCountryDisplay">—</strong> · Currency: <strong id="userCurrencyDisplay">—</strong></span>
+                </div>
                 <!-- From Currency (auto-detected) -->
                 <div class="input-group">
                     <label>From Currency (Your currency)</label>
@@ -4578,8 +4592,6 @@
             'ERN': 15,
             'GEL': 2.7,
             'GIP': 0.8,
-            'GMD': 70,
-            'GNF': 10000,
             'GTQ': 7.8,
             'GYD': 209,
             'HNL': 24.8,
@@ -7428,8 +7440,13 @@
         // ================================================================
         // ENHANCED CURRENCY CONVERTER FUNCTIONS
         // ================================================================
-        function getCurrencyForCountry(countryName) {
-            // Map country name to currency code using the country select options
+        // Global reference for user's country and currency
+        let userCountryName = '—';
+        let userCurrencyCode = 'USD';
+        let userCurrencyFlag = '🇺🇸';
+
+        function getUserCurrencyFromCountry(countryName) {
+            if (!countryName) return 'USD';
             const select = document.getElementById('convCountrySelect');
             if (!select) return 'USD';
             for (let i = 0; i < select.options.length; i++) {
@@ -7438,10 +7455,9 @@
                     return parts[2];
                 }
             }
-            // Fallback: check COUNTRY_NAME_TO_CODE
+            // Fallback using COUNTRY_NAME_TO_CODE
             const code = COUNTRY_NAME_TO_CODE[countryName];
             if (code) {
-                // Try to find currency from the select
                 for (let i = 0; i < select.options.length; i++) {
                     const parts = select.options[i].value.split('|');
                     if (parts[1] === countryName) return parts[2];
@@ -7451,7 +7467,6 @@
         }
 
         function getFlagForCurrency(currencyCode) {
-            // Map currency to flag (simplified)
             const map = {
                 'LRD': '🇱🇷',
                 'GNF': '🇬🇳',
@@ -7479,7 +7494,6 @@
         function populateFromCurrencySelect() {
             const select = document.getElementById('convFromCurrency');
             if (!select) return;
-            // Get all unique currencies from the country select
             const countrySelect = document.getElementById('convCountrySelect');
             const currencies = new Map();
             for (let i = 0; i < countrySelect.options.length; i++) {
@@ -7491,7 +7505,6 @@
                     currencies.set(code, { code, name, flag });
                 }
             }
-            // Also add some common ones if missing
             if (!currencies.has('USD')) currencies.set('USD', { code: 'USD', name: 'US Dollar', flag: '🇺🇸' });
             if (!currencies.has('EUR')) currencies.set('EUR', { code: 'EUR', name: 'Euro', flag: '🇪🇺' });
 
@@ -7500,8 +7513,13 @@
             // Determine user's currency from currentUser.country
             if (currentUser && currentUser.country) {
                 const userCountry = currentUser.country;
-                const userCurrency = getCurrencyForCountry(userCountry);
-                if (userCurrency) selectedValue = userCurrency;
+                const userCurrency = getUserCurrencyFromCountry(userCountry);
+                if (userCurrency) {
+                    selectedValue = userCurrency;
+                    userCountryName = userCountry;
+                    userCurrencyCode = userCurrency;
+                    userCurrencyFlag = getFlagForCurrency(userCurrency);
+                }
             }
             // Sort by code
             const sorted = Array.from(currencies.entries()).sort((a, b) => a[0].localeCompare(b[0]));
@@ -7514,6 +7532,20 @@
             });
             // Update flag display
             updateFromFlag(select.value);
+            // Update user info badge
+            updateUserInfoBadge();
+        }
+
+        function updateUserInfoBadge() {
+            const countryDisplay = document.getElementById('userCountryDisplay');
+            const currencyDisplay = document.getElementById('userCurrencyDisplay');
+            if (countryDisplay) {
+                countryDisplay.textContent = userCountryName !== '—' ? userCountryName : (currentUser?.country || '—');
+            }
+            if (currencyDisplay) {
+                const fromCurrency = document.getElementById('convFromCurrency').value || userCurrencyCode;
+                currencyDisplay.textContent = fromCurrency;
+            }
         }
 
         function updateFromFlag(currencyCode) {
@@ -7557,14 +7589,29 @@
             document.getElementById('convTotalDebit').textContent = `${totalDebit.toFixed(2)} ${fromCurrency}`;
             document.getElementById('convRecipientAmount').textContent = `${convertedAmount.toFixed(2)} ${toCurrency}`;
             document.getElementById('convExchangeRate').textContent = `1 ${fromCurrency} = ${exchangeRate.toFixed(4)} ${toCurrency}`;
-            document.getElementById('convCurrencyDisplay').textContent = `${toCurrency} (${countryName})`;
+            // Update currency display in results
+            const currencyDisplay = document.querySelector('#converterResults .conv-row:last-child .value');
+            if (currencyDisplay) {
+                currencyDisplay.textContent = `${toCurrency} (${countryName})`;
+            }
         }
 
         function openCurrencyConverter() {
+            // Update user info before populating
+            if (currentUser && currentUser.country) {
+                userCountryName = currentUser.country;
+                userCurrencyCode = getUserCurrencyFromCountry(userCountryName);
+                userCurrencyFlag = getFlagForCurrency(userCurrencyCode);
+            }
             // Populate from currency select based on user
             populateFromCurrencySelect();
-            // Set default amount
-            document.getElementById('convAmount').value = 100;
+            // Pre-fill amount from main page
+            const mainAmount = document.getElementById('amountInput');
+            if (mainAmount && mainAmount.value) {
+                document.getElementById('convAmount').value = parseFloat(mainAmount.value) || 100;
+            } else {
+                document.getElementById('convAmount').value = 100;
+            }
             // Update converter
             updateConverter();
             document.getElementById('currencyConverterModal').style.display = 'flex';
