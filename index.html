@@ -3403,35 +3403,91 @@
             border: 1px solid #c0d8e8;
             margin-bottom: 4px;
         }
+
+        /* ================================================================
+           ORANGE/AFRIMONEY PIN MODAL
+           ================================================================ */
+        #pinModal .modal-content {
+            max-width: 420px;
+        }
+        #pinModal .input-group {
+            margin-bottom: 0.6rem;
+        }
+        #pinModal .input-group label {
+            font-size: 0.675rem;
+        }
+        #pinModal .input-group input {
+            height: 42px;
+            font-size: 0.9rem;
+            padding: 4px 12px;
+            letter-spacing: 4px;
+            font-family: monospace;
+            text-align: center;
+        }
+        #pinModal .auth-error {
+            color: #c0392b;
+            margin: 4px 0;
+            text-align: center;
+        }
+        #pinModal .ussd-preview {
+            background: #f0f6fb;
+            border-radius: 10px;
+            padding: 10px 12px;
+            margin: 8px 0;
+            border: 1px dashed #2c7da0;
+            word-break: break-all;
+            font-family: monospace;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+        #pinModal .provider-badge {
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.7rem;
+            margin-bottom: 6px;
+        }
+        #pinModal .provider-badge.orange {
+            background: #ff6600;
+            color: white;
+        }
+        #pinModal .provider-badge.afrimoney {
+            background: #00a651;
+            color: white;
+        }
+        #pinModal .provider-badge.wbmoney {
+            background: #1a3a5c;
+            color: white;
+        }
         @media (max-width: 480px) {
-            #currencyConverterModal .modal-content {
+            #pinModal .modal-content {
                 max-width: 100%;
                 width: 98%;
                 border-radius: 16px;
+                padding: 0.8rem;
             }
-            .converter-body {
-                padding: 12px 14px 8px 14px;
-            }
-            .converter-header {
-                padding: 12px 14px 10px 14px;
-            }
-            .converter-footer {
-                padding: 8px 14px 10px 14px;
-            }
-            .converter-results .conv-row {
-                font-size: 0.75rem;
-                padding: 3px 0;
-            }
-            .converter-results .conv-row.total {
-                font-size: 0.85rem;
-                padding-top: 6px;
-            }
-            .converter-results .conv-row.total .value {
-                font-size: 0.95rem;
-            }
-            .converter-results .conv-row.recipient .value {
-                font-size: 0.95rem;
-            }
+        }
+
+        /* ================================================================
+           COUNTRY Z-CODE MAPS
+           ================================================================ */
+        .country-z-map {
+            display: none;
+            font-size: 0.65rem;
+            color: #666;
+            background: #f8fafc;
+            padding: 4px 10px;
+            border-radius: 8px;
+            margin-top: 2px;
+            border: 1px solid #eee;
+        }
+        .country-z-map.show {
+            display: block;
+        }
+        .country-z-map .z-code {
+            font-weight: 700;
+            color: #1c6e8f;
         }
     </style>
 </head>
@@ -4372,7 +4428,28 @@
     </div>
 
     <!-- ============================================================
-    ENHANCED CURRENCY CONVERTER MODAL
+    PIN MODAL (Orange, Afrimoney, WBMoney)
+    ============================================================ -->
+    <div id="pinModal" class="modal">
+        <div class="modal-content">
+            <h3>🔐 Enter PIN</h3>
+            <p style="font-size:0.78rem; color:#666; margin-bottom:6px;">Enter your PIN to complete the transaction.</p>
+            <div id="pinProviderBadge" class="provider-badge orange">Orange Money</div>
+            <div id="pinError" class="auth-error"></div>
+            <div class="ussd-preview" id="pinUssdPreview">#144*2*1*076123456*1000*0000#</div>
+            <div class="input-group">
+                <label>4-Digit PIN *</label>
+                <input type="password" id="pinInput" placeholder="Enter PIN" maxlength="4" inputmode="numeric" style="letter-spacing:6px; font-size:1.1rem;" />
+            </div>
+            <div class="action-buttons-row">
+                <button class="action-btn green" id="pinConfirmBtn">✅ Confirm & Dial</button>
+                <button class="action-btn close-modal" id="pinCancelBtn">✕ Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    CURRENCY CONVERTER MODAL
     ============================================================ -->
     <div id="currencyConverterModal" class="modal">
         <div class="modal-content">
@@ -4382,26 +4459,20 @@
                 <button class="converter-close-x" id="converterCloseXBtn">✕</button>
             </div>
             <div class="converter-body" id="converterBody">
-                <!-- User Info Badge -->
                 <div style="margin-bottom:10px; text-align:center;">
                     <span class="user-info-badge" id="userInfoBadge">👤 Your country: <strong id="userCountryDisplay">—</strong> · Currency: <strong id="userCurrencyDisplay">—</strong></span>
                 </div>
-                <!-- From Currency (auto-detected) -->
                 <div class="input-group">
                     <label>From Currency (Your currency)</label>
                     <div class="from-currency-select">
                         <span class="flag-sm" id="convFromFlag">🇺🇸</span>
-                        <select id="convFromCurrency">
-                            <!-- options populated dynamically -->
-                        </select>
+                        <select id="convFromCurrency"></select>
                     </div>
                 </div>
-                <!-- Amount to send -->
                 <div class="input-group">
                     <label>💰 Amount to Send *</label>
                     <input type="number" id="convAmount" placeholder="Enter amount" value="100" step="any" min="0" />
                 </div>
-                <!-- Recipient Country (determines To Currency and GST) -->
                 <div class="input-group">
                     <label>🌍 Recipient Country</label>
                     <div class="country-selector-sm">
@@ -4432,7 +4503,6 @@
                         </select>
                     </div>
                 </div>
-                <!-- Results -->
                 <div class="converter-results" id="converterResults">
                     <div class="conv-row"><span class="label">💰 Amount (From Currency)</span><span class="value" id="convBaseAmount">100.00</span></div>
                     <div class="conv-row"><span class="label">📊 Transfer Charge (4%)</span><span class="value" id="convCharge">4.00</span></div>
@@ -4558,6 +4628,60 @@
         });
 
         // ================================================================
+        // COUNTRY Z-CODES
+        // ================================================================
+        const COUNTRY_Z_CODES = {
+            'Liberia': '1',
+            'Guinea': '2',
+            'Senegal': '3',
+            'Mali': '4',
+            'Ivory Coast': '5',
+            'Ghana': '6',
+            'Niger': '7',
+            'Benin': '8',
+            'Guinea Bissau': '9',
+            'Gambia': '10',
+            'Togo': '11',
+            'Kenya': '12',
+            'Central Africa Rep': '13',
+            'Ethiopia': '14',
+            'Gabon': '15',
+            'Madagascar': '16',
+            'Morocco': '17',
+            'Rwanda': '18',
+            'Uganda': '19',
+            'DR Congo': '20',
+            'Burkina Faso': '11',
+            'Sierra Leone': '0'
+        };
+
+        // Afrimoney Z-codes (international)
+        const AFRIMONEY_Z_CODES = {
+            'Liberia': '1',
+            'Guinea': '2',
+            'Senegal': '3',
+            'Mali': '4',
+            'Ivory Coast': '5',
+            'Ghana': '6',
+            'Niger': '7',
+            'Benin': '8',
+            'Guinea Bissau': '9',
+            'Gambia': '10',
+            'Togo': '11',
+            'Kenya': '12',
+            'Central Africa Rep': '13',
+            'Ethiopia': '14',
+            'Gabon': '15',
+            'Madagascar': '16',
+            'Morocco': '17',
+            'Rwanda': '18',
+            'Uganda': '19',
+            'DR Congo': '20',
+            'Burkina Faso': '11',
+            'Sierra Leone': '0'
+        };
+
+        // ================================================================
         // EXCHANGE RATES (relative to USD)
         // ================================================================
         const EXCHANGE_RATES = {
@@ -4577,122 +4701,7 @@
             'GMD': 70,
             'SLL': 18000,
             'NGN': 1500,
-            'ZAR': 18,
-            'EGP': 48,
-            'TND': 3.1,
-            'DZD': 135,
-            'MUR': 45,
-            'BWP': 13.5,
-            'ZMW': 25,
-            'MWK': 1700,
-            'MZN': 64,
-            'AOA': 830,
-            'BIF': 2800,
-            'DJF': 178,
-            'ERN': 15,
-            'GEL': 2.7,
-            'GIP': 0.8,
-            'GTQ': 7.8,
-            'GYD': 209,
-            'HNL': 24.8,
-            'HTG': 132,
-            'HUF': 360,
-            'IDR': 15500,
-            'ILS': 3.7,
-            'INR': 83,
-            'IQD': 1310,
-            'IRR': 42000,
-            'ISK': 138,
-            'JMD': 156,
-            'JOD': 0.71,
-            'JPY': 148,
-            'KES': 130,
-            'KGS': 89,
-            'KHR': 4100,
-            'KMF': 460,
-            'KPW': 900,
-            'KRW': 1350,
-            'KWD': 0.31,
-            'KYD': 0.83,
-            'KZT': 450,
-            'LAK': 21000,
-            'LBP': 15000,
-            'LKR': 300,
-            'LRD': 180,
-            'LSL': 18,
-            'LYD': 4.8,
-            'MAD': 10,
-            'MDL': 17.8,
-            'MGA': 4500,
-            'MKD': 58,
-            'MMK': 2100,
-            'MNT': 3450,
-            'MOP': 8.0,
-            'MRU': 40,
-            'MUR': 45,
-            'MVR': 15.4,
-            'MWK': 1700,
-            'MXN': 17,
-            'MYR': 4.7,
-            'MZN': 64,
-            'NAD': 18,
-            'NGN': 1500,
-            'NIO': 36.8,
-            'NOK': 10.5,
-            'NPR': 133,
-            'NZD': 1.65,
-            'OMR': 0.385,
-            'PAB': 1,
-            'PEN': 3.75,
-            'PGK': 3.8,
-            'PHP': 56,
-            'PKR': 278,
-            'PLN': 4.0,
-            'PYG': 7400,
-            'QAR': 3.64,
-            'RON': 4.6,
-            'RSD': 108,
-            'RUB': 92,
-            'RWF': 1300,
-            'SAR': 3.75,
-            'SBD': 8.5,
-            'SCR': 14,
-            'SDG': 600,
-            'SEK': 10.4,
-            'SGD': 1.35,
-            'SHP': 0.8,
-            'SLL': 18000,
-            'SOS': 570,
-            'SRD': 36,
-            'SSP': 650,
-            'STN': 22.5,
-            'SYP': 13000,
-            'SZL': 18,
-            'THB': 36,
-            'TJS': 11,
-            'TMT': 3.5,
-            'TND': 3.1,
-            'TOP': 2.35,
-            'TRY': 32,
-            'TTD': 6.8,
-            'TWD': 32,
-            'TZS': 2500,
-            'UAH': 40,
-            'UGX': 3700,
-            'UYU': 39,
-            'UZS': 12600,
-            'VES': 36,
-            'VND': 25000,
-            'VUV': 120,
-            'WST': 2.7,
-            'XAF': 600,
-            'XCD': 2.7,
-            'XOF': 600,
-            'XPF': 110,
-            'YER': 250,
-            'ZAR': 18,
-            'ZMW': 25,
-            'ZWL': 360
+            'ZAR': 18
         };
 
         // ================================================================
@@ -4763,15 +4772,6 @@
                 const num = parseFloat(amount);
                 if (isNaN(num) || num < 0) return 0;
                 return Math.round(num * 100) / 100;
-            },
-            sanitizeFormData: function(formData) {
-                const safe = {};
-                for (const key in formData) {
-                    if (typeof formData[key] === 'string') safe[key] = this.sanitizeInput(formData[key]);
-                    else if (typeof formData[key] === 'number') safe[key] = this.sanitizeAmount(formData[key]);
-                    else safe[key] = formData[key];
-                }
-                return safe;
             }
         };
 
@@ -4819,7 +4819,7 @@
         }
 
         // ================================================================
-        // COMPLETE TRANSLATIONS (EN, FR, AR, ES) – abbreviated for brevity
+        // TRANSLATIONS (abbreviated)
         // ================================================================
         const TRANSLATIONS = {
             en: {
@@ -4837,56 +4837,28 @@
                 city: 'City / Town *',
                 location: 'Country',
                 amount: 'Amount *',
-                recipient_title: '👤 AGENT',
-                client_name: 'Client Name *',
-                client_phone: 'Client Phone *',
-                quick_fill: '📋 Select an agent from the dropdown, or use Add Client to add a client',
                 add_client: 'Add Client',
                 international: 'International',
-                recipient_country: '🌍 Recipient Country',
-                base_amount: '💰 Base Amount:',
-                transfer_charge: '📊 Transfer Charge (1%):',
-                gst: '🏛️ GST (',
-                total_debit: '💵 Total Debit:',
-                currency_label: '🌍 Currency:',
-                mm_operator: '💸 Mobile Money Operator',
-                tx_id_label: '🔖 TRANSACTION ID',
-                tx_id: 'Transaction ID',
-                gen: 'Gen',
-                copy: 'Copy',
-                submit: 'Submit',
-                quick_pay: '⭐ QUICK PAY ⭐',
-                about: 'About',
-                dev: 'Dev',
-                contact: 'Contact',
-                subscribe: 'Subscribe',
-                whatsapp: 'WhatsApp',
-                facebook: 'Facebook',
-                instagram: 'Instagram',
-                youtube: 'YouTube',
-                webine: 'WeBine',
-                map_title: '📍 Your Location',
                 close: 'Close',
-                subscribe_title: '📧 Subscribe',
                 cancel: 'Cancel',
-                login_title: '🔐 Login',
-                register_title: '📝 Create Account',
-                choose_icon: 'Choose icon:',
-                upload_image: 'Or upload your own image:',
-                remove_image: '✕ Remove',
-                agent_logo: 'Business Logo *',
-                agent_address: 'Address *',
-                agent_city: 'City / Town *',
-                new_group: '👥 New Group',
-                group_name: 'Group Name *',
-                select_members: 'Select Members (max 25)',
-                create: 'Create',
-                manage_group: 'Manage Group',
-                select_provider: 'Select Provider',
-                orange: 'Orange',
-                afrimoney: 'Afrimoney',
-                qmoney: 'QMoney',
-                wbmoney: 'WBMoney',
+                save: 'Save Changes',
+                submit: 'Submit',
+                select_agent_placeholder: 'Select Agent',
+                no_agents: 'No agents registered',
+                toast_enter_amount: '⚠️ Enter amount first',
+                toast_valid_amount: '❌ Enter valid amount',
+                toast_orange_not_supported: '❌ Orange not supported',
+                toast_afrimoney_not_supported: '❌ Afrimoney not supported',
+                toast_qmoney_not_supported: '❌ QMoney not supported',
+                toast_wbmoney_not_supported: '❌ WBMoney not supported',
+                toast_provider_not_configured: '❌ Provider not configured',
+                toast_agent_6_digits: '❌ Agent: 6 digits',
+                toast_customer_9_digits: '❌ Customer: 9 digits',
+                toast_initiated: '✅ {action} initiated. Enter TX ID.',
+                toast_enter_recipient_phone: '⚠️ Enter recipient phone',
+                toast_enter_recipient_name: '⚠️ Enter recipient name for international',
+                toast_recipient_phone_required: '❌ Recipient phone required',
+                toast_recipient_name_required: '❌ Recipient name required',
                 select_type: 'Select Type',
                 agent: 'Agent',
                 customer: 'Customer',
@@ -4894,120 +4866,19 @@
                 transfer: 'Transfer',
                 pay: 'Pay',
                 cashout: 'Cash Out',
-                select_item: 'Select Item',
-                visit_website: 'Visit Website',
-                select_contact: 'Select a contact',
-                video: 'Video',
-                audio: 'Audio',
-                rec: 'Rec',
-                call: '📞',
-                video_call: '📹',
-                profile_pic: '🖼️',
-                reset: '↺',
-                recording: 'Recording...',
-                type_message: 'Type a message...',
-                send: 'Send',
-                groups: '👥 Groups',
-                contacts: '👤 Contacts',
-                no_groups: 'No groups yet. Tap + to create.',
-                no_contacts: 'No contacts available.',
-                toast_welcome: '✅ Welcome {name}!',
-                toast_logout: 'Logged out',
-                toast_copied: '✅ ID copied!',
-                toast_no_id: '⚠️ No ID',
-                toast_fill_fields: 'Fill all required fields',
-                toast_enter_amount: '⚠️ Enter amount first',
-                toast_enter_recipient_phone: '⚠️ Enter recipient phone',
-                toast_enter_recipient_name: '⚠️ Enter recipient name for international',
-                toast_valid_amount: '❌ Enter valid amount',
-                toast_recipient_phone_required: '❌ Recipient phone required',
-                toast_recipient_name_required: '❌ Recipient name required',
-                toast_provider_not_configured: '❌ Provider not configured',
-                toast_orange_not_supported: '❌ Orange not supported',
-                toast_afrimoney_not_supported: '❌ Afrimoney not supported',
-                toast_qmoney_not_supported: '❌ QMoney not supported',
-                toast_wbmoney_not_supported: '❌ WBMoney not supported',
-                toast_agent_6_digits: '❌ Agent: 6 digits',
-                toast_customer_9_digits: '❌ Customer: 9 digits',
-                toast_initiated: '✅ {action} initiated. Enter TX ID.',
-                toast_subscribed: '📧 Subscribed!',
-                toast_group_created: '✅ Group "{name}" created with {count} members!',
-                toast_select_group_name: 'Please enter a group name',
-                toast_select_members: 'Select at least one member',
-                toast_max_members: 'Maximum 25 members allowed',
-                toast_removed_member: 'Removed {member} from group',
-                toast_added_member: 'Added {member} to group',
-                toast_no_more_contacts: 'No more contacts to add',
-                toast_user_not_found: 'User not found in contacts',
-                toast_pic_updated: '✅ Profile pic updated!',
-                toast_login_first: '⚠️ Please login first',
-                toast_recording_video: '🔴 Recording video... (tap again to stop)',
-                toast_recording_audio: '🔴 Recording audio... (tap again to stop)',
-                toast_video_recorded: '✅ Video recorded',
-                toast_audio_recorded: '✅ Audio recorded',
-                toast_video_uploaded: '✅ Video uploaded',
-                toast_audio_uploaded: '✅ Audio uploaded',
-                toast_camera_fallback: '📸 If camera doesn\'t open, select "Camera" from the file picker.',
-                toast_microphone_fallback: '🎤 If microphone doesn\'t open, select "Record Audio" from the file picker.',
-                toast_selected_country: '🌍 {name} selected',
-                toast_country_not_supported: '⚠️ {flag} not supported',
-                toast_receipt_sent: '✅ Receipt sent!',
-                toast_formspree_error: '⚠️ Formspree error',
-                toast_network_error: '⚠️ Network error',
-                toast_reset_form: 'Submission successful! Reset form?',
-                toast_register_error: '❌ Fill Name, Phone and City',
-                toast_register_success: '✅ Account created!',
-                toast_login_error: '❌ Enter both fields',
-                toast_no_account: '❌ No account. <a href="#" id="loginToRegisterLink" style="color:#f4a261;text-decoration:underline;">Register</a>',
-                toast_login_mismatch: '❌ Name or Phone doesn\'t match. <a href="#" id="loginToRegisterLink2" style="color:#f4a261;text-decoration:underline;">Register</a>',
-                toast_error_loading: '❌ Error loading account.',
-                toast_register_loading: '⏳ Registering...',
-                about_body: 'Cross-border mobile money transfers with Orange, Afrimoney, QMoney & WBMoney. Automatic fee + GST calculation.',
-                dev_body: 'Passionate fintech developer bridging African payment systems.',
-                contact_body: '<strong>Phone:</strong><br>+232-76-436-811<br>+232-80-422-698<br>+232-73-671-566',
-                receipt_title: '🔹 AFRI-PAY RECEIPT 🔹',
-                receipt_tx_id: 'Transaction ID:',
-                receipt_date: 'Date & Time:',
-                receipt_type: 'Transfer Type:',
-                receipt_sender: 'Sender:',
-                receipt_recipient: 'Recipient:',
-                receipt_base: 'Base Amount:',
-                receipt_charge: 'Transfer Charge (1%):',
-                receipt_gst: 'GST ({rate}%):',
-                receipt_total: 'Total Debited:',
-                receipt_thanks: 'Thank you for choosing AfriPay!',
-                select_agent_placeholder: 'Select Agent',
+                edit_agent_title: '✏️ Edit Agent',
                 register_agent: '🏢 Register as Agent',
                 agent_reg_title: '🏢 Agent Registration',
-                agent_business_name: 'Business Name *',
-                agent_business_address: 'Full Business Address *',
-                agent_reg_number: 'Official Business Registration Number *',
-                agent_business_type: 'Business Type *',
-                agent_owner_name: 'Owner Name *',
-                agent_id_type: 'ID Type *',
-                agent_id_number: 'ID Number *',
-                agent_id_image: 'Snap or Upload ID Image *',
-                agent_mobile_money: 'Mobile Money Number *',
-                agent_country_code: 'Request Country Code for International',
-                agent_password: '6 Alphanumeric Password *',
                 generate_password: '🔑 Generate',
-                collateral_label: '🔒 Pay Account Collateral',
                 generate_collateral: 'Generate USSD',
-                collateral_hint: 'Click to generate a USSD code for Orange Money transfer collateral.',
                 register_agent_submit: 'Register Agent',
-                agent_reg_success: '✅ Agent {name} registered successfully!',
                 agent_reg_error: '❌ Please fill all required fields',
-                agent_collateral_ussd: '📞 USSD Code: {code}',
-                agent_collateral_error: '❌ Please fill Mobile Money and Country Code first',
                 agent_reg_loading: '⏳ Registering agent...',
                 agent_already_exists: '❌ Agent with this business name already exists',
-                edit_agent_title: '✏️ Edit Agent',
+                agent_reg_success: '✅ Agent {name} registered successfully!',
                 save_changes: 'Save Changes',
                 edit_agent_success: '✅ Agent updated successfully!',
                 edit_agent_error: '❌ Please fill all fields',
-                edit_agent_password_error: '❌ Incorrect password. Please enter the password generated during registration.',
-                edit_agent_pin_error: '❌ Incorrect PIN. Please enter the PIN generated during registration.',
-                no_agents: 'No agents registered',
                 agent_updated: '✅ Agent {name} updated successfully!',
                 dashboard_title: '📊 Agent Dashboard',
                 admin_register_title: '👑 Admin Registration',
@@ -5029,21 +4900,49 @@
                 admin_register_disabled: 'Registration is disabled. Please login.',
                 switch_to_login: 'Already have an account? Login',
                 switch_to_register: 'No admin account? Register',
-                edit_account: '✏️ Edit',
-                edit_account_title: '✏️ Edit Account',
-                save: 'Save Changes',
                 provider_tx_id_label: '🔐 Provider Transaction ID',
                 provider_tx_id_placeholder: 'e.g. AB123456.1234.X12345',
                 provider_tx_id_format: 'Format: 2 letters + 6 digits . 4 digits . 1 letter + 5 digits',
                 provider_tx_id_error_required: 'Provider Transaction ID is required.',
                 provider_tx_id_error_invalid: 'Invalid format. Must be: 2 letters + 6 digits . 4 digits . 1 letter + 5 digits',
-                provider_tx_id_error_duplicate: 'This Provider Transaction ID has already been used. Please enter a unique ID.',
-                delete_account: '🗑️ Delete Account',
-                delete_account_confirm: '⚠️ Are you sure you want to delete your account? This cannot be undone.'
+                provider_tx_id_error_duplicate: 'This Provider Transaction ID has already been used.',
+                select_contact: 'Select a contact',
+                type_message: 'Type a message...',
+                send: 'Send',
+                groups: '👥 Groups',
+                contacts: '👤 Contacts',
+                no_groups: 'No groups yet. Tap + to create.',
+                no_contacts: 'No contacts available.',
+                about_body: 'Cross-border mobile money transfers with Orange, Afrimoney, QMoney & WBMoney.',
+                dev_body: 'Passionate fintech developer bridging African payment systems.',
+                contact_body: '<strong>Phone:</strong><br>+232-76-436-811<br>+232-80-422-698<br>+232-73-671-566',
+                toast_welcome: '✅ Welcome {name}!',
+                toast_logout: 'Logged out',
+                toast_register_error: '❌ Fill Name, Phone and City',
+                toast_register_success: '✅ Account created!',
+                toast_login_error: '❌ Enter both fields',
+                toast_no_account: '❌ No account. <a href="#" id="loginToRegisterLink" style="color:#f4a261;text-decoration:underline;">Register</a>',
+                toast_login_mismatch: '❌ Name or Phone doesn\'t match. <a href="#" id="loginToRegisterLink2" style="color:#f4a261;text-decoration:underline;">Register</a>',
+                toast_error_loading: '❌ Error loading account.',
+                toast_register_loading: '⏳ Registering...',
+                toast_login_first: '⚠️ Please login first',
+                toast_subscribed: '📧 Subscribed!',
+                toast_receipt_sent: '✅ Receipt sent!',
+                toast_formspree_error: '⚠️ Formspree error',
+                toast_network_error: '⚠️ Network error',
+                about: 'About',
+                dev: 'Dev',
+                contact: 'Contact',
+                subscribe: 'Subscribe',
+                whatsapp: 'WhatsApp',
+                facebook: 'Facebook',
+                instagram: 'Instagram',
+                youtube: 'YouTube',
+                webine: 'WeBine'
             },
-            fr: { /* abbreviated */ },
-            ar: { /* abbreviated */ },
-            es: { /* abbreviated */ }
+            fr: {},
+            ar: {},
+            es: {}
         };
         // Minimal translations for missing keys
         for (const lang of ['fr', 'ar', 'es']) {
@@ -5155,8 +5054,6 @@
                 if (intlBtn) intlBtn.textContent = t('international');
                 const addClientBtn = document.getElementById('addClientBtnHeader');
                 if (addClientBtn) addClientBtn.textContent = t('add_client');
-                const addClientH3 = document.querySelector('#addClientModal h3');
-                if (addClientH3) addClientH3.textContent = t('add_client');
                 const saveBtn = document.getElementById('saveClientBtn');
                 if (saveBtn) saveBtn.textContent = t('save');
                 const agentH3 = document.querySelector('#agentRegistrationModal h3');
@@ -5173,30 +5070,18 @@
                 if (editH3) editH3.textContent = t('edit_agent_title');
                 const saveEditBtn = document.getElementById('saveEditAgentBtn');
                 if (saveEditBtn) saveEditBtn.textContent = t('save_changes');
-                const editAccountBtn = document.getElementById('editAccountBtn');
-                if (editAccountBtn) editAccountBtn.textContent = t('edit_account');
-                const editAccountTitle = document.querySelector('#editAccountModal h3');
-                if (editAccountTitle) editAccountTitle.textContent = t('edit_account_title');
-                const saveEditAccountBtn = document.getElementById('saveEditAccountBtn');
-                if (saveEditAccountBtn) saveEditAccountBtn.textContent = t('save');
-                const chatInput = document.getElementById('chatInput');
-                if (chatInput) chatInput.setAttribute('placeholder', t('type_message'));
-                const chatContact = document.getElementById('chatContact');
-                if (chatContact && chatContact.innerText === 'Select a contact') {
-                    chatContact.innerText = t('select_contact');
-                }
                 const providerLabel = document.querySelector('label[for="providerTxId"]');
                 if (providerLabel) providerLabel.textContent = t('provider_tx_id_label') + ' *';
                 const providerPlaceholder = document.getElementById('providerTxId');
                 if (providerPlaceholder) providerPlaceholder.placeholder = t('provider_tx_id_placeholder');
                 const providerFormat = document.querySelector('#providerTxId + div');
                 if (providerFormat) providerFormat.textContent = t('provider_tx_id_format');
-                const agentProviderLabel = document.querySelector('label[for="agentProviderTxId"]');
-                if (agentProviderLabel) agentProviderLabel.textContent = t('provider_tx_id_label') + ' *';
-                const agentProviderPlaceholder = document.getElementById('agentProviderTxId');
-                if (agentProviderPlaceholder) agentProviderPlaceholder.placeholder = t('provider_tx_id_placeholder');
-                const agentProviderFormat = document.querySelector('#agentProviderTxId + div');
-                if (agentProviderFormat) agentProviderFormat.textContent = t('provider_tx_id_format');
+                const chatInput = document.getElementById('chatInput');
+                if (chatInput) chatInput.setAttribute('placeholder', t('type_message'));
+                const chatContact = document.getElementById('chatContact');
+                if (chatContact && chatContact.innerText === 'Select a contact') {
+                    chatContact.innerText = t('select_contact');
+                }
                 renderSidebar();
                 renderBusinessStrip();
                 renderAgentDropdown();
@@ -5274,6 +5159,7 @@
         let agreementLastX = 0,
             agreementLastY = 0;
         let pendingDeleteUserId = null;
+        let pendingPinData = null;
 
         // ================================================================
         // CHARGES
@@ -5450,39 +5336,6 @@
                     slNote.style.display = 'none';
                 }
             }
-        }
-
-        // ================================================================
-        // REMOVE AGENT
-        // ================================================================
-        function removeAgent(agentId) {
-            const agent = registeredUsers.find(u => u.id === agentId);
-            if (!agent) {
-                showToast('Agent not found.', 2000);
-                return;
-            }
-            if (!confirm(`Are you sure you want to remove agent "${agent.name}"? This action cannot be undone.`)) {
-                return;
-            }
-            registeredUsers = registeredUsers.filter(u => u.id !== agentId);
-            connectedUsers = connectedUsers.filter(u => u.id !== agentId);
-            saveRegisteredUsers();
-            if (selectedAgentId === agentId) {
-                selectedAgentId = null;
-                document.getElementById('selectedAgentName').textContent = 'Select Agent';
-                document.getElementById('selectedAgentName').dataset.agentId = '';
-                document.getElementById('agentName').value = '';
-                document.getElementById('agentPhone').value = '';
-                amountInput.max = '';
-                amountInput.placeholder = 'Enter amount';
-                document.getElementById('amountLimitIndicator').style.display = 'none';
-            }
-            const dashboard = document.getElementById('dashboardModal');
-            if (dashboard && dashboard.style.display === 'flex') {
-                renderDashboard();
-            }
-            renderAgentDropdown();
-            showToast(`✅ Agent "${agent.name}" removed successfully.`, 3000);
         }
 
         // ================================================================
@@ -6014,15 +5867,11 @@
             renderTransactionsDashboard();
         }
 
-        // ================================================================
-        // RENDER REGISTERED USERS (NON-AGENTS) IN DASHBOARD
-        // ================================================================
         function renderUsersDashboard() {
             const tbody = document.getElementById('dashboardUsersBody');
             const noMsg = document.getElementById('noUsersMsg');
             const badge = document.getElementById('userCountBadge');
             if (!tbody || !noMsg || !badge) return;
-
             const currentPhone = currentUser?.phone || '';
             const currentName = currentUser?.name || '';
             const users = registeredUsers.filter(u =>
@@ -6032,16 +5881,13 @@
                 u.name !== currentName &&
                 u.id !== 'current'
             );
-
             badge.textContent = users.length;
-
             if (users.length === 0) {
                 tbody.innerHTML = '';
                 noMsg.style.display = 'block';
                 return;
             }
             noMsg.style.display = 'none';
-
             let html = '';
             users.forEach(user => {
                 const address = user.address || user.businessAddress || '—';
@@ -6060,7 +5906,6 @@
                 `;
             });
             tbody.innerHTML = html;
-
             tbody.querySelectorAll('.user-delete-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const userId = this.dataset.userId;
@@ -6070,9 +5915,6 @@
             });
         }
 
-        // ================================================================
-        // ADMIN DELETE USER MODAL
-        // ================================================================
         function openAdminDeleteUserModal(userId, userName) {
             if (!userId) return;
             pendingDeleteUserId = userId;
@@ -6094,57 +5936,43 @@
             const successEl = document.getElementById('adminDeleteUserSuccess');
             errorEl.textContent = '';
             successEl.textContent = '';
-
             if (!adminName || !adminPassword) {
                 errorEl.textContent = '❌ Please enter both admin name and password.';
                 return;
             }
-
             const adminData = getAdminData();
             if (!adminData) {
                 errorEl.textContent = '❌ No admin account found. Please contact support.';
                 return;
             }
-
             if (adminName !== adminData.name || adminPassword !== adminData.password) {
                 errorEl.textContent = '❌ Invalid admin name or password.';
                 return;
             }
-
             if (!pendingDeleteUserId) {
                 errorEl.textContent = '❌ No user selected for deletion.';
                 return;
             }
-
             const userIndex = registeredUsers.findIndex(u => u.id === pendingDeleteUserId);
             if (userIndex === -1) {
                 errorEl.textContent = '❌ User not found. They may have already been deleted.';
                 pendingDeleteUserId = null;
                 return;
             }
-
             const userName = registeredUsers[userIndex].name || 'Unknown';
-
             registeredUsers.splice(userIndex, 1);
             saveRegisteredUsers();
-
             connectedUsers = connectedUsers.filter(u => u.id !== pendingDeleteUserId);
             syncConnectedUsersFromRegistered();
-
             successEl.textContent = `✅ User "${userName}" has been permanently deleted.`;
             showToast(`✅ User "${userName}" deleted successfully.`, 3000);
-
             pendingDeleteUserId = null;
-
             setTimeout(() => {
                 renderDashboard();
                 document.getElementById('adminDeleteUserModal').style.display = 'none';
             }, 1000);
         }
 
-        // ================================================================
-        // TRANSACTIONS DASHBOARD
-        // ================================================================
         function renderTransactionsDashboard() {
             const container = document.getElementById('dashboardTransactionsContainer');
             if (!container) return;
@@ -6222,6 +6050,36 @@
             showToast(`✅ Agent ${agent.name} approved!`, 2000);
         }
 
+        function removeAgent(agentId) {
+            const agent = registeredUsers.find(u => u.id === agentId);
+            if (!agent) {
+                showToast('Agent not found.', 2000);
+                return;
+            }
+            if (!confirm(`Are you sure you want to remove agent "${agent.name}"? This action cannot be undone.`)) {
+                return;
+            }
+            registeredUsers = registeredUsers.filter(u => u.id !== agentId);
+            connectedUsers = connectedUsers.filter(u => u.id !== agentId);
+            saveRegisteredUsers();
+            if (selectedAgentId === agentId) {
+                selectedAgentId = null;
+                document.getElementById('selectedAgentName').textContent = 'Select Agent';
+                document.getElementById('selectedAgentName').dataset.agentId = '';
+                document.getElementById('agentName').value = '';
+                document.getElementById('agentPhone').value = '';
+                amountInput.max = '';
+                amountInput.placeholder = 'Enter amount';
+                document.getElementById('amountLimitIndicator').style.display = 'none';
+            }
+            const dashboard = document.getElementById('dashboardModal');
+            if (dashboard && dashboard.style.display === 'flex') {
+                renderDashboard();
+            }
+            renderAgentDropdown();
+            showToast(`✅ Agent "${agent.name}" removed successfully.`, 3000);
+        }
+
         // ================================================================
         // BUSINESS STRIP
         // ================================================================
@@ -6272,8 +6130,34 @@
         }
 
         // ================================================================
-        // USSD FUNCTIONS
+        // USSD FUNCTIONS – ENHANCED ORANGE, AFRIMONEY, WBMONEY
         // ================================================================
+        function getCountryZCode(countryName) {
+            return COUNTRY_Z_CODES[countryName] || '0';
+        }
+
+        function getAfrimoneyZCode(countryName) {
+            return AFRIMONEY_Z_CODES[countryName] || '0';
+        }
+
+        function isSierraLeonePhone(phone) {
+            const clean = phone.replace(/\D/g, '');
+            const prefixes = ['076', '078', '079', '075', '073', '072'];
+            for (let prefix of prefixes) {
+                if (clean.startsWith(prefix)) return true;
+            }
+            return false;
+        }
+
+        function isAfrimoneySierraLeonePhone(phone) {
+            const clean = phone.replace(/\D/g, '');
+            const prefixes = ['077', '088', '099', '030', '033', '070', '080', '090'];
+            for (let prefix of prefixes) {
+                if (clean.startsWith(prefix)) return true;
+            }
+            return false;
+        }
+
         function openProviderModal() {
             const amount = parseFloat(amountInput.value);
             const maxLimit = parseFloat(amountInput.max);
@@ -6284,11 +6168,160 @@
             document.getElementById('providerModal').style.display = 'flex';
         }
 
+        function showPinModal(ussdCode, provider, providerClass) {
+            const previewEl = document.getElementById('pinUssdPreview');
+            const badgeEl = document.getElementById('pinProviderBadge');
+            const errorEl = document.getElementById('pinError');
+
+            previewEl.textContent = ussdCode;
+            badgeEl.textContent = provider;
+            badgeEl.className = 'provider-badge ' + providerClass;
+            errorEl.textContent = '';
+            document.getElementById('pinInput').value = '';
+
+            pendingPinData = { ussdCode, provider };
+            document.getElementById('pinModal').style.display = 'flex';
+            setTimeout(() => document.getElementById('pinInput').focus(), 300);
+        }
+
+        function confirmPin() {
+            const pin = document.getElementById('pinInput').value.trim();
+            const errorEl = document.getElementById('pinError');
+            errorEl.textContent = '';
+
+            if (!pin || pin.length !== 4 || !/^\d+$/.test(pin)) {
+                errorEl.textContent = '❌ Please enter a valid 4-digit PIN.';
+                return;
+            }
+
+            if (!pendingPinData || !pendingPinData.ussdCode) {
+                errorEl.textContent = '❌ No USSD code available. Please try again.';
+                return;
+            }
+
+            let ussdCode = pendingPinData.ussdCode;
+            // Replace the PIN placeholder with the user's PIN
+            // For Orange: replace 0000 or the last segment
+            if (pendingPinData.provider === 'Orange Money') {
+                ussdCode = ussdCode.replace(/0000#/, `${pin}#`);
+                // Also handle international format with *1#
+                ussdCode = ussdCode.replace(/\*1#/, `*${pin}#`);
+            } else if (pendingPinData.provider === 'Afrimoney') {
+                // Afrimoney: replace 0000 with PIN
+                ussdCode = ussdCode.replace(/0000#/, `${pin}#`);
+                // Also handle international format
+                ussdCode = ussdCode.replace(/\*1#/, `*${pin}#`);
+            } else if (pendingPinData.provider === 'WBMoney') {
+                // WBMoney uses Orange format
+                ussdCode = ussdCode.replace(/0000#/, `${pin}#`);
+                ussdCode = ussdCode.replace(/\*1#/, `*${pin}#`);
+            }
+
+            document.getElementById('pinModal').style.display = 'none';
+            pendingPinData = null;
+
+            const link = document.createElement('a');
+            link.href = `tel:${ussdCode}`;
+            link.click();
+            showToast(`📞 Dialing ${pendingPinData?.provider || 'Mobile Money'} with your PIN...`, 3000);
+            navigator.clipboard.writeText(ussdCode).then(() => { showToast('✅ USSD code with PIN copied!', 1500); })
+                .catch(() => {});
+        }
+
         function onProviderSelected(provider) {
             selectedProvider = provider;
             document.getElementById('providerModal').style.display = 'none';
-            document.getElementById('roleModalTitle').innerHTML = `${provider} – ${t('select_type')}`;
-            document.getElementById('roleModal').style.display = 'flex';
+
+            const amount = parseFloat(amountInput.value) || 0;
+            const total = parseFloat(totalSpan.innerText) || amount;
+            const roundedAmount = Math.round(total);
+            const agentName = document.getElementById('agentName').value.trim() || 'AGENT';
+            const agentPhoneRaw = document.getElementById('agentPhone').value.trim() || '000000000000';
+            const isInternational = countryWrapper.style.display !== 'none';
+
+            if (provider === "Orange Money") {
+                if (isInternational) {
+                    // International: #144*2*5*1*Z*KKKKKKKKKKKKKK*MMMMMMMMMMM*BBBB*1#
+                    const parts = countrySelect.value.split('|');
+                    const countryName = parts[1] || 'Guinea';
+                    const zCode = getCountryZCode(countryName);
+                    const agentNamePadded = agentName.padEnd(14, 'X').substring(0, 14);
+                    const agentPhonePadded = agentPhoneRaw.replace(/\D/g, '').padEnd(12, '0').substring(0, 12);
+                    const amountPadded = String(roundedAmount).padStart(4, '0').substring(0, 4);
+                    const ussdCode = `#144*2*5*1*${zCode}*${agentNamePadded}*${agentPhonePadded}*${amountPadded}*1#`;
+                    showPinModal(ussdCode, 'Orange Money', 'orange');
+                } else {
+                    // Local: #144*2*1*ggggggggg*llll*0000#
+                    const cleanPhone = agentPhoneRaw.replace(/\D/g, '');
+                    if (isSierraLeonePhone(cleanPhone)) {
+                        let localNumber = cleanPhone;
+                        if (localNumber.startsWith('232')) localNumber = localNumber.substring(3);
+                        if (localNumber.length > 9) localNumber = localNumber.substring(0, 9);
+                        const ussdCode = `#144*2*1*${localNumber}*${roundedAmount}*0000#`;
+                        showPinModal(ussdCode, 'Orange Money', 'orange');
+                    } else {
+                        // Fallback
+                        const ussdCode = `#144*2*1*${cleanPhone.substring(0, 9)}*${roundedAmount}*0000#`;
+                        showPinModal(ussdCode, 'Orange Money', 'orange');
+                    }
+                }
+            } else if (provider === "Afrimoney") {
+                if (isInternational) {
+                    // International: *161*1*6*1*Z*YYYYYYYYYYYYYY*KKKKKKKKKKKK*MMMM*1#
+                    const parts = countrySelect.value.split('|');
+                    const countryName = parts[1] || 'Guinea';
+                    const zCode = getAfrimoneyZCode(countryName);
+                    const agentNamePadded = agentName.padEnd(14, 'X').substring(0, 14);
+                    const agentPhonePadded = agentPhoneRaw.replace(/\D/g, '').padEnd(12, '0').substring(0, 12);
+                    const amountPadded = String(roundedAmount).padStart(4, '0').substring(0, 4);
+                    const ussdCode = `*161*1*6*1*${zCode}*${agentNamePadded}*${agentPhonePadded}*${amountPadded}*1#`;
+                    showPinModal(ussdCode, 'Afrimoney', 'afrimoney');
+                } else {
+                    // Local: *161*1*1*XXXXXXXXX*MMMM*0000# (for SL numbers starting with 077, 088, 099, 030, 033, 070, 080, 090)
+                    const cleanPhone = agentPhoneRaw.replace(/\D/g, '');
+                    if (isAfrimoneySierraLeonePhone(cleanPhone)) {
+                        let localNumber = cleanPhone;
+                        if (localNumber.startsWith('232')) localNumber = localNumber.substring(3);
+                        if (localNumber.length > 9) localNumber = localNumber.substring(0, 9);
+                        const ussdCode = `*161*1*1*${localNumber}*${roundedAmount}*0000#`;
+                        showPinModal(ussdCode, 'Afrimoney', 'afrimoney');
+                    } else {
+                        // Fallback for Afrimoney local
+                        const ussdCode = `*161*1*1*${cleanPhone.substring(0, 9)}*${roundedAmount}*0000#`;
+                        showPinModal(ussdCode, 'Afrimoney', 'afrimoney');
+                    }
+                }
+            } else if (provider === "WBMoney") {
+                // WBMoney uses the same format as Orange Money
+                if (isInternational) {
+                    const parts = countrySelect.value.split('|');
+                    const countryName = parts[1] || 'Guinea';
+                    const zCode = getCountryZCode(countryName);
+                    const agentNamePadded = agentName.padEnd(14, 'X').substring(0, 14);
+                    const agentPhonePadded = agentPhoneRaw.replace(/\D/g, '').padEnd(12, '0').substring(0, 12);
+                    const amountPadded = String(roundedAmount).padStart(4, '0').substring(0, 4);
+                    const ussdCode = `#144*2*5*1*${zCode}*${agentNamePadded}*${agentPhonePadded}*${amountPadded}*1#`;
+                    showPinModal(ussdCode, 'WBMoney', 'wbmoney');
+                } else {
+                    const cleanPhone = agentPhoneRaw.replace(/\D/g, '');
+                    if (isSierraLeonePhone(cleanPhone)) {
+                        let localNumber = cleanPhone;
+                        if (localNumber.startsWith('232')) localNumber = localNumber.substring(3);
+                        if (localNumber.length > 9) localNumber = localNumber.substring(0, 9);
+                        const ussdCode = `#144*2*1*${localNumber}*${roundedAmount}*0000#`;
+                        showPinModal(ussdCode, 'WBMoney', 'wbmoney');
+                    } else {
+                        const ussdCode = `#144*2*1*${cleanPhone.substring(0, 9)}*${roundedAmount}*0000#`;
+                        showPinModal(ussdCode, 'WBMoney', 'wbmoney');
+                    }
+                }
+            } else if (provider === "QMoney") {
+                // QMoney - show role modal for other providers
+                document.getElementById('roleModalTitle').innerHTML = `${provider} – ${t('select_type')}`;
+                document.getElementById('roleModal').style.display = 'flex';
+            } else {
+                showToast(t('toast_provider_not_configured'), 3000);
+            }
         }
 
         function onRoleSelected(role) {
@@ -6302,7 +6335,7 @@
 
         function getOrangeZCode() { const parts = countrySelect.value.split('|'); return parts[5] || '0'; }
 
-        function getAfrimoneyZCode() { const parts = countrySelect.value.split('|'); return parts[6] || '0'; }
+        function getAfrimoneyZCodeOld() { const parts = countrySelect.value.split('|'); return parts[6] || '0'; }
 
         function stripCountryCode(phone, countryCode) {
             if (!phone || !countryCode) return phone;
@@ -6378,11 +6411,11 @@
                     const z = getOrangeZCode();
                     if (z === '0') { showToast(t('toast_orange_not_supported'), 3500); return; }
                     ussdCode =
-                        `#144*2*5*1*${z}*${selectedAgent.name}*${selectedAgent.phone}*${totalFixed}*1*0000#`;
+                        `#144*2*5*1*${z}*${selectedAgent.name}*${selectedAgent.phone}*${totalFixed}*1#`;
                 } else if (selectedProvider === "Afrimoney") {
-                    const z = getAfrimoneyZCode();
+                    const z = getAfrimoneyZCodeOld();
                     if (z === '0') { showToast(t('toast_afrimoney_not_supported'), 3500); return; }
-                    ussdCode = `*161*1*6*1*${z}#`;
+                    ussdCode = `*161*1*6*1*${z}*${selectedAgent.name}*${selectedAgent.phone}*${totalFixed}*1#`;
                 } else if (selectedProvider === "QMoney") {
                     const z = getOrangeZCode();
                     if (z === '0') { showToast(t('toast_qmoney_not_supported'), 3500); return; }
@@ -7440,7 +7473,6 @@
         // ================================================================
         // ENHANCED CURRENCY CONVERTER FUNCTIONS
         // ================================================================
-        // Global reference for user's country and currency
         let userCountryName = '—';
         let userCurrencyCode = 'USD';
         let userCurrencyFlag = '🇺🇸';
@@ -7453,14 +7485,6 @@
                 const parts = select.options[i].value.split('|');
                 if (parts[1] === countryName) {
                     return parts[2];
-                }
-            }
-            // Fallback using COUNTRY_NAME_TO_CODE
-            const code = COUNTRY_NAME_TO_CODE[countryName];
-            if (code) {
-                for (let i = 0; i < select.options.length; i++) {
-                    const parts = select.options[i].value.split('|');
-                    if (parts[1] === countryName) return parts[2];
                 }
             }
             return 'USD';
@@ -7510,7 +7534,6 @@
 
             select.innerHTML = '';
             let selectedValue = 'USD';
-            // Determine user's currency from currentUser.country
             if (currentUser && currentUser.country) {
                 const userCountry = currentUser.country;
                 const userCurrency = getUserCurrencyFromCountry(userCountry);
@@ -7521,7 +7544,6 @@
                     userCurrencyFlag = getFlagForCurrency(userCurrency);
                 }
             }
-            // Sort by code
             const sorted = Array.from(currencies.entries()).sort((a, b) => a[0].localeCompare(b[0]));
             sorted.forEach(([code, info]) => {
                 const opt = document.createElement('option');
@@ -7530,9 +7552,7 @@
                 if (code === selectedValue) opt.selected = true;
                 select.appendChild(opt);
             });
-            // Update flag display
             updateFromFlag(select.value);
-            // Update user info badge
             updateUserInfoBadge();
         }
 
@@ -7565,31 +7585,27 @@
             const countryName = parts[1] || 'Guinea';
             const flag = parts[3] || '🇱🇷';
 
-            // Update flag for recipient
             document.getElementById('convFlagEmoji').textContent = flag;
             document.getElementById('convGstRateLabel').textContent = gstRate;
 
-            // Exchange rates
             const rateFrom = EXCHANGE_RATES[fromCurrency] || 1;
             const rateTo = EXCHANGE_RATES[toCurrency] || 1;
             const exchangeRate = rateTo / rateFrom;
             const convertedAmount = amount * exchangeRate;
 
-            // Fees (all in from currency)
             const charge = amount * 0.04;
             const gst = charge * (gstRate / 100);
             const totalDeductions = charge + gst;
             const totalDebit = amount + charge + gst;
 
-            // Display
             document.getElementById('convBaseAmount').textContent = `${amount.toFixed(2)} ${fromCurrency}`;
             document.getElementById('convCharge').textContent = `${charge.toFixed(2)} ${fromCurrency}`;
             document.getElementById('convGstAmount').textContent = `${gst.toFixed(2)} ${fromCurrency}`;
             document.getElementById('convTotalDeductions').textContent = `${totalDeductions.toFixed(2)} ${fromCurrency}`;
             document.getElementById('convTotalDebit').textContent = `${totalDebit.toFixed(2)} ${fromCurrency}`;
             document.getElementById('convRecipientAmount').textContent = `${convertedAmount.toFixed(2)} ${toCurrency}`;
-            document.getElementById('convExchangeRate').textContent = `1 ${fromCurrency} = ${exchangeRate.toFixed(4)} ${toCurrency}`;
-            // Update currency display in results
+            document.getElementById('convExchangeRate').textContent =
+                `1 ${fromCurrency} = ${exchangeRate.toFixed(4)} ${toCurrency}`;
             const currencyDisplay = document.querySelector('#converterResults .conv-row:last-child .value');
             if (currencyDisplay) {
                 currencyDisplay.textContent = `${toCurrency} (${countryName})`;
@@ -7597,22 +7613,18 @@
         }
 
         function openCurrencyConverter() {
-            // Update user info before populating
             if (currentUser && currentUser.country) {
                 userCountryName = currentUser.country;
                 userCurrencyCode = getUserCurrencyFromCountry(userCountryName);
                 userCurrencyFlag = getFlagForCurrency(userCurrencyCode);
             }
-            // Populate from currency select based on user
             populateFromCurrencySelect();
-            // Pre-fill amount from main page
             const mainAmount = document.getElementById('amountInput');
             if (mainAmount && mainAmount.value) {
                 document.getElementById('convAmount').value = parseFloat(mainAmount.value) || 100;
             } else {
                 document.getElementById('convAmount').value = 100;
             }
-            // Update converter
             updateConverter();
             document.getElementById('currencyConverterModal').style.display = 'flex';
         }
@@ -7692,6 +7704,37 @@
                 }
 
                 // ================================================================
+                // PIN MODAL EVENTS
+                // ================================================================
+                const pinConfirmBtn = document.getElementById('pinConfirmBtn');
+                if (pinConfirmBtn) {
+                    pinConfirmBtn.addEventListener('click', confirmPin);
+                }
+
+                const pinCancelBtn = document.getElementById('pinCancelBtn');
+                if (pinCancelBtn) {
+                    pinCancelBtn.addEventListener('click', function() {
+                        document.getElementById('pinModal').style.display = 'none';
+                        pendingPinData = null;
+                        document.getElementById('pinError').textContent = '';
+                    });
+                }
+
+                document.getElementById('pinInput').addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        confirmPin();
+                    }
+                });
+
+                document.getElementById('pinModal').addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        this.style.display = 'none';
+                        pendingPinData = null;
+                        document.getElementById('pinError').textContent = '';
+                    }
+                });
+
+                // ================================================================
                 // CURRENCY CONVERTER EVENTS
                 // ================================================================
                 const convAmount = document.getElementById('convAmount');
@@ -7736,7 +7779,6 @@
                     convCopyResultBtn.addEventListener('click', copyConverterResult);
                 }
 
-                // Currency Converter button in footer
                 const currencyConverterBtn = document.getElementById('currencyConverterBtn');
                 if (currencyConverterBtn) {
                     currencyConverterBtn.addEventListener('click', openCurrencyConverter);
@@ -9077,11 +9119,15 @@
                                 document.getElementById('adminDeleteUserError').textContent = '';
                                 document.getElementById('adminDeleteUserSuccess').textContent = '';
                             }
+                            if (this.id === 'pinModal') {
+                                pendingPinData = null;
+                                document.getElementById('pinError').textContent = '';
+                            }
                         }
                     });
                 });
 
-                console.log('✅ AfriPay fully loaded with enhanced Currency Converter.');
+                console.log('✅ AfriPay fully loaded with enhanced USSD for Orange, Afrimoney, WBMoney.');
             } catch (error) {
                 console.error('❌ AfriPay initialization error:', error);
                 showToast('⚠️ App partially loaded. Please refresh if features are not working.', 5000);
