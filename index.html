@@ -210,6 +210,13 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .agent-dropdown-item .agent-name .agent-flag {
+            font-size: 1.0rem;
+            flex-shrink: 0;
         }
         .agent-dropdown-item .edit-agent-btn {
             background: rgba(255, 255, 255, 0.15);
@@ -225,6 +232,7 @@
             height: 28px;
             display: flex;
             align-items: center;
+            justify-content: center;
         }
         .agent-dropdown-item .edit-agent-btn:hover {
             background: rgba(255, 215, 0, 0.3);
@@ -3489,6 +3497,26 @@
             font-weight: 700;
             color: #1c6e8f;
         }
+        /* Settings icon style */
+        .agent-dropdown-item .edit-agent-btn {
+            font-size: 1.0rem !important;
+            background: transparent;
+            padding: 0 4px;
+            min-width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            transition: 0.2s;
+        }
+        .agent-dropdown-item .edit-agent-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+        /* Flag in agent name */
+        .agent-dropdown-item .agent-name .agent-flag {
+            font-size: 1.0rem;
+            flex-shrink: 0;
+            margin-right: 2px;
+        }
     </style>
 </head>
 <body>
@@ -3631,7 +3659,7 @@
                     <div class="input-group"><label id="clientPhoneLabel">Client Phone *</label><input type="tel" id="clientPhone" readonly /></div>
                 </div>
                 <div style="display:flex; align-items:center; gap:6px; margin-bottom:0.4rem; flex-wrap:wrap;">
-                    <span style="font-size:0.7rem; color:#1c6e8f;">📋 Select an agent from the dropdown, or use <strong>Add Client</strong> to add a client</span>
+                    <span style="font-size:0.7rem; color:#1c6e8f;" data-i18n="agent_select_hint">📋 Select an agent from the dropdown, or use <strong>Add Client</strong> to add a client</span>
                     <span id="slModeNote" class="sl-mode-note" style="display:none;">🌍 International Agent – Special USSD format</span>
                     <span id="guineaModeNote" class="guinea-mode-note" style="display:none;">🇬🇳 Guinea Orange Money USSD</span>
                 </div>
@@ -3690,19 +3718,19 @@
                 </div>
 
                 <!-- PROVIDER TRANSACTION ID -->
-                <div class="section-title" style="margin-top:0.5rem;">🔐 PROVIDER TRANSACTION ID</div>
+                <div class="section-title" style="margin-top:0.5rem;" data-i18n="provider_tx_section">🔐 PROVIDER TRANSACTION ID</div>
                 <div class="input-group">
-                    <label for="providerTxId">Provider Transaction ID (Format: AB123456.1234.X12345) *</label>
+                    <label for="providerTxId" data-i18n="provider_tx_id_label">Provider Transaction ID (Format: AB123456.1234.X12345) *</label>
                     <input type="text" id="providerTxId" placeholder="e.g. AB123456.1234.X12345" pattern="[A-Za-z]{2}[0-9]{6}\.[0-9]{4}\.[A-Za-z][0-9]{5}" />
-                    <div style="font-size:0.6rem; color:#666; margin-top:2px;">Format: 2 letters + 6 digits . 4 digits . 1 letter + 5 digits (e.g. AB123456.1234.X12345)</div>
+                    <div style="font-size:0.6rem; color:#666; margin-top:2px;" data-i18n="provider_tx_id_format">Format: 2 letters + 6 digits . 4 digits . 1 letter + 5 digits (e.g. AB123456.1234.X12345)</div>
                     <div id="providerTxIdError" class="error-msg" style="font-size:0.65rem; display:none;"></div>
                 </div>
 
                 <!-- TRANSFER CODE (CONDITIONAL) -->
                 <div class="input-group" id="mainTransferCodeGroup" style="display:none;">
-                    <label for="mainTransferCode">Transfer Code (6, 8, 10, 12, or 14 digits) *</label>
+                    <label for="mainTransferCode" data-i18n="transfer_code_label">Transfer Code (6, 8, 10, 12, or 14 digits) *</label>
                     <input type="text" id="mainTransferCode" placeholder="e.g. 123456" maxlength="14" pattern="[0-9]{6}|[0-9]{8}|[0-9]{10}|[0-9]{12}|[0-9]{14}" />
-                    <div style="font-size:0.6rem; color:#666; margin-top:2px;">Enter the 6-14 digit transfer code provided by the sender (appears only for International transfers).</div>
+                    <div style="font-size:0.6rem; color:#666; margin-top:2px;" data-i18n="transfer_code_hint">Enter the 6-14 digit transfer code provided by the sender (appears only for International transfers).</div>
                     <div id="mainTransferCodeError" class="error-msg" style="font-size:0.65rem; display:none;"></div>
                 </div>
 
@@ -3723,7 +3751,7 @@
                 <button class="footer-btn" id="aboutDevBtn" data-i18n="dev">Dev</button>
                 <button class="footer-btn" id="contactBtn" data-i18n="contact">Contact</button>
                 <button class="footer-btn" id="subscribeBtn" data-i18n="subscribe">Subscribe</button>
-                <button class="footer-btn" id="currencyConverterBtn" style="background:#2c7da0; color:white;">💱 Currency Converter</button>
+                <button class="footer-btn" id="currencyConverterBtn" style="background:#2c7da0; color:white;" data-i18n="currency_converter">💱 Currency Converter</button>
             </div>
             <div class="social-icons">
                 <a href="#" class="social-icon" id="whatsappBtn" data-i18n="whatsapp">WhatsApp</a>
@@ -3754,7 +3782,7 @@
     <div id="registerModal" class="modal"><div class="modal-content"><h3 data-i18n="register_title">📝 Create Account</h3><input type="text" id="regName" placeholder="Full Name *" style="width:100%; padding:5px 9px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.85rem; height:42px;" /><input type="tel" id="regPhone" placeholder="Phone *" style="width:100%; padding:5px 9px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.85rem; height:42px;" />
         <input type="text" id="regAddress" placeholder="Address" style="width:100%; padding:5px 9px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.85rem; height:42px;" />
         <div class="input-group" style="margin-bottom:0.4rem;">
-            <label style="font-size:0.78rem;font-weight:700;color:#1e3b4a;">City / Town *</label>
+            <label style="font-size:0.78rem;font-weight:700;color:#1e3b4a;" data-i18n="city">City / Town *</label>
             <div class="city-input-row">
                 <select id="regCitySelect">
                     <option value="">Select a capital city...</option>
@@ -3806,7 +3834,7 @@
             <span class="emoji-option" data-emoji="🧑‍🍳">🧑‍🍳</span><span class="emoji-option" data-emoji="👨‍🔧">👨‍🔧</span><span class="emoji-option" data-emoji="👩‍🔧">👩‍🔧</span><span class="emoji-option" data-emoji="🧑‍🔧">🧑‍🔧</span><span class="emoji-option" data-emoji="👨‍🎨">👨‍🎨</span><span class="emoji-option" data-emoji="👩‍🎨">👩‍🎨</span>
         </div>
         <div style="margin-top:8px;">
-            <label style="font-size:0.78rem;font-weight:700;color:#1e3b4a;">Or upload your own image:</label>
+            <label style="font-size:0.78rem;font-weight:700;color:#1e3b4a;" data-i18n="upload_image">Or upload your own image:</label>
             <input type="file" id="regProfileImage" accept="image/*" style="width:100%; padding:4px; border-radius:20px; border:1px solid #ddd; font-size:0.85rem; height:38px;" />
             <div id="regProfilePreview" class="image-upload-preview" style="display:none;">
                 <img src="#" alt="Profile preview" />
@@ -3814,7 +3842,7 @@
             </div>
         </div>
         <div style="display:flex; gap:6px; align-items:center; margin-top:4px;">
-            <button type="button" class="action-btn" id="regGenerateUssdBtn" style="flex:1; background:#2c7da0; height:38px; font-size:0.85rem;">📱 Generate USSD</button>
+            <button type="button" class="action-btn" id="regGenerateUssdBtn" style="flex:1; background:#2c7da0; height:38px; font-size:0.85rem;" data-i18n="generate_ussd">📱 Generate USSD</button>
         </div>
         <div class="ussd-result-box" id="regUssdResult">
             <span class="ussd-label">📞 USSD Code:</span>
@@ -3900,11 +3928,11 @@
                     <img src="#" alt="Logo Preview" />
                     <button type="button" id="agentLogoRemove" class="remove-image-btn">✕ Remove</button>
                 </div>
-                <div style="font-size:0.65rem; color:#666; margin-top:2px;">Please upload your business logo (required).</div>
+                <div style="font-size:0.65rem; color:#666; margin-top:2px;" data-i18n="agent_logo_hint">Please upload your business logo (required).</div>
             </div>
             <div class="input-group"><label data-i18n="agent_mobile_money">Mobile Money Number *</label><input type="tel" id="agentMobileMoney" placeholder="e.g. 23276123456" /></div>
             <div class="input-group">
-                <label for="agentCollateralLimit">💳 Collateral Limit *</label>
+                <label for="agentCollateralLimit" data-i18n="collateral_limit_label">💳 Collateral Limit *</label>
                 <select id="agentCollateralLimit">
                     <option value="500">500</option><option value="1000">1,000</option><option value="1500">1,500</option>
                     <option value="2000">2,000</option><option value="2500">2,500</option><option value="3000">3,000</option>
@@ -3914,7 +3942,7 @@
                     <option value="8000">8,000</option><option value="8500">8,500</option><option value="9000">9,000</option>
                     <option value="9500">9,500</option><option value="10000">10,000</option>
                 </select>
-                <div style="font-size:0.6rem; color:#666; margin-top:2px;">This sets the maximum amount the agent can transact.</div>
+                <div style="font-size:0.6rem; color:#666; margin-top:2px;" data-i18n="collateral_limit_hint">This sets the maximum amount the agent can transact.</div>
             </div>
             <div class="input-group"><label data-i18n="agent_country_code">Request Country Code for International</label>
                 <select id="agentCountryCode">
@@ -3938,17 +3966,17 @@
                     <input type="text" id="agentPassword" placeholder="e.g. A1B2C3" style="flex:1; min-width:100px; letter-spacing:2px; font-family:monospace;" readonly />
                     <button type="button" class="action-btn green" id="generatePasswordBtn" style="padding:4px 14px; height:38px; font-size:0.7rem;" data-i18n="generate_password">🔑 Generate</button>
                 </div>
-                <div id="agentPasswordHint" style="font-size:0.65rem; color:#666; margin-top:2px;">Click Generate to create a 6-character alphanumeric password</div>
+                <div id="agentPasswordHint" style="font-size:0.65rem; color:#666; margin-top:2px;" data-i18n="password_hint">Click Generate to create a 6-character alphanumeric password</div>
             </div>
 
             <!-- 5-Digit PIN Field -->
             <div class="input-group">
-                <label>5-Digit PIN *</label>
+                <label data-i18n="agent_pin_label">5-Digit PIN *</label>
                 <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
                     <input type="text" id="agentPin" placeholder="e.g. 12345" style="flex:1; min-width:100px; letter-spacing:2px; font-family:monospace;" readonly />
-                    <button type="button" class="action-btn green" id="generatePinBtn" style="padding:4px 14px; height:38px; font-size:0.7rem;">🔑 Generate PIN</button>
+                    <button type="button" class="action-btn green" id="generatePinBtn" style="padding:4px 14px; height:38px; font-size:0.7rem;" data-i18n="generate_pin">🔑 Generate PIN</button>
                 </div>
-                <div id="agentPinHint" style="font-size:0.65rem; color:#666; margin-top:2px;">Click Generate to create a 5-digit PIN</div>
+                <div id="agentPinHint" style="font-size:0.65rem; color:#666; margin-top:2px;" data-i18n="pin_hint">Click Generate to create a 5-digit PIN</div>
             </div>
 
             <div class="collateral-box">
@@ -3966,25 +3994,25 @@
 
             <!-- View Agreement Button -->
             <div style="margin: 10px 0 6px 0; text-align: center;">
-                <button class="action-btn orange" id="viewAgreementBtn" style="width:100%; height:42px; font-size:0.85rem;">📜 View & Sign Agent Agreement</button>
+                <button class="action-btn orange" id="viewAgreementBtn" style="width:100%; height:42px; font-size:0.85rem;" data-i18n="view_agreement">📜 View & Sign Agent Agreement</button>
                 <div id="agreementStatusDisplay" style="font-size:0.65rem; color:#7f8c8d; margin-top:3px;">
-                    Agreement: <span id="agreementStatusText" style="font-weight:700; color:#e74c3c;">Not Signed</span>
+                    <span data-i18n="agreement_status_label">Agreement:</span> <span id="agreementStatusText" style="font-weight:700; color:#e74c3c;" data-i18n="not_signed">Not Signed</span>
                 </div>
             </div>
 
             <!-- Provider Transaction ID -->
             <div class="input-group" style="margin-top:0.5rem;">
-                <label for="agentProviderTxId">🔐 Provider Transaction ID (Format: AB123456.1234.X12345) *</label>
+                <label for="agentProviderTxId" data-i18n="provider_tx_id_label">🔐 Provider Transaction ID (Format: AB123456.1234.X12345) *</label>
                 <input type="text" id="agentProviderTxId" placeholder="e.g. AB123456.1234.X12345" pattern="[A-Za-z]{2}[0-9]{6}\.[0-9]{4}\.[A-Za-z][0-9]{5}" />
-                <div style="font-size:0.6rem; color:#666; margin-top:2px;">Format: 2 letters + 6 digits . 4 digits . 1 letter + 5 digits</div>
+                <div style="font-size:0.6rem; color:#666; margin-top:2px;" data-i18n="provider_tx_id_format">Format: 2 letters + 6 digits . 4 digits . 1 letter + 5 digits</div>
                 <div id="agentProviderTxIdError" class="error-msg" style="font-size:0.65rem; display:none;"></div>
             </div>
 
             <!-- Transfer Code (Conditional) -->
             <div class="input-group" id="agentTransferCodeGroup" style="display:none;">
-                <label for="agentTransferCode">Transfer Code (6, 8, 10, 12, or 14 digits) *</label>
+                <label for="agentTransferCode" data-i18n="transfer_code_label">Transfer Code (6, 8, 10, 12, or 14 digits) *</label>
                 <input type="text" id="agentTransferCode" placeholder="e.g. 123456" maxlength="14" pattern="[0-9]{6}|[0-9]{8}|[0-9]{10}|[0-9]{12}|[0-9]{14}" />
-                <div style="font-size:0.6rem; color:#666; margin-top:2px;">Enter the 6-14 digit transfer code provided by the sender.</div>
+                <div style="font-size:0.6rem; color:#666; margin-top:2px;" data-i18n="transfer_code_hint">Enter the 6-14 digit transfer code provided by the sender.</div>
                 <div id="agentTransferCodeError" class="error-msg" style="font-size:0.65rem; display:none;"></div>
             </div>
 
@@ -3999,20 +4027,20 @@
     <div id="agreementModal" class="modal">
         <div class="modal-content">
             <div class="agreement-modal-header">
-                <h3>📜 AGENT REGISTRATION AGREEMENT</h3>
-                <small>Please read carefully and sign to proceed</small>
+                <h3 data-i18n="agreement_title">📜 AGENT REGISTRATION AGREEMENT</h3>
+                <small data-i18n="agreement_subtitle">Please read carefully and sign to proceed</small>
                 <button class="agreement-close-x" id="agreementCloseXBtn">✕</button>
             </div>
             <div class="agreement-body" id="agreementBody">
                 <!-- Dynamically filled -->
             </div>
             <div class="agreement-footer">
-                <button class="action-btn agree-btn" id="agreementAgreeBtn" disabled>
+                <button class="action-btn agree-btn" id="agreementAgreeBtn" disabled data-i18n="agree_sign">
                     ✋ I Agree & Sign
                 </button>
-                <button class="action-btn close-modal" id="agreementCloseBtn">✕ Close</button>
+                <button class="action-btn close-modal" id="agreementCloseBtn" data-i18n="close">✕ Close</button>
             </div>
-            <div class="agreement-status" id="agreementStatus">
+            <div class="agreement-status" id="agreementStatus" data-i18n="agreement_status_prompt">
                 Please read all clauses and provide signature below.
             </div>
         </div>
@@ -4065,21 +4093,21 @@
             <div class="input-group">
                 <label data-i18n="agent_password">6 Alphanumeric Password *</label>
                 <input type="text" id="editPassword" placeholder="Enter the 6-character password" style="letter-spacing:2px; font-family:monospace;" />
-                <div id="editPasswordHint" style="font-size:0.65rem; color:#666; margin-top:2px;">Enter the password that was generated during registration</div>
+                <div id="editPasswordHint" style="font-size:0.65rem; color:#666; margin-top:2px;" data-i18n="edit_password_hint">Enter the password that was generated during registration</div>
             </div>
 
             <!-- PIN Field in Edit Modal -->
             <div class="input-group">
-                <label>5-Digit PIN *</label>
+                <label data-i18n="agent_pin_label">5-Digit PIN *</label>
                 <input type="text" id="editPin" placeholder="Enter the 5-digit PIN" style="letter-spacing:2px; font-family:monospace;" maxlength="5" />
-                <div style="font-size:0.65rem; color:#666; margin-top:2px;">Enter the PIN that was generated during registration</div>
+                <div style="font-size:0.65rem; color:#666; margin-top:2px;" data-i18n="edit_pin_hint">Enter the PIN that was generated during registration</div>
             </div>
 
             <!-- Report Button placed at the bottom side by side with Save and Cancel -->
             <div class="action-buttons-row" style="margin-top:8px;">
                 <button class="action-btn" id="saveEditAgentBtn" data-i18n="save_changes">Save Changes</button>
                 <button class="action-btn close-modal" data-i18n="cancel">Cancel</button>
-                <button class="action-btn orange" id="editAgentReportBtn" style="background: #1a1a1a; color: white;">📋 Report</button>
+                <button class="action-btn orange" id="editAgentReportBtn" style="background: #1a1a1a; color: white;" data-i18n="report">📋 Report</button>
             </div>
         </div>
     </div>
@@ -4194,12 +4222,12 @@
     <div id="dashboardModal" class="modal">
         <div class="modal-content">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                <h3>📊 Agent Dashboard</h3>
-                <button class="action-btn" id="adminLogoutBtn" style="background:#e74c3c; padding:4px 14px; height:34px; font-size:0.7rem;">Logout</button>
+                <h3 data-i18n="dashboard_title">📊 Agent Dashboard</h3>
+                <button class="action-btn" id="adminLogoutBtn" style="background:#e74c3c; padding:4px 14px; height:34px; font-size:0.7rem;" data-i18n="logout">Logout</button>
             </div>
             <div id="dashboardContent" style="overflow-x:auto;">
                 <table>
-                    <thead><tr><th>Agent Name</th><th>Business</th><th>Address</th><th>Type</th><th>Password</th><th>PIN</th><th>Collateral Limit</th><th>Country</th><th>Status</th><th>Agreement</th><th>Action</th><th>Remove</th></tr></thead>
+                    <thead><tr><th data-i18n="agent_name_th">Agent Name</th><th data-i18n="business_th">Business</th><th data-i18n="address_th">Address</th><th data-i18n="type_th">Type</th><th data-i18n="password_th">Password</th><th data-i18n="pin_th">PIN</th><th data-i18n="collateral_th">Collateral Limit</th><th data-i18n="country_th">Country</th><th data-i18n="status_th">Status</th><th data-i18n="agreement_th">Agreement</th><th data-i18n="action_th">Action</th><th data-i18n="remove_th">Remove</th></tr></thead>
                     <tbody id="dashboardTableBody"></tbody>
                 </table>
                 <!-- ============================================================
@@ -4207,15 +4235,15 @@
                 ============================================================ -->
                 <div id="dashboardUsersContainer">
                     <div class="users-section-title">
-                        👤 Registered Users
+                        <span data-i18n="registered_users_label">👤 Registered Users</span>
                         <span class="badge-count" id="userCountBadge">0</span>
                     </div>
                     <div id="dashboardUsersTableWrapper" style="overflow-x:auto; margin-top:4px;">
                         <table id="dashboardUsersTable">
-                            <thead><tr><th>Name</th><th>Address</th><th>Phone</th><th>City</th><th>Country</th><th>Action</th></tr></thead>
+                            <thead><tr><th data-i18n="name_th">Name</th><th data-i18n="address_th">Address</th><th data-i18n="phone_th">Phone</th><th data-i18n="city_th">City</th><th data-i18n="country_th">Country</th><th data-i18n="action_th">Action</th></tr></thead>
                             <tbody id="dashboardUsersBody"></tbody>
                         </table>
-                        <div id="noUsersMsg" class="no-users-msg">No registered users found.</div>
+                        <div id="noUsersMsg" class="no-users-msg" data-i18n="no_users_msg">No registered users found.</div>
                     </div>
                 </div>
                 <div id="dashboardTransactionsContainer"></div>
@@ -4229,27 +4257,27 @@
         <div class="modal-content">
             <div class="receipt-header">
                 <div class="receipt-logo">AFRI·PAY</div>
-                <div class="receipt-sub">CROSS-BORDER PAYMENT RECEIPT</div>
+                <div class="receipt-sub" data-i18n="receipt_sub">CROSS-BORDER PAYMENT RECEIPT</div>
                 <div class="receipt-badge" id="receiptBadge">🔹 CONFIRMED</div>
                 <button class="receipt-close-x" id="receiptCloseXBtn">✕</button>
             </div>
             <div class="receipt-body" id="receiptBody"></div>
             <div class="receipt-footer">
-                <div class="thanks">✨ Thank you for choosing AfriPay!</div>
-                <div class="powered">Powered by WeBine Financial Technologies</div>
+                <div class="thanks" data-i18n="receipt_thanks">✨ Thank you for choosing AfriPay!</div>
+                <div class="powered" data-i18n="receipt_powered">Powered by WeBine Financial Technologies</div>
                 <div class="receipt-share-row">
                     <div class="receipt-share-group">
-                        <div class="receipt-share-label">📤 Send receipt to:</div>
+                        <div class="receipt-share-label" data-i18n="send_receipt_to">📤 Send receipt to:</div>
                         <div class="share-row">
-                            <button class="receipt-share-btn client" id="receiptShareClientWhatsApp">📱 Client WhatsApp</button>
-                            <button class="receipt-share-btn agent" id="receiptShareAgentWhatsApp">📱 Agent WhatsApp</button>
+                            <button class="receipt-share-btn client" id="receiptShareClientWhatsApp" data-i18n="client_whatsapp">📱 Client WhatsApp</button>
+                            <button class="receipt-share-btn agent" id="receiptShareAgentWhatsApp" data-i18n="agent_whatsapp">📱 Agent WhatsApp</button>
                         </div>
                         <div class="share-row">
-                            <button class="receipt-share-btn sms" id="receiptShareClientSMS">✉️ Client SMS</button>
-                            <button class="receipt-share-btn sms" id="receiptShareAgentSMS">✉️ Agent SMS</button>
+                            <button class="receipt-share-btn sms" id="receiptShareClientSMS" data-i18n="client_sms">✉️ Client SMS</button>
+                            <button class="receipt-share-btn sms" id="receiptShareAgentSMS" data-i18n="agent_sms">✉️ Agent SMS</button>
                         </div>
                         <div class="share-row" style="margin-top:4px;">
-                            <button class="receipt-share-btn close-receipt" id="receiptCloseBtn">✕ Close</button>
+                            <button class="receipt-share-btn close-receipt" id="receiptCloseBtn" data-i18n="close">✕ Close</button>
                         </div>
                     </div>
                 </div>
@@ -4346,7 +4374,7 @@
                 <span class="emoji-option" data-emoji="👨‍🎓">👨‍🎓</span><span class="emoji-option" data-emoji="👩‍🎓">👩‍🎓</span>
             </div>
             <div style="margin-top:8px;">
-                <label style="font-size:0.78rem;font-weight:700;color:#1e3b4a;">Upload profile image:</label>
+                <label style="font-size:0.78rem;font-weight:700;color:#1e3b4a;" data-i18n="upload_image">Upload profile image:</label>
                 <input type="file" id="editProfileImage" accept="image/*" style="width:100%; padding:4px; border-radius:20px; border:1px solid #ddd; font-size:0.85rem; height:38px;" />
                 <div id="editProfilePreview" class="image-upload-preview" style="display:none;">
                     <img src="#" alt="Profile preview" />
@@ -4363,21 +4391,21 @@
     <!-- Agent Auth Modal (Password & PIN) -->
     <div id="agentAuthModal" class="modal">
         <div class="modal-content">
-            <h3>🔐 Agent Authentication</h3>
-            <p style="font-size:0.78rem; color:#666; margin-bottom:8px;">Please enter your credentials to access the report.</p>
+            <h3 data-i18n="agent_auth_title">🔐 Agent Authentication</h3>
+            <p style="font-size:0.78rem; color:#666; margin-bottom:8px;" data-i18n="agent_auth_subtitle">Please enter your credentials to access the report.</p>
             <div id="agentAuthError" class="auth-error"></div>
             <div id="agentAuthSuccess" class="auth-success"></div>
             <div class="input-group">
-                <label>6 Alphanumeric Password *</label>
+                <label data-i18n="agent_password">6 Alphanumeric Password *</label>
                 <input type="password" id="agentAuthPassword" placeholder="Enter your password" maxlength="6" style="letter-spacing:4px;" />
             </div>
             <div class="input-group">
-                <label>5-Digit PIN *</label>
+                <label data-i18n="agent_pin_label">5-Digit PIN *</label>
                 <input type="password" id="agentAuthPin" placeholder="Enter your PIN" maxlength="5" inputmode="numeric" />
             </div>
             <div class="action-buttons-row">
-                <button class="action-btn green" id="agentAuthConfirmBtn">✅ Confirm</button>
-                <button class="action-btn close-modal" id="agentAuthCancelBtn">✕ Cancel</button>
+                <button class="action-btn green" id="agentAuthConfirmBtn" data-i18n="confirm">✅ Confirm</button>
+                <button class="action-btn close-modal" id="agentAuthCancelBtn" data-i18n="cancel">✕ Cancel</button>
             </div>
         </div>
     </div>
@@ -4386,16 +4414,16 @@
     <div id="agentReportModal" class="modal">
         <div class="modal-content">
             <div class="report-header">
-                <h3>📋 AGENT REPORT</h3>
-                <small>Transaction Details & USSD Code</small>
+                <h3 data-i18n="agent_report_title">📋 AGENT REPORT</h3>
+                <small data-i18n="agent_report_subtitle">Transaction Details & USSD Code</small>
                 <button class="report-close-x" id="reportCloseXBtn">✕</button>
             </div>
             <div class="report-body" id="reportBody">
                 <!-- Dynamically filled -->
             </div>
             <div class="report-footer">
-                <button class="action-btn copy-btn" id="reportCopyUssdBtn">📋 Copy USSD</button>
-                <button class="action-btn close-report" id="reportCloseBtn">✕ Close</button>
+                <button class="action-btn copy-btn" id="reportCopyUssdBtn" data-i18n="copy_ussd">📋 Copy USSD</button>
+                <button class="action-btn close-report" id="reportCloseBtn" data-i18n="close">✕ Close</button>
             </div>
         </div>
     </div>
@@ -4405,24 +4433,24 @@
     ============================================================ -->
     <div id="adminDeleteUserModal" class="modal admin-auth-modal">
         <div class="modal-content">
-            <h3>🔐 Admin Verification Required</h3>
-            <p style="font-size:0.78rem; color:#666; margin-bottom:8px;">Enter admin credentials to permanently delete this user.</p>
+            <h3 data-i18n="admin_verify_title">🔐 Admin Verification Required</h3>
+            <p style="font-size:0.78rem; color:#666; margin-bottom:8px;" data-i18n="admin_verify_subtitle">Enter admin credentials to permanently delete this user.</p>
             <div id="adminDeleteUserError" class="auth-error"></div>
             <div id="adminDeleteUserSuccess" class="auth-success"></div>
             <div class="delete-user-warning" id="deleteUserWarning">
                 ⚠️ You are about to permanently delete <span class="delete-user-name-highlight" id="deleteUserNameDisplay">—</span>. This action cannot be undone.
             </div>
             <div class="input-group">
-                <label>Admin Name *</label>
+                <label data-i18n="admin_name">Admin Name *</label>
                 <input type="text" id="adminDeleteUserName" placeholder="Enter admin name" />
             </div>
             <div class="input-group">
-                <label>Admin Password *</label>
+                <label data-i18n="admin_password">Admin Password *</label>
                 <input type="password" id="adminDeleteUserPassword" placeholder="Enter admin password" />
             </div>
             <div class="action-buttons-row">
-                <button class="action-btn green" id="adminDeleteUserConfirmBtn">✅ Confirm Delete</button>
-                <button class="action-btn close-modal" id="adminDeleteUserCancelBtn">✕ Cancel</button>
+                <button class="action-btn green" id="adminDeleteUserConfirmBtn" data-i18n="confirm_delete">✅ Confirm Delete</button>
+                <button class="action-btn close-modal" id="adminDeleteUserCancelBtn" data-i18n="cancel">✕ Cancel</button>
             </div>
         </div>
     </div>
@@ -4432,18 +4460,18 @@
     ============================================================ -->
     <div id="pinModal" class="modal">
         <div class="modal-content">
-            <h3>🔐 Enter PIN</h3>
-            <p style="font-size:0.78rem; color:#666; margin-bottom:6px;">Enter your PIN to complete the transaction.</p>
+            <h3 data-i18n="enter_pin_title">🔐 Enter PIN</h3>
+            <p style="font-size:0.78rem; color:#666; margin-bottom:6px;" data-i18n="enter_pin_subtitle">Enter your PIN to complete the transaction.</p>
             <div id="pinProviderBadge" class="provider-badge orange">Orange Money</div>
             <div id="pinError" class="auth-error"></div>
             <div class="ussd-preview" id="pinUssdPreview">#144*2*1*076123456*1000*0000#</div>
             <div class="input-group">
-                <label>4-Digit PIN *</label>
+                <label data-i18n="pin_4_digit">4-Digit PIN *</label>
                 <input type="password" id="pinInput" placeholder="Enter PIN" maxlength="4" inputmode="numeric" style="letter-spacing:6px; font-size:1.1rem;" />
             </div>
             <div class="action-buttons-row">
-                <button class="action-btn green" id="pinConfirmBtn">✅ Confirm & Dial</button>
-                <button class="action-btn close-modal" id="pinCancelBtn">✕ Cancel</button>
+                <button class="action-btn green" id="pinConfirmBtn" data-i18n="confirm_dial">✅ Confirm & Dial</button>
+                <button class="action-btn close-modal" id="pinCancelBtn" data-i18n="cancel">✕ Cancel</button>
             </div>
         </div>
     </div>
@@ -4454,27 +4482,27 @@
     <div id="currencyConverterModal" class="modal">
         <div class="modal-content">
             <div class="converter-header">
-                <h3>💱 Currency Converter</h3>
-                <small>Convert & calculate fees</small>
+                <h3 data-i18n="currency_converter">💱 Currency Converter</h3>
+                <small data-i18n="converter_subtitle">Convert & calculate fees</small>
                 <button class="converter-close-x" id="converterCloseXBtn">✕</button>
             </div>
             <div class="converter-body" id="converterBody">
                 <div style="margin-bottom:10px; text-align:center;">
-                    <span class="user-info-badge" id="userInfoBadge">👤 Your country: <strong id="userCountryDisplay">—</strong> · Currency: <strong id="userCurrencyDisplay">—</strong></span>
+                    <span class="user-info-badge" id="userInfoBadge" data-i18n="user_info_badge">👤 Your country: <strong id="userCountryDisplay">—</strong> · Currency: <strong id="userCurrencyDisplay">—</strong></span>
                 </div>
                 <div class="input-group">
-                    <label>From Currency (Your currency)</label>
+                    <label data-i18n="from_currency_label">From Currency (Your currency)</label>
                     <div class="from-currency-select">
                         <span class="flag-sm" id="convFromFlag">🇺🇸</span>
                         <select id="convFromCurrency"></select>
                     </div>
                 </div>
                 <div class="input-group">
-                    <label>💰 Amount to Send *</label>
+                    <label data-i18n="amount_to_send">💰 Amount to Send *</label>
                     <input type="number" id="convAmount" placeholder="Enter amount" value="100" step="any" min="0" />
                 </div>
                 <div class="input-group">
-                    <label>🌍 Recipient Country</label>
+                    <label data-i18n="recipient_country">🌍 Recipient Country</label>
                     <div class="country-selector-sm">
                         <span class="flag-sm" id="convFlagEmoji">🇱🇷</span>
                         <select id="convCountrySelect">
@@ -4504,21 +4532,21 @@
                     </div>
                 </div>
                 <div class="converter-results" id="converterResults">
-                    <div class="conv-row"><span class="label">💰 Amount (From Currency)</span><span class="value" id="convBaseAmount">100.00</span></div>
-                    <div class="conv-row"><span class="label">📊 Transfer Charge (4%)</span><span class="value" id="convCharge">4.00</span></div>
-                    <div class="conv-row"><span class="label">🏛️ GST (<span id="convGstRateLabel">18</span>%)</span><span class="value" id="convGstAmount">0.72</span></div>
-                    <div class="conv-row"><span class="label">📋 Total Deductions</span><span class="value" id="convTotalDeductions">4.72</span></div>
-                    <div class="conv-row total"><span class="label">💵 Total Debit</span><span class="value" id="convTotalDebit">104.72</span></div>
-                    <div class="conv-row recipient"><span class="label">🎯 Recipient Receives (converted)</span><span class="value" id="convRecipientAmount">—</span></div>
+                    <div class="conv-row"><span class="label" data-i18n="base_amount">💰 Amount (From Currency)</span><span class="value" id="convBaseAmount">100.00</span></div>
+                    <div class="conv-row"><span class="label" data-i18n="transfer_charge">📊 Transfer Charge (4%)</span><span class="value" id="convCharge">4.00</span></div>
+                    <div class="conv-row"><span class="label" data-i18n="gst">🏛️ GST (<span id="convGstRateLabel">18</span>%)</span><span class="value" id="convGstAmount">0.72</span></div>
+                    <div class="conv-row"><span class="label" data-i18n="total_deductions">📋 Total Deductions</span><span class="value" id="convTotalDeductions">4.72</span></div>
+                    <div class="conv-row total"><span class="label" data-i18n="total_debit">💵 Total Debit</span><span class="value" id="convTotalDebit">104.72</span></div>
+                    <div class="conv-row recipient"><span class="label" data-i18n="recipient_receives">🎯 Recipient Receives (converted)</span><span class="value" id="convRecipientAmount">—</span></div>
                     <div class="conv-row" style="border-top:1px solid #eee; margin-top:4px; padding-top:4px;">
-                        <span class="label">🔄 Exchange Rate</span>
+                        <span class="label" data-i18n="exchange_rate">🔄 Exchange Rate</span>
                         <span class="value" id="convExchangeRate">1.0000</span>
                     </div>
                 </div>
             </div>
             <div class="converter-footer">
-                <button class="action-btn copy-result" id="convCopyResultBtn">📋 Copy Result</button>
-                <button class="action-btn close-converter" id="convCloseBtn">✕ Close</button>
+                <button class="action-btn copy-result" id="convCopyResultBtn" data-i18n="copy_result">📋 Copy Result</button>
+                <button class="action-btn close-converter" id="convCloseBtn" data-i18n="close">✕ Close</button>
             </div>
         </div>
     </div>
@@ -4546,7 +4574,7 @@
             <div class="chat-messages" id="chatMessages"></div>
             <div class="chat-controls" id="chatControls">
                 <div class="ctrl-group"><span>🎨</span><input type="color" id="chatBgColor" value="#f5f8fa" /></div>
-                <div class="ctrl-group"><button id="fontDecrease">A-</button><button id="fontIncrease">A+</button></div>
+                <div class="ctrl-group"><button id="fontDecrease" data-i18n="font_decrease">A-</button><button id="fontIncrease" data-i18n="font_increase">A+</button></div>
                 <div class="ctrl-group"><span>☀️</span><input type="range" class="brightness-slider" id="brightnessSlider" min="0.3" max="1.5" step="0.05" value="1.0" /></div>
                 <button id="resetChatSettings" data-i18n="reset">↺</button>
                 <span class="recording-indicator" id="recordingIndicator"><span class="recording-dot"></span> <span data-i18n="recording">Recording...</span></span>
@@ -4626,6 +4654,33 @@
         Object.keys(COUNTRY_CODE_TO_NAME).forEach(code => {
             COUNTRY_NAME_TO_CODE[COUNTRY_CODE_TO_NAME[code]] = code;
         });
+
+        // Country code to flag emoji mapping
+        const COUNTRY_CODE_TO_FLAG = {
+            '+232': '🇸🇱',
+            '+224': '🇬🇳',
+            '+221': '🇸🇳',
+            '+231': '🇱🇷',
+            '+233': '🇬🇭',
+            '+234': '🇳🇬',
+            '+254': '🇰🇪',
+            '+223': '🇲🇱',
+            '+225': '🇨🇮',
+            '+227': '🇳🇪',
+            '+229': '🇧🇯',
+            '+245': '🇬🇼',
+            '+220': '🇬🇲',
+            '+228': '🇹🇬',
+            '+236': '🇨🇫',
+            '+251': '🇪🇹',
+            '+241': '🇬🇦',
+            '+261': '🇲🇬',
+            '+212': '🇲🇦',
+            '+250': '🇷🇼',
+            '+256': '🇺🇬',
+            '+243': '🇨🇩',
+            '+226': '🇧🇫'
+        };
 
         // ================================================================
         // COUNTRY Z-CODES
@@ -4772,6 +4827,18 @@
                 const num = parseFloat(amount);
                 if (isNaN(num) || num < 0) return 0;
                 return Math.round(num * 100) / 100;
+            },
+            sanitizeFormData: function(data) {
+                if (!data || typeof data !== 'object') return {};
+                const safe = {};
+                for (const key in data) {
+                    if (typeof data[key] === 'string') {
+                        safe[key] = this.sanitizeInput(data[key], 200);
+                    } else {
+                        safe[key] = data[key];
+                    }
+                }
+                return safe;
             }
         };
 
@@ -4819,7 +4886,7 @@
         }
 
         // ================================================================
-        // TRANSLATIONS (abbreviated)
+        // TRANSLATIONS – FULLY EXPANDED
         // ================================================================
         const TRANSLATIONS = {
             en: {
@@ -4938,20 +5005,1014 @@
                 facebook: 'Facebook',
                 instagram: 'Instagram',
                 youtube: 'YouTube',
-                webine: 'WeBine'
+                webine: 'WeBine',
+                map_title: '📍 Your Location',
+                subscribe_title: '📧 Subscribe',
+                login_title: '🔐 Login',
+                register_title: '📝 Create Account',
+                choose_icon: 'Choose icon:',
+                upload_image: 'Or upload your own image:',
+                generate_ussd: '📱 Generate USSD',
+                agent_business_name: 'Business Name *',
+                agent_address: 'Address *',
+                agent_city: 'City / Town *',
+                agent_reg_number: 'Official Business Registration Number *',
+                agent_business_type: 'Business Type *',
+                agent_owner_name: 'Owner Name *',
+                agent_id_type: 'ID Type *',
+                agent_id_number: 'ID Number *',
+                agent_id_image: 'Snap or Upload ID Image *',
+                agent_logo: 'Business Logo *',
+                agent_logo_hint: 'Please upload your business logo (required).',
+                agent_mobile_money: 'Mobile Money Number *',
+                collateral_limit_label: '💳 Collateral Limit *',
+                collateral_limit_hint: 'This sets the maximum amount the agent can transact.',
+                agent_country_code: 'Request Country Code for International',
+                agent_password: '6 Alphanumeric Password *',
+                password_hint: 'Click Generate to create a 6-character alphanumeric password',
+                agent_pin_label: '5-Digit PIN *',
+                pin_hint: 'Click Generate to create a 5-digit PIN',
+                collateral_label: '🔒 Pay Account Collateral',
+                collateral_hint: 'Click to generate a USSD code for Orange Money transfer collateral.',
+                view_agreement: '📜 View & Sign Agent Agreement',
+                agreement_status_label: 'Agreement:',
+                not_signed: 'Not Signed',
+                signed: 'Signed ✅',
+                provider_tx_section: '🔐 PROVIDER TRANSACTION ID',
+                transfer_code_label: 'Transfer Code (6, 8, 10, 12, or 14 digits) *',
+                transfer_code_hint: 'Enter the 6-14 digit transfer code provided by the sender.',
+                generate_pin: '🔑 Generate PIN',
+                agreement_title: '📜 AGENT REGISTRATION AGREEMENT',
+                agreement_subtitle: 'Please read carefully and sign to proceed',
+                agree_sign: '✋ I Agree & Sign',
+                agreement_status_prompt: 'Please read all clauses and provide signature below.',
+                edit_agent_title: '✏️ Edit Agent',
+                report: '📋 Report',
+                client_name: 'Client Name *',
+                client_phone: 'Client Phone *',
+                new_group: '👥 New Group',
+                group_name: 'Group Name *',
+                select_members: 'Select Members (max 25)',
+                create: 'Create',
+                manage_group: 'Manage Group',
+                select_provider: 'Select Provider',
+                orange: 'Orange',
+                afrimoney: 'Afrimoney',
+                qmoney: 'QMoney',
+                wbmoney: 'WBMoney',
+                select_type: 'Select Type',
+                transfer: 'Transfer',
+                pay: 'Pay',
+                cashout: 'Cash Out',
+                select_item: 'Select Item',
+                visit_website: 'Visit Website',
+                dashboard_title: '📊 Agent Dashboard',
+                agent_name_th: 'Agent Name',
+                business_th: 'Business',
+                address_th: 'Address',
+                type_th: 'Type',
+                password_th: 'Password',
+                pin_th: 'PIN',
+                collateral_th: 'Collateral Limit',
+                country_th: 'Country',
+                status_th: 'Status',
+                agreement_th: 'Agreement',
+                action_th: 'Action',
+                remove_th: 'Remove',
+                registered_users_label: '👤 Registered Users',
+                name_th: 'Name',
+                phone_th: 'Phone',
+                city_th: 'City',
+                no_users_msg: 'No registered users found.',
+                receipt_sub: 'CROSS-BORDER PAYMENT RECEIPT',
+                receipt_thanks: '✨ Thank you for choosing AfriPay!',
+                receipt_powered: 'Powered by WeBine Financial Technologies',
+                send_receipt_to: '📤 Send receipt to:',
+                client_whatsapp: '📱 Client WhatsApp',
+                agent_whatsapp: '📱 Agent WhatsApp',
+                client_sms: '✉️ Client SMS',
+                agent_sms: '✉️ Agent SMS',
+                edit_account_title: '✏️ Edit Account',
+                agent_auth_title: '🔐 Agent Authentication',
+                agent_auth_subtitle: 'Please enter your credentials to access the report.',
+                confirm: '✅ Confirm',
+                agent_report_title: '📋 AGENT REPORT',
+                agent_report_subtitle: 'Transaction Details & USSD Code',
+                copy_ussd: '📋 Copy USSD',
+                admin_verify_title: '🔐 Admin Verification Required',
+                admin_verify_subtitle: 'Enter admin credentials to permanently delete this user.',
+                confirm_delete: '✅ Confirm Delete',
+                enter_pin_title: '🔐 Enter PIN',
+                enter_pin_subtitle: 'Enter your PIN to complete the transaction.',
+                pin_4_digit: '4-Digit PIN *',
+                confirm_dial: '✅ Confirm & Dial',
+                currency_converter: '💱 Currency Converter',
+                converter_subtitle: 'Convert & calculate fees',
+                user_info_badge: '👤 Your country:',
+                from_currency_label: 'From Currency (Your currency)',
+                amount_to_send: '💰 Amount to Send *',
+                recipient_country: '🌍 Recipient Country',
+                base_amount: '💰 Base Amount:',
+                transfer_charge: '📊 Transfer Charge (1%):',
+                gst: '🏛️ GST (<span id="gstRateLabel">15</span>%):',
+                total_debit: '💵 Total Debit:',
+                currency_label: '🌍 Currency:',
+                mm_operator: '💸 Mobile Money Operator',
+                tx_id_label: '🔖 TRANSACTION ID',
+                tx_id: 'Transaction ID',
+                gen: 'Gen',
+                copy: 'Copy',
+                quick_pay: '⭐ QUICK PAY ⭐',
+                total_deductions: '📋 Total Deductions',
+                recipient_receives: '🎯 Recipient Receives (converted)',
+                exchange_rate: '🔄 Exchange Rate',
+                copy_result: '📋 Copy Result',
+                video: 'Video',
+                audio: 'Audio',
+                rec: 'Rec',
+                call: '📞',
+                video_call: '📹',
+                profile_pic: '🖼️',
+                reset: '↺',
+                recording: 'Recording...',
+                font_decrease: 'A-',
+                font_increase: 'A+',
+                agent_select_hint: '📋 Select an agent from the dropdown, or use <strong>Add Client</strong> to add a client',
+                edit_password_hint: 'Enter the password that was generated during registration',
+                edit_pin_hint: 'Enter the PIN that was generated during registration',
+                toast_copied: '✅ Copied!',
+                toast_no_id: '⚠️ No ID to copy.',
+                toast_selected_country: '🌍 Selected: {name}',
+                toast_country_not_supported: '⚠️ Country not supported: {flag}',
+                toast_select_group_name: '⚠️ Please enter a group name',
+                toast_select_members: '⚠️ Please select at least one member',
+                toast_max_members: '⚠️ Maximum 25 members allowed',
+                toast_group_created: '✅ Group "{name}" created with {count} members',
+                toast_agent_collateral_error: '⚠️ Please enter a valid mobile money number',
+                toast_edit_agent_password_error: '❌ Incorrect password. Please enter the correct password.',
+                toast_edit_agent_pin_error: '❌ Incorrect PIN. Please enter the correct PIN.',
+                date_th: 'Date',
+                amount_th: 'Amount',
+                total_th: 'Total',
+                client_label: 'Client',
+                recent_transactions: 'Recent Transactions',
+                no_transactions: 'No transactions yet.',
+                receipt_tx_id: 'TX ID',
+                receipt_date: 'Date',
+                receipt_type: 'Type',
+                receipt_sender: 'Sender',
+                receipt_base: 'Base Amount',
+                receipt_charge: 'Charge',
+                receipt_gst: 'GST ({rate}%)',
+                receipt_total: 'Total'
             },
-            fr: {},
-            ar: {},
-            es: {}
-        };
-        // Minimal translations for missing keys
-        for (const lang of ['fr', 'ar', 'es']) {
-            if (!TRANSLATIONS[lang]) TRANSLATIONS[lang] = {};
-            const en = TRANSLATIONS.en;
-            for (const key in en) {
-                if (!TRANSLATIONS[lang][key]) TRANSLATIONS[lang][key] = en[key];
+            fr: {
+                login: 'Connexion',
+                register: 'S\'inscrire',
+                logout: 'Déconnexion',
+                online: 'En ligne',
+                about: 'À propos',
+                dev: 'Développeur',
+                contact: 'Contact',
+                subscribe: 'S\'abonner',
+                whatsapp: 'WhatsApp',
+                facebook: 'Facebook',
+                instagram: 'Instagram',
+                youtube: 'YouTube',
+                webine: 'WeBine',
+                close: 'Fermer',
+                cancel: 'Annuler',
+                save: 'Enregistrer',
+                submit: 'Soumettre',
+                add_client: 'Ajouter un client',
+                international: 'International',
+                edit_account_title: '✏️ Modifier le compte',
+                agent: 'Agent',
+                customer: 'Client',
+                other: 'Autre',
+                transfer: 'Transfert',
+                pay: 'Payer',
+                cashout: 'Retrait',
+                send: 'Envoyer',
+                create: 'Créer',
+                confirm: 'Confirmer',
+                reset: 'Réinitialiser',
+                recording: 'Enregistrement...',
+                video: 'Vidéo',
+                audio: 'Audio',
+                call: '📞',
+                profile_pic: '🖼️',
+                rec: 'Enr',
+                video_call: '📹',
+                map_title: '📍 Votre emplacement',
+                subscribe_title: '📧 S\'abonner',
+                login_title: '🔐 Connexion',
+                register_title: '📝 Créer un compte',
+                choose_icon: 'Choisir une icône :',
+                upload_image: 'Ou téléchargez votre propre image :',
+                generate_ussd: '📱 Générer USSD',
+                generate_password: '🔑 Générer',
+                generate_collateral: 'Générer USSD',
+                generate_pin: '🔑 Générer PIN',
+                register_agent: '🏢 S\'inscrire en tant qu\'agent',
+                agent_reg_title: '🏢 Inscription agent',
+                register_agent_submit: 'Inscrire l\'agent',
+                agent_reg_error: '❌ Veuillez remplir tous les champs requis',
+                agent_reg_loading: '⏳ Inscription de l\'agent...',
+                agent_already_exists: '❌ Un agent avec ce nom d\'entreprise existe déjà',
+                agent_reg_success: '✅ Agent {name} inscrit avec succès !',
+                save_changes: 'Enregistrer les modifications',
+                edit_agent_success: '✅ Agent mis à jour avec succès !',
+                edit_agent_error: '❌ Veuillez remplir tous les champs',
+                agent_updated: '✅ Agent {name} mis à jour avec succès !',
+                dashboard_title: '📊 Tableau de bord des agents',
+                admin_register_title: '👑 Inscription admin',
+                admin_login_title: '🔐 Connexion admin',
+                admin_name: 'Nom admin *',
+                admin_password: 'Mot de passe *',
+                admin_confirm_password: 'Confirmer le mot de passe *',
+                admin_pin: 'Code PIN 5 chiffres *',
+                admin_register_btn: 'Inscrire l\'admin',
+                admin_login_btn: 'Se connecter',
+                admin_register_success: '✅ Admin inscrit avec succès ! Veuillez vous connecter.',
+                admin_login_success: '✅ Bienvenue Admin !',
+                admin_reg_error: '❌ Veuillez remplir tous les champs correctement.',
+                admin_pin_error: '❌ Le PIN doit comporter exactement 5 chiffres.',
+                admin_password_mismatch: '❌ Les mots de passe ne correspondent pas.',
+                admin_already_exists: '❌ Admin déjà inscrit. Veuillez vous connecter.',
+                admin_invalid_credentials: '❌ Nom, mot de passe ou PIN invalide.',
+                admin_logout: 'Déconnecté',
+                admin_register_disabled: 'L\'inscription est désactivée. Veuillez vous connecter.',
+                switch_to_login: 'Déjà un compte ? Connectez-vous',
+                switch_to_register: 'Pas de compte admin ? Inscrivez-vous',
+                provider_tx_id_label: '🔐 ID de transaction fournisseur',
+                provider_tx_id_placeholder: 'ex. AB123456.1234.X12345',
+                provider_tx_id_format: 'Format: 2 lettres + 6 chiffres . 4 chiffres . 1 lettre + 5 chiffres',
+                provider_tx_id_error_required: 'L\'ID de transaction fournisseur est requis.',
+                provider_tx_id_error_invalid: 'Format invalide. Doit être: 2 lettres + 6 chiffres . 4 chiffres . 1 lettre + 5 chiffres',
+                provider_tx_id_error_duplicate: 'Cet ID de transaction fournisseur a déjà été utilisé.',
+                select_contact: 'Sélectionner un contact',
+                type_message: 'Tapez un message...',
+                groups: '👥 Groupes',
+                contacts: '👤 Contacts',
+                no_groups: 'Pas encore de groupes. Appuyez sur + pour créer.',
+                no_contacts: 'Aucun contact disponible.',
+                about_body: 'Transferts d\'argent mobile transfrontaliers avec Orange, Afrimoney, QMoney et WBMoney.',
+                dev_body: 'Développeur fintech passionné connectant les systèmes de paiement africains.',
+                contact_body: '<strong>Téléphone :</strong><br>+232-76-436-811<br>+232-80-422-698<br>+232-73-671-566',
+                toast_welcome: '✅ Bienvenue {name} !',
+                toast_logout: 'Déconnecté',
+                toast_register_error: '❌ Remplissez le nom, le téléphone et la ville',
+                toast_register_success: '✅ Compte créé !',
+                toast_login_error: '❌ Entrez les deux champs',
+                toast_no_account: '❌ Aucun compte. <a href="#" id="loginToRegisterLink" style="color:#f4a261;text-decoration:underline;">S\'inscrire</a>',
+                toast_login_mismatch: '❌ Le nom ou le téléphone ne correspond pas. <a href="#" id="loginToRegisterLink2" style="color:#f4a261;text-decoration:underline;">S\'inscrire</a>',
+                toast_error_loading: '❌ Erreur lors du chargement du compte.',
+                toast_register_loading: '⏳ Inscription en cours...',
+                toast_login_first: '⚠️ Veuillez d\'abord vous connecter',
+                toast_subscribed: '📧 Abonné !',
+                toast_receipt_sent: '✅ Reçu envoyé !',
+                toast_formspree_error: '⚠️ Erreur Formspree',
+                toast_network_error: '⚠️ Erreur réseau',
+                toast_enter_amount: '⚠️ Entrez d\'abord le montant',
+                toast_valid_amount: '❌ Entrez un montant valide',
+                toast_orange_not_supported: '❌ Orange non supporté',
+                toast_afrimoney_not_supported: '❌ Afrimoney non supporté',
+                toast_qmoney_not_supported: '❌ QMoney non supporté',
+                toast_wbmoney_not_supported: '❌ WBMoney non supporté',
+                toast_provider_not_configured: '❌ Fournisseur non configuré',
+                toast_agent_6_digits: '❌ Agent : 6 chiffres',
+                toast_customer_9_digits: '❌ Client : 9 chiffres',
+                toast_initiated: '✅ {action} initiée. Entrez l\'ID de transaction.',
+                toast_enter_recipient_phone: '⚠️ Entrez le téléphone du destinataire',
+                toast_enter_recipient_name: '⚠️ Entrez le nom du destinataire pour l\'international',
+                toast_recipient_phone_required: '❌ Téléphone du destinataire requis',
+                toast_recipient_name_required: '❌ Nom du destinataire requis',
+                select_type: 'Sélectionner le type',
+                edit_agent_title: '✏️ Modifier l\'agent',
+                agent_business_name: 'Nom de l\'entreprise *',
+                agent_address: 'Adresse *',
+                agent_city: 'Ville *',
+                agent_reg_number: 'Numéro d\'enregistrement officiel *',
+                agent_business_type: 'Type d\'entreprise *',
+                agent_owner_name: 'Nom du propriétaire *',
+                agent_id_type: 'Type de pièce d\'identité *',
+                agent_id_number: 'Numéro de pièce d\'identité *',
+                agent_id_image: 'Prendre ou télécharger une photo de la pièce d\'identité *',
+                agent_logo: 'Logo de l\'entreprise *',
+                agent_logo_hint: 'Veuillez télécharger votre logo d\'entreprise (obligatoire).',
+                agent_mobile_money: 'Numéro Mobile Money *',
+                collateral_limit_label: '💳 Limite de garantie *',
+                collateral_limit_hint: 'Définit le montant maximum que l\'agent peut transacter.',
+                agent_country_code: 'Demander le code pays pour l\'international',
+                agent_password: 'Mot de passe alphanumérique de 6 caractères *',
+                password_hint: 'Cliquez sur Générer pour créer un mot de passe alphanumérique de 6 caractères',
+                agent_pin_label: 'Code PIN à 5 chiffres *',
+                pin_hint: 'Cliquez sur Générer pour créer un code PIN à 5 chiffres',
+                collateral_label: '🔒 Garantie du compte de paiement',
+                collateral_hint: 'Cliquez pour générer un code USSD pour le transfert de garantie Orange Money.',
+                view_agreement: '📜 Voir et signer l\'accord d\'agent',
+                agreement_status_label: 'Accord :',
+                not_signed: 'Non signé',
+                signed: 'Signé ✅',
+                provider_tx_section: '🔐 ID DE TRANSACTION FOURNISSEUR',
+                transfer_code_label: 'Code de transfert (6, 8, 10, 12 ou 14 chiffres) *',
+                transfer_code_hint: 'Entrez le code de transfert de 6 à 14 chiffres fourni par l\'expéditeur.',
+                report: '📋 Rapport',
+                client_name: 'Nom du client *',
+                client_phone: 'Téléphone du client *',
+                new_group: '👥 Nouveau groupe',
+                group_name: 'Nom du groupe *',
+                select_members: 'Sélectionner les membres (max 25)',
+                manage_group: 'Gérer le groupe',
+                select_provider: 'Sélectionner le fournisseur',
+                orange: 'Orange',
+                afrimoney: 'Afrimoney',
+                qmoney: 'QMoney',
+                wbmoney: 'WBMoney',
+                select_item: 'Sélectionner un article',
+                visit_website: 'Visiter le site web',
+                agent_name_th: 'Nom de l\'agent',
+                business_th: 'Entreprise',
+                address_th: 'Adresse',
+                type_th: 'Type',
+                password_th: 'Mot de passe',
+                pin_th: 'PIN',
+                collateral_th: 'Limite de garantie',
+                country_th: 'Pays',
+                status_th: 'Statut',
+                agreement_th: 'Accord',
+                action_th: 'Action',
+                remove_th: 'Supprimer',
+                registered_users_label: '👤 Utilisateurs inscrits',
+                name_th: 'Nom',
+                phone_th: 'Téléphone',
+                city_th: 'Ville',
+                no_users_msg: 'Aucun utilisateur inscrit trouvé.',
+                receipt_sub: 'REÇU DE PAIEMENT TRANSFRONTALIER',
+                receipt_thanks: '✨ Merci d\'avoir choisi AfriPay !',
+                receipt_powered: 'Propulsé par WeBine Financial Technologies',
+                send_receipt_to: '📤 Envoyer le reçu à :',
+                client_whatsapp: '📱 Client WhatsApp',
+                agent_whatsapp: '📱 Agent WhatsApp',
+                client_sms: '✉️ Client SMS',
+                agent_sms: '✉️ Agent SMS',
+                agent_auth_title: '🔐 Authentification de l\'agent',
+                agent_auth_subtitle: 'Veuillez entrer vos identifiants pour accéder au rapport.',
+                confirm: '✅ Confirmer',
+                agent_report_title: '📋 RAPPORT DE L\'AGENT',
+                agent_report_subtitle: 'Détails de la transaction et code USSD',
+                copy_ussd: '📋 Copier USSD',
+                admin_verify_title: '🔐 Vérification admin requise',
+                admin_verify_subtitle: 'Entrez les identifiants admin pour supprimer définitivement cet utilisateur.',
+                confirm_delete: '✅ Confirmer la suppression',
+                enter_pin_title: '🔐 Entrer le PIN',
+                enter_pin_subtitle: 'Entrez votre PIN pour compléter la transaction.',
+                pin_4_digit: 'PIN à 4 chiffres *',
+                confirm_dial: '✅ Confirmer et composer',
+                currency_converter: '💱 Convertisseur de devises',
+                converter_subtitle: 'Convertir et calculer les frais',
+                user_info_badge: '👤 Votre pays :',
+                from_currency_label: 'Devise source (Votre devise)',
+                amount_to_send: '💰 Montant à envoyer *',
+                recipient_country: '🌍 Pays du destinataire',
+                base_amount: '💰 Montant de base :',
+                transfer_charge: '📊 Frais de transfert (1%) :',
+                gst: '🏛️ TVA (<span id="gstRateLabel">15</span>%) :',
+                total_debit: '💵 Débit total :',
+                currency_label: '🌍 Devise :',
+                mm_operator: '💸 Opérateur Mobile Money',
+                tx_id_label: '🔖 ID DE TRANSACTION',
+                tx_id: 'ID de transaction',
+                gen: 'Générer',
+                copy: 'Copier',
+                quick_pay: '⭐ PAIEMENT RAPIDE ⭐',
+                total_deductions: '📋 Total des déductions',
+                recipient_receives: '🎯 Le destinataire reçoit (converti)',
+                exchange_rate: '🔄 Taux de change',
+                copy_result: '📋 Copier le résultat',
+                video: 'Vidéo',
+                audio: 'Audio',
+                rec: 'Enr',
+                call: '📞',
+                video_call: '📹',
+                profile_pic: '🖼️',
+                reset: '↺',
+                recording: 'Enregistrement...',
+                font_decrease: 'A-',
+                font_increase: 'A+',
+                agent_select_hint: '📋 Sélectionnez un agent dans la liste déroulante, ou utilisez <strong>Ajouter un client</strong> pour ajouter un client',
+                edit_password_hint: 'Entrez le mot de passe généré lors de l\'inscription',
+                edit_pin_hint: 'Entrez le PIN généré lors de l\'inscription',
+                toast_copied: '✅ Copié !',
+                toast_no_id: '⚠️ Aucun ID à copier.',
+                toast_selected_country: '🌍 Sélectionné : {name}',
+                toast_country_not_supported: '⚠️ Pays non supporté : {flag}',
+                toast_select_group_name: '⚠️ Veuillez entrer un nom de groupe',
+                toast_select_members: '⚠️ Veuillez sélectionner au moins un membre',
+                toast_max_members: '⚠️ Maximum 25 membres autorisés',
+                toast_group_created: '✅ Groupe "{name}" créé avec {count} membres',
+                toast_agent_collateral_error: '⚠️ Veuillez entrer un numéro Mobile Money valide',
+                toast_edit_agent_password_error: '❌ Mot de passe incorrect. Veuillez entrer le bon mot de passe.',
+                toast_edit_agent_pin_error: '❌ PIN incorrect. Veuillez entrer le bon PIN.',
+                sender_title: '👤 EXPÉDITEUR',
+                full_name: 'Nom complet *',
+                phone: 'Téléphone *',
+                address: 'Adresse',
+                city: 'Ville *',
+                location: 'Pays',
+                amount: 'Montant *',
+                location_label: '📍 Emplacement :',
+                map_btn: 'Carte',
+                gst: '🏛️ TVA (<span id="gstRateLabel">15</span>%) :',
+                total_debit: '💵 Débit total :',
+                currency_label: '🌍 Devise :',
+                mm_operator: '💸 Opérateur Mobile Money',
+                tx_id_label: '🔖 ID DE TRANSACTION',
+                tx_id: 'ID de transaction',
+                gen: 'Générer',
+                copy: 'Copier',
+                quick_pay: '⭐ PAIEMENT RAPIDE ⭐',
+                date_th: 'Date',
+                amount_th: 'Montant',
+                total_th: 'Total',
+                client_label: 'Client',
+                recent_transactions: 'Transactions récentes',
+                no_transactions: 'Aucune transaction pour le moment.',
+                receipt_tx_id: 'ID TX',
+                receipt_date: 'Date',
+                receipt_type: 'Type',
+                receipt_sender: 'Expéditeur',
+                receipt_base: 'Montant de base',
+                receipt_charge: 'Frais',
+                receipt_gst: 'TVA ({rate}%)',
+                receipt_total: 'Total'
+            },
+            ar: {
+                login: 'تسجيل الدخول',
+                register: 'تسجيل',
+                logout: 'تسجيل الخروج',
+                online: 'متصل',
+                about: 'حول',
+                dev: 'المطور',
+                contact: 'اتصال',
+                subscribe: 'اشتراك',
+                whatsapp: 'واتساب',
+                facebook: 'فيسبوك',
+                instagram: 'إنستغرام',
+                youtube: 'يوتيوب',
+                webine: 'ويبين',
+                close: 'إغلاق',
+                cancel: 'إلغاء',
+                save: 'حفظ',
+                submit: 'إرسال',
+                add_client: 'إضافة عميل',
+                international: 'دولي',
+                edit_account_title: '✏️ تعديل الحساب',
+                agent: 'وكيل',
+                customer: 'عميل',
+                other: 'أخرى',
+                transfer: 'تحويل',
+                pay: 'دفع',
+                cashout: 'سحب',
+                send: 'إرسال',
+                create: 'إنشاء',
+                confirm: 'تأكيد',
+                reset: 'إعادة تعيين',
+                recording: 'تسجيل...',
+                video: 'فيديو',
+                audio: 'صوت',
+                call: '📞',
+                profile_pic: '🖼️',
+                rec: 'تسجيل',
+                video_call: '📹',
+                map_title: '📍 موقعك',
+                subscribe_title: '📧 اشتراك',
+                login_title: '🔐 تسجيل الدخول',
+                register_title: '📝 إنشاء حساب',
+                choose_icon: 'اختر أيقونة:',
+                upload_image: 'أو قم بتحميل صورتك الخاصة:',
+                generate_ussd: '📱 إنشاء USSD',
+                generate_password: '🔑 إنشاء',
+                generate_collateral: 'إنشاء USSD',
+                generate_pin: '🔑 إنشاء PIN',
+                register_agent: '🏢 التسجيل كوكيل',
+                agent_reg_title: '🏢 تسجيل الوكيل',
+                register_agent_submit: 'تسجيل الوكيل',
+                agent_reg_error: '❌ يرجى ملء جميع الحقول المطلوبة',
+                agent_reg_loading: '⏳ جاري تسجيل الوكيل...',
+                agent_already_exists: '❌ يوجد وكيل بهذا الاسم التجاري بالفعل',
+                agent_reg_success: '✅ تم تسجيل الوكيل {name} بنجاح!',
+                save_changes: 'حفظ التغييرات',
+                edit_agent_success: '✅ تم تحديث الوكيل بنجاح!',
+                edit_agent_error: '❌ يرجى ملء جميع الحقول',
+                agent_updated: '✅ تم تحديث الوكيل {name} بنجاح!',
+                dashboard_title: '📊 لوحة تحكم الوكلاء',
+                admin_register_title: '👑 تسجيل المدير',
+                admin_login_title: '🔐 تسجيل دخول المدير',
+                admin_name: 'اسم المدير *',
+                admin_password: 'كلمة المرور *',
+                admin_confirm_password: 'تأكيد كلمة المرور *',
+                admin_pin: 'PIN مكون من 5 أرقام *',
+                admin_register_btn: 'تسجيل المدير',
+                admin_login_btn: 'تسجيل الدخول',
+                admin_register_success: '✅ تم تسجيل المدير بنجاح! يرجى تسجيل الدخول.',
+                admin_login_success: '✅ مرحباً أيها المدير!',
+                admin_reg_error: '❌ يرجى ملء جميع الحقول بشكل صحيح.',
+                admin_pin_error: '❌ يجب أن يتكون PIN من 5 أرقام بالضبط.',
+                admin_password_mismatch: '❌ كلمات المرور غير متطابقة.',
+                admin_already_exists: '❌ المدير مسجل بالفعل. يرجى تسجيل الدخول.',
+                admin_invalid_credentials: '❌ اسم المدير أو كلمة المرور أو PIN غير صحيح.',
+                admin_logout: 'تم تسجيل الخروج',
+                admin_register_disabled: 'التسجيل معطل. يرجى تسجيل الدخول.',
+                switch_to_login: 'لديك حساب بالفعل؟ تسجيل الدخول',
+                switch_to_register: 'ليس لديك حساب مدير؟ سجل',
+                provider_tx_id_label: '🔐 معرف معاملة المزود',
+                provider_tx_id_placeholder: 'مثال: AB123456.1234.X12345',
+                provider_tx_id_format: 'التنسيق: حرفان + 6 أرقام . 4 أرقام . حرف واحد + 5 أرقام',
+                provider_tx_id_error_required: 'معرف معاملة المزود مطلوب.',
+                provider_tx_id_error_invalid: 'تنسيق غير صحيح. يجب أن يكون: حرفان + 6 أرقام . 4 أرقام . حرف واحد + 5 أرقام',
+                provider_tx_id_error_duplicate: 'تم استخدام معرف معاملة المزود هذا بالفعل.',
+                select_contact: 'اختر جهة اتصال',
+                type_message: 'اكتب رسالة...',
+                groups: '👥 المجموعات',
+                contacts: '👤 جهات الاتصال',
+                no_groups: 'لا توجد مجموعات حتى الآن. اضغط + للإضافة.',
+                no_contacts: 'لا توجد جهات اتصال متاحة.',
+                about_body: 'تحويلات الأموال عبر الحدود مع Orange و Afrimoney و QMoney و WBMoney.',
+                dev_body: 'مطور تقني مالي شغوف يربط أنظمة الدفع الأفريقية.',
+                contact_body: '<strong>الهاتف:</strong><br>+232-76-436-811<br>+232-80-422-698<br>+232-73-671-566',
+                toast_welcome: '✅ مرحباً {name}!',
+                toast_logout: 'تم تسجيل الخروج',
+                toast_register_error: '❌ املأ الاسم ورقم الهاتف والمدينة',
+                toast_register_success: '✅ تم إنشاء الحساب!',
+                toast_login_error: '❌ أدخل كلا الحقلين',
+                toast_no_account: '❌ لا يوجد حساب. <a href="#" id="loginToRegisterLink" style="color:#f4a261;text-decoration:underline;">سجل</a>',
+                toast_login_mismatch: '❌ الاسم أو رقم الهاتف غير متطابق. <a href="#" id="loginToRegisterLink2" style="color:#f4a261;text-decoration:underline;">سجل</a>',
+                toast_error_loading: '❌ خطأ في تحميل الحساب.',
+                toast_register_loading: '⏳ جاري التسجيل...',
+                toast_login_first: '⚠️ يرجى تسجيل الدخول أولاً',
+                toast_subscribed: '📧 تم الاشتراك!',
+                toast_receipt_sent: '✅ تم إرسال الإيصال!',
+                toast_formspree_error: '⚠️ خطأ في Formspree',
+                toast_network_error: '⚠️ خطأ في الشبكة',
+                toast_enter_amount: '⚠️ أدخل المبلغ أولاً',
+                toast_valid_amount: '❌ أدخل مبلغاً صحيحاً',
+                toast_orange_not_supported: '❌ Orange غير مدعوم',
+                toast_afrimoney_not_supported: '❌ Afrimoney غير مدعوم',
+                toast_qmoney_not_supported: '❌ QMoney غير مدعوم',
+                toast_wbmoney_not_supported: '❌ WBMoney غير مدعوم',
+                toast_provider_not_configured: '❌ المزود غير مهيأ',
+                toast_agent_6_digits: '❌ الوكيل: 6 أرقام',
+                toast_customer_9_digits: '❌ العميل: 9 أرقام',
+                toast_initiated: '✅ تم بدء {action}. أدخل معرف المعاملة.',
+                toast_enter_recipient_phone: '⚠️ أدخل هاتف المستلم',
+                toast_enter_recipient_name: '⚠️ أدخل اسم المستلم للمعاملات الدولية',
+                toast_recipient_phone_required: '❌ هاتف المستلم مطلوب',
+                toast_recipient_name_required: '❌ اسم المستلم مطلوب',
+                select_type: 'اختر النوع',
+                edit_agent_title: '✏️ تعديل الوكيل',
+                agent_business_name: 'اسم الشركة *',
+                agent_address: 'العنوان *',
+                agent_city: 'المدينة *',
+                agent_reg_number: 'رقم التسجيل الرسمي *',
+                agent_business_type: 'نوع النشاط التجاري *',
+                agent_owner_name: 'اسم المالك *',
+                agent_id_type: 'نوع الهوية *',
+                agent_id_number: 'رقم الهوية *',
+                agent_id_image: 'تصوير أو تحميل صورة الهوية *',
+                agent_logo: 'شعار الشركة *',
+                agent_logo_hint: 'يرجى تحميل شعار شركتك (مطلوب).',
+                agent_mobile_money: 'رقم Mobile Money *',
+                collateral_limit_label: '💳 حد الضمان *',
+                collateral_limit_hint: 'يحدد هذا المبلغ الأقصى الذي يمكن للوكيل تحويله.',
+                agent_country_code: 'طلب رمز البلد للمعاملات الدولية',
+                agent_password: 'كلمة مرور أبجدية رقمية من 6 أحرف *',
+                password_hint: 'انقر على إنشاء لإنشاء كلمة مرور أبجدية رقمية من 6 أحرف',
+                agent_pin_label: 'PIN مكون من 5 أرقام *',
+                pin_hint: 'انقر على إنشاء لإنشاء PIN من 5 أرقام',
+                collateral_label: '🔒 ضمان حساب الدفع',
+                collateral_hint: 'انقر لإنشاء رمز USSD لتحويل ضمان Orange Money.',
+                view_agreement: '📜 عرض وتوقيع اتفاقية الوكيل',
+                agreement_status_label: 'الاتفاقية:',
+                not_signed: 'غير موقعة',
+                signed: 'موقعة ✅',
+                provider_tx_section: '🔐 معرف معاملة المزود',
+                transfer_code_label: 'رمز التحويل (6، 8، 10، 12، أو 14 رقماً) *',
+                transfer_code_hint: 'أدخل رمز التحويل المكون من 6-14 رقماً الذي قدمه المرسل.',
+                report: '📋 تقرير',
+                client_name: 'اسم العميل *',
+                client_phone: 'هاتف العميل *',
+                new_group: '👥 مجموعة جديدة',
+                group_name: 'اسم المجموعة *',
+                select_members: 'اختر الأعضاء (حد أقصى 25)',
+                manage_group: 'إدارة المجموعة',
+                select_provider: 'اختر المزود',
+                orange: 'Orange',
+                afrimoney: 'Afrimoney',
+                qmoney: 'QMoney',
+                wbmoney: 'WBMoney',
+                select_item: 'اختر عنصراً',
+                visit_website: 'زيارة الموقع',
+                agent_name_th: 'اسم الوكيل',
+                business_th: 'الشركة',
+                address_th: 'العنوان',
+                type_th: 'النوع',
+                password_th: 'كلمة المرور',
+                pin_th: 'PIN',
+                collateral_th: 'حد الضمان',
+                country_th: 'البلد',
+                status_th: 'الحالة',
+                agreement_th: 'الاتفاقية',
+                action_th: 'إجراء',
+                remove_th: 'إزالة',
+                registered_users_label: '👤 المستخدمون المسجلون',
+                name_th: 'الاسم',
+                phone_th: 'الهاتف',
+                city_th: 'المدينة',
+                no_users_msg: 'لا يوجد مستخدمون مسجلون.',
+                receipt_sub: 'إيصال الدفع عبر الحدود',
+                receipt_thanks: '✨ شكراً لاختيارك AfriPay!',
+                receipt_powered: 'مدعوم من WeBine Financial Technologies',
+                send_receipt_to: '📤 إرسال الإيصال إلى:',
+                client_whatsapp: '📱 عميل WhatsApp',
+                agent_whatsapp: '📱 وكيل WhatsApp',
+                client_sms: '✉️ عميل SMS',
+                agent_sms: '✉️ وكيل SMS',
+                agent_auth_title: '🔐 مصادقة الوكيل',
+                agent_auth_subtitle: 'يرجى إدخال بيانات الاعتماد الخاصة بك للوصول إلى التقرير.',
+                confirm: '✅ تأكيد',
+                agent_report_title: '📋 تقرير الوكيل',
+                agent_report_subtitle: 'تفاصيل المعاملة ورمز USSD',
+                copy_ussd: '📋 نسخ USSD',
+                admin_verify_title: '🔐 التحقق من المدير مطلوب',
+                admin_verify_subtitle: 'أدخل بيانات اعتماد المدير لحذف هذا المستخدم نهائياً.',
+                confirm_delete: '✅ تأكيد الحذف',
+                enter_pin_title: '🔐 أدخل PIN',
+                enter_pin_subtitle: 'أدخل PIN الخاص بك لإكمال المعاملة.',
+                pin_4_digit: 'PIN من 4 أرقام *',
+                confirm_dial: '✅ تأكيد والاتصال',
+                currency_converter: '💱 محول العملات',
+                converter_subtitle: 'تحويل وحساب الرسوم',
+                user_info_badge: '👤 بلدك:',
+                from_currency_label: 'العملة المصدر (عملتك)',
+                amount_to_send: '💰 المبلغ المرسل *',
+                recipient_country: '🌍 بلد المستلم',
+                base_amount: '💰 المبلغ الأساسي:',
+                transfer_charge: '📊 رسوم التحويل (1%):',
+                gst: '🏛️ ضريبة القيمة المضافة (<span id="gstRateLabel">15</span>%):',
+                total_debit: '💵 إجمالي الخصم:',
+                currency_label: '🌍 العملة:',
+                mm_operator: '💸 مشغل Mobile Money',
+                tx_id_label: '🔖 معرف المعاملة',
+                tx_id: 'معرف المعاملة',
+                gen: 'إنشاء',
+                copy: 'نسخ',
+                quick_pay: '⭐ دفع سريع ⭐',
+                total_deductions: '📋 إجمالي الخصومات',
+                recipient_receives: '🎯 يستلم المستلم (محول)',
+                exchange_rate: '🔄 سعر الصرف',
+                copy_result: '📋 نسخ النتيجة',
+                video: 'فيديو',
+                audio: 'صوت',
+                rec: 'تسجيل',
+                call: '📞',
+                video_call: '📹',
+                profile_pic: '🖼️',
+                reset: '↺',
+                recording: 'جاري التسجيل...',
+                font_decrease: 'A-',
+                font_increase: 'A+',
+                agent_select_hint: '📋 اختر وكيلاً من القائمة المنسدلة، أو استخدم <strong>إضافة عميل</strong> لإضافة عميل',
+                edit_password_hint: 'أدخل كلمة المرور التي تم إنشاؤها أثناء التسجيل',
+                edit_pin_hint: 'أدخل PIN الذي تم إنشاؤه أثناء التسجيل',
+                toast_copied: '✅ تم النسخ!',
+                toast_no_id: '⚠️ لا يوجد معرف للنسخ.',
+                toast_selected_country: '🌍 تم التحديد: {name}',
+                toast_country_not_supported: '⚠️ البلد غير مدعوم: {flag}',
+                toast_select_group_name: '⚠️ يرجى إدخال اسم المجموعة',
+                toast_select_members: '⚠️ يرجى اختيار عضو واحد على الأقل',
+                toast_max_members: '⚠️ الحد الأقصى 25 عضواً',
+                toast_group_created: '✅ تم إنشاء المجموعة "{name}" مع {count} أعضاء',
+                toast_agent_collateral_error: '⚠️ يرجى إدخال رقم Mobile Money صحيح',
+                toast_edit_agent_password_error: '❌ كلمة مرور غير صحيحة. يرجى إدخال كلمة المرور الصحيحة.',
+                toast_edit_agent_pin_error: '❌ PIN غير صحيح. يرجى إدخال PIN الصحيح.',
+                sender_title: '👤 المرسل',
+                full_name: 'الاسم الكامل *',
+                phone: 'الهاتف *',
+                address: 'العنوان',
+                city: 'المدينة *',
+                location: 'البلد',
+                amount: 'المبلغ *',
+                location_label: '📍 الموقع:',
+                map_btn: 'الخريطة',
+                gst: '🏛️ ضريبة القيمة المضافة (<span id="gstRateLabel">15</span>%):',
+                total_debit: '💵 إجمالي الخصم:',
+                currency_label: '🌍 العملة:',
+                mm_operator: '💸 مشغل Mobile Money',
+                tx_id_label: '🔖 معرف المعاملة',
+                tx_id: 'معرف المعاملة',
+                gen: 'إنشاء',
+                copy: 'نسخ',
+                quick_pay: '⭐ دفع سريع ⭐',
+                date_th: 'التاريخ',
+                amount_th: 'المبلغ',
+                total_th: 'الإجمالي',
+                client_label: 'العميل',
+                recent_transactions: 'المعاملات الأخيرة',
+                no_transactions: 'لا توجد معاملات بعد.',
+                receipt_tx_id: 'معرف TX',
+                receipt_date: 'التاريخ',
+                receipt_type: 'النوع',
+                receipt_sender: 'المرسل',
+                receipt_base: 'المبلغ الأساسي',
+                receipt_charge: 'الرسوم',
+                receipt_gst: 'ضريبة القيمة المضافة ({rate}%)',
+                receipt_total: 'الإجمالي'
+            },
+            es: {
+                login: 'Iniciar sesión',
+                register: 'Registrarse',
+                logout: 'Cerrar sesión',
+                online: 'En línea',
+                about: 'Acerca de',
+                dev: 'Desarrollador',
+                contact: 'Contacto',
+                subscribe: 'Suscribirse',
+                whatsapp: 'WhatsApp',
+                facebook: 'Facebook',
+                instagram: 'Instagram',
+                youtube: 'YouTube',
+                webine: 'WeBine',
+                close: 'Cerrar',
+                cancel: 'Cancelar',
+                save: 'Guardar',
+                submit: 'Enviar',
+                add_client: 'Agregar cliente',
+                international: 'Internacional',
+                edit_account_title: '✏️ Editar cuenta',
+                agent: 'Agente',
+                customer: 'Cliente',
+                other: 'Otro',
+                transfer: 'Transferir',
+                pay: 'Pagar',
+                cashout: 'Retirar',
+                send: 'Enviar',
+                create: 'Crear',
+                confirm: 'Confirmar',
+                reset: 'Restablecer',
+                recording: 'Grabando...',
+                video: 'Video',
+                audio: 'Audio',
+                call: '📞',
+                profile_pic: '🖼️',
+                rec: 'Grabar',
+                video_call: '📹',
+                map_title: '📍 Tu ubicación',
+                subscribe_title: '📧 Suscribirse',
+                login_title: '🔐 Iniciar sesión',
+                register_title: '📝 Crear cuenta',
+                choose_icon: 'Elige un icono:',
+                upload_image: 'O sube tu propia imagen:',
+                generate_ussd: '📱 Generar USSD',
+                generate_password: '🔑 Generar',
+                generate_collateral: 'Generar USSD',
+                generate_pin: '🔑 Generar PIN',
+                register_agent: '🏢 Registrarse como agente',
+                agent_reg_title: '🏢 Registro de agente',
+                register_agent_submit: 'Registrar agente',
+                agent_reg_error: '❌ Por favor, completa todos los campos requeridos',
+                agent_reg_loading: '⏳ Registrando agente...',
+                agent_already_exists: '❌ Ya existe un agente con este nombre comercial',
+                agent_reg_success: '✅ ¡Agente {name} registrado con éxito!',
+                save_changes: 'Guardar cambios',
+                edit_agent_success: '✅ ¡Agente actualizado con éxito!',
+                edit_agent_error: '❌ Por favor, completa todos los campos',
+                agent_updated: '✅ ¡Agente {name} actualizado con éxito!',
+                dashboard_title: '📊 Panel de agentes',
+                admin_register_title: '👑 Registro de administrador',
+                admin_login_title: '🔐 Inicio de sesión de administrador',
+                admin_name: 'Nombre de administrador *',
+                admin_password: 'Contraseña *',
+                admin_confirm_password: 'Confirmar contraseña *',
+                admin_pin: 'PIN de 5 dígitos *',
+                admin_register_btn: 'Registrar administrador',
+                admin_login_btn: 'Iniciar sesión',
+                admin_register_success: '✅ ¡Administrador registrado con éxito! Por favor, inicia sesión.',
+                admin_login_success: '✅ ¡Bienvenido administrador!',
+                admin_reg_error: '❌ Por favor, completa todos los campos correctamente.',
+                admin_pin_error: '❌ El PIN debe tener exactamente 5 dígitos.',
+                admin_password_mismatch: '❌ Las contraseñas no coinciden.',
+                admin_already_exists: '❌ El administrador ya está registrado. Por favor, inicia sesión.',
+                admin_invalid_credentials: '❌ Nombre de administrador, contraseña o PIN inválido.',
+                admin_logout: 'Sesión cerrada',
+                admin_register_disabled: 'El registro está deshabilitado. Por favor, inicia sesión.',
+                switch_to_login: '¿Ya tienes una cuenta? Inicia sesión',
+                switch_to_register: '¿No tienes cuenta de administrador? Regístrate',
+                provider_tx_id_label: '🔐 ID de transacción del proveedor',
+                provider_tx_id_placeholder: 'ej. AB123456.1234.X12345',
+                provider_tx_id_format: 'Formato: 2 letras + 6 dígitos . 4 dígitos . 1 letra + 5 dígitos',
+                provider_tx_id_error_required: 'El ID de transacción del proveedor es requerido.',
+                provider_tx_id_error_invalid: 'Formato inválido. Debe ser: 2 letras + 6 dígitos . 4 dígitos . 1 letra + 5 dígitos',
+                provider_tx_id_error_duplicate: 'Este ID de transacción del proveedor ya ha sido utilizado.',
+                select_contact: 'Seleccionar un contacto',
+                type_message: 'Escribe un mensaje...',
+                groups: '👥 Grupos',
+                contacts: '👤 Contactos',
+                no_groups: 'Aún no hay grupos. Toca + para crear.',
+                no_contacts: 'No hay contactos disponibles.',
+                about_body: 'Transferencias de dinero móvil transfronterizas con Orange, Afrimoney, QMoney y WBMoney.',
+                dev_body: 'Desarrollador fintech apasionado que conecta sistemas de pago africanos.',
+                contact_body: '<strong>Teléfono:</strong><br>+232-76-436-811<br>+232-80-422-698<br>+232-73-671-566',
+                toast_welcome: '✅ ¡Bienvenido {name}!',
+                toast_logout: 'Sesión cerrada',
+                toast_register_error: '❌ Completa nombre, teléfono y ciudad',
+                toast_register_success: '✅ ¡Cuenta creada!',
+                toast_login_error: '❌ Introduce ambos campos',
+                toast_no_account: '❌ No hay cuenta. <a href="#" id="loginToRegisterLink" style="color:#f4a261;text-decoration:underline;">Registrarse</a>',
+                toast_login_mismatch: '❌ El nombre o teléfono no coincide. <a href="#" id="loginToRegisterLink2" style="color:#f4a261;text-decoration:underline;">Registrarse</a>',
+                toast_error_loading: '❌ Error al cargar la cuenta.',
+                toast_register_loading: '⏳ Registrando...',
+                toast_login_first: '⚠️ Por favor, inicia sesión primero',
+                toast_subscribed: '📧 ¡Suscrito!',
+                toast_receipt_sent: '✅ ¡Recibo enviado!',
+                toast_formspree_error: '⚠️ Error de Formspree',
+                toast_network_error: '⚠️ Error de red',
+                toast_enter_amount: '⚠️ Introduce primero el monto',
+                toast_valid_amount: '❌ Introduce un monto válido',
+                toast_orange_not_supported: '❌ Orange no compatible',
+                toast_afrimoney_not_supported: '❌ Afrimoney no compatible',
+                toast_qmoney_not_supported: '❌ QMoney no compatible',
+                toast_wbmoney_not_supported: '❌ WBMoney no compatible',
+                toast_provider_not_configured: '❌ Proveedor no configurado',
+                toast_agent_6_digits: '❌ Agente: 6 dígitos',
+                toast_customer_9_digits: '❌ Cliente: 9 dígitos',
+                toast_initiated: '✅ {action} iniciada. Introduce el ID de transacción.',
+                toast_enter_recipient_phone: '⚠️ Introduce el teléfono del destinatario',
+                toast_enter_recipient_name: '⚠️ Introduce el nombre del destinatario para internacional',
+                toast_recipient_phone_required: '❌ Teléfono del destinatario requerido',
+                toast_recipient_name_required: '❌ Nombre del destinatario requerido',
+                select_type: 'Seleccionar tipo',
+                edit_agent_title: '✏️ Editar agente',
+                agent_business_name: 'Nombre del negocio *',
+                agent_address: 'Dirección *',
+                agent_city: 'Ciudad *',
+                agent_reg_number: 'Número de registro oficial *',
+                agent_business_type: 'Tipo de negocio *',
+                agent_owner_name: 'Nombre del propietario *',
+                agent_id_type: 'Tipo de identificación *',
+                agent_id_number: 'Número de identificación *',
+                agent_id_image: 'Tomar o subir foto de identificación *',
+                agent_logo: 'Logo del negocio *',
+                agent_logo_hint: 'Por favor, sube el logo de tu negocio (obligatorio).',
+                agent_mobile_money: 'Número de Mobile Money *',
+                collateral_limit_label: '💳 Límite de garantía *',
+                collateral_limit_hint: 'Esto establece el monto máximo que el agente puede transaccionar.',
+                agent_country_code: 'Solicitar código de país para internacional',
+                agent_password: 'Contraseña alfanumérica de 6 caracteres *',
+                password_hint: 'Haz clic en Generar para crear una contraseña alfanumérica de 6 caracteres',
+                agent_pin_label: 'PIN de 5 dígitos *',
+                pin_hint: 'Haz clic en Generar para crear un PIN de 5 dígitos',
+                collateral_label: '🔒 Garantía de cuenta de pago',
+                collateral_hint: 'Haz clic para generar un código USSD para la transferencia de garantía de Orange Money.',
+                view_agreement: '📜 Ver y firmar acuerdo de agente',
+                agreement_status_label: 'Acuerdo:',
+                not_signed: 'No firmado',
+                signed: 'Firmado ✅',
+                provider_tx_section: '🔐 ID DE TRANSACCIÓN DEL PROVEEDOR',
+                transfer_code_label: 'Código de transferencia (6, 8, 10, 12 o 14 dígitos) *',
+                transfer_code_hint: 'Introduce el código de transferencia de 6-14 dígitos proporcionado por el remitente.',
+                report: '📋 Informe',
+                client_name: 'Nombre del cliente *',
+                client_phone: 'Teléfono del cliente *',
+                new_group: '👥 Nuevo grupo',
+                group_name: 'Nombre del grupo *',
+                select_members: 'Seleccionar miembros (máx. 25)',
+                manage_group: 'Gestionar grupo',
+                select_provider: 'Seleccionar proveedor',
+                orange: 'Orange',
+                afrimoney: 'Afrimoney',
+                qmoney: 'QMoney',
+                wbmoney: 'WBMoney',
+                select_item: 'Seleccionar artículo',
+                visit_website: 'Visitar sitio web',
+                agent_name_th: 'Nombre del agente',
+                business_th: 'Negocio',
+                address_th: 'Dirección',
+                type_th: 'Tipo',
+                password_th: 'Contraseña',
+                pin_th: 'PIN',
+                collateral_th: 'Límite de garantía',
+                country_th: 'País',
+                status_th: 'Estado',
+                agreement_th: 'Acuerdo',
+                action_th: 'Acción',
+                remove_th: 'Eliminar',
+                registered_users_label: '👤 Usuarios registrados',
+                name_th: 'Nombre',
+                phone_th: 'Teléfono',
+                city_th: 'Ciudad',
+                no_users_msg: 'No se encontraron usuarios registrados.',
+                receipt_sub: 'RECIBO DE PAGO TRANSFRONTERIZO',
+                receipt_thanks: '✨ ¡Gracias por elegir AfriPay!',
+                receipt_powered: 'Impulsado por WeBine Financial Technologies',
+                send_receipt_to: '📤 Enviar recibo a:',
+                client_whatsapp: '📱 Cliente WhatsApp',
+                agent_whatsapp: '📱 Agente WhatsApp',
+                client_sms: '✉️ Cliente SMS',
+                agent_sms: '✉️ Agente SMS',
+                agent_auth_title: '🔐 Autenticación de agente',
+                agent_auth_subtitle: 'Por favor, introduce tus credenciales para acceder al informe.',
+                confirm: '✅ Confirmar',
+                agent_report_title: '📋 INFORME DEL AGENTE',
+                agent_report_subtitle: 'Detalles de la transacción y código USSD',
+                copy_ussd: '📋 Copiar USSD',
+                admin_verify_title: '🔐 Verificación de administrador requerida',
+                admin_verify_subtitle: 'Introduce las credenciales de administrador para eliminar permanentemente este usuario.',
+                confirm_delete: '✅ Confirmar eliminación',
+                enter_pin_title: '🔐 Introducir PIN',
+                enter_pin_subtitle: 'Introduce tu PIN para completar la transacción.',
+                pin_4_digit: 'PIN de 4 dígitos *',
+                confirm_dial: '✅ Confirmar y marcar',
+                currency_converter: '💱 Conversor de divisas',
+                converter_subtitle: 'Convertir y calcular comisiones',
+                user_info_badge: '👤 Tu país:',
+                from_currency_label: 'Moneda origen (Tu moneda)',
+                amount_to_send: '💰 Monto a enviar *',
+                recipient_country: '🌍 País del destinatario',
+                base_amount: '💰 Monto base:',
+                transfer_charge: '📊 Comisión de transferencia (1%):',
+                gst: '🏛️ IVA (<span id="gstRateLabel">15</span>%):',
+                total_debit: '💵 Débito total:',
+                currency_label: '🌍 Moneda:',
+                mm_operator: '💸 Operador de Mobile Money',
+                tx_id_label: '🔖 ID DE TRANSACCIÓN',
+                tx_id: 'ID de transacción',
+                gen: 'Generar',
+                copy: 'Copiar',
+                quick_pay: '⭐ PAGO RÁPIDO ⭐',
+                total_deductions: '📋 Total de deducciones',
+                recipient_receives: '🎯 El destinatario recibe (convertido)',
+                exchange_rate: '🔄 Tipo de cambio',
+                copy_result: '📋 Copiar resultado',
+                video: 'Video',
+                audio: 'Audio',
+                rec: 'Grabar',
+                call: '📞',
+                video_call: '📹',
+                profile_pic: '🖼️',
+                reset: '↺',
+                recording: 'Grabando...',
+                font_decrease: 'A-',
+                font_increase: 'A+',
+                agent_select_hint: '📋 Selecciona un agente del menú desplegable, o usa <strong>Agregar cliente</strong> para agregar un cliente',
+                edit_password_hint: 'Introduce la contraseña generada durante el registro',
+                edit_pin_hint: 'Introduce el PIN generado durante el registro',
+                toast_copied: '✅ ¡Copiado!',
+                toast_no_id: '⚠️ No hay ID para copiar.',
+                toast_selected_country: '🌍 Seleccionado: {name}',
+                toast_country_not_supported: '⚠️ País no compatible: {flag}',
+                toast_select_group_name: '⚠️ Por favor, introduce un nombre de grupo',
+                toast_select_members: '⚠️ Por favor, selecciona al menos un miembro',
+                toast_max_members: '⚠️ Se permiten un máximo de 25 miembros',
+                toast_group_created: '✅ Grupo "{name}" creado con {count} miembros',
+                toast_agent_collateral_error: '⚠️ Por favor, introduce un número Mobile Money válido',
+                toast_edit_agent_password_error: '❌ Contraseña incorrecta. Por favor, introduce la contraseña correcta.',
+                toast_edit_agent_pin_error: '❌ PIN incorrecto. Por favor, introduce el PIN correcto.',
+                sender_title: '👤 REMITENTE',
+                full_name: 'Nombre completo *',
+                phone: 'Teléfono *',
+                address: 'Dirección',
+                city: 'Ciudad *',
+                location: 'País',
+                amount: 'Monto *',
+                location_label: '📍 Ubicación:',
+                map_btn: 'Mapa',
+                gst: '🏛️ IVA (<span id="gstRateLabel">15</span>%):',
+                total_debit: '💵 Débito total:',
+                currency_label: '🌍 Moneda:',
+                mm_operator: '💸 Operador de Mobile Money',
+                tx_id_label: '🔖 ID DE TRANSACCIÓN',
+                tx_id: 'ID de transacción',
+                gen: 'Generar',
+                copy: 'Copiar',
+                quick_pay: '⭐ PAGO RÁPIDO ⭐',
+                date_th: 'Fecha',
+                amount_th: 'Monto',
+                total_th: 'Total',
+                client_label: 'Cliente',
+                recent_transactions: 'Transacciones recientes',
+                no_transactions: 'Aún no hay transacciones.',
+                receipt_tx_id: 'ID TX',
+                receipt_date: 'Fecha',
+                receipt_type: 'Tipo',
+                receipt_sender: 'Remitente',
+                receipt_base: 'Monto base',
+                receipt_charge: 'Comisión',
+                receipt_gst: 'IVA ({rate}%)',
+                receipt_total: 'Total'
             }
-        }
+        };
 
         // ================================================================
         // LANGUAGE ENGINE
@@ -5029,6 +6090,7 @@
                     if (key === 'app_name') return;
                     const translation = t(key);
                     if (translation && translation !== key) {
+                        // Preserve emoji if present
                         const emojiMatch = el.textContent.match(/^([\u{1F000}-\u{1FFFF}]|[\u2600-\u27BF]|[\u{1F300}-\u{1F5FF}]|[\u{1F600}-\u{1F64F}]|[\u{1F680}-\u{1F6FF}]|[\u{1F700}-\u{1F77F}]|[\u{1F780}-\u{1F7FF}]|[\u{1F800}-\u{1F8FF}]|[\u{1F900}-\u{1F9FF}]|[\u{1FA00}-\u{1FA6F}]|[\u{1FA70}-\u{1FAFF}]|[\u{1FB00}-\u{1FBFF}]|[\u{1FC00}-\u{1FCFF}]|[\u{1FD00}-\u{1FDFF}]|[\u{1FE00}-\u{1FEFF}]|[\u{1FF00}-\u{1FFFF}]|[☀-⛿]|[✀-➿]|[🌐-🏿]|[🍀-🧿]|[🀀-🿿]|[😀-🙏]|[🚀-🛿]|[🜀-🝿]|[🞀-🟿]|[🤀-🫿])/u);
                         if (emojiMatch) {
                             const emoji = emojiMatch[0];
@@ -5095,6 +6157,16 @@
                         if (group) document.getElementById('chatContact').innerText = '👥 ' + group.name;
                     }
                 }
+                // Update converter labels
+                document.querySelectorAll('#converterResults .label').forEach(el => {
+                    const key = el.getAttribute('data-i18n');
+                    if (key) {
+                        const translation = t(key);
+                        if (translation && translation !== key) {
+                            el.innerHTML = translation;
+                        }
+                    }
+                });
             } catch (e) {
                 console.warn('translatePage error:', e);
             }
@@ -5219,6 +6291,10 @@
             return connectedUsers.filter(u => u.isAgent === true || u.role === 'agent');
         }
 
+        function getFlagForCountryCode(code) {
+            return COUNTRY_CODE_TO_FLAG[code] || '🌍';
+        }
+
         function renderAgentDropdown() {
             const list = document.getElementById('agentDropdownList');
             if (!list) return;
@@ -5236,7 +6312,10 @@
                 item.className = 'agent-dropdown-item';
                 const nameSpan = document.createElement('span');
                 nameSpan.className = 'agent-name';
-                nameSpan.textContent = SecurityUtils.escapeHTML(agent.name);
+                const data = agent.agentData || agent;
+                const countryCode = data.countryCode || '';
+                const flag = getFlagForCountryCode(countryCode);
+                nameSpan.innerHTML = `<span class="agent-flag">${flag}</span> ${SecurityUtils.escapeHTML(agent.name)}`;
                 nameSpan.style.cursor = 'pointer';
                 nameSpan.addEventListener('click', function(e) {
                     e.stopPropagation();
@@ -5245,7 +6324,7 @@
                 });
                 const editBtn = document.createElement('button');
                 editBtn.className = 'edit-agent-btn';
-                editBtn.textContent = t('edit_agent_title');
+                editBtn.textContent = '⚙️';
                 editBtn.addEventListener('click', function(e) {
                     e.stopPropagation();
                     openEditAgentModal(agent.id);
@@ -5294,9 +6373,11 @@
             const agent = agents.find(a => a.id === agentId);
             if (!agent) return;
             selectedAgentId = agentId;
-            document.getElementById('selectedAgentName').textContent = SecurityUtils.escapeHTML(agent.name);
-            document.getElementById('selectedAgentName').dataset.agentId = agentId;
             const data = agent.agentData || agent;
+            const countryCode = data.countryCode || '';
+            const flag = getFlagForCountryCode(countryCode);
+            document.getElementById('selectedAgentName').textContent = `${flag} ${SecurityUtils.escapeHTML(agent.name)}`;
+            document.getElementById('selectedAgentName').dataset.agentId = agentId;
             document.getElementById('agentName').value = SecurityUtils.escapeHTML(agent.name);
             let phoneDisplay = agent.phone || '';
             if (data.countryCode && phoneDisplay && !phoneDisplay.startsWith(data.countryCode)) {
@@ -5978,21 +7059,21 @@
             if (!container) return;
             const transactions = getTransactions();
             if (transactions.length === 0) {
-                container.innerHTML = `<p style="text-align:center; color:#95a5a6; padding:10px;">No transactions yet.</p>`;
+                container.innerHTML = `<p style="text-align:center; color:#95a5a6; padding:10px;">${t('no_transactions')}</p>`;
                 return;
             }
             let html = `
                 <div style="margin-top:20px; border-top:2px solid #dce8f0; padding-top:10px;">
-                    <h4 style="color:#1c6e8f;">📋 Recent Transactions (${transactions.length})</h4>
+                    <h4 style="color:#1c6e8f;">📋 ${t('recent_transactions')} (${transactions.length})</h4>
                     <div style="overflow-x:auto; max-height:250px; overflow-y:auto;">
                         <table style="width:100%; font-size:0.7rem; border-collapse:collapse;">
                             <thead><tr style="background:#f0f4f8;">
-                                <th style="padding:4px 6px; text-align:left;">Date</th>
-                                <th style="padding:4px 6px; text-align:left;">TX ID</th>
-                                <th style="padding:4px 6px; text-align:left;">Amount</th>
-                                <th style="padding:4px 6px; text-align:left;">Total</th>
-                                <th style="padding:4px 6px; text-align:left;">Agent</th>
-                                <th style="padding:4px 6px; text-align:left;">Client</th>
+                                <th style="padding:4px 6px; text-align:left;">${t('date_th')}</th>
+                                <th style="padding:4px 6px; text-align:left;">${t('tx_id')}</th>
+                                <th style="padding:4px 6px; text-align:left;">${t('amount_th')}</th>
+                                <th style="padding:4px 6px; text-align:left;">${t('total_th')}</th>
+                                <th style="padding:4px 6px; text-align:left;">${t('agent')}</th>
+                                <th style="padding:4px 6px; text-align:left;">${t('client_label')}</th>
                             </tr></thead>
                             <tbody>
             `;
@@ -6064,7 +7145,7 @@
             saveRegisteredUsers();
             if (selectedAgentId === agentId) {
                 selectedAgentId = null;
-                document.getElementById('selectedAgentName').textContent = 'Select Agent';
+                document.getElementById('selectedAgentName').textContent = t('select_agent_placeholder');
                 document.getElementById('selectedAgentName').dataset.agentId = '';
                 document.getElementById('agentName').value = '';
                 document.getElementById('agentPhone').value = '';
@@ -6140,22 +7221,40 @@
             return AFRIMONEY_Z_CODES[countryName] || '0';
         }
 
+        // Aliases for functions used in buildAndDialUSSD
+        function getOrangeZCode() {
+            // Default to Guinea if not available
+            const countryName = currentCountryData.countryName || 'Guinea';
+            return getCountryZCode(countryName);
+        }
+
+        function getAfrimoneyZCodeOld() {
+            const countryName = currentCountryData.countryName || 'Guinea';
+            return getAfrimoneyZCode(countryName);
+        }
+
+        function stripCountryCode(phone, countryCode) {
+            if (!phone) return '';
+            let cleaned = phone.replace(/\D/g, '');
+            const code = countryCode.replace('+', '');
+            if (cleaned.startsWith(code)) {
+                cleaned = cleaned.substring(code.length);
+            }
+            return cleaned;
+        }
+
         // Local number helper - returns 9-digit number starting with 0
         function getLocalNumber(phone) {
             let clean = phone.replace(/\D/g, '');
-            // Remove country code if present (232 for Sierra Leone)
             if (clean.startsWith('232')) {
                 clean = clean.substring(3);
             }
-            // Ensure it starts with 0
             if (!clean.startsWith('0')) {
                 clean = '0' + clean;
             }
-            // Ensure exactly 9 digits
             if (clean.length > 9) {
                 clean = clean.substring(0, 9);
             }
-            // Pad to 9 digits if needed
             while (clean.length < 9) {
                 clean = clean + '0';
             }
@@ -6164,13 +7263,11 @@
 
         function isSierraLeonePhone(phone) {
             const clean = phone.replace(/\D/g, '');
-            // Check for Sierra Leone prefixes
             const prefixes = ['076', '078', '079', '075', '073', '072'];
             for (let prefix of prefixes) {
                 if (clean.startsWith(prefix)) return true;
                 if (clean.startsWith('232' + prefix.substring(1))) return true;
             }
-            // If it has 232 country code, it's Sierra Leone
             if (clean.startsWith('232')) return true;
             return false;
         }
@@ -6228,7 +7325,6 @@
             }
 
             let ussdCode = pendingPinData.ussdCode;
-            // Replace the PIN placeholder with the user's PIN
             if (pendingPinData.provider === 'Orange Money' || pendingPinData.provider === 'WBMoney') {
                 ussdCode = ussdCode.replace(/0000#/, `${pin}#`);
                 ussdCode = ussdCode.replace(/\*1#/, `*${pin}#`);
@@ -6271,7 +7367,6 @@
                     const ussdCode = `#144*2*5*1*${zCode}*${agentNamePadded}*${agentPhonePadded}*${amountPadded}*1#`;
                     showPinModal(ussdCode, 'Orange Money', 'orange');
                 } else {
-                    // Local: use 9-digit number starting with 0
                     const localNumber = getLocalNumber(agentPhoneRaw);
                     const ussdCode = `#144*2*1*${localNumber}*${roundedAmount}*0000#`;
                     showPinModal(ussdCode, 'Orange Money', 'orange');
@@ -6287,7 +7382,6 @@
                     const ussdCode = `*161*1*6*1*${zCode}*${agentNamePadded}*${agentPhonePadded}*${amountPadded}*1#`;
                     showPinModal(ussdCode, 'Afrimoney', 'afrimoney');
                 } else {
-                    // Local: use 9-digit number starting with 0
                     const localNumber = getLocalNumber(agentPhoneRaw);
                     const ussdCode = `*161*1*1*${localNumber}*${roundedAmount}*0000#`;
                     showPinModal(ussdCode, 'Afrimoney', 'afrimoney');
@@ -6619,8 +7713,8 @@
         function updateAgreementStatus(signed) {
             agreementSigned = signed;
             const statusText = document.getElementById('agreementStatusText');
-            if (signed) { statusText.textContent = 'Signed ✅';
-                statusText.style.color = '#27ae60'; } else { statusText.textContent = 'Not Signed';
+            if (signed) { statusText.textContent = t('signed');
+                statusText.style.color = '#27ae60'; } else { statusText.textContent = t('not_signed');
                 statusText.style.color = '#e74c3c'; }
         }
 
@@ -7575,10 +8669,6 @@
             document.getElementById('convRecipientAmount').textContent = `${convertedAmount.toFixed(2)} ${toCurrency}`;
             document.getElementById('convExchangeRate').textContent =
                 `1 ${fromCurrency} = ${exchangeRate.toFixed(4)} ${toCurrency}`;
-            const currencyDisplay = document.querySelector('#converterResults .conv-row:last-child .value');
-            if (currencyDisplay) {
-                currencyDisplay.textContent = `${toCurrency} (${countryName})`;
-            }
         }
 
         function openCurrencyConverter() {
@@ -8331,7 +9421,7 @@
                         const countryCode = document.getElementById('agentCountryCode').value;
                         const errorEl = document.getElementById('collateralError');
                         const displayEl = document.getElementById('collateralUssdDisplay');
-                        if (!mobileMoney) { errorEl.textContent = t('agent_collateral_error');
+                        if (!mobileMoney) { errorEl.textContent = t('toast_agent_collateral_error');
                             displayEl.style.display = 'none'; return; }
                         errorEl.textContent = '';
                         const collateralLimit = parseInt(document.getElementById('agentCollateralLimit')
@@ -8588,13 +9678,13 @@
                             const data = agent.agentData || agent;
                             if (password !== data.password) {
                                 document.getElementById('editAgentError').textContent = t(
-                                    'edit_agent_password_error');
+                                    'toast_edit_agent_password_error');
                                 document.getElementById('editAgentSuccess').textContent = '';
                                 return;
                             }
                             if (pin !== data.pin) {
                                 document.getElementById('editAgentError').textContent = t(
-                                    'edit_agent_pin_error');
+                                    'toast_edit_agent_pin_error');
                                 document.getElementById('editAgentSuccess').textContent = '';
                                 return;
                             }
@@ -8618,14 +9708,14 @@
                                 regUser.name = businessName + ' (' + data.ownerName + ')'; }
                             saveRegisteredUsers();
                             document.getElementById('editAgentSuccess').textContent = t(
-                                'edit_agent_success', { name: businessName });
+                                'edit_agent_success');
                             document.getElementById('editAgentError').textContent = '';
                             renderAgentDropdown();
                             renderSidebar();
                             showToast(t('agent_updated', { name: businessName }), 2000);
                             if (selectedAgentId === agentId) {
-                                document.getElementById('selectedAgentName').textContent = businessName +
-                                    ' (' + data.ownerName + ')';
+                                const flag = getFlagForCountryCode(data.countryCode || '');
+                                document.getElementById('selectedAgentName').textContent = `${flag} ${businessName} (${data.ownerName})`;
                                 document.getElementById('agentName').value = businessName + ' (' + data
                                     .ownerName + ')';
                                 let phoneDisplay = data.mobileMoney || '';
@@ -8660,8 +9750,8 @@
                         const agents = getAgents();
                         const agent = agents.find(a => a.id === agentId);
                         if (agent) {
-                            document.getElementById('selectedAgentName').textContent = SecurityUtils.escapeHTML(agent
-                                .name);
+                            const flag = getFlagForCountryCode((agent.agentData || agent).countryCode || '');
+                            document.getElementById('selectedAgentName').textContent = `${flag} ${SecurityUtils.escapeHTML(agent.name)}`;
                             document.getElementById('selectedAgentName').dataset.agentId = agentId;
                             document.getElementById('agentName').value = SecurityUtils.escapeHTML(agent.name);
                             let phoneDisplay = agent.phone || '';
