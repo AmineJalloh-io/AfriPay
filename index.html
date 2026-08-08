@@ -4477,7 +4477,7 @@
     </div>
 
     <!-- ============================================================
-    CURRENCY CONVERTER MODAL
+    CURRENCY CONVERTER MODAL – FIXED
     ============================================================ -->
     <div id="currencyConverterModal" class="modal">
         <div class="modal-content">
@@ -4488,7 +4488,7 @@
             </div>
             <div class="converter-body" id="converterBody">
                 <div style="margin-bottom:10px; text-align:center;">
-                    <span class="user-info-badge" id="userInfoBadge" data-i18n="user_info_badge">👤 Your country: <strong id="userCountryDisplay">—</strong> · Currency: <strong id="userCurrencyDisplay">—</strong></span>
+                    <span class="user-info-badge" id="userInfoBadge">👤 <span data-i18n="user_info_badge">Your country:</span> <strong id="userCountryDisplay">—</strong> · <span data-i18n="currency_label">Currency:</span> <strong id="userCurrencyDisplay">—</strong></span>
                 </div>
                 <div class="input-group">
                     <label data-i18n="from_currency_label">From Currency (Your currency)</label>
@@ -4737,10 +4737,12 @@
         };
 
         // ================================================================
-        // EXCHANGE RATES (relative to USD)
+        // EXCHANGE RATES (relative to USD) – FIXED with EUR
         // ================================================================
         const EXCHANGE_RATES = {
             'USD': 1,
+            'EUR': 0.92,
+            'GBP': 0.79,
             'LRD': 180,
             'GNF': 10000,
             'XOF': 600,
@@ -4886,7 +4888,7 @@
         }
 
         // ================================================================
-        // TRANSLATIONS – FULLY EXPANDED
+        // TRANSLATIONS – FULLY EXPANDED WITH ARABIC AND SPANISH
         // ================================================================
         const TRANSLATIONS = {
             en: {
@@ -5108,7 +5110,7 @@
                 confirm_dial: '✅ Confirm & Dial',
                 currency_converter: '💱 Currency Converter',
                 converter_subtitle: 'Convert & calculate fees',
-                user_info_badge: '👤 Your country:',
+                user_info_badge: 'Your country:',
                 from_currency_label: 'From Currency (Your currency)',
                 amount_to_send: '💰 Amount to Send *',
                 recipient_country: '🌍 Recipient Country',
@@ -5164,7 +5166,8 @@
                 receipt_base: 'Base Amount',
                 receipt_charge: 'Charge',
                 receipt_gst: 'GST ({rate}%)',
-                receipt_total: 'Total'
+                receipt_total: 'Total',
+                no_transaction: 'No transactions yet.'
             },
             fr: {
                 login: 'Connexion',
@@ -5372,7 +5375,7 @@
                 confirm_dial: '✅ Confirmer et composer',
                 currency_converter: '💱 Convertisseur de devises',
                 converter_subtitle: 'Convertir et calculer les frais',
-                user_info_badge: '👤 Votre pays :',
+                user_info_badge: 'Votre pays :',
                 from_currency_label: 'Devise source (Votre devise)',
                 amount_to_send: '💰 Montant à envoyer *',
                 recipient_country: '🌍 Pays du destinataire',
@@ -5446,58 +5449,59 @@
                 receipt_base: 'Montant de base',
                 receipt_charge: 'Frais',
                 receipt_gst: 'TVA ({rate}%)',
-                receipt_total: 'Total'
+                receipt_total: 'Total',
+                no_transaction: 'Aucune transaction'
             },
             ar: {
+                // Arabic translations
+                app_name: 'أفري باي',
                 login: 'تسجيل الدخول',
                 register: 'تسجيل',
                 logout: 'تسجيل الخروج',
                 online: 'متصل',
-                about: 'حول',
-                dev: 'المطور',
-                contact: 'اتصال',
-                subscribe: 'اشتراك',
-                whatsapp: 'واتساب',
-                facebook: 'فيسبوك',
-                instagram: 'إنستغرام',
-                youtube: 'يوتيوب',
-                webine: 'ويبين',
-                close: 'إغلاق',
-                cancel: 'إلغاء',
-                save: 'حفظ',
-                submit: 'إرسال',
+                location_label: '📍 الموقع:',
+                map_btn: 'الخريطة',
+                sender_title: '👤 المرسل',
+                full_name: 'الاسم الكامل *',
+                phone: 'الهاتف *',
+                address: 'العنوان',
+                city: 'المدينة *',
+                location: 'البلد',
+                amount: 'المبلغ *',
                 add_client: 'إضافة عميل',
                 international: 'دولي',
-                edit_account_title: '✏️ تعديل الحساب',
+                close: 'إغلاق',
+                cancel: 'إلغاء',
+                save: 'حفظ التغييرات',
+                submit: 'إرسال',
+                select_agent_placeholder: 'اختر وكيلاً',
+                no_agents: 'لا يوجد وكلاء مسجلون',
+                toast_enter_amount: '⚠️ أدخل المبلغ أولاً',
+                toast_valid_amount: '❌ أدخل مبلغاً صحيحاً',
+                toast_orange_not_supported: '❌ Orange غير مدعوم',
+                toast_afrimoney_not_supported: '❌ Afrimoney غير مدعوم',
+                toast_qmoney_not_supported: '❌ QMoney غير مدعوم',
+                toast_wbmoney_not_supported: '❌ WBMoney غير مدعوم',
+                toast_provider_not_configured: '❌ المزود غير مهيأ',
+                toast_agent_6_digits: '❌ الوكيل: 6 أرقام',
+                toast_customer_9_digits: '❌ العميل: 9 أرقام',
+                toast_initiated: '✅ تم بدء {action}. أدخل معرف المعاملة.',
+                toast_enter_recipient_phone: '⚠️ أدخل هاتف المستلم',
+                toast_enter_recipient_name: '⚠️ أدخل اسم المستلم للمعاملات الدولية',
+                toast_recipient_phone_required: '❌ هاتف المستلم مطلوب',
+                toast_recipient_name_required: '❌ اسم المستلم مطلوب',
+                select_type: 'اختر النوع',
                 agent: 'وكيل',
                 customer: 'عميل',
                 other: 'أخرى',
                 transfer: 'تحويل',
                 pay: 'دفع',
-                cashout: 'سحب',
-                send: 'إرسال',
-                create: 'إنشاء',
-                confirm: 'تأكيد',
-                reset: 'إعادة تعيين',
-                recording: 'تسجيل...',
-                video: 'فيديو',
-                audio: 'صوت',
-                call: '📞',
-                profile_pic: '🖼️',
-                rec: 'تسجيل',
-                video_call: '📹',
-                map_title: '📍 موقعك',
-                subscribe_title: '📧 اشتراك',
-                login_title: '🔐 تسجيل الدخول',
-                register_title: '📝 إنشاء حساب',
-                choose_icon: 'اختر أيقونة:',
-                upload_image: 'أو قم بتحميل صورتك الخاصة:',
-                generate_ussd: '📱 إنشاء USSD',
-                generate_password: '🔑 إنشاء',
-                generate_collateral: 'إنشاء USSD',
-                generate_pin: '🔑 إنشاء PIN',
+                cashout: 'سحب نقدي',
+                edit_agent_title: '✏️ تعديل الوكيل',
                 register_agent: '🏢 التسجيل كوكيل',
                 agent_reg_title: '🏢 تسجيل الوكيل',
+                generate_password: '🔑 إنشاء',
+                generate_collateral: 'إنشاء USSD',
                 register_agent_submit: 'تسجيل الوكيل',
                 agent_reg_error: '❌ يرجى ملء جميع الحقول المطلوبة',
                 agent_reg_loading: '⏳ جاري تسجيل الوكيل...',
@@ -5513,7 +5517,7 @@
                 admin_name: 'اسم المدير *',
                 admin_password: 'كلمة المرور *',
                 admin_confirm_password: 'تأكيد كلمة المرور *',
-                admin_pin: 'PIN مكون من 5 أرقام *',
+                admin_pin: 'PIN من 5 أرقام *',
                 admin_register_btn: 'تسجيل المدير',
                 admin_login_btn: 'تسجيل الدخول',
                 admin_register_success: '✅ تم تسجيل المدير بنجاح! يرجى تسجيل الدخول.',
@@ -5535,6 +5539,7 @@
                 provider_tx_id_error_duplicate: 'تم استخدام معرف معاملة المزود هذا بالفعل.',
                 select_contact: 'اختر جهة اتصال',
                 type_message: 'اكتب رسالة...',
+                send: 'إرسال',
                 groups: '👥 المجموعات',
                 contacts: '👤 جهات الاتصال',
                 no_groups: 'لا توجد مجموعات حتى الآن. اضغط + للإضافة.',
@@ -5556,22 +5561,22 @@
                 toast_receipt_sent: '✅ تم إرسال الإيصال!',
                 toast_formspree_error: '⚠️ خطأ في Formspree',
                 toast_network_error: '⚠️ خطأ في الشبكة',
-                toast_enter_amount: '⚠️ أدخل المبلغ أولاً',
-                toast_valid_amount: '❌ أدخل مبلغاً صحيحاً',
-                toast_orange_not_supported: '❌ Orange غير مدعوم',
-                toast_afrimoney_not_supported: '❌ Afrimoney غير مدعوم',
-                toast_qmoney_not_supported: '❌ QMoney غير مدعوم',
-                toast_wbmoney_not_supported: '❌ WBMoney غير مدعوم',
-                toast_provider_not_configured: '❌ المزود غير مهيأ',
-                toast_agent_6_digits: '❌ الوكيل: 6 أرقام',
-                toast_customer_9_digits: '❌ العميل: 9 أرقام',
-                toast_initiated: '✅ تم بدء {action}. أدخل معرف المعاملة.',
-                toast_enter_recipient_phone: '⚠️ أدخل هاتف المستلم',
-                toast_enter_recipient_name: '⚠️ أدخل اسم المستلم للمعاملات الدولية',
-                toast_recipient_phone_required: '❌ هاتف المستلم مطلوب',
-                toast_recipient_name_required: '❌ اسم المستلم مطلوب',
-                select_type: 'اختر النوع',
-                edit_agent_title: '✏️ تعديل الوكيل',
+                about: 'حول',
+                dev: 'المطور',
+                contact: 'اتصال',
+                subscribe: 'اشتراك',
+                whatsapp: 'واتساب',
+                facebook: 'فيسبوك',
+                instagram: 'إنستغرام',
+                youtube: 'يوتيوب',
+                webine: 'ويبين',
+                map_title: '📍 موقعك',
+                subscribe_title: '📧 اشتراك',
+                login_title: '🔐 تسجيل الدخول',
+                register_title: '📝 إنشاء حساب',
+                choose_icon: 'اختر أيقونة:',
+                upload_image: 'أو قم بتحميل صورتك الخاصة:',
+                generate_ussd: '📱 إنشاء USSD',
                 agent_business_name: 'اسم الشركة *',
                 agent_address: 'العنوان *',
                 agent_city: 'المدينة *',
@@ -5589,7 +5594,7 @@
                 agent_country_code: 'طلب رمز البلد للمعاملات الدولية',
                 agent_password: 'كلمة مرور أبجدية رقمية من 6 أحرف *',
                 password_hint: 'انقر على إنشاء لإنشاء كلمة مرور أبجدية رقمية من 6 أحرف',
-                agent_pin_label: 'PIN مكون من 5 أرقام *',
+                agent_pin_label: 'PIN من 5 أرقام *',
                 pin_hint: 'انقر على إنشاء لإنشاء PIN من 5 أرقام',
                 collateral_label: '🔒 ضمان حساب الدفع',
                 collateral_hint: 'انقر لإنشاء رمز USSD لتحويل ضمان Orange Money.',
@@ -5600,20 +5605,32 @@
                 provider_tx_section: '🔐 معرف معاملة المزود',
                 transfer_code_label: 'رمز التحويل (6، 8، 10، 12، أو 14 رقماً) *',
                 transfer_code_hint: 'أدخل رمز التحويل المكون من 6-14 رقماً الذي قدمه المرسل.',
+                generate_pin: '🔑 إنشاء PIN',
+                agreement_title: '📜 اتفاقية تسجيل الوكيل',
+                agreement_subtitle: 'يرجى القراءة بعناية والتوقيع للمتابعة',
+                agree_sign: '✋ أوافق وأوقع',
+                agreement_status_prompt: 'يرجى قراءة جميع البنود وتقديم توقيعك أدناه.',
+                edit_agent_title: '✏️ تعديل الوكيل',
                 report: '📋 تقرير',
                 client_name: 'اسم العميل *',
                 client_phone: 'هاتف العميل *',
                 new_group: '👥 مجموعة جديدة',
                 group_name: 'اسم المجموعة *',
                 select_members: 'اختر الأعضاء (حد أقصى 25)',
+                create: 'إنشاء',
                 manage_group: 'إدارة المجموعة',
                 select_provider: 'اختر المزود',
                 orange: 'Orange',
                 afrimoney: 'Afrimoney',
                 qmoney: 'QMoney',
                 wbmoney: 'WBMoney',
+                select_type: 'اختر النوع',
+                transfer: 'تحويل',
+                pay: 'دفع',
+                cashout: 'سحب نقدي',
                 select_item: 'اختر عنصراً',
                 visit_website: 'زيارة الموقع',
+                dashboard_title: '📊 لوحة تحكم الوكلاء',
                 agent_name_th: 'اسم الوكيل',
                 business_th: 'الشركة',
                 address_th: 'العنوان',
@@ -5639,6 +5656,7 @@
                 agent_whatsapp: '📱 وكيل WhatsApp',
                 client_sms: '✉️ عميل SMS',
                 agent_sms: '✉️ وكيل SMS',
+                edit_account_title: '✏️ تعديل الحساب',
                 agent_auth_title: '🔐 مصادقة الوكيل',
                 agent_auth_subtitle: 'يرجى إدخال بيانات الاعتماد الخاصة بك للوصول إلى التقرير.',
                 confirm: '✅ تأكيد',
@@ -5654,7 +5672,7 @@
                 confirm_dial: '✅ تأكيد والاتصال',
                 currency_converter: '💱 محول العملات',
                 converter_subtitle: 'تحويل وحساب الرسوم',
-                user_info_badge: '👤 بلدك:',
+                user_info_badge: 'بلدك:',
                 from_currency_label: 'العملة المصدر (عملتك)',
                 amount_to_send: '💰 المبلغ المرسل *',
                 recipient_country: '🌍 بلد المستلم',
@@ -5697,24 +5715,6 @@
                 toast_agent_collateral_error: '⚠️ يرجى إدخال رقم Mobile Money صحيح',
                 toast_edit_agent_password_error: '❌ كلمة مرور غير صحيحة. يرجى إدخال كلمة المرور الصحيحة.',
                 toast_edit_agent_pin_error: '❌ PIN غير صحيح. يرجى إدخال PIN الصحيح.',
-                sender_title: '👤 المرسل',
-                full_name: 'الاسم الكامل *',
-                phone: 'الهاتف *',
-                address: 'العنوان',
-                city: 'المدينة *',
-                location: 'البلد',
-                amount: 'المبلغ *',
-                location_label: '📍 الموقع:',
-                map_btn: 'الخريطة',
-                gst: '🏛️ ضريبة القيمة المضافة (<span id="gstRateLabel">15</span>%):',
-                total_debit: '💵 إجمالي الخصم:',
-                currency_label: '🌍 العملة:',
-                mm_operator: '💸 مشغل Mobile Money',
-                tx_id_label: '🔖 معرف المعاملة',
-                tx_id: 'معرف المعاملة',
-                gen: 'إنشاء',
-                copy: 'نسخ',
-                quick_pay: '⭐ دفع سريع ⭐',
                 date_th: 'التاريخ',
                 amount_th: 'المبلغ',
                 total_th: 'الإجمالي',
@@ -5728,66 +5728,67 @@
                 receipt_base: 'المبلغ الأساسي',
                 receipt_charge: 'الرسوم',
                 receipt_gst: 'ضريبة القيمة المضافة ({rate}%)',
-                receipt_total: 'الإجمالي'
+                receipt_total: 'الإجمالي',
+                no_transaction: 'لا توجد معاملات'
             },
             es: {
+                // Spanish translations
+                app_name: 'AfriPay',
                 login: 'Iniciar sesión',
                 register: 'Registrarse',
                 logout: 'Cerrar sesión',
                 online: 'En línea',
-                about: 'Acerca de',
-                dev: 'Desarrollador',
-                contact: 'Contacto',
-                subscribe: 'Suscribirse',
-                whatsapp: 'WhatsApp',
-                facebook: 'Facebook',
-                instagram: 'Instagram',
-                youtube: 'YouTube',
-                webine: 'WeBine',
-                close: 'Cerrar',
-                cancel: 'Cancelar',
-                save: 'Guardar',
-                submit: 'Enviar',
+                location_label: '📍 Ubicación:',
+                map_btn: 'Mapa',
+                sender_title: '👤 REMITENTE',
+                full_name: 'Nombre completo *',
+                phone: 'Teléfono *',
+                address: 'Dirección',
+                city: 'Ciudad *',
+                location: 'País',
+                amount: 'Monto *',
                 add_client: 'Agregar cliente',
                 international: 'Internacional',
-                edit_account_title: '✏️ Editar cuenta',
+                close: 'Cerrar',
+                cancel: 'Cancelar',
+                save: 'Guardar cambios',
+                submit: 'Enviar',
+                select_agent_placeholder: 'Seleccionar agente',
+                no_agents: 'No hay agentes registrados',
+                toast_enter_amount: '⚠️ Ingrese el monto primero',
+                toast_valid_amount: '❌ Ingrese un monto válido',
+                toast_orange_not_supported: '❌ Orange no compatible',
+                toast_afrimoney_not_supported: '❌ Afrimoney no compatible',
+                toast_qmoney_not_supported: '❌ QMoney no compatible',
+                toast_wbmoney_not_supported: '❌ WBMoney no compatible',
+                toast_provider_not_configured: '❌ Proveedor no configurado',
+                toast_agent_6_digits: '❌ Agente: 6 dígitos',
+                toast_customer_9_digits: '❌ Cliente: 9 dígitos',
+                toast_initiated: '✅ {action} iniciada. Ingrese el ID de transacción.',
+                toast_enter_recipient_phone: '⚠️ Ingrese el teléfono del destinatario',
+                toast_enter_recipient_name: '⚠️ Ingrese el nombre del destinatario para internacional',
+                toast_recipient_phone_required: '❌ Teléfono del destinatario requerido',
+                toast_recipient_name_required: '❌ Nombre del destinatario requerido',
+                select_type: 'Seleccionar tipo',
                 agent: 'Agente',
                 customer: 'Cliente',
                 other: 'Otro',
                 transfer: 'Transferir',
                 pay: 'Pagar',
                 cashout: 'Retirar',
-                send: 'Enviar',
-                create: 'Crear',
-                confirm: 'Confirmar',
-                reset: 'Restablecer',
-                recording: 'Grabando...',
-                video: 'Video',
-                audio: 'Audio',
-                call: '📞',
-                profile_pic: '🖼️',
-                rec: 'Grabar',
-                video_call: '📹',
-                map_title: '📍 Tu ubicación',
-                subscribe_title: '📧 Suscribirse',
-                login_title: '🔐 Iniciar sesión',
-                register_title: '📝 Crear cuenta',
-                choose_icon: 'Elige un icono:',
-                upload_image: 'O sube tu propia imagen:',
-                generate_ussd: '📱 Generar USSD',
-                generate_password: '🔑 Generar',
-                generate_collateral: 'Generar USSD',
-                generate_pin: '🔑 Generar PIN',
+                edit_agent_title: '✏️ Editar agente',
                 register_agent: '🏢 Registrarse como agente',
                 agent_reg_title: '🏢 Registro de agente',
+                generate_password: '🔑 Generar',
+                generate_collateral: 'Generar USSD',
                 register_agent_submit: 'Registrar agente',
-                agent_reg_error: '❌ Por favor, completa todos los campos requeridos',
+                agent_reg_error: '❌ Por favor, complete todos los campos requeridos',
                 agent_reg_loading: '⏳ Registrando agente...',
                 agent_already_exists: '❌ Ya existe un agente con este nombre comercial',
                 agent_reg_success: '✅ ¡Agente {name} registrado con éxito!',
                 save_changes: 'Guardar cambios',
                 edit_agent_success: '✅ ¡Agente actualizado con éxito!',
-                edit_agent_error: '❌ Por favor, completa todos los campos',
+                edit_agent_error: '❌ Por favor, complete todos los campos',
                 agent_updated: '✅ ¡Agente {name} actualizado con éxito!',
                 dashboard_title: '📊 Panel de agentes',
                 admin_register_title: '👑 Registro de administrador',
@@ -5798,17 +5799,17 @@
                 admin_pin: 'PIN de 5 dígitos *',
                 admin_register_btn: 'Registrar administrador',
                 admin_login_btn: 'Iniciar sesión',
-                admin_register_success: '✅ ¡Administrador registrado con éxito! Por favor, inicia sesión.',
+                admin_register_success: '✅ ¡Administrador registrado con éxito! Por favor, inicie sesión.',
                 admin_login_success: '✅ ¡Bienvenido administrador!',
-                admin_reg_error: '❌ Por favor, completa todos los campos correctamente.',
+                admin_reg_error: '❌ Por favor, complete todos los campos correctamente.',
                 admin_pin_error: '❌ El PIN debe tener exactamente 5 dígitos.',
                 admin_password_mismatch: '❌ Las contraseñas no coinciden.',
-                admin_already_exists: '❌ El administrador ya está registrado. Por favor, inicia sesión.',
+                admin_already_exists: '❌ El administrador ya está registrado. Por favor, inicie sesión.',
                 admin_invalid_credentials: '❌ Nombre de administrador, contraseña o PIN inválido.',
                 admin_logout: 'Sesión cerrada',
-                admin_register_disabled: 'El registro está deshabilitado. Por favor, inicia sesión.',
-                switch_to_login: '¿Ya tienes una cuenta? Inicia sesión',
-                switch_to_register: '¿No tienes cuenta de administrador? Regístrate',
+                admin_register_disabled: 'El registro está deshabilitado. Por favor, inicie sesión.',
+                switch_to_login: '¿Ya tiene una cuenta? Inicie sesión',
+                switch_to_register: '¿No tiene cuenta de administrador? Regístrese',
                 provider_tx_id_label: '🔐 ID de transacción del proveedor',
                 provider_tx_id_placeholder: 'ej. AB123456.1234.X12345',
                 provider_tx_id_format: 'Formato: 2 letras + 6 dígitos . 4 dígitos . 1 letra + 5 dígitos',
@@ -5816,44 +5817,45 @@
                 provider_tx_id_error_invalid: 'Formato inválido. Debe ser: 2 letras + 6 dígitos . 4 dígitos . 1 letra + 5 dígitos',
                 provider_tx_id_error_duplicate: 'Este ID de transacción del proveedor ya ha sido utilizado.',
                 select_contact: 'Seleccionar un contacto',
-                type_message: 'Escribe un mensaje...',
+                type_message: 'Escriba un mensaje...',
+                send: 'Enviar',
                 groups: '👥 Grupos',
                 contacts: '👤 Contactos',
-                no_groups: 'Aún no hay grupos. Toca + para crear.',
+                no_groups: 'Aún no hay grupos. Toque + para crear.',
                 no_contacts: 'No hay contactos disponibles.',
                 about_body: 'Transferencias de dinero móvil transfronterizas con Orange, Afrimoney, QMoney y WBMoney.',
                 dev_body: 'Desarrollador fintech apasionado que conecta sistemas de pago africanos.',
                 contact_body: '<strong>Teléfono:</strong><br>+232-76-436-811<br>+232-80-422-698<br>+232-73-671-566',
                 toast_welcome: '✅ ¡Bienvenido {name}!',
                 toast_logout: 'Sesión cerrada',
-                toast_register_error: '❌ Completa nombre, teléfono y ciudad',
+                toast_register_error: '❌ Complete nombre, teléfono y ciudad',
                 toast_register_success: '✅ ¡Cuenta creada!',
-                toast_login_error: '❌ Introduce ambos campos',
-                toast_no_account: '❌ No hay cuenta. <a href="#" id="loginToRegisterLink" style="color:#f4a261;text-decoration:underline;">Registrarse</a>',
-                toast_login_mismatch: '❌ El nombre o teléfono no coincide. <a href="#" id="loginToRegisterLink2" style="color:#f4a261;text-decoration:underline;">Registrarse</a>',
+                toast_login_error: '❌ Ingrese ambos campos',
+                toast_no_account: '❌ No hay cuenta. <a href="#" id="loginToRegisterLink" style="color:#f4a261;text-decoration:underline;">Regístrese</a>',
+                toast_login_mismatch: '❌ El nombre o teléfono no coincide. <a href="#" id="loginToRegisterLink2" style="color:#f4a261;text-decoration:underline;">Regístrese</a>',
                 toast_error_loading: '❌ Error al cargar la cuenta.',
                 toast_register_loading: '⏳ Registrando...',
-                toast_login_first: '⚠️ Por favor, inicia sesión primero',
+                toast_login_first: '⚠️ Por favor, inicie sesión primero',
                 toast_subscribed: '📧 ¡Suscrito!',
                 toast_receipt_sent: '✅ ¡Recibo enviado!',
                 toast_formspree_error: '⚠️ Error de Formspree',
                 toast_network_error: '⚠️ Error de red',
-                toast_enter_amount: '⚠️ Introduce primero el monto',
-                toast_valid_amount: '❌ Introduce un monto válido',
-                toast_orange_not_supported: '❌ Orange no compatible',
-                toast_afrimoney_not_supported: '❌ Afrimoney no compatible',
-                toast_qmoney_not_supported: '❌ QMoney no compatible',
-                toast_wbmoney_not_supported: '❌ WBMoney no compatible',
-                toast_provider_not_configured: '❌ Proveedor no configurado',
-                toast_agent_6_digits: '❌ Agente: 6 dígitos',
-                toast_customer_9_digits: '❌ Cliente: 9 dígitos',
-                toast_initiated: '✅ {action} iniciada. Introduce el ID de transacción.',
-                toast_enter_recipient_phone: '⚠️ Introduce el teléfono del destinatario',
-                toast_enter_recipient_name: '⚠️ Introduce el nombre del destinatario para internacional',
-                toast_recipient_phone_required: '❌ Teléfono del destinatario requerido',
-                toast_recipient_name_required: '❌ Nombre del destinatario requerido',
-                select_type: 'Seleccionar tipo',
-                edit_agent_title: '✏️ Editar agente',
+                about: 'Acerca de',
+                dev: 'Desarrollador',
+                contact: 'Contacto',
+                subscribe: 'Suscribirse',
+                whatsapp: 'WhatsApp',
+                facebook: 'Facebook',
+                instagram: 'Instagram',
+                youtube: 'YouTube',
+                webine: 'WeBine',
+                map_title: '📍 Su ubicación',
+                subscribe_title: '📧 Suscribirse',
+                login_title: '🔐 Iniciar sesión',
+                register_title: '📝 Crear cuenta',
+                choose_icon: 'Elija un icono:',
+                upload_image: 'O suba su propia imagen:',
+                generate_ussd: '📱 Generar USSD',
                 agent_business_name: 'Nombre del negocio *',
                 agent_address: 'Dirección *',
                 agent_city: 'Ciudad *',
@@ -5864,38 +5866,50 @@
                 agent_id_number: 'Número de identificación *',
                 agent_id_image: 'Tomar o subir foto de identificación *',
                 agent_logo: 'Logo del negocio *',
-                agent_logo_hint: 'Por favor, sube el logo de tu negocio (obligatorio).',
+                agent_logo_hint: 'Por favor, suba el logo de su negocio (obligatorio).',
                 agent_mobile_money: 'Número de Mobile Money *',
                 collateral_limit_label: '💳 Límite de garantía *',
                 collateral_limit_hint: 'Esto establece el monto máximo que el agente puede transaccionar.',
                 agent_country_code: 'Solicitar código de país para internacional',
                 agent_password: 'Contraseña alfanumérica de 6 caracteres *',
-                password_hint: 'Haz clic en Generar para crear una contraseña alfanumérica de 6 caracteres',
+                password_hint: 'Haga clic en Generar para crear una contraseña alfanumérica de 6 caracteres',
                 agent_pin_label: 'PIN de 5 dígitos *',
-                pin_hint: 'Haz clic en Generar para crear un PIN de 5 dígitos',
+                pin_hint: 'Haga clic en Generar para crear un PIN de 5 dígitos',
                 collateral_label: '🔒 Garantía de cuenta de pago',
-                collateral_hint: 'Haz clic para generar un código USSD para la transferencia de garantía de Orange Money.',
+                collateral_hint: 'Haga clic para generar un código USSD para la transferencia de garantía de Orange Money.',
                 view_agreement: '📜 Ver y firmar acuerdo de agente',
                 agreement_status_label: 'Acuerdo:',
                 not_signed: 'No firmado',
                 signed: 'Firmado ✅',
                 provider_tx_section: '🔐 ID DE TRANSACCIÓN DEL PROVEEDOR',
                 transfer_code_label: 'Código de transferencia (6, 8, 10, 12 o 14 dígitos) *',
-                transfer_code_hint: 'Introduce el código de transferencia de 6-14 dígitos proporcionado por el remitente.',
+                transfer_code_hint: 'Ingrese el código de transferencia de 6-14 dígitos proporcionado por el remitente.',
+                generate_pin: '🔑 Generar PIN',
+                agreement_title: '📜 ACUERDO DE REGISTRO DE AGENTE',
+                agreement_subtitle: 'Lea atentamente y firme para continuar',
+                agree_sign: '✋ Acepto y firmo',
+                agreement_status_prompt: 'Lea todas las cláusulas y proporcione su firma a continuación.',
+                edit_agent_title: '✏️ Editar agente',
                 report: '📋 Informe',
                 client_name: 'Nombre del cliente *',
                 client_phone: 'Teléfono del cliente *',
                 new_group: '👥 Nuevo grupo',
                 group_name: 'Nombre del grupo *',
                 select_members: 'Seleccionar miembros (máx. 25)',
+                create: 'Crear',
                 manage_group: 'Gestionar grupo',
                 select_provider: 'Seleccionar proveedor',
                 orange: 'Orange',
                 afrimoney: 'Afrimoney',
                 qmoney: 'QMoney',
                 wbmoney: 'WBMoney',
+                select_type: 'Seleccionar tipo',
+                transfer: 'Transferir',
+                pay: 'Pagar',
+                cashout: 'Retirar',
                 select_item: 'Seleccionar artículo',
                 visit_website: 'Visitar sitio web',
+                dashboard_title: '📊 Panel de agentes',
                 agent_name_th: 'Nombre del agente',
                 business_th: 'Negocio',
                 address_th: 'Dirección',
@@ -5921,23 +5935,24 @@
                 agent_whatsapp: '📱 Agente WhatsApp',
                 client_sms: '✉️ Cliente SMS',
                 agent_sms: '✉️ Agente SMS',
+                edit_account_title: '✏️ Editar cuenta',
                 agent_auth_title: '🔐 Autenticación de agente',
-                agent_auth_subtitle: 'Por favor, introduce tus credenciales para acceder al informe.',
+                agent_auth_subtitle: 'Por favor, introduzca sus credenciales para acceder al informe.',
                 confirm: '✅ Confirmar',
                 agent_report_title: '📋 INFORME DEL AGENTE',
                 agent_report_subtitle: 'Detalles de la transacción y código USSD',
                 copy_ussd: '📋 Copiar USSD',
                 admin_verify_title: '🔐 Verificación de administrador requerida',
-                admin_verify_subtitle: 'Introduce las credenciales de administrador para eliminar permanentemente este usuario.',
+                admin_verify_subtitle: 'Introduzca las credenciales de administrador para eliminar permanentemente este usuario.',
                 confirm_delete: '✅ Confirmar eliminación',
                 enter_pin_title: '🔐 Introducir PIN',
-                enter_pin_subtitle: 'Introduce tu PIN para completar la transacción.',
+                enter_pin_subtitle: 'Introduzca su PIN para completar la transacción.',
                 pin_4_digit: 'PIN de 4 dígitos *',
                 confirm_dial: '✅ Confirmar y marcar',
                 currency_converter: '💱 Conversor de divisas',
                 converter_subtitle: 'Convertir y calcular comisiones',
-                user_info_badge: '👤 Tu país:',
-                from_currency_label: 'Moneda origen (Tu moneda)',
+                user_info_badge: 'Su país:',
+                from_currency_label: 'Moneda origen (Su moneda)',
                 amount_to_send: '💰 Monto a enviar *',
                 recipient_country: '🌍 País del destinatario',
                 base_amount: '💰 Monto base:',
@@ -5965,38 +5980,20 @@
                 recording: 'Grabando...',
                 font_decrease: 'A-',
                 font_increase: 'A+',
-                agent_select_hint: '📋 Selecciona un agente del menú desplegable, o usa <strong>Agregar cliente</strong> para agregar un cliente',
-                edit_password_hint: 'Introduce la contraseña generada durante el registro',
-                edit_pin_hint: 'Introduce el PIN generado durante el registro',
+                agent_select_hint: '📋 Seleccione un agente del menú desplegable, o use <strong>Agregar cliente</strong> para agregar un cliente',
+                edit_password_hint: 'Ingrese la contraseña generada durante el registro',
+                edit_pin_hint: 'Ingrese el PIN generado durante el registro',
                 toast_copied: '✅ ¡Copiado!',
                 toast_no_id: '⚠️ No hay ID para copiar.',
                 toast_selected_country: '🌍 Seleccionado: {name}',
                 toast_country_not_supported: '⚠️ País no compatible: {flag}',
-                toast_select_group_name: '⚠️ Por favor, introduce un nombre de grupo',
-                toast_select_members: '⚠️ Por favor, selecciona al menos un miembro',
+                toast_select_group_name: '⚠️ Por favor, ingrese un nombre de grupo',
+                toast_select_members: '⚠️ Por favor, seleccione al menos un miembro',
                 toast_max_members: '⚠️ Se permiten un máximo de 25 miembros',
                 toast_group_created: '✅ Grupo "{name}" creado con {count} miembros',
-                toast_agent_collateral_error: '⚠️ Por favor, introduce un número Mobile Money válido',
-                toast_edit_agent_password_error: '❌ Contraseña incorrecta. Por favor, introduce la contraseña correcta.',
-                toast_edit_agent_pin_error: '❌ PIN incorrecto. Por favor, introduce el PIN correcto.',
-                sender_title: '👤 REMITENTE',
-                full_name: 'Nombre completo *',
-                phone: 'Teléfono *',
-                address: 'Dirección',
-                city: 'Ciudad *',
-                location: 'País',
-                amount: 'Monto *',
-                location_label: '📍 Ubicación:',
-                map_btn: 'Mapa',
-                gst: '🏛️ IVA (<span id="gstRateLabel">15</span>%):',
-                total_debit: '💵 Débito total:',
-                currency_label: '🌍 Moneda:',
-                mm_operator: '💸 Operador de Mobile Money',
-                tx_id_label: '🔖 ID DE TRANSACCIÓN',
-                tx_id: 'ID de transacción',
-                gen: 'Generar',
-                copy: 'Copiar',
-                quick_pay: '⭐ PAGO RÁPIDO ⭐',
+                toast_agent_collateral_error: '⚠️ Por favor, ingrese un número Mobile Money válido',
+                toast_edit_agent_password_error: '❌ Contraseña incorrecta. Por favor, ingrese la contraseña correcta.',
+                toast_edit_agent_pin_error: '❌ PIN incorrecto. Por favor, ingrese el PIN correcto.',
                 date_th: 'Fecha',
                 amount_th: 'Monto',
                 total_th: 'Total',
@@ -6010,7 +6007,8 @@
                 receipt_base: 'Monto base',
                 receipt_charge: 'Comisión',
                 receipt_gst: 'IVA ({rate}%)',
-                receipt_total: 'Total'
+                receipt_total: 'Total',
+                no_transaction: 'Sin transacciones'
             }
         };
 
@@ -6090,7 +6088,6 @@
                     if (key === 'app_name') return;
                     const translation = t(key);
                     if (translation && translation !== key) {
-                        // Preserve emoji if present
                         const emojiMatch = el.textContent.match(/^([\u{1F000}-\u{1FFFF}]|[\u2600-\u27BF]|[\u{1F300}-\u{1F5FF}]|[\u{1F600}-\u{1F64F}]|[\u{1F680}-\u{1F6FF}]|[\u{1F700}-\u{1F77F}]|[\u{1F780}-\u{1F7FF}]|[\u{1F800}-\u{1F8FF}]|[\u{1F900}-\u{1F9FF}]|[\u{1FA00}-\u{1FA6F}]|[\u{1FA70}-\u{1FAFF}]|[\u{1FB00}-\u{1FBFF}]|[\u{1FC00}-\u{1FCFF}]|[\u{1FD00}-\u{1FDFF}]|[\u{1FE00}-\u{1FEFF}]|[\u{1FF00}-\u{1FFFF}]|[☀-⛿]|[✀-➿]|[🌐-🏿]|[🍀-🧿]|[🀀-🿿]|[😀-🙏]|[🚀-🛿]|[🜀-🝿]|[🞀-🟿]|[🤀-🫿])/u);
                         if (emojiMatch) {
                             const emoji = emojiMatch[0];
@@ -6157,13 +6154,44 @@
                         if (group) document.getElementById('chatContact').innerText = '👥 ' + group.name;
                     }
                 }
-                // Update converter labels
-                document.querySelectorAll('#converterResults .label').forEach(el => {
+                // Update converter labels that might have HTML content
+                const gstLabel = document.querySelector('#converterResults .conv-row .label[data-i18n="gst"]');
+                if (gstLabel) {
+                    const key = 'gst';
+                    const translation = t(key);
+                    if (translation && translation !== key) {
+                        gstLabel.innerHTML = translation.replace('{rate}', '') + ' <span id="convGstRateLabel">' + document
+                            .getElementById('convGstRateLabel').textContent + '</span>%';
+                    }
+                }
+                // Update user info badge
+                const userInfoBadge = document.querySelector('#userInfoBadge');
+                if (userInfoBadge) {
+                    const label = t('user_info_badge');
+                    const countryDisplay = document.getElementById('userCountryDisplay');
+                    const currencyDisplay = document.getElementById('userCurrencyDisplay');
+                    if (countryDisplay && currencyDisplay) {
+                        userInfoBadge.innerHTML = '👤 ' + label + ' <strong id="userCountryDisplay">' + countryDisplay
+                            .textContent + '</strong> · <span data-i18n="currency_label">' + t(
+                            'currency_label') + '</span> <strong id="userCurrencyDisplay">' + currencyDisplay
+                            .textContent + '</strong>';
+                    }
+                }
+                // Update converter result labels
+                document.querySelectorAll('#converterResults .conv-row .label').forEach(el => {
                     const key = el.getAttribute('data-i18n');
                     if (key) {
                         const translation = t(key);
                         if (translation && translation !== key) {
-                            el.innerHTML = translation;
+                            // Preserve any inner HTML like the GST rate span
+                            const innerHtml = el.innerHTML;
+                            const rateMatch = innerHtml.match(/<span[^>]*>([^<]*)<\/span>/);
+                            if (rateMatch && key === 'gst') {
+                                el.innerHTML = translation.replace('{rate}', '') + ' <span id="convGstRateLabel">' +
+                                    rateMatch[1] + '</span>%';
+                            } else {
+                                el.innerHTML = translation;
+                            }
                         }
                     }
                 });
@@ -6248,7 +6276,7 @@
         const countryWrapper = document.getElementById('countryWrapper');
         const intlToggleBtn = document.getElementById('intlToggleBtn');
 
-        let currentCountryData = { gstRate: 10, currency: 'LRD', flag: '🇱🇷' };
+        let currentCountryData = { gstRate: 10, currency: 'LRD', flag: '🇱🇷', countryName: 'Liberia' };
         let isLocalMode = true;
 
         function computeCharges() {
@@ -6270,7 +6298,8 @@
             countryWrapper.style.display = enabled ? 'none' : 'block';
             if (!enabled) {
                 const parts = countrySelect.value.split('|');
-                currentCountryData = { gstRate: parseFloat(parts[4]), currency: parts[2], flag: parts[3] };
+                currentCountryData = { gstRate: parseFloat(parts[4]), currency: parts[2], flag: parts[3], countryName: parts[
+                    1] };
                 gstRateLabel.innerText = currentCountryData.gstRate;
                 currencySymbolSpan.innerText = currentCountryData.currency;
                 flagSpan.innerText = currentCountryData.flag;
@@ -7223,7 +7252,6 @@
 
         // Aliases for functions used in buildAndDialUSSD
         function getOrangeZCode() {
-            // Default to Guinea if not available
             const countryName = currentCountryData.countryName || 'Guinea';
             return getCountryZCode(countryName);
         }
@@ -7259,28 +7287,6 @@
                 clean = clean + '0';
             }
             return clean;
-        }
-
-        function isSierraLeonePhone(phone) {
-            const clean = phone.replace(/\D/g, '');
-            const prefixes = ['076', '078', '079', '075', '073', '072'];
-            for (let prefix of prefixes) {
-                if (clean.startsWith(prefix)) return true;
-                if (clean.startsWith('232' + prefix.substring(1))) return true;
-            }
-            if (clean.startsWith('232')) return true;
-            return false;
-        }
-
-        function isAfrimoneySierraLeonePhone(phone) {
-            const clean = phone.replace(/\D/g, '');
-            const prefixes = ['077', '088', '099', '030', '033', '070', '080', '090'];
-            for (let prefix of prefixes) {
-                if (clean.startsWith(prefix)) return true;
-                if (clean.startsWith('232' + prefix.substring(1))) return true;
-            }
-            if (clean.startsWith('232')) return true;
-            return false;
         }
 
         function openProviderModal() {
@@ -8213,7 +8219,7 @@
                                 const parts = document.getElementById('countryCodeSelect').value.split(
                                 '|');
                                 currentCountryData = { gstRate: parseFloat(parts[4]), currency: parts[
-                                        2], flag: parts[3] };
+                                        2], flag: parts[3], countryName: parts[1] };
                                 gstRateLabel.innerText = currentCountryData.gstRate;
                                 currencySymbolSpan.innerText = currentCountryData.currency;
                                 flagSpan.innerText = currentCountryData.flag;
@@ -8534,7 +8540,7 @@
         }
 
         // ================================================================
-        // ENHANCED CURRENCY CONVERTER FUNCTIONS
+        // ENHANCED CURRENCY CONVERTER FUNCTIONS – FULLY FIXED
         // ================================================================
         let userCountryName = '—';
         let userCurrencyCode = 'USD';
@@ -8592,8 +8598,10 @@
                     currencies.set(code, { code, name, flag });
                 }
             }
+            // Add common currencies not in the country list
             if (!currencies.has('USD')) currencies.set('USD', { code: 'USD', name: 'US Dollar', flag: '🇺🇸' });
             if (!currencies.has('EUR')) currencies.set('EUR', { code: 'EUR', name: 'Euro', flag: '🇪🇺' });
+            if (!currencies.has('GBP')) currencies.set('GBP', { code: 'GBP', name: 'British Pound', flag: '🇬🇧' });
 
             select.innerHTML = '';
             let selectedValue = 'USD';
@@ -8639,85 +8647,99 @@
         }
 
         function updateConverter() {
-            const amount = parseFloat(document.getElementById('convAmount').value) || 0;
-            const fromCurrency = document.getElementById('convFromCurrency').value;
-            const countrySelect = document.getElementById('convCountrySelect');
-            const parts = countrySelect.value.split('|');
-            const toCurrency = parts[2] || 'GNF';
-            const gstRate = parseFloat(parts[4]) || 10;
-            const countryName = parts[1] || 'Guinea';
-            const flag = parts[3] || '🇱🇷';
+            try {
+                const amount = parseFloat(document.getElementById('convAmount').value) || 0;
+                const fromCurrency = document.getElementById('convFromCurrency').value || 'USD';
+                const countrySelect = document.getElementById('convCountrySelect');
+                const parts = countrySelect.value.split('|');
+                const toCurrency = parts[2] || 'GNF';
+                const gstRate = parseFloat(parts[4]) || 10;
+                const countryName = parts[1] || 'Guinea';
+                const flag = parts[3] || '🇱🇷';
 
-            document.getElementById('convFlagEmoji').textContent = flag;
-            document.getElementById('convGstRateLabel').textContent = gstRate;
+                document.getElementById('convFlagEmoji').textContent = flag;
+                document.getElementById('convGstRateLabel').textContent = gstRate;
 
-            const rateFrom = EXCHANGE_RATES[fromCurrency] || 1;
-            const rateTo = EXCHANGE_RATES[toCurrency] || 1;
-            const exchangeRate = rateTo / rateFrom;
-            const convertedAmount = amount * exchangeRate;
+                const rateFrom = EXCHANGE_RATES[fromCurrency] || 1;
+                const rateTo = EXCHANGE_RATES[toCurrency] || 1;
+                const exchangeRate = rateTo / rateFrom;
+                const convertedAmount = amount * exchangeRate;
 
-            const charge = amount * 0.04;
-            const gst = charge * (gstRate / 100);
-            const totalDeductions = charge + gst;
-            const totalDebit = amount + charge + gst;
+                const charge = amount * 0.04;
+                const gst = charge * (gstRate / 100);
+                const totalDeductions = charge + gst;
+                const totalDebit = amount + charge + gst;
 
-            document.getElementById('convBaseAmount').textContent = `${amount.toFixed(2)} ${fromCurrency}`;
-            document.getElementById('convCharge').textContent = `${charge.toFixed(2)} ${fromCurrency}`;
-            document.getElementById('convGstAmount').textContent = `${gst.toFixed(2)} ${fromCurrency}`;
-            document.getElementById('convTotalDeductions').textContent = `${totalDeductions.toFixed(2)} ${fromCurrency}`;
-            document.getElementById('convTotalDebit').textContent = `${totalDebit.toFixed(2)} ${fromCurrency}`;
-            document.getElementById('convRecipientAmount').textContent = `${convertedAmount.toFixed(2)} ${toCurrency}`;
-            document.getElementById('convExchangeRate').textContent =
-                `1 ${fromCurrency} = ${exchangeRate.toFixed(4)} ${toCurrency}`;
+                document.getElementById('convBaseAmount').textContent = `${amount.toFixed(2)} ${fromCurrency}`;
+                document.getElementById('convCharge').textContent = `${charge.toFixed(2)} ${fromCurrency}`;
+                document.getElementById('convGstAmount').textContent = `${gst.toFixed(2)} ${fromCurrency}`;
+                document.getElementById('convTotalDeductions').textContent = `${totalDeductions.toFixed(2)} ${fromCurrency}`;
+                document.getElementById('convTotalDebit').textContent = `${totalDebit.toFixed(2)} ${fromCurrency}`;
+                document.getElementById('convRecipientAmount').textContent = `${convertedAmount.toFixed(2)} ${toCurrency}`;
+                document.getElementById('convExchangeRate').textContent =
+                    `1 ${fromCurrency} = ${exchangeRate.toFixed(4)} ${toCurrency}`;
+            } catch (e) {
+                console.warn('updateConverter error:', e);
+            }
         }
 
         function openCurrencyConverter() {
-            if (currentUser && currentUser.country) {
-                userCountryName = currentUser.country;
-                userCurrencyCode = getUserCurrencyFromCountry(userCountryName);
-                userCurrencyFlag = getFlagForCurrency(userCurrencyCode);
+            try {
+                if (currentUser && currentUser.country) {
+                    userCountryName = currentUser.country;
+                    userCurrencyCode = getUserCurrencyFromCountry(userCountryName);
+                    userCurrencyFlag = getFlagForCurrency(userCurrencyCode);
+                }
+                populateFromCurrencySelect();
+                const mainAmount = document.getElementById('amountInput');
+                if (mainAmount && mainAmount.value) {
+                    document.getElementById('convAmount').value = parseFloat(mainAmount.value) || 100;
+                } else {
+                    document.getElementById('convAmount').value = 100;
+                }
+                updateConverter();
+                document.getElementById('currencyConverterModal').style.display = 'flex';
+                translatePage(); // Ensure translations are applied
+            } catch (e) {
+                console.warn('openCurrencyConverter error:', e);
+                showToast('⚠️ Error opening converter', 2000);
             }
-            populateFromCurrencySelect();
-            const mainAmount = document.getElementById('amountInput');
-            if (mainAmount && mainAmount.value) {
-                document.getElementById('convAmount').value = parseFloat(mainAmount.value) || 100;
-            } else {
-                document.getElementById('convAmount').value = 100;
-            }
-            updateConverter();
-            document.getElementById('currencyConverterModal').style.display = 'flex';
         }
 
         function copyConverterResult() {
-            const amount = parseFloat(document.getElementById('convAmount').value) || 0;
-            const fromCurrency = document.getElementById('convFromCurrency').value;
-            const countrySelect = document.getElementById('convCountrySelect');
-            const parts = countrySelect.value.split('|');
-            const toCurrency = parts[2] || 'GNF';
-            const country = parts[1] || 'Guinea';
-            const gstRate = parseFloat(parts[4]) || 10;
-            const charge = amount * 0.04;
-            const gst = charge * (gstRate / 100);
-            const total = amount + charge + gst;
-            const rateFrom = EXCHANGE_RATES[fromCurrency] || 1;
-            const rateTo = EXCHANGE_RATES[toCurrency] || 1;
-            const exchangeRate = rateTo / rateFrom;
-            const converted = amount * exchangeRate;
+            try {
+                const amount = parseFloat(document.getElementById('convAmount').value) || 0;
+                const fromCurrency = document.getElementById('convFromCurrency').value || 'USD';
+                const countrySelect = document.getElementById('convCountrySelect');
+                const parts = countrySelect.value.split('|');
+                const toCurrency = parts[2] || 'GNF';
+                const country = parts[1] || 'Guinea';
+                const gstRate = parseFloat(parts[4]) || 10;
+                const charge = amount * 0.04;
+                const gst = charge * (gstRate / 100);
+                const total = amount + charge + gst;
+                const rateFrom = EXCHANGE_RATES[fromCurrency] || 1;
+                const rateTo = EXCHANGE_RATES[toCurrency] || 1;
+                const exchangeRate = rateTo / rateFrom;
+                const converted = amount * exchangeRate;
 
-            const text =
-                `💱 AFRI-PAY CONVERTER\n─────────────────\n📌 From: ${fromCurrency}\n📌 To: ${country} (${toCurrency})\n💰 Amount: ${amount.toFixed(2)} ${fromCurrency}\n🔄 Rate: 1 ${fromCurrency} = ${exchangeRate.toFixed(4)} ${toCurrency}\n🎯 Recipient Receives: ${converted.toFixed(2)} ${toCurrency}\n─────────────────\n📊 4% Charge: ${charge.toFixed(2)} ${fromCurrency}\n🏛️ GST (${gstRate}%): ${gst.toFixed(2)} ${fromCurrency}\n📋 Total Deductions: ${(charge + gst).toFixed(2)} ${fromCurrency}\n💵 Total Debit: ${total.toFixed(2)} ${fromCurrency}`;
+                const text =
+                    `💱 AFRI-PAY CONVERTER\n─────────────────\n📌 From: ${fromCurrency}\n📌 To: ${country} (${toCurrency})\n💰 Amount: ${amount.toFixed(2)} ${fromCurrency}\n🔄 Rate: 1 ${fromCurrency} = ${exchangeRate.toFixed(4)} ${toCurrency}\n🎯 Recipient Receives: ${converted.toFixed(2)} ${toCurrency}\n─────────────────\n📊 4% Charge: ${charge.toFixed(2)} ${fromCurrency}\n🏛️ GST (${gstRate}%): ${gst.toFixed(2)} ${fromCurrency}\n📋 Total Deductions: ${(charge + gst).toFixed(2)} ${fromCurrency}\n💵 Total Debit: ${total.toFixed(2)} ${fromCurrency}`;
 
-            navigator.clipboard.writeText(text).then(() => {
-                showToast('✅ Conversion result copied to clipboard!', 2000);
-            }).catch(() => {
-                const temp = document.createElement('textarea');
-                temp.value = text;
-                document.body.appendChild(temp);
-                temp.select();
-                document.execCommand('copy');
-                document.body.removeChild(temp);
-                showToast('✅ Conversion result copied!', 1500);
-            });
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast('✅ Conversion result copied to clipboard!', 2000);
+                }).catch(() => {
+                    const temp = document.createElement('textarea');
+                    temp.value = text;
+                    document.body.appendChild(temp);
+                    temp.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(temp);
+                    showToast('✅ Conversion result copied!', 1500);
+                });
+            } catch (e) {
+                showToast('⚠️ Error copying result', 2000);
+            }
         }
 
         // ================================================================
@@ -8794,7 +8816,7 @@
                 });
 
                 // ================================================================
-                // CURRENCY CONVERTER EVENTS
+                // CURRENCY CONVERTER EVENTS – FIXED
                 // ================================================================
                 const convAmount = document.getElementById('convAmount');
                 const convCountrySelect = document.getElementById('convCountrySelect');
