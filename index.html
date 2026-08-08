@@ -3517,6 +3517,21 @@
             flex-shrink: 0;
             margin-right: 2px;
         }
+        .receipt-share-row .share-row {
+            display: flex !important;
+            gap: 6px !important;
+            flex-wrap: wrap !important;
+            justify-content: center !important;
+            width: 100% !important;
+        }
+        .receipt-share-row .share-row .receipt-share-btn {
+            flex: 1 1 45% !important;
+            min-width: 80px !important;
+            display: flex !important;
+        }
+        .receipt-share-group .share-row .receipt-share-btn {
+            display: flex !important;
+        }
     </style>
 </head>
 <body>
@@ -5167,7 +5182,8 @@
                 receipt_charge: 'Charge',
                 receipt_gst: 'GST ({rate}%)',
                 receipt_total: 'Total',
-                no_transaction: 'No transactions yet.'
+                no_transaction: 'No transactions yet.',
+                receipt_transfer_code: 'Transfer Code'
             },
             fr: {
                 login: 'Connexion',
@@ -5450,10 +5466,10 @@
                 receipt_charge: 'Frais',
                 receipt_gst: 'TVA ({rate}%)',
                 receipt_total: 'Total',
-                no_transaction: 'Aucune transaction'
+                no_transaction: 'Aucune transaction',
+                receipt_transfer_code: 'Code de transfert'
             },
             ar: {
-                // Arabic translations
                 app_name: 'أفري باي',
                 login: 'تسجيل الدخول',
                 register: 'تسجيل',
@@ -5729,10 +5745,10 @@
                 receipt_charge: 'الرسوم',
                 receipt_gst: 'ضريبة القيمة المضافة ({rate}%)',
                 receipt_total: 'الإجمالي',
-                no_transaction: 'لا توجد معاملات'
+                no_transaction: 'لا توجد معاملات',
+                receipt_transfer_code: 'رمز التحويل'
             },
             es: {
-                // Spanish translations
                 app_name: 'AfriPay',
                 login: 'Iniciar sesión',
                 register: 'Registrarse',
@@ -6008,7 +6024,8 @@
                 receipt_charge: 'Comisión',
                 receipt_gst: 'IVA ({rate}%)',
                 receipt_total: 'Total',
-                no_transaction: 'Sin transacciones'
+                no_transaction: 'Sin transacciones',
+                receipt_transfer_code: 'Código de transferencia'
             }
         };
 
@@ -6195,6 +6212,11 @@
                         }
                     }
                 });
+                // Update receipt transfer code label
+                const receiptLabel = document.querySelector('#receiptBody .receipt-row .label');
+                if (receiptLabel && receiptLabel.innerText.includes('Transfer Code')) {
+                    // This is handled dynamically in showReceiptModal
+                }
             } catch (e) {
                 console.warn('translatePage error:', e);
             }
@@ -7538,7 +7560,7 @@
         }
 
         // ================================================================
-        // RECEIPT MODAL
+        // RECEIPT MODAL – FIXED WITH TRANSFER CODE AND SHARING BUTTONS
         // ================================================================
         function showReceiptModal(receiptData) {
             const body = document.getElementById('receiptBody');
@@ -7552,6 +7574,7 @@
                 { label: '👤 Agent', value: SecurityUtils.escapeHTML(receiptData.agent) },
                 { label: '👥 Client', value: SecurityUtils.escapeHTML(receiptData.client || 'N/A') },
                 { label: '🔐 Provider TX ID', value: SecurityUtils.escapeHTML(receiptData.providerTxId || 'N/A') },
+                { label: t('receipt_transfer_code'), value: SecurityUtils.escapeHTML(receiptData.transferCode || 'N/A') },
                 { label: t('receipt_base'), value: SecurityUtils.escapeHTML(receiptData.currency + ' ' + receiptData
                         .baseAmount) },
                 { label: t('receipt_charge'), value: SecurityUtils.escapeHTML(receiptData.currency + ' ' + receiptData
@@ -7571,6 +7594,7 @@
             const clientName = document.getElementById('clientName').value.trim() || 'Client';
             const agentPhone = document.getElementById('agentPhone').value.trim();
             const agentName = document.getElementById('agentName').value.trim() || 'Agent';
+            const transferCode = receiptData.transferCode || 'N/A';
             const receiptText = [
                 '🔹 AFRI·PAY RECEIPT 🔹', '─────────────────',
                 `${t('receipt_tx_id')} ${receiptData.txId}`,
@@ -7580,6 +7604,7 @@
                 `👤 Agent: ${receiptData.agent}`,
                 `👥 Client: ${receiptData.client || 'N/A'}`,
                 `🔐 Provider TX ID: ${receiptData.providerTxId || 'N/A'}`,
+                `🔑 ${t('receipt_transfer_code')}: ${transferCode}`,
                 `${t('receipt_base')} ${receiptData.currency} ${receiptData.baseAmount}`,
                 `${t('receipt_charge')} ${receiptData.currency} ${receiptData.charge}`,
                 `${t('receipt_gst', { rate: receiptData.gstRate })} ${receiptData.currency} ${receiptData.gst}`,
@@ -7589,33 +7614,39 @@
             ].join('\n');
             const encodedText = encodeURIComponent(receiptText);
             const clientWA = document.getElementById('receiptShareClientWhatsApp');
+            const agentWA = document.getElementById('receiptShareAgentWhatsApp');
+            const clientSMS = document.getElementById('receiptShareClientSMS');
+            const agentSMS = document.getElementById('receiptShareAgentSMS');
+
+            // Ensure buttons are visible
             if (clientPhone) {
                 const clientClean = clientPhone.replace(/\D/g, '');
                 clientWA.onclick = () => { window.open(`https://wa.me/${clientClean}?text=${encodedText}`, '_blank');
                     showToast(`📤 Receipt sent to ${clientName} via WhatsApp`, 2500); };
                 clientWA.style.display = 'flex';
-            } else clientWA.style.display = 'none';
-            const agentWA = document.getElementById('receiptShareAgentWhatsApp');
+            } else { clientWA.style.display = 'none'; }
+
             if (agentPhone) {
                 const agentClean = agentPhone.replace(/\D/g, '');
                 agentWA.onclick = () => { window.open(`https://wa.me/${agentClean}?text=${encodedText}`, '_blank');
                     showToast(`📤 Receipt sent to ${agentName} via WhatsApp`, 2500); };
                 agentWA.style.display = 'flex';
-            } else agentWA.style.display = 'none';
-            const clientSMS = document.getElementById('receiptShareClientSMS');
+            } else { agentWA.style.display = 'none'; }
+
             if (clientPhone) {
                 const clientClean = clientPhone.replace(/\D/g, '');
                 clientSMS.onclick = () => { window.location.href = `sms:${clientClean}?body=${encodedText}`;
                     showToast(`📤 Receipt sent to ${clientName} via SMS`, 2500); };
                 clientSMS.style.display = 'flex';
-            } else clientSMS.style.display = 'none';
-            const agentSMS = document.getElementById('receiptShareAgentSMS');
+            } else { clientSMS.style.display = 'none'; }
+
             if (agentPhone) {
                 const agentClean = agentPhone.replace(/\D/g, '');
                 agentSMS.onclick = () => { window.location.href = `sms:${agentClean}?body=${encodedText}`;
                     showToast(`📤 Receipt sent to ${agentName} via SMS`, 2500); };
                 agentSMS.style.display = 'flex';
-            } else agentSMS.style.display = 'none';
+            } else { agentSMS.style.display = 'none'; }
+
             document.getElementById('receiptModal').style.display = 'flex';
             addTransaction(receiptData);
             const dash = document.getElementById('dashboardModal');
@@ -9244,6 +9275,7 @@
                             const txId = document.getElementById('transactionId').value.trim();
                             const dateStr = document.getElementById('currentDate').innerText + " " + document
                                 .getElementById('currentTime').innerText;
+                            const transferCode = document.getElementById('mainTransferCode').value.trim();
                             markProviderTxIdAsUsed(providerTxId);
                             const receiptData = {
                                 txId,
@@ -9258,7 +9290,8 @@
                                 gst: gst.toFixed(2),
                                 total: total.toFixed(2),
                                 currency: currency,
-                                providerTxId: providerTxId
+                                providerTxId: providerTxId,
+                                transferCode: transferCode || 'N/A'
                             };
                             showReceiptModal(receiptData);
                             const payload = {
@@ -9279,6 +9312,7 @@
                                 transfer_mode: isLocalMode ? "Local" : "International",
                                 transaction_id: txId,
                                 provider_tx_id: providerTxId,
+                                transfer_code: transferCode || 'N/A',
                                 timestamp: dateStr,
                                 user: currentUser?.name || "Guest",
                                 collateral_limit: maxLimit > 0 ? maxLimit : 'N/A'
