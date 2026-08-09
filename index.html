@@ -2536,9 +2536,9 @@
         }
         .receipt-share-row {
             display: flex;
-            flex-direction: column;
             gap: 6px;
-            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
             margin-top: 10px;
         }
         .receipt-share-btn {
@@ -2546,23 +2546,30 @@
             padding: 4px 10px;
             border-radius: 30px;
             font-weight: 600;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             cursor: pointer;
             transition: 0.2s;
             display: inline-flex;
             align-items: center;
-            gap: 4px;
-            height: 30px;
+            gap: 3px;
+            height: 28px;
             color: white;
-            min-width: 60px;
+            min-width: 50px;
             justify-content: center;
             flex: 0 1 auto;
         }
-        .receipt-share-btn.whatsapp {
-            background: #25D366;
+        .receipt-share-btn.client {
+            background: #2c7da0;
         }
-        .receipt-share-btn.whatsapp:hover {
-            background: #1da851;
+        .receipt-share-btn.client:hover {
+            background: #1f5068;
+            transform: translateY(-1px);
+        }
+        .receipt-share-btn.agent {
+            background: #8e44ad;
+        }
+        .receipt-share-btn.agent:hover {
+            background: #732d91;
             transform: translateY(-1px);
         }
         .receipt-share-btn.sms {
@@ -2579,57 +2586,32 @@
             background: #7f8c8d;
             transform: translateY(-1px);
         }
-        .receipt-share-btn.client {
-            background: #2c7da0;
-        }
-        .receipt-share-btn.client:hover {
-            background: #1f5068;
-            transform: translateY(-1px);
-        }
-        .receipt-share-btn.agent {
-            background: #8e44ad;
-        }
-        .receipt-share-btn.agent:hover {
-            background: #732d91;
-            transform: translateY(-1px);
-        }
         .receipt-share-label {
             font-size: 0.6rem;
             color: #7f8c8d;
             text-align: center;
             width: 100%;
-            margin-top: 2px;
+            margin-top: 4px;
             font-weight: 600;
-        }
-        .receipt-phone-display {
-            font-size: 0.7rem;
-            color: #1c6e8f;
-            background: #e8f0f8;
-            padding: 1px 10px;
-            border-radius: 20px;
-            display: inline-block;
-            border: 1px solid #c0d8e8;
-            margin-left: 4px;
         }
         .receipt-share-group {
             display: flex;
-            flex-wrap: wrap;
-            gap: 4px;
-            justify-content: center;
+            flex-direction: column;
+            gap: 3px;
+            align-items: center;
             width: 100%;
         }
-        .receipt-share-group .share-row {
+        .share-row {
             display: flex;
             gap: 4px;
             flex-wrap: wrap;
             justify-content: center;
             width: 100%;
         }
-        .receipt-share-group .share-row .receipt-share-btn {
+        .share-row .receipt-share-btn {
             flex: 0 1 auto;
-            min-width: 55px;
+            min-width: 44px;
         }
-
         @media (max-width: 480px) {
             #receiptModal .modal-content {
                 max-width: 100%;
@@ -2657,10 +2639,10 @@
                 font-size: 0.95rem;
             }
             .receipt-share-btn {
-                font-size: 0.6rem;
-                padding: 3px 8px;
-                height: 26px;
-                min-width: 48px;
+                font-size: 0.55rem;
+                padding: 2px 7px;
+                height: 24px;
+                min-width: 36px;
             }
             .receipt-close-x {
                 top: 4px;
@@ -2669,8 +2651,11 @@
                 width: 28px;
                 height: 28px;
             }
-            .receipt-share-group .share-row .receipt-share-btn {
-                min-width: 44px;
+            .share-row .receipt-share-btn {
+                min-width: 34px;
+            }
+            .receipt-share-label {
+                font-size: 0.5rem;
             }
         }
 
@@ -3520,7 +3505,7 @@
             margin-right: 2px;
         }
 
-        /* Receipt share buttons */
+        /* Receipt share buttons - compact side by side */
         .receipt-share-row {
             display: flex;
             flex-direction: column;
@@ -3530,9 +3515,9 @@
         }
         .receipt-share-group {
             display: flex;
-            flex-wrap: wrap;
-            gap: 4px;
-            justify-content: center;
+            flex-direction: column;
+            gap: 3px;
+            align-items: center;
             width: 100%;
         }
         .share-row {
@@ -3544,18 +3529,18 @@
         }
         .receipt-share-btn {
             border: none;
-            padding: 3px 10px;
+            padding: 3px 8px;
             border-radius: 30px;
             font-weight: 600;
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             cursor: pointer;
             transition: 0.2s;
             display: inline-flex;
             align-items: center;
-            gap: 3px;
-            height: 28px;
+            gap: 2px;
+            height: 24px;
             color: white;
-            min-width: 50px;
+            min-width: 38px;
             justify-content: center;
             flex: 0 1 auto;
         }
@@ -3588,29 +3573,33 @@
             transform: translateY(-1px);
         }
         .receipt-share-label {
-            font-size: 0.6rem;
+            font-size: 0.55rem;
             color: #7f8c8d;
             text-align: center;
             width: 100%;
             margin-top: 2px;
             font-weight: 600;
         }
-        .receipt-share-group .share-row .receipt-share-btn {
+        .share-row .receipt-share-btn {
             flex: 0 1 auto;
-            min-width: 44px;
+            min-width: 34px;
         }
         @media (max-width: 480px) {
             .receipt-share-btn {
-                font-size: 0.55rem;
-                padding: 2px 7px;
-                height: 24px;
-                min-width: 38px;
+                font-size: 0.5rem;
+                padding: 2px 6px;
+                height: 20px;
+                min-width: 30px;
             }
-            .receipt-share-group .share-row .receipt-share-btn {
-                min-width: 36px;
+            .share-row .receipt-share-btn {
+                min-width: 28px;
             }
             .receipt-share-label {
-                font-size: 0.5rem;
+                font-size: 0.45rem;
+            }
+            .receipt-share-row {
+                gap: 3px;
+                margin-top: 6px;
             }
         }
     </style>
