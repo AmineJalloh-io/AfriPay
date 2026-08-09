@@ -3158,7 +3158,7 @@
         }
 
         /* ================================================================
-           CURRENCY CONVERTER MODAL – ENHANCED
+           CURRENCY CONVERTER MODAL – ENHANCED HEIGHT + LIVE RATES
            ================================================================ */
         #currencyConverterModal .modal-content {
             max-width: 520px;
@@ -3168,6 +3168,8 @@
             overflow: hidden;
             background: #fcfcfc;
             position: relative;
+            max-height: 95vh;       /* increased modal height */
+            height: auto;
         }
         .converter-header {
             background: linear-gradient(135deg, #0a2b3c 0%, #1c4e6c 100%);
@@ -3212,6 +3214,8 @@
         }
         .converter-body {
             padding: 16px 20px 12px 20px;
+            overflow-y: auto;       /* ensures all content is scrollable */
+            max-height: 70vh;       /* more room for content */
         }
         .converter-body .input-group {
             margin-bottom: 0.6rem;
@@ -3601,6 +3605,14 @@
                 gap: 3px;
                 margin-top: 6px;
             }
+        }
+
+        /* live exchange rate freshness */
+        .rate-fresh {
+            font-size: 0.6rem;
+            color: #27ae60;
+            margin-left: 6px;
+            font-weight: 400;
         }
     </style>
 </head>
@@ -4562,18 +4574,19 @@
     </div>
 
     <!-- ============================================================
-    CURRENCY CONVERTER MODAL – FIXED
+    CURRENCY CONVERTER MODAL – ENHANCED HEIGHT + LIVE RATES
     ============================================================ -->
     <div id="currencyConverterModal" class="modal">
         <div class="modal-content">
             <div class="converter-header">
                 <h3 data-i18n="currency_converter">💱 Currency Converter</h3>
-                <small data-i18n="converter_subtitle">Convert & calculate fees</small>
+                <small data-i18n="converter_subtitle">Real-time exchange rates · Convert & calculate fees</small>
                 <button class="converter-close-x" id="converterCloseXBtn">✕</button>
             </div>
             <div class="converter-body" id="converterBody">
                 <div style="margin-bottom:10px; text-align:center;">
                     <span class="user-info-badge" id="userInfoBadge">👤 <span data-i18n="user_info_badge">Your country:</span> <strong id="userCountryDisplay">—</strong> · <span data-i18n="currency_label">Currency:</span> <strong id="userCurrencyDisplay">—</strong></span>
+                    <span class="rate-fresh" id="rateFreshness">✅ live</span>
                 </div>
                 <div class="input-group">
                     <label data-i18n="from_currency_label">From Currency (Your currency)</label>
@@ -4617,7 +4630,7 @@
                     </div>
                 </div>
                 <div class="converter-results" id="converterResults">
-                    <div class="conv-row"><span class="label" data-i18n="base_amount">💰 Amount (From Currency)</span><span class="value" id="convBaseAmount">100.00</span></div>
+                    <div class="conv-row"><span class="label" data-i18n="base_amount">💰 Base Amount:</span><span class="value" id="convBaseAmount">100.00</span></div>
                     <div class="conv-row"><span class="label" data-i18n="transfer_charge">📊 Transfer Charge (4%)</span><span class="value" id="convCharge">4.00</span></div>
                     <div class="conv-row"><span class="label" data-i18n="gst">🏛️ GST (<span id="convGstRateLabel">18</span>%)</span><span class="value" id="convGstAmount">0.72</span></div>
                     <div class="conv-row"><span class="label" data-i18n="total_deductions">📋 Total Deductions</span><span class="value" id="convTotalDeductions">4.72</span></div>
@@ -4822,9 +4835,9 @@
         };
 
         // ================================================================
-        // EXCHANGE RATES (relative to USD) – FIXED with EUR
+        // EXCHANGE RATES – LIVE UPDATED
         // ================================================================
-        const EXCHANGE_RATES = {
+        let EXCHANGE_RATES = {
             'USD': 1,
             'EUR': 0.92,
             'GBP': 0.79,
@@ -4845,6 +4858,35 @@
             'NGN': 1500,
             'ZAR': 18
         };
+        const BASE_CURRENCY = 'USD';
+
+        // ================================================================
+        // FETCH LIVE EXCHANGE RATES
+        // ================================================================
+        async function fetchLiveRates() {
+            try {
+                const res = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+                if (!res.ok) throw new Error('API error');
+                const data = await res.json();
+                if (data && data.rates) {
+                    const newRates = { USD: 1 };
+                    const supported = Object.keys(EXCHANGE_RATES);
+                    for (const code of supported) {
+                        if (data.rates[code]) {
+                            newRates[code] = data.rates[code];
+                        } else {
+                            newRates[code] = EXCHANGE_RATES[code];
+                        }
+                    }
+                    EXCHANGE_RATES = newRates;
+                    document.getElementById('rateFreshness').textContent = '✅ live ' + new Date().toLocaleTimeString();
+                    updateConverter();
+                }
+            } catch (e) {
+                console.warn('Rate fetch failed, using fallback rates', e);
+                document.getElementById('rateFreshness').textContent = '⚠️ fallback rates';
+            }
+        }
 
         // ================================================================
         // SUPPORTED COUNTRY FLAGS & BUSINESSES
@@ -5194,14 +5236,14 @@
                 pin_4_digit: '4-Digit PIN *',
                 confirm_dial: '✅ Confirm & Dial',
                 currency_converter: '💱 Currency Converter',
-                converter_subtitle: 'Convert & calculate fees',
+                converter_subtitle: 'Real-time exchange rates · Convert & calculate fees',
                 user_info_badge: 'Your country:',
                 from_currency_label: 'From Currency (Your currency)',
                 amount_to_send: '💰 Amount to Send *',
                 recipient_country: '🌍 Recipient Country',
                 base_amount: '💰 Base Amount:',
-                transfer_charge: '📊 Transfer Charge (1%):',
-                gst: '🏛️ GST (<span id="gstRateLabel">15</span>%):',
+                transfer_charge: '📊 Transfer Charge (4%)',
+                gst: '🏛️ GST (<span id="convGstRateLabel">15</span>%)',
                 total_debit: '💵 Total Debit:',
                 currency_label: '🌍 Currency:',
                 mm_operator: '💸 Mobile Money Operator',
@@ -5460,14 +5502,14 @@
                 pin_4_digit: 'PIN à 4 chiffres *',
                 confirm_dial: '✅ Confirmer et composer',
                 currency_converter: '💱 Convertisseur de devises',
-                converter_subtitle: 'Convertir et calculer les frais',
+                converter_subtitle: 'Taux de change en temps réel · Convertir et calculer les frais',
                 user_info_badge: 'Votre pays :',
                 from_currency_label: 'Devise source (Votre devise)',
                 amount_to_send: '💰 Montant à envoyer *',
                 recipient_country: '🌍 Pays du destinataire',
                 base_amount: '💰 Montant de base :',
-                transfer_charge: '📊 Frais de transfert (1%) :',
-                gst: '🏛️ TVA (<span id="gstRateLabel">15</span>%) :',
+                transfer_charge: '📊 Frais de transfert (4%)',
+                gst: '🏛️ TVA (<span id="convGstRateLabel">15</span>%)',
                 total_debit: '💵 Débit total :',
                 currency_label: '🌍 Devise :',
                 mm_operator: '💸 Opérateur Mobile Money',
@@ -5757,14 +5799,14 @@
                 pin_4_digit: 'PIN من 4 أرقام *',
                 confirm_dial: '✅ تأكيد والاتصال',
                 currency_converter: '💱 محول العملات',
-                converter_subtitle: 'تحويل وحساب الرسوم',
+                converter_subtitle: 'أسعار الصرف الفورية · تحويل وحساب الرسوم',
                 user_info_badge: 'بلدك:',
                 from_currency_label: 'العملة المصدر (عملتك)',
                 amount_to_send: '💰 المبلغ المرسل *',
                 recipient_country: '🌍 بلد المستلم',
                 base_amount: '💰 المبلغ الأساسي:',
-                transfer_charge: '📊 رسوم التحويل (1%):',
-                gst: '🏛️ ضريبة القيمة المضافة (<span id="gstRateLabel">15</span>%):',
+                transfer_charge: '📊 رسوم التحويل (4%)',
+                gst: '🏛️ ضريبة القيمة المضافة (<span id="convGstRateLabel">15</span>%)',
                 total_debit: '💵 إجمالي الخصم:',
                 currency_label: '🌍 العملة:',
                 mm_operator: '💸 مشغل Mobile Money',
@@ -6036,14 +6078,14 @@
                 pin_4_digit: 'PIN de 4 dígitos *',
                 confirm_dial: '✅ Confirmar y marcar',
                 currency_converter: '💱 Conversor de divisas',
-                converter_subtitle: 'Convertir y calcular comisiones',
+                converter_subtitle: 'Tipos de cambio en tiempo real · Convertir y calcular comisiones',
                 user_info_badge: 'Su país:',
                 from_currency_label: 'Moneda origen (Su moneda)',
                 amount_to_send: '💰 Monto a enviar *',
                 recipient_country: '🌍 País del destinatario',
                 base_amount: '💰 Monto base:',
-                transfer_charge: '📊 Comisión de transferencia (1%):',
-                gst: '🏛️ IVA (<span id="gstRateLabel">15</span>%):',
+                transfer_charge: '📊 Comisión de transferencia (4%)',
+                gst: '🏛️ IVA (<span id="convGstRateLabel">15</span>%)',
                 total_debit: '💵 Débito total:',
                 currency_label: '🌍 Moneda:',
                 mm_operator: '💸 Operador de Mobile Money',
@@ -8647,7 +8689,7 @@
         }
 
         // ================================================================
-        // ENHANCED CURRENCY CONVERTER FUNCTIONS – FULLY FIXED
+        // ENHANCED CURRENCY CONVERTER FUNCTIONS – LIVE RATES + MORE HEIGHT
         // ================================================================
         let userCountryName = '—';
         let userCurrencyCode = 'USD';
@@ -8753,6 +8795,7 @@
             }
         }
 
+        // This function is called whenever the converter inputs change
         function updateConverter() {
             try {
                 const amount = parseFloat(document.getElementById('convAmount').value) || 0;
@@ -8767,11 +8810,13 @@
                 document.getElementById('convFlagEmoji').textContent = flag;
                 document.getElementById('convGstRateLabel').textContent = gstRate;
 
+                // Use the live EXCHANGE_RATES
                 const rateFrom = EXCHANGE_RATES[fromCurrency] || 1;
                 const rateTo = EXCHANGE_RATES[toCurrency] || 1;
                 const exchangeRate = rateTo / rateFrom;
                 const convertedAmount = amount * exchangeRate;
 
+                // 4% transfer charge
                 const charge = amount * 0.04;
                 const gst = charge * (gstRate / 100);
                 const totalDeductions = charge + gst;
@@ -8804,7 +8849,10 @@
                 } else {
                     document.getElementById('convAmount').value = 100;
                 }
-                updateConverter();
+                // fetch fresh rates every time converter opens
+                fetchLiveRates().then(() => {
+                    updateConverter();
+                });
                 document.getElementById('currencyConverterModal').style.display = 'flex';
                 translatePage(); // Ensure translations are applied
             } catch (e) {
@@ -8831,7 +8879,7 @@
                 const converted = amount * exchangeRate;
 
                 const text =
-                    `💱 AFRI-PAY CONVERTER\n─────────────────\n📌 From: ${fromCurrency}\n📌 To: ${country} (${toCurrency})\n💰 Amount: ${amount.toFixed(2)} ${fromCurrency}\n🔄 Rate: 1 ${fromCurrency} = ${exchangeRate.toFixed(4)} ${toCurrency}\n🎯 Recipient Receives: ${converted.toFixed(2)} ${toCurrency}\n─────────────────\n📊 4% Charge: ${charge.toFixed(2)} ${fromCurrency}\n🏛️ GST (${gstRate}%): ${gst.toFixed(2)} ${fromCurrency}\n📋 Total Deductions: ${(charge + gst).toFixed(2)} ${fromCurrency}\n💵 Total Debit: ${total.toFixed(2)} ${fromCurrency}`;
+                    `💱 AFRI-PAY CONVERTER (live rates)\n─────────────────\n📌 From: ${fromCurrency}\n📌 To: ${country} (${toCurrency})\n💰 Amount: ${amount.toFixed(2)} ${fromCurrency}\n🔄 Rate: 1 ${fromCurrency} = ${exchangeRate.toFixed(4)} ${toCurrency}\n🎯 Recipient Receives: ${converted.toFixed(2)} ${toCurrency}\n─────────────────\n📊 4% Charge: ${charge.toFixed(2)} ${fromCurrency}\n🏛️ GST (${gstRate}%): ${gst.toFixed(2)} ${fromCurrency}\n📋 Total Deductions: ${(charge + gst).toFixed(2)} ${fromCurrency}\n💵 Total Debit: ${total.toFixed(2)} ${fromCurrency}`;
 
                 navigator.clipboard.writeText(text).then(() => {
                     showToast('✅ Conversion result copied to clipboard!', 2000);
@@ -8877,6 +8925,9 @@
                 setupAvatarUpload();
                 updateDateTime();
                 setInterval(updateDateTime, 1000);
+                // fetch live rates on load and every 5 min
+                fetchLiveRates();
+                setInterval(fetchLiveRates, 300000);
 
                 if (!selectedAgentId) {
                     const agents = getAgents();
@@ -8923,7 +8974,7 @@
                 });
 
                 // ================================================================
-                // CURRENCY CONVERTER EVENTS – FIXED
+                // CURRENCY CONVERTER EVENTS
                 // ================================================================
                 const convAmount = document.getElementById('convAmount');
                 const convCountrySelect = document.getElementById('convCountrySelect');
@@ -10318,7 +10369,7 @@
                     });
                 });
 
-                console.log('✅ AfriPay fully loaded with enhanced USSD for Orange, Afrimoney, WBMoney.');
+                console.log('✅ AfriPay fully loaded with enhanced USSD for Orange, Afrimoney, WBMoney and live currency rates.');
             } catch (error) {
                 console.error('❌ AfriPay initialization error:', error);
                 showToast('⚠️ App partially loaded. Please refresh if features are not working.', 5000);
