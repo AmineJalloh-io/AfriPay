@@ -2536,27 +2536,27 @@
         }
         .receipt-share-row {
             display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            justify-content: center;
+            flex-direction: column;
+            gap: 6px;
+            align-items: center;
             margin-top: 10px;
         }
         .receipt-share-btn {
             border: none;
-            padding: 6px 16px;
+            padding: 4px 10px;
             border-radius: 30px;
-            font-weight: 700;
-            font-size: 0.75rem;
+            font-weight: 600;
+            font-size: 0.7rem;
             cursor: pointer;
             transition: 0.2s;
             display: inline-flex;
             align-items: center;
-            gap: 5px;
-            height: 38px;
+            gap: 4px;
+            height: 30px;
             color: white;
-            flex: 1 1 auto;
-            min-width: 100px;
+            min-width: 60px;
             justify-content: center;
+            flex: 0 1 auto;
         }
         .receipt-share-btn.whatsapp {
             background: #25D366;
@@ -2594,11 +2594,11 @@
             transform: translateY(-1px);
         }
         .receipt-share-label {
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             color: #7f8c8d;
             text-align: center;
             width: 100%;
-            margin-top: 4px;
+            margin-top: 2px;
             font-weight: 600;
         }
         .receipt-phone-display {
@@ -2613,25 +2613,24 @@
         }
         .receipt-share-group {
             display: flex;
-            flex-direction: column;
+            flex-wrap: wrap;
             gap: 4px;
+            justify-content: center;
             width: 100%;
         }
         .receipt-share-group .share-row {
             display: flex;
-            gap: 6px;
+            gap: 4px;
             flex-wrap: wrap;
             justify-content: center;
+            width: 100%;
         }
         .receipt-share-group .share-row .receipt-share-btn {
-            flex: 1 1 45%;
-            min-width: 80px;
+            flex: 0 1 auto;
+            min-width: 55px;
         }
+
         @media (max-width: 480px) {
-            .receipt-share-group .share-row .receipt-share-btn {
-                flex: 1 1 100%;
-                min-width: 60px;
-            }
             #receiptModal .modal-content {
                 max-width: 100%;
                 width: 98%;
@@ -2658,10 +2657,10 @@
                 font-size: 0.95rem;
             }
             .receipt-share-btn {
-                font-size: 0.7rem;
-                padding: 5px 12px;
-                height: 34px;
-                min-width: 70px;
+                font-size: 0.6rem;
+                padding: 3px 8px;
+                height: 26px;
+                min-width: 48px;
             }
             .receipt-close-x {
                 top: 4px;
@@ -2669,6 +2668,9 @@
                 font-size: 1.2rem;
                 width: 28px;
                 height: 28px;
+            }
+            .receipt-share-group .share-row .receipt-share-btn {
+                min-width: 44px;
             }
         }
 
@@ -3517,20 +3519,99 @@
             flex-shrink: 0;
             margin-right: 2px;
         }
-        .receipt-share-row .share-row {
-            display: flex !important;
-            gap: 6px !important;
-            flex-wrap: wrap !important;
-            justify-content: center !important;
-            width: 100% !important;
+
+        /* Receipt share buttons */
+        .receipt-share-row {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            align-items: center;
+            margin-top: 8px;
         }
-        .receipt-share-row .share-row .receipt-share-btn {
-            flex: 1 1 45% !important;
-            min-width: 80px !important;
-            display: flex !important;
+        .receipt-share-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            justify-content: center;
+            width: 100%;
+        }
+        .share-row {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+        }
+        .receipt-share-btn {
+            border: none;
+            padding: 3px 10px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.65rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            height: 28px;
+            color: white;
+            min-width: 50px;
+            justify-content: center;
+            flex: 0 1 auto;
+        }
+        .receipt-share-btn.client {
+            background: #2c7da0;
+        }
+        .receipt-share-btn.client:hover {
+            background: #1f5068;
+            transform: translateY(-1px);
+        }
+        .receipt-share-btn.agent {
+            background: #8e44ad;
+        }
+        .receipt-share-btn.agent:hover {
+            background: #732d91;
+            transform: translateY(-1px);
+        }
+        .receipt-share-btn.sms {
+            background: #3498db;
+        }
+        .receipt-share-btn.sms:hover {
+            background: #2980b9;
+            transform: translateY(-1px);
+        }
+        .receipt-share-btn.close-receipt {
+            background: #95a5a6;
+        }
+        .receipt-share-btn.close-receipt:hover {
+            background: #7f8c8d;
+            transform: translateY(-1px);
+        }
+        .receipt-share-label {
+            font-size: 0.6rem;
+            color: #7f8c8d;
+            text-align: center;
+            width: 100%;
+            margin-top: 2px;
+            font-weight: 600;
         }
         .receipt-share-group .share-row .receipt-share-btn {
-            display: flex !important;
+            flex: 0 1 auto;
+            min-width: 44px;
+        }
+        @media (max-width: 480px) {
+            .receipt-share-btn {
+                font-size: 0.55rem;
+                padding: 2px 7px;
+                height: 24px;
+                min-width: 38px;
+            }
+            .receipt-share-group .share-row .receipt-share-btn {
+                min-width: 36px;
+            }
+            .receipt-share-label {
+                font-size: 0.5rem;
+            }
         }
     </style>
 </head>
@@ -4284,12 +4365,12 @@
                     <div class="receipt-share-group">
                         <div class="receipt-share-label" data-i18n="send_receipt_to">📤 Send receipt to:</div>
                         <div class="share-row">
-                            <button class="receipt-share-btn client" id="receiptShareClientWhatsApp" data-i18n="client_whatsapp">📱 Client WhatsApp</button>
-                            <button class="receipt-share-btn agent" id="receiptShareAgentWhatsApp" data-i18n="agent_whatsapp">📱 Agent WhatsApp</button>
+                            <button class="receipt-share-btn client" id="receiptShareClientWhatsApp" data-i18n="client_whatsapp">📱 Client</button>
+                            <button class="receipt-share-btn agent" id="receiptShareAgentWhatsApp" data-i18n="agent_whatsapp">📱 Agent</button>
                         </div>
                         <div class="share-row">
-                            <button class="receipt-share-btn sms" id="receiptShareClientSMS" data-i18n="client_sms">✉️ Client SMS</button>
-                            <button class="receipt-share-btn sms" id="receiptShareAgentSMS" data-i18n="agent_sms">✉️ Agent SMS</button>
+                            <button class="receipt-share-btn sms" id="receiptShareClientSMS" data-i18n="client_sms">✉️ Client</button>
+                            <button class="receipt-share-btn sms" id="receiptShareAgentSMS" data-i18n="agent_sms">✉️ Agent</button>
                         </div>
                         <div class="share-row" style="margin-top:4px;">
                             <button class="receipt-share-btn close-receipt" id="receiptCloseBtn" data-i18n="close">✕ Close</button>
@@ -7618,33 +7699,39 @@
             const clientSMS = document.getElementById('receiptShareClientSMS');
             const agentSMS = document.getElementById('receiptShareAgentSMS');
 
-            // Ensure buttons are visible
+            // Update button text to "Client" and "Agent" only
+            clientWA.textContent = '📱 Client';
+            agentWA.textContent = '📱 Agent';
+            clientSMS.textContent = '✉️ Client';
+            agentSMS.textContent = '✉️ Agent';
+
+            // Ensure buttons are visible and properly sized
             if (clientPhone) {
                 const clientClean = clientPhone.replace(/\D/g, '');
                 clientWA.onclick = () => { window.open(`https://wa.me/${clientClean}?text=${encodedText}`, '_blank');
                     showToast(`📤 Receipt sent to ${clientName} via WhatsApp`, 2500); };
-                clientWA.style.display = 'flex';
+                clientWA.style.display = 'inline-flex';
             } else { clientWA.style.display = 'none'; }
 
             if (agentPhone) {
                 const agentClean = agentPhone.replace(/\D/g, '');
                 agentWA.onclick = () => { window.open(`https://wa.me/${agentClean}?text=${encodedText}`, '_blank');
                     showToast(`📤 Receipt sent to ${agentName} via WhatsApp`, 2500); };
-                agentWA.style.display = 'flex';
+                agentWA.style.display = 'inline-flex';
             } else { agentWA.style.display = 'none'; }
 
             if (clientPhone) {
                 const clientClean = clientPhone.replace(/\D/g, '');
                 clientSMS.onclick = () => { window.location.href = `sms:${clientClean}?body=${encodedText}`;
                     showToast(`📤 Receipt sent to ${clientName} via SMS`, 2500); };
-                clientSMS.style.display = 'flex';
+                clientSMS.style.display = 'inline-flex';
             } else { clientSMS.style.display = 'none'; }
 
             if (agentPhone) {
                 const agentClean = agentPhone.replace(/\D/g, '');
                 agentSMS.onclick = () => { window.location.href = `sms:${agentClean}?body=${encodedText}`;
                     showToast(`📤 Receipt sent to ${agentName} via SMS`, 2500); };
-                agentSMS.style.display = 'flex';
+                agentSMS.style.display = 'inline-flex';
             } else { agentSMS.style.display = 'none'; }
 
             document.getElementById('receiptModal').style.display = 'flex';
