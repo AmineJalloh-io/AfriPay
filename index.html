@@ -3168,7 +3168,7 @@
             overflow: hidden;
             background: #fcfcfc;
             position: relative;
-            max-height: 95vh;       /* increased modal height */
+            max-height: 95vh;
             height: auto;
         }
         .converter-header {
@@ -3214,8 +3214,8 @@
         }
         .converter-body {
             padding: 16px 20px 12px 20px;
-            overflow-y: auto;       /* ensures all content is scrollable */
-            max-height: 70vh;       /* more room for content */
+            overflow-y: auto;
+            max-height: 70vh;
         }
         .converter-body .input-group {
             margin-bottom: 0.6rem;
@@ -3798,7 +3798,7 @@
                 </div>
                 <div class="charges-panel" id="chargesPanel">
                     <div class="charges-row"><span data-i18n="base_amount">💰 Base Amount:</span><span id="displayAmount">0.00</span></div>
-                    <div class="charges-row"><span data-i18n="transfer_charge">📊 Transfer Charge (1%):</span><span id="chargeAmount">0.00</span></div>
+                    <div class="charges-row"><span data-i18n="transfer_charge">📊 Transfer Charge (4%):</span><span id="chargeAmount">0.00</span></div>
                     <div class="charges-row" id="gstRow"><span data-i18n="gst">🏛️ GST (<span id="gstRateLabel">15</span>%):</span><span id="gstAmount">0.00</span></div>
                     <div class="charges-row total-row"><span data-i18n="total_debit">💵 Total Debit:</span><span id="totalAmount">0.00</span></div>
                     <div class="charges-row"><span data-i18n="currency_label">🌍 Currency:</span><span id="currencySymbol">GMD</span></div>
@@ -6396,7 +6396,7 @@
         let pendingPinData = null;
 
         // ================================================================
-        // CHARGES
+        // CHARGES – UPDATED TO 4% (GST NOT INCLUDED)
         // ================================================================
         const amountInput = document.getElementById('amountInput');
         const countrySelect = document.getElementById('countryCodeSelect');
@@ -6415,7 +6415,7 @@
 
         function computeCharges() {
             const raw = parseFloat(amountInput.value) || 0;
-            const charge = raw * 0.01;
+            const charge = raw * 0.04; // 4% transfer charge, GST not included
             const gst = isLocalMode ? 0 : charge * (currentCountryData.gstRate / 100);
             const total = raw + charge + gst;
             displayAmountSpan.innerText = raw.toFixed(2);
@@ -7602,7 +7602,8 @@
                 cleanPhone = localNumber;
             }
 
-            const charge = amount * 0.01;
+            // Use 4% charge for USSD calculations as well
+            const charge = amount * 0.04;
             const gst = isLocalMode ? 0 : charge * (currentCountryData.gstRate / 100);
             const total = amount + charge + gst;
             const totalFixed = Math.round(total);
@@ -8599,7 +8600,7 @@
             const senderName = document.getElementById('senderName').value.trim() || 'N/A';
             const senderPhone = document.getElementById('senderPhone').value.trim() || 'N/A';
             const amount = parseFloat(amountInput.value) || 0;
-            const charge = amount * 0.01;
+            const charge = amount * 0.04; // 4% charge for report
             const gstRate = isLocalMode ? 0 : currentCountryData.gstRate;
             const gst = charge * (gstRate / 100);
             const total = amount + charge + gst;
@@ -8626,7 +8627,7 @@
                 <div class="info-row"><span class="label">👤 Sender Name</span><span class="value">${SecurityUtils.escapeHTML(senderName)}</span></div>
                 <div class="info-row"><span class="label">📞 Sender Phone</span><span class="value">${SecurityUtils.escapeHTML(senderPhone)}</span></div>
                 <div class="info-row"><span class="label">💰 Base Amount</span><span class="value">${currency} ${amount.toFixed(2)}</span></div>
-                <div class="info-row"><span class="label">📊 Transfer Charge (1%)</span><span class="value">${currency} ${charge.toFixed(2)}</span></div>
+                <div class="info-row"><span class="label">📊 Transfer Charge (4%)</span><span class="value">${currency} ${charge.toFixed(2)}</span></div>
                 <div class="info-row"><span class="label">🏛️ GST (${gstRate}%)</span><span class="value">${currency} ${gst.toFixed(2)}</span></div>
                 <div class="info-row total"><span class="label">💵 Total Sent</span><span class="value">${currency} ${total.toFixed(2)}</span></div>
                 <div class="info-row" style="background: #f0f8f0; border-bottom: 2px solid #27ae60; font-weight: 700;"><span class="label">💰 Agent Commission (12%)</span><span class="value" style="color: #27ae60;">${currency} ${agentCommission.toFixed(2)}</span></div>
@@ -8816,7 +8817,7 @@
                 const exchangeRate = rateTo / rateFrom;
                 const convertedAmount = amount * exchangeRate;
 
-                // 4% transfer charge
+                // 4% transfer charge (GST not included)
                 const charge = amount * 0.04;
                 const gst = charge * (gstRate / 100);
                 const totalDeductions = charge + gst;
@@ -9394,7 +9395,7 @@
                                 return;
                             }
                             ensureTransactionId();
-                            const charge = amount * 0.01;
+                            const charge = amount * 0.04; // 4% charge
                             const gstRate = isLocalMode ? 0 : currentCountryData.gstRate;
                             const gst = charge * (gstRate / 100);
                             const total = amount + charge + gst;
@@ -10369,7 +10370,7 @@
                     });
                 });
 
-                console.log('✅ AfriPay fully loaded with enhanced USSD for Orange, Afrimoney, WBMoney and live currency rates.');
+                console.log('✅ AfriPay fully loaded with enhanced USSD for Orange, Afrimoney, WBMoney, live currency rates and 4% transfer charge.');
             } catch (error) {
                 console.error('❌ AfriPay initialization error:', error);
                 showToast('⚠️ App partially loaded. Please refresh if features are not working.', 5000);
