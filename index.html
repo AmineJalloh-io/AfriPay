@@ -821,7 +821,7 @@
         }
 
         /* ================================================================
-           FOOTER
+           FOOTER – REARRANGED WITH HOW TO BUTTON
            ================================================================ */
         .footer-section {
             background: #f8fafc;
@@ -3840,7 +3840,7 @@
         </div>
 
         <!-- ============================================================
-        FOOTER
+        FOOTER – REARRANGED WITH HOW TO BUTTON
         ============================================================ -->
         <div class="footer-section">
             <div class="footer-buttons">
@@ -3848,7 +3848,8 @@
                 <button class="footer-btn" id="aboutDevBtn" data-i18n="dev">Dev</button>
                 <button class="footer-btn" id="contactBtn" data-i18n="contact">Contact</button>
                 <button class="footer-btn" id="subscribeBtn" data-i18n="subscribe">Subscribe</button>
-                <button class="footer-btn" id="currencyConverterBtn" style="background:#2c7da0; color:white;" data-i18n="currency_converter">💱 Currency Converter</button>
+                <button class="footer-btn" id="howToBtn" style="background:#2c7da0; color:white;" data-i18n="how_to">📖 How to</button>
+                <button class="footer-btn" id="currencyConverterBtn" style="background:#0f2b3d; color:white;" data-i18n="currency_converter">💱 Currency Converter</button>
             </div>
             <div class="social-icons">
                 <a href="#" class="social-icon" id="whatsappBtn" data-i18n="whatsapp">WhatsApp</a>
@@ -5295,7 +5296,8 @@
                 receipt_gst: 'GST ({rate}%)',
                 receipt_total: 'Total',
                 no_transaction: 'No transactions yet.',
-                receipt_transfer_code: 'Transfer Code'
+                receipt_transfer_code: 'Transfer Code',
+                how_to: '📖 How to'
             },
             fr: {
                 login: 'Connexion',
@@ -5579,7 +5581,8 @@
                 receipt_gst: 'TVA ({rate}%)',
                 receipt_total: 'Total',
                 no_transaction: 'Aucune transaction',
-                receipt_transfer_code: 'Code de transfert'
+                receipt_transfer_code: 'Code de transfert',
+                how_to: '📖 Comment faire'
             },
             ar: {
                 app_name: 'أفري باي',
@@ -5858,7 +5861,8 @@
                 receipt_gst: 'ضريبة القيمة المضافة ({rate}%)',
                 receipt_total: 'الإجمالي',
                 no_transaction: 'لا توجد معاملات',
-                receipt_transfer_code: 'رمز التحويل'
+                receipt_transfer_code: 'رمز التحويل',
+                how_to: '📖 كيفية الاستخدام'
             },
             es: {
                 app_name: 'AfriPay',
@@ -6137,7 +6141,8 @@
                 receipt_gst: 'IVA ({rate}%)',
                 receipt_total: 'Total',
                 no_transaction: 'Sin transacciones',
-                receipt_transfer_code: 'Código de transferencia'
+                receipt_transfer_code: 'Código de transferencia',
+                how_to: '📖 Cómo usar'
             }
         };
 
@@ -8899,6 +8904,13 @@
         }
 
         // ================================================================
+        // HOW TO BUTTON HANDLER
+        // ================================================================
+        function openHowToGuide() {
+            window.open('https://aminejalloh-io.github.io/DirectPayApp/', '_blank');
+        }
+
+        // ================================================================
         // MAIN INITIALIZATION
         // ================================================================
         document.addEventListener('DOMContentLoaded', function() {
@@ -9022,6 +9034,14 @@
                 const currencyConverterBtn = document.getElementById('currencyConverterBtn');
                 if (currencyConverterBtn) {
                     currencyConverterBtn.addEventListener('click', openCurrencyConverter);
+                }
+
+                // ================================================================
+                // HOW TO BUTTON EVENT
+                // ================================================================
+                const howToBtn = document.getElementById('howToBtn');
+                if (howToBtn) {
+                    howToBtn.addEventListener('click', openHowToGuide);
                 }
 
                 // ================================================================
@@ -10370,7 +10390,7 @@
                     });
                 });
 
-                console.log('✅ AfriPay fully loaded with enhanced USSD for Orange, Afrimoney, WBMoney, live currency rates and 4% transfer charge.');
+                console.log('✅ AfriPay fully loaded with enhanced USSD, live currency rates, 4% transfer charge, and How to button.');
             } catch (error) {
                 console.error('❌ AfriPay initialization error:', error);
                 showToast('⚠️ App partially loaded. Please refresh if features are not working.', 5000);
