@@ -32,33 +32,34 @@
         }
 
         /* ================================================================
-           HEADER WITH NEW LOGO
+           HEADER - Aligned with logo & brand text
            ================================================================ */
         .live-header {
             background: linear-gradient(135deg, #0a2b3c 0%, #1c4e6c 100%);
-            padding: 0.5rem 0.6rem;
+            padding: 0.4rem 0.6rem;
             color: white;
             display: flex;
             flex-wrap: wrap;
             align-items: center;
             justify-content: space-between;
             gap: 4px;
-            min-height: 60px;
+            min-height: 56px;
             position: relative;
             z-index: 10;
         }
         .logo-container {
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 6px;
             flex-wrap: wrap;
+            flex-shrink: 0;
         }
         .africa-map-logo {
             display: flex;
             align-items: center;
-            gap: 3px;
+            gap: 4px;
             background: rgba(255, 255, 255, 0.07);
-            padding: 2px 8px 2px 4px;
+            padding: 2px 10px 2px 5px;
             border-radius: 30px;
             transition: all 0.3s ease;
         }
@@ -66,9 +67,6 @@
             background: rgba(255, 255, 255, 0.15);
             transform: scale(1.02);
         }
-        /* ================================================================
-           NEW AFRI-PAY LOGO - A + P Combined
-           ================================================================ */
         .afripay-logo-svg {
             width: 40px;
             height: 40px;
@@ -80,7 +78,7 @@
             transform: rotate(-5deg) scale(1.05);
         }
         .brand-text {
-            font-size: 1.38rem;
+            font-size: 1.6rem;
             font-weight: 800;
             background: linear-gradient(135deg, #FFF, #FFD966, #6bc6ff);
             -webkit-background-clip: text;
@@ -88,6 +86,7 @@
             color: transparent;
             letter-spacing: -0.5px;
             cursor: default;
+            line-height: 1.2;
         }
         #dashboardTrigger {
             cursor: pointer;
@@ -102,22 +101,23 @@
         .header-right {
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 5px;
             flex-wrap: wrap;
             justify-content: flex-end;
+            flex: 1;
         }
         .datetime-box {
             background: rgba(0, 0, 0, 0.25);
-            padding: 0.05rem 0.4rem;
+            padding: 0.1rem 0.5rem;
             border-radius: 30px;
             text-align: center;
-            font-size: 0.63rem;
-            line-height: 1.1;
-            min-width: 60px;
+            font-size: 0.7rem;
+            line-height: 1.2;
+            min-width: 65px;
         }
         .time-text {
             font-weight: 700;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
         }
         .lang-selector {
             display: flex;
@@ -125,8 +125,8 @@
             gap: 3px;
             background: rgba(255, 255, 255, 0.10);
             border-radius: 30px;
-            padding: 1px 4px 1px 6px;
-            height: 32px;
+            padding: 2px 5px 2px 8px;
+            height: 34px;
             border: 1px solid rgba(255, 255, 255, 0.15);
         }
         .lang-selector select {
@@ -134,33 +134,33 @@
             border: none;
             color: white;
             font-weight: 600;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             outline: none;
             cursor: pointer;
-            padding: 1px 2px;
-            width: 56px;
+            padding: 2px 2px;
+            width: 58px;
         }
         .lang-selector select option {
             background: #1c4e6c;
             color: white;
         }
         .lang-icon {
-            font-size: 0.92rem;
+            font-size: 0.95rem;
             line-height: 1;
         }
         .agent-dropdown-container {
             position: relative;
-            min-width: 100px;
-            max-width: 150px;
+            min-width: 110px;
+            max-width: 160px;
         }
         .agent-dropdown-btn {
             background: rgba(255, 255, 255, 0.10);
             border: 1px solid rgba(255, 255, 255, 0.15);
             color: white;
-            padding: 2px 8px 2px 10px;
+            padding: 3px 10px 3px 12px;
             border-radius: 30px;
             cursor: pointer;
-            height: 32px;
+            height: 34px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -171,20 +171,20 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            font-size: 0.8rem !important;
+            font-size: 0.85rem !important;
         }
         .agent-dropdown-btn:hover {
             background: rgba(255, 255, 255, 0.20);
         }
         .agent-dropdown-btn .arrow {
-            font-size: 0.58rem;
+            font-size: 0.6rem;
             margin-left: 2px;
             flex-shrink: 0;
         }
         .agent-dropdown-list {
             display: none;
             position: absolute;
-            top: 36px;
+            top: 38px;
             left: 0;
             right: 0;
             background: #1c4e6c;
@@ -209,7 +209,7 @@
         .agent-dropdown-item {
             display: flex;
             align-items: center;
-            padding: 4px 10px;
+            padding: 5px 10px;
             cursor: pointer;
             transition: background 0.15s;
             gap: 6px;
@@ -227,8 +227,8 @@
             min-width: 0;
         }
         .agent-dropdown-item .agent-logo {
-            width: 26px;
-            height: 26px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid rgba(255, 215, 0, 0.3);
@@ -241,18 +241,18 @@
             border-color: #ffd966;
         }
         .agent-dropdown-item .agent-logo-fallback {
-            width: 26px;
-            height: 26px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.1);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1rem;
+            font-size: 1.1rem;
             flex-shrink: 0;
         }
         .agent-dropdown-item .agent-name {
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             font-weight: 500;
             white-space: nowrap;
             overflow: hidden;
@@ -260,14 +260,14 @@
             flex: 1;
         }
         .agent-dropdown-item .agent-flag {
-            font-size: 0.98rem;
+            font-size: 1rem;
             flex-shrink: 0;
             margin-right: 2px;
         }
         .agent-dropdown-empty {
             padding: 8px;
             text-align: center;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             color: rgba(255, 255, 255, 0.6);
         }
         .auth-section {
@@ -283,17 +283,17 @@
         .auth-btn {
             background: rgba(255, 255, 255, 0.15);
             border: none;
-            padding: 4px 10px;
+            padding: 5px 12px;
             border-radius: 30px;
             color: white;
             cursor: pointer;
             font-weight: 600;
             transition: 0.2s;
-            height: 32px;
+            height: 34px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.8rem !important;
+            font-size: 0.85rem !important;
         }
         .auth-btn:hover {
             background: rgba(255, 255, 255, 0.3);
@@ -303,23 +303,23 @@
             align-items: center;
             gap: 4px;
             background: rgba(255, 255, 255, 0.12);
-            padding: 2px 8px 2px 4px;
+            padding: 2px 10px 2px 5px;
             border-radius: 30px;
-            height: 32px;
+            height: 34px;
         }
         .user-avatar {
-            font-size: 1.15rem;
+            font-size: 1.2rem;
             line-height: 1;
-            width: 26px;
-            height: 26px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             object-fit: cover;
             display: inline-block;
             background: #2c7da0;
             color: white;
             text-align: center;
-            line-height: 26px;
-            font-size: 1.15rem;
+            line-height: 28px;
+            font-size: 1.2rem;
             flex-shrink: 0;
             cursor: pointer;
             transition: opacity 0.2s, transform 0.2s;
@@ -334,7 +334,7 @@
             bottom: -2px;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 0.4rem;
+            font-size: 0.45rem;
             background: rgba(0, 0, 0, 0.6);
             color: white;
             padding: 1px 3px;
@@ -356,19 +356,19 @@
         }
         .user-name-display {
             font-weight: 700;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
         }
         .logout-btn {
             background: rgba(255, 255, 255, 0.18);
             border: none;
-            padding: 2px 8px;
+            padding: 2px 10px;
             border-radius: 20px;
             color: white;
             cursor: pointer;
-            font-size: 0.69rem;
+            font-size: 0.72rem;
             font-weight: 600;
             transition: 0.2s;
-            height: 26px;
+            height: 28px;
             display: flex;
             align-items: center;
         }
@@ -378,14 +378,14 @@
         .edit-account-btn {
             background: rgba(255, 255, 255, 0.18);
             border: none;
-            padding: 2px 8px;
+            padding: 2px 10px;
             border-radius: 20px;
             color: white;
             cursor: pointer;
-            font-size: 0.69rem;
+            font-size: 0.72rem;
             font-weight: 600;
             transition: 0.2s;
-            height: 26px;
+            height: 28px;
             display: flex;
             align-items: center;
         }
@@ -396,17 +396,17 @@
             display: inline-flex;
             align-items: center;
             gap: 3px;
-            font-size: 0.63rem;
+            font-size: 0.68rem;
             color: #8fdf8f;
             background: rgba(0, 180, 0, 0.15);
-            padding: 1px 6px 1px 3px;
+            padding: 2px 8px 2px 4px;
             border-radius: 30px;
             border: 1px solid rgba(0, 200, 0, 0.2);
-            height: 26px;
+            height: 28px;
         }
         .connection-indicator .connection-dot {
-            width: 6px;
-            height: 6px;
+            width: 7px;
+            height: 7px;
             background: #2ecc71;
             border-radius: 50%;
             display: inline-block;
@@ -503,7 +503,7 @@
             min-width: max-content;
         }
         .flag-icon {
-            font-size: 1.04rem;
+            font-size: 1.1rem;
             cursor: pointer;
             transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
             border-radius: 3px;
@@ -527,7 +527,7 @@
             height: 24px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 1.15rem;
+            font-size: 1.2rem;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -540,37 +540,37 @@
         }
 
         /* ================================================================
-           MAIN FORM
+           MAIN FORM - Increased font sizes by 15%
            ================================================================ */
         .form-container {
-            padding: 0.6rem 0.7rem 0.4rem 0.7rem;
+            padding: 0.7rem 0.8rem 0.5rem 0.8rem;
         }
         .profile-section {
             background: #f0f6fb;
             border-radius: 12px;
-            padding: 0.4rem 0.6rem;
-            margin-bottom: 0.4rem;
+            padding: 0.5rem 0.7rem;
+            margin-bottom: 0.5rem;
             border: 1px solid #dce8f0;
             display: flex;
             flex-wrap: wrap;
             align-items: center;
-            gap: 0.3rem 0.5rem;
+            gap: 0.4rem 0.6rem;
         }
         .profile-section .profile-label {
             font-weight: 700;
             color: #1c6e8f;
             margin-right: 1px;
-            font-size: 0.75rem !important;
+            font-size: 0.85rem !important;
         }
         .profile-section .profile-field {
             color: #1e3b4a;
             background: white;
-            padding: 1px 8px;
+            padding: 2px 10px;
             border-radius: 30px;
             border: 1px solid #d0dce8;
             display: inline-block;
-            min-width: 40px;
-            font-size: 0.69rem !important;
+            min-width: 45px;
+            font-size: 0.8rem !important;
         }
         .profile-section .profile-field:read-only {
             cursor: default;
@@ -579,7 +579,7 @@
         .map-btn {
             background: #2c7da0;
             border: none;
-            padding: 3px 10px;
+            padding: 4px 12px;
             border-radius: 30px;
             color: white;
             font-weight: 700;
@@ -588,8 +588,8 @@
             display: inline-flex;
             align-items: center;
             gap: 3px;
-            height: 30px;
-            font-size: 0.75rem !important;
+            height: 32px;
+            font-size: 0.85rem !important;
         }
         .map-btn:hover {
             background: #1f5068;
@@ -598,33 +598,33 @@
         .section-title {
             font-weight: 800;
             color: #1c6e8f;
-            margin: 0.3rem 0 0.25rem 0;
+            margin: 0.4rem 0 0.3rem 0;
             border-left: 3px solid #f4a261;
-            padding-left: 6px;
+            padding-left: 8px;
             text-transform: uppercase;
-            font-size: 0.75rem !important;
+            font-size: 0.85rem !important;
         }
         .section-title:first-of-type { margin-top: 0; }
         .input-group {
-            margin-bottom: 0.3rem;
+            margin-bottom: 0.35rem;
             display: flex;
             flex-direction: column;
-            gap: 1px;
+            gap: 2px;
         }
         .input-group label {
             font-weight: 700;
             color: #1e3b4a;
-            font-size: 0.69rem !important;
+            font-size: 0.8rem !important;
         }
         .input-group input, .input-group select {
-            padding: 4px 8px;
-            border-radius: 16px;
+            padding: 5px 10px;
+            border-radius: 18px;
             border: 1.5px solid #e0e8f0;
-            font-size: 0.86rem;
+            font-size: 0.95rem;
             transition: 0.2s;
             outline: none;
             background: #fff;
-            height: 34px;
+            height: 38px;
         }
         .input-group input:focus, .input-group select:focus {
             border-color: #f4a261;
@@ -637,23 +637,23 @@
         .double-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 0.3rem;
+            gap: 0.4rem;
         }
         .add-client-btn {
             background: #2c7da0;
             border: none;
             color: white;
             border-radius: 30px;
-            padding: 4px 10px;
+            padding: 5px 12px;
             font-weight: 700;
             cursor: pointer;
             transition: 0.2s;
-            height: 34px;
+            height: 38px;
             display: inline-flex;
             align-items: center;
             gap: 3px;
             white-space: nowrap;
-            font-size: 0.8rem !important;
+            font-size: 0.85rem !important;
         }
         .add-client-btn:hover {
             background: #1f5068;
@@ -668,18 +668,18 @@
         .tx-btn {
             background: #f4a261;
             border: none;
-            padding: 4px 10px;
+            padding: 5px 12px;
             border-radius: 30px;
             font-weight: 700;
             cursor: pointer;
             transition: 0.2s;
             color: white;
             white-space: nowrap;
-            height: 34px;
+            height: 38px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.8rem !important;
+            font-size: 0.85rem !important;
         }
         .tx-btn.copy { background: #2c7da0; }
         .tx-btn:hover {
@@ -690,17 +690,17 @@
             display: flex;
             gap: 4px;
             flex-wrap: wrap;
-            margin-bottom: 0.3rem;
+            margin-bottom: 0.35rem;
             align-items: center;
         }
         .mode-row .btn {
             flex: 1;
-            padding: 4px 10px;
+            padding: 5px 12px;
             border-radius: 30px;
             font-weight: 700;
             cursor: pointer;
             transition: 0.2s;
-            height: 34px;
+            height: 38px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -709,7 +709,7 @@
             color: #1e3b4a;
             white-space: nowrap;
             min-width: 80px;
-            font-size: 0.8rem !important;
+            font-size: 0.85rem !important;
         }
         .mode-row .btn.active {
             background: #0f2b3d;
@@ -734,43 +734,43 @@
             background: white;
             border: 1.5px solid #e0e8f0;
             border-radius: 30px;
-            padding: 0 3px;
-            height: 34px;
+            padding: 0 4px;
+            height: 38px;
         }
-        .country-flag { font-size: 1.15rem; }
+        .country-flag { font-size: 1.2rem; }
         #countryCodeSelect {
             flex: 1;
             border: none;
             background: transparent;
             padding: 2px 2px;
             outline: none;
-            font-size: 0.8rem;
-            height: 30px;
+            font-size: 0.85rem;
+            height: 34px;
         }
         .charges-panel {
             background: #f8fafc;
             border-radius: 12px;
-            padding: 0.3rem 0.5rem;
-            margin: 0.3rem 0;
+            padding: 0.4rem 0.6rem;
+            margin: 0.35rem 0;
             border: 1px solid #e2edf7;
         }
         .charges-row {
             display: flex;
             justify-content: space-between;
-            padding: 1px 0;
-            font-size: 0.69rem !important;
+            padding: 2px 0;
+            font-size: 0.8rem !important;
         }
         .total-row {
             font-weight: 800;
             border-top: 2px dashed #cbdde9;
-            margin-top: 2px;
-            padding-top: 3px;
-            font-size: 0.75rem !important;
+            margin-top: 3px;
+            padding-top: 4px;
+            font-size: 0.85rem !important;
         }
         .mm-button-container {
             display: flex;
             gap: 4px;
-            margin: 3px 0;
+            margin: 4px 0;
         }
         .mm-button-container .single-mm-btn {
             flex: 1;
@@ -779,17 +779,17 @@
             background: #0f2b3d;
             color: white;
             border: none;
-            padding: 6px 12px;
+            padding: 7px 14px;
             border-radius: 30px;
             font-weight: 700;
             cursor: pointer;
             transition: 0.2s;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-            height: 38px;
+            height: 42px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.8rem !important;
+            font-size: 0.85rem !important;
         }
         .single-mm-btn:hover {
             background: #f4a261;
@@ -799,18 +799,18 @@
             background: #0f2b3d;
             color: white;
             width: 100%;
-            padding: 6px 12px;
+            padding: 7px 14px;
             border-radius: 30px;
             font-weight: 700;
-            margin-top: 0.3rem;
+            margin-top: 0.35rem;
             border: none;
             cursor: pointer;
             transition: 0.2s;
-            height: 38px;
+            height: 42px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.86rem !important;
+            font-size: 0.95rem !important;
         }
         .btn-submit:hover {
             background: #f4a261;
@@ -818,8 +818,8 @@
         }
         .business-strip {
             background: linear-gradient(90deg, #fef9f0 0%, #fff5e8 100%);
-            padding: 0.3rem 0.4rem;
-            margin-top: 0.3rem;
+            padding: 0.35rem 0.5rem;
+            margin-top: 0.35rem;
             border-radius: 12px;
             border: 1px solid #ffe0b5;
             overflow-x: auto;
@@ -834,11 +834,11 @@
             color: #c97e2a;
             margin-bottom: 2px;
             text-align: center;
-            font-size: 0.69rem !important;
+            font-size: 0.8rem !important;
         }
         .business-icons {
             display: inline-flex;
-            gap: 0.3rem;
+            gap: 0.35rem;
             align-items: center;
         }
         .business-item {
@@ -846,51 +846,51 @@
             flex-direction: column;
             align-items: center;
             background: white;
-            padding: 2px 6px;
+            padding: 3px 7px;
             border-radius: 30px;
             cursor: pointer;
             transition: all 0.2s ease;
             border: 1px solid #ffe0b5;
-            min-width: 44px;
+            min-width: 48px;
         }
         .business-item:hover {
             transform: translateY(-2px);
             border-color: #f4a261;
             background: #fffaf5;
         }
-        .business-icon-img { font-size: 1.15rem; margin-bottom: 0px; }
-        .business-name { font-weight: 700; color: #1c6e8f; font-size: 0.58rem !important; }
-        .business-category { color: #e67e22; font-size: 0.52rem !important; }
+        .business-icon-img { font-size: 1.2rem; margin-bottom: 0px; }
+        .business-name { font-weight: 700; color: #1c6e8f; font-size: 0.65rem !important; }
+        .business-category { color: #e67e22; font-size: 0.58rem !important; }
 
         /* ================================================================
-           FOOTER
+           FOOTER - Increased font sizes
            ================================================================ */
         .footer-section {
             background: #f8fafc;
             border-top: 1px solid rgba(0, 0, 0, 0.06);
-            padding: 0.3rem 0.4rem;
+            padding: 0.35rem 0.5rem;
         }
         .footer-buttons {
             display: flex;
             flex-wrap: wrap;
-            gap: 3px;
+            gap: 4px;
             margin-bottom: 3px;
             justify-content: center;
         }
         .footer-btn {
             background: #eef2f7;
             border: none;
-            padding: 3px 8px;
+            padding: 4px 10px;
             border-radius: 30px;
             font-weight: 700;
             cursor: pointer;
             color: #1c6e8f;
             transition: 0.2s;
-            height: 28px;
+            height: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.69rem !important;
+            font-size: 0.78rem !important;
             flex: 0 1 auto;
         }
         .footer-btn:hover {
@@ -905,17 +905,17 @@
         }
         .social-icon {
             cursor: pointer;
-            padding: 3px 8px;
+            padding: 4px 10px;
             background: #eef2f7;
             border-radius: 30px;
             color: #1c6e8f;
             text-decoration: none;
             transition: 0.2s;
-            height: 28px;
+            height: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.69rem !important;
+            font-size: 0.78rem !important;
             flex: 0 1 auto;
         }
         .social-icon:hover {
@@ -924,7 +924,7 @@
         }
 
         /* ================================================================
-           MODALS
+           MODALS - Increased font sizes
            ================================================================ */
         .modal {
             display: none;
@@ -942,7 +942,7 @@
         .modal-content {
             background: white;
             border-radius: 1.2rem;
-            padding: 0.8rem;
+            padding: 0.9rem;
             width: 88%;
             max-width: 380px;
             max-height: 80vh;
@@ -950,8 +950,8 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         }
         .modal-content h3 {
-            margin-bottom: 4px;
-            font-size: 0.98rem !important;
+            margin-bottom: 5px;
+            font-size: 1.05rem !important;
         }
         .action-buttons-row {
             display: flex;
@@ -964,7 +964,7 @@
             min-width: 50px;
         }
         .action-btn {
-            padding: 6px 12px;
+            padding: 7px 14px;
             border-radius: 30px;
             font-weight: 700;
             border: none;
@@ -972,11 +972,11 @@
             background: #0f2b3d;
             color: white;
             transition: 0.2s;
-            height: 36px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.8rem !important;
+            font-size: 0.85rem !important;
         }
         .action-btn:hover {
             background: #f4a261;
@@ -999,7 +999,7 @@
             transform: translateX(-50%);
             background: #1e2f3c;
             color: white;
-            padding: 4px 14px;
+            padding: 5px 16px;
             border-radius: 40px;
             z-index: 1100;
             pointer-events: none;
@@ -1008,24 +1008,24 @@
             transition: opacity 0.25s ease, visibility 0.25s ease;
             max-width: 85%;
             text-align: center;
-            font-size: 0.8rem !important;
+            font-size: 0.85rem !important;
         }
 
         /* ================================================================
-           CHAT
+           CHAT - Increased font sizes
            ================================================================ */
         .chat-toggle-btn {
             position: fixed;
             bottom: 18px;
             left: 18px;
-            width: 56px;
-            height: 56px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             background: #0f2b3d;
             color: white;
             border: none;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            font-size: 1.84rem !important;
+            font-size: 2rem !important;
             cursor: pointer;
             z-index: 500;
             transition: transform 0.2s, background 0.2s;
@@ -1044,10 +1044,10 @@
             background: #e74c3c;
             color: white;
             border-radius: 50%;
-            padding: 1px 4px;
-            font-size: 0.63rem;
+            padding: 1px 5px;
+            font-size: 0.7rem;
             font-weight: 700;
-            min-width: 16px;
+            min-width: 18px;
             text-align: center;
         }
         .chat-window {
@@ -1076,19 +1076,19 @@
         .chat-nav {
             background: #0f2b3d;
             color: white;
-            padding: 6px 10px;
+            padding: 7px 12px;
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 5px;
             flex-wrap: wrap;
             border-bottom: 1px solid #1c4e6c;
             flex-shrink: 0;
-            min-height: 44px;
+            min-height: 48px;
         }
         .chat-nav .chat-contact {
             flex: 1;
             font-weight: 700;
-            font-size: 0.92rem;
+            font-size: 0.95rem;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -1103,29 +1103,29 @@
             background: rgba(255, 255, 255, 0.12);
             border: none;
             color: white;
-            padding: 3px 8px;
+            padding: 4px 10px;
             border-radius: 20px;
-            font-size: 0.69rem;
+            font-size: 0.75rem;
             cursor: pointer;
             transition: 0.2s;
             display: flex;
             align-items: center;
             gap: 2px;
             white-space: nowrap;
-            height: 28px;
+            height: 30px;
         }
         .chat-nav .chat-actions button:hover { background: rgba(255, 255, 255, 0.25); }
         .chat-nav .chat-close {
             background: rgba(255, 255, 255, 0.15);
             border: none;
             color: white;
-            font-size: 1.38rem;
+            font-size: 1.4rem;
             cursor: pointer;
-            padding: 0 6px;
+            padding: 0 8px;
             border-radius: 20px;
             transition: 0.2s;
             line-height: 1;
-            height: 28px;
+            height: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1133,74 +1133,74 @@
         .chat-nav .chat-close:hover { background: rgba(255, 255, 255, 0.3); }
         .chat-messages {
             flex: 1;
-            padding: 8px 10px;
+            padding: 10px 12px;
             overflow-y: auto;
             background: #f5f8fa;
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 5px;
             transition: background 0.2s;
         }
         .chat-message {
             max-width: 85%;
-            padding: 4px 10px;
-            border-radius: 16px;
-            line-height: 1.3;
+            padding: 5px 12px;
+            border-radius: 18px;
+            line-height: 1.4;
             word-wrap: break-word;
             background: white;
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
             align-self: flex-start;
-            border-bottom-left-radius: 3px;
+            border-bottom-left-radius: 4px;
             transition: font-size 0.2s, filter 0.2s;
-            font-size: 0.86rem !important;
+            font-size: 0.92rem !important;
         }
         .chat-message.sent {
             align-self: flex-end;
             background: #0f2b3d;
             color: white;
-            border-bottom-right-radius: 3px;
+            border-bottom-right-radius: 4px;
         }
         .chat-message .msg-time {
-            font-size: 0.58rem;
+            font-size: 0.62rem;
             opacity: 0.6;
             margin-left: 4px;
         }
         .chat-input-area {
             display: flex;
             gap: 4px;
-            padding: 4px 8px;
+            padding: 5px 10px;
             border-top: 1px solid #e0e8f0;
             background: white;
             flex-shrink: 0;
         }
         .chat-input-area input {
             flex: 1;
-            padding: 4px 10px;
+            padding: 5px 12px;
             border-radius: 30px;
             border: 1px solid #d0dce8;
             outline: none;
-            font-size: 0.86rem;
-            height: 34px;
+            font-size: 0.92rem;
+            height: 38px;
         }
         .chat-input-area input:focus { border-color: #f4a261; }
         .chat-input-area button {
             background: #0f2b3d;
             color: white;
             border: none;
-            padding: 4px 12px;
+            padding: 5px 14px;
             border-radius: 30px;
             font-weight: 700;
             cursor: pointer;
             transition: 0.2s;
-            height: 34px;
+            height: 38px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.8rem !important;
+            font-size: 0.85rem !important;
         }
         .chat-input-area button:hover { background: #f4a261; }
         .chat-sidebar {
-            width: 140px;
+            width: 150px;
             background: #f8fafc;
             border-left: 1px solid #e0e8f0;
             padding: 6px 0;
@@ -1213,29 +1213,29 @@
         .sidebar-section-title {
             font-weight: 700;
             color: #1c6e8f;
-            padding: 3px 8px;
+            padding: 4px 10px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             border-bottom: 1px solid #e0e8f0;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.69rem !important;
+            font-size: 0.78rem !important;
         }
         .sidebar-section-title .add-group-btn {
             background: none;
             border: none;
             color: #2c7da0;
             cursor: pointer;
-            font-size: 0.92rem;
+            font-size: 1rem;
             padding: 0 2px;
         }
         .sidebar-section-title .add-group-btn:hover { color: #f4a261; }
         .sidebar-user, .sidebar-group {
             display: flex;
             align-items: center;
-            padding: 3px 8px;
-            gap: 4px;
+            padding: 4px 10px;
+            gap: 5px;
             cursor: pointer;
             transition: background 0.15s;
             border-left: 3px solid transparent;
@@ -1246,8 +1246,8 @@
             border-left-color: #2c7da0;
         }
         .sidebar-user .avatar, .sidebar-group .avatar {
-            width: 24px;
-            height: 24px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -1256,7 +1256,7 @@
             flex-shrink: 0;
             overflow: hidden;
             color: #1e3b4a;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
         }
         .sidebar-user .avatar img, .sidebar-group .avatar img {
             width: 100%;
@@ -1269,11 +1269,11 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            font-size: 0.69rem !important;
+            font-size: 0.78rem !important;
         }
         .sidebar-user .status {
-            width: 6px;
-            height: 6px;
+            width: 7px;
+            height: 7px;
             border-radius: 50%;
             flex-shrink: 0;
         }
@@ -1282,33 +1282,33 @@
         .chat-controls {
             display: flex;
             align-items: center;
-            gap: 3px;
-            padding: 3px 6px;
+            gap: 4px;
+            padding: 4px 8px;
             background: #f0f4f8;
             border-top: 1px solid #e0e8f0;
             flex-wrap: wrap;
             flex-shrink: 0;
-            min-height: 34px;
+            min-height: 38px;
         }
         .chat-controls .ctrl-group { display: flex; align-items: center; gap: 3px; }
         .chat-controls button {
             background: transparent;
             border: 1px solid #d0dce8;
-            border-radius: 16px;
-            padding: 2px 6px;
+            border-radius: 18px;
+            padding: 3px 8px;
             cursor: pointer;
             transition: 0.15s;
             display: flex;
             align-items: center;
             gap: 2px;
             color: #1e3b4a;
-            height: 26px;
-            font-size: 0.69rem !important;
+            height: 28px;
+            font-size: 0.75rem !important;
         }
         .chat-controls button:hover { background: #dce5ec; }
         .chat-controls input[type="color"] {
-            width: 24px;
-            height: 24px;
+            width: 26px;
+            height: 26px;
             border: 1px solid #d0dce8;
             border-radius: 50%;
             padding: 0;
@@ -1318,8 +1318,8 @@
         .chat-controls input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
         .chat-controls input[type="color"]::-webkit-color-swatch { border: none; border-radius: 50%; }
         .chat-controls .brightness-slider {
-            width: 60px;
-            height: 3px;
+            width: 65px;
+            height: 4px;
             -webkit-appearance: none;
             background: #d0dce8;
             border-radius: 2px;
@@ -1327,8 +1327,8 @@
         }
         .chat-controls .brightness-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 12px;
-            height: 12px;
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
             background: #0f2b3d;
             cursor: pointer;
@@ -1339,12 +1339,12 @@
             gap: 3px;
             color: #e74c3c;
             font-weight: 700;
-            font-size: 0.69rem !important;
+            font-size: 0.75rem !important;
         }
         .recording-indicator.active { display: inline-flex; }
         .recording-dot {
-            width: 6px;
-            height: 6px;
+            width: 7px;
+            height: 7px;
             background: #e74c3c;
             border-radius: 50%;
             animation: pulse-dot 0.8s ease-in-out infinite;
@@ -1355,21 +1355,21 @@
             background: rgba(255, 255, 255, 0.15);
             border: none;
             color: white;
-            font-size: 1.04rem;
+            font-size: 1.1rem;
             cursor: pointer;
-            padding: 2px 5px;
+            padding: 2px 6px;
             border-radius: 20px;
             transition: 0.2s;
             line-height: 1;
-            height: 28px;
+            height: 30px;
         }
         .sidebar-toggle:hover { background: rgba(255, 255, 255, 0.3); }
 
         /* ================================================================
-           RECEIPT MODAL
+           RECEIPT MODAL - Increased font sizes
            ================================================================ */
         #receiptModal .modal-content {
-            max-width: 400px;
+            max-width: 420px;
             width: 95%;
             padding: 0;
             border-radius: 16px;
@@ -1379,13 +1379,13 @@
         }
         .receipt-header {
             background: linear-gradient(135deg, #0a2b3c 0%, #1c4e6c 100%);
-            padding: 12px 16px 10px 16px;
+            padding: 14px 18px 12px 18px;
             color: white;
             text-align: center;
             position: relative;
         }
         .receipt-header .receipt-logo {
-            font-size: 1.38rem;
+            font-size: 1.5rem;
             font-weight: 800;
             letter-spacing: -0.5px;
             background: linear-gradient(135deg, #FFF, #FFD966, #6bc6ff);
@@ -1394,36 +1394,36 @@
             color: transparent;
         }
         .receipt-header .receipt-sub {
-            font-size: 0.63rem;
+            font-size: 0.68rem;
             opacity: 0.8;
-            margin-top: 1px;
+            margin-top: 2px;
             letter-spacing: 1px;
         }
         .receipt-header .receipt-badge {
             background: rgba(255, 255, 255, 0.15);
-            padding: 1px 10px;
+            padding: 2px 12px;
             border-radius: 30px;
             display: inline-block;
-            font-size: 0.58rem;
+            font-size: 0.62rem;
             font-weight: 600;
-            margin-top: 2px;
+            margin-top: 3px;
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
         .receipt-close-x {
             position: absolute;
             top: 6px;
-            right: 10px;
+            right: 12px;
             background: rgba(255, 255, 255, 0.15);
             border: none;
             color: white;
-            font-size: 1.38rem;
+            font-size: 1.4rem;
             cursor: pointer;
-            padding: 0 4px;
+            padding: 0 6px;
             border-radius: 50%;
             transition: 0.2s;
             line-height: 1.4;
-            width: 28px;
-            height: 28px;
+            width: 30px;
+            height: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1435,14 +1435,14 @@
             transform: scale(1.1);
         }
         .receipt-body {
-            padding: 10px 14px 8px 14px;
+            padding: 12px 16px 10px 16px;
         }
         .receipt-row {
             display: flex;
             justify-content: space-between;
-            padding: 2px 0;
+            padding: 3px 0;
             border-bottom: 1px solid #f0f0f0;
-            font-size: 0.75rem !important;
+            font-size: 0.82rem !important;
         }
         .receipt-row .label {
             color: #7f8c8d;
@@ -1458,52 +1458,52 @@
         .receipt-row.total {
             border-top: 2px solid #1c4e6c;
             border-bottom: none;
-            padding-top: 6px;
-            margin-top: 3px;
+            padding-top: 8px;
+            margin-top: 4px;
             font-weight: 800;
-            font-size: 0.86rem !important;
+            font-size: 0.92rem !important;
         }
         .receipt-row.total .value {
             color: #0a2b3c;
-            font-size: 0.98rem;
+            font-size: 1.05rem;
         }
         .receipt-footer {
             background: #f5f8fa;
-            padding: 8px 14px 10px 14px;
+            padding: 10px 16px 12px 16px;
             text-align: center;
             border-top: 1px solid #e8edf2;
         }
         .receipt-footer .thanks {
             font-weight: 700;
             color: #1c6e8f;
-            font-size: 0.8rem !important;
+            font-size: 0.85rem !important;
         }
         .receipt-footer .powered {
-            font-size: 0.58rem;
+            font-size: 0.62rem;
             color: #95a5a6;
-            margin-top: 1px;
+            margin-top: 2px;
         }
         .receipt-share-row {
             display: flex;
-            gap: 3px;
+            gap: 4px;
             flex-wrap: wrap;
             justify-content: center;
-            margin-top: 6px;
+            margin-top: 8px;
         }
         .receipt-share-btn {
             border: none;
-            padding: 2px 8px;
+            padding: 3px 10px;
             border-radius: 30px;
             font-weight: 600;
-            font-size: 0.58rem !important;
+            font-size: 0.62rem !important;
             cursor: pointer;
             transition: 0.2s;
             display: inline-flex;
             align-items: center;
             gap: 2px;
-            height: 22px;
+            height: 24px;
             color: white;
-            min-width: 34px;
+            min-width: 36px;
             justify-content: center;
             flex: 0 1 auto;
         }
@@ -1516,7 +1516,7 @@
         .receipt-share-btn.close-receipt { background: #95a5a6; }
         .receipt-share-btn.close-receipt:hover { background: #7f8c8d; transform: translateY(-1px); }
         .receipt-share-label {
-            font-size: 0.52rem;
+            font-size: 0.55rem;
             color: #7f8c8d;
             text-align: center;
             width: 100%;
@@ -1532,135 +1532,135 @@
         }
         .share-row {
             display: flex;
-            gap: 3px;
+            gap: 4px;
             flex-wrap: wrap;
             justify-content: center;
             width: 100%;
         }
-        .share-row .receipt-share-btn { flex: 0 1 auto; min-width: 30px; }
+        .share-row .receipt-share-btn { flex: 0 1 auto; min-width: 32px; }
 
         /* ================================================================
            RESPONSIVE
            ================================================================ */
         @media (max-width: 600px) {
             .double-row { grid-template-columns: 1fr; gap: 0; }
-            .double-row .input-group { margin-bottom: 0.2rem; }
-            .city-input-row { flex-direction: column; gap: 0.2rem; }
+            .double-row .input-group { margin-bottom: 0.25rem; }
+            .city-input-row { flex-direction: column; gap: 0.25rem; }
             .city-input-row .or-text { display: none; }
             .btn-row .btn, .btn-row .action-btn { min-width: 50px; }
             .action-buttons-row .action-btn { min-width: 40px; }
-            .live-header { padding: 0.3rem 0.4rem; min-height: 50px; }
-            .brand-text { font-size: 1.15rem; }
-            .afripay-logo-svg { width: 32px; height: 32px; }
-            .agent-dropdown-container { min-width: 80px; max-width: 120px; }
-            .agent-dropdown-btn { padding: 2px 6px 2px 8px; height: 28px; min-width: 60px; font-size: 0.69rem !important; }
-            .agent-dropdown-list { min-width: 130px; }
-            .datetime-box { font-size: 0.52rem; min-width: 50px; padding: 0.05rem 0.3rem; }
-            .time-text { font-size: 0.63rem; }
-            .auth-btn { padding: 3px 8px; height: 28px; font-size: 0.69rem !important; }
-            .user-welcome { padding: 1px 6px 1px 3px; height: 28px; }
-            .user-avatar { font-size: 0.98rem; width: 22px; height: 22px; line-height: 22px; }
-            .user-name-display { font-size: 0.63rem; }
-            .logout-btn, .edit-account-btn { padding: 1px 6px; height: 22px; font-size: 0.58rem; }
-            .connection-indicator { padding: 1px 4px 1px 2px; height: 22px; font-size: 0.52rem; }
+            .live-header { padding: 0.35rem 0.5rem; min-height: 52px; }
+            .brand-text { font-size: 1.3rem; }
+            .afripay-logo-svg { width: 34px; height: 34px; }
+            .agent-dropdown-container { min-width: 90px; max-width: 130px; }
+            .agent-dropdown-btn { padding: 2px 8px 2px 10px; height: 30px; min-width: 70px; font-size: 0.75rem !important; }
+            .agent-dropdown-list { min-width: 140px; }
+            .datetime-box { font-size: 0.58rem; min-width: 55px; padding: 0.05rem 0.35rem; }
+            .time-text { font-size: 0.68rem; }
+            .auth-btn { padding: 4px 10px; height: 30px; font-size: 0.75rem !important; }
+            .user-welcome { padding: 2px 8px 2px 4px; height: 30px; }
+            .user-avatar { font-size: 1rem; width: 24px; height: 24px; line-height: 24px; }
+            .user-name-display { font-size: 0.68rem; }
+            .logout-btn, .edit-account-btn { padding: 2px 8px; height: 24px; font-size: 0.62rem; }
+            .connection-indicator { padding: 2px 6px 2px 3px; height: 24px; font-size: 0.58rem; }
             .connection-dot { width: 5px; height: 5px; }
-            .lang-selector { height: 28px; padding: 1px 3px 1px 4px; }
-            .lang-selector select { width: 48px; font-size: 0.63rem; }
-            .lang-icon { font-size: 0.75rem; }
-            .form-container { padding: 0.4rem 0.5rem 0.3rem 0.5rem; }
-            .section-title { margin: 0.25rem 0 0.2rem 0; font-size: 0.69rem !important; }
-            .input-group label { font-size: 0.63rem !important; }
-            .input-group input, .input-group select { padding: 3px 6px; font-size: 0.8rem; height: 30px; }
-            .single-mm-btn { padding: 4px 10px; height: 34px; font-size: 0.75rem !important; }
-            .btn-submit { padding: 4px 10px; height: 34px; font-size: 0.8rem !important; }
-            .tx-btn { padding: 3px 8px; height: 30px; font-size: 0.69rem !important; }
-            .mode-row .btn { padding: 3px 8px; height: 30px; min-width: 60px; font-size: 0.69rem !important; }
-            .add-client-btn { padding: 3px 8px; height: 30px; font-size: 0.69rem !important; }
-            .charges-row { font-size: 0.63rem !important; }
-            .total-row { font-size: 0.69rem !important; }
-            .footer-btn { padding: 2px 6px; height: 24px; font-size: 0.63rem !important; }
-            .social-icon { padding: 2px 6px; height: 24px; font-size: 0.63rem !important; }
-            .modal-content { padding: 0.6rem; max-width: 300px; }
-            .modal-content h3 { font-size: 0.86rem !important; }
-            .action-btn { padding: 4px 10px; height: 32px; font-size: 0.69rem !important; }
-            .flag-icon { font-size: 0.86rem; }
-            .flag-scroll-btn { width: 20px; height: 20px; font-size: 0.92rem; }
-            .chat-toggle-btn { width: 48px; height: 48px; font-size: 1.61rem !important; bottom: 12px; left: 12px; }
+            .lang-selector { height: 30px; padding: 2px 4px 2px 6px; }
+            .lang-selector select { width: 50px; font-size: 0.68rem; }
+            .lang-icon { font-size: 0.8rem; }
+            .form-container { padding: 0.5rem 0.6rem 0.35rem 0.6rem; }
+            .section-title { margin: 0.3rem 0 0.25rem 0; font-size: 0.75rem !important; }
+            .input-group label { font-size: 0.7rem !important; }
+            .input-group input, .input-group select { padding: 4px 8px; font-size: 0.85rem; height: 34px; }
+            .single-mm-btn { padding: 5px 12px; height: 38px; font-size: 0.8rem !important; }
+            .btn-submit { padding: 5px 12px; height: 38px; font-size: 0.85rem !important; }
+            .tx-btn { padding: 4px 10px; height: 34px; font-size: 0.75rem !important; }
+            .mode-row .btn { padding: 4px 10px; height: 34px; min-width: 70px; font-size: 0.75rem !important; }
+            .add-client-btn { padding: 4px 10px; height: 34px; font-size: 0.75rem !important; }
+            .charges-row { font-size: 0.7rem !important; }
+            .total-row { font-size: 0.75rem !important; }
+            .footer-btn { padding: 3px 8px; height: 28px; font-size: 0.7rem !important; }
+            .social-icon { padding: 3px 8px; height: 28px; font-size: 0.7rem !important; }
+            .modal-content { padding: 0.7rem; max-width: 320px; }
+            .modal-content h3 { font-size: 0.92rem !important; }
+            .action-btn { padding: 5px 12px; height: 36px; font-size: 0.75rem !important; }
+            .flag-icon { font-size: 0.92rem; }
+            .flag-scroll-btn { width: 22px; height: 22px; font-size: 1rem; }
+            .chat-toggle-btn { width: 52px; height: 52px; font-size: 1.7rem !important; bottom: 14px; left: 14px; }
             .chat-window { left: 0; right: 0; width: 100%; bottom: 0; top: auto !important; height: 100vh; max-height: 100vh; border-radius: 0; }
-            .chat-nav { padding: 4px 8px; min-height: 38px; }
-            .chat-nav .chat-contact { font-size: 0.8rem; }
-            .chat-nav .chat-actions button { padding: 2px 6px; height: 24px; font-size: 0.58rem; }
-            .chat-sidebar { display: none; position: absolute; right: 0; top: 0; bottom: 0; width: 130px; background: #f8fafc; border-left: 1px solid #e0e8f0; z-index: 10; box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1); border-radius: 0 16px 16px 0; }
+            .chat-nav { padding: 5px 10px; min-height: 42px; }
+            .chat-nav .chat-contact { font-size: 0.82rem; }
+            .chat-nav .chat-actions button { padding: 3px 8px; height: 26px; font-size: 0.62rem; }
+            .chat-sidebar { display: none; position: absolute; right: 0; top: 0; bottom: 0; width: 140px; background: #f8fafc; border-left: 1px solid #e0e8f0; z-index: 10; box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1); border-radius: 0 16px 16px 0; }
             .chat-sidebar.open { display: flex; }
-            .sidebar-toggle { display: block; font-size: 0.92rem; padding: 2px 4px; }
-            .chat-input-area { padding: 3px 6px; }
-            .chat-input-area input { padding: 3px 8px; font-size: 0.8rem; height: 30px; }
-            .chat-input-area button { padding: 3px 10px; height: 30px; font-size: 0.69rem !important; }
-            .chat-message { padding: 3px 8px; font-size: 0.75rem !important; }
-            .chat-controls { padding: 2px 4px; min-height: 28px; }
-            .chat-controls button { padding: 2px 5px; height: 22px; font-size: 0.58rem !important; }
-            .chat-controls input[type="color"] { width: 20px; height: 20px; }
-            .chat-controls .brightness-slider { width: 50px; }
-            .receipt-body { padding: 8px 10px 6px 10px; }
-            .receipt-row { font-size: 0.63rem !important; }
-            .receipt-row.total { font-size: 0.75rem !important; }
-            .receipt-header { padding: 10px 12px 8px 12px; }
-            .receipt-header .receipt-logo { font-size: 1.15rem; }
-            .receipt-footer { padding: 6px 10px 8px 10px; }
-            .receipt-share-btn { font-size: 0.52rem !important; padding: 2px 6px; height: 20px; min-width: 28px; }
-            .share-row .receipt-share-btn { min-width: 26px; }
+            .sidebar-toggle { display: block; font-size: 0.95rem; padding: 2px 5px; }
+            .chat-input-area { padding: 4px 8px; }
+            .chat-input-area input { padding: 4px 10px; font-size: 0.85rem; height: 34px; }
+            .chat-input-area button { padding: 4px 12px; height: 34px; font-size: 0.75rem !important; }
+            .chat-message { padding: 4px 10px; font-size: 0.82rem !important; }
+            .chat-controls { padding: 3px 6px; min-height: 32px; }
+            .chat-controls button { padding: 2px 6px; height: 24px; font-size: 0.62rem !important; }
+            .chat-controls input[type="color"] { width: 22px; height: 22px; }
+            .chat-controls .brightness-slider { width: 55px; }
+            .receipt-body { padding: 10px 12px 8px 12px; }
+            .receipt-row { font-size: 0.7rem !important; }
+            .receipt-row.total { font-size: 0.8rem !important; }
+            .receipt-header { padding: 12px 14px 10px 14px; }
+            .receipt-header .receipt-logo { font-size: 1.25rem; }
+            .receipt-footer { padding: 8px 12px 10px 12px; }
+            .receipt-share-btn { font-size: 0.55rem !important; padding: 2px 8px; height: 22px; min-width: 30px; }
+            .share-row .receipt-share-btn { min-width: 28px; }
         }
         @media (max-width: 400px) {
-            .brand-text { font-size: 0.98rem; }
+            .brand-text { font-size: 1.05rem; }
             .afripay-logo-svg { width: 28px; height: 28px; }
-            .agent-dropdown-container { min-width: 60px; max-width: 90px; }
-            .agent-dropdown-btn { padding: 1px 4px 1px 6px; height: 24px; min-width: 50px; font-size: 0.58rem !important; }
-            .agent-dropdown-list { min-width: 110px; }
-            .agent-dropdown-item .agent-name { font-size: 0.63rem; }
-            .auth-btn { padding: 2px 6px; height: 24px; font-size: 0.58rem !important; }
-            .user-welcome { padding: 1px 4px 1px 2px; height: 24px; }
-            .user-avatar { font-size: 0.8rem; width: 18px; height: 18px; line-height: 18px; }
+            .agent-dropdown-container { min-width: 70px; max-width: 100px; }
+            .agent-dropdown-btn { padding: 2px 6px 2px 8px; height: 26px; min-width: 55px; font-size: 0.65rem !important; }
+            .agent-dropdown-list { min-width: 120px; }
+            .agent-dropdown-item .agent-name { font-size: 0.68rem; }
+            .auth-btn { padding: 3px 8px; height: 26px; font-size: 0.65rem !important; }
+            .user-welcome { padding: 2px 6px 2px 3px; height: 26px; }
+            .user-avatar { font-size: 0.85rem; width: 20px; height: 20px; line-height: 20px; }
             .user-name-display { font-size: 0.58rem; }
-            .datetime-box { font-size: 0.46rem; min-width: 40px; padding: 0 0.2rem; }
-            .time-text { font-size: 0.52rem; }
-            .lang-selector { height: 24px; padding: 0 2px 0 3px; }
-            .lang-selector select { width: 40px; font-size: 0.52rem; }
-            .lang-icon { font-size: 0.63rem; }
-            .connection-indicator { padding: 0 3px 0 1px; height: 18px; font-size: 0.46rem; }
+            .datetime-box { font-size: 0.5rem; min-width: 45px; padding: 0.05rem 0.25rem; }
+            .time-text { font-size: 0.58rem; }
+            .lang-selector { height: 26px; padding: 1px 3px 1px 4px; }
+            .lang-selector select { width: 42px; font-size: 0.58rem; }
+            .lang-icon { font-size: 0.7rem; }
+            .connection-indicator { padding: 1px 4px 1px 2px; height: 20px; font-size: 0.5rem; }
             .connection-dot { width: 4px; height: 4px; }
-            .logout-btn, .edit-account-btn { padding: 0 4px; height: 18px; font-size: 0.46rem; }
-            .flag-icon { font-size: 0.75rem; }
-            .form-container { padding: 0.3rem 0.35rem 0.2rem 0.35rem; }
-            .input-group input, .input-group select { padding: 2px 5px; font-size: 0.75rem; height: 26px; }
-            .single-mm-btn { padding: 3px 8px; height: 30px; font-size: 0.69rem !important; }
-            .btn-submit { padding: 3px 8px; height: 30px; font-size: 0.75rem !important; }
-            .tx-btn { padding: 2px 6px; height: 26px; font-size: 0.63rem !important; }
-            .mode-row .btn { padding: 2px 6px; height: 26px; min-width: 50px; font-size: 0.63rem !important; }
-            .add-client-btn { padding: 2px 6px; height: 26px; font-size: 0.63rem !important; }
-            .modal-content { padding: 0.5rem; max-width: 260px; }
-            .action-btn { padding: 3px 8px; height: 28px; font-size: 0.63rem !important; }
-            .footer-btn { padding: 1px 5px; height: 20px; font-size: 0.58rem !important; }
-            .social-icon { padding: 1px 5px; height: 20px; font-size: 0.58rem !important; }
-            .chat-toggle-btn { width: 42px; height: 42px; font-size: 1.38rem !important; bottom: 8px; left: 8px; }
-            .chat-nav .chat-actions button { padding: 1px 5px; height: 20px; font-size: 0.52rem; }
-            .chat-input-area input { padding: 2px 6px; font-size: 0.75rem; height: 26px; }
-            .chat-input-area button { padding: 2px 8px; height: 26px; font-size: 0.63rem !important; }
-            .chat-message { padding: 2px 6px; font-size: 0.69rem !important; }
-            .sidebar-user .user-info .name { font-size: 0.58rem !important; }
-            .sidebar-user .avatar { width: 20px; height: 20px; font-size: 0.69rem; }
-            .profile-section .profile-field { font-size: 0.58rem !important; padding: 1px 5px; min-width: 30px; }
-            .profile-section .profile-label { font-size: 0.63rem !important; }
-            .map-btn { padding: 2px 6px; height: 26px; font-size: 0.63rem !important; }
+            .logout-btn, .edit-account-btn { padding: 1px 6px; height: 20px; font-size: 0.5rem; }
+            .flag-icon { font-size: 0.78rem; }
+            .form-container { padding: 0.35rem 0.4rem 0.25rem 0.4rem; }
+            .input-group input, .input-group select { padding: 3px 6px; font-size: 0.8rem; height: 30px; }
+            .single-mm-btn { padding: 4px 10px; height: 34px; font-size: 0.72rem !important; }
+            .btn-submit { padding: 4px 10px; height: 34px; font-size: 0.78rem !important; }
+            .tx-btn { padding: 3px 8px; height: 30px; font-size: 0.68rem !important; }
+            .mode-row .btn { padding: 3px 8px; height: 30px; min-width: 55px; font-size: 0.68rem !important; }
+            .add-client-btn { padding: 3px 8px; height: 30px; font-size: 0.68rem !important; }
+            .modal-content { padding: 0.6rem; max-width: 280px; }
+            .action-btn { padding: 4px 10px; height: 32px; font-size: 0.68rem !important; }
+            .footer-btn { padding: 2px 6px; height: 24px; font-size: 0.62rem !important; }
+            .social-icon { padding: 2px 6px; height: 24px; font-size: 0.62rem !important; }
+            .chat-toggle-btn { width: 46px; height: 46px; font-size: 1.5rem !important; bottom: 10px; left: 10px; }
+            .chat-nav .chat-actions button { padding: 2px 6px; height: 22px; font-size: 0.55rem; }
+            .chat-input-area input { padding: 3px 8px; font-size: 0.78rem; height: 30px; }
+            .chat-input-area button { padding: 3px 10px; height: 30px; font-size: 0.68rem !important; }
+            .chat-message { padding: 3px 8px; font-size: 0.75rem !important; }
+            .sidebar-user .user-info .name { font-size: 0.62rem !important; }
+            .sidebar-user .avatar { width: 22px; height: 22px; font-size: 0.72rem; }
+            .profile-section .profile-field { font-size: 0.65rem !important; padding: 2px 6px; min-width: 35px; }
+            .profile-section .profile-label { font-size: 0.72rem !important; }
+            .map-btn { padding: 3px 8px; height: 28px; font-size: 0.72rem !important; }
         }
 
         /* ================================================================
            UTILITY CLASSES
            ================================================================ */
         .collateral-limit-indicator {
-            font-size: 0.63rem;
+            font-size: 0.68rem;
             color: #1c6e8f;
             background: #e8f0f8;
-            padding: 1px 8px;
+            padding: 2px 10px;
             border-radius: 20px;
             display: inline-block;
             margin-left: 4px;
@@ -1668,29 +1668,29 @@
         }
         .city-input-row {
             display: flex;
-            gap: 0.3rem;
+            gap: 0.35rem;
             align-items: center;
         }
         .city-input-row select, .city-input-row input { flex: 1; }
         .city-input-row .or-text {
-            font-size: 0.63rem;
+            font-size: 0.68rem;
             color: #95a5a6;
             font-weight: 600;
         }
-        .error-msg { color: #c0392b; margin: 2px 0; font-size: 0.69rem !important; }
-        .success-msg { color: #27ae60; margin: 2px 0; font-size: 0.69rem !important; }
-        .info-msg { color: #2c7da0; margin: 2px 0; font-size: 0.69rem !important; }
+        .error-msg { color: #c0392b; margin: 2px 0; font-size: 0.75rem !important; }
+        .success-msg { color: #27ae60; margin: 2px 0; font-size: 0.75rem !important; }
+        .info-msg { color: #2c7da0; margin: 2px 0; font-size: 0.75rem !important; }
         .emoji-grid {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
-            gap: 2px;
-            margin: 3px 0 4px 0;
+            gap: 3px;
+            margin: 4px 0 5px 0;
         }
         .emoji-option {
-            font-size: 1.38rem;
+            font-size: 1.5rem;
             text-align: center;
             cursor: pointer;
-            padding: 2px 1px;
+            padding: 2px 2px;
             border-radius: 8px;
             transition: 0.15s;
             border: 2px solid transparent;
@@ -1707,55 +1707,55 @@
             box-shadow: 0 0 6px rgba(244, 162, 97, 0.3);
         }
         .group-member-list {
-            max-height: 140px;
+            max-height: 150px;
             overflow-y: auto;
             margin: 4px 0;
             border: 1px solid #e0e8f0;
             border-radius: 10px;
-            padding: 2px 0;
+            padding: 3px 0;
         }
         .group-member-item {
             display: flex;
             align-items: center;
-            padding: 2px 6px;
-            gap: 4px;
+            padding: 3px 8px;
+            gap: 5px;
             cursor: pointer;
             transition: background 0.15s;
-            font-size: 0.69rem !important;
+            font-size: 0.75rem !important;
         }
         .group-member-item:hover { background: #f0f4f8; }
         .group-member-item input[type="checkbox"] {
-            width: 13px;
-            height: 13px;
+            width: 14px;
+            height: 14px;
             accent-color: #0f2b3d;
         }
         .group-member-item .member-avatar {
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             background: #d0dce8;
-            font-size: 0.69rem;
+            font-size: 0.75rem;
         }
-        .group-member-item .member-name { font-weight: 500; color: #1e3b4a; font-size: 0.69rem !important; }
-        .member-counter { color: #1c6e8f; font-weight: 600; margin-left: auto; font-size: 0.69rem !important; }
+        .group-member-item .member-name { font-weight: 500; color: #1e3b4a; font-size: 0.75rem !important; }
+        .member-counter { color: #1c6e8f; font-weight: 600; margin-left: auto; font-size: 0.75rem !important; }
 
         /* ================================================================
            AGENT FORM
            ================================================================ */
-        .agent-form .input-group { margin-bottom: 0.3rem; }
-        .agent-form .input-group label { font-size: 0.63rem !important; }
+        .agent-form .input-group { margin-bottom: 0.35rem; }
+        .agent-form .input-group label { font-size: 0.7rem !important; }
         .agent-form .input-group input, .agent-form .input-group select {
-            height: 32px;
-            font-size: 0.8rem;
-            padding: 3px 8px;
+            height: 36px;
+            font-size: 0.85rem;
+            padding: 4px 10px;
         }
         .id-preview {
             margin-top: 3px;
             max-width: 100%;
-            max-height: 100px;
+            max-height: 110px;
             border-radius: 6px;
             border: 1px solid #ddd;
             display: none;
@@ -1765,16 +1765,16 @@
         .collateral-box {
             background: #f0f6fb;
             border-radius: 8px;
-            padding: 0.4rem;
-            margin-top: 0.3rem;
+            padding: 0.5rem;
+            margin-top: 0.35rem;
             border: 1px dashed #2c7da0;
         }
         .collateral-box .ussd-code {
-            font-size: 0.98rem;
+            font-size: 1.05rem;
             font-weight: 700;
             color: #0f2b3d;
             background: white;
-            padding: 3px 10px;
+            padding: 4px 12px;
             border-radius: 30px;
             display: inline-block;
             margin-top: 3px;
@@ -1783,11 +1783,11 @@
         }
         .password-display {
             font-family: monospace;
-            font-size: 1.04rem;
+            font-size: 1.1rem;
             font-weight: 700;
             color: #0f2b3d;
             background: #f0f6fb;
-            padding: 3px 10px;
+            padding: 4px 12px;
             border-radius: 30px;
             border: 1px solid #d0dce8;
             display: inline-block;
@@ -1797,20 +1797,20 @@
         /* ================================================================
            ADMIN AUTH
            ================================================================ */
-        .admin-auth-modal .modal-content { max-width: 340px; }
+        .admin-auth-modal .modal-content { max-width: 350px; }
         .admin-auth-modal .input-group { margin-bottom: 0.4rem; }
-        .admin-auth-modal .input-group label { font-size: 0.63rem !important; }
+        .admin-auth-modal .input-group label { font-size: 0.7rem !important; }
         .admin-auth-modal .input-group input {
-            height: 34px;
-            font-size: 0.86rem;
-            padding: 3px 10px;
+            height: 38px;
+            font-size: 0.9rem;
+            padding: 4px 12px;
             letter-spacing: 1px;
         }
         .admin-auth-modal .auth-toggle-link {
             color: #2c7da0;
             cursor: pointer;
             text-decoration: underline;
-            font-size: 0.69rem !important;
+            font-size: 0.75rem !important;
             transition: 0.15s;
         }
         .admin-auth-modal .auth-toggle-link:hover { color: #f4a261; }
@@ -1818,61 +1818,61 @@
             text-align: center;
             margin: 4px 0 3px 0;
             color: #95a5a6;
-            font-size: 0.69rem !important;
+            font-size: 0.75rem !important;
         }
-        .admin-auth-modal .auth-error { color: #c0392b; margin: 3px 0; text-align: center; font-size: 0.69rem !important; }
-        .admin-auth-modal .auth-success { color: #27ae60; margin: 3px 0; text-align: center; font-size: 0.69rem !important; }
+        .admin-auth-modal .auth-error { color: #c0392b; margin: 3px 0; text-align: center; font-size: 0.75rem !important; }
+        .admin-auth-modal .auth-success { color: #27ae60; margin: 3px 0; text-align: center; font-size: 0.75rem !important; }
 
         /* ================================================================
            DASHBOARD
            ================================================================ */
-        #dashboardModal .modal-content { max-width: 680px; width: 95%; }
-        #dashboardModal table { width: 100%; border-collapse: collapse; margin-top: 4px; }
+        #dashboardModal .modal-content { max-width: 700px; width: 95%; }
+        #dashboardModal table { width: 100%; border-collapse: collapse; margin-top: 5px; }
         #dashboardModal th {
             background: #f0f4f8;
-            padding: 2px 4px;
+            padding: 3px 5px;
             text-align: left;
             font-weight: 700;
             color: #1c6e8f;
             border-bottom: 2px solid #dce8f0;
             white-space: nowrap;
-            font-size: 0.63rem !important;
+            font-size: 0.7rem !important;
         }
         #dashboardModal td {
-            padding: 2px 4px;
+            padding: 3px 5px;
             border-bottom: 1px solid #eee;
             vertical-align: middle;
-            font-size: 0.63rem !important;
+            font-size: 0.7rem !important;
         }
         .status-badge {
             display: inline-block;
-            padding: 1px 6px;
+            padding: 2px 8px;
             border-radius: 20px;
             font-weight: 700;
-            font-size: 0.58rem !important;
+            font-size: 0.62rem !important;
         }
         .status-badge.approved { background: #d5f5e3; color: #1e8449; }
         .status-badge.pending { background: #fdebd0; color: #ca6f1e; }
         .users-section-title {
             font-weight: 800;
             color: #1c6e8f;
-            margin: 0.8rem 0 0.25rem 0;
+            margin: 0.9rem 0 0.3rem 0;
             border-left: 3px solid #e74c3c;
-            padding-left: 6px;
+            padding-left: 8px;
             text-transform: uppercase;
             display: flex;
             align-items: center;
             gap: 6px;
-            font-size: 0.69rem !important;
+            font-size: 0.75rem !important;
         }
         .users-section-title .badge-count {
             background: #e74c3c;
             color: white;
-            padding: 0 8px;
+            padding: 0 10px;
             border-radius: 30px;
-            font-size: 0.58rem;
+            font-size: 0.62rem;
             font-weight: 700;
-            height: 18px;
+            height: 20px;
             display: inline-flex;
             align-items: center;
         }
@@ -1880,24 +1880,24 @@
             background: #e74c3c;
             color: white;
             border: none;
-            padding: 1px 6px;
+            padding: 2px 8px;
             border-radius: 20px;
             cursor: pointer;
             font-weight: 600;
-            font-size: 0.58rem !important;
+            font-size: 0.62rem !important;
             transition: 0.2s;
-            height: 22px;
+            height: 24px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
         }
         .user-delete-btn:hover { background: #c0392b; transform: scale(1.05); }
-        .no-users-msg { text-align: center; padding: 10px; color: #95a5a6; font-size: 0.69rem !important; }
+        .no-users-msg { text-align: center; padding: 12px; color: #95a5a6; font-size: 0.75rem !important; }
         .delete-user-warning {
-            font-size: 0.69rem;
+            font-size: 0.72rem;
             color: #e74c3c;
             background: #fde8e8;
-            padding: 4px 10px;
+            padding: 5px 12px;
             border-radius: 6px;
             margin-bottom: 6px;
             border-left: 3px solid #e74c3c;
@@ -1908,7 +1908,7 @@
            CURRENCY CONVERTER
            ================================================================ */
         #currencyConverterModal .modal-content {
-            max-width: 480px;
+            max-width: 500px;
             width: 95%;
             padding: 0;
             border-radius: 16px;
@@ -1920,28 +1920,28 @@
         }
         .converter-header {
             background: linear-gradient(135deg, #0a2b3c 0%, #1c4e6c 100%);
-            padding: 10px 16px;
+            padding: 12px 18px;
             color: white;
             text-align: center;
             position: relative;
         }
-        .converter-header h3 { color: white; margin: 0; font-size: 1.04rem !important; }
-        .converter-header small { font-size: 0.58rem; opacity: 0.8; }
+        .converter-header h3 { color: white; margin: 0; font-size: 1.1rem !important; }
+        .converter-header small { font-size: 0.62rem; opacity: 0.8; }
         .converter-close-x {
             position: absolute;
-            top: 4px;
-            right: 10px;
+            top: 5px;
+            right: 12px;
             background: rgba(255, 255, 255, 0.15);
             border: none;
             color: white;
-            font-size: 1.27rem;
+            font-size: 1.3rem;
             cursor: pointer;
-            padding: 0 4px;
+            padding: 0 5px;
             border-radius: 50%;
             transition: 0.2s;
             line-height: 1.4;
-            width: 26px;
-            height: 26px;
+            width: 28px;
+            height: 28px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1949,13 +1949,13 @@
             z-index: 5;
         }
         .converter-close-x:hover { background: rgba(255, 255, 255, 0.3); transform: scale(1.1); }
-        .converter-body { padding: 12px 16px 10px 16px; overflow-y: auto; max-height: 70vh; }
+        .converter-body { padding: 14px 18px 12px 18px; overflow-y: auto; max-height: 70vh; }
         .converter-body .input-group { margin-bottom: 0.4rem; }
-        .converter-body .input-group label { font-size: 0.69rem !important; font-weight: 700; color: #1e3b4a; }
+        .converter-body .input-group label { font-size: 0.75rem !important; font-weight: 700; color: #1e3b4a; }
         .converter-body .input-group input, .converter-body .input-group select {
-            height: 34px;
-            font-size: 0.86rem;
-            padding: 3px 10px;
+            height: 38px;
+            font-size: 0.9rem;
+            padding: 4px 12px;
             border-radius: 30px;
             border: 1.5px solid #e0e8f0;
             outline: none;
@@ -1969,19 +1969,19 @@
             background: white;
             border: 1.5px solid #e0e8f0;
             border-radius: 30px;
-            padding: 0 6px 0 10px;
-            height: 34px;
+            padding: 0 6px 0 12px;
+            height: 38px;
         }
         .converter-body .input-group .country-selector-sm select {
             border: none;
             background: transparent;
             padding: 2px 0;
             outline: none;
-            font-size: 0.8rem;
-            height: 30px;
+            font-size: 0.85rem;
+            height: 34px;
             flex: 1;
         }
-        .converter-body .input-group .country-selector-sm .flag-sm { font-size: 1.15rem; flex-shrink: 0; }
+        .converter-body .input-group .country-selector-sm .flag-sm { font-size: 1.2rem; flex-shrink: 0; }
         .converter-body .input-group .from-currency-select {
             display: flex;
             align-items: center;
@@ -1989,41 +1989,41 @@
             background: white;
             border: 1.5px solid #e0e8f0;
             border-radius: 30px;
-            padding: 0 6px 0 10px;
-            height: 34px;
+            padding: 0 6px 0 12px;
+            height: 38px;
         }
         .converter-body .input-group .from-currency-select select {
             border: none;
             background: transparent;
             padding: 2px 0;
             outline: none;
-            font-size: 0.8rem;
-            height: 30px;
+            font-size: 0.85rem;
+            height: 34px;
             flex: 1;
         }
-        .converter-body .input-group .from-currency-select .flag-sm { font-size: 1.15rem; flex-shrink: 0; }
+        .converter-body .input-group .from-currency-select .flag-sm { font-size: 1.2rem; flex-shrink: 0; }
         .converter-body .user-info-badge {
             background: #e8f0f8;
             border-radius: 30px;
-            padding: 2px 10px;
+            padding: 3px 12px;
             display: inline-block;
-            font-size: 0.69rem !important;
+            font-size: 0.75rem !important;
             color: #1c6e8f;
             border: 1px solid #c0d8e8;
-            margin-bottom: 3px;
+            margin-bottom: 4px;
         }
         .converter-results {
             background: #f8fafc;
             border-radius: 12px;
-            padding: 0.5rem 0.6rem;
-            margin: 0.4rem 0 0.3rem 0;
+            padding: 0.6rem 0.7rem;
+            margin: 0.4rem 0 0.35rem 0;
             border: 1px solid #e2edf7;
         }
         .converter-results .conv-row {
             display: flex;
             justify-content: space-between;
-            padding: 2px 0;
-            font-size: 0.75rem !important;
+            padding: 3px 0;
+            font-size: 0.8rem !important;
             border-bottom: 1px solid #edf2f7;
         }
         .converter-results .conv-row:last-child { border-bottom: none; }
@@ -2032,43 +2032,43 @@
         .converter-results .conv-row.total {
             border-top: 2px dashed #cbdde9;
             border-bottom: none;
-            margin-top: 3px;
-            padding-top: 6px;
+            margin-top: 4px;
+            padding-top: 8px;
             font-weight: 800;
-            font-size: 0.86rem !important;
+            font-size: 0.92rem !important;
         }
-        .converter-results .conv-row.total .value { color: #0a2b3c; font-size: 0.98rem; }
+        .converter-results .conv-row.total .value { color: #0a2b3c; font-size: 1.05rem; }
         .converter-results .conv-row.recipient {
             background: #e8f8f0;
             border-radius: 6px;
-            padding: 4px 8px;
-            margin-top: 3px;
+            padding: 5px 10px;
+            margin-top: 4px;
             border: 1px solid #b8e0d0;
         }
         .converter-results .conv-row.recipient .label { color: #1a7a5a; font-weight: 700; }
-        .converter-results .conv-row.recipient .value { color: #1a7a5a; font-weight: 800; font-size: 0.98rem; }
+        .converter-results .conv-row.recipient .value { color: #1a7a5a; font-weight: 800; font-size: 1.05rem; }
         .converter-footer {
             background: #f5f8fa;
-            padding: 8px 16px 10px 16px;
+            padding: 10px 18px 12px 18px;
             border-top: 1px solid #e8edf2;
             display: flex;
             gap: 6px;
             flex-wrap: wrap;
             justify-content: center;
         }
-        .converter-footer .action-btn { flex: 1; min-width: 80px; }
-        .rate-fresh { font-size: 0.58rem; color: #27ae60; margin-left: 4px; font-weight: 400; }
+        .converter-footer .action-btn { flex: 1; min-width: 90px; }
+        .rate-fresh { font-size: 0.62rem; color: #27ae60; margin-left: 4px; font-weight: 400; }
 
         /* ================================================================
            PIN MODAL
            ================================================================ */
-        #pinModal .modal-content { max-width: 380px; }
+        #pinModal .modal-content { max-width: 400px; }
         #pinModal .input-group { margin-bottom: 0.4rem; }
-        #pinModal .input-group label { font-size: 0.63rem !important; }
+        #pinModal .input-group label { font-size: 0.7rem !important; }
         #pinModal .input-group input {
-            height: 36px;
-            font-size: 0.92rem;
-            padding: 3px 10px;
+            height: 40px;
+            font-size: 0.95rem;
+            padding: 4px 12px;
             letter-spacing: 4px;
             font-family: monospace;
             text-align: center;
@@ -2076,32 +2076,32 @@
         #pinModal .ussd-preview {
             background: #f0f6fb;
             border-radius: 8px;
-            padding: 6px 10px;
+            padding: 8px 12px;
             margin: 6px 0;
             border: 1px dashed #2c7da0;
             word-break: break-all;
             font-family: monospace;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             text-align: center;
         }
         #pinModal .provider-badge {
             display: inline-block;
-            padding: 1px 10px;
+            padding: 2px 12px;
             border-radius: 30px;
             font-weight: 700;
-            font-size: 0.69rem;
+            font-size: 0.75rem;
             margin-bottom: 4px;
         }
         #pinModal .provider-badge.orange { background: #ff6600; color: white; }
         #pinModal .provider-badge.afrimoney { background: #00a651; color: white; }
         #pinModal .provider-badge.wbmoney { background: #1a3a5c; color: white; }
-        #pinModal .auth-error { color: #c0392b; margin: 3px 0; text-align: center; font-size: 0.69rem !important; }
+        #pinModal .auth-error { color: #c0392b; margin: 3px 0; text-align: center; font-size: 0.75rem !important; }
 
         /* ================================================================
            AGREEMENT MODAL
            ================================================================ */
         #agreementModal .modal-content {
-            max-width: 520px;
+            max-width: 540px;
             width: 95%;
             padding: 0;
             border-radius: 16px;
@@ -2110,28 +2110,28 @@
         }
         .agreement-modal-header {
             background: linear-gradient(135deg, #0a2b3c 0%, #1c4e6c 100%);
-            padding: 10px 16px;
+            padding: 12px 18px;
             color: white;
             text-align: center;
             position: relative;
         }
-        .agreement-modal-header h3 { color: white; margin: 0; font-size: 1.04rem !important; }
-        .agreement-modal-header small { font-size: 0.58rem; opacity: 0.8; }
+        .agreement-modal-header h3 { color: white; margin: 0; font-size: 1.1rem !important; }
+        .agreement-modal-header small { font-size: 0.62rem; opacity: 0.8; }
         .agreement-close-x {
             position: absolute;
-            top: 4px;
-            right: 10px;
+            top: 5px;
+            right: 12px;
             background: rgba(255, 255, 255, 0.15);
             border: none;
             color: white;
-            font-size: 1.27rem;
+            font-size: 1.3rem;
             cursor: pointer;
-            padding: 0 4px;
+            padding: 0 5px;
             border-radius: 50%;
             transition: 0.2s;
             line-height: 1.4;
-            width: 26px;
-            height: 26px;
+            width: 28px;
+            height: 28px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -2139,11 +2139,11 @@
             z-index: 5;
         }
         .agreement-close-x:hover { background: rgba(255, 255, 255, 0.3); transform: scale(1.1); }
-        .agreement-body { padding: 12px 16px; max-height: 55vh; overflow-y: auto; font-size: 0.75rem !important; line-height: 1.6; color: #1e3b4a; }
+        .agreement-body { padding: 14px 18px; max-height: 55vh; overflow-y: auto; font-size: 0.8rem !important; line-height: 1.7; color: #1e3b4a; }
         .agreement-body .clause {
             background: #f8fafc;
             border-radius: 6px;
-            padding: 6px 10px;
+            padding: 8px 12px;
             margin-bottom: 6px;
             border-left: 3px solid #2c7da0;
         }
@@ -2151,15 +2151,15 @@
         .agreement-body .clause .tag {
             font-weight: 700;
             color: #2c7da0;
-            font-size: 0.69rem !important;
+            font-size: 0.75rem !important;
             display: block;
-            margin-bottom: 1px;
+            margin-bottom: 2px;
         }
         .agreement-body .clause.dev-clause .tag { color: #8e44ad; }
-        .agreement-body .placeholder { color: #1c6e8f; font-weight: 700; background: #e8f0f8; padding: 0 3px; border-radius: 3px; }
+        .agreement-body .placeholder { color: #1c6e8f; font-weight: 700; background: #e8f0f8; padding: 0 4px; border-radius: 3px; }
         .agreement-footer {
             background: #f5f8fa;
-            padding: 8px 16px;
+            padding: 10px 18px;
             border-top: 1px solid #e8edf2;
             display: flex;
             gap: 6px;
@@ -2176,40 +2176,40 @@
             margin-top: 6px;
             border: 2px dashed #d0dce8;
             border-radius: 10px;
-            padding: 6px;
+            padding: 8px;
             display: none;
             background: white;
         }
         .agreement-signature-area.open { display: block; }
-        .agreement-signature-area canvas { width: 100%; height: 80px; border-radius: 6px; background: white; touch-action: none; cursor: crosshair; }
+        .agreement-signature-area canvas { width: 100%; height: 85px; border-radius: 6px; background: white; touch-action: none; cursor: crosshair; }
         .agreement-signature-area .sig-actions {
             display: flex;
             gap: 4px;
-            margin-top: 3px;
+            margin-top: 4px;
             flex-wrap: wrap;
         }
         .agreement-signature-area .sig-actions button {
-            padding: 2px 10px;
+            padding: 3px 12px;
             border-radius: 20px;
             border: none;
             font-weight: 700;
-            font-size: 0.63rem !important;
+            font-size: 0.68rem !important;
             cursor: pointer;
-            height: 26px;
+            height: 28px;
         }
         .agreement-signature-area .sig-actions .sig-clear { background: #e74c3c; color: white; }
         .agreement-signature-area .sig-actions .sig-clear:hover { background: #c0392b; }
         .agreement-signature-area .sig-actions .sig-confirm { background: #27ae60; color: white; }
         .agreement-signature-area .sig-actions .sig-confirm:hover { background: #1e8449; }
-        .sig-preview { max-width: 100px; max-height: 40px; border: 1px solid #ddd; border-radius: 4px; display: none; margin-top: 3px; }
+        .sig-preview { max-width: 110px; max-height: 45px; border: 1px solid #ddd; border-radius: 4px; display: none; margin-top: 3px; }
         .sig-preview.show { display: block; }
-        .agreement-status { font-size: 0.63rem; color: #7f8c8d; text-align: center; margin-top: 3px; }
+        .agreement-status { font-size: 0.68rem; color: #7f8c8d; text-align: center; margin-top: 3px; }
 
         /* ================================================================
            AGENT REPORT MODAL
            ================================================================ */
         #agentReportModal .modal-content {
-            max-width: 440px;
+            max-width: 460px;
             width: 95%;
             padding: 0;
             border-radius: 16px;
@@ -2219,28 +2219,28 @@
         }
         .report-header {
             background: linear-gradient(135deg, #0a2b3c 0%, #1c4e6c 100%);
-            padding: 10px 16px;
+            padding: 12px 18px;
             color: white;
             text-align: center;
             position: relative;
         }
-        .report-header h3 { color: white; margin: 0; font-size: 0.98rem !important; }
-        .report-header small { font-size: 0.58rem; opacity: 0.8; }
+        .report-header h3 { color: white; margin: 0; font-size: 1.05rem !important; }
+        .report-header small { font-size: 0.62rem; opacity: 0.8; }
         .report-close-x {
             position: absolute;
-            top: 4px;
-            right: 10px;
+            top: 5px;
+            right: 12px;
             background: rgba(255, 255, 255, 0.15);
             border: none;
             color: white;
-            font-size: 1.27rem;
+            font-size: 1.3rem;
             cursor: pointer;
-            padding: 0 4px;
+            padding: 0 5px;
             border-radius: 50%;
             transition: 0.2s;
             line-height: 1.4;
-            width: 26px;
-            height: 26px;
+            width: 28px;
+            height: 28px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -2248,55 +2248,55 @@
             z-index: 5;
         }
         .report-close-x:hover { background: rgba(255, 255, 255, 0.3); transform: scale(1.1); }
-        .report-body { padding: 12px 16px; max-height: 55vh; overflow-y: auto; }
+        .report-body { padding: 14px 18px; max-height: 55vh; overflow-y: auto; }
         .report-body .info-row {
             display: flex;
             justify-content: space-between;
-            padding: 4px 0;
+            padding: 5px 0;
             border-bottom: 1px solid #f0f0f0;
-            font-size: 0.75rem !important;
+            font-size: 0.8rem !important;
         }
         .report-body .info-row .label { color: #7f8c8d; font-weight: 500; }
         .report-body .info-row .value { color: #1e3b4a; font-weight: 600; text-align: right; }
         .report-body .info-row.total {
             border-top: 2px solid #1c4e6c;
             border-bottom: none;
-            padding-top: 6px;
-            margin-top: 3px;
+            padding-top: 8px;
+            margin-top: 4px;
             font-weight: 800;
-            font-size: 0.86rem !important;
+            font-size: 0.92rem !important;
         }
-        .report-body .info-row.total .value { color: #0a2b3c; font-size: 0.98rem; }
+        .report-body .info-row.total .value { color: #0a2b3c; font-size: 1.05rem; }
         .report-ussd-section {
             background: #f0f6fb;
             border-radius: 8px;
-            padding: 8px 10px;
-            margin-top: 6px;
+            padding: 10px 12px;
+            margin-top: 8px;
             border: 1px dashed #2c7da0;
         }
         .report-ussd-section .ussd-code {
             font-family: monospace;
             font-weight: 700;
-            font-size: 0.86rem;
+            font-size: 0.9rem;
             color: #0f2b3d;
             background: white;
-            padding: 4px 10px;
+            padding: 5px 12px;
             border-radius: 6px;
             display: block;
             word-break: break-all;
-            margin-top: 3px;
+            margin-top: 4px;
             border: 1px solid #d0dce8;
         }
         .report-footer {
             background: #f5f8fa;
-            padding: 8px 16px 10px 16px;
+            padding: 10px 18px 12px 18px;
             border-top: 1px solid #e8edf2;
             display: flex;
             gap: 6px;
             flex-wrap: wrap;
             justify-content: center;
         }
-        .report-footer .action-btn { flex: 1; min-width: 80px; }
+        .report-footer .action-btn { flex: 1; min-width: 90px; }
         .report-footer .action-btn.copy-btn { background: #2c7da0; }
         .report-footer .action-btn.copy-btn:hover { background: #1f5068; }
 
@@ -2307,15 +2307,15 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 3px 4px;
+            padding: 4px 5px;
             border-bottom: 1px solid #eee;
             cursor: pointer;
             transition: background 0.2s;
-            font-size: 0.75rem !important;
+            font-size: 0.8rem !important;
         }
         .goods-item:hover { background: #fef9f0; }
-        .goods-name { font-weight: 600; font-size: 0.75rem !important; }
-        .goods-price { color: #f4a261; font-weight: 700; font-size: 0.75rem !important; }
+        .goods-name { font-weight: 600; font-size: 0.8rem !important; }
+        .goods-price { color: #f4a261; font-weight: 700; font-size: 0.8rem !important; }
 
         /* ================================================================
            RECEIPT SHARE
@@ -2325,7 +2325,7 @@
             flex-direction: column;
             gap: 3px;
             align-items: center;
-            margin-top: 6px;
+            margin-top: 8px;
         }
         .receipt-share-group {
             display: flex;
@@ -2343,7 +2343,7 @@
         }
         .receipt-share-btn {
             border: none;
-            padding: 2px 7px;
+            padding: 2px 8px;
             border-radius: 30px;
             font-weight: 600;
             font-size: 0.58rem !important;
@@ -2352,15 +2352,15 @@
             display: inline-flex;
             align-items: center;
             gap: 2px;
-            height: 20px;
+            height: 22px;
             color: white;
-            min-width: 30px;
+            min-width: 32px;
             justify-content: center;
             flex: 0 1 auto;
         }
-        .share-row .receipt-share-btn { flex: 0 1 auto; min-width: 26px; }
+        .share-row .receipt-share-btn { flex: 0 1 auto; min-width: 28px; }
         .receipt-share-label {
-            font-size: 0.52rem;
+            font-size: 0.55rem;
             color: #7f8c8d;
             text-align: center;
             width: 100%;
@@ -2376,25 +2376,25 @@
             #currencyConverterModal .modal-content { max-width: 100%; width: 98%; border-radius: 12px; }
             #agentReportModal .modal-content { max-width: 100%; width: 98%; border-radius: 12px; }
             #agreementModal .modal-content { max-width: 100%; width: 98%; border-radius: 12px; }
-            #dashboardModal .modal-content { max-width: 100%; width: 98%; padding: 0.4rem; }
-            .receipt-body { padding: 6px 8px 4px 8px; }
-            .receipt-row { font-size: 0.58rem !important; }
-            .report-body { padding: 8px 10px; }
-            .report-body .info-row { font-size: 0.63rem !important; }
-            .converter-body { padding: 8px 10px 6px 10px; }
-            .converter-results .conv-row { font-size: 0.63rem !important; }
-            .agreement-body { padding: 8px 10px; font-size: 0.63rem !important; }
-            .modal-content { padding: 0.5rem; max-width: 100%; width: 96%; }
+            #dashboardModal .modal-content { max-width: 100%; width: 98%; padding: 0.5rem; }
+            .receipt-body { padding: 8px 10px 6px 10px; }
+            .receipt-row { font-size: 0.65rem !important; }
+            .report-body { padding: 10px 12px; }
+            .report-body .info-row { font-size: 0.7rem !important; }
+            .converter-body { padding: 10px 12px 8px 12px; }
+            .converter-results .conv-row { font-size: 0.7rem !important; }
+            .agreement-body { padding: 10px 12px; font-size: 0.7rem !important; }
+            .modal-content { padding: 0.6rem; max-width: 100%; width: 96%; }
         }
         @media (max-width: 400px) {
-            .receipt-share-btn { font-size: 0.46rem !important; padding: 1px 4px; height: 16px; min-width: 22px; }
-            .share-row .receipt-share-btn { min-width: 20px; }
-            .receipt-share-label { font-size: 0.46rem; }
-            .action-btn { font-size: 0.58rem !important; padding: 3px 6px; height: 26px; }
-            .modal-content h3 { font-size: 0.75rem !important; }
-            #dashboardModal th, #dashboardModal td { font-size: 0.52rem !important; padding: 1px 2px; }
-            .converter-results .conv-row { font-size: 0.58rem !important; }
-            .report-body .info-row { font-size: 0.58rem !important; }
+            .receipt-share-btn { font-size: 0.5rem !important; padding: 2px 5px; height: 18px; min-width: 24px; }
+            .share-row .receipt-share-btn { min-width: 22px; }
+            .receipt-share-label { font-size: 0.5rem; }
+            .action-btn { font-size: 0.62rem !important; padding: 4px 8px; height: 28px; }
+            .modal-content h3 { font-size: 0.8rem !important; }
+            #dashboardModal th, #dashboardModal td { font-size: 0.55rem !important; padding: 2px 3px; }
+            .converter-results .conv-row { font-size: 0.62rem !important; }
+            .report-body .info-row { font-size: 0.62rem !important; }
         }
     </style>
 </head>
@@ -2403,7 +2403,7 @@
     APP CONTAINER
     ============================================================ -->
     <div class="app-card" id="appContainer">
-        <!-- HEADER WITH NEW LOGO -->
+        <!-- HEADER WITH NEW LOGO - Buttons aligned with logo -->
         <div class="live-header">
             <div class="logo-container">
                 <div class="africa-map-logo">
@@ -2440,6 +2440,7 @@
                 </div>
                 <span class="brand-text" id="brandText">Afri<span id="dashboardTrigger">P</span>ay</span>
             </div>
+            <!-- Header buttons - aligned with logo -->
             <div class="header-right">
                 <div class="datetime-box">
                     <div id="currentDate">--</div>
@@ -2561,8 +2562,8 @@
                     <div class="input-group"><label id="clientNameLabel" data-i18n="client_name">Client *</label><input type="text" id="clientName" readonly /></div>
                     <div class="input-group"><label id="clientPhoneLabel" data-i18n="client_phone">Phone *</label><input type="tel" id="clientPhone" readonly /></div>
                 </div>
-                <div style="display:flex; align-items:center; gap:4px; margin-bottom:0.3rem; flex-wrap:wrap;">
-                    <span style="font-size:0.63rem; color:#1c6e8f;" data-i18n="agent_select_hint">📋 Select agent or <strong>Add Client</strong></span>
+                <div style="display:flex; align-items:center; gap:4px; margin-bottom:0.35rem; flex-wrap:wrap;">
+                    <span style="font-size:0.7rem; color:#1c6e8f;" data-i18n="agent_select_hint">📋 Select agent or <strong>Add Client</strong></span>
                     <span id="slModeNote" class="sl-mode-note" style="display:none;">🌍 Intl</span>
                     <span id="guineaModeNote" class="guinea-mode-note" style="display:none;">🇬🇳 Guinea</span>
                 </div>
@@ -2619,18 +2620,18 @@
                     <button type="button" class="tx-btn" id="generateTxBtn" data-i18n="gen">Gen</button>
                     <button type="button" class="tx-btn copy" id="copyTxBtn" data-i18n="copy">Copy</button>
                 </div>
-                <div class="section-title" style="margin-top:0.3rem;" data-i18n="provider_tx_section">🔐 Provider TX ID</div>
+                <div class="section-title" style="margin-top:0.35rem;" data-i18n="provider_tx_section">🔐 Provider TX ID</div>
                 <div class="input-group">
                     <label for="providerTxId" data-i18n="provider_tx_id_label">Provider TX ID *</label>
                     <input type="text" id="providerTxId" placeholder="AB123456.1234.X12345" pattern="[A-Za-z]{2}[0-9]{6}\.[0-9]{4}\.[A-Za-z][0-9]{5}" />
-                    <div style="font-size:0.58rem; color:#666; margin-top:1px;" data-i18n="provider_tx_id_format">Format: AB123456.1234.X12345</div>
-                    <div id="providerTxIdError" class="error-msg" style="font-size:0.63rem; display:none;"></div>
+                    <div style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="provider_tx_id_format">Format: AB123456.1234.X12345</div>
+                    <div id="providerTxIdError" class="error-msg" style="font-size:0.68rem; display:none;"></div>
                 </div>
                 <div class="input-group" id="mainTransferCodeGroup" style="display:none;">
                     <label for="mainTransferCode" data-i18n="transfer_code_label">Transfer Code *</label>
                     <input type="text" id="mainTransferCode" placeholder="6-14 digits" maxlength="14" pattern="[0-9]{6}|[0-9]{8}|[0-9]{10}|[0-9]{12}|[0-9]{14}" />
-                    <div style="font-size:0.58rem; color:#666; margin-top:1px;" data-i18n="transfer_code_hint">6-14 digit transfer code</div>
-                    <div id="mainTransferCodeError" class="error-msg" style="font-size:0.63rem; display:none;"></div>
+                    <div style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="transfer_code_hint">6-14 digit transfer code</div>
+                    <div id="mainTransferCodeError" class="error-msg" style="font-size:0.68rem; display:none;"></div>
                 </div>
                 <button type="submit" class="btn-submit" id="submitBtn" data-i18n="submit">Submit</button>
                 <div class="business-strip">
@@ -2670,13 +2671,13 @@
     <div id="infoModal" class="modal"><div class="modal-content"><h3 id="modalTitle"></h3><div id="modalBody"></div><button class="action-btn close-modal" data-i18n="close">Close</button></div></div>
 
     <!-- Subscribe Modal -->
-    <div id="subscribeModal" class="modal"><div class="modal-content"><h3 data-i18n="subscribe_title">📧 Subscribe</h3><input type="email" id="subEmail" placeholder="Email" style="width:100%; padding:4px 8px; margin:3px 0; border-radius:30px; border:1px solid #ddd; font-size:0.86rem; height:34px;" /><div class="action-buttons-row"><button id="submitSubscribeBtn" class="action-btn" data-i18n="subscribe">Subscribe</button><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div></div></div>
+    <div id="subscribeModal" class="modal"><div class="modal-content"><h3 data-i18n="subscribe_title">📧 Subscribe</h3><input type="email" id="subEmail" placeholder="Email" style="width:100%; padding:5px 10px; margin:3px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;" /><div class="action-buttons-row"><button id="submitSubscribeBtn" class="action-btn" data-i18n="subscribe">Subscribe</button><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div></div></div>
 
     <!-- Login Modal -->
-    <div id="loginModal" class="modal"><div class="modal-content"><h3 data-i18n="login_title">🔐 Login</h3><input type="text" id="loginName" placeholder="Full Name" style="width:100%; padding:4px 8px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.86rem; height:34px;" /><input type="tel" id="loginPhone" placeholder="Phone" style="width:100%; padding:4px 8px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.86rem; height:34px;" /><div id="loginError" class="error-msg"></div><div class="action-buttons-row"><button id="doLoginBtn" class="action-btn" data-i18n="login">Login</button><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div></div></div>
+    <div id="loginModal" class="modal"><div class="modal-content"><h3 data-i18n="login_title">🔐 Login</h3><input type="text" id="loginName" placeholder="Full Name" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;" /><input type="tel" id="loginPhone" placeholder="Phone" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;" /><div id="loginError" class="error-msg"></div><div class="action-buttons-row"><button id="doLoginBtn" class="action-btn" data-i18n="login">Login</button><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div></div></div>
 
     <!-- Register Modal -->
-    <div id="registerModal" class="modal"><div class="modal-content"><h3 data-i18n="register_title">📝 Register</h3><input type="text" id="regName" placeholder="Full Name *" style="width:100%; padding:4px 8px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.86rem; height:34px;" /><input type="tel" id="regPhone" placeholder="Phone *" style="width:100%; padding:4px 8px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.86rem; height:34px;" /><input type="text" id="regAddress" placeholder="Address" style="width:100%; padding:4px 8px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.86rem; height:34px;" /><div class="input-group" style="margin-bottom:0.3rem;"><label style="font-size:0.69rem;font-weight:700;color:#1e3b4a;" data-i18n="city">City *</label><div class="city-input-row"><select id="regCitySelect"><option value="">Select city...</option><option value="Freetown">Freetown</option><option value="Abuja">Abuja</option><option value="Accra">Accra</option><option value="Nairobi">Nairobi</option><option value="Monrovia">Monrovia</option><option value="Dakar">Dakar</option><option value="Conakry">Conakry</option><option value="Bamako">Bamako</option><option value="Yamoussoukro">Yamoussoukro</option><option value="Niamey">Niamey</option><option value="Porto-Novo">Porto-Novo</option><option value="Bissau">Bissau</option><option value="Banjul">Banjul</option><option value="Lomé">Lomé</option><option value="Bangui">Bangui</option><option value="Addis Ababa">Addis Ababa</option><option value="Libreville">Libreville</option><option value="Antananarivo">Antananarivo</option><option value="Rabat">Rabat</option><option value="Kigali">Kigali</option><option value="Kampala">Kampala</option><option value="Kinshasa">Kinshasa</option><option value="Ouagadougou">Ouagadougou</option></select><span class="or-text">OR</span><input type="text" id="regCityOther" placeholder="Other city" /></div></div><select id="regCountry" style="width:100%; padding:4px 8px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.86rem; height:34px;"><option value="Sierra Leone">Sierra Leone</option><option value="Nigeria">Nigeria</option><option value="Ghana">Ghana</option><option value="Kenya">Kenya</option><option value="Liberia">Liberia</option><option value="Senegal">Senegal</option><option value="Guinea">Guinea</option><option value="Mali">Mali</option><option value="Ivory Coast">Ivory Coast</option><option value="Niger">Niger</option><option value="Benin">Benin</option><option value="Guinea Bissau">Guinea Bissau</option><option value="Gambia">Gambia</option><option value="Togo">Togo</option><option value="Central Africa Rep">CAR</option><option value="Ethiopia">Ethiopia</option><option value="Gabon">Gabon</option><option value="Madagascar">Madagascar</option><option value="Morocco">Morocco</option><option value="Rwanda">Rwanda</option><option value="Uganda">Uganda</option><option value="DR Congo">DRC</option><option value="Burkina Faso">Burkina</option></select><select id="regLanguage" style="width:100%; padding:4px 8px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.86rem; height:34px;"><option value="en">English</option><option value="fr">Français</option><option value="es">Español</option></select><label style="font-size:0.69rem;font-weight:700;color:#1e3b4a;margin-top:2px;" data-i18n="choose_icon">Icon:</label><div class="emoji-grid" id="emojiPickerGrid"><span class="emoji-option" data-emoji="👤">👤</span><span class="emoji-option" data-emoji="👨">👨</span><span class="emoji-option" data-emoji="👩">👩</span><span class="emoji-option" data-emoji="🧑">🧑</span><span class="emoji-option" data-emoji="👦">👦</span><span class="emoji-option" data-emoji="👧">👧</span><span class="emoji-option" data-emoji="🧒">🧒</span><span class="emoji-option" data-emoji="👨‍💻">👨‍💻</span><span class="emoji-option" data-emoji="👩‍💻">👩‍💻</span><span class="emoji-option" data-emoji="🧑‍💻">🧑‍💻</span><span class="emoji-option" data-emoji="👨‍🎓">👨‍🎓</span><span class="emoji-option" data-emoji="👩‍🎓">👩‍🎓</span></div><div style="margin-top:4px;"><label style="font-size:0.69rem;font-weight:700;color:#1e3b4a;" data-i18n="upload_image">Upload image:</label><input type="file" id="regProfileImage" accept="image/*" style="width:100%; padding:3px; border-radius:20px; border:1px solid #ddd; font-size:0.8rem; height:32px;" /><div id="regProfilePreview" class="image-upload-preview" style="display:none;"><img src="#" alt="Preview" /><button type="button" id="regProfileRemove" class="remove-image-btn" data-i18n="remove">✕</button></div></div><div style="display:flex; gap:4px; align-items:center; margin-top:3px;"><button type="button" class="action-btn" id="regGenerateUssdBtn" style="flex:1; background:#2c7da0; height:32px; font-size:0.8rem;" data-i18n="generate_ussd">📱 USSD</button></div><div class="ussd-result-box" id="regUssdResult"><span class="ussd-label">📞 USSD:</span><span class="ussd-code-value" id="regUssdCode"></span><button class="copy-ussd-btn" id="regCopyUssdBtn" data-i18n="copy">Copy</button></div><div id="regError" class="error-msg"></div><div id="regSuccess" class="success-msg"></div><div class="action-buttons-row"><button id="doRegisterBtn" class="action-btn" data-i18n="register">Register</button><button id="registerAgentBtn" class="action-btn orange" data-i18n="register_agent">🏢 Agent</button><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div></div></div>
+    <div id="registerModal" class="modal"><div class="modal-content"><h3 data-i18n="register_title">📝 Register</h3><input type="text" id="regName" placeholder="Full Name *" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;" /><input type="tel" id="regPhone" placeholder="Phone *" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;" /><input type="text" id="regAddress" placeholder="Address" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;" /><div class="input-group" style="margin-bottom:0.35rem;"><label style="font-size:0.75rem;font-weight:700;color:#1e3b4a;" data-i18n="city">City *</label><div class="city-input-row"><select id="regCitySelect"><option value="">Select city...</option><option value="Freetown">Freetown</option><option value="Abuja">Abuja</option><option value="Accra">Accra</option><option value="Nairobi">Nairobi</option><option value="Monrovia">Monrovia</option><option value="Dakar">Dakar</option><option value="Conakry">Conakry</option><option value="Bamako">Bamako</option><option value="Yamoussoukro">Yamoussoukro</option><option value="Niamey">Niamey</option><option value="Porto-Novo">Porto-Novo</option><option value="Bissau">Bissau</option><option value="Banjul">Banjul</option><option value="Lomé">Lomé</option><option value="Bangui">Bangui</option><option value="Addis Ababa">Addis Ababa</option><option value="Libreville">Libreville</option><option value="Antananarivo">Antananarivo</option><option value="Rabat">Rabat</option><option value="Kigali">Kigali</option><option value="Kampala">Kampala</option><option value="Kinshasa">Kinshasa</option><option value="Ouagadougou">Ouagadougou</option></select><span class="or-text">OR</span><input type="text" id="regCityOther" placeholder="Other city" /></div></div><select id="regCountry" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;"><option value="Sierra Leone">Sierra Leone</option><option value="Nigeria">Nigeria</option><option value="Ghana">Ghana</option><option value="Kenya">Kenya</option><option value="Liberia">Liberia</option><option value="Senegal">Senegal</option><option value="Guinea">Guinea</option><option value="Mali">Mali</option><option value="Ivory Coast">Ivory Coast</option><option value="Niger">Niger</option><option value="Benin">Benin</option><option value="Guinea Bissau">Guinea Bissau</option><option value="Gambia">Gambia</option><option value="Togo">Togo</option><option value="Central Africa Rep">CAR</option><option value="Ethiopia">Ethiopia</option><option value="Gabon">Gabon</option><option value="Madagascar">Madagascar</option><option value="Morocco">Morocco</option><option value="Rwanda">Rwanda</option><option value="Uganda">Uganda</option><option value="DR Congo">DRC</option><option value="Burkina Faso">Burkina</option></select><select id="regLanguage" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;"><option value="en">English</option><option value="fr">Français</option><option value="es">Español</option></select><label style="font-size:0.75rem;font-weight:700;color:#1e3b4a;margin-top:2px;" data-i18n="choose_icon">Icon:</label><div class="emoji-grid" id="emojiPickerGrid"><span class="emoji-option" data-emoji="👤">👤</span><span class="emoji-option" data-emoji="👨">👨</span><span class="emoji-option" data-emoji="👩">👩</span><span class="emoji-option" data-emoji="🧑">🧑</span><span class="emoji-option" data-emoji="👦">👦</span><span class="emoji-option" data-emoji="👧">👧</span><span class="emoji-option" data-emoji="🧒">🧒</span><span class="emoji-option" data-emoji="👨‍💻">👨‍💻</span><span class="emoji-option" data-emoji="👩‍💻">👩‍💻</span><span class="emoji-option" data-emoji="🧑‍💻">🧑‍💻</span><span class="emoji-option" data-emoji="👨‍🎓">👨‍🎓</span><span class="emoji-option" data-emoji="👩‍🎓">👩‍🎓</span></div><div style="margin-top:4px;"><label style="font-size:0.75rem;font-weight:700;color:#1e3b4a;" data-i18n="upload_image">Upload image:</label><input type="file" id="regProfileImage" accept="image/*" style="width:100%; padding:4px; border-radius:20px; border:1px solid #ddd; font-size:0.85rem; height:36px;" /><div id="regProfilePreview" class="image-upload-preview" style="display:none;"><img src="#" alt="Preview" /><button type="button" id="regProfileRemove" class="remove-image-btn" data-i18n="remove">✕</button></div></div><div style="display:flex; gap:4px; align-items:center; margin-top:3px;"><button type="button" class="action-btn" id="regGenerateUssdBtn" style="flex:1; background:#2c7da0; height:36px; font-size:0.85rem;" data-i18n="generate_ussd">📱 USSD</button></div><div class="ussd-result-box" id="regUssdResult"><span class="ussd-label">📞 USSD:</span><span class="ussd-code-value" id="regUssdCode"></span><button class="copy-ussd-btn" id="regCopyUssdBtn" data-i18n="copy">Copy</button></div><div id="regError" class="error-msg"></div><div id="regSuccess" class="success-msg"></div><div class="action-buttons-row"><button id="doRegisterBtn" class="action-btn" data-i18n="register">Register</button><button id="registerAgentBtn" class="action-btn orange" data-i18n="register_agent">🏢 Agent</button><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div></div></div>
 
     <!-- Agent Registration Modal -->
     <div id="agentRegistrationModal" class="modal">
@@ -2691,17 +2692,17 @@
             <div class="input-group"><label data-i18n="agent_business_type">Type *</label><select id="agentBusinessType"><option value="Retail">Retail</option><option value="Wholesale">Wholesale</option><option value="Service">Service</option><option value="Manufacturing">Manufacturing</option><option value="Transport">Transport</option><option value="Hospitality">Hospitality</option><option value="Financial">Financial</option><option value="Other">Other</option></select></div>
             <div class="double-row"><div class="input-group"><label data-i18n="agent_owner_name">Owner *</label><input type="text" id="agentOwnerName" placeholder="Owner name" /></div><div class="input-group"><label data-i18n="agent_id_type">ID Type *</label><select id="agentIdType"><option value="National ID">National ID</option><option value="Passport">Passport</option><option value="Driver's License">Driver's License</option><option value="Voter's Card">Voter's Card</option><option value="Other">Other</option></select></div></div>
             <div class="input-group"><label data-i18n="agent_id_number">ID Number *</label><input type="text" id="agentIdNumber" placeholder="e.g. SL-123456" /></div>
-            <div class="input-group"><label data-i18n="agent_id_image">ID Image *</label><input type="file" id="agentIdImage" accept="image/*" capture="environment" style="padding:3px; height:auto;" /><img id="agentIdPreview" class="id-preview" alt="ID" /></div>
-            <div class="input-group"><label data-i18n="agent_logo">Logo *</label><input type="file" id="agentLogoImage" accept="image/*" required style="padding:3px; height:auto;" /><div id="agentLogoPreviewContainer" class="image-upload-preview agent-logo-preview" style="display:none;"><img src="#" alt="Logo" /><button type="button" id="agentLogoRemove" class="remove-image-btn" data-i18n="remove">✕</button></div><div style="font-size:0.58rem; color:#666; margin-top:1px;" data-i18n="agent_logo_hint">Upload business logo</div></div>
+            <div class="input-group"><label data-i18n="agent_id_image">ID Image *</label><input type="file" id="agentIdImage" accept="image/*" capture="environment" style="padding:4px; height:auto;" /><img id="agentIdPreview" class="id-preview" alt="ID" /></div>
+            <div class="input-group"><label data-i18n="agent_logo">Logo *</label><input type="file" id="agentLogoImage" accept="image/*" required style="padding:4px; height:auto;" /><div id="agentLogoPreviewContainer" class="image-upload-preview agent-logo-preview" style="display:none;"><img src="#" alt="Logo" /><button type="button" id="agentLogoRemove" class="remove-image-btn" data-i18n="remove">✕</button></div><div style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="agent_logo_hint">Upload business logo</div></div>
             <div class="input-group"><label data-i18n="agent_mobile_money">Mobile Money *</label><input type="tel" id="agentMobileMoney" placeholder="e.g. 23276123456" /></div>
-            <div class="input-group"><label for="agentCollateralLimit" data-i18n="collateral_limit_label">💳 Collateral *</label><select id="agentCollateralLimit"><option value="500">500</option><option value="1000">1,000</option><option value="1500">1,500</option><option value="2000">2,000</option><option value="2500">2,500</option><option value="3000">3,000</option><option value="3500">3,500</option><option value="4000">4,000</option><option value="4500">4,500</option><option value="5000" selected>5,000</option><option value="5500">5,500</option><option value="6000">6,000</option><option value="6500">6,500</option><option value="7000">7,000</option><option value="7500">7,500</option><option value="8000">8,000</option><option value="8500">8,500</option><option value="9000">9,000</option><option value="9500">9,500</option><option value="10000">10,000</option></select><div style="font-size:0.58rem; color:#666; margin-top:1px;" data-i18n="collateral_limit_hint">Max transaction amount</div></div>
+            <div class="input-group"><label for="agentCollateralLimit" data-i18n="collateral_limit_label">💳 Collateral *</label><select id="agentCollateralLimit"><option value="500">500</option><option value="1000">1,000</option><option value="1500">1,500</option><option value="2000">2,000</option><option value="2500">2,500</option><option value="3000">3,000</option><option value="3500">3,500</option><option value="4000">4,000</option><option value="4500">4,500</option><option value="5000" selected>5,000</option><option value="5500">5,500</option><option value="6000">6,000</option><option value="6500">6,500</option><option value="7000">7,000</option><option value="7500">7,500</option><option value="8000">8,000</option><option value="8500">8,500</option><option value="9000">9,000</option><option value="9500">9,500</option><option value="10000">10,000</option></select><div style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="collateral_limit_hint">Max transaction amount</div></div>
             <div class="input-group"><label data-i18n="agent_country_code">Country Code</label><select id="agentCountryCode"><option value="+232">🇸🇱 +232</option><option value="+234">🇳🇬 +234</option><option value="+233">🇬🇭 +233</option><option value="+254">🇰🇪 +254</option><option value="+231">🇱🇷 +231</option><option value="+221">🇸🇳 +221</option><option value="+224" selected>🇬🇳 +224</option><option value="+223">🇲🇱 +223</option><option value="+225">🇨🇮 +225</option><option value="+227">🇳🇪 +227</option><option value="+229">🇧🇯 +229</option><option value="+245">🇬🇼 +245</option><option value="+220">🇬🇲 +220</option><option value="+228">🇹🇬 +228</option><option value="+236">🇨🇫 +236</option><option value="+251">🇪🇹 +251</option><option value="+241">🇬🇦 +241</option><option value="+261">🇲🇬 +261</option><option value="+212">🇲🇦 +212</option><option value="+250">🇷🇼 +250</option><option value="+256">🇺🇬 +256</option><option value="+243">🇨🇩 +243</option><option value="+226">🇧🇫 +226</option></select></div>
-            <div class="input-group"><label data-i18n="agent_password">Password *</label><div style="display:flex; gap:4px; align-items:center; flex-wrap:wrap;"><input type="text" id="agentPassword" placeholder="A1B2C3" style="flex:1; min-width:80px; letter-spacing:2px; font-family:monospace;" readonly /><button type="button" class="action-btn green" id="generatePasswordBtn" style="padding:3px 10px; height:32px; font-size:0.69rem;" data-i18n="generate_password">🔑 Gen</button></div><div id="agentPasswordHint" style="font-size:0.58rem; color:#666; margin-top:1px;" data-i18n="password_hint">Click Gen to create 6-char password</div></div>
-            <div class="input-group"><label data-i18n="agent_pin_label">5-Digit PIN *</label><div style="display:flex; gap:4px; align-items:center; flex-wrap:wrap;"><input type="text" id="agentPin" placeholder="12345" style="flex:1; min-width:80px; letter-spacing:2px; font-family:monospace;" readonly /><button type="button" class="action-btn green" id="generatePinBtn" style="padding:3px 10px; height:32px; font-size:0.69rem;" data-i18n="generate_pin">🔑 Gen PIN</button></div><div id="agentPinHint" style="font-size:0.58rem; color:#666; margin-top:1px;" data-i18n="pin_hint">Click to create 5-digit PIN</div></div>
-            <div class="collateral-box"><div style="display:flex; align-items:center; gap:4px; flex-wrap:wrap;"><span style="font-weight:700; font-size:0.75rem; color:#1c6e8f;" data-i18n="collateral_label">🔒 Collateral</span><button class="action-btn orange" id="generateCollateralBtn" style="padding:3px 10px; height:30px; font-size:0.69rem;" data-i18n="generate_collateral">USSD</button></div><div id="collateralResult" style="margin-top:3px;"><span style="font-size:0.63rem; color:#666;" data-i18n="collateral_hint">Generate USSD for Orange Money collateral</span><div id="collateralUssdDisplay" class="ussd-code" style="display:none;"></div></div><div id="collateralError" class="error-msg" style="font-size:0.63rem;"></div><input type="hidden" id="collateralAmount" value="0" /></div>
-            <div style="margin:6px 0 4px 0; text-align:center;"><button class="action-btn orange" id="viewAgreementBtn" style="width:100%; height:36px; font-size:0.8rem;" data-i18n="view_agreement">📜 Agreement</button><div id="agreementStatusDisplay" style="font-size:0.63rem; color:#7f8c8d; margin-top:2px;"><span data-i18n="agreement_status_label">Agreement:</span> <span id="agreementStatusText" style="font-weight:700; color:#e74c3c;" data-i18n="not_signed">Not Signed</span></div></div>
-            <div class="input-group" style="margin-top:0.3rem;"><label for="agentProviderTxId" data-i18n="provider_tx_id_label">🔐 Provider TX ID *</label><input type="text" id="agentProviderTxId" placeholder="AB123456.1234.X12345" pattern="[A-Za-z]{2}[0-9]{6}\.[0-9]{4}\.[A-Za-z][0-9]{5}" /><div style="font-size:0.58rem; color:#666; margin-top:1px;" data-i18n="provider_tx_id_format">Format: AB123456.1234.X12345</div><div id="agentProviderTxIdError" class="error-msg" style="font-size:0.63rem; display:none;"></div></div>
-            <div class="input-group" id="agentTransferCodeGroup" style="display:none;"><label for="agentTransferCode" data-i18n="transfer_code_label">Transfer Code *</label><input type="text" id="agentTransferCode" placeholder="6-14 digits" maxlength="14" pattern="[0-9]{6}|[0-9]{8}|[0-9]{10}|[0-9]{12}|[0-9]{14}" /><div style="font-size:0.58rem; color:#666; margin-top:1px;" data-i18n="transfer_code_hint">6-14 digit code</div><div id="agentTransferCodeError" class="error-msg" style="font-size:0.63rem; display:none;"></div></div>
+            <div class="input-group"><label data-i18n="agent_password">Password *</label><div style="display:flex; gap:4px; align-items:center; flex-wrap:wrap;"><input type="text" id="agentPassword" placeholder="A1B2C3" style="flex:1; min-width:80px; letter-spacing:2px; font-family:monospace;" readonly /><button type="button" class="action-btn green" id="generatePasswordBtn" style="padding:4px 12px; height:36px; font-size:0.75rem;" data-i18n="generate_password">🔑 Gen</button></div><div id="agentPasswordHint" style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="password_hint">Click Gen to create 6-char password</div></div>
+            <div class="input-group"><label data-i18n="agent_pin_label">5-Digit PIN *</label><div style="display:flex; gap:4px; align-items:center; flex-wrap:wrap;"><input type="text" id="agentPin" placeholder="12345" style="flex:1; min-width:80px; letter-spacing:2px; font-family:monospace;" readonly /><button type="button" class="action-btn green" id="generatePinBtn" style="padding:4px 12px; height:36px; font-size:0.75rem;" data-i18n="generate_pin">🔑 Gen PIN</button></div><div id="agentPinHint" style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="pin_hint">Click to create 5-digit PIN</div></div>
+            <div class="collateral-box"><div style="display:flex; align-items:center; gap:4px; flex-wrap:wrap;"><span style="font-weight:700; font-size:0.8rem; color:#1c6e8f;" data-i18n="collateral_label">🔒 Collateral</span><button class="action-btn orange" id="generateCollateralBtn" style="padding:4px 12px; height:34px; font-size:0.75rem;" data-i18n="generate_collateral">USSD</button></div><div id="collateralResult" style="margin-top:3px;"><span style="font-size:0.68rem; color:#666;" data-i18n="collateral_hint">Generate USSD for Orange Money collateral</span><div id="collateralUssdDisplay" class="ussd-code" style="display:none;"></div></div><div id="collateralError" class="error-msg" style="font-size:0.68rem;"></div><input type="hidden" id="collateralAmount" value="0" /></div>
+            <div style="margin:6px 0 4px 0; text-align:center;"><button class="action-btn orange" id="viewAgreementBtn" style="width:100%; height:38px; font-size:0.85rem;" data-i18n="view_agreement">📜 Agreement</button><div id="agreementStatusDisplay" style="font-size:0.68rem; color:#7f8c8d; margin-top:2px;"><span data-i18n="agreement_status_label">Agreement:</span> <span id="agreementStatusText" style="font-weight:700; color:#e74c3c;" data-i18n="not_signed">Not Signed</span></div></div>
+            <div class="input-group" style="margin-top:0.35rem;"><label for="agentProviderTxId" data-i18n="provider_tx_id_label">🔐 Provider TX ID *</label><input type="text" id="agentProviderTxId" placeholder="AB123456.1234.X12345" pattern="[A-Za-z]{2}[0-9]{6}\.[0-9]{4}\.[A-Za-z][0-9]{5}" /><div style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="provider_tx_id_format">Format: AB123456.1234.X12345</div><div id="agentProviderTxIdError" class="error-msg" style="font-size:0.68rem; display:none;"></div></div>
+            <div class="input-group" id="agentTransferCodeGroup" style="display:none;"><label for="agentTransferCode" data-i18n="transfer_code_label">Transfer Code *</label><input type="text" id="agentTransferCode" placeholder="6-14 digits" maxlength="14" pattern="[0-9]{6}|[0-9]{8}|[0-9]{10}|[0-9]{12}|[0-9]{14}" /><div style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="transfer_code_hint">6-14 digit code</div><div id="agentTransferCodeError" class="error-msg" style="font-size:0.68rem; display:none;"></div></div>
             <div class="action-buttons-row" style="margin-top:6px;"><button class="action-btn" id="submitAgentRegistrationBtn" data-i18n="register_agent_submit">Register</button><button class="action-btn close-modal" id="closeAgentRegBtn" style="background:#2c7da0;" data-i18n="close">Close</button></div>
         </div>
     </div>
@@ -2711,7 +2712,7 @@
     <!-- They are included in the full file but omitted here for brevity -->
 
     <!-- ============================================================
-    JAVASCRIPT - Full implementation with FIX for "app not fully loaded"
+    JAVASCRIPT - Full implementation (same as previous working version)
     ============================================================ -->
     <script>
         // ================================================================
@@ -4362,8 +4363,8 @@
                 const logoImg = document.createElement('img');
                 logoImg.src = data.logoDataURL;
                 logoImg.alt = 'Logo';
-                logoImg.style.width = '22px';
-                logoImg.style.height = '22px';
+                logoImg.style.width = '24px';
+                logoImg.style.height = '24px';
                 logoImg.style.borderRadius = '50%';
                 logoImg.style.objectFit = 'cover';
                 logoImg.style.marginRight = '4px';
@@ -4372,7 +4373,7 @@
             } else {
                 const fallback = document.createElement('span');
                 fallback.textContent = '🏢';
-                fallback.style.fontSize = '0.9rem';
+                fallback.style.fontSize = '1rem';
                 fallback.style.marginRight = '4px';
                 btn.appendChild(fallback);
             }
@@ -4934,7 +4935,7 @@
             let html = '';
             if (agents.length === 0) {
                 html +=
-                    `<tr><td colspan="12" style="text-align:center; padding:10px; color:#95a5a6; font-size:0.69rem;">${t('no_agents')}</td></tr>`;
+                    `<tr><td colspan="12" style="text-align:center; padding:10px; color:#95a5a6; font-size:0.75rem;">${t('no_agents')}</td></tr>`;
             } else {
                 agents.forEach(agent => {
                     const data = agent.agentData || agent;
@@ -4953,9 +4954,9 @@
                             <td>${data.collateralLimit || 0}</td>
                             <td>${SecurityUtils.escapeHTML(data.countryCode || 'N/A')}</td>
                             <td><span class="status-badge ${statusClass}">${statusText}</span></td>
-                            <td>${hasAgreement ? `<button class="action-btn view-agreement-btn" data-agent-id="${agent.id}" style="background:#2c7da0; padding:1px 6px; height:22px; font-size:0.58rem;">📜</button>` : '—'}</td>
-                            <td><button class="action-btn approve-btn ${approved ? 'approved' : ''}" data-agent-id="${agent.id}" ${approved ? 'disabled' : ''} style="padding:1px 6px; height:22px; font-size:0.58rem;">${approved ? '✅' : 'Approve'}</button></td>
-                            <td><button class="action-btn remove-agent-btn" data-agent-id="${agent.id}" style="background:#e74c3c; padding:1px 6px; height:22px; font-size:0.58rem;">✕</button></td>
+                            <td>${hasAgreement ? `<button class="action-btn view-agreement-btn" data-agent-id="${agent.id}" style="background:#2c7da0; padding:2px 8px; height:26px; font-size:0.62rem;">📜</button>` : '—'}</td>
+                            <td><button class="action-btn approve-btn ${approved ? 'approved' : ''}" data-agent-id="${agent.id}" ${approved ? 'disabled' : ''} style="padding:2px 8px; height:26px; font-size:0.62rem;">${approved ? '✅' : 'Approve'}</button></td>
+                            <td><button class="action-btn remove-agent-btn" data-agent-id="${agent.id}" style="background:#e74c3c; padding:2px 8px; height:26px; font-size:0.62rem;">✕</button></td>
                         </tr>
                     `;
                 });
@@ -5092,32 +5093,32 @@
             if (!container) return;
             const transactions = getTransactions();
             if (transactions.length === 0) {
-                container.innerHTML = `<p style="text-align:center; color:#95a5a6; padding:6px; font-size:0.69rem;">${t('no_transactions')}</p>`;
+                container.innerHTML = `<p style="text-align:center; color:#95a5a6; padding:8px; font-size:0.75rem;">${t('no_transactions')}</p>`;
                 return;
             }
             let html = `
-                <div style="margin-top:10px; border-top:2px solid #dce8f0; padding-top:6px;">
-                    <h4 style="color:#1c6e8f; font-size:0.75rem;">📋 ${t('recent_transactions')} (${transactions.length})</h4>
+                <div style="margin-top:12px; border-top:2px solid #dce8f0; padding-top:8px;">
+                    <h4 style="color:#1c6e8f; font-size:0.8rem;">📋 ${t('recent_transactions')} (${transactions.length})</h4>
                     <div style="overflow-x:auto; max-height:200px; overflow-y:auto;">
-                        <table style="width:100%; font-size:0.63rem; border-collapse:collapse;">
+                        <table style="width:100%; font-size:0.68rem; border-collapse:collapse;">
                             <thead><tr style="background:#f0f4f8;">
-                                <th style="padding:2px 4px; text-align:left;">${t('date_th')}</th>
-                                <th style="padding:2px 4px; text-align:left;">${t('tx_id')}</th>
-                                <th style="padding:2px 4px; text-align:left;">${t('amount_th')}</th>
-                                <th style="padding:2px 4px; text-align:left;">${t('total_th')}</th>
-                                <th style="padding:2px 4px; text-align:left;">${t('agent')}</th>
-                                <th style="padding:2px 4px; text-align:left;">${t('client_label')}</th>
+                                <th style="padding:2px 5px; text-align:left;">${t('date_th')}</th>
+                                <th style="padding:2px 5px; text-align:left;">${t('tx_id')}</th>
+                                <th style="padding:2px 5px; text-align:left;">${t('amount_th')}</th>
+                                <th style="padding:2px 5px; text-align:left;">${t('total_th')}</th>
+                                <th style="padding:2px 5px; text-align:left;">${t('agent')}</th>
+                                <th style="padding:2px 5px; text-align:left;">${t('client_label')}</th>
                             </tr></thead>
                             <tbody>
             `;
             transactions.slice(0, 15).forEach(tx => {
                 html += `<tr style="border-bottom:1px solid #eee;">
-                    <td style="padding:2px 4px;">${SecurityUtils.escapeHTML(tx.date || '')}</td>
-                    <td style="padding:2px 4px; font-family:monospace;">${SecurityUtils.escapeHTML(tx.txId || '')}</td>
-                    <td style="padding:2px 4px;">${SecurityUtils.escapeHTML(tx.currency + ' ' + tx.baseAmount || '')}</td>
-                    <td style="padding:2px 4px; font-weight:700;">${SecurityUtils.escapeHTML(tx.currency + ' ' + tx.total || '')}</td>
-                    <td style="padding:2px 4px;">${SecurityUtils.escapeHTML(tx.agent || '')}</td>
-                    <td style="padding:2px 4px;">${SecurityUtils.escapeHTML(tx.client || 'N/A')}</td>
+                    <td style="padding:2px 5px;">${SecurityUtils.escapeHTML(tx.date || '')}</td>
+                    <td style="padding:2px 5px; font-family:monospace;">${SecurityUtils.escapeHTML(tx.txId || '')}</td>
+                    <td style="padding:2px 5px;">${SecurityUtils.escapeHTML(tx.currency + ' ' + tx.baseAmount || '')}</td>
+                    <td style="padding:2px 5px; font-weight:700;">${SecurityUtils.escapeHTML(tx.currency + ' ' + tx.total || '')}</td>
+                    <td style="padding:2px 5px;">${SecurityUtils.escapeHTML(tx.agent || '')}</td>
+                    <td style="padding:2px 5px;">${SecurityUtils.escapeHTML(tx.client || 'N/A')}</td>
                 </tr>`;
             });
             html += `</tbody></table></div></div>`;
@@ -5135,13 +5136,13 @@
             }
             const a = data.agreement;
             const content = `
-                <div style="max-height:60vh; overflow-y:auto; font-size:0.75rem;">
-                    <h3 style="font-size:0.98rem;">📜 Signed Agreement – ${SecurityUtils.escapeHTML(data.businessName || agent.name)}</h3>
+                <div style="max-height:60vh; overflow-y:auto; font-size:0.8rem;">
+                    <h3 style="font-size:1.05rem;">📜 Signed Agreement – ${SecurityUtils.escapeHTML(data.businessName || agent.name)}</h3>
                     <p><strong>Signed by:</strong> ${SecurityUtils.escapeHTML(a.agentName || '')}</p>
                     <p><strong>Business:</strong> ${SecurityUtils.escapeHTML(a.businessName || '')}</p>
                     <p><strong>Date:</strong> ${new Date(a.signedDate).toLocaleString()}</p>
-                    <div style="margin-top:6px; border:1px solid #ddd; padding:6px; border-radius:6px; background:#f8fafc; max-height:200px; overflow-y:auto; font-size:0.69rem;">${a.agreementText || 'N/A'}</div>
-                    ${a.signature ? `<div style="margin-top:6px; text-align:center;"><img src="${a.signature}" alt="Signature" style="max-width:150px; max-height:60px; border:1px solid #ddd; border-radius:4px;" /></div>` : ''}
+                    <div style="margin-top:6px; border:1px solid #ddd; padding:8px; border-radius:6px; background:#f8fafc; max-height:200px; overflow-y:auto; font-size:0.75rem;">${a.agreementText || 'N/A'}</div>
+                    ${a.signature ? `<div style="margin-top:6px; text-align:center;"><img src="${a.signature}" alt="Signature" style="max-width:160px; max-height:65px; border:1px solid #ddd; border-radius:4px;" /></div>` : ''}
                 </div>
                 <button class="action-btn close-modal" style="margin-top:6px;">Close</button>
             `;
@@ -5601,8 +5602,8 @@
                 <div class="clause"><span class="tag">Clause 2 – Commission</span><strong>I</strong> <span class="placeholder">${ownerName}</span>, <strong>Owner of:</strong> <span class="placeholder">${bizName}</span>, <strong>agreed</strong> that I receive <strong>7%</strong> of the charges when I send money for a client.<br><br><strong>And I also agree</strong> that I will receive <strong>12%</strong> of the cashing out charges if I receive money from client to client.</div>
                 <div class="clause"><span class="tag">Clause 3 – Warning & Closure</span><strong>I also agree</strong> that taking more than my percentage (%) for more than once my agent account will be closed. I will get a warning message at the first time.</div>
                 <div class="clause"><span class="tag">Clause 4 – Agent Signature</span><strong>Upon these I</strong> <span class="placeholder">${ownerName}</span>, <strong>Owner of:</strong> <span class="placeholder">${bizName}</span> <strong>Sign:</strong><div class="agreement-signature-area open" id="agreementSignatureArea"><canvas id="agreementSigCanvas" width="400" height="80"></canvas><div class="sig-actions"><button class="sig-clear" id="clearAgreementSig">🗑️ Clear</button><button class="sig-confirm" id="confirmAgreementSig">✅ Confirm</button></div></div><img class="sig-preview" id="agreementSigPreview" alt="Signature" /></div>
-                <div class="clause dev-clause"><span class="tag">Developer Agreement – NUSWEB</span><strong>I Mohamed Amine Jalloh CEO of NUSWEB the developer of AfriPay agrees</strong> that we will always deliver to the agents all required services, assistance and support to our <strong>Dear Agent</strong> <span class="placeholder">${ownerName}</span>.<br><br><strong>I also agree</strong> that our dear agent has the right to cancel this agreement and request for any damage payments and compensations that our farm will pay it back to the Agent and honor the agreement.<br><br><strong>I also agree</strong> that Agent gets <strong>7%</strong> of the charges if they send money for client.<br><br><strong>I also agree</strong> that the agent receives <strong>12%</strong> of the transfer charges if they cash out the money for the client.<br><br><strong>Upon that I sign:</strong> <span style="font-weight:700; color:#8e44ad;">Dev- Signature</span> <em style="font-size:0.6rem; color:#8e44ad;"> (pre-confirmed)</em></div>
-                <div style="font-size:0.63rem; color:#7f8c8d; text-align:center; margin-top:6px; border-top:1px solid #eee; padding-top:4px;">Binding between ${ownerName} (Agent) and Mohamed Amine Jalloh (Developer, NUSWEB).<br>Date: ${dateStr}</div>
+                <div class="clause dev-clause"><span class="tag">Developer Agreement – NUSWEB</span><strong>I Mohamed Amine Jalloh CEO of NUSWEB the developer of AfriPay agrees</strong> that we will always deliver to the agents all required services, assistance and support to our <strong>Dear Agent</strong> <span class="placeholder">${ownerName}</span>.<br><br><strong>I also agree</strong> that our dear agent has the right to cancel this agreement and request for any damage payments and compensations that our farm will pay it back to the Agent and honor the agreement.<br><br><strong>I also agree</strong> that Agent gets <strong>7%</strong> of the charges if they send money for client.<br><br><strong>I also agree</strong> that the agent receives <strong>12%</strong> of the transfer charges if they cash out the money for the client.<br><br><strong>Upon that I sign:</strong> <span style="font-weight:700; color:#8e44ad;">Dev- Signature</span> <em style="font-size:0.65rem; color:#8e44ad;"> (pre-confirmed)</em></div>
+                <div style="font-size:0.68rem; color:#7f8c8d; text-align:center; margin-top:6px; border-top:1px solid #eee; padding-top:4px;">Binding between ${ownerName} (Agent) and Mohamed Amine Jalloh (Developer, NUSWEB).<br>Date: ${dateStr}</div>
             `;
             body.innerHTML = html;
             window._currentAgreementHTML = html;
@@ -5856,7 +5857,7 @@
             sidebar.appendChild(groupsTitle);
             if (groups.length === 0) {
                 const empty = document.createElement('div');
-                empty.style.cssText = 'padding: 4px 8px; font-size: 0.63rem; color: #95a5a6; text-align: center;';
+                empty.style.cssText = 'padding: 4px 10px; font-size: 0.68rem; color: #95a5a6; text-align: center;';
                 empty.innerText = t('no_groups');
                 sidebar.appendChild(empty);
             } else {
@@ -5901,7 +5902,7 @@
             const allContacts = getAllContacts();
             if (allContacts.length === 0) {
                 const empty = document.createElement('div');
-                empty.style.cssText = 'padding: 4px 8px; font-size: 0.63rem; color: #95a5a6; text-align: center;';
+                empty.style.cssText = 'padding: 4px 10px; font-size: 0.68rem; color: #95a5a6; text-align: center;';
                 empty.innerText = t('no_contacts');
                 sidebar.appendChild(empty);
             } else {
@@ -5997,10 +5998,10 @@
                 <h3>${t('admin_register_title')}</h3>
                 <div id="adminAuthError" class="auth-error"></div>
                 <div id="adminAuthSuccess" class="auth-success"></div>
-                <div class="input-group"><label>${t('admin_name')}</label><input type="text" id="adminRegName" placeholder="Admin name" style="height:34px;" /></div>
-                <div class="input-group"><label>${t('admin_password')}</label><input type="password" id="adminRegPassword" placeholder="••••••••" style="height:34px;" /></div>
-                <div class="input-group"><label>${t('admin_confirm_password')}</label><input type="password" id="adminRegConfirmPassword" placeholder="••••••••" style="height:34px;" /></div>
-                <div class="input-group"><label>${t('admin_pin')}</label><input type="password" id="adminRegPin" placeholder="12345" maxlength="5" inputmode="numeric" style="height:34px;" /></div>
+                <div class="input-group"><label>${t('admin_name')}</label><input type="text" id="adminRegName" placeholder="Admin name" style="height:38px;" /></div>
+                <div class="input-group"><label>${t('admin_password')}</label><input type="password" id="adminRegPassword" placeholder="••••••••" style="height:38px;" /></div>
+                <div class="input-group"><label>${t('admin_confirm_password')}</label><input type="password" id="adminRegConfirmPassword" placeholder="••••••••" style="height:38px;" /></div>
+                <div class="input-group"><label>${t('admin_pin')}</label><input type="password" id="adminRegPin" placeholder="12345" maxlength="5" inputmode="numeric" style="height:38px;" /></div>
                 <button class="action-btn" id="adminRegisterAction" style="width:100%; margin-top:4px;">${t('admin_register_btn')}</button>
                 <div class="auth-divider">—</div>
                 <span class="auth-toggle-link" id="adminAuthToggle">${t('switch_to_login')}</span>
@@ -6016,9 +6017,9 @@
                 <h3>${t('admin_login_title')}</h3>
                 <div id="adminAuthError" class="auth-error"></div>
                 <div id="adminAuthSuccess" class="auth-success"></div>
-                <div class="input-group"><label>${t('admin_name')}</label><input type="text" id="adminLoginName" placeholder="Admin name" style="height:34px;" /></div>
-                <div class="input-group"><label>${t('admin_password')}</label><input type="password" id="adminLoginPassword" placeholder="••••••••" style="height:34px;" /></div>
-                <div class="input-group"><label>${t('admin_pin')}</label><input type="password" id="adminLoginPin" placeholder="12345" maxlength="5" inputmode="numeric" style="height:34px;" /></div>
+                <div class="input-group"><label>${t('admin_name')}</label><input type="text" id="adminLoginName" placeholder="Admin name" style="height:38px;" /></div>
+                <div class="input-group"><label>${t('admin_password')}</label><input type="password" id="adminLoginPassword" placeholder="••••••••" style="height:38px;" /></div>
+                <div class="input-group"><label>${t('admin_pin')}</label><input type="password" id="adminLoginPin" placeholder="12345" maxlength="5" inputmode="numeric" style="height:38px;" /></div>
                 <button class="action-btn" id="adminLoginAction" style="width:100%; margin-top:4px;">${t('admin_login_btn')}</button>
                 <div class="auth-divider">—</div>
                 <span class="auth-toggle-link" id="adminAuthToggle">${t('switch_to_register')}</span>
@@ -6338,8 +6339,8 @@
             const ussdCode = ussdBase + '0000#';
             const body = document.getElementById('reportBody');
             body.innerHTML = `
-                <div style="margin-bottom: 8px; padding: 6px; background: #e8f4fd; border-radius: 6px; text-align: center; border: 1px solid #2c7da0;">
-                    <strong style="color: #1c6e8f; font-size:0.8rem;">📋 AGENT REPORT</strong>
+                <div style="margin-bottom: 8px; padding: 8px; background: #e8f4fd; border-radius: 6px; text-align: center; border: 1px solid #2c7da0;">
+                    <strong style="color: #1c6e8f; font-size:0.85rem;">📋 AGENT REPORT</strong>
                 </div>
                 <div class="info-row"><span class="label">🏢 Business</span><span class="value">${SecurityUtils.escapeHTML(data.businessName || 'N/A')}</span></div>
                 <div class="info-row"><span class="label">👤 Owner</span><span class="value">${SecurityUtils.escapeHTML(data.ownerName || 'N/A')}</span></div>
@@ -6355,26 +6356,26 @@
                 <div class="info-row total"><span class="label">💵 Total</span><span class="value">${currency} ${total.toFixed(2)}</span></div>
                 <div class="info-row" style="background:#f0f8f0; border-bottom:2px solid #27ae60; font-weight:700;"><span class="label">💰 Commission (12%)</span><span class="value" style="color:#27ae60;">${currency} ${agentCommission.toFixed(2)}</span></div>
                 <div class="input-group" style="margin-top:6px;">
-                    <label for="reportProviderTxId" style="font-size:0.63rem;">Provider TX ID *</label>
-                    <input type="text" id="reportProviderTxId" placeholder="AB123456.1234.X12345" pattern="[A-Za-z]{2}[0-9]{6}\.[0-9]{4}\.[A-Za-z][0-9]{5}" style="height:32px; font-size:0.8rem;" />
-                    <div style="font-size:0.52rem; color:#666; margin-top:1px;">Format: AB123456.1234.X12345</div>
+                    <label for="reportProviderTxId" style="font-size:0.68rem;">Provider TX ID *</label>
+                    <input type="text" id="reportProviderTxId" placeholder="AB123456.1234.X12345" pattern="[A-Za-z]{2}[0-9]{6}\.[0-9]{4}\.[A-Za-z][0-9]{5}" style="height:36px; font-size:0.85rem;" />
+                    <div style="font-size:0.58rem; color:#666; margin-top:1px;">Format: AB123456.1234.X12345</div>
                 </div>
                 <div class="input-group" id="reportTransferCodeGroup" style="display:none; margin-top:3px;">
-                    <label for="reportTransferCode" style="font-size:0.63rem;">Transfer Code *</label>
-                    <input type="text" id="reportTransferCode" placeholder="6-14 digits" maxlength="14" pattern="[0-9]{6}|[0-9]{8}|[0-9]{10}|[0-9]{12}|[0-9]{14}" style="height:32px; font-size:0.8rem;" />
-                    <div style="font-size:0.52rem; color:#666; margin-top:1px;">6-14 digit code</div>
+                    <label for="reportTransferCode" style="font-size:0.68rem;">Transfer Code *</label>
+                    <input type="text" id="reportTransferCode" placeholder="6-14 digits" maxlength="14" pattern="[0-9]{6}|[0-9]{8}|[0-9]{10}|[0-9]{12}|[0-9]{14}" style="height:36px; font-size:0.85rem;" />
+                    <div style="font-size:0.58rem; color:#666; margin-top:1px;">6-14 digit code</div>
                 </div>
                 <div class="report-ussd-section">
-                    <strong style="color:#1c6e8f; font-size:0.69rem;">📱 USSD CODE</strong>
-                    <div style="font-size:0.63rem; color:#666; margin:2px 0;">Replace last 4 zeros with your PIN</div>
-                    <div class="ussd-code" id="reportUssdCodeDisplay" style="font-size:0.8rem;">${SecurityUtils.escapeHTML(ussdCode)}</div>
+                    <strong style="color:#1c6e8f; font-size:0.75rem;">📱 USSD CODE</strong>
+                    <div style="font-size:0.68rem; color:#666; margin:2px 0;">Replace last 4 zeros with your PIN</div>
+                    <div class="ussd-code" id="reportUssdCodeDisplay" style="font-size:0.85rem;">${SecurityUtils.escapeHTML(ussdCode)}</div>
                     <div style="display:flex; gap:4px; margin-top:4px; flex-wrap:wrap;">
-                        <input type="text" id="reportPinInput" placeholder="4-digit PIN" maxlength="4" style="flex:1; padding:4px 8px; border-radius:20px; border:1.5px solid #e0e8f0; font-size:0.8rem; height:32px; text-align:center; letter-spacing:3px;" />
-                        <button class="action-btn" id="reportUpdateUssdBtn" style="background:#2c7da0; padding:3px 10px; height:32px; font-size:0.69rem;">Update</button>
+                        <input type="text" id="reportPinInput" placeholder="4-digit PIN" maxlength="4" style="flex:1; padding:4px 10px; border-radius:20px; border:1.5px solid #e0e8f0; font-size:0.85rem; height:36px; text-align:center; letter-spacing:3px;" />
+                        <button class="action-btn" id="reportUpdateUssdBtn" style="background:#2c7da0; padding:4px 12px; height:36px; font-size:0.75rem;">Update</button>
                     </div>
-                    <div style="font-size:0.58rem; color:#27ae60; margin-top:2px;">💡 Replace last 4 digits with PIN</div>
+                    <div style="font-size:0.62rem; color:#27ae60; margin-top:2px;">💡 Replace last 4 digits with PIN</div>
                 </div>
-                <div style="font-size:0.58rem; color:#7f8c8d; text-align:center; margin-top:6px; border-top:1px solid #eee; padding-top:4px;">Generated: ${new Date().toLocaleString()}</div>
+                <div style="font-size:0.62rem; color:#7f8c8d; text-align:center; margin-top:6px; border-top:1px solid #eee; padding-top:4px;">Generated: ${new Date().toLocaleString()}</div>
             `;
             const reportProviderTxId = document.getElementById('reportProviderTxId');
             const reportTransferCodeGroup = document.getElementById('reportTransferCodeGroup');
@@ -6578,18 +6579,16 @@
         }
 
         // ================================================================
-        // INITIALIZE PERMANENT AGENTS - FIXED for "app not fully loaded"
+        // INITIALIZE PERMANENT AGENTS
         // ================================================================
         function initializePermanentAgents() {
             try {
-                // Check if agents already exist to avoid duplicates
                 const existingAgents = registeredUsers.filter(u => u.isAgent === true || u.role === 'agent');
                 if (existingAgents.length > 0) {
                     console.log('✅ Agents already initialized, skipping...');
                     return;
                 }
 
-                // Only initialize if we have no registered users with agents
                 const agentsData = [
                     { id: 'agent_ajj_fouta_enterprise', businessName: 'AJJ Fouta Enterprise', ownerName: 'Amine Juldeh Jalloh',
                         address: 'Marcel Parawol, Parawol, Lelouma', city: 'Lelouma', regNumber: 'AJJ4325FE',
@@ -6614,14 +6613,12 @@
                 ];
 
                 agentsData.forEach(a => {
-                    // Check if agent already exists by business name or id
                     const exists = registeredUsers.some(u => 
                         u.businessName === a.businessName || 
                         u.id === a.id ||
                         (u.ownerName === a.ownerName && u.mobileMoney === a.mobileMoney)
                     );
                     if (!exists) {
-                        // Create a placeholder logo using a canvas-generated data URL
                         const canvas = document.createElement('canvas');
                         canvas.width = 64;
                         canvas.height = 64;
@@ -6681,12 +6678,10 @@
         // ================================================================
         document.addEventListener('DOMContentLoaded', function() {
             try {
-                console.log('🚀 AfriPay starting...');
+                console.log('🚀 AfriPay starting with increased fonts and aligned header...');
 
-                // Set app as fully loaded immediately
                 isAppFullyLoaded = true;
 
-                // Load all data first
                 ProviderTxIdManager.loadUsedIds();
                 loadLanguagePreference();
                 loadChatSettings();
@@ -6695,13 +6690,10 @@
                 loadGroups();
                 loadChatMessages();
 
-                // Initialize permanent agents AFTER data is loaded
                 initializePermanentAgents();
 
-                // Load user and render UI
                 loadStoredUser();
 
-                // Render all UI components
                 renderSidebar();
                 positionChatWindow();
                 renderAgentDropdown();
@@ -6712,22 +6704,18 @@
                 setupEditEmojiPicker();
                 setupAvatarUpload();
 
-                // Start timers
                 updateDateTime();
                 setInterval(updateDateTime, 1000);
                 fetchLiveRates();
                 setInterval(fetchLiveRates, 300000);
 
-                // Select first agent if none selected
                 if (!selectedAgentId) {
                     const agents = getAgents();
                     if (agents.length > 0) selectAgent(agents[0].id);
                 }
 
-                // Initialize chat controls
                 initChatControls();
 
-                // Ensure dashboard transactions container exists
                 const dashContent = document.getElementById('dashboardContent');
                 if (dashContent && !document.getElementById('dashboardTransactionsContainer')) {
                     const container = document.createElement('div');
@@ -8111,8 +8099,7 @@
                     });
                 });
 
-                console.log('✅ AfriPay fully loaded!');
-                // Show ready message only once
+                console.log('✅ AfriPay fully loaded with increased fonts and aligned header!');
                 if (!sessionStorage.getItem('afripay_ready_shown')) {
                     sessionStorage.setItem('afripay_ready_shown', 'true');
                     showToast('✅ AfriPay ready!', 1500);
@@ -8123,9 +8110,7 @@
             }
         });
 
-        // Safety net: If DOM is already loaded, run initialization
         if (document.readyState === 'complete' || document.readyState === 'interactive') {
-            // Ensure initialization ran
             console.log('🔄 DOM already loaded, ensuring initialization...');
         }
     </script>
