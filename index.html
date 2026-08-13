@@ -2217,9 +2217,7 @@
     </style>
 </head>
 <body>
-    <!-- ============================================================
-    APP CONTAINER
-    ============================================================ -->
+    <!-- APP CONTAINER -->
     <div class="app-card" id="appContainer">
         <!-- HEADER -->
         <div class="live-header">
@@ -2463,14 +2461,10 @@
         </div>
     </div>
 
-    <!-- ============================================================
-    TOAST
-    ============================================================ -->
+    <!-- TOAST -->
     <div class="toast-msg" id="toastMsg"></div>
 
-    <!-- ============================================================
-    CHAT TOGGLE & WINDOW
-    ============================================================ -->
+    <!-- CHAT TOGGLE & WINDOW -->
     <button class="chat-toggle-btn" id="chatToggleBtn">💬<span class="chat-badge" id="chatBadge">0</span></button>
     <div class="chat-window" id="chatWindow">
         <div class="chat-sidebar" id="chatSidebar"></div>
@@ -2505,120 +2499,79 @@
         </div>
     </div>
 
-    <!-- ============================================================
-    MODALS
-    ============================================================ -->
-
-    <!-- Map Modal -->
+    <!-- MODALS -->
     <div id="mapModal" class="modal"><div class="modal-content"><h3 data-i18n="map_title">📍 Location</h3><iframe id="mapIframe" allowfullscreen loading="lazy" style="width:100%; height:300px; border:none; border-radius:8px;"></iframe><button class="action-btn close-modal" data-i18n="close">Close</button></div></div>
-
-    <!-- Info Modal -->
     <div id="infoModal" class="modal"><div class="modal-content"><h3 id="modalTitle"></h3><div id="modalBody"></div><button class="action-btn close-modal" data-i18n="close">Close</button></div></div>
-
-    <!-- Subscribe Modal -->
     <div id="subscribeModal" class="modal"><div class="modal-content"><h3 data-i18n="subscribe_title">📧 Subscribe</h3><input type="email" id="subEmail" placeholder="Email" style="width:100%; padding:5px 10px; margin:3px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;" /><div class="action-buttons-row"><button id="submitSubscribeBtn" class="action-btn" data-i18n="subscribe">Subscribe</button><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div></div></div>
-
-    <!-- Login Modal -->
     <div id="loginModal" class="modal"><div class="modal-content"><h3 data-i18n="login_title">🔐 Login</h3><input type="text" id="loginName" placeholder="Full Name" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;" /><input type="tel" id="loginPhone" placeholder="Phone" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;" /><div id="loginError" class="error-msg"></div><div class="action-buttons-row"><button id="doLoginBtn" class="action-btn" data-i18n="login">Login</button><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div></div></div>
-
-    <!-- Register Modal -->
     <div id="registerModal" class="modal"><div class="modal-content"><h3 data-i18n="register_title">📝 Register</h3><input type="text" id="regName" placeholder="Full Name *" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;" /><input type="tel" id="regPhone" placeholder="Phone *" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;" /><input type="text" id="regAddress" placeholder="Address" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;" /><div class="input-group" style="margin-bottom:0.35rem;"><label style="font-size:0.75rem;font-weight:700;color:#1e3b4a;" data-i18n="city">City *</label><div class="city-input-row"><select id="regCitySelect"><option value="">Select city...</option><option value="Freetown">Freetown</option><option value="Abuja">Abuja</option><option value="Accra">Accra</option><option value="Nairobi">Nairobi</option><option value="Monrovia">Monrovia</option><option value="Dakar">Dakar</option><option value="Conakry">Conakry</option><option value="Bamako">Bamako</option><option value="Yamoussoukro">Yamoussoukro</option><option value="Niamey">Niamey</option><option value="Porto-Novo">Porto-Novo</option><option value="Bissau">Bissau</option><option value="Banjul">Banjul</option><option value="Lomé">Lomé</option><option value="Bangui">Bangui</option><option value="Addis Ababa">Addis Ababa</option><option value="Libreville">Libreville</option><option value="Antananarivo">Antananarivo</option><option value="Rabat">Rabat</option><option value="Kigali">Kigali</option><option value="Kampala">Kampala</option><option value="Kinshasa">Kinshasa</option><option value="Ouagadougou">Ouagadougou</option></select><span class="or-text">OR</span><input type="text" id="regCityOther" placeholder="Other city" /></div></div><select id="regCountry" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;"><option value="Sierra Leone">Sierra Leone</option><option value="Nigeria">Nigeria</option><option value="Ghana">Ghana</option><option value="Kenya">Kenya</option><option value="Liberia">Liberia</option><option value="Senegal">Senegal</option><option value="Guinea">Guinea</option><option value="Mali">Mali</option><option value="Ivory Coast">Ivory Coast</option><option value="Niger">Niger</option><option value="Benin">Benin</option><option value="Guinea Bissau">Guinea Bissau</option><option value="Gambia">Gambia</option><option value="Togo">Togo</option><option value="Central Africa Rep">CAR</option><option value="Ethiopia">Ethiopia</option><option value="Gabon">Gabon</option><option value="Madagascar">Madagascar</option><option value="Morocco">Morocco</option><option value="Rwanda">Rwanda</option><option value="Uganda">Uganda</option><option value="DR Congo">DRC</option><option value="Burkina Faso">Burkina</option></select><select id="regLanguage" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;"><option value="en">English</option><option value="fr">Français</option><option value="es">Español</option></select><label style="font-size:0.75rem;font-weight:700;color:#1e3b4a;margin-top:2px;" data-i18n="choose_icon">Icon:</label><div class="emoji-grid" id="emojiPickerGrid"><span class="emoji-option" data-emoji="👤">👤</span><span class="emoji-option" data-emoji="👨">👨</span><span class="emoji-option" data-emoji="👩">👩</span><span class="emoji-option" data-emoji="🧑">🧑</span><span class="emoji-option" data-emoji="👦">👦</span><span class="emoji-option" data-emoji="👧">👧</span><span class="emoji-option" data-emoji="🧒">🧒</span><span class="emoji-option" data-emoji="👨‍💻">👨‍💻</span><span class="emoji-option" data-emoji="👩‍💻">👩‍💻</span><span class="emoji-option" data-emoji="🧑‍💻">🧑‍💻</span><span class="emoji-option" data-emoji="👨‍🎓">👨‍🎓</span><span class="emoji-option" data-emoji="👩‍🎓">👩‍🎓</span></div><div style="margin-top:4px;"><label style="font-size:0.75rem;font-weight:700;color:#1e3b4a;" data-i18n="upload_image">Upload image:</label><input type="file" id="regProfileImage" accept="image/*" style="width:100%; padding:4px; border-radius:20px; border:1px solid #ddd; font-size:0.85rem; height:36px;" /><div id="regProfilePreview" style="display:none; margin-top:2px;"><img src="#" alt="Preview" style="max-height:60px; border-radius:6px;" /><button type="button" id="regProfileRemove" style="background:#e74c3c; color:white; border:none; padding:2px 8px; border-radius:20px; font-size:0.6rem; cursor:pointer;">✕</button></div></div><div style="display:flex; gap:4px; align-items:center; margin-top:3px;"><button type="button" class="action-btn" id="regGenerateUssdBtn" style="flex:1; background:#2c7da0; height:36px; font-size:0.85rem;" data-i18n="generate_ussd">📱 USSD</button></div><div class="ussd-result-box" id="regUssdResult"><span class="ussd-label">📞 USSD:</span><span class="ussd-code-value" id="regUssdCode"></span><button class="copy-ussd-btn" id="regCopyUssdBtn">Copy</button></div><div id="regError" class="error-msg"></div><div id="regSuccess" class="success-msg"></div><div class="action-buttons-row"><button id="doRegisterBtn" class="action-btn" data-i18n="register">Register</button><button id="registerAgentBtn" class="action-btn orange" data-i18n="register_agent">🏢 Agent</button><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div></div></div>
-
-    <!-- Agent Registration Modal -->
     <div id="agentRegistrationModal" class="modal"><div class="modal-content agent-form"><h3 data-i18n="agent_reg_title">🏢 Agent Reg</h3><div id="agentRegError" class="error-msg"></div><div id="agentRegSuccess" class="success-msg"></div><div class="input-group"><label data-i18n="agent_business_name">Business *</label><input type="text" id="agentBusinessName" placeholder="Business name" /></div><div class="input-group"><label data-i18n="agent_address">Address *</label><input type="text" id="agentAddress" placeholder="Street" /></div><div class="input-group"><label data-i18n="agent_city">City *</label><div class="city-input-row"><select id="agentCitySelect"><option value="">Select city...</option><option value="Freetown">Freetown</option><option value="Abuja">Abuja</option><option value="Accra">Accra</option><option value="Nairobi">Nairobi</option><option value="Monrovia">Monrovia</option><option value="Dakar">Dakar</option><option value="Conakry">Conakry</option><option value="Bamako">Bamako</option><option value="Yamoussoukro">Yamoussoukro</option><option value="Niamey">Niamey</option><option value="Porto-Novo">Porto-Novo</option><option value="Bissau">Bissau</option><option value="Banjul">Banjul</option><option value="Lomé">Lomé</option><option value="Bangui">Bangui</option><option value="Addis Ababa">Addis Ababa</option><option value="Libreville">Libreville</option><option value="Antananarivo">Antananarivo</option><option value="Rabat">Rabat</option><option value="Kigali">Kigali</option><option value="Kampala">Kampala</option><option value="Kinshasa">Kinshasa</option><option value="Ouagadougou">Ouagadougou</option></select><span class="or-text">OR</span><input type="text" id="agentCityOther" placeholder="Other city" /></div></div><div class="input-group"><label data-i18n="agent_reg_number">Reg Number *</label><input type="text" id="agentRegNumber" placeholder="e.g. SL-2025-0042" /></div><div class="input-group"><label data-i18n="agent_business_type">Type *</label><select id="agentBusinessType"><option value="Retail">Retail</option><option value="Wholesale">Wholesale</option><option value="Service">Service</option><option value="Manufacturing">Manufacturing</option><option value="Transport">Transport</option><option value="Hospitality">Hospitality</option><option value="Financial">Financial</option><option value="Other">Other</option></select></div><div class="double-row"><div class="input-group"><label data-i18n="agent_owner_name">Owner *</label><input type="text" id="agentOwnerName" placeholder="Owner name" /></div><div class="input-group"><label data-i18n="agent_id_type">ID Type *</label><select id="agentIdType"><option value="National ID">National ID</option><option value="Passport">Passport</option><option value="Driver's License">Driver's License</option><option value="Voter's Card">Voter's Card</option><option value="Other">Other</option></select></div></div><div class="input-group"><label data-i18n="agent_id_number">ID Number *</label><input type="text" id="agentIdNumber" placeholder="e.g. SL-123456" /></div><div class="input-group"><label data-i18n="agent_id_image">ID Image *</label><input type="file" id="agentIdImage" accept="image/*" capture="environment" style="padding:4px; height:auto;" /><img id="agentIdPreview" class="id-preview" alt="ID" /></div><div class="input-group"><label data-i18n="agent_logo">Logo *</label><input type="file" id="agentLogoImage" accept="image/*" required style="padding:4px; height:auto;" /><div id="agentLogoPreviewContainer" style="display:none; margin-top:2px;"><img src="#" alt="Logo" style="max-height:60px; border-radius:6px;" /><button type="button" id="agentLogoRemove" style="background:#e74c3c; color:white; border:none; padding:2px 8px; border-radius:20px; font-size:0.6rem; cursor:pointer;">✕</button></div><div style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="agent_logo_hint">Upload business logo</div></div><div class="input-group"><label data-i18n="agent_mobile_money">Mobile Money *</label><input type="tel" id="agentMobileMoney" placeholder="e.g. 23276123456" /></div><div class="input-group"><label for="agentCollateralLimit" data-i18n="collateral_limit_label">💳 Collateral *</label><select id="agentCollateralLimit"><option value="500">500</option><option value="1000">1,000</option><option value="1500">1,500</option><option value="2000">2,000</option><option value="2500">2,500</option><option value="3000">3,000</option><option value="3500">3,500</option><option value="4000">4,000</option><option value="4500">4,500</option><option value="5000" selected>5,000</option><option value="5500">5,500</option><option value="6000">6,000</option><option value="6500">6,500</option><option value="7000">7,000</option><option value="7500">7,500</option><option value="8000">8,000</option><option value="8500">8,500</option><option value="9000">9,000</option><option value="9500">9,500</option><option value="10000">10,000</option></select><div style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="collateral_limit_hint">Max transaction amount</div></div><div class="input-group"><label data-i18n="agent_country_code">Country Code</label><select id="agentCountryCode"><option value="+232">🇸🇱 +232</option><option value="+234">🇳🇬 +234</option><option value="+233">🇬🇭 +233</option><option value="+254">🇰🇪 +254</option><option value="+231">🇱🇷 +231</option><option value="+221">🇸🇳 +221</option><option value="+224" selected>🇬🇳 +224</option><option value="+223">🇲🇱 +223</option><option value="+225">🇨🇮 +225</option><option value="+227">🇳🇪 +227</option><option value="+229">🇧🇯 +229</option><option value="+245">🇬🇼 +245</option><option value="+220">🇬🇲 +220</option><option value="+228">🇹🇬 +228</option><option value="+236">🇨🇫 +236</option><option value="+251">🇪🇹 +251</option><option value="+241">🇬🇦 +241</option><option value="+261">🇲🇬 +261</option><option value="+212">🇲🇦 +212</option><option value="+250">🇷🇼 +250</option><option value="+256">🇺🇬 +256</option><option value="+243">🇨🇩 +243</option><option value="+226">🇧🇫 +226</option></select></div><div class="input-group"><label data-i18n="agent_password">Password *</label><div style="display:flex; gap:4px; align-items:center; flex-wrap:wrap;"><input type="text" id="agentPassword" placeholder="A1B2C3" style="flex:1; min-width:80px; letter-spacing:2px; font-family:monospace;" readonly /><button type="button" class="action-btn green" id="generatePasswordBtn" style="padding:4px 12px; height:36px; font-size:0.75rem;" data-i18n="generate_password">🔑 Gen</button></div><div id="agentPasswordHint" style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="password_hint">Click Gen to create 6-char password</div></div><div class="input-group"><label data-i18n="agent_pin_label">5-Digit PIN *</label><div style="display:flex; gap:4px; align-items:center; flex-wrap:wrap;"><input type="text" id="agentPin" placeholder="12345" style="flex:1; min-width:80px; letter-spacing:2px; font-family:monospace;" readonly /><button type="button" class="action-btn green" id="generatePinBtn" style="padding:4px 12px; height:36px; font-size:0.75rem;" data-i18n="generate_pin">🔑 Gen PIN</button></div><div id="agentPinHint" style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="pin_hint">Click to create 5-digit PIN</div></div><div class="collateral-box"><div style="display:flex; align-items:center; gap:4px; flex-wrap:wrap;"><span style="font-weight:700; font-size:0.8rem; color:#1c6e8f;" data-i18n="collateral_label">🔒 Collateral</span><button class="action-btn orange" id="generateCollateralBtn" style="padding:4px 12px; height:34px; font-size:0.75rem;" data-i18n="generate_collateral">USSD</button></div><div id="collateralResult" style="margin-top:3px;"><span style="font-size:0.68rem; color:#666;" data-i18n="collateral_hint">Generate USSD for Orange Money collateral</span><div id="collateralUssdDisplay" class="ussd-code" style="display:none;"></div></div><div id="collateralError" class="error-msg" style="font-size:0.68rem;"></div><input type="hidden" id="collateralAmount" value="0" /></div><div style="margin:6px 0 4px 0; text-align:center;"><button class="action-btn orange" id="viewAgreementBtn" style="width:100%; height:38px; font-size:0.85rem;" data-i18n="view_agreement">📜 Agreement</button><div id="agreementStatusDisplay" style="font-size:0.68rem; color:#7f8c8d; margin-top:2px;"><span data-i18n="agreement_status_label">Agreement:</span> <span id="agreementStatusText" style="font-weight:700; color:#e74c3c;" data-i18n="not_signed">Not Signed</span></div></div><div class="input-group" style="margin-top:0.35rem;"><label for="agentProviderTxId" data-i18n="provider_tx_id_label">🔐 Provider TX ID *</label><input type="text" id="agentProviderTxId" placeholder="AB123456.1234.X12345" pattern="[A-Za-z]{2}[0-9]{6}\.[0-9]{4}\.[A-Za-z][0-9]{5}" /><div style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="provider_tx_id_format">Format: AB123456.1234.X12345</div><div id="agentProviderTxIdError" class="error-msg" style="font-size:0.68rem; display:none;"></div></div><div class="input-group" id="agentTransferCodeGroup" style="display:none;"><label for="agentTransferCode" data-i18n="transfer_code_label">Transfer Code *</label><input type="text" id="agentTransferCode" placeholder="6-14 digits" maxlength="14" pattern="[0-9]{6}|[0-9]{8}|[0-9]{10}|[0-9]{12}|[0-9]{14}" /><div style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="transfer_code_hint">6-14 digit code</div><div id="agentTransferCodeError" class="error-msg" style="font-size:0.68rem; display:none;"></div></div><div class="action-buttons-row" style="margin-top:6px;"><button class="action-btn" id="submitAgentRegistrationBtn" data-i18n="register_agent_submit">Register</button><button class="action-btn close-modal" id="closeAgentRegBtn" style="background:#2c7da0;" data-i18n="close">Close</button></div></div></div>
-
-    <!-- Edit Agent Modal -->
     <div id="editAgentModal" class="modal"><div class="modal-content agent-form"><h3 data-i18n="edit_agent_title">✏️ Edit Agent</h3><input type="hidden" id="editAgentId" /><div id="editAgentError" class="error-msg"></div><div id="editAgentSuccess" class="success-msg"></div><div class="input-group"><label data-i18n="agent_business_name">Business *</label><input type="text" id="editBusinessName" /></div><div class="input-group"><label data-i18n="agent_address">Address *</label><input type="text" id="editAddress" /></div><div class="input-group"><label data-i18n="agent_city">City *</label><div class="city-input-row"><select id="editCitySelect"><option value="">Select city...</option><option value="Freetown">Freetown</option><option value="Abuja">Abuja</option><option value="Accra">Accra</option><option value="Nairobi">Nairobi</option><option value="Monrovia">Monrovia</option><option value="Dakar">Dakar</option><option value="Conakry">Conakry</option><option value="Bamako">Bamako</option><option value="Yamoussoukro">Yamoussoukro</option><option value="Niamey">Niamey</option><option value="Porto-Novo">Porto-Novo</option><option value="Bissau">Bissau</option><option value="Banjul">Banjul</option><option value="Lomé">Lomé</option><option value="Bangui">Bangui</option><option value="Addis Ababa">Addis Ababa</option><option value="Libreville">Libreville</option><option value="Antananarivo">Antananarivo</option><option value="Rabat">Rabat</option><option value="Kigali">Kigali</option><option value="Kampala">Kampala</option><option value="Kinshasa">Kinshasa</option><option value="Ouagadougou">Ouagadougou</option></select><span class="or-text">OR</span><input type="text" id="editCityOther" placeholder="Other city" /></div></div><div class="input-group"><label data-i18n="agent_reg_number">Reg Number *</label><input type="text" id="editRegNumber" /></div><div class="input-group"><label data-i18n="agent_mobile_money">Mobile Money *</label><input type="tel" id="editMobileMoney" /></div><div class="input-group"><label data-i18n="agent_password">Password *</label><input type="password" id="editPassword" placeholder="Enter registration password" /></div><div class="input-group"><label data-i18n="agent_pin_label">5-Digit PIN *</label><input type="password" id="editPin" placeholder="Enter registration PIN" maxlength="5" /></div><div class="action-buttons-row"><button class="action-btn" id="saveEditAgentBtn" data-i18n="save_changes">Save</button><button class="action-btn" id="editAgentReportBtn" style="background:#1a1a1a; color:white;" data-i18n="report">📋 Report</button><button class="action-btn close-modal" style="background:#2c7da0;" data-i18n="close">Close</button></div></div></div>
-
-    <!-- Add Client Modal -->
     <div id="addClientModal" class="modal"><div class="modal-content"><h3 data-i18n="add_client">➕ Add Client</h3><div id="addClientError" class="error-msg"></div><div class="input-group"><label data-i18n="client_name">Name *</label><input type="text" id="newClientName" placeholder="Client name" /></div><div class="input-group"><label data-i18n="client_phone">Phone *</label><input type="tel" id="newClientPhone" placeholder="Phone" /></div><div class="input-group"><label data-i18n="address">Address</label><input type="text" id="newClientAddress" placeholder="Address" /></div><div class="input-group"><label data-i18n="city">City *</label><select id="newClientCitySelect"><option value="">Select city...</option><option value="Freetown">Freetown</option><option value="Abuja">Abuja</option><option value="Accra">Accra</option><option value="Nairobi">Nairobi</option><option value="Monrovia">Monrovia</option><option value="Dakar">Dakar</option><option value="Conakry">Conakry</option><option value="Bamako">Bamako</option><option value="Yamoussoukro">Yamoussoukro</option><option value="Niamey">Niamey</option><option value="Porto-Novo">Porto-Novo</option><option value="Bissau">Bissau</option><option value="Banjul">Banjul</option><option value="Lomé">Lomé</option><option value="Bangui">Bangui</option><option value="Addis Ababa">Addis Ababa</option><option value="Libreville">Libreville</option><option value="Antananarivo">Antananarivo</option><option value="Rabat">Rabat</option><option value="Kigali">Kigali</option><option value="Kampala">Kampala</option><option value="Kinshasa">Kinshasa</option><option value="Ouagadougou">Ouagadougou</option></select></div><div class="input-group"><label data-i18n="location">Country</label><select id="newClientCountrySelect"><option value="Sierra Leone">Sierra Leone</option><option value="Nigeria">Nigeria</option><option value="Ghana">Ghana</option><option value="Kenya">Kenya</option><option value="Liberia">Liberia</option><option value="Senegal">Senegal</option><option value="Guinea">Guinea</option><option value="Mali">Mali</option><option value="Ivory Coast">Ivory Coast</option><option value="Niger">Niger</option><option value="Benin">Benin</option><option value="Guinea Bissau">Guinea Bissau</option><option value="Gambia">Gambia</option><option value="Togo">Togo</option><option value="Central Africa Rep">CAR</option><option value="Ethiopia">Ethiopia</option><option value="Gabon">Gabon</option><option value="Madagascar">Madagascar</option><option value="Morocco">Morocco</option><option value="Rwanda">Rwanda</option><option value="Uganda">Uganda</option><option value="DR Congo">DRC</option><option value="Burkina Faso">Burkina</option></select></div><div class="action-buttons-row"><button class="action-btn" id="saveClientBtn" data-i18n="save">Save</button><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div></div></div>
-
-    <!-- Edit Account Modal -->
     <div id="editAccountModal" class="modal"><div class="modal-content"><h3 data-i18n="edit_account_title">✏️ Edit Account</h3><div id="editAccountError" class="error-msg"></div><div id="editAccountSuccess" class="success-msg"></div><div class="input-group"><label data-i18n="full_name">Name *</label><input type="text" id="editAccountName" /></div><div class="input-group"><label data-i18n="phone">Phone *</label><input type="tel" id="editAccountPhone" /></div><div class="input-group"><label data-i18n="address">Address</label><input type="text" id="editAccountAddress" /></div><div class="input-group"><label data-i18n="city">City *</label><div class="city-input-row"><select id="editAccountCitySelect"><option value="">Select city...</option><option value="Freetown">Freetown</option><option value="Abuja">Abuja</option><option value="Accra">Accra</option><option value="Nairobi">Nairobi</option><option value="Monrovia">Monrovia</option><option value="Dakar">Dakar</option><option value="Conakry">Conakry</option><option value="Bamako">Bamako</option><option value="Yamoussoukro">Yamoussoukro</option><option value="Niamey">Niamey</option><option value="Porto-Novo">Porto-Novo</option><option value="Bissau">Bissau</option><option value="Banjul">Banjul</option><option value="Lomé">Lomé</option><option value="Bangui">Bangui</option><option value="Addis Ababa">Addis Ababa</option><option value="Libreville">Libreville</option><option value="Antananarivo">Antananarivo</option><option value="Rabat">Rabat</option><option value="Kigali">Kigali</option><option value="Kampala">Kampala</option><option value="Kinshasa">Kinshasa</option><option value="Ouagadougou">Ouagadougou</option></select><span class="or-text">OR</span><input type="text" id="editAccountCityOther" placeholder="Other city" /></div></div><div class="input-group"><label data-i18n="location">Country</label><select id="editAccountCountry"><option value="Sierra Leone">Sierra Leone</option><option value="Nigeria">Nigeria</option><option value="Ghana">Ghana</option><option value="Kenya">Kenya</option><option value="Liberia">Liberia</option><option value="Senegal">Senegal</option><option value="Guinea">Guinea</option><option value="Mali">Mali</option><option value="Ivory Coast">Ivory Coast</option><option value="Niger">Niger</option><option value="Benin">Benin</option><option value="Guinea Bissau">Guinea Bissau</option><option value="Gambia">Gambia</option><option value="Togo">Togo</option><option value="Central Africa Rep">CAR</option><option value="Ethiopia">Ethiopia</option><option value="Gabon">Gabon</option><option value="Madagascar">Madagascar</option><option value="Morocco">Morocco</option><option value="Rwanda">Rwanda</option><option value="Uganda">Uganda</option><option value="DR Congo">DRC</option><option value="Burkina Faso">Burkina</option></select></div><label style="font-size:0.75rem;font-weight:700;color:#1e3b4a;margin-top:2px;" data-i18n="choose_icon">Icon:</label><div class="emoji-grid" id="editEmojiPickerGrid"><span class="emoji-option" data-emoji="👤">👤</span><span class="emoji-option" data-emoji="👨">👨</span><span class="emoji-option" data-emoji="👩">👩</span><span class="emoji-option" data-emoji="🧑">🧑</span><span class="emoji-option" data-emoji="👦">👦</span><span class="emoji-option" data-emoji="👧">👧</span><span class="emoji-option" data-emoji="🧒">🧒</span><span class="emoji-option" data-emoji="👨‍💻">👨‍💻</span><span class="emoji-option" data-emoji="👩‍💻">👩‍💻</span><span class="emoji-option" data-emoji="🧑‍💻">🧑‍💻</span><span class="emoji-option" data-emoji="👨‍🎓">👨‍🎓</span><span class="emoji-option" data-emoji="👩‍🎓">👩‍🎓</span></div><div style="margin-top:4px;"><label style="font-size:0.75rem;font-weight:700;color:#1e3b4a;" data-i18n="upload_image">Upload image:</label><input type="file" id="editProfileImage" accept="image/*" style="width:100%; padding:4px; border-radius:20px; border:1px solid #ddd; font-size:0.85rem; height:36px;" /><div id="editProfilePreview" style="display:none; margin-top:2px;"><img src="#" alt="Preview" style="max-height:60px; border-radius:6px;" /><button type="button" id="editProfileRemove" style="background:#e74c3c; color:white; border:none; padding:2px 8px; border-radius:20px; font-size:0.6rem; cursor:pointer;">✕</button></div></div><div class="action-buttons-row"><button class="action-btn" id="saveEditAccountBtn" data-i18n="save">Save</button><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div></div></div>
-
-    <!-- Group Create Modal -->
     <div id="groupCreateModal" class="modal"><div class="modal-content"><h3 data-i18n="new_group">👥 Create Group</h3><div class="input-group"><label data-i18n="group_name">Name *</label><input type="text" id="groupNameInput" placeholder="Group name" /></div><div class="input-group"><label data-i18n="select_members">Members (max 25)</label><div style="font-size:0.68rem; color:#666;">Selected: <span id="memberCounter">0</span></div><div class="group-member-list" id="memberListContainer"></div></div><div class="action-buttons-row"><button class="action-btn" id="createGroupBtn" data-i18n="create">Create</button><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div></div></div>
-
-    <!-- Provider Modal -->
     <div id="providerModal" class="modal"><div class="modal-content"><h3 data-i18n="select_provider">💸 Select Provider</h3><div class="action-buttons-row"><button class="action-btn" data-provider="Orange Money" style="background:#ff6600;">Orange</button><button class="action-btn" data-provider="Afrimoney" style="background:#00a651;">Afrimoney</button><button class="action-btn" data-provider="QMoney" style="background:#1a3a5c;">QMoney</button><button class="action-btn" data-provider="WBMoney" style="background:#0f2b3d;">WBMoney</button></div><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div></div>
-
-    <!-- Role Modal -->
     <div id="roleModal" class="modal"><div class="modal-content"><h3 id="roleModalTitle">👤 Select Type</h3><div class="action-buttons-row" id="roleButtons"><button class="action-btn" data-role="agent" style="background:#2c7da0;">Agent</button><button class="action-btn" data-role="customer" style="background:#27ae60;">Customer</button><button class="action-btn" data-role="other" style="background:#8e44ad;">Other</button></div><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div></div>
-
-    <!-- Action Modal -->
     <div id="actionModal" class="modal"><div class="modal-content"><h3 data-i18n="select_type">Action for <span id="modalProviderName">—</span></h3><div id="selectedRoleDisplay" style="font-size:0.8rem; color:#1c6e8f; margin-bottom:4px;">Type: —</div><div class="action-buttons-row"><button class="action-btn" id="actionTransfer" style="background:#f39c12;">💸 Transfer</button><button class="action-btn" id="actionPay" style="background:#27ae60;">💰 Pay</button><button class="action-btn" id="actionCashout" style="background:#e74c3c;">🏦 Cash Out</button></div><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div></div>
-
-    <!-- Goods Modal -->
     <div id="goodsModal" class="modal"><div class="modal-content"><h3 id="goodsModalTitle">📦 Select Item</h3><div id="goodsList"></div><a id="businessWebsiteLink" href="#" target="_blank" style="display:block; margin:4px 0; color:#2c7da0; font-size:0.75rem; text-decoration:none;">🌐 Website</a><button class="action-btn close-modal" data-i18n="close">Close</button></div></div>
-
-    <!-- Admin Auth Modal -->
     <div id="adminAuthModal" class="modal admin-auth-modal"><div class="modal-content" id="adminAuthBody"></div></div>
-
-    <!-- Dashboard Modal -->
     <div id="dashboardModal" class="modal"><div class="modal-content" style="max-width:700px; width:95%;"><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; flex-wrap:wrap;"><h3 data-i18n="dashboard_title">📊 Dashboard</h3><div style="display:flex; gap:4px; flex-wrap:wrap;"><button class="action-btn" id="adminLogoutBtn" style="background:#e74c3c; padding:4px 12px; height:32px; font-size:0.7rem;">Logout</button><button class="action-btn close-modal" style="background:#2c7da0; padding:4px 12px; height:32px; font-size:0.7rem;">Close</button></div></div><div id="dashboardContent"><h4 style="color:#1c6e8f; font-size:0.8rem;">🏢 Agents</h4><div style="overflow-x:auto; max-height:250px; overflow-y:auto;"><table><thead><tr><th data-i18n="agent_name_th">Agent</th><th data-i18n="business_th">Business</th><th data-i18n="address_th">Address</th><th data-i18n="type_th">Type</th><th data-i18n="password_th">Pass</th><th data-i18n="pin_th">PIN</th><th data-i18n="collateral_th">Limit</th><th data-i18n="country_th">Country</th><th data-i18n="status_th">Status</th><th data-i18n="agreement_th">Agree</th><th data-i18n="action_th">Action</th><th data-i18n="remove_th">Remove</th></tr></thead><tbody id="dashboardTableBody"></tbody></table></div><div class="users-section-title"><span data-i18n="registered_users_label">👤 Users</span><span class="badge-count" id="userCountBadge">0</span></div><div style="overflow-x:auto; max-height:150px; overflow-y:auto;"><table><thead><tr><th data-i18n="name_th">Name</th><th data-i18n="address">Address</th><th data-i18n="phone_th">Phone</th><th data-i18n="city_th">City</th><th data-i18n="location">Country</th><th data-i18n="action_th">Action</th></tr></thead><tbody id="dashboardUsersBody"></tbody></table><div id="noUsersMsg" class="no-users-msg" data-i18n="no_users_msg">No users</div></div><div id="dashboardTransactionsContainer"></div></div></div></div>
-
-    <!-- Receipt Modal -->
     <div id="receiptModal" class="modal"><div class="modal-content"><div class="receipt-header"><button class="receipt-close-x" id="receiptCloseXBtn">✕</button><div class="receipt-logo">Afri·Pay</div><div class="receipt-sub" data-i18n="receipt_sub">RECEIPT</div><div class="receipt-badge" id="receiptBadge">🔹 CONFIRMED</div></div><div class="receipt-body" id="receiptBody"></div><div class="receipt-footer"><div class="thanks" data-i18n="receipt_thanks">✨ Thank you!</div><div class="powered" data-i18n="receipt_powered">WeBine Financial</div><div class="receipt-share-row"><div class="receipt-share-group"><div class="receipt-share-label" data-i18n="send_receipt_to">📤 Send:</div><div class="share-row"><button class="receipt-share-btn client" id="receiptShareClientWhatsApp">📱 Client</button><button class="receipt-share-btn agent" id="receiptShareAgentWhatsApp">📱 Agent</button><button class="receipt-share-btn sms" id="receiptShareClientSMS">✉️ Client</button><button class="receipt-share-btn sms" id="receiptShareAgentSMS">✉️ Agent</button><button class="receipt-share-btn close-receipt" id="receiptCloseBtn">✕</button></div></div></div></div></div></div>
-
-    <!-- Agreement Modal -->
     <div id="agreementModal" class="modal"><div class="modal-content"><div class="agreement-modal-header"><button class="agreement-close-x" id="agreementCloseXBtn">✕</button><h3 data-i18n="agreement_title">📜 AGREEMENT</h3><small data-i18n="agreement_subtitle">Read & sign</small></div><div class="agreement-body" id="agreementBody"></div><div class="agreement-footer"><button class="action-btn agree-btn" id="agreementAgreeBtn" data-i18n="agree_sign">✋ Agree</button><button class="action-btn close-modal" id="agreementCloseBtn" data-i18n="close">Close</button></div><div class="agreement-status" id="agreementStatus" data-i18n="agreement_status_prompt">Read & sign below</div></div></div>
-
-    <!-- Agent Auth Modal -->
     <div id="agentAuthModal" class="modal"><div class="modal-content"><h3 data-i18n="agent_auth_title">🔐 Agent Auth</h3><div style="font-size:0.75rem; color:#7f8c8d; margin-bottom:4px;" data-i18n="agent_auth_subtitle">Enter credentials</div><div id="agentAuthError" class="error-msg"></div><div id="agentAuthSuccess" class="success-msg"></div><div class="input-group"><label data-i18n="agent_password">Password *</label><input type="password" id="agentAuthPassword" placeholder="6 chars" maxlength="6" /></div><div class="input-group"><label data-i18n="agent_pin_label">5-Digit PIN *</label><input type="password" id="agentAuthPin" placeholder="5 digits" maxlength="5" /></div><div class="action-buttons-row"><button class="action-btn" id="agentAuthConfirmBtn" data-i18n="confirm">✅ Confirm</button><button class="action-btn close-modal" id="agentAuthCancelBtn" data-i18n="cancel">Cancel</button></div></div></div>
-
-    <!-- Agent Report Modal -->
     <div id="agentReportModal" class="modal"><div class="modal-content"><div class="report-header"><button class="report-close-x" id="reportCloseXBtn">✕</button><h3 data-i18n="agent_report_title">📋 Agent Report</h3><small data-i18n="agent_report_subtitle">Tx & USSD</small></div><div class="report-body" id="reportBody"></div><div class="report-footer"><button class="action-btn copy-btn" id="reportCopyUssdBtn" data-i18n="copy_ussd">📋 Copy USSD</button><button class="action-btn close-modal" id="reportCloseBtn" data-i18n="close">Close</button></div></div></div>
-
-    <!-- Admin Delete User Modal -->
     <div id="adminDeleteUserModal" class="modal"><div class="modal-content"><h3 data-i18n="admin_verify_title">🔐 Admin Verify</h3><div style="font-size:0.75rem; color:#7f8c8d; margin-bottom:4px;" data-i18n="admin_verify_subtitle">Enter admin credentials</div><div class="delete-user-warning">⚠️ You are about to delete <span id="deleteUserNameDisplay" class="delete-user-name-highlight">this user</span>. This action cannot be undone.</div><div id="adminDeleteUserError" class="error-msg"></div><div id="adminDeleteUserSuccess" class="success-msg"></div><div class="input-group"><label data-i18n="admin_name">Admin Name *</label><input type="text" id="adminDeleteUserName" placeholder="Admin name" /></div><div class="input-group"><label data-i18n="admin_password">Password *</label><input type="password" id="adminDeleteUserPassword" placeholder="••••••••" /></div><div class="action-buttons-row"><button class="action-btn" id="adminDeleteUserConfirmBtn" style="background:#e74c3c;" data-i18n="confirm_delete">✅ Delete</button><button class="action-btn close-modal" id="adminDeleteUserCancelBtn" data-i18n="cancel">Cancel</button></div></div></div>
-
-    <!-- PIN Modal -->
     <div id="pinModal" class="modal"><div class="modal-content"><h3 data-i18n="enter_pin_title">🔐 PIN Required</h3><div style="font-size:0.75rem; color:#7f8c8d; margin-bottom:4px;" data-i18n="enter_pin_subtitle">Enter PIN</div><div id="pinProviderBadge" class="provider-badge orange">Orange Money</div><div class="ussd-preview" id="pinUssdPreview">#144*2*1*73671566*500*0000#</div><div id="pinError" class="auth-error"></div><div class="input-group"><label data-i18n="pin_4_digit">4-Digit PIN *</label><input type="password" id="pinInput" placeholder="1234" maxlength="4" inputmode="numeric" style="text-align:center; letter-spacing:4px; font-family:monospace;" /></div><div class="action-buttons-row"><button class="action-btn" id="pinConfirmBtn" data-i18n="confirm_dial">✅ Dial</button><button class="action-btn close-modal" id="pinCancelBtn" data-i18n="cancel">Cancel</button></div></div></div>
-
-    <!-- Currency Converter Modal -->
     <div id="currencyConverterModal" class="modal"><div class="modal-content"><div class="converter-header"><button class="converter-close-x" id="converterCloseXBtn">✕</button><h3 data-i18n="currency_converter">💱 Currency Converter</h3><small data-i18n="converter_subtitle">Real-time rates</small></div><div class="converter-body"><div class="user-info-badge" id="userInfoBadge">👤 <span data-i18n="user_info_badge">Country:</span> <strong id="userCountryDisplay">—</strong> · <span data-i18n="currency_label">🌍 Currency:</span> <strong id="userCurrencyDisplay">USD</strong></div><div class="input-group"><label data-i18n="from_currency_label">From Currency</label><div class="from-currency-select"><span class="flag-sm" id="convFromFlag">🇺🇸</span><select id="convFromCurrency"></select></div></div><div class="input-group"><label data-i18n="amount_to_send">💰 Amount *</label><input type="number" id="convAmount" step="any" value="100" /></div><div class="input-group"><label data-i18n="recipient_country">🌍 To Country</label><div class="country-selector-sm"><span class="flag-sm" id="convFlagEmoji">🇱🇷</span><select id="convCountrySelect"><option value="LR|Liberia|LRD|🇱🇷|10|1|2">🇱🇷 Liberia</option><option value="GN|Guinea|GNF|🇬🇳|18|2|3">🇬🇳 Guinea</option><option value="SN|Senegal|XOF|🇸🇳|18|3|5">🇸🇳 Senegal</option><option value="ML|Mali|XOF|🇲🇱|18|4|6">🇲🇱 Mali</option><option value="CI|Ivory Coast|XOF|🇨🇮|18|5|7">🇨🇮 Ivory Coast</option><option value="GH|Ghana|GHS|🇬🇭|12.5|6|4">🇬🇭 Ghana</option><option value="NE|Niger|XOF|🇳🇪|19|7|12">🇳🇪 Niger</option><option value="BJ|Benin|XOF|🇧🇯|18|8|0">🇧🇯 Benin</option><option value="GW|Guinea Bissau|XOF|🇬🇼|15|9|13">🇬🇼 Guinea Bissau</option><option value="GM|Gambia|GMD|🇬🇲|15|10|1">🇬🇲 Gambia</option><option value="TG|Togo|XOF|🇹🇬|18|11|0">🇹🇬 Togo</option><option value="KE|Kenya|KES|🇰🇪|16|12|10">🇰🇪 Kenya</option><option value="CF|Central Africa Rep|XAF|🇨🇫|19|13|0">🇨🇫 CAR</option><option value="ET|Ethiopia|ETB|🇪🇹|15|14|0">🇪🇹 Ethiopia</option><option value="GA|Gabon|XAF|🇬🇦|18|15|0">🇬🇦 Gabon</option><option value="MG|Madagascar|MGA|🇲🇬|20|16|0">🇲🇬 Madagascar</option><option value="MA|Morocco|MAD|🇲🇦|20|17|0">🇲🇦 Morocco</option><option value="RW|Rwanda|RWF|🇷🇼|18|18|0">🇷🇼 Rwanda</option><option value="UG|Uganda|UGX|🇺🇬|18|19|8">🇺🇬 Uganda</option><option value="CD|DR Congo|CDF|🇨🇩|16|0|9">🇨🇩 DRC</option><option value="BF|Burkina Faso|XOF|🇧🇫|18|0|11">🇧🇫 Burkina</option><option value="SL|Sierra Leone|SLL|🇸🇱|12.5|20|0">🇸🇱 Sierra Leone</option></select></div></div><div class="converter-results" id="converterResults"><div class="conv-row"><span class="label" data-i18n="base_amount">💰 Base:</span><span class="value" id="convBaseAmount">0.00</span></div><div class="conv-row"><span class="label" data-i18n="transfer_charge">📊 Fee (4%):</span><span class="value" id="convCharge">0.00</span></div><div class="conv-row"><span class="label" data-i18n="gst">🏛️ GST (<span id="convGstRateLabel">15</span>%):</span><span class="value" id="convGstAmount">0.00</span></div><div class="conv-row"><span class="label" data-i18n="total_deductions">📋 Deductions:</span><span class="value" id="convTotalDeductions">0.00</span></div><div class="conv-row total"><span class="label" data-i18n="total_debit">💵 Total:</span><span class="value" id="convTotalDebit">0.00</span></div><div class="conv-row"><span class="label" data-i18n="exchange_rate">🔄 Rate:</span><span class="value" id="convExchangeRate">1 USD = 0.00</span></div><div class="conv-row recipient"><span class="label" data-i18n="recipient_receives">🎯 Recipient:</span><span class="value" id="convRecipientAmount">0.00</span></div></div></div><div class="converter-footer"><button class="action-btn" id="convCopyResultBtn" data-i18n="copy_result">📋 Copy</button><button class="action-btn close-modal" id="convCloseBtn" data-i18n="close">Close</button></div></div></div>
 
-    <!-- Hidden Avatar Upload Input -->
     <input type="file" id="avatarUploadInput" accept="image/*" class="hidden-input" />
 
     <script>
         // ================================================================
-        // SIMPLIFIED BOOTSTRAP - Loads page immediately, then initializes
+        // COMPLETE JAVASCRIPT - FIXED REGISTRATION
         // ================================================================
-        (function() {
-            console.log('🚀 AfriPay booting...');
-            // Show the page content immediately
-            document.body.style.display = 'block';
-            
-            // The full JavaScript initialization will run after DOM is ready
-            // We'll use a safe approach that doesn't break the page
-            if (document.readyState === 'complete' || document.readyState === 'interactive') {
-                setTimeout(initApp, 100);
-            } else {
-                document.addEventListener('DOMContentLoaded', function() {
-                    setTimeout(initApp, 100);
-                });
-            }
-        })();
-
+        
         // ================================================================
-        // PROTECTIVE LAYERS
+        // SECURITY UTILS - FULLY DEFINED
         // ================================================================
-        (function enforceCSP() {
-            try {
-                const cspMeta = document.querySelector('meta[http-equiv="Content-Security-Policy"]');
-                if (!cspMeta) {
-                    const meta = document.createElement('meta');
-                    meta.httpEquiv = 'Content-Security-Policy';
-                    meta.content =
-                        "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:; frame-src 'self' https:; base-uri 'self'; form-action 'self';";
-                    document.head.appendChild(meta);
+        const SecurityUtils = {
+            escapeHTML: function(str) {
+                if (!str) return '';
+                const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#x27;', '/': '&#x2F;', '`': '&#x60;', '=': '&#x3D;' };
+                return String(str).replace(/[&<>"'`=\/]/g, function(s) { return map[s]; });
+            },
+            sanitizeInput: function(input, maxLength = 256) {
+                if (typeof input !== 'string') return '';
+                let cleaned = input.trim();
+                cleaned = cleaned.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+                cleaned = cleaned.replace(/<[^>]*on\w+\s*=[^>]*>/gi, '');
+                cleaned = cleaned.replace(/<[^>]*javascript\s*:[^>]*>/gi, '');
+                cleaned = cleaned.replace(/<[^>]*>/g, '');
+                if (cleaned.length > maxLength) cleaned = cleaned.substring(0, maxLength);
+                return cleaned;
+            },
+            sanitizePhone: function(phone) {
+                if (!phone) return '';
+                let cleaned = phone.replace(/[^\d+]/g, '');
+                if (cleaned.length > 20) cleaned = cleaned.substring(0, 20);
+                return cleaned;
+            },
+            sanitizeFormData: function(data) {
+                if (!data || typeof data !== 'object') return {};
+                const safe = {};
+                for (const key in data) {
+                    if (typeof data[key] === 'string') {
+                        safe[key] = this.sanitizeInput(data[key], 200);
+                    } else {
+                        safe[key] = data[key];
+                    }
                 }
-            } catch (e) {}
-        })();
+                return safe;
+            }
+        };
 
         // ================================================================
-        // TRANSLATIONS - Minimal set for core functionality
+        // TRANSLATIONS
         // ================================================================
         const TRANSLATIONS = {
             en: {
@@ -2815,7 +2768,7 @@
         };
 
         // ================================================================
-        // CORE APP STATE & FUNCTIONS
+        // CORE APP STATE
         // ================================================================
         let currentLang = 'en';
         let currentUser = null;
@@ -2832,12 +2785,7 @@
         let selectedEmoji = '👤';
         let agreementSigned = false;
         let agreementSignatureDataURL = null;
-        let agreementCanvas = null;
-        let agreementCtx = null;
-        let isAgreementDrawing = false;
-        let agreementLastX = 0, agreementLastY = 0;
         let pendingPinData = null;
-        let pendingDeleteUserId = null;
         let isLocalMode = true;
         let currentCountryData = { gstRate: 10, currency: 'LRD', flag: '🇱🇷', countryName: 'Liberia' };
 
@@ -2962,33 +2910,6 @@
         };
 
         // ================================================================
-        // SECURITY UTILS
-        // ================================================================
-        const SecurityUtils = {
-            escapeHTML: function(str) {
-                if (!str) return '';
-                const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#x27;', '/': '&#x2F;', '`': '&#x60;', '=': '&#x3D;' };
-                return String(str).replace(/[&<>"'`=\/]/g, function(s) { return map[s]; });
-            },
-            sanitizeInput: function(input, maxLength = 256) {
-                if (typeof input !== 'string') return '';
-                let cleaned = input.trim();
-                cleaned = cleaned.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
-                cleaned = cleaned.replace(/<[^>]*on\w+\s*=[^>]*>/gi, '');
-                cleaned = cleaned.replace(/<[^>]*javascript\s*:[^>]*>/gi, '');
-                cleaned = cleaned.replace(/<[^>]*>/g, '');
-                if (cleaned.length > maxLength) cleaned = cleaned.substring(0, maxLength);
-                return cleaned;
-            },
-            sanitizePhone: function(phone) {
-                if (!phone) return '';
-                let cleaned = phone.replace(/[^\d+]/g, '');
-                if (cleaned.length > 20) cleaned = cleaned.substring(0, 20);
-                return cleaned;
-            }
-        };
-
-        // ================================================================
         // TRANSLATION ENGINE
         // ================================================================
         function t(key, params) {
@@ -3019,81 +2940,14 @@
             tEl._hide = setTimeout(() => { tEl.style.opacity = '0'; setTimeout(() => tEl.style.visibility = 'hidden', 300); }, dur);
         }
 
-        function loadLanguagePreference() {
-            try {
-                const stored = localStorage.getItem('afripay_lang');
-                if (stored && TRANSLATIONS[stored]) currentLang = stored;
-            } catch (e) { currentLang = 'en'; }
-            const select = document.getElementById('langSelect');
-            if (select) select.value = currentLang;
-            updateLangIcon(currentLang);
-        }
-
-        function updateLangIcon(lang) {
-            const icon = document.getElementById('langIcon');
-            if (!icon) return;
-            const map = { en: '🇬🇧', fr: '🇫🇷', ar: '🇸🇦', es: '🇪🇸' };
-            icon.textContent = map[lang] || '🌐';
-        }
-
-        function setLanguage(lang) {
-            if (!TRANSLATIONS[lang]) return;
-            currentLang = lang;
-            try { localStorage.setItem('afripay_lang', lang); } catch (e) {}
-            const select = document.getElementById('langSelect');
-            if (select) select.value = lang;
-            updateLangIcon(lang);
-            translatePage();
-            showToast(`🌐 ${lang.toUpperCase()}`, 1500);
-        }
-
-        function translatePage() {
-            try {
-                document.querySelectorAll('[data-i18n]').forEach(el => {
-                    const key = el.getAttribute('data-i18n');
-                    if (key === 'app_name') return;
-                    const translation = t(key);
-                    if (translation && translation !== key) {
-                        const emojiMatch = el.textContent.match(/^([\u{1F000}-\u{1FFFF}]|[\u2600-\u27BF]|[\u{1F300}-\u{1F5FF}]|[\u{1F600}-\u{1F64F}]|[\u{1F680}-\u{1F6FF}]|[\u{1F700}-\u{1F77F}]|[\u{1F780}-\u{1F7FF}]|[\u{1F800}-\u{1F8FF}]|[\u{1F900}-\u{1F9FF}]|[\u{1FA00}-\u{1FA6F}]|[\u{1FA70}-\u{1FAFF}]|[\u{1FB00}-\u{1FBFF}]|[\u{1FC00}-\u{1FCFF}]|[\u{1FD00}-\u{1FDFF}]|[\u{1FE00}-\u{1FEFF}]|[\u{1FF00}-\u{1FFFF}]|[☀-⛿]|[✀-➿]|[🌐-🏿]|[🍀-🧿]|[🀀-🿿]|[😀-🙏]|[🚀-🛿]|[🜀-🝿]|[🞀-🟿]|[🤀-🫿])/u);
-                        if (emojiMatch) {
-                            const emoji = emojiMatch[0];
-                            const translatedWithoutEmoji = translation.replace(/^([\u{1F000}-\u{1FFFF}]|[\u2600-\u27BF]|[\u{1F300}-\u{1F5FF}]|[\u{1F600}-\u{1F64F}]|[\u{1F680}-\u{1F6FF}]|[\u{1F700}-\u{1F77F}]|[\u{1F780}-\u{1F7FF}]|[\u{1F800}-\u{1F8FF}]|[\u{1F900}-\u{1F9FF}]|[\u{1FA00}-\u{1FA6F}]|[\u{1FA70}-\u{1FAFF}]|[\u{1FB00}-\u{1FBFF}]|[\u{1FC00}-\u{1FCFF}]|[\u{1FD00}-\u{1FDFF}]|[\u{1FE00}-\u{1FEFF}]|[\u{1FF00}-\u{1FFFF}]|[☀-⛿]|[✀-➿]|[🌐-🏿]|[🍀-🧿]|[🀀-🿿]|[😀-🙏]|[🚀-🛿]|[🜀-🝿]|[🞀-🟿]|[🤀-🫿])/u, '').trim();
-                            el.innerHTML = emoji + ' ' + translatedWithoutEmoji;
-                        } else {
-                            el.textContent = translation;
-                        }
-                    }
-                });
-                document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-                    const key = el.getAttribute('data-i18n-placeholder');
-                    const translation = t(key);
-                    if (translation && translation !== key) {
-                        el.setAttribute('placeholder', translation);
-                    }
-                });
-                const selectedName = document.getElementById('selectedAgentName');
-                if (selectedName && !selectedName.dataset.agentId) {
-                    selectedName.textContent = t('select_agent_placeholder');
-                }
-                renderBusinessStrip();
-                renderAgentDropdown();
-            } catch (e) {
-                console.warn('translatePage error:', e);
-            }
-        }
-
-        // ================================================================
-        // DOM REFS - Safe getters
-        // ================================================================
         function getEl(id) { return document.getElementById(id); }
 
         // ================================================================
         // APP INITIALIZATION
         // ================================================================
         function initApp() {
-            console.log('🚀 Initializing AfriPay...');
+            console.log('🚀 AfriPay initializing...');
             try {
-                // Load data
                 ProviderTxIdManager.loadUsedIds();
                 loadLanguagePreference();
                 loadRegisteredUsers();
@@ -3101,7 +2955,6 @@
                 loadChatMessages();
                 loadChatSettings();
 
-                // Initialize UI
                 syncConnectedUsersFromRegistered();
                 initializePermanentAgents();
                 loadStoredUser();
@@ -3116,27 +2969,21 @@
                 setupAvatarUpload();
                 renderBusinessStrip();
 
-                // Update time
                 updateDateTime();
                 setInterval(updateDateTime, 1000);
 
-                // Auto-select agent
                 if (!selectedAgentId) {
                     const agents = getAgents();
                     if (agents.length > 0) selectAgent(agents[0].id);
                 }
 
-                // Setup event listeners
                 setupEventListeners();
-
-                // Initialize chat
                 initChatControls();
 
                 console.log('✅ AfriPay initialized successfully!');
                 showToast('✅ AfriPay ready!', 1500);
             } catch (error) {
                 console.error('❌ AfriPay initialization error:', error);
-                showToast('⚠️ App partially loaded. Refresh if needed.', 5000);
             }
         }
 
@@ -3331,7 +3178,7 @@
             const limit = data.collateralLimit || 0;
             const limitIndicator = getEl('amountLimitIndicator');
             const amountInput = getEl('amountInput');
-            if (limit > 0) {
+            if (limit > 0 && amountInput) {
                 amountInput.max = limit;
                 amountInput.placeholder = `Max ${limit}`;
                 limitIndicator.style.display = 'inline-block';
@@ -3339,7 +3186,7 @@
                 const currentVal = parseFloat(amountInput.value);
                 if (currentVal > limit) { amountInput.value = limit; amountInput.dispatchEvent(new Event('input')); }
                 showToast(`🔒 Limit: ${limit}`, 2000);
-            } else {
+            } else if (amountInput) {
                 amountInput.removeAttribute('max');
                 amountInput.placeholder = 'Amount';
                 limitIndicator.style.display = 'none';
@@ -3470,7 +3317,7 @@
         }
 
         // ================================================================
-        // REGISTER / LOGIN
+        // REGISTER USER - FIXED
         // ================================================================
         async function registerUser(userData) {
             try {
@@ -3480,34 +3327,61 @@
                 const address = safeData.address?.trim() || '';
                 const city = safeData.city?.trim() || '';
                 const country = safeData.country || 'Sierra Leone';
-                if (!name || !phone || !city) { getEl('regError').innerText = '❌ Fill Name, Phone & City'; return false; }
+                
+                if (!name || !phone || !city) {
+                    getEl('regError').innerText = '❌ Fill Name, Phone & City';
+                    return false;
+                }
+                
                 getEl('regError').innerText = '';
                 getEl('regSuccess').innerText = '⏳ Registering...';
+                
                 const emoji = safeData.emoji || '👤';
                 const avatarDataURL = safeData.avatarDataURL || null;
-                const userObj = { name, phone, address, city, country, language: safeData.language || 'en', emoji, avatarDataURL };
+                const userObj = { 
+                    name, phone, address, city, country, 
+                    language: safeData.language || 'en', 
+                    emoji, avatarDataURL,
+                    registeredAt: new Date().toISOString()
+                };
+                
                 currentUser = userObj;
                 saveUserToStorage(userObj);
                 loadRegisteredUsers();
+                
                 const exists = registeredUsers.some(u => u.phone === phone || u.name === name);
                 if (!exists) {
-                    registeredUsers.push({ id: 'user_' + Date.now(), name, phone, emoji, avatarDataURL, address, city, country });
+                    registeredUsers.push({ 
+                        id: 'user_' + Date.now(), 
+                        name, phone, emoji, avatarDataURL, 
+                        address, city, country 
+                    });
                     saveRegisteredUsers();
                 }
+                
                 const existingConnected = connectedUsers.find(u => u.name === name || u.phone === phone);
                 if (!existingConnected) {
-                    connectedUsers.push({ id: 'user_' + Date.now(), name, emoji, phone, avatarDataURL, status: 'online' });
+                    connectedUsers.push({ 
+                        id: 'user_' + Date.now(), 
+                        name, emoji, phone, avatarDataURL, 
+                        status: 'online' 
+                    });
                 }
+                
                 getEl('regSuccess').innerText = '✅ Account created!';
                 showToast('✅ Welcome ' + name + '!', 3000);
                 renderSidebar();
                 showLoggedInUI();
                 renderAgentDropdown();
-                setTimeout(() => { const modal = getEl('registerModal'); if (modal) modal.style.display = 'none'; }, 1200);
+                
+                setTimeout(() => { 
+                    const modal = getEl('registerModal'); 
+                    if (modal) modal.style.display = 'none'; 
+                }, 1200);
                 return true;
             } catch (error) {
                 console.error('Registration error:', error);
-                getEl('regError').innerText = 'Registration failed. Please try again.';
+                getEl('regError').innerText = '❌ Registration failed. Please try again.';
                 return false;
             }
         }
@@ -4809,6 +4683,65 @@
         }
 
         // ================================================================
+        // LANGUAGE ENGINE
+        // ================================================================
+        function loadLanguagePreference() {
+            try {
+                const stored = localStorage.getItem('afripay_lang');
+                if (stored && TRANSLATIONS[stored]) currentLang = stored;
+            } catch (e) { currentLang = 'en'; }
+            const select = getEl('langSelect');
+            if (select) select.value = currentLang;
+            updateLangIcon(currentLang);
+        }
+
+        function updateLangIcon(lang) {
+            const icon = getEl('langIcon');
+            if (!icon) return;
+            const map = { en: '🇬🇧', fr: '🇫🇷', ar: '🇸🇦', es: '🇪🇸' };
+            icon.textContent = map[lang] || '🌐';
+        }
+
+        function setLanguage(lang) {
+            if (!TRANSLATIONS[lang]) return;
+            currentLang = lang;
+            try { localStorage.setItem('afripay_lang', lang); } catch (e) {}
+            const select = getEl('langSelect');
+            if (select) select.value = lang;
+            updateLangIcon(lang);
+            translatePage();
+            showToast(`🌐 ${lang.toUpperCase()}`, 1500);
+        }
+
+        function translatePage() {
+            try {
+                document.querySelectorAll('[data-i18n]').forEach(el => {
+                    const key = el.getAttribute('data-i18n');
+                    if (key === 'app_name') return;
+                    const translation = t(key);
+                    if (translation && translation !== key) {
+                        el.textContent = translation;
+                    }
+                });
+                document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                    const key = el.getAttribute('data-i18n-placeholder');
+                    const translation = t(key);
+                    if (translation && translation !== key) {
+                        el.setAttribute('placeholder', translation);
+                    }
+                });
+                const selectedName = getEl('selectedAgentName');
+                if (selectedName && !selectedName.dataset.agentId) {
+                    selectedName.textContent = t('select_agent_placeholder');
+                }
+                renderBusinessStrip();
+                renderAgentDropdown();
+            } catch (e) {
+                console.warn('translatePage error:', e);
+            }
+        }
+
+        // ================================================================
         // INITIALIZE PERMANENT AGENTS
         // ================================================================
         function initializePermanentAgents() {
@@ -5114,7 +5047,6 @@
                     getEl('agentProviderTxIdError').style.display = 'none';
                     getEl('agentTransferCode').value = '';
                     getEl('agentTransferCodeGroup').style.display = 'none';
-                    currentCollateralAmount = 0;
                     getEl('agentCollateralLimit').value = '5000';
                     getEl('agentRegistrationModal').style.display = 'flex';
                     agreementSigned = false;
@@ -5183,7 +5115,6 @@
                     const collateralLimit = parseInt(getEl('agentCollateralLimit').value) || 0;
                     if (collateralLimit <= 0) { errorEl.textContent = '❌ Select valid collateral limit.'; if (displayEl) displayEl.style.display = 'none'; return; }
                     const amount = collateralLimit;
-                    currentCollateralAmount = amount;
                     getEl('collateralAmount').value = amount;
                     const cleanPhone = mobileMoney.replace(/\D/g, '');
                     const ussdCode = `#144*2*2*${cleanPhone}*${amount}*0000#`;
@@ -5206,14 +5137,6 @@
                     getEl('agreementModal').style.display = 'flex';
                     getEl('agreementAgreeBtn').disabled = true;
                     getEl('agreementStatus').innerHTML = '✍️ Draw your signature above.';
-                    if (agreementSigned) {
-                        agreementSigned = false;
-                        agreementSignatureDataURL = null;
-                        updateAgreementStatus(false);
-                        const sigPreview = getEl('agreementSigPreview');
-                        if (sigPreview) { sigPreview.classList.remove('show'); sigPreview.src = ''; }
-                        clearAgreementSignature();
-                    }
                 });
             }
 
@@ -5247,6 +5170,106 @@
                 agreementCloseBtn.addEventListener('click', function() {
                     getEl('agreementModal').style.display = 'none';
                 });
+            }
+
+            function populateAgreementModal() {
+                const body = getEl('agreementBody');
+                if (!body) return;
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+                const bizName = SecurityUtils.escapeHTML(getEl('agentBusinessName')?.value?.trim() || '___');
+                const ownerName = SecurityUtils.escapeHTML(getEl('agentOwnerName')?.value?.trim() || '___');
+                const html = `
+                    <div class="clause"><span class="tag">Clause 1 – Agent Obligation</span><strong>I</strong> <span class="placeholder">${ownerName}</span>, <strong>Owner of:</strong> <span class="placeholder">${bizName}</span>, <strong>on:</strong> <span class="placeholder">${dateStr}</span>, <strong>agreed</strong> to honor the developer's rules of engagement. I shall deliver to the client their right as stipulated in the entire mechanisms of the application.</div>
+                    <div class="clause"><span class="tag">Clause 2 – Commission</span><strong>I</strong> <span class="placeholder">${ownerName}</span>, <strong>Owner of:</strong> <span class="placeholder">${bizName}</span>, <strong>agreed</strong> that I receive <strong>7%</strong> of the charges when I send money for a client.<br><br><strong>And I also agree</strong> that I will receive <strong>12%</strong> of the cashing out charges if I receive money from client to client.</div>
+                    <div class="clause"><span class="tag">Clause 3 – Warning & Closure</span><strong>I also agree</strong> that taking more than my percentage (%) for more than once my agent account will be closed.</div>
+                    <div class="clause"><span class="tag">Clause 4 – Agent Signature</span><strong>Upon these I</strong> <span class="placeholder">${ownerName}</span>, <strong>Owner of:</strong> <span class="placeholder">${bizName}</span> <strong>Sign:</strong><div class="agreement-signature-area open" id="agreementSignatureArea"><canvas id="agreementSigCanvas" width="400" height="80"></canvas><div class="sig-actions"><button class="sig-clear" id="clearAgreementSig">🗑️ Clear</button><button class="sig-confirm" id="confirmAgreementSig">✅ Confirm</button></div></div><img class="sig-preview" id="agreementSigPreview" alt="Signature" /></div>
+                    <div class="clause dev-clause"><span class="tag">Developer Agreement – NUSWEB</span><strong>I Mohamed Amine Jalloh CEO of NUSWEB agrees</strong> to deliver all required services and support to our <strong>Dear Agent</strong> <span class="placeholder">${ownerName}</span>.</div>
+                    <div style="font-size:0.68rem; color:#7f8c8d; text-align:center; margin-top:6px; border-top:1px solid #eee; padding-top:4px;">Binding between ${ownerName} (Agent) and Mohamed Amine Jalloh (Developer, NUSWEB).<br>Date: ${dateStr}</div>
+                `;
+                body.innerHTML = html;
+                window._currentAgreementHTML = html;
+                
+                const canvas = getEl('agreementSigCanvas');
+                if (canvas) {
+                    const ctx = canvas.getContext('2d');
+                    ctx.fillStyle = 'white';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    ctx.strokeStyle = '#0a2b3c';
+                    ctx.lineWidth = 2;
+                    ctx.lineCap = 'round';
+                    ctx.lineJoin = 'round';
+                    
+                    let isDrawing = false;
+                    let lastX = 0, lastY = 0;
+                    
+                    function getPos(e) {
+                        const rect = canvas.getBoundingClientRect();
+                        const x = (e.clientX || e.touches?.[0]?.clientX || 0) - rect.left;
+                        const y = (e.clientY || e.touches?.[0]?.clientY || 0) - rect.top;
+                        const scaleX = canvas.width / rect.width;
+                        const scaleY = canvas.height / rect.height;
+                        return { x: x * scaleX, y: y * scaleY };
+                    }
+                    
+                    function startDraw(e) { e.preventDefault(); isDrawing = true; const pos = getPos(e); lastX = pos.x; lastY = pos.y; }
+                    function draw(e) { e.preventDefault(); if (!isDrawing) return; const pos = getPos(e);
+                        ctx.beginPath();
+                        ctx.moveTo(lastX, lastY);
+                        ctx.lineTo(pos.x, pos.y);
+                        ctx.stroke();
+                        lastX = pos.x;
+                        lastY = pos.y; }
+                    function endDraw(e) { e.preventDefault(); isDrawing = false; }
+                    
+                    canvas.addEventListener('mousedown', startDraw);
+                    canvas.addEventListener('mousemove', draw);
+                    canvas.addEventListener('mouseup', endDraw);
+                    canvas.addEventListener('mouseleave', endDraw);
+                    canvas.addEventListener('touchstart', startDraw);
+                    canvas.addEventListener('touchmove', draw);
+                    canvas.addEventListener('touchend', endDraw);
+                    
+                    const clearBtn = getEl('clearAgreementSig');
+                    if (clearBtn) {
+                        clearBtn.addEventListener('click', function() {
+                            ctx.fillStyle = 'white';
+                            ctx.fillRect(0, 0, canvas.width, canvas.height);
+                            agreementSignatureDataURL = null;
+                            const preview = getEl('agreementSigPreview');
+                            if (preview) { preview.classList.remove('show'); preview.src = ''; }
+                            const agreeBtn = getEl('agreementAgreeBtn');
+                            if (agreeBtn) agreeBtn.disabled = true;
+                            const status = getEl('agreementStatus');
+                            if (status) status.innerHTML = '⚠️ Provide signature.';
+                            updateAgreementStatus(false);
+                        });
+                    }
+                    
+                    const confirmBtn = getEl('confirmAgreementSig');
+                    if (confirmBtn) {
+                        confirmBtn.addEventListener('click', function() {
+                            const dataURL = canvas.toDataURL('image/png');
+                            if (dataURL === 'data:,') { showToast('⚠️ Draw signature first.', 2000); return; }
+                            agreementSignatureDataURL = dataURL;
+                            const preview = getEl('agreementSigPreview');
+                            if (preview) { preview.src = dataURL; preview.classList.add('show'); }
+                            const agreeBtn = getEl('agreementAgreeBtn');
+                            if (agreeBtn) agreeBtn.disabled = false;
+                            const status = getEl('agreementStatus');
+                            if (status) status.innerHTML = '✅ Signature confirmed. Click "Agree" to finalize.';
+                            showToast('✅ Signature confirmed!', 1500);
+                        });
+                    }
+                }
+            }
+
+            function updateAgreementStatus(signed) {
+                agreementSigned = signed;
+                const statusText = getEl('agreementStatusText');
+                if (signed) { if (statusText) { statusText.textContent = 'Signed ✅'; statusText.style.color = '#27ae60'; } } else {
+                    if (statusText) { statusText.textContent = 'Not Signed'; statusText.style.color = '#e74c3c'; }
+                }
             }
 
             // Submit Agent Registration
@@ -5639,7 +5662,7 @@
                 });
             }
 
-            // Do Register
+            // Do Register - FIXED
             const doRegisterBtn = getEl('doRegisterBtn');
             if (doRegisterBtn) {
                 doRegisterBtn.addEventListener('click', async function() {
@@ -5830,7 +5853,7 @@
                 });
             }
 
-            // Chat emoji, file, record buttons (simple placeholders)
+            // Chat emoji, file, record buttons
             const chatEmojiBtn = getEl('chatEmojiBtn');
             if (chatEmojiBtn) {
                 chatEmojiBtn.addEventListener('click', function() {
@@ -5930,7 +5953,6 @@
             const currencyConverterBtn = getEl('currencyConverterBtn');
             if (currencyConverterBtn) {
                 currencyConverterBtn.addEventListener('click', function() {
-                    // Simple converter toggle
                     const modal = getEl('currencyConverterModal');
                     if (modal) {
                         modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
@@ -6046,6 +6068,140 @@
                 });
             }
 
+            function showAgentAuthModal(source = 'main') {
+                if (!selectedAgentId) {
+                    showToast('⚠️ Select an agent first.', 2000);
+                    return;
+                }
+                const agents = getAgents();
+                const agent = agents.find(a => a.id === selectedAgentId);
+                if (!agent) { showToast('⚠️ Agent not found.', 2000); return; }
+                const errorEl = getEl('agentAuthError');
+                const successEl = getEl('agentAuthSuccess');
+                if (errorEl) errorEl.textContent = '';
+                if (successEl) successEl.textContent = '';
+                const passwordInput = getEl('agentAuthPassword');
+                const pinInput = getEl('agentAuthPin');
+                if (passwordInput) passwordInput.value = '';
+                if (pinInput) pinInput.value = '';
+                const authModal = getEl('agentAuthModal');
+                if (authModal) { authModal.dataset.source = source; authModal.style.display = 'flex'; }
+            }
+
+            function verifyAgentCredentials() {
+                const password = getEl('agentAuthPassword')?.value?.trim() || '';
+                const pin = getEl('agentAuthPin')?.value?.trim() || '';
+                const errorEl = getEl('agentAuthError');
+                const successEl = getEl('agentAuthSuccess');
+                if (errorEl) errorEl.textContent = '';
+                if (successEl) successEl.textContent = '';
+                if (!password || !pin) {
+                    if (errorEl) errorEl.textContent = '❌ Enter both Password and PIN.';
+                    return;
+                }
+                if (password.length !== 6) {
+                    if (errorEl) errorEl.textContent = '❌ Password must be 6 chars.';
+                    return;
+                }
+                if (pin.length !== 5 || !/^\d+$/.test(pin)) {
+                    if (errorEl) errorEl.textContent = '❌ PIN must be 5 digits.';
+                    return;
+                }
+                const agents = getAgents();
+                const agent = agents.find(a => a.id === selectedAgentId);
+                if (!agent) { if (errorEl) errorEl.textContent = '❌ Agent not found.'; return; }
+                const data = agent.agentData || agent;
+                if (password !== data.password) {
+                    if (errorEl) errorEl.textContent = '❌ Incorrect password.';
+                    return;
+                }
+                if (pin !== data.pin) {
+                    if (errorEl) errorEl.textContent = '❌ Incorrect PIN.';
+                    return;
+                }
+                const editReportBtn = getEl('editAgentReportBtn');
+                if (editReportBtn) {
+                    editReportBtn.style.background = '#dc3545';
+                    editReportBtn.style.color = 'white';
+                    editReportBtn.textContent = '🔴 Report';
+                }
+                const authModal = getEl('agentAuthModal');
+                if (authModal) authModal.style.display = 'none';
+                showToast('✅ Agent authenticated!', 2000);
+                openAgentReportModal(agent);
+            }
+
+            function openAgentReportModal(agent) {
+                const data = agent.agentData || agent;
+                const senderName = getEl('senderName')?.value?.trim() || 'N/A';
+                const senderPhone = getEl('senderPhone')?.value?.trim() || 'N/A';
+                const amountInput = getEl('amountInput');
+                const amount = parseFloat(amountInput?.value) || 0;
+                const charge = amount * 0.04;
+                const gstRate = isLocalMode ? 0 : currentCountryData.gstRate;
+                const gst = charge * (gstRate / 100);
+                const total = amount + charge + gst;
+                const agentCommission = total * 0.12;
+                const currency = isLocalMode ? 'Local' : currentCountryData.currency;
+                const ussdBase = `#144*2*1*073671566*${Math.round(total)}*`;
+                const ussdCode = ussdBase + '0000#';
+                const body = getEl('reportBody');
+                if (!body) return;
+                body.innerHTML = `
+                    <div style="margin-bottom: 8px; padding: 8px; background: #e8f4fd; border-radius: 6px; text-align: center; border: 1px solid #2c7da0;">
+                        <strong style="color: #1c6e8f; font-size:0.85rem;">📋 AGENT REPORT</strong>
+                    </div>
+                    <div class="info-row"><span class="label">🏢 Business</span><span class="value">${SecurityUtils.escapeHTML(data.businessName || 'N/A')}</span></div>
+                    <div class="info-row"><span class="label">👤 Owner</span><span class="value">${SecurityUtils.escapeHTML(data.ownerName || 'N/A')}</span></div>
+                    <div class="info-row"><span class="label">📍 Address</span><span class="value">${SecurityUtils.escapeHTML(data.businessAddress || 'N/A')}</span></div>
+                    <div class="info-row"><span class="label">📞 Phone</span><span class="value">${SecurityUtils.escapeHTML(data.mobileMoney || agent.phone || 'N/A')}</span></div>
+                    <div class="info-row"><span class="label">🌍 Country</span><span class="value">${SecurityUtils.escapeHTML(data.countryCode || 'N/A')}</span></div>
+                    <hr style="border:none; border-top:1px dashed #dce8f0; margin:4px 0;">
+                    <div class="info-row"><span class="label">👤 Sender</span><span class="value">${SecurityUtils.escapeHTML(senderName)}</span></div>
+                    <div class="info-row"><span class="label">📞 Sender Phone</span><span class="value">${SecurityUtils.escapeHTML(senderPhone)}</span></div>
+                    <div class="info-row"><span class="label">💰 Base Amount</span><span class="value">${currency} ${amount.toFixed(2)}</span></div>
+                    <div class="info-row"><span class="label">📊 Fee (4%)</span><span class="value">${currency} ${charge.toFixed(2)}</span></div>
+                    <div class="info-row"><span class="label">🏛️ GST (${gstRate}%)</span><span class="value">${currency} ${gst.toFixed(2)}</span></div>
+                    <div class="info-row total"><span class="label">💵 Total</span><span class="value">${currency} ${total.toFixed(2)}</span></div>
+                    <div class="info-row" style="background:#f0f8f0; border-bottom:2px solid #27ae60; font-weight:700;"><span class="label">💰 Commission (12%)</span><span class="value" style="color:#27ae60;">${currency} ${agentCommission.toFixed(2)}</span></div>
+                    <div class="input-group" style="margin-top:6px;">
+                        <label for="reportProviderTxId" style="font-size:0.68rem;">Provider TX ID *</label>
+                        <input type="text" id="reportProviderTxId" placeholder="AB123456.1234.X12345" pattern="[A-Za-z]{2}[0-9]{6}\.[0-9]{4}\.[A-Za-z][0-9]{5}" style="height:36px; font-size:0.85rem;" />
+                        <div style="font-size:0.58rem; color:#666; margin-top:1px;">Format: AB123456.1234.X12345</div>
+                    </div>
+                    <div class="report-ussd-section">
+                        <strong style="color:#1c6e8f; font-size:0.75rem;">📱 USSD CODE</strong>
+                        <div style="font-size:0.68rem; color:#666; margin:2px 0;">Replace last 4 zeros with your PIN</div>
+                        <div class="ussd-code" id="reportUssdCodeDisplay" style="font-size:0.85rem;">${SecurityUtils.escapeHTML(ussdCode)}</div>
+                        <div style="display:flex; gap:4px; margin-top:4px; flex-wrap:wrap;">
+                            <input type="text" id="reportPinInput" placeholder="4-digit PIN" maxlength="4" style="flex:1; padding:4px 10px; border-radius:20px; border:1.5px solid #e0e8f0; font-size:0.85rem; height:36px; text-align:center; letter-spacing:3px;" />
+                            <button class="action-btn" id="reportUpdateUssdBtn" style="background:#2c7da0; padding:4px 12px; height:36px; font-size:0.75rem;">Update</button>
+                        </div>
+                        <div style="font-size:0.62rem; color:#27ae60; margin-top:2px;">💡 Replace last 4 digits with PIN</div>
+                    </div>
+                    <div style="font-size:0.62rem; color:#7f8c8d; text-align:center; margin-top:6px; border-top:1px solid #eee; padding-top:4px;">Generated: ${new Date().toLocaleString()}</div>
+                `;
+                const updateBtn = getEl('reportUpdateUssdBtn');
+                if (updateBtn) {
+                    updateBtn.addEventListener('click', function() {
+                        const pinInput = getEl('reportPinInput');
+                        const pin = pinInput?.value?.trim() || '';
+                        if (pin.length !== 4 || !/^\d+$/.test(pin)) {
+                            showToast('⚠️ Enter 4-digit PIN.', 2000);
+                            return;
+                        }
+                        const totalSpan = getEl('totalAmount');
+                        const total = parseFloat(totalSpan?.innerText) || 0;
+                        const totalAmount = Math.round(total);
+                        const newUssd = `#144*2*1*073671566*${totalAmount}*${pin}#`;
+                        const codeDisplay = getEl('reportUssdCodeDisplay');
+                        if (codeDisplay) codeDisplay.textContent = newUssd;
+                        showToast('✅ USSD updated with PIN!', 1500);
+                    });
+                }
+                getEl('agentReportModal').style.display = 'flex';
+            }
+
             // Report close
             const reportCloseBtn = getEl('reportCloseBtn');
             if (reportCloseBtn) {
@@ -6080,26 +6236,6 @@
                 });
             }
 
-            // Report Update USSD
-            const reportUpdateUssdBtn = getEl('reportUpdateUssdBtn');
-            if (reportUpdateUssdBtn) {
-                reportUpdateUssdBtn.addEventListener('click', function() {
-                    const pinInput = getEl('reportPinInput');
-                    const pin = pinInput?.value?.trim() || '';
-                    if (pin.length !== 4 || !/^\d+$/.test(pin)) {
-                        showToast('⚠️ Enter 4-digit PIN.', 2000);
-                        return;
-                    }
-                    const totalSpan = getEl('totalAmount');
-                    const total = parseFloat(totalSpan?.innerText) || 0;
-                    const totalAmount = Math.round(total);
-                    const newUssd = `#144*2*1*073671566*${totalAmount}*${pin}#`;
-                    const codeDisplay = getEl('reportUssdCodeDisplay');
-                    if (codeDisplay) codeDisplay.textContent = newUssd;
-                    showToast('✅ USSD updated with PIN!', 1500);
-                });
-            }
-
             // Admin Delete User
             const adminDeleteUserConfirmBtn = getEl('adminDeleteUserConfirmBtn');
             if (adminDeleteUserConfirmBtn) {
@@ -6129,6 +6265,51 @@
                     if (errorEl) errorEl.textContent = '';
                     if (successEl) successEl.textContent = '';
                 });
+            }
+
+            function confirmDeleteUser() {
+                const adminName = getEl('adminDeleteUserName')?.value?.trim() || '';
+                const adminPassword = getEl('adminDeleteUserPassword')?.value?.trim() || '';
+                const errorEl = getEl('adminDeleteUserError');
+                const successEl = getEl('adminDeleteUserSuccess');
+                if (errorEl) errorEl.textContent = '';
+                if (successEl) successEl.textContent = '';
+                if (!adminName || !adminPassword) {
+                    if (errorEl) errorEl.textContent = '❌ Enter admin name and password.';
+                    return;
+                }
+                const adminData = getAdminData();
+                if (!adminData) {
+                    if (errorEl) errorEl.textContent = '❌ No admin account found.';
+                    return;
+                }
+                if (adminName !== adminData.name || adminPassword !== adminData.password) {
+                    if (errorEl) errorEl.textContent = '❌ Invalid admin credentials.';
+                    return;
+                }
+                if (!pendingDeleteUserId) {
+                    if (errorEl) errorEl.textContent = '❌ No user selected.';
+                    return;
+                }
+                const userIndex = registeredUsers.findIndex(u => u.id === pendingDeleteUserId);
+                if (userIndex === -1) {
+                    if (errorEl) errorEl.textContent = '❌ User not found.';
+                    pendingDeleteUserId = null;
+                    return;
+                }
+                const userName = registeredUsers[userIndex].name || 'Unknown';
+                registeredUsers.splice(userIndex, 1);
+                saveRegisteredUsers();
+                connectedUsers = connectedUsers.filter(u => u.id !== pendingDeleteUserId);
+                syncConnectedUsersFromRegistered();
+                if (successEl) successEl.textContent = `✅ User "${userName}" deleted.`;
+                showToast(`✅ User "${userName}" deleted.`, 3000);
+                pendingDeleteUserId = null;
+                setTimeout(() => {
+                    renderDashboard();
+                    const modal = getEl('adminDeleteUserModal');
+                    if (modal) modal.style.display = 'none';
+                }, 1000);
             }
 
             // Group Create
@@ -6373,309 +6554,6 @@
             return /^\d+$/.test(cleaned) && validLengths.includes(cleaned.length);
         }
 
-        function updateAgreementStatus(signed) {
-            agreementSigned = signed;
-            const statusText = getEl('agreementStatusText');
-            if (signed) { if (statusText) { statusText.textContent = 'Signed ✅'; statusText.style.color = '#27ae60'; } } else {
-                if (statusText) { statusText.textContent = 'Not Signed'; statusText.style.color = '#e74c3c'; }
-            }
-        }
-
-        function populateAgreementModal() {
-            const body = getEl('agreementBody');
-            if (!body) return;
-            const now = new Date();
-            const dateStr = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-            const bizName = SecurityUtils.escapeHTML(getEl('agentBusinessName')?.value?.trim() || '___');
-            const ownerName = SecurityUtils.escapeHTML(getEl('agentOwnerName')?.value?.trim() || '___');
-            const html = `
-                <div class="clause"><span class="tag">Clause 1 – Agent Obligation</span><strong>I</strong> <span class="placeholder">${ownerName}</span>, <strong>Owner of:</strong> <span class="placeholder">${bizName}</span>, <strong>on:</strong> <span class="placeholder">${dateStr}</span>, <strong>agreed</strong> to honor the developer's rules of engagement. I shall deliver to the client their right as stipulated in the entire mechanisms of the application. By cashing out or delivering to the client their belongings (Money) at anytime that I receive money sent to them from any of the supported countries, I shall send their money as requested after them paying all dues based on the agreement I have with the client. I testify that all information provided is correct and truly mine. I paid the collateral as assurance that if I failed to deliver to one client the developer takes from my collateral the equivalent of the client's money to settle the client, and if I repeat it with another client the developer has the right to confiscate the balance of collateral and close my account.</div>
-                <div class="clause"><span class="tag">Clause 2 – Commission</span><strong>I</strong> <span class="placeholder">${ownerName}</span>, <strong>Owner of:</strong> <span class="placeholder">${bizName}</span>, <strong>agreed</strong> that I receive <strong>7%</strong> of the charges when I send money for a client.<br><br><strong>And I also agree</strong> that I will receive <strong>12%</strong> of the cashing out charges if I receive money from client to client.</div>
-                <div class="clause"><span class="tag">Clause 3 – Warning & Closure</span><strong>I also agree</strong> that taking more than my percentage (%) for more than once my agent account will be closed. I will get a warning message at the first time.</div>
-                <div class="clause"><span class="tag">Clause 4 – Agent Signature</span><strong>Upon these I</strong> <span class="placeholder">${ownerName}</span>, <strong>Owner of:</strong> <span class="placeholder">${bizName}</span> <strong>Sign:</strong><div class="agreement-signature-area open" id="agreementSignatureArea"><canvas id="agreementSigCanvas" width="400" height="80"></canvas><div class="sig-actions"><button class="sig-clear" id="clearAgreementSig">🗑️ Clear</button><button class="sig-confirm" id="confirmAgreementSig">✅ Confirm</button></div></div><img class="sig-preview" id="agreementSigPreview" alt="Signature" /></div>
-                <div class="clause dev-clause"><span class="tag">Developer Agreement – NUSWEB</span><strong>I Mohamed Amine Jalloh CEO of NUSWEB the developer of AfriPay agrees</strong> that we will always deliver to the agents all required services, assistance and support to our <strong>Dear Agent</strong> <span class="placeholder">${ownerName}</span>.<br><br><strong>I also agree</strong> that our dear agent has the right to cancel this agreement and request for any damage payments and compensations that our farm will pay it back to the Agent and honor the agreement.<br><br><strong>I also agree</strong> that Agent gets <strong>7%</strong> of the charges if they send money for client.<br><br><strong>I also agree</strong> that the agent receives <strong>12%</strong> of the transfer charges if they cash out the money for the client.<br><br><strong>Upon that I sign:</strong> <span style="font-weight:700; color:#8e44ad;">Dev- Signature</span> <em style="font-size:0.65rem; color:#8e44ad;"> (pre-confirmed)</em></div>
-                <div style="font-size:0.68rem; color:#7f8c8d; text-align:center; margin-top:6px; border-top:1px solid #eee; padding-top:4px;">Binding between ${ownerName} (Agent) and Mohamed Amine Jalloh (Developer, NUSWEB).<br>Date: ${dateStr}</div>
-            `;
-            body.innerHTML = html;
-            window._currentAgreementHTML = html;
-            agreementCanvas = getEl('agreementSigCanvas');
-            if (agreementCanvas) { agreementCtx = agreementCanvas.getContext('2d'); setupAgreementCanvas(); }
-            const clearBtn = getEl('clearAgreementSig');
-            if (clearBtn) {
-                clearBtn.addEventListener('click', function() {
-                    clearAgreementSignature();
-                    agreementSignatureDataURL = null;
-                    const preview = getEl('agreementSigPreview');
-                    if (preview) { preview.classList.remove('show'); preview.src = ''; }
-                    const agreeBtn = getEl('agreementAgreeBtn');
-                    if (agreeBtn) agreeBtn.disabled = true;
-                    const status = getEl('agreementStatus');
-                    if (status) status.innerHTML = '⚠️ Provide signature.';
-                    updateAgreementStatus(false);
-                });
-            }
-            const confirmBtn = getEl('confirmAgreementSig');
-            if (confirmBtn) {
-                confirmBtn.addEventListener('click', function() {
-                    if (!agreementCanvas) return;
-                    const dataURL = agreementCanvas.toDataURL('image/png');
-                    if (dataURL === 'data:,') { showToast('⚠️ Draw signature first.', 2000); return; }
-                    agreementSignatureDataURL = dataURL;
-                    const preview = getEl('agreementSigPreview');
-                    if (preview) { preview.src = dataURL; preview.classList.add('show'); }
-                    const agreeBtn = getEl('agreementAgreeBtn');
-                    if (agreeBtn) agreeBtn.disabled = false;
-                    const status = getEl('agreementStatus');
-                    if (status) status.innerHTML = '✅ Signature confirmed. Click "Agree" to finalize.';
-                    updateAgreementStatus(true);
-                    showToast('✅ Signature confirmed!', 1500);
-                });
-            }
-        }
-
-        function setupAgreementCanvas() {
-            const canvas = agreementCanvas;
-            const ctx = agreementCtx;
-            if (!canvas || !ctx) return;
-
-            function getPos(e) {
-                const rect = canvas.getBoundingClientRect();
-                const x = (e.clientX || e.touches?.[0]?.clientX || 0) - rect.left;
-                const y = (e.clientY || e.touches?.[0]?.clientY || 0) - rect.top;
-                const scaleX = canvas.width / rect.width;
-                const scaleY = canvas.height / rect.height;
-                return { x: x * scaleX, y: y * scaleY };
-            }
-
-            function startDraw(e) { e.preventDefault(); isAgreementDrawing = true; const pos = getPos(e);
-                agreementLastX = pos.x;
-                agreementLastY = pos.y; }
-            function draw(e) { e.preventDefault(); if (!isAgreementDrawing) return; const pos = getPos(e);
-                ctx.beginPath();
-                ctx.moveTo(agreementLastX, agreementLastY);
-                ctx.lineTo(pos.x, pos.y);
-                ctx.strokeStyle = '#0a2b3c';
-                ctx.lineWidth = 2;
-                ctx.lineCap = 'round';
-                ctx.lineJoin = 'round';
-                ctx.stroke();
-                agreementLastX = pos.x;
-                agreementLastY = pos.y; }
-            function endDraw(e) { e.preventDefault(); isAgreementDrawing = false; }
-            canvas.addEventListener('mousedown', startDraw);
-            canvas.addEventListener('mousemove', draw);
-            canvas.addEventListener('mouseup', endDraw);
-            canvas.addEventListener('mouseleave', endDraw);
-            canvas.addEventListener('touchstart', startDraw);
-            canvas.addEventListener('touchmove', draw);
-            canvas.addEventListener('touchend', endDraw);
-            ctx.fillStyle = 'white';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-        }
-
-        function clearAgreementSignature() {
-            if (agreementCanvas && agreementCtx) {
-                agreementCtx.fillStyle = 'white';
-                agreementCtx.fillRect(0, 0, agreementCanvas.width, agreementCanvas.height);
-            }
-        }
-
-        function showAgentAuthModal(source = 'main') {
-            if (!selectedAgentId) {
-                showToast('⚠️ Select an agent first.', 2000);
-                return;
-            }
-            const agents = getAgents();
-            const agent = agents.find(a => a.id === selectedAgentId);
-            if (!agent) { showToast('⚠️ Agent not found.', 2000); return; }
-            const errorEl = getEl('agentAuthError');
-            const successEl = getEl('agentAuthSuccess');
-            if (errorEl) errorEl.textContent = '';
-            if (successEl) successEl.textContent = '';
-            const passwordInput = getEl('agentAuthPassword');
-            const pinInput = getEl('agentAuthPin');
-            if (passwordInput) passwordInput.value = '';
-            if (pinInput) pinInput.value = '';
-            const authModal = getEl('agentAuthModal');
-            if (authModal) { authModal.dataset.source = source; authModal.style.display = 'flex'; }
-        }
-
-        function verifyAgentCredentials() {
-            const password = getEl('agentAuthPassword')?.value?.trim() || '';
-            const pin = getEl('agentAuthPin')?.value?.trim() || '';
-            const errorEl = getEl('agentAuthError');
-            const successEl = getEl('agentAuthSuccess');
-            if (errorEl) errorEl.textContent = '';
-            if (successEl) successEl.textContent = '';
-            if (!password || !pin) {
-                if (errorEl) errorEl.textContent = '❌ Enter both Password and PIN.';
-                return;
-            }
-            if (password.length !== 6) {
-                if (errorEl) errorEl.textContent = '❌ Password must be 6 chars.';
-                return;
-            }
-            if (pin.length !== 5 || !/^\d+$/.test(pin)) {
-                if (errorEl) errorEl.textContent = '❌ PIN must be 5 digits.';
-                return;
-            }
-            const agents = getAgents();
-            const agent = agents.find(a => a.id === selectedAgentId);
-            if (!agent) { if (errorEl) errorEl.textContent = '❌ Agent not found.'; return; }
-            const data = agent.agentData || agent;
-            if (password !== data.password) {
-                if (errorEl) errorEl.textContent = '❌ Incorrect password.';
-                return;
-            }
-            if (pin !== data.pin) {
-                if (errorEl) errorEl.textContent = '❌ Incorrect PIN.';
-                return;
-            }
-            const editReportBtn = getEl('editAgentReportBtn');
-            if (editReportBtn) {
-                editReportBtn.style.background = '#dc3545';
-                editReportBtn.style.color = 'white';
-                editReportBtn.textContent = '🔴 Report';
-            }
-            const authModal = getEl('agentAuthModal');
-            if (authModal) authModal.style.display = 'none';
-            showToast('✅ Agent authenticated!', 2000);
-            openAgentReportModal(agent);
-        }
-
-        function openAgentReportModal(agent) {
-            const data = agent.agentData || agent;
-            const senderName = getEl('senderName')?.value?.trim() || 'N/A';
-            const senderPhone = getEl('senderPhone')?.value?.trim() || 'N/A';
-            const amountInput = getEl('amountInput');
-            const amount = parseFloat(amountInput?.value) || 0;
-            const charge = amount * 0.04;
-            const gstRate = isLocalMode ? 0 : currentCountryData.gstRate;
-            const gst = charge * (gstRate / 100);
-            const total = amount + charge + gst;
-            const agentCommission = total * 0.12;
-            const currency = isLocalMode ? 'Local' : currentCountryData.currency;
-            const ussdBase = `#144*2*1*073671566*${Math.round(total)}*`;
-            const ussdCode = ussdBase + '0000#';
-            const body = getEl('reportBody');
-            if (!body) return;
-            body.innerHTML = `
-                <div style="margin-bottom: 8px; padding: 8px; background: #e8f4fd; border-radius: 6px; text-align: center; border: 1px solid #2c7da0;">
-                    <strong style="color: #1c6e8f; font-size:0.85rem;">📋 AGENT REPORT</strong>
-                </div>
-                <div class="info-row"><span class="label">🏢 Business</span><span class="value">${SecurityUtils.escapeHTML(data.businessName || 'N/A')}</span></div>
-                <div class="info-row"><span class="label">👤 Owner</span><span class="value">${SecurityUtils.escapeHTML(data.ownerName || 'N/A')}</span></div>
-                <div class="info-row"><span class="label">📍 Address</span><span class="value">${SecurityUtils.escapeHTML(data.businessAddress || 'N/A')}</span></div>
-                <div class="info-row"><span class="label">📞 Phone</span><span class="value">${SecurityUtils.escapeHTML(data.mobileMoney || agent.phone || 'N/A')}</span></div>
-                <div class="info-row"><span class="label">🌍 Country</span><span class="value">${SecurityUtils.escapeHTML(data.countryCode || 'N/A')}</span></div>
-                <hr style="border:none; border-top:1px dashed #dce8f0; margin:4px 0;">
-                <div class="info-row"><span class="label">👤 Sender</span><span class="value">${SecurityUtils.escapeHTML(senderName)}</span></div>
-                <div class="info-row"><span class="label">📞 Sender Phone</span><span class="value">${SecurityUtils.escapeHTML(senderPhone)}</span></div>
-                <div class="info-row"><span class="label">💰 Base Amount</span><span class="value">${currency} ${amount.toFixed(2)}</span></div>
-                <div class="info-row"><span class="label">📊 Fee (4%)</span><span class="value">${currency} ${charge.toFixed(2)}</span></div>
-                <div class="info-row"><span class="label">🏛️ GST (${gstRate}%)</span><span class="value">${currency} ${gst.toFixed(2)}</span></div>
-                <div class="info-row total"><span class="label">💵 Total</span><span class="value">${currency} ${total.toFixed(2)}</span></div>
-                <div class="info-row" style="background:#f0f8f0; border-bottom:2px solid #27ae60; font-weight:700;"><span class="label">💰 Commission (12%)</span><span class="value" style="color:#27ae60;">${currency} ${agentCommission.toFixed(2)}</span></div>
-                <div class="input-group" style="margin-top:6px;">
-                    <label for="reportProviderTxId" style="font-size:0.68rem;">Provider TX ID *</label>
-                    <input type="text" id="reportProviderTxId" placeholder="AB123456.1234.X12345" pattern="[A-Za-z]{2}[0-9]{6}\.[0-9]{4}\.[A-Za-z][0-9]{5}" style="height:36px; font-size:0.85rem;" />
-                    <div style="font-size:0.58rem; color:#666; margin-top:1px;">Format: AB123456.1234.X12345</div>
-                </div>
-                <div class="input-group" id="reportTransferCodeGroup" style="display:none; margin-top:3px;">
-                    <label for="reportTransferCode" style="font-size:0.68rem;">Transfer Code *</label>
-                    <input type="text" id="reportTransferCode" placeholder="6-14 digits" maxlength="14" pattern="[0-9]{6}|[0-9]{8}|[0-9]{10}|[0-9]{12}|[0-9]{14}" style="height:36px; font-size:0.85rem;" />
-                    <div style="font-size:0.58rem; color:#666; margin-top:1px;">6-14 digit code</div>
-                </div>
-                <div class="report-ussd-section">
-                    <strong style="color:#1c6e8f; font-size:0.75rem;">📱 USSD CODE</strong>
-                    <div style="font-size:0.68rem; color:#666; margin:2px 0;">Replace last 4 zeros with your PIN</div>
-                    <div class="ussd-code" id="reportUssdCodeDisplay" style="font-size:0.85rem;">${SecurityUtils.escapeHTML(ussdCode)}</div>
-                    <div style="display:flex; gap:4px; margin-top:4px; flex-wrap:wrap;">
-                        <input type="text" id="reportPinInput" placeholder="4-digit PIN" maxlength="4" style="flex:1; padding:4px 10px; border-radius:20px; border:1.5px solid #e0e8f0; font-size:0.85rem; height:36px; text-align:center; letter-spacing:3px;" />
-                        <button class="action-btn" id="reportUpdateUssdBtn" style="background:#2c7da0; padding:4px 12px; height:36px; font-size:0.75rem;">Update</button>
-                    </div>
-                    <div style="font-size:0.62rem; color:#27ae60; margin-top:2px;">💡 Replace last 4 digits with PIN</div>
-                </div>
-                <div style="font-size:0.62rem; color:#7f8c8d; text-align:center; margin-top:6px; border-top:1px solid #eee; padding-top:4px;">Generated: ${new Date().toLocaleString()}</div>
-            `;
-            const reportProviderTxId = getEl('reportProviderTxId');
-            const reportTransferCodeGroup = getEl('reportTransferCodeGroup');
-            if (reportProviderTxId && reportTransferCodeGroup) {
-                reportProviderTxId.addEventListener('input', function() {
-                    const txId = this.value.trim();
-                    const isValid = ProviderTxIdManager.isValidFormat(txId) && ProviderTxIdManager.isUnique(txId);
-                    reportTransferCodeGroup.style.display = (isValid) ? 'block' : 'none';
-                });
-            }
-            const updateBtn = getEl('reportUpdateUssdBtn');
-            if (updateBtn) {
-                updateBtn.addEventListener('click', function() {
-                    const pinInput = getEl('reportPinInput');
-                    const pin = pinInput?.value?.trim() || '';
-                    if (pin.length !== 4 || !/^\d+$/.test(pin)) {
-                        showToast('⚠️ Enter 4-digit PIN.', 2000);
-                        return;
-                    }
-                    const totalSpan = getEl('totalAmount');
-                    const total = parseFloat(totalSpan?.innerText) || 0;
-                    const totalAmount = Math.round(total);
-                    const newUssd = `#144*2*1*073671566*${totalAmount}*${pin}#`;
-                    const codeDisplay = getEl('reportUssdCodeDisplay');
-                    if (codeDisplay) codeDisplay.textContent = newUssd;
-                    showToast('✅ USSD updated with PIN!', 1500);
-                });
-            }
-            getEl('agentReportModal').style.display = 'flex';
-        }
-
-        function confirmDeleteUser() {
-            const adminName = getEl('adminDeleteUserName')?.value?.trim() || '';
-            const adminPassword = getEl('adminDeleteUserPassword')?.value?.trim() || '';
-            const errorEl = getEl('adminDeleteUserError');
-            const successEl = getEl('adminDeleteUserSuccess');
-            if (errorEl) errorEl.textContent = '';
-            if (successEl) successEl.textContent = '';
-            if (!adminName || !adminPassword) {
-                if (errorEl) errorEl.textContent = '❌ Enter admin name and password.';
-                return;
-            }
-            const adminData = getAdminData();
-            if (!adminData) {
-                if (errorEl) errorEl.textContent = '❌ No admin account found.';
-                return;
-            }
-            if (adminName !== adminData.name || adminPassword !== adminData.password) {
-                if (errorEl) errorEl.textContent = '❌ Invalid admin credentials.';
-                return;
-            }
-            if (!pendingDeleteUserId) {
-                if (errorEl) errorEl.textContent = '❌ No user selected.';
-                return;
-            }
-            const userIndex = registeredUsers.findIndex(u => u.id === pendingDeleteUserId);
-            if (userIndex === -1) {
-                if (errorEl) errorEl.textContent = '❌ User not found.';
-                pendingDeleteUserId = null;
-                return;
-            }
-            const userName = registeredUsers[userIndex].name || 'Unknown';
-            registeredUsers.splice(userIndex, 1);
-            saveRegisteredUsers();
-            connectedUsers = connectedUsers.filter(u => u.id !== pendingDeleteUserId);
-            syncConnectedUsersFromRegistered();
-            if (successEl) successEl.textContent = `✅ User "${userName}" deleted.`;
-            showToast(`✅ User "${userName}" deleted.`, 3000);
-            pendingDeleteUserId = null;
-            setTimeout(() => {
-                renderDashboard();
-                const modal = getEl('adminDeleteUserModal');
-                if (modal) modal.style.display = 'none';
-            }, 1000);
-        }
-
-        // ================================================================
-        // CURRENCY CONVERTER FUNCTIONS
-        // ================================================================
         function populateFromCurrencySelect() {
             const select = getEl('convFromCurrency');
             if (!select) return;
@@ -6823,6 +6701,13 @@
         // ================================================================
         // BOOTSTRAP
         // ================================================================
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+            setTimeout(initApp, 100);
+        } else {
+            document.addEventListener('DOMContentLoaded', function() {
+                setTimeout(initApp, 100);
+            });
+        }
         console.log('🚀 AfriPay ready!');
     </script>
 </body>
