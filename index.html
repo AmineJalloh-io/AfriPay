@@ -2504,7 +2504,114 @@
     <div id="infoModal" class="modal"><div class="modal-content"><h3 id="modalTitle"></h3><div id="modalBody"></div><button class="action-btn close-modal" data-i18n="close">Close</button></div></div>
     <div id="subscribeModal" class="modal"><div class="modal-content"><h3 data-i18n="subscribe_title">📧 Subscribe</h3><input type="email" id="subEmail" placeholder="Email" style="width:100%; padding:5px 10px; margin:3px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;" /><div class="action-buttons-row"><button id="submitSubscribeBtn" class="action-btn" data-i18n="subscribe">Subscribe</button><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div></div></div>
     <div id="loginModal" class="modal"><div class="modal-content"><h3 data-i18n="login_title">🔐 Login</h3><input type="text" id="loginName" placeholder="Full Name" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;" /><input type="tel" id="loginPhone" placeholder="Phone" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;" /><div id="loginError" class="error-msg"></div><div class="action-buttons-row"><button id="doLoginBtn" class="action-btn" data-i18n="login">Login</button><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div></div></div>
-    <div id="registerModal" class="modal"><div class="modal-content"><h3 data-i18n="register_title">📝 Register</h3><input type="text" id="regName" placeholder="Full Name *" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;" /><input type="tel" id="regPhone" placeholder="Phone *" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;" /><input type="text" id="regAddress" placeholder="Address" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;" /><div class="input-group" style="margin-bottom:0.35rem;"><label style="font-size:0.75rem;font-weight:700;color:#1e3b4a;" data-i18n="city">City *</label><div class="city-input-row"><select id="regCitySelect"><option value="">Select city...</option><option value="Freetown">Freetown</option><option value="Abuja">Abuja</option><option value="Accra">Accra</option><option value="Nairobi">Nairobi</option><option value="Monrovia">Monrovia</option><option value="Dakar">Dakar</option><option value="Conakry">Conakry</option><option value="Bamako">Bamako</option><option value="Yamoussoukro">Yamoussoukro</option><option value="Niamey">Niamey</option><option value="Porto-Novo">Porto-Novo</option><option value="Bissau">Bissau</option><option value="Banjul">Banjul</option><option value="Lomé">Lomé</option><option value="Bangui">Bangui</option><option value="Addis Ababa">Addis Ababa</option><option value="Libreville">Libreville</option><option value="Antananarivo">Antananarivo</option><option value="Rabat">Rabat</option><option value="Kigali">Kigali</option><option value="Kampala">Kampala</option><option value="Kinshasa">Kinshasa</option><option value="Ouagadougou">Ouagadougou</option></select><span class="or-text">OR</span><input type="text" id="regCityOther" placeholder="Other city" /></div></div><select id="regCountry" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;"><option value="Sierra Leone">Sierra Leone</option><option value="Nigeria">Nigeria</option><option value="Ghana">Ghana</option><option value="Kenya">Kenya</option><option value="Liberia">Liberia</option><option value="Senegal">Senegal</option><option value="Guinea">Guinea</option><option value="Mali">Mali</option><option value="Ivory Coast">Ivory Coast</option><option value="Niger">Niger</option><option value="Benin">Benin</option><option value="Guinea Bissau">Guinea Bissau</option><option value="Gambia">Gambia</option><option value="Togo">Togo</option><option value="Central Africa Rep">CAR</option><option value="Ethiopia">Ethiopia</option><option value="Gabon">Gabon</option><option value="Madagascar">Madagascar</option><option value="Morocco">Morocco</option><option value="Rwanda">Rwanda</option><option value="Uganda">Uganda</option><option value="DR Congo">DRC</option><option value="Burkina Faso">Burkina</option></select><select id="regLanguage" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;"><option value="en">English</option><option value="fr">Français</option><option value="es">Español</option></select><label style="font-size:0.75rem;font-weight:700;color:#1e3b4a;margin-top:2px;" data-i18n="choose_icon">Icon:</label><div class="emoji-grid" id="emojiPickerGrid"><span class="emoji-option" data-emoji="👤">👤</span><span class="emoji-option" data-emoji="👨">👨</span><span class="emoji-option" data-emoji="👩">👩</span><span class="emoji-option" data-emoji="🧑">🧑</span><span class="emoji-option" data-emoji="👦">👦</span><span class="emoji-option" data-emoji="👧">👧</span><span class="emoji-option" data-emoji="🧒">🧒</span><span class="emoji-option" data-emoji="👨‍💻">👨‍💻</span><span class="emoji-option" data-emoji="👩‍💻">👩‍💻</span><span class="emoji-option" data-emoji="🧑‍💻">🧑‍💻</span><span class="emoji-option" data-emoji="👨‍🎓">👨‍🎓</span><span class="emoji-option" data-emoji="👩‍🎓">👩‍🎓</span></div><div style="margin-top:4px;"><label style="font-size:0.75rem;font-weight:700;color:#1e3b4a;" data-i18n="upload_image">Upload image:</label><input type="file" id="regProfileImage" accept="image/*" style="width:100%; padding:4px; border-radius:20px; border:1px solid #ddd; font-size:0.85rem; height:36px;" /><div id="regProfilePreview" style="display:none; margin-top:2px;"><img src="#" alt="Preview" style="max-height:60px; border-radius:6px;" /><button type="button" id="regProfileRemove" style="background:#e74c3c; color:white; border:none; padding:2px 8px; border-radius:20px; font-size:0.6rem; cursor:pointer;">✕</button></div></div><div style="display:flex; gap:4px; align-items:center; margin-top:3px;"><button type="button" class="action-btn" id="regGenerateUssdBtn" style="flex:1; background:#2c7da0; height:36px; font-size:0.85rem;" data-i18n="generate_ussd">📱 USSD</button></div><div class="ussd-result-box" id="regUssdResult"><span class="ussd-label">📞 USSD:</span><span class="ussd-code-value" id="regUssdCode"></span><button class="copy-ussd-btn" id="regCopyUssdBtn">Copy</button></div><div id="regError" class="error-msg"></div><div id="regSuccess" class="success-msg"></div><div class="action-buttons-row"><button id="doRegisterBtn" class="action-btn" data-i18n="register">Register</button><button id="registerAgentBtn" class="action-btn orange" data-i18n="register_agent">🏢 Agent</button><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div></div></div>
+    
+    <!-- REGISTER MODAL - FIXED -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <h3 data-i18n="register_title">📝 Register</h3>
+            <input type="text" id="regName" placeholder="Full Name *" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;" />
+            <input type="tel" id="regPhone" placeholder="Phone *" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;" />
+            <input type="text" id="regAddress" placeholder="Address" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;" />
+            <div class="input-group" style="margin-bottom:0.35rem;">
+                <label style="font-size:0.75rem;font-weight:700;color:#1e3b4a;" data-i18n="city">City *</label>
+                <div class="city-input-row">
+                    <select id="regCitySelect">
+                        <option value="">Select city...</option>
+                        <option value="Freetown">Freetown</option>
+                        <option value="Abuja">Abuja</option>
+                        <option value="Accra">Accra</option>
+                        <option value="Nairobi">Nairobi</option>
+                        <option value="Monrovia">Monrovia</option>
+                        <option value="Dakar">Dakar</option>
+                        <option value="Conakry">Conakry</option>
+                        <option value="Bamako">Bamako</option>
+                        <option value="Yamoussoukro">Yamoussoukro</option>
+                        <option value="Niamey">Niamey</option>
+                        <option value="Porto-Novo">Porto-Novo</option>
+                        <option value="Bissau">Bissau</option>
+                        <option value="Banjul">Banjul</option>
+                        <option value="Lomé">Lomé</option>
+                        <option value="Bangui">Bangui</option>
+                        <option value="Addis Ababa">Addis Ababa</option>
+                        <option value="Libreville">Libreville</option>
+                        <option value="Antananarivo">Antananarivo</option>
+                        <option value="Rabat">Rabat</option>
+                        <option value="Kigali">Kigali</option>
+                        <option value="Kampala">Kampala</option>
+                        <option value="Kinshasa">Kinshasa</option>
+                        <option value="Ouagadougou">Ouagadougou</option>
+                    </select>
+                    <span class="or-text">OR</span>
+                    <input type="text" id="regCityOther" placeholder="Other city" />
+                </div>
+            </div>
+            <select id="regCountry" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;">
+                <option value="Sierra Leone">Sierra Leone</option>
+                <option value="Nigeria">Nigeria</option>
+                <option value="Ghana">Ghana</option>
+                <option value="Kenya">Kenya</option>
+                <option value="Liberia">Liberia</option>
+                <option value="Senegal">Senegal</option>
+                <option value="Guinea">Guinea</option>
+                <option value="Mali">Mali</option>
+                <option value="Ivory Coast">Ivory Coast</option>
+                <option value="Niger">Niger</option>
+                <option value="Benin">Benin</option>
+                <option value="Guinea Bissau">Guinea Bissau</option>
+                <option value="Gambia">Gambia</option>
+                <option value="Togo">Togo</option>
+                <option value="Central Africa Rep">CAR</option>
+                <option value="Ethiopia">Ethiopia</option>
+                <option value="Gabon">Gabon</option>
+                <option value="Madagascar">Madagascar</option>
+                <option value="Morocco">Morocco</option>
+                <option value="Rwanda">Rwanda</option>
+                <option value="Uganda">Uganda</option>
+                <option value="DR Congo">DRC</option>
+                <option value="Burkina Faso">Burkina</option>
+            </select>
+            <select id="regLanguage" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;">
+                <option value="en">English</option>
+                <option value="fr">Français</option>
+                <option value="es">Español</option>
+            </select>
+            <label style="font-size:0.75rem;font-weight:700;color:#1e3b4a;margin-top:2px;" data-i18n="choose_icon">Icon:</label>
+            <div class="emoji-grid" id="emojiPickerGrid">
+                <span class="emoji-option" data-emoji="👤">👤</span>
+                <span class="emoji-option" data-emoji="👨">👨</span>
+                <span class="emoji-option" data-emoji="👩">👩</span>
+                <span class="emoji-option" data-emoji="🧑">🧑</span>
+                <span class="emoji-option" data-emoji="👦">👦</span>
+                <span class="emoji-option" data-emoji="👧">👧</span>
+                <span class="emoji-option" data-emoji="🧒">🧒</span>
+                <span class="emoji-option" data-emoji="👨‍💻">👨‍💻</span>
+                <span class="emoji-option" data-emoji="👩‍💻">👩‍💻</span>
+                <span class="emoji-option" data-emoji="🧑‍💻">🧑‍💻</span>
+                <span class="emoji-option" data-emoji="👨‍🎓">👨‍🎓</span>
+                <span class="emoji-option" data-emoji="👩‍🎓">👩‍🎓</span>
+            </div>
+            <div style="margin-top:4px;">
+                <label style="font-size:0.75rem;font-weight:700;color:#1e3b4a;" data-i18n="upload_image">Upload image:</label>
+                <input type="file" id="regProfileImage" accept="image/*" style="width:100%; padding:4px; border-radius:20px; border:1px solid #ddd; font-size:0.85rem; height:36px;" />
+                <div id="regProfilePreview" style="display:none; margin-top:2px;">
+                    <img src="#" alt="Preview" style="max-height:60px; border-radius:6px;" />
+                    <button type="button" id="regProfileRemove" style="background:#e74c3c; color:white; border:none; padding:2px 8px; border-radius:20px; font-size:0.6rem; cursor:pointer;">✕</button>
+                </div>
+            </div>
+            <div style="display:flex; gap:4px; align-items:center; margin-top:3px;">
+                <button type="button" class="action-btn" id="regGenerateUssdBtn" style="flex:1; background:#2c7da0; height:36px; font-size:0.85rem;" data-i18n="generate_ussd">📱 USSD</button>
+            </div>
+            <div class="ussd-result-box" id="regUssdResult"><span class="ussd-label">📞 USSD:</span><span class="ussd-code-value" id="regUssdCode"></span><button class="copy-ussd-btn" id="regCopyUssdBtn">Copy</button></div>
+            <div id="regError" class="error-msg"></div>
+            <div id="regSuccess" class="success-msg"></div>
+            <div class="action-buttons-row">
+                <button id="doRegisterBtn" class="action-btn" data-i18n="register">Register</button>
+                <button id="registerAgentBtn" class="action-btn orange" data-i18n="register_agent">🏢 Agent</button>
+                <button class="action-btn close-modal" data-i18n="cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+    
     <div id="agentRegistrationModal" class="modal"><div class="modal-content agent-form"><h3 data-i18n="agent_reg_title">🏢 Agent Reg</h3><div id="agentRegError" class="error-msg"></div><div id="agentRegSuccess" class="success-msg"></div><div class="input-group"><label data-i18n="agent_business_name">Business *</label><input type="text" id="agentBusinessName" placeholder="Business name" /></div><div class="input-group"><label data-i18n="agent_address">Address *</label><input type="text" id="agentAddress" placeholder="Street" /></div><div class="input-group"><label data-i18n="agent_city">City *</label><div class="city-input-row"><select id="agentCitySelect"><option value="">Select city...</option><option value="Freetown">Freetown</option><option value="Abuja">Abuja</option><option value="Accra">Accra</option><option value="Nairobi">Nairobi</option><option value="Monrovia">Monrovia</option><option value="Dakar">Dakar</option><option value="Conakry">Conakry</option><option value="Bamako">Bamako</option><option value="Yamoussoukro">Yamoussoukro</option><option value="Niamey">Niamey</option><option value="Porto-Novo">Porto-Novo</option><option value="Bissau">Bissau</option><option value="Banjul">Banjul</option><option value="Lomé">Lomé</option><option value="Bangui">Bangui</option><option value="Addis Ababa">Addis Ababa</option><option value="Libreville">Libreville</option><option value="Antananarivo">Antananarivo</option><option value="Rabat">Rabat</option><option value="Kigali">Kigali</option><option value="Kampala">Kampala</option><option value="Kinshasa">Kinshasa</option><option value="Ouagadougou">Ouagadougou</option></select><span class="or-text">OR</span><input type="text" id="agentCityOther" placeholder="Other city" /></div></div><div class="input-group"><label data-i18n="agent_reg_number">Reg Number *</label><input type="text" id="agentRegNumber" placeholder="e.g. SL-2025-0042" /></div><div class="input-group"><label data-i18n="agent_business_type">Type *</label><select id="agentBusinessType"><option value="Retail">Retail</option><option value="Wholesale">Wholesale</option><option value="Service">Service</option><option value="Manufacturing">Manufacturing</option><option value="Transport">Transport</option><option value="Hospitality">Hospitality</option><option value="Financial">Financial</option><option value="Other">Other</option></select></div><div class="double-row"><div class="input-group"><label data-i18n="agent_owner_name">Owner *</label><input type="text" id="agentOwnerName" placeholder="Owner name" /></div><div class="input-group"><label data-i18n="agent_id_type">ID Type *</label><select id="agentIdType"><option value="National ID">National ID</option><option value="Passport">Passport</option><option value="Driver's License">Driver's License</option><option value="Voter's Card">Voter's Card</option><option value="Other">Other</option></select></div></div><div class="input-group"><label data-i18n="agent_id_number">ID Number *</label><input type="text" id="agentIdNumber" placeholder="e.g. SL-123456" /></div><div class="input-group"><label data-i18n="agent_id_image">ID Image *</label><input type="file" id="agentIdImage" accept="image/*" capture="environment" style="padding:4px; height:auto;" /><img id="agentIdPreview" class="id-preview" alt="ID" /></div><div class="input-group"><label data-i18n="agent_logo">Logo *</label><input type="file" id="agentLogoImage" accept="image/*" required style="padding:4px; height:auto;" /><div id="agentLogoPreviewContainer" style="display:none; margin-top:2px;"><img src="#" alt="Logo" style="max-height:60px; border-radius:6px;" /><button type="button" id="agentLogoRemove" style="background:#e74c3c; color:white; border:none; padding:2px 8px; border-radius:20px; font-size:0.6rem; cursor:pointer;">✕</button></div><div style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="agent_logo_hint">Upload business logo</div></div><div class="input-group"><label data-i18n="agent_mobile_money">Mobile Money *</label><input type="tel" id="agentMobileMoney" placeholder="e.g. 23276123456" /></div><div class="input-group"><label for="agentCollateralLimit" data-i18n="collateral_limit_label">💳 Collateral *</label><select id="agentCollateralLimit"><option value="500">500</option><option value="1000">1,000</option><option value="1500">1,500</option><option value="2000">2,000</option><option value="2500">2,500</option><option value="3000">3,000</option><option value="3500">3,500</option><option value="4000">4,000</option><option value="4500">4,500</option><option value="5000" selected>5,000</option><option value="5500">5,500</option><option value="6000">6,000</option><option value="6500">6,500</option><option value="7000">7,000</option><option value="7500">7,500</option><option value="8000">8,000</option><option value="8500">8,500</option><option value="9000">9,000</option><option value="9500">9,500</option><option value="10000">10,000</option></select><div style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="collateral_limit_hint">Max transaction amount</div></div><div class="input-group"><label data-i18n="agent_country_code">Country Code</label><select id="agentCountryCode"><option value="+232">🇸🇱 +232</option><option value="+234">🇳🇬 +234</option><option value="+233">🇬🇭 +233</option><option value="+254">🇰🇪 +254</option><option value="+231">🇱🇷 +231</option><option value="+221">🇸🇳 +221</option><option value="+224" selected>🇬🇳 +224</option><option value="+223">🇲🇱 +223</option><option value="+225">🇨🇮 +225</option><option value="+227">🇳🇪 +227</option><option value="+229">🇧🇯 +229</option><option value="+245">🇬🇼 +245</option><option value="+220">🇬🇲 +220</option><option value="+228">🇹🇬 +228</option><option value="+236">🇨🇫 +236</option><option value="+251">🇪🇹 +251</option><option value="+241">🇬🇦 +241</option><option value="+261">🇲🇬 +261</option><option value="+212">🇲🇦 +212</option><option value="+250">🇷🇼 +250</option><option value="+256">🇺🇬 +256</option><option value="+243">🇨🇩 +243</option><option value="+226">🇧🇫 +226</option></select></div><div class="input-group"><label data-i18n="agent_password">Password *</label><div style="display:flex; gap:4px; align-items:center; flex-wrap:wrap;"><input type="text" id="agentPassword" placeholder="A1B2C3" style="flex:1; min-width:80px; letter-spacing:2px; font-family:monospace;" readonly /><button type="button" class="action-btn green" id="generatePasswordBtn" style="padding:4px 12px; height:36px; font-size:0.75rem;" data-i18n="generate_password">🔑 Gen</button></div><div id="agentPasswordHint" style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="password_hint">Click Gen to create 6-char password</div></div><div class="input-group"><label data-i18n="agent_pin_label">5-Digit PIN *</label><div style="display:flex; gap:4px; align-items:center; flex-wrap:wrap;"><input type="text" id="agentPin" placeholder="12345" style="flex:1; min-width:80px; letter-spacing:2px; font-family:monospace;" readonly /><button type="button" class="action-btn green" id="generatePinBtn" style="padding:4px 12px; height:36px; font-size:0.75rem;" data-i18n="generate_pin">🔑 Gen PIN</button></div><div id="agentPinHint" style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="pin_hint">Click to create 5-digit PIN</div></div><div class="collateral-box"><div style="display:flex; align-items:center; gap:4px; flex-wrap:wrap;"><span style="font-weight:700; font-size:0.8rem; color:#1c6e8f;" data-i18n="collateral_label">🔒 Collateral</span><button class="action-btn orange" id="generateCollateralBtn" style="padding:4px 12px; height:34px; font-size:0.75rem;" data-i18n="generate_collateral">USSD</button></div><div id="collateralResult" style="margin-top:3px;"><span style="font-size:0.68rem; color:#666;" data-i18n="collateral_hint">Generate USSD for Orange Money collateral</span><div id="collateralUssdDisplay" class="ussd-code" style="display:none;"></div></div><div id="collateralError" class="error-msg" style="font-size:0.68rem;"></div><input type="hidden" id="collateralAmount" value="0" /></div><div style="margin:6px 0 4px 0; text-align:center;"><button class="action-btn orange" id="viewAgreementBtn" style="width:100%; height:38px; font-size:0.85rem;" data-i18n="view_agreement">📜 Agreement</button><div id="agreementStatusDisplay" style="font-size:0.68rem; color:#7f8c8d; margin-top:2px;"><span data-i18n="agreement_status_label">Agreement:</span> <span id="agreementStatusText" style="font-weight:700; color:#e74c3c;" data-i18n="not_signed">Not Signed</span></div></div><div class="input-group" style="margin-top:0.35rem;"><label for="agentProviderTxId" data-i18n="provider_tx_id_label">🔐 Provider TX ID *</label><input type="text" id="agentProviderTxId" placeholder="AB123456.1234.X12345" pattern="[A-Za-z]{2}[0-9]{6}\.[0-9]{4}\.[A-Za-z][0-9]{5}" /><div style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="provider_tx_id_format">Format: AB123456.1234.X12345</div><div id="agentProviderTxIdError" class="error-msg" style="font-size:0.68rem; display:none;"></div></div><div class="input-group" id="agentTransferCodeGroup" style="display:none;"><label for="agentTransferCode" data-i18n="transfer_code_label">Transfer Code *</label><input type="text" id="agentTransferCode" placeholder="6-14 digits" maxlength="14" pattern="[0-9]{6}|[0-9]{8}|[0-9]{10}|[0-9]{12}|[0-9]{14}" /><div style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="transfer_code_hint">6-14 digit code</div><div id="agentTransferCodeError" class="error-msg" style="font-size:0.68rem; display:none;"></div></div><div class="action-buttons-row" style="margin-top:6px;"><button class="action-btn" id="submitAgentRegistrationBtn" data-i18n="register_agent_submit">Register</button><button class="action-btn close-modal" id="closeAgentRegBtn" style="background:#2c7da0;" data-i18n="close">Close</button></div></div></div>
     <div id="editAgentModal" class="modal"><div class="modal-content agent-form"><h3 data-i18n="edit_agent_title">✏️ Edit Agent</h3><input type="hidden" id="editAgentId" /><div id="editAgentError" class="error-msg"></div><div id="editAgentSuccess" class="success-msg"></div><div class="input-group"><label data-i18n="agent_business_name">Business *</label><input type="text" id="editBusinessName" /></div><div class="input-group"><label data-i18n="agent_address">Address *</label><input type="text" id="editAddress" /></div><div class="input-group"><label data-i18n="agent_city">City *</label><div class="city-input-row"><select id="editCitySelect"><option value="">Select city...</option><option value="Freetown">Freetown</option><option value="Abuja">Abuja</option><option value="Accra">Accra</option><option value="Nairobi">Nairobi</option><option value="Monrovia">Monrovia</option><option value="Dakar">Dakar</option><option value="Conakry">Conakry</option><option value="Bamako">Bamako</option><option value="Yamoussoukro">Yamoussoukro</option><option value="Niamey">Niamey</option><option value="Porto-Novo">Porto-Novo</option><option value="Bissau">Bissau</option><option value="Banjul">Banjul</option><option value="Lomé">Lomé</option><option value="Bangui">Bangui</option><option value="Addis Ababa">Addis Ababa</option><option value="Libreville">Libreville</option><option value="Antananarivo">Antananarivo</option><option value="Rabat">Rabat</option><option value="Kigali">Kigali</option><option value="Kampala">Kampala</option><option value="Kinshasa">Kinshasa</option><option value="Ouagadougou">Ouagadougou</option></select><span class="or-text">OR</span><input type="text" id="editCityOther" placeholder="Other city" /></div></div><div class="input-group"><label data-i18n="agent_reg_number">Reg Number *</label><input type="text" id="editRegNumber" /></div><div class="input-group"><label data-i18n="agent_mobile_money">Mobile Money *</label><input type="tel" id="editMobileMoney" /></div><div class="input-group"><label data-i18n="agent_password">Password *</label><input type="password" id="editPassword" placeholder="Enter registration password" /></div><div class="input-group"><label data-i18n="agent_pin_label">5-Digit PIN *</label><input type="password" id="editPin" placeholder="Enter registration PIN" maxlength="5" /></div><div class="action-buttons-row"><button class="action-btn" id="saveEditAgentBtn" data-i18n="save_changes">Save</button><button class="action-btn" id="editAgentReportBtn" style="background:#1a1a1a; color:white;" data-i18n="report">📋 Report</button><button class="action-btn close-modal" style="background:#2c7da0;" data-i18n="close">Close</button></div></div></div>
     <div id="addClientModal" class="modal"><div class="modal-content"><h3 data-i18n="add_client">➕ Add Client</h3><div id="addClientError" class="error-msg"></div><div class="input-group"><label data-i18n="client_name">Name *</label><input type="text" id="newClientName" placeholder="Client name" /></div><div class="input-group"><label data-i18n="client_phone">Phone *</label><input type="tel" id="newClientPhone" placeholder="Phone" /></div><div class="input-group"><label data-i18n="address">Address</label><input type="text" id="newClientAddress" placeholder="Address" /></div><div class="input-group"><label data-i18n="city">City *</label><select id="newClientCitySelect"><option value="">Select city...</option><option value="Freetown">Freetown</option><option value="Abuja">Abuja</option><option value="Accra">Accra</option><option value="Nairobi">Nairobi</option><option value="Monrovia">Monrovia</option><option value="Dakar">Dakar</option><option value="Conakry">Conakry</option><option value="Bamako">Bamako</option><option value="Yamoussoukro">Yamoussoukro</option><option value="Niamey">Niamey</option><option value="Porto-Novo">Porto-Novo</option><option value="Bissau">Bissau</option><option value="Banjul">Banjul</option><option value="Lomé">Lomé</option><option value="Bangui">Bangui</option><option value="Addis Ababa">Addis Ababa</option><option value="Libreville">Libreville</option><option value="Antananarivo">Antananarivo</option><option value="Rabat">Rabat</option><option value="Kigali">Kigali</option><option value="Kampala">Kampala</option><option value="Kinshasa">Kinshasa</option><option value="Ouagadougou">Ouagadougou</option></select></div><div class="input-group"><label data-i18n="location">Country</label><select id="newClientCountrySelect"><option value="Sierra Leone">Sierra Leone</option><option value="Nigeria">Nigeria</option><option value="Ghana">Ghana</option><option value="Kenya">Kenya</option><option value="Liberia">Liberia</option><option value="Senegal">Senegal</option><option value="Guinea">Guinea</option><option value="Mali">Mali</option><option value="Ivory Coast">Ivory Coast</option><option value="Niger">Niger</option><option value="Benin">Benin</option><option value="Guinea Bissau">Guinea Bissau</option><option value="Gambia">Gambia</option><option value="Togo">Togo</option><option value="Central Africa Rep">CAR</option><option value="Ethiopia">Ethiopia</option><option value="Gabon">Gabon</option><option value="Madagascar">Madagascar</option><option value="Morocco">Morocco</option><option value="Rwanda">Rwanda</option><option value="Uganda">Uganda</option><option value="DR Congo">DRC</option><option value="Burkina Faso">Burkina</option></select></div><div class="action-buttons-row"><button class="action-btn" id="saveClientBtn" data-i18n="save">Save</button><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div></div></div>
@@ -3321,67 +3428,101 @@
         // ================================================================
         async function registerUser(userData) {
             try {
-                const safeData = SecurityUtils.sanitizeFormData(userData);
-                const name = safeData.name?.trim() || '';
-                const phone = safeData.phone?.trim() || '';
-                const address = safeData.address?.trim() || '';
-                const city = safeData.city?.trim() || '';
-                const country = safeData.country || 'Sierra Leone';
+                // Get form data directly from the registration form
+                const name = document.getElementById('regName').value.trim();
+                const phone = document.getElementById('regPhone').value.trim();
+                const address = document.getElementById('regAddress').value.trim();
+                const city = getCityValue('regCitySelect', 'regCityOther');
+                const country = document.getElementById('regCountry').value;
+                const language = document.getElementById('regLanguage').value;
                 
+                // Get avatar data if any
+                let avatarDataURL = null;
+                const previewContainer = document.getElementById('regProfilePreview');
+                if (previewContainer && previewContainer.style.display !== 'none') {
+                    const img = previewContainer.querySelector('img');
+                    if (img && img.src && !img.src.startsWith('#')) {
+                        avatarDataURL = img.src;
+                    }
+                }
+                
+                // Get selected emoji
+                const selectedEmojiEl = document.querySelector('#emojiPickerGrid .emoji-option.selected');
+                const emoji = selectedEmojiEl ? selectedEmojiEl.getAttribute('data-emoji') : '👤';
+                
+                // Validate required fields
                 if (!name || !phone || !city) {
-                    getEl('regError').innerText = '❌ Fill Name, Phone & City';
+                    document.getElementById('regError').innerText = '❌ Please fill in Name, Phone and City';
                     return false;
                 }
                 
-                getEl('regError').innerText = '';
-                getEl('regSuccess').innerText = '⏳ Registering...';
-                
-                const emoji = safeData.emoji || '👤';
-                const avatarDataURL = safeData.avatarDataURL || null;
-                const userObj = { 
-                    name, phone, address, city, country, 
-                    language: safeData.language || 'en', 
-                    emoji, avatarDataURL,
+                // Create user object
+                const userObj = {
+                    name: name,
+                    phone: phone,
+                    address: address || '',
+                    city: city,
+                    country: country || 'Sierra Leone',
+                    language: language || 'en',
+                    emoji: avatarDataURL ? '' : emoji,
+                    avatarDataURL: avatarDataURL || null,
                     registeredAt: new Date().toISOString()
                 };
                 
+                // Save user
                 currentUser = userObj;
                 saveUserToStorage(userObj);
-                loadRegisteredUsers();
                 
+                // Update registered users list
+                loadRegisteredUsers();
                 const exists = registeredUsers.some(u => u.phone === phone || u.name === name);
                 if (!exists) {
-                    registeredUsers.push({ 
-                        id: 'user_' + Date.now(), 
-                        name, phone, emoji, avatarDataURL, 
-                        address, city, country 
+                    registeredUsers.push({
+                        id: 'user_' + Date.now(),
+                        name: name,
+                        phone: phone,
+                        emoji: userObj.emoji || '👤',
+                        avatarDataURL: avatarDataURL || null,
+                        address: address || '',
+                        city: city,
+                        country: country || 'Sierra Leone'
                     });
                     saveRegisteredUsers();
                 }
                 
+                // Update connected users
                 const existingConnected = connectedUsers.find(u => u.name === name || u.phone === phone);
                 if (!existingConnected) {
-                    connectedUsers.push({ 
-                        id: 'user_' + Date.now(), 
-                        name, emoji, phone, avatarDataURL, 
-                        status: 'online' 
+                    connectedUsers.push({
+                        id: 'user_' + Date.now(),
+                        name: name,
+                        emoji: userObj.emoji || '👤',
+                        phone: phone,
+                        avatarDataURL: avatarDataURL || null,
+                        status: 'online'
                     });
                 }
                 
-                getEl('regSuccess').innerText = '✅ Account created!';
+                // Show success
+                document.getElementById('regSuccess').innerText = '✅ Account created successfully!';
+                document.getElementById('regError').innerText = '';
                 showToast('✅ Welcome ' + name + '!', 3000);
+                
+                // Update UI
                 renderSidebar();
                 showLoggedInUI();
                 renderAgentDropdown();
                 
-                setTimeout(() => { 
-                    const modal = getEl('registerModal'); 
-                    if (modal) modal.style.display = 'none'; 
-                }, 1200);
+                // Close modal after delay
+                setTimeout(() => {
+                    const modal = document.getElementById('registerModal');
+                    if (modal) modal.style.display = 'none';
+                }, 1500);
+                
                 return true;
             } catch (error) {
                 console.error('Registration error:', error);
-                getEl('regError').innerText = '❌ Registration failed. Please try again.';
+                document.getElementById('regError').innerText = '❌ Registration failed: ' + error.message;
                 return false;
             }
         }
@@ -4865,7 +5006,7 @@
                 if (grid) {
                     const first = grid.querySelector('.emoji-option');
                     grid.querySelectorAll('.emoji-option').forEach(o => o.classList.remove('selected'));
-                    if (first) { first.classList.add('selected'); selectedEmoji = first.getAttribute('data-emoji') || '👤'; }
+                    if (first) { first.classList.add('selected'); }
                 }
                 const regUssdResult = getEl('regUssdResult');
                 if (regUssdResult) regUssdResult.style.display = 'none';
@@ -5666,25 +5807,102 @@
             const doRegisterBtn = getEl('doRegisterBtn');
             if (doRegisterBtn) {
                 doRegisterBtn.addEventListener('click', async function() {
-                    const name = SecurityUtils.sanitizeInput(getEl('regName').value.trim(), 100);
-                    const phone = SecurityUtils.sanitizePhone(getEl('regPhone').value.trim());
-                    const address = SecurityUtils.sanitizeInput(getEl('regAddress').value.trim(), 200);
-                    const city = getCityValue('regCitySelect', 'regCityOther');
-                    const country = SecurityUtils.sanitizeInput(getEl('regCountry').value, 100);
-                    const language = getEl('regLanguage').value;
-                    let avatarDataURL = null;
-                    const previewContainer = getEl('regProfilePreview');
-                    if (previewContainer && previewContainer.style.display !== 'none') {
-                        const img = previewContainer.querySelector('img');
-                        if (img && img.src && !img.src.startsWith('#')) avatarDataURL = img.src;
+                    try {
+                        // Get form values directly
+                        const name = document.getElementById('regName').value.trim();
+                        const phone = document.getElementById('regPhone').value.trim();
+                        const address = document.getElementById('regAddress').value.trim();
+                        const city = getCityValue('regCitySelect', 'regCityOther');
+                        const country = document.getElementById('regCountry').value;
+                        const language = document.getElementById('regLanguage').value;
+                        
+                        // Get avatar
+                        let avatarDataURL = null;
+                        const previewContainer = document.getElementById('regProfilePreview');
+                        if (previewContainer && previewContainer.style.display !== 'none') {
+                            const img = previewContainer.querySelector('img');
+                            if (img && img.src && !img.src.startsWith('#')) {
+                                avatarDataURL = img.src;
+                            }
+                        }
+                        
+                        // Get emoji
+                        const selectedEmojiEl = document.querySelector('#emojiPickerGrid .emoji-option.selected');
+                        const emoji = selectedEmojiEl ? selectedEmojiEl.getAttribute('data-emoji') : '👤';
+                        
+                        // Validate
+                        if (!name || !phone || !city) {
+                            document.getElementById('regError').innerText = '❌ Please fill in Name, Phone and City';
+                            return;
+                        }
+                        
+                        // Create user object
+                        const userObj = {
+                            name: name,
+                            phone: phone,
+                            address: address || '',
+                            city: city,
+                            country: country || 'Sierra Leone',
+                            language: language || 'en',
+                            emoji: avatarDataURL ? '' : emoji,
+                            avatarDataURL: avatarDataURL || null,
+                            registeredAt: new Date().toISOString()
+                        };
+                        
+                        // Save user
+                        currentUser = userObj;
+                        saveUserToStorage(userObj);
+                        
+                        // Update registered users
+                        loadRegisteredUsers();
+                        const exists = registeredUsers.some(u => u.phone === phone || u.name === name);
+                        if (!exists) {
+                            registeredUsers.push({
+                                id: 'user_' + Date.now(),
+                                name: name,
+                                phone: phone,
+                                emoji: userObj.emoji || '👤',
+                                avatarDataURL: avatarDataURL || null,
+                                address: address || '',
+                                city: city,
+                                country: country || 'Sierra Leone'
+                            });
+                            saveRegisteredUsers();
+                        }
+                        
+                        // Update connected users
+                        const existingConnected = connectedUsers.find(u => u.name === name || u.phone === phone);
+                        if (!existingConnected) {
+                            connectedUsers.push({
+                                id: 'user_' + Date.now(),
+                                name: name,
+                                emoji: userObj.emoji || '👤',
+                                phone: phone,
+                                avatarDataURL: avatarDataURL || null,
+                                status: 'online'
+                            });
+                        }
+                        
+                        // Show success
+                        document.getElementById('regSuccess').innerText = '✅ Account created successfully!';
+                        document.getElementById('regError').innerText = '';
+                        showToast('✅ Welcome ' + name + '!', 3000);
+                        
+                        // Update UI
+                        renderSidebar();
+                        showLoggedInUI();
+                        renderAgentDropdown();
+                        
+                        // Close modal
+                        setTimeout(() => {
+                            const modal = document.getElementById('registerModal');
+                            if (modal) modal.style.display = 'none';
+                        }, 1500);
+                        
+                    } catch (error) {
+                        console.error('Registration error:', error);
+                        document.getElementById('regError').innerText = '❌ Registration failed: ' + error.message;
                     }
-                    const emoji = avatarDataURL ? '' : (selectedEmoji || '👤');
-                    const regData = { name, phone, address, city, country, language, emoji, avatarDataURL };
-                    if (!regData.name || !regData.phone || !regData.city) {
-                        getEl('regError').innerText = '❌ Fill Name, Phone & City';
-                        return;
-                    }
-                    await registerUser(regData);
                 });
             }
 
