@@ -2775,7 +2775,7 @@
 
     <script>
         // ================================================================
-        // COMPLETE JAVASCRIPT - FIXED FOR MOBILE
+        // COMPLETE JAVASCRIPT - FIXED FOR MOBILE & CONVERTER
         // ================================================================
         
         // ================================================================
@@ -7234,7 +7234,11 @@
             // ================================================================
             const currencyConverterBtn = getEl('currencyConverterBtn');
             if (currencyConverterBtn) {
-                const converterHandler = function(e) {
+                // Remove any existing listeners by cloning and replacing
+                const newBtn = currencyConverterBtn.cloneNode(true);
+                currencyConverterBtn.parentNode.replaceChild(newBtn, currencyConverterBtn);
+                
+                newBtn.addEventListener('click', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
                     const modal = getEl('currencyConverterModal');
@@ -7262,9 +7266,34 @@
                     } catch (err) {
                         console.warn('Converter populate error:', err);
                     }
-                };
-                currencyConverterBtn.addEventListener('click', converterHandler);
-                currencyConverterBtn.addEventListener('touchstart', converterHandler, { passive: true });
+                });
+                newBtn.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const modal = getEl('currencyConverterModal');
+                    if (!modal) {
+                        showToast('⚠️ Converter modal not found', 2000);
+                        return;
+                    }
+                    if (modal.style.display === 'flex') {
+                        modal.style.display = 'none';
+                        return;
+                    }
+                    modal.style.display = 'flex';
+                    try {
+                        populateFromCurrencySelect();
+                        const mainAmount = getEl('amountInput');
+                        const convAmount = getEl('convAmount');
+                        if (mainAmount && mainAmount.value && convAmount) {
+                            convAmount.value = parseFloat(mainAmount.value) || 100;
+                        } else if (convAmount) {
+                            convAmount.value = 100;
+                        }
+                        updateConverter();
+                    } catch (err) {
+                        console.warn('Converter populate error:', err);
+                    }
+                }, { passive: true });
             }
 
             // Converter close buttons
