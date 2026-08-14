@@ -3817,7 +3817,6 @@
                 showToast('✅ AfriPay ready!', 1500);
             } catch (error) {
                 console.error('❌ AfriPay initialization error:', error);
-                // Try to show a fallback toast
                 try { showToast('⚠️ App loaded with some issues. Please refresh.', 3000); } catch (e) {}
             }
         }
@@ -3934,10 +3933,8 @@
                 getEl('agentDropdownList').classList.remove('open');
                 showToast('👤 ' + t('select_agent_placeholder'), 1500);
             });
-            // Also add touch support
             selectItem.addEventListener('touchstart', function(e) {
                 e.stopPropagation();
-                // The click handler will handle it
             }, { passive: true });
             list.appendChild(selectItem);
             
@@ -3958,7 +3955,6 @@
                 const infoDiv = document.createElement('div');
                 infoDiv.className = 'agent-info';
 
-                // Logo on the right, flag on the left
                 const logoImg = document.createElement('img');
                 logoImg.className = 'agent-logo';
                 logoImg.src = data.logoDataURL || '';
@@ -3971,7 +3967,6 @@
                 });
                 logoImg.addEventListener('touchstart', function(e) {
                     e.stopPropagation();
-                    // Small delay to allow the dropdown to close
                     setTimeout(function() {
                         openEditAgentModal(agent.id);
                         getEl('agentDropdownList').classList.remove('open');
@@ -4032,7 +4027,6 @@
             const btn = getEl('selectedAgentName');
             btn.innerHTML = '';
 
-            // Logo on the right, flag on the left
             const logoImg = document.createElement('img');
             logoImg.src = data.logoDataURL || '';
             logoImg.alt = 'Logo';
@@ -4420,9 +4414,7 @@
                     }
                     showToast(t('toast_country_not_supported', { flag: flagEmoji }), 2000);
                 });
-                // Also handle touch
                 el.addEventListener('touchstart', function(e) {
-                    // The click handler will handle it
                 }, { passive: true });
             });
         }
@@ -5184,19 +5176,47 @@
             renderTransactionsDashboard();
         }
 
+        // ================================================================
+        // FIXED: USERS DASHBOARD - NOW SHOWS REGISTERED USERS
+        // ================================================================
         function renderUsersDashboard() {
             const tbody = getEl('dashboardUsersBody');
             const noMsg = getEl('noUsersMsg');
             const badge = getEl('userCountBadge');
             if (!tbody || !noMsg || !badge) return;
+            
+            // Reload users from storage to ensure we have the latest data
+            try {
+                const stored = localStorage.getItem(STORAGE_KEYS.registeredUsers);
+                if (stored) {
+                    const parsed = JSON.parse(stored);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        registeredUsers = parsed;
+                    }
+                }
+            } catch (e) { /* ignore */ }
+            
             const currentPhone = currentUser?.phone || '';
             const currentName = currentUser?.name || '';
+            
+            // Filter out agents and the current user
             const users = registeredUsers.filter(u =>
-                !u.isAgent && u.role !== 'agent' && u.phone !== currentPhone && u.name !== currentName && u.id !== 'current'
+                !u.isAgent && 
+                u.role !== 'agent' && 
+                u.phone !== currentPhone && 
+                u.name !== currentName && 
+                u.id !== 'current'
             );
+            
             badge.textContent = users.length;
-            if (users.length === 0) { tbody.innerHTML = ''; noMsg.style.display = 'block'; return; }
+            
+            if (users.length === 0) {
+                tbody.innerHTML = '';
+                noMsg.style.display = 'block';
+                return;
+            }
             noMsg.style.display = 'none';
+            
             let html = '';
             users.forEach(user => {
                 const address = user.address || user.businessAddress || '—';
@@ -5767,7 +5787,6 @@
         // ================================================================
         function initializePermanentAgents() {
             try {
-                // Check if we already have the specific agent from screenshot
                 const existingAgent = registeredUsers.find(u => 
                     u.businessName === 'DAD Asso du Fouta' || 
                     u.regNumber === 'DA543256D' ||
@@ -5779,7 +5798,6 @@
                     return;
                 }
 
-                // Create the agent from screenshot
                 const canvas = document.createElement('canvas');
                 canvas.width = 64;
                 canvas.height = 64;
@@ -5835,7 +5853,7 @@
         }
 
         // ================================================================
-        // SETUP EVENT LISTENERS - FIXED FOR MOBILE
+        // SETUP EVENT LISTENERS - FIXED FOR MOBILE & CONVERTER
         // ================================================================
         function setupEventListeners() {
             // Language
@@ -5845,7 +5863,7 @@
                 langSelect.addEventListener('touchstart', function(e) { e.stopPropagation(); }, { passive: true });
             }
 
-            // Login - Fix for mobile: use both click and touchstart
+            // Login
             const loginBtn = getEl('loginBtn');
             if (loginBtn) {
                 const loginHandler = function(e) {
@@ -5859,7 +5877,7 @@
                 loginBtn.addEventListener('touchstart', loginHandler, { passive: true });
             }
 
-            // Register - Fix for mobile
+            // Register
             const registerBtn = getEl('registerBtn');
             if (registerBtn) {
                 const registerHandler = function(e) {
@@ -6770,7 +6788,7 @@
                 });
             }
 
-            // Do Register - FIXED
+            // Do Register
             const doRegisterBtn = getEl('doRegisterBtn');
             if (doRegisterBtn) {
                 doRegisterBtn.addEventListener('click', async function() {
@@ -6860,9 +6878,7 @@
                         document.getElementById('regError').innerText = '❌ Registration failed: ' + error.message;
                     }
                 });
-                // Also handle touch for mobile
                 doRegisterBtn.addEventListener('touchstart', function(e) {
-                    // Just let the click handler do the work
                 }, { passive: true });
             }
 
@@ -7213,30 +7229,45 @@
                 });
             }
 
-            // Currency Converter
+            // ================================================================
+            // FIXED: CURRENCY CONVERTER MODAL - NOW OPENING PROPERLY
+            // ================================================================
             const currencyConverterBtn = getEl('currencyConverterBtn');
             if (currencyConverterBtn) {
-                const handler = function(e) {
+                const converterHandler = function(e) {
                     e.preventDefault();
+                    e.stopPropagation();
                     const modal = getEl('currencyConverterModal');
-                    if (modal) {
-                        modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
-                        if (modal.style.display === 'flex') {
-                            populateFromCurrencySelect();
-                            const mainAmount = getEl('amountInput');
-                            const convAmount = getEl('convAmount');
-                            if (mainAmount && mainAmount.value && convAmount) {
-                                convAmount.value = parseFloat(mainAmount.value) || 100;
-                            } else if (convAmount) {
-                                convAmount.value = 100;
-                            }
-                            updateConverter();
+                    if (!modal) {
+                        showToast('⚠️ Converter modal not found', 2000);
+                        return;
+                    }
+                    // Toggle the display
+                    if (modal.style.display === 'flex') {
+                        modal.style.display = 'none';
+                        return;
+                    }
+                    modal.style.display = 'flex';
+                    // Populate the converter
+                    try {
+                        populateFromCurrencySelect();
+                        const mainAmount = getEl('amountInput');
+                        const convAmount = getEl('convAmount');
+                        if (mainAmount && mainAmount.value && convAmount) {
+                            convAmount.value = parseFloat(mainAmount.value) || 100;
+                        } else if (convAmount) {
+                            convAmount.value = 100;
                         }
+                        updateConverter();
+                    } catch (err) {
+                        console.warn('Converter populate error:', err);
                     }
                 };
-                currencyConverterBtn.addEventListener('click', handler);
-                currencyConverterBtn.addEventListener('touchstart', handler, { passive: true });
+                currencyConverterBtn.addEventListener('click', converterHandler);
+                currencyConverterBtn.addEventListener('touchstart', converterHandler, { passive: true });
             }
+
+            // Converter close buttons
             const convCloseBtn = getEl('convCloseBtn');
             if (convCloseBtn) {
                 const handler = function(e) { e.preventDefault(); getEl('currencyConverterModal').style.display = 'none'; };
@@ -7813,6 +7844,9 @@
                             const errorEl = getEl('pinError');
                             if (errorEl) errorEl.textContent = '';
                         }
+                        if (this.id === 'currencyConverterModal') {
+                            // Do nothing special, just close
+                        }
                     }
                 };
                 modal.addEventListener('click', closeHandler);
@@ -8006,9 +8040,7 @@
         // BOOTSTRAP - FIXED FOR MOBILE
         // ================================================================
         function bootstrap() {
-            // Use multiple strategies to ensure initialization
             if (document.readyState === 'complete' || document.readyState === 'interactive') {
-                // Use requestAnimationFrame to ensure DOM is fully painted
                 requestAnimationFrame(function() {
                     setTimeout(initApp, 50);
                 });
@@ -8019,7 +8051,6 @@
                     });
                 });
             }
-            // Fallback: ensure init runs even if events don't fire
             setTimeout(function() {
                 if (typeof initApp === 'function') {
                     try { initApp(); } catch (e) { console.warn('Fallback init error:', e); }
@@ -8027,7 +8058,6 @@
             }, 1500);
         }
 
-        // Start the application
         bootstrap();
         console.log('🚀 AfriPay bootstrapped!');
     </script>
