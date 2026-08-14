@@ -2775,7 +2775,7 @@
 
     <script>
         // ================================================================
-        // COMPLETE JAVASCRIPT - FIXED REGISTRATION & DASHBOARD
+        // COMPLETE JAVASCRIPT - FIXED FOR MOBILE
         // ================================================================
         
         // ================================================================
@@ -3764,53 +3764,61 @@
         function getEl(id) { return document.getElementById(id); }
 
         // ================================================================
-        // APP INITIALIZATION
+        // APP INITIALIZATION - FIXED FOR MOBILE
         // ================================================================
         function initApp() {
             console.log('🚀 AfriPay initializing...');
             try {
-                ProviderTxIdManager.loadUsedIds();
-                loadLanguagePreference();
-                loadRegisteredUsers();
-                loadGroups();
-                loadChatMessages();
-                loadChatSettings();
+                // Initialize all managers safely
+                try { ProviderTxIdManager.loadUsedIds(); } catch (e) { console.warn('ProviderTxIdManager load error:', e); }
+                try { loadLanguagePreference(); } catch (e) { console.warn('Language load error:', e); }
+                try { loadRegisteredUsers(); } catch (e) { console.warn('Registered users load error:', e); }
+                try { loadGroups(); } catch (e) { console.warn('Groups load error:', e); }
+                try { loadChatMessages(); } catch (e) { console.warn('Chat messages load error:', e); }
+                try { loadChatSettings(); } catch (e) { console.warn('Chat settings load error:', e); }
 
-                syncConnectedUsersFromRegistered();
-                initializePermanentAgents();
-                loadStoredUser();
+                try { syncConnectedUsersFromRegistered(); } catch (e) { console.warn('Sync users error:', e); }
+                try { initializePermanentAgents(); } catch (e) { console.warn('Init agents error:', e); }
+                try { loadStoredUser(); } catch (e) { console.warn('Load user error:', e); }
 
-                renderSidebar();
-                renderAgentDropdown();
-                translatePage();
-                renderHeaderFlags();
-                setupFlagClickHandlers();
-                setupEmojiPicker();
-                setupEditEmojiPicker();
-                setupAvatarUpload();
-                renderBusinessStrip();
+                // Render UI components
+                try { renderSidebar(); } catch (e) { console.warn('Render sidebar error:', e); }
+                try { renderAgentDropdown(); } catch (e) { console.warn('Render agent dropdown error:', e); }
+                try { translatePage(); } catch (e) { console.warn('Translate page error:', e); }
+                try { renderHeaderFlags(); } catch (e) { console.warn('Render flags error:', e); }
+                try { setupFlagClickHandlers(); } catch (e) { console.warn('Flag handlers error:', e); }
+                try { setupEmojiPicker(); } catch (e) { console.warn('Emoji picker error:', e); }
+                try { setupEditEmojiPicker(); } catch (e) { console.warn('Edit emoji picker error:', e); }
+                try { setupAvatarUpload(); } catch (e) { console.warn('Avatar upload error:', e); }
+                try { renderBusinessStrip(); } catch (e) { console.warn('Business strip error:', e); }
 
-                updateDateTime();
-                setInterval(updateDateTime, 1000);
+                // Start time updates
+                try { updateDateTime(); } catch (e) { console.warn('Date/time update error:', e); }
+                setInterval(function() { try { updateDateTime(); } catch (e) { /* ignore */ } }, 1000);
 
-                // Auto-select the agent from screenshot if available
-                const agents = getAgents();
-                const screenshotAgent = agents.find(a => 
-                    a.agentData && a.agentData.businessName === 'DAD Asso du Fouta'
-                );
-                if (screenshotAgent) {
-                    selectAgent(screenshotAgent.id);
-                } else if (agents.length > 0) {
-                    selectAgent(agents[0].id);
-                }
+                // Auto-select agent
+                try {
+                    const agents = getAgents();
+                    const screenshotAgent = agents.find(a => 
+                        a.agentData && a.agentData.businessName === 'DAD Asso du Fouta'
+                    );
+                    if (screenshotAgent) {
+                        selectAgent(screenshotAgent.id);
+                    } else if (agents.length > 0) {
+                        selectAgent(agents[0].id);
+                    }
+                } catch (e) { console.warn('Auto-select agent error:', e); }
 
-                setupEventListeners();
-                initChatControls();
+                // Setup event listeners
+                try { setupEventListeners(); } catch (e) { console.warn('Event listeners setup error:', e); }
+                try { initChatControls(); } catch (e) { console.warn('Chat controls init error:', e); }
 
                 console.log('✅ AfriPay initialized successfully!');
                 showToast('✅ AfriPay ready!', 1500);
             } catch (error) {
                 console.error('❌ AfriPay initialization error:', error);
+                // Try to show a fallback toast
+                try { showToast('⚠️ App loaded with some issues. Please refresh.', 3000); } catch (e) {}
             }
         }
 
@@ -3926,6 +3934,11 @@
                 getEl('agentDropdownList').classList.remove('open');
                 showToast('👤 ' + t('select_agent_placeholder'), 1500);
             });
+            // Also add touch support
+            selectItem.addEventListener('touchstart', function(e) {
+                e.stopPropagation();
+                // The click handler will handle it
+            }, { passive: true });
             list.appendChild(selectItem);
             
             if (agents.length === 0) {
@@ -3956,6 +3969,14 @@
                     openEditAgentModal(agent.id);
                     getEl('agentDropdownList').classList.remove('open');
                 });
+                logoImg.addEventListener('touchstart', function(e) {
+                    e.stopPropagation();
+                    // Small delay to allow the dropdown to close
+                    setTimeout(function() {
+                        openEditAgentModal(agent.id);
+                        getEl('agentDropdownList').classList.remove('open');
+                    }, 100);
+                }, { passive: true });
 
                 if (!data.logoDataURL) {
                     logoImg.style.display = 'none';
@@ -3967,6 +3988,13 @@
                         openEditAgentModal(agent.id);
                         getEl('agentDropdownList').classList.remove('open');
                     });
+                    fallback.addEventListener('touchstart', function(e) {
+                        e.stopPropagation();
+                        setTimeout(function() {
+                            openEditAgentModal(agent.id);
+                            getEl('agentDropdownList').classList.remove('open');
+                        }, 100);
+                    }, { passive: true });
                     infoDiv.appendChild(fallback);
                 } else {
                     infoDiv.appendChild(logoImg);
@@ -3974,13 +4002,17 @@
 
                 const nameSpan = document.createElement('span');
                 nameSpan.className = 'agent-name';
-                // Flag on the left
                 nameSpan.innerHTML = `<span class="agent-flag">${flag}</span> ${SecurityUtils.escapeHTML(agent.name)}`;
                 nameSpan.addEventListener('click', function(e) {
                     e.stopPropagation();
                     selectAgent(agent.id);
                     getEl('agentDropdownList').classList.remove('open');
                 });
+                nameSpan.addEventListener('touchstart', function(e) {
+                    e.stopPropagation();
+                    selectAgent(agent.id);
+                    getEl('agentDropdownList').classList.remove('open');
+                }, { passive: true });
 
                 infoDiv.appendChild(nameSpan);
                 item.appendChild(infoDiv);
@@ -4015,6 +4047,10 @@
                 e.stopPropagation();
                 openEditAgentModal(agent.id);
             });
+            logoImg.addEventListener('touchstart', function(e) {
+                e.stopPropagation();
+                openEditAgentModal(agent.id);
+            }, { passive: true });
 
             const flagSpan = document.createElement('span');
             flagSpan.className = 'agent-flag';
@@ -4384,6 +4420,10 @@
                     }
                     showToast(t('toast_country_not_supported', { flag: flagEmoji }), 2000);
                 });
+                // Also handle touch
+                el.addEventListener('touchstart', function(e) {
+                    // The click handler will handle it
+                }, { passive: true });
             });
         }
 
@@ -4425,6 +4465,10 @@
                 div.innerHTML =
                     `<div class="business-icon-img">${biz.icon}</div><div class="business-name">${SecurityUtils.escapeHTML(biz.name)}</div><div class="business-category">${SecurityUtils.escapeHTML(biz.type)}</div>`;
                 div.addEventListener('click', () => showGoodsModal(biz.id));
+                div.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    showGoodsModal(biz.id);
+                }, { passive: true });
                 container.appendChild(div);
             });
         }
@@ -4461,6 +4505,22 @@
                     showToast(`💰 ${SecurityUtils.escapeHTML(goodsName)} added: ${finalPrice.toFixed(2)} ${getCurrencySymbolForDisplay()}`);
                     getEl('goodsModal').style.display = 'none';
                 });
+                item.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    const price = parseFloat(this.getAttribute('data-price'));
+                    const goodsName = this.getAttribute('data-name');
+                    const agentName = getEl('agentName');
+                    const agentPhone = getEl('agentPhone');
+                    const amountInput = getEl('amountInput');
+                    if (agentName) agentName.value = `${SecurityUtils.escapeHTML(biz.name)} – ${SecurityUtils.escapeHTML(goodsName)}`;
+                    if (agentPhone) agentPhone.value = SecurityUtils.escapeHTML(biz.contact);
+                    const maxLimit = parseFloat(amountInput?.max);
+                    let finalPrice = price;
+                    if (maxLimit > 0 && price > maxLimit) { finalPrice = maxLimit; showToast(`⚠️ Capped at limit: ${maxLimit}`, 2500); }
+                    if (amountInput) { amountInput.value = finalPrice; amountInput.dispatchEvent(new Event('input')); }
+                    showToast(`💰 ${SecurityUtils.escapeHTML(goodsName)} added: ${finalPrice.toFixed(2)} ${getCurrencySymbolForDisplay()}`);
+                    getEl('goodsModal').style.display = 'none';
+                }, { passive: true });
             });
         }
 
@@ -4562,12 +4622,20 @@
                             e.stopPropagation();
                             openGroupManageModal(group);
                         });
+                        manageBtn.addEventListener('touchstart', function(e) {
+                            e.stopPropagation();
+                            openGroupManageModal(group);
+                        }, { passive: true });
                         actions.appendChild(manageBtn);
                     }
                     div.appendChild(avatar);
                     div.appendChild(info);
                     div.appendChild(actions);
                     div.addEventListener('click', () => { setActiveChat(group.id, 'group'); });
+                    div.addEventListener('touchstart', function(e) {
+                        e.preventDefault();
+                        setActiveChat(group.id, 'group');
+                    }, { passive: true });
                     sidebar.appendChild(div);
                 });
             }
@@ -4605,6 +4673,10 @@
                     div.appendChild(info);
                     div.appendChild(status);
                     div.addEventListener('click', () => { setActiveChat(user.id, 'individual'); });
+                    div.addEventListener('touchstart', function(e) {
+                        e.preventDefault();
+                        setActiveChat(user.id, 'individual');
+                    }, { passive: true });
                     sidebar.appendChild(div);
                 });
             }
@@ -4616,6 +4688,12 @@
                     populateGroupMemberList();
                     getEl('groupCreateModal').style.display = 'flex';
                 });
+                addBtn.addEventListener('touchstart', function(e) {
+                    e.stopPropagation();
+                    getEl('groupNameInput').value = '';
+                    populateGroupMemberList();
+                    getEl('groupCreateModal').style.display = 'flex';
+                }, { passive: true });
             }
         }
 
@@ -4729,7 +4807,14 @@
             try {
                 const sendBtn = getEl('chatSendBtn');
                 const chatInput = getEl('chatInput');
-                if (sendBtn) { sendBtn.removeEventListener('click', sendMessage); sendBtn.addEventListener('click', sendMessage); }
+                if (sendBtn) { 
+                    sendBtn.removeEventListener('click', sendMessage); 
+                    sendBtn.addEventListener('click', sendMessage);
+                    sendBtn.addEventListener('touchstart', function(e) {
+                        e.preventDefault();
+                        sendMessage();
+                    }, { passive: true });
+                }
                 if (chatInput) {
                     const handler = function(e) { if (e.key === 'Enter') sendMessage(); };
                     chatInput.removeEventListener('keydown', handler);
@@ -4794,6 +4879,14 @@
                 }
                 avatarInput.click();
             });
+            avatarContainer.addEventListener('touchstart', function(e) {
+                if (e.target.closest('.logout-btn') || e.target.closest('.edit-account-btn')) return;
+                if (!currentUser) {
+                    showToast('⚠️ Login first to change picture.', 2000);
+                    return;
+                }
+                avatarInput.click();
+            }, { passive: true });
             avatarInput.addEventListener('change', function(e) {
                 const file = e.target.files[0];
                 if (!file) return;
@@ -4840,6 +4933,12 @@
                     this.classList.add('selected');
                     selectedEmoji = this.getAttribute('data-emoji') || '👤';
                 });
+                el.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    options.forEach(o => o.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedEmoji = this.getAttribute('data-emoji') || '👤';
+                }, { passive: true });
             });
             const first = grid.querySelector('.emoji-option');
             if (first) { first.classList.add('selected'); selectedEmoji = first.getAttribute('data-emoji') || '👤'; }
@@ -4854,6 +4953,11 @@
                     options.forEach(o => o.classList.remove('selected'));
                     this.classList.add('selected');
                 });
+                el.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    options.forEach(o => o.classList.remove('selected'));
+                    this.classList.add('selected');
+                }, { passive: true });
             });
         }
 
@@ -4933,7 +5037,15 @@
                 <span class="auth-toggle-link" id="adminAuthToggle">Login</span>
             `;
             getEl('adminRegisterAction').addEventListener('click', adminRegister);
+            getEl('adminRegisterAction').addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                adminRegister();
+            }, { passive: true });
             getEl('adminAuthToggle').addEventListener('click', showAdminLogin);
+            getEl('adminAuthToggle').addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                showAdminLogin();
+            }, { passive: true });
         }
 
         function showAdminLogin() {
@@ -4951,10 +5063,19 @@
                 <span class="auth-toggle-link" id="adminAuthToggle">Register</span>
             `;
             getEl('adminLoginAction').addEventListener('click', adminLogin);
+            getEl('adminLoginAction').addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                adminLogin();
+            }, { passive: true });
             getEl('adminAuthToggle').addEventListener('click', function() {
                 if (getAdminData()) showAdminLogin();
                 else showAdminRegister();
             });
+            getEl('adminAuthToggle').addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                if (getAdminData()) showAdminLogin();
+                else showAdminRegister();
+            }, { passive: true });
         }
 
         function adminRegister() {
@@ -5040,12 +5161,24 @@
             tbody.innerHTML = html;
             tbody.querySelectorAll('.view-agreement-btn').forEach(btn => {
                 btn.addEventListener('click', function() { viewAgentAgreement(this.dataset.agentId); });
+                btn.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    viewAgentAgreement(this.dataset.agentId);
+                }, { passive: true });
             });
             tbody.querySelectorAll('.approve-btn:not(.approved)').forEach(btn => {
                 btn.addEventListener('click', function() { approveAgent(this.dataset.agentId); });
+                btn.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    approveAgent(this.dataset.agentId);
+                }, { passive: true });
             });
             tbody.querySelectorAll('.remove-agent-btn').forEach(btn => {
                 btn.addEventListener('click', function() { removeAgent(this.dataset.agentId); });
+                btn.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    removeAgent(this.dataset.agentId);
+                }, { passive: true });
             });
             renderUsersDashboard();
             renderTransactionsDashboard();
@@ -5086,6 +5219,10 @@
                 btn.addEventListener('click', function() {
                     openAdminDeleteUserModal(this.dataset.userId, this.dataset.userName);
                 });
+                btn.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    openAdminDeleteUserModal(this.dataset.userId, this.dataset.userName);
+                }, { passive: true });
             });
         }
 
@@ -5698,14 +5835,15 @@
         }
 
         // ================================================================
-        // SETUP EVENT LISTENERS - FIXED DASHBOARD & MOBILE
+        // SETUP EVENT LISTENERS - FIXED FOR MOBILE
         // ================================================================
         function setupEventListeners() {
             // Language
             const langSelect = getEl('langSelect');
-            if (langSelect) langSelect.addEventListener('change', function() { setLanguage(this.value); });
-            // Also handle touch for mobile
-            langSelect.addEventListener('touchstart', function(e) { e.stopPropagation(); }, { passive: true });
+            if (langSelect) {
+                langSelect.addEventListener('change', function() { setLanguage(this.value); });
+                langSelect.addEventListener('touchstart', function(e) { e.stopPropagation(); }, { passive: true });
+            }
 
             // Login - Fix for mobile: use both click and touchstart
             const loginBtn = getEl('loginBtn');
@@ -7865,16 +8003,33 @@
         }
 
         // ================================================================
-        // BOOTSTRAP
+        // BOOTSTRAP - FIXED FOR MOBILE
         // ================================================================
-        if (document.readyState === 'complete' || document.readyState === 'interactive') {
-            setTimeout(initApp, 100);
-        } else {
-            document.addEventListener('DOMContentLoaded', function() {
-                setTimeout(initApp, 100);
-            });
+        function bootstrap() {
+            // Use multiple strategies to ensure initialization
+            if (document.readyState === 'complete' || document.readyState === 'interactive') {
+                // Use requestAnimationFrame to ensure DOM is fully painted
+                requestAnimationFrame(function() {
+                    setTimeout(initApp, 50);
+                });
+            } else {
+                document.addEventListener('DOMContentLoaded', function() {
+                    requestAnimationFrame(function() {
+                        setTimeout(initApp, 50);
+                    });
+                });
+            }
+            // Fallback: ensure init runs even if events don't fire
+            setTimeout(function() {
+                if (typeof initApp === 'function') {
+                    try { initApp(); } catch (e) { console.warn('Fallback init error:', e); }
+                }
+            }, 1500);
         }
-        console.log('🚀 AfriPay ready!');
+
+        // Start the application
+        bootstrap();
+        console.log('🚀 AfriPay bootstrapped!');
     </script>
 </body>
 </html>
