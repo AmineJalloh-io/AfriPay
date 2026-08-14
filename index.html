@@ -32,26 +32,29 @@
         }
 
         /* ================================================================
-           HEADER
+           HEADER - IMPROVED LAYOUT
            ================================================================ */
         .live-header {
             background: linear-gradient(135deg, #0a2b3c 0%, #1c4e6c 100%);
-            padding: 0.4rem 0.6rem;
+            padding: 0.6rem 0.8rem;
             color: white;
             display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-            gap: 4px;
-            min-height: 56px;
+            flex-direction: column;
+            gap: 6px;
             position: relative;
             z-index: 10;
+        }
+        .header-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 4px;
         }
         .logo-container {
             display: flex;
             align-items: center;
             gap: 6px;
-            flex-wrap: wrap;
             flex-shrink: 0;
         }
         .africa-map-logo {
@@ -98,26 +101,27 @@
             color: #ffd966;
             text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
         }
-        .header-right {
+        .datetime-box {
+            background: rgba(0, 0, 0, 0.25);
+            padding: 0.15rem 0.6rem;
+            border-radius: 30px;
+            text-align: center;
+            font-size: 0.65rem;
+            line-height: 1.2;
+            min-width: 70px;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .datetime-box .time-text {
+            font-weight: 700;
+            font-size: 0.75rem;
+        }
+        .header-controls {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
             flex-wrap: wrap;
             justify-content: flex-end;
             flex: 1;
-        }
-        .datetime-box {
-            background: rgba(0, 0, 0, 0.25);
-            padding: 0.1rem 0.5rem;
-            border-radius: 30px;
-            text-align: center;
-            font-size: 0.7rem;
-            line-height: 1.2;
-            min-width: 65px;
-        }
-        .time-text {
-            font-weight: 700;
-            font-size: 0.8rem;
         }
         .lang-selector {
             display: flex;
@@ -125,7 +129,7 @@
             gap: 3px;
             background: rgba(255, 255, 255, 0.10);
             border-radius: 30px;
-            padding: 2px 5px 2px 8px;
+            padding: 2px 6px 2px 10px;
             height: 34px;
             border: 1px solid rgba(255, 255, 255, 0.15);
         }
@@ -134,7 +138,7 @@
             border: none;
             color: white;
             font-weight: 600;
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             outline: none;
             cursor: pointer;
             padding: 2px 2px;
@@ -145,13 +149,13 @@
             color: white;
         }
         .lang-icon {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             line-height: 1;
         }
         .agent-dropdown-container {
             position: relative;
-            min-width: 110px;
-            max-width: 160px;
+            min-width: 120px;
+            max-width: 170px;
         }
         .agent-dropdown-btn {
             background: rgba(255, 255, 255, 0.10);
@@ -171,7 +175,7 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            font-size: 0.85rem !important;
+            font-size: 0.8rem !important;
         }
         .agent-dropdown-btn:hover {
             background: rgba(255, 255, 255, 0.20);
@@ -193,7 +197,7 @@
             z-index: 100;
             max-height: 200px;
             overflow-y: auto;
-            padding: 3px 0;
+            padding: 4px 0;
             min-width: 160px;
         }
         .agent-dropdown-list.open {
@@ -252,7 +256,7 @@
             flex-shrink: 0;
         }
         .agent-dropdown-item .agent-name {
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             font-weight: 500;
             white-space: nowrap;
             overflow: hidden;
@@ -260,14 +264,14 @@
             flex: 1;
         }
         .agent-dropdown-item .agent-flag {
-            font-size: 1rem;
+            font-size: 0.95rem;
             flex-shrink: 0;
             margin-right: 2px;
         }
         .agent-dropdown-empty {
             padding: 8px;
             text-align: center;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: rgba(255, 255, 255, 0.6);
         }
         .auth-section {
@@ -293,7 +297,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.85rem !important;
+            font-size: 0.8rem !important;
         }
         .auth-btn:hover {
             background: rgba(255, 255, 255, 0.3);
@@ -308,18 +312,18 @@
             height: 34px;
         }
         .user-avatar {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             line-height: 1;
-            width: 28px;
-            height: 28px;
+            width: 26px;
+            height: 26px;
             border-radius: 50%;
             object-fit: cover;
             display: inline-block;
             background: #2c7da0;
             color: white;
             text-align: center;
-            line-height: 28px;
-            font-size: 1.2rem;
+            line-height: 26px;
+            font-size: 1.1rem;
             flex-shrink: 0;
             cursor: pointer;
             transition: opacity 0.2s, transform 0.2s;
@@ -334,7 +338,7 @@
             bottom: -2px;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 0.45rem;
+            font-size: 0.4rem;
             background: rgba(0, 0, 0, 0.6);
             color: white;
             padding: 1px 3px;
@@ -356,7 +360,7 @@
         }
         .user-name-display {
             font-weight: 700;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
         }
         .logout-btn {
             background: rgba(255, 255, 255, 0.18);
@@ -365,10 +369,10 @@
             border-radius: 20px;
             color: white;
             cursor: pointer;
-            font-size: 0.72rem;
+            font-size: 0.7rem;
             font-weight: 600;
             transition: 0.2s;
-            height: 28px;
+            height: 26px;
             display: flex;
             align-items: center;
         }
@@ -382,10 +386,10 @@
             border-radius: 20px;
             color: white;
             cursor: pointer;
-            font-size: 0.72rem;
+            font-size: 0.7rem;
             font-weight: 600;
             transition: 0.2s;
-            height: 28px;
+            height: 26px;
             display: flex;
             align-items: center;
         }
@@ -396,17 +400,17 @@
             display: inline-flex;
             align-items: center;
             gap: 3px;
-            font-size: 0.68rem;
+            font-size: 0.62rem;
             color: #8fdf8f;
             background: rgba(0, 180, 0, 0.15);
             padding: 2px 8px 2px 4px;
             border-radius: 30px;
             border: 1px solid rgba(0, 200, 0, 0.2);
-            height: 28px;
+            height: 26px;
         }
         .connection-indicator .connection-dot {
-            width: 7px;
-            height: 7px;
+            width: 6px;
+            height: 6px;
             background: #2ecc71;
             border-radius: 50%;
             display: inline-block;
@@ -1314,24 +1318,24 @@
             .city-input-row .or-text { display: none; }
             .btn-row .btn, .btn-row .action-btn { min-width: 50px; }
             .action-buttons-row .action-btn { min-width: 40px; }
-            .live-header { padding: 0.35rem 0.5rem; min-height: 52px; }
+            .live-header { padding: 0.4rem 0.5rem; }
             .brand-text { font-size: 1.3rem; }
             .afripay-logo-svg { width: 34px; height: 34px; }
-            .agent-dropdown-container { min-width: 90px; max-width: 130px; }
-            .agent-dropdown-btn { padding: 2px 8px 2px 10px; height: 30px; min-width: 70px; font-size: 0.75rem !important; }
+            .agent-dropdown-container { min-width: 90px; max-width: 120px; }
+            .agent-dropdown-btn { padding: 2px 8px 2px 10px; height: 30px; min-width: 70px; font-size: 0.72rem !important; }
             .agent-dropdown-list { min-width: 140px; }
-            .datetime-box { font-size: 0.58rem; min-width: 55px; padding: 0.05rem 0.35rem; }
-            .time-text { font-size: 0.68rem; }
-            .auth-btn { padding: 4px 10px; height: 30px; font-size: 0.75rem !important; }
+            .datetime-box { font-size: 0.55rem; min-width: 55px; padding: 0.05rem 0.35rem; }
+            .datetime-box .time-text { font-size: 0.65rem; }
+            .auth-btn { padding: 4px 10px; height: 30px; font-size: 0.72rem !important; }
             .user-welcome { padding: 2px 8px 2px 4px; height: 30px; }
             .user-avatar { font-size: 1rem; width: 24px; height: 24px; line-height: 24px; }
-            .user-name-display { font-size: 0.68rem; }
-            .logout-btn, .edit-account-btn { padding: 2px 8px; height: 24px; font-size: 0.62rem; }
-            .connection-indicator { padding: 2px 6px 2px 3px; height: 24px; font-size: 0.58rem; }
+            .user-name-display { font-size: 0.65rem; }
+            .logout-btn, .edit-account-btn { padding: 2px 8px; height: 24px; font-size: 0.6rem; }
+            .connection-indicator { padding: 2px 6px 2px 3px; height: 24px; font-size: 0.55rem; }
             .connection-dot { width: 5px; height: 5px; }
             .lang-selector { height: 30px; padding: 2px 4px 2px 6px; }
-            .lang-selector select { width: 50px; font-size: 0.68rem; }
-            .lang-icon { font-size: 0.8rem; }
+            .lang-selector select { width: 48px; font-size: 0.65rem; }
+            .lang-icon { font-size: 0.75rem; }
             .form-container { padding: 0.5rem 0.6rem 0.35rem 0.6rem; }
             .section-title { margin: 0.3rem 0 0.25rem 0; font-size: 0.75rem !important; }
             .input-group label { font-size: 0.7rem !important; }
@@ -1378,22 +1382,22 @@
         @media (max-width: 400px) {
             .brand-text { font-size: 1.05rem; }
             .afripay-logo-svg { width: 28px; height: 28px; }
-            .agent-dropdown-container { min-width: 70px; max-width: 100px; }
-            .agent-dropdown-btn { padding: 2px 6px 2px 8px; height: 26px; min-width: 55px; font-size: 0.65rem !important; }
+            .agent-dropdown-container { min-width: 70px; max-width: 90px; }
+            .agent-dropdown-btn { padding: 2px 6px 2px 8px; height: 26px; min-width: 55px; font-size: 0.62rem !important; }
             .agent-dropdown-list { min-width: 120px; }
-            .agent-dropdown-item .agent-name { font-size: 0.68rem; }
-            .auth-btn { padding: 3px 8px; height: 26px; font-size: 0.65rem !important; }
+            .agent-dropdown-item .agent-name { font-size: 0.65rem; }
+            .auth-btn { padding: 3px 8px; height: 26px; font-size: 0.62rem !important; }
             .user-welcome { padding: 2px 6px 2px 3px; height: 26px; }
             .user-avatar { font-size: 0.85rem; width: 20px; height: 20px; line-height: 20px; }
-            .user-name-display { font-size: 0.58rem; }
-            .datetime-box { font-size: 0.5rem; min-width: 45px; padding: 0.05rem 0.25rem; }
-            .time-text { font-size: 0.58rem; }
+            .user-name-display { font-size: 0.55rem; }
+            .datetime-box { font-size: 0.48rem; min-width: 45px; padding: 0.05rem 0.25rem; }
+            .datetime-box .time-text { font-size: 0.55rem; }
             .lang-selector { height: 26px; padding: 1px 3px 1px 4px; }
-            .lang-selector select { width: 42px; font-size: 0.58rem; }
-            .lang-icon { font-size: 0.7rem; }
-            .connection-indicator { padding: 1px 4px 1px 2px; height: 20px; font-size: 0.5rem; }
+            .lang-selector select { width: 40px; font-size: 0.55rem; }
+            .lang-icon { font-size: 0.65rem; }
+            .connection-indicator { padding: 1px 4px 1px 2px; height: 20px; font-size: 0.48rem; }
             .connection-dot { width: 4px; height: 4px; }
-            .logout-btn, .edit-account-btn { padding: 1px 6px; height: 20px; font-size: 0.5rem; }
+            .logout-btn, .edit-account-btn { padding: 1px 6px; height: 20px; font-size: 0.48rem; }
             .flag-icon { font-size: 0.78rem; }
             .form-container { padding: 0.35rem 0.4rem 0.25rem 0.4rem; }
             .input-group input, .input-group select { padding: 3px 6px; font-size: 0.8rem; height: 30px; }
@@ -2219,74 +2223,77 @@
 <body>
     <!-- APP CONTAINER -->
     <div class="app-card" id="appContainer">
-        <!-- HEADER -->
+        <!-- HEADER - IMPROVED LAYOUT -->
         <div class="live-header">
-            <div class="logo-container">
-                <div class="africa-map-logo">
-                    <svg class="afripay-logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="50" cy="50" r="45" fill="url(#logoGrad)" stroke="#FFD966" stroke-width="2"/>
-                        <path d="M50 20 L30 75 L40 75 L44 60 L56 60 L60 75 L70 75 L50 20Z" fill="white" opacity="0.95"/>
-                        <path d="M50 28 L56 55 L44 55 L50 28Z" fill="#FFD966" opacity="0.8"/>
-                        <path d="M50 20 L50 75 L42 75 L42 55 L58 55 C68 55 68 42 58 42 L42 42 L42 20 L50 20Z" fill="white" opacity="0.9"/>
-                        <path d="M50 20 L50 75 L42 75 L42 55 L58 55 C68 55 68 42 58 42 L42 42 L42 20 L50 20Z" fill="url(#pGrad)" opacity="0.7"/>
-                        <path d="M52 32 L58 40 L68 28 L58 28 L52 32Z" fill="#6bc6ff" opacity="0.8"/>
-                        <circle cx="50" cy="50" r="3" fill="#FFD966"/>
-                        <defs>
-                            <linearGradient id="logoGrad" x1="0" y1="0" x2="100" y2="100">
-                                <stop offset="0%" stop-color="#0a2b3c"/>
-                                <stop offset="100%" stop-color="#1c4e6c"/>
-                            </linearGradient>
-                            <linearGradient id="pGrad" x1="0" y1="0" x2="100" y2="100">
-                                <stop offset="0%" stop-color="#FFD966" stop-opacity="0.9"/>
-                                <stop offset="100%" stop-color="#6bc6ff" stop-opacity="0.9"/>
-                            </linearGradient>
-                        </defs>
-                    </svg>
-                </div>
-                <span class="brand-text">Afri<span id="dashboardTrigger">P</span>ay</span>
-            </div>
-            <div class="header-right">
-                <div class="datetime-box">
-                    <div id="currentDate">--</div>
-                    <div class="time-text" id="currentTime">--:--:--</div>
-                </div>
-                <div class="lang-selector">
-                    <span class="lang-icon" id="langIcon">🌐</span>
-                    <select id="langSelect">
-                        <option value="en">🇬🇧 EN</option>
-                        <option value="fr">🇫🇷 FR</option>
-                        <option value="ar">🇸🇦 AR</option>
-                        <option value="es">🇪🇸 ES</option>
-                    </select>
-                </div>
-                <div class="agent-dropdown-container">
-                    <button class="agent-dropdown-btn" id="agentDropdownBtn">
-                        <span id="selectedAgentName" data-i18n="select_agent_placeholder">Agent</span>
-                        <span class="arrow">▼</span>
-                    </button>
-                    <div class="agent-dropdown-list" id="agentDropdownList">
-                        <div class="agent-dropdown-empty" data-i18n="no_agents">No agents</div>
+            <!-- Top row: Logo + Time + Controls -->
+            <div class="header-top">
+                <div class="logo-container">
+                    <div class="africa-map-logo">
+                        <svg class="afripay-logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="50" cy="50" r="45" fill="url(#logoGrad)" stroke="#FFD966" stroke-width="2"/>
+                            <path d="M50 20 L30 75 L40 75 L44 60 L56 60 L60 75 L70 75 L50 20Z" fill="white" opacity="0.95"/>
+                            <path d="M50 28 L56 55 L44 55 L50 28Z" fill="#FFD966" opacity="0.8"/>
+                            <path d="M50 20 L50 75 L42 75 L42 55 L58 55 C68 55 68 42 58 42 L42 42 L42 20 L50 20Z" fill="white" opacity="0.9"/>
+                            <path d="M50 20 L50 75 L42 75 L42 55 L58 55 C68 55 68 42 58 42 L42 42 L42 20 L50 20Z" fill="url(#pGrad)" opacity="0.7"/>
+                            <path d="M52 32 L58 40 L68 28 L58 28 L52 32Z" fill="#6bc6ff" opacity="0.8"/>
+                            <circle cx="50" cy="50" r="3" fill="#FFD966"/>
+                            <defs>
+                                <linearGradient id="logoGrad" x1="0" y1="0" x2="100" y2="100">
+                                    <stop offset="0%" stop-color="#0a2b3c"/>
+                                    <stop offset="100%" stop-color="#1c4e6c"/>
+                                </linearGradient>
+                                <linearGradient id="pGrad" x1="0" y1="0" x2="100" y2="100">
+                                    <stop offset="0%" stop-color="#FFD966" stop-opacity="0.9"/>
+                                    <stop offset="100%" stop-color="#6bc6ff" stop-opacity="0.9"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <span class="brand-text">Afri<span id="dashboardTrigger">P</span>ay</span>
+                    <div class="datetime-box">
+                        <div id="currentDate">--</div>
+                        <div class="time-text" id="currentTime">--:--:--</div>
                     </div>
                 </div>
-                <div class="auth-section" id="authSection">
-                    <div class="auth-buttons" id="authButtons">
-                        <button class="auth-btn" id="loginBtn" data-i18n="login">Login</button>
-                        <button class="auth-btn" id="registerBtn" data-i18n="register">Register</button>
+                <div class="header-controls">
+                    <div class="lang-selector">
+                        <span class="lang-icon" id="langIcon">🌐</span>
+                        <select id="langSelect">
+                            <option value="en">🇬🇧 EN</option>
+                            <option value="fr">🇫🇷 FR</option>
+                            <option value="ar">🇸🇦 AR</option>
+                            <option value="es">🇪🇸 ES</option>
+                        </select>
                     </div>
-                    <div id="welcomeSection" style="display:none;">
-                        <div class="user-welcome">
-                            <span class="user-avatar" id="userAvatarContainer">
-                                <span id="userAvatarEmoji">👤</span>
-                                <img id="userAvatarImg" class="user-avatar-img" style="display:none;" alt="avatar" />
-                                <span class="avatar-upload-hint" data-i18n="change_avatar">📷</span>
-                            </span>
-                            <span class="user-name-display" id="loggedUserName">User</span>
-                            <button class="edit-account-btn" id="editAccountBtn" data-i18n="edit_account">✏️</button>
-                            <button class="logout-btn" id="logoutBtn" data-i18n="logout">Logout</button>
-                            <span class="connection-indicator">
-                                <span class="connection-dot"></span>
-                                <span class="connection-text" data-i18n="online">Online</span>
-                            </span>
+                    <div class="agent-dropdown-container">
+                        <button class="agent-dropdown-btn" id="agentDropdownBtn">
+                            <span id="selectedAgentName" data-i18n="select_agent_placeholder">Select Agent</span>
+                            <span class="arrow">▼</span>
+                        </button>
+                        <div class="agent-dropdown-list" id="agentDropdownList">
+                            <div class="agent-dropdown-empty" data-i18n="no_agents">No agents</div>
+                        </div>
+                    </div>
+                    <div class="auth-section" id="authSection">
+                        <div class="auth-buttons" id="authButtons">
+                            <button class="auth-btn" id="loginBtn" data-i18n="login">Login</button>
+                            <button class="auth-btn" id="registerBtn" data-i18n="register">Register</button>
+                        </div>
+                        <div id="welcomeSection" style="display:none;">
+                            <div class="user-welcome">
+                                <span class="user-avatar" id="userAvatarContainer">
+                                    <span id="userAvatarEmoji">👤</span>
+                                    <img id="userAvatarImg" class="user-avatar-img" style="display:none;" alt="avatar" />
+                                    <span class="avatar-upload-hint" data-i18n="change_avatar">📷</span>
+                                </span>
+                                <span class="user-name-display" id="loggedUserName">User</span>
+                                <button class="edit-account-btn" id="editAccountBtn" data-i18n="edit_account">✏️</button>
+                                <button class="logout-btn" id="logoutBtn" data-i18n="logout">Logout</button>
+                                <span class="connection-indicator">
+                                    <span class="connection-dot"></span>
+                                    <span class="connection-text" data-i18n="online">Online</span>
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -2635,7 +2642,7 @@
 
     <script>
         // ================================================================
-        // COMPLETE JAVASCRIPT - FIXED REGISTRATION
+        // COMPLETE JAVASCRIPT - FIXED REGISTRATION & DASHBOARD
         // ================================================================
         
         // ================================================================
@@ -2687,7 +2694,7 @@
                 full_name: 'Name *', phone: 'Phone *', address: 'Address', city: 'City *',
                 amount: 'Amount *', add_client: '➕ Client', international: 'Intl',
                 close: 'Close', cancel: 'Cancel', save: 'Save', submit: 'Submit',
-                select_agent_placeholder: 'Agent', no_agents: 'No agents',
+                select_agent_placeholder: 'Select Agent', no_agents: 'No agents',
                 about: 'About', dev: 'Dev', contact: 'Contact', subscribe: 'Subscribe',
                 whatsapp: 'WA', facebook: 'FB', instagram: 'IG', youtube: 'YT', webine: 'WB',
                 how_to: '📖 How', currency_converter: '💱 Convert',
@@ -2895,6 +2902,7 @@
         let pendingPinData = null;
         let isLocalMode = true;
         let currentCountryData = { gstRate: 10, currency: 'LRD', flag: '🇱🇷', countryName: 'Liberia' };
+        let pendingDeleteUserId = null;
 
         // ================================================================
         // COUNTRY MAPPING
@@ -3181,6 +3189,31 @@
             if (!list) return;
             const agents = getAgents();
             list.innerHTML = '';
+            
+            // Add "Select Agent" as first item
+            const selectItem = document.createElement('div');
+            selectItem.className = 'agent-dropdown-item';
+            selectItem.style.borderBottom = '1px solid rgba(255,215,0,0.3)';
+            selectItem.style.fontWeight = '600';
+            selectItem.innerHTML = `<span class="agent-info"><span style="color:#FFD966; margin-right:6px;">👤</span> <span class="agent-name">Select Agent</span></span>`;
+            selectItem.addEventListener('click', function(e) {
+                e.stopPropagation();
+                // Clear selection
+                selectedAgentId = null;
+                const btn = getEl('selectedAgentName');
+                btn.innerHTML = 'Select Agent';
+                btn.dataset.agentId = '';
+                getEl('agentName').value = '';
+                getEl('agentPhone').value = '';
+                const amountInput = getEl('amountInput');
+                if (amountInput) { amountInput.max = ''; amountInput.placeholder = 'Amount'; }
+                const limitIndicator = getEl('amountLimitIndicator');
+                if (limitIndicator) limitIndicator.style.display = 'none';
+                getEl('agentDropdownList').classList.remove('open');
+                showToast('👤 Select an agent', 1500);
+            });
+            list.appendChild(selectItem);
+            
             if (agents.length === 0) {
                 const empty = document.createElement('div');
                 empty.className = 'agent-dropdown-empty';
@@ -3198,6 +3231,7 @@
                 const infoDiv = document.createElement('div');
                 infoDiv.className = 'agent-info';
 
+                // Logo on the right, flag on the left
                 const logoImg = document.createElement('img');
                 logoImg.className = 'agent-logo';
                 logoImg.src = data.logoDataURL || '';
@@ -3226,6 +3260,7 @@
 
                 const nameSpan = document.createElement('span');
                 nameSpan.className = 'agent-name';
+                // Flag on the left
                 nameSpan.innerHTML = `<span class="agent-flag">${flag}</span> ${SecurityUtils.escapeHTML(agent.name)}`;
                 nameSpan.addEventListener('click', function(e) {
                     e.stopPropagation();
@@ -3251,27 +3286,32 @@
             const btn = getEl('selectedAgentName');
             btn.innerHTML = '';
 
-            if (data.logoDataURL) {
-                const logoImg = document.createElement('img');
-                logoImg.src = data.logoDataURL;
-                logoImg.alt = 'Logo';
-                logoImg.style.width = '24px';
-                logoImg.style.height = '24px';
-                logoImg.style.borderRadius = '50%';
-                logoImg.style.objectFit = 'cover';
-                logoImg.style.marginRight = '4px';
-                logoImg.style.border = '2px solid #ffd966';
-                btn.appendChild(logoImg);
-            } else {
-                const fallback = document.createElement('span');
-                fallback.textContent = '🏢';
-                fallback.style.fontSize = '1rem';
-                fallback.style.marginRight = '4px';
-                btn.appendChild(fallback);
-            }
+            // Logo on the right, flag on the left
+            const logoImg = document.createElement('img');
+            logoImg.src = data.logoDataURL || '';
+            logoImg.alt = 'Logo';
+            logoImg.style.width = '24px';
+            logoImg.style.height = '24px';
+            logoImg.style.borderRadius = '50%';
+            logoImg.style.objectFit = 'cover';
+            logoImg.style.marginLeft = '4px';
+            logoImg.style.border = '2px solid #ffd966';
+            logoImg.title = 'Click to edit';
+            logoImg.addEventListener('click', function(e) {
+                e.stopPropagation();
+                openEditAgentModal(agent.id);
+            });
 
-            const nameText = document.createTextNode(`${flag} ${SecurityUtils.escapeHTML(agent.name)}`);
+            const flagSpan = document.createElement('span');
+            flagSpan.className = 'agent-flag';
+            flagSpan.textContent = flag;
+            flagSpan.style.marginRight = '4px';
+
+            const nameText = document.createTextNode(SecurityUtils.escapeHTML(agent.name));
+
+            btn.appendChild(flagSpan);
             btn.appendChild(nameText);
+            btn.appendChild(logoImg);
             btn.dataset.agentId = agentId;
 
             getEl('agentName').value = SecurityUtils.escapeHTML(agent.name);
@@ -3428,7 +3468,6 @@
         // ================================================================
         async function registerUser(userData) {
             try {
-                // Get form data directly from the registration form
                 const name = document.getElementById('regName').value.trim();
                 const phone = document.getElementById('regPhone').value.trim();
                 const address = document.getElementById('regAddress').value.trim();
@@ -3436,7 +3475,6 @@
                 const country = document.getElementById('regCountry').value;
                 const language = document.getElementById('regLanguage').value;
                 
-                // Get avatar data if any
                 let avatarDataURL = null;
                 const previewContainer = document.getElementById('regProfilePreview');
                 if (previewContainer && previewContainer.style.display !== 'none') {
@@ -3446,17 +3484,14 @@
                     }
                 }
                 
-                // Get selected emoji
                 const selectedEmojiEl = document.querySelector('#emojiPickerGrid .emoji-option.selected');
                 const emoji = selectedEmojiEl ? selectedEmojiEl.getAttribute('data-emoji') : '👤';
                 
-                // Validate required fields
                 if (!name || !phone || !city) {
                     document.getElementById('regError').innerText = '❌ Please fill in Name, Phone and City';
                     return false;
                 }
                 
-                // Create user object
                 const userObj = {
                     name: name,
                     phone: phone,
@@ -3469,11 +3504,9 @@
                     registeredAt: new Date().toISOString()
                 };
                 
-                // Save user
                 currentUser = userObj;
                 saveUserToStorage(userObj);
                 
-                // Update registered users list
                 loadRegisteredUsers();
                 const exists = registeredUsers.some(u => u.phone === phone || u.name === name);
                 if (!exists) {
@@ -3490,7 +3523,6 @@
                     saveRegisteredUsers();
                 }
                 
-                // Update connected users
                 const existingConnected = connectedUsers.find(u => u.name === name || u.phone === phone);
                 if (!existingConnected) {
                     connectedUsers.push({
@@ -3503,17 +3535,14 @@
                     });
                 }
                 
-                // Show success
                 document.getElementById('regSuccess').innerText = '✅ Account created successfully!';
                 document.getElementById('regError').innerText = '';
                 showToast('✅ Welcome ' + name + '!', 3000);
                 
-                // Update UI
                 renderSidebar();
                 showLoggedInUI();
                 renderAgentDropdown();
                 
-                // Close modal after delay
                 setTimeout(() => {
                     const modal = document.getElementById('registerModal');
                     if (modal) modal.style.display = 'none';
@@ -4887,97 +4916,75 @@
         // ================================================================
         function initializePermanentAgents() {
             try {
-                const existingAgents = registeredUsers.filter(u => u.isAgent === true || u.role === 'agent');
-                if (existingAgents.length > 0) {
-                    console.log('✅ Agents already initialized, skipping...');
+                // Check if we already have the specific agent from screenshot
+                const existingAgent = registeredUsers.find(u => 
+                    u.businessName === 'DAD Asso du Fouta' || 
+                    u.regNumber === 'DA543256D' ||
+                    (u.ownerName === 'Amine Juldeh Jalloh' && u.mobileMoney === '624592014')
+                );
+                
+                if (existingAgent) {
+                    console.log('✅ Agent already initialized, skipping...');
                     return;
                 }
 
-                const agentsData = [
-                    { id: 'agent_ajj_fouta_enterprise', businessName: 'AJJ Fouta Enterprise', ownerName: 'Amine Juldeh Jalloh',
-                        address: 'Marcel Parawol, Parawol, Lelouma', city: 'Lelouma', regNumber: 'AJJ4325FE',
-                        type: 'Service', idType: 'National ID', idNumber: 'SLX34GC', mobileMoney: '624592014',
-                        countryCode: '+224', password: 'IP57PX', pin: '12345', collateralLimit: 9500, currency: 'GNF',
-                        providerTxId: 'AJ123456.7890.X12345' },
-                    { id: 'agent_nusweb_biz', businessName: 'NUSWEB Biz', ownerName: 'Amine Mohamed Jalloh',
-                        address: '2e Rokupa Estates, Rokupa Freetown', city: 'Freetown', regNumber: 'NUS432WB',
-                        type: 'Service', idType: "Voter's Card", idNumber: '654783', mobileMoney: '73671566',
-                        countryCode: '+232', password: 'X9YXBH', pin: '54321', collateralLimit: 10000, currency: 'SLL',
-                        providerTxId: 'NU123456.7890.X12346' },
-                    { id: 'agent_tw_senegal_guinee', businessName: 'TW-SENEGAL GUINEE', ownerName: 'Telly Wurrie Jalloh',
-                        address: 'Lice Limamu Lai I, Dakar', city: 'Dakar', regNumber: 'TWS5674G', type: 'Service',
-                        idType: 'Other', idNumber: '1020304', mobileMoney: '772605278', countryCode: '+221',
-                        password: 'YT4V19', pin: '67890', collateralLimit: 6500, currency: 'XOF',
-                        providerTxId: 'TW123456.7890.X12347' },
-                    { id: 'agent_i_b_diallo_design', businessName: 'I B DIALLO Design', ownerName: 'I B Diallo',
-                        address: 'Makoto Conakry', city: 'Conakry', regNumber: 'IBD08976D', type: 'Service',
-                        idType: 'Other', idNumber: '9080707', mobileMoney: '624591952', countryCode: '+224',
-                        password: 'C26N84', pin: '98765', collateralLimit: 8000, currency: 'GNF',
-                        providerTxId: 'IB123456.7890.X12348' }
-                ];
+                // Create the agent from screenshot
+                const canvas = document.createElement('canvas');
+                canvas.width = 64;
+                canvas.height = 64;
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#2c7da0';
+                ctx.beginPath();
+                ctx.arc(32, 32, 28, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = 'white';
+                ctx.font = 'bold 28px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('D', 32, 34);
+                const logoDataURL = canvas.toDataURL('image/png');
 
-                agentsData.forEach(a => {
-                    const exists = registeredUsers.some(u => 
-                        u.businessName === a.businessName || u.id === a.id ||
-                        (u.ownerName === a.ownerName && u.mobileMoney === a.mobileMoney)
-                    );
-                    if (!exists) {
-                        const canvas = document.createElement('canvas');
-                        canvas.width = 64;
-                        canvas.height = 64;
-                        const ctx = canvas.getContext('2d');
-                        ctx.fillStyle = '#2c7da0';
-                        ctx.beginPath();
-                        ctx.arc(32, 32, 28, 0, Math.PI * 2);
-                        ctx.fill();
-                        ctx.fillStyle = 'white';
-                        ctx.font = 'bold 28px Arial';
-                        ctx.textAlign = 'center';
-                        ctx.textBaseline = 'middle';
-                        ctx.fillText(a.businessName.charAt(0), 32, 34);
-                        const logoDataURL = canvas.toDataURL('image/png');
-
-                        const agentData = {
-                            id: a.id,
-                            name: a.businessName + ' (' + a.ownerName + ')',
-                            businessName: a.businessName,
-                            businessAddress: a.address,
-                            city: a.city,
-                            regNumber: a.regNumber,
-                            businessType: a.type,
-                            ownerName: a.ownerName,
-                            idType: a.idType,
-                            idNumber: a.idNumber,
-                            mobileMoney: a.mobileMoney,
-                            countryCode: a.countryCode,
-                            password: a.password,
-                            pin: a.pin,
-                            collateralAmount: 0,
-                            collateralLimit: a.collateralLimit,
-                            currency: a.currency,
-                            approved: true,
-                            role: 'agent',
-                            isAgent: true,
-                            registeredAt: new Date().toISOString(),
-                            idImageDataURL: null,
-                            logoDataURL: logoDataURL,
-                            agreement: null,
-                            providerTxId: a.providerTxId
-                        };
-                        registeredUsers.push(agentData);
-                        ProviderTxIdManager.markAsUsed(a.providerTxId);
-                    }
-                });
+                const agentData = {
+                    id: 'agent_dad_assofouta',
+                    name: 'DAD Asso du Fouta (Amine Juldeh Jalloh)',
+                    businessName: 'DAD Asso du Fouta',
+                    businessAddress: 'Marche Parawol, Parawol, Lelouma',
+                    city: 'Conakry',
+                    regNumber: 'DA543256D',
+                    businessType: 'Service',
+                    ownerName: 'Amine Juldeh Jalloh',
+                    idType: "Voter's Card",
+                    idNumber: '0989998',
+                    mobileMoney: '624592014',
+                    countryCode: '+224',
+                    password: 'PJL6JY',
+                    pin: '22656',
+                    collateralAmount: 0,
+                    collateralLimit: 7000,
+                    currency: 'GNF',
+                    approved: true,
+                    role: 'agent',
+                    isAgent: true,
+                    registeredAt: new Date().toISOString(),
+                    idImageDataURL: null,
+                    logoDataURL: logoDataURL,
+                    agreement: null,
+                    providerTxId: 'MP266546.7657.N87906'
+                };
+                
+                registeredUsers.push(agentData);
+                ProviderTxIdManager.markAsUsed('MP266546.7657.N87906');
+                
                 saveRegisteredUsers();
                 syncConnectedUsersFromRegistered();
-                console.log('✅ Permanent agents initialized successfully');
+                console.log('✅ Permanent agent (DAD Asso du Fouta) initialized successfully');
             } catch (e) {
-                console.warn('⚠️ Error initializing agents:', e);
+                console.warn('⚠️ Error initializing agent:', e);
             }
         }
 
         // ================================================================
-        // SETUP EVENT LISTENERS
+        // SETUP EVENT LISTENERS - FIXED DASHBOARD
         // ================================================================
         function setupEventListeners() {
             // Language
@@ -5808,7 +5815,6 @@
             if (doRegisterBtn) {
                 doRegisterBtn.addEventListener('click', async function() {
                     try {
-                        // Get form values directly
                         const name = document.getElementById('regName').value.trim();
                         const phone = document.getElementById('regPhone').value.trim();
                         const address = document.getElementById('regAddress').value.trim();
@@ -5816,7 +5822,6 @@
                         const country = document.getElementById('regCountry').value;
                         const language = document.getElementById('regLanguage').value;
                         
-                        // Get avatar
                         let avatarDataURL = null;
                         const previewContainer = document.getElementById('regProfilePreview');
                         if (previewContainer && previewContainer.style.display !== 'none') {
@@ -5826,17 +5831,14 @@
                             }
                         }
                         
-                        // Get emoji
                         const selectedEmojiEl = document.querySelector('#emojiPickerGrid .emoji-option.selected');
                         const emoji = selectedEmojiEl ? selectedEmojiEl.getAttribute('data-emoji') : '👤';
                         
-                        // Validate
                         if (!name || !phone || !city) {
                             document.getElementById('regError').innerText = '❌ Please fill in Name, Phone and City';
                             return;
                         }
                         
-                        // Create user object
                         const userObj = {
                             name: name,
                             phone: phone,
@@ -5849,11 +5851,9 @@
                             registeredAt: new Date().toISOString()
                         };
                         
-                        // Save user
                         currentUser = userObj;
                         saveUserToStorage(userObj);
                         
-                        // Update registered users
                         loadRegisteredUsers();
                         const exists = registeredUsers.some(u => u.phone === phone || u.name === name);
                         if (!exists) {
@@ -5870,7 +5870,6 @@
                             saveRegisteredUsers();
                         }
                         
-                        // Update connected users
                         const existingConnected = connectedUsers.find(u => u.name === name || u.phone === phone);
                         if (!existingConnected) {
                             connectedUsers.push({
@@ -5883,17 +5882,14 @@
                             });
                         }
                         
-                        // Show success
                         document.getElementById('regSuccess').innerText = '✅ Account created successfully!';
                         document.getElementById('regError').innerText = '';
                         showToast('✅ Welcome ' + name + '!', 3000);
                         
-                        // Update UI
                         renderSidebar();
                         showLoggedInUI();
                         renderAgentDropdown();
                         
-                        // Close modal
                         setTimeout(() => {
                             const modal = document.getElementById('registerModal');
                             if (modal) modal.style.display = 'none';
@@ -6744,6 +6740,15 @@
                     }
                 });
             });
+
+            // Dashboard trigger - fix for P in AfriPay
+            const dashboardTrigger = getEl('dashboardTrigger');
+            if (dashboardTrigger) {
+                dashboardTrigger.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    openAdminAuth();
+                });
+            }
         }
 
         // ================================================================
