@@ -13,6 +13,7 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
         body {
             background: linear-gradient(145deg, #eef2f7 0%, #d9e2ec 100%);
@@ -21,6 +22,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            touch-action: manipulation;
         }
         .app-card {
             max-width: 648px;
@@ -176,9 +178,14 @@
             overflow: hidden;
             text-overflow: ellipsis;
             font-size: 0.8rem !important;
+            touch-action: manipulation;
         }
         .agent-dropdown-btn:hover {
             background: rgba(255, 255, 255, 0.20);
+        }
+        .agent-dropdown-btn:active {
+            background: rgba(255, 255, 255, 0.30);
+            transform: scale(0.97);
         }
         .agent-dropdown-btn .arrow {
             font-size: 0.6rem;
@@ -219,9 +226,14 @@
             gap: 6px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.06);
             color: white;
+            touch-action: manipulation;
         }
         .agent-dropdown-item:hover {
             background: rgba(255, 255, 255, 0.08);
+        }
+        .agent-dropdown-item:active {
+            background: rgba(255, 255, 255, 0.15);
+            transform: scale(0.98);
         }
         .agent-dropdown-item .agent-info {
             display: flex;
@@ -243,6 +255,9 @@
         .agent-dropdown-item .agent-logo:hover {
             transform: scale(1.1);
             border-color: #ffd966;
+        }
+        .agent-dropdown-item .agent-logo:active {
+            transform: scale(0.95);
         }
         .agent-dropdown-item .agent-logo-fallback {
             width: 28px;
@@ -298,9 +313,14 @@
             align-items: center;
             justify-content: center;
             font-size: 0.8rem !important;
+            touch-action: manipulation;
         }
         .auth-btn:hover {
             background: rgba(255, 255, 255, 0.3);
+        }
+        .auth-btn:active {
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(0.97);
         }
         .user-welcome {
             display: flex;
@@ -328,10 +348,14 @@
             cursor: pointer;
             transition: opacity 0.2s, transform 0.2s;
             position: relative;
+            touch-action: manipulation;
         }
         .user-avatar:hover {
             opacity: 0.8;
             transform: scale(1.05);
+        }
+        .user-avatar:active {
+            transform: scale(0.95);
         }
         .user-avatar .avatar-upload-hint {
             position: absolute;
@@ -375,9 +399,14 @@
             height: 26px;
             display: flex;
             align-items: center;
+            touch-action: manipulation;
         }
         .logout-btn:hover {
             background: rgba(255, 255, 255, 0.3);
+        }
+        .logout-btn:active {
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(0.97);
         }
         .edit-account-btn {
             background: rgba(255, 255, 255, 0.18);
@@ -392,9 +421,14 @@
             height: 26px;
             display: flex;
             align-items: center;
+            touch-action: manipulation;
         }
         .edit-account-btn:hover {
             background: rgba(255, 255, 255, 0.3);
+        }
+        .edit-account-btn:active {
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(0.97);
         }
         .connection-indicator {
             display: inline-flex;
@@ -474,12 +508,16 @@
             line-height: 1.2;
             user-select: none;
             flex-shrink: 0;
+            touch-action: manipulation;
         }
         .flag-icon:hover {
             transform: scale(1.3);
             background: rgba(255, 215, 0, 0.25);
             box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
             border-radius: 3px;
+        }
+        .flag-icon:active {
+            transform: scale(0.9);
         }
         .flag-scroll-btn {
             background: rgba(0, 0, 0, 0.15);
@@ -496,10 +534,14 @@
             justify-content: center;
             flex-shrink: 0;
             transition: 0.2s;
+            touch-action: manipulation;
         }
         .flag-scroll-btn:hover {
             background: rgba(0, 0, 0, 0.3);
             color: white;
+        }
+        .flag-scroll-btn:active {
+            transform: scale(0.9);
         }
 
         /* ================================================================
@@ -553,10 +595,14 @@
             gap: 3px;
             height: 32px;
             font-size: 0.85rem !important;
+            touch-action: manipulation;
         }
         .map-btn:hover {
             background: #1f5068;
             transform: translateY(-1px);
+        }
+        .map-btn:active {
+            transform: scale(0.97);
         }
         .section-title {
             font-weight: 800;
@@ -588,6 +634,7 @@
             outline: none;
             background: #fff;
             height: 38px;
+            touch-action: manipulation;
         }
         .input-group input:focus, .input-group select:focus {
             border-color: #f4a261;
@@ -623,11 +670,15 @@
             align-items: center;
             justify-content: center;
             font-size: 0.85rem !important;
+            touch-action: manipulation;
         }
         .tx-btn.copy { background: #2c7da0; }
         .tx-btn:hover {
             transform: translateY(-1px);
             opacity: 0.9;
+        }
+        .tx-btn:active {
+            transform: scale(0.97);
         }
         .mode-row {
             display: flex;
@@ -653,12 +704,16 @@
             white-space: nowrap;
             min-width: 80px;
             font-size: 0.85rem !important;
+            touch-action: manipulation;
         }
         .mode-row .btn.active {
             background: #0f2b3d;
             color: white;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
             border-color: #0f2b3d;
+        }
+        .mode-row .btn:active {
+            transform: scale(0.97);
         }
         .mode-row .btn.add-client-btn-header {
             background: #2c7da0;
@@ -733,10 +788,14 @@
             align-items: center;
             justify-content: center;
             font-size: 0.85rem !important;
+            touch-action: manipulation;
         }
         .single-mm-btn:hover {
             background: #f4a261;
             transform: translateY(-1px);
+        }
+        .single-mm-btn:active {
+            transform: scale(0.97);
         }
         .btn-submit {
             background: #0f2b3d;
@@ -754,10 +813,14 @@
             align-items: center;
             justify-content: center;
             font-size: 0.95rem !important;
+            touch-action: manipulation;
         }
         .btn-submit:hover {
             background: #f4a261;
             transform: translateY(-1px);
+        }
+        .btn-submit:active {
+            transform: scale(0.97);
         }
         .business-strip {
             background: linear-gradient(90deg, #fef9f0 0%, #fff5e8 100%);
@@ -795,11 +858,15 @@
             transition: all 0.2s ease;
             border: 1px solid #ffe0b5;
             min-width: 48px;
+            touch-action: manipulation;
         }
         .business-item:hover {
             transform: translateY(-2px);
             border-color: #f4a261;
             background: #fffaf5;
+        }
+        .business-item:active {
+            transform: scale(0.95);
         }
         .business-icon-img { font-size: 1.2rem; margin-bottom: 0px; }
         .business-name { font-weight: 700; color: #1c6e8f; font-size: 0.65rem !important; }
@@ -835,10 +902,14 @@
             justify-content: center;
             font-size: 0.78rem !important;
             flex: 0 1 auto;
+            touch-action: manipulation;
         }
         .footer-btn:hover {
             background: #dce5ec;
             transform: translateY(-1px);
+        }
+        .footer-btn:active {
+            transform: scale(0.97);
         }
         .social-icons {
             display: flex;
@@ -860,10 +931,14 @@
             justify-content: center;
             font-size: 0.78rem !important;
             flex: 0 1 auto;
+            touch-action: manipulation;
         }
         .social-icon:hover {
             background: #dce5ec;
             transform: scale(1.03);
+        }
+        .social-icon:active {
+            transform: scale(0.95);
         }
 
         /* ================================================================
@@ -881,6 +956,7 @@
             justify-content: center;
             z-index: 1000;
             backdrop-filter: blur(3px);
+            touch-action: manipulation;
         }
         .modal-content {
             background: white;
@@ -891,6 +967,7 @@
             max-height: 80vh;
             overflow-y: auto;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            -webkit-overflow-scrolling: touch;
         }
         .modal-content h3 {
             margin-bottom: 5px;
@@ -920,10 +997,14 @@
             align-items: center;
             justify-content: center;
             font-size: 0.85rem !important;
+            touch-action: manipulation;
         }
         .action-btn:hover {
             background: #f4a261;
             transform: translateY(-1px);
+        }
+        .action-btn:active {
+            transform: scale(0.97);
         }
         .action-btn.close-modal { background: #ccc; color: #222; }
         .action-btn.close-modal:hover { background: #bbb; }
@@ -975,10 +1056,14 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            touch-action: manipulation;
         }
         .chat-toggle-btn:hover {
             transform: scale(1.05);
             background: #f4a261;
+        }
+        .chat-toggle-btn:active {
+            transform: scale(0.95);
         }
         .chat-toggle-btn .chat-badge {
             position: absolute;
@@ -1056,8 +1141,10 @@
             gap: 2px;
             white-space: nowrap;
             height: 30px;
+            touch-action: manipulation;
         }
         .chat-nav .chat-actions button:hover { background: rgba(255, 255, 255, 0.25); }
+        .chat-nav .chat-actions button:active { transform: scale(0.95); }
         .chat-nav .chat-close {
             background: rgba(255, 255, 255, 0.15);
             border: none;
@@ -1072,8 +1159,10 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            touch-action: manipulation;
         }
         .chat-nav .chat-close:hover { background: rgba(255, 255, 255, 0.3); }
+        .chat-nav .chat-close:active { transform: scale(0.95); }
         .chat-messages {
             flex: 1;
             padding: 10px 12px;
@@ -1083,6 +1172,7 @@
             flex-direction: column;
             gap: 5px;
             transition: background 0.2s;
+            -webkit-overflow-scrolling: touch;
         }
         .chat-message {
             max-width: 85%;
@@ -1124,6 +1214,7 @@
             outline: none;
             font-size: 0.92rem;
             height: 38px;
+            touch-action: manipulation;
         }
         .chat-input-area input:focus { border-color: #f4a261; }
         .chat-input-area button {
@@ -1140,8 +1231,10 @@
             align-items: center;
             justify-content: center;
             font-size: 0.85rem !important;
+            touch-action: manipulation;
         }
         .chat-input-area button:hover { background: #f4a261; }
+        .chat-input-area button:active { transform: scale(0.97); }
         .chat-sidebar {
             width: 150px;
             background: #f8fafc;
@@ -1152,6 +1245,7 @@
             display: flex;
             flex-direction: column;
             gap: 2px;
+            -webkit-overflow-scrolling: touch;
         }
         .sidebar-section-title {
             font-weight: 700;
@@ -1172,8 +1266,10 @@
             cursor: pointer;
             font-size: 1rem;
             padding: 0 2px;
+            touch-action: manipulation;
         }
         .sidebar-section-title .add-group-btn:hover { color: #f4a261; }
+        .sidebar-section-title .add-group-btn:active { transform: scale(0.95); }
         .sidebar-user, .sidebar-group {
             display: flex;
             align-items: center;
@@ -1182,8 +1278,10 @@
             cursor: pointer;
             transition: background 0.15s;
             border-left: 3px solid transparent;
+            touch-action: manipulation;
         }
         .sidebar-user:hover, .sidebar-group:hover { background: #eef2f7; }
+        .sidebar-user:active, .sidebar-group:active { background: #dce5ec; transform: scale(0.98); }
         .sidebar-user.active, .sidebar-group.active {
             background: #e2edf7;
             border-left-color: #2c7da0;
@@ -1247,8 +1345,10 @@
             color: #1e3b4a;
             height: 28px;
             font-size: 0.75rem !important;
+            touch-action: manipulation;
         }
         .chat-controls button:hover { background: #dce5ec; }
+        .chat-controls button:active { transform: scale(0.95); }
         .chat-controls input[type="color"] {
             width: 26px;
             height: 26px;
@@ -1257,6 +1357,7 @@
             padding: 0;
             cursor: pointer;
             background: none;
+            touch-action: manipulation;
         }
         .chat-controls input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
         .chat-controls input[type="color"]::-webkit-color-swatch { border: none; border-radius: 50%; }
@@ -1267,6 +1368,7 @@
             background: #d0dce8;
             border-radius: 2px;
             outline: none;
+            touch-action: manipulation;
         }
         .chat-controls .brightness-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
@@ -1305,8 +1407,10 @@
             transition: 0.2s;
             line-height: 1;
             height: 30px;
+            touch-action: manipulation;
         }
         .sidebar-toggle:hover { background: rgba(255, 255, 255, 0.3); }
+        .sidebar-toggle:active { transform: scale(0.95); }
 
         /* ================================================================
            RESPONSIVE
@@ -1461,10 +1565,14 @@
             border: 2px solid transparent;
             background: #f5f7fa;
             line-height: 1.2;
+            touch-action: manipulation;
         }
         .emoji-option:hover {
             transform: scale(1.1);
             background: #e8edf4;
+        }
+        .emoji-option:active {
+            transform: scale(0.95);
         }
         .emoji-option.selected {
             border-color: #f4a261;
@@ -1478,6 +1586,7 @@
             border: 1px solid #e0e8f0;
             border-radius: 10px;
             padding: 3px 0;
+            -webkit-overflow-scrolling: touch;
         }
         .group-member-item {
             display: flex;
@@ -1487,12 +1596,15 @@
             cursor: pointer;
             transition: background 0.15s;
             font-size: 0.75rem !important;
+            touch-action: manipulation;
         }
         .group-member-item:hover { background: #f0f4f8; }
+        .group-member-item:active { background: #e0e8f0; transform: scale(0.98); }
         .group-member-item input[type="checkbox"] {
             width: 14px;
             height: 14px;
             accent-color: #0f2b3d;
+            touch-action: manipulation;
         }
         .group-member-item .member-avatar {
             width: 22px;
@@ -1555,10 +1667,12 @@
         }
         .ussd-result-box .ussd-label { font-size: 0.7rem; color: #1c6e8f; }
         .ussd-result-box .ussd-code-value { font-family: monospace; font-weight: 700; font-size: 0.8rem; flex: 1; }
-        .copy-ussd-btn { background: #2c7da0; border: none; color: white; padding: 2px 10px; border-radius: 20px; font-size: 0.65rem; cursor: pointer; }
+        .copy-ussd-btn { background: #2c7da0; border: none; color: white; padding: 2px 10px; border-radius: 20px; font-size: 0.65rem; cursor: pointer; touch-action: manipulation; }
+        .copy-ussd-btn:active { transform: scale(0.95); }
         .image-upload-preview { display: none; margin-top: 2px; }
         .image-upload-preview img { max-height: 60px; border-radius: 6px; }
-        .remove-image-btn { background: #e74c3c; color: white; border: none; padding: 2px 8px; border-radius: 20px; font-size: 0.6rem; cursor: pointer; }
+        .remove-image-btn { background: #e74c3c; color: white; border: none; padding: 2px 8px; border-radius: 20px; font-size: 0.6rem; cursor: pointer; touch-action: manipulation; }
+        .remove-image-btn:active { transform: scale(0.95); }
         .password-display { font-family: monospace; font-size: 1.1rem; font-weight: 700; color: #0f2b3d; background: #f0f6fb; padding: 4px 12px; border-radius: 30px; border: 1px solid #d0dce8; display: inline-block; letter-spacing: 2px; }
         .status-badge { display: inline-block; padding: 2px 8px; border-radius: 20px; font-weight: 700; font-size: 0.62rem !important; }
         .status-badge.approved { background: #d5f5e3; color: #1e8449; }
@@ -1600,8 +1714,10 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
+            touch-action: manipulation;
         }
         .user-delete-btn:hover { background: #c0392b; transform: scale(1.05); }
+        .user-delete-btn:active { transform: scale(0.95); }
         .no-users-msg { text-align: center; padding: 12px; color: #95a5a6; font-size: 0.75rem !important; }
         .delete-user-warning {
             font-size: 0.72rem;
@@ -1628,8 +1744,10 @@
             text-decoration: underline;
             font-size: 0.75rem !important;
             transition: 0.15s;
+            touch-action: manipulation;
         }
         .admin-auth-modal .auth-toggle-link:hover { color: #f4a261; }
+        .admin-auth-modal .auth-toggle-link:active { transform: scale(0.98); }
         .admin-auth-modal .auth-divider {
             text-align: center;
             margin: 4px 0 3px 0;
@@ -1717,11 +1835,13 @@
             justify-content: center;
             font-weight: 700;
             z-index: 5;
+            touch-action: manipulation;
         }
         .receipt-close-x:hover {
             background: rgba(255, 255, 255, 0.3);
             transform: scale(1.1);
         }
+        .receipt-close-x:active { transform: scale(0.95); }
         .receipt-body {
             padding: 12px 16px 10px 16px;
         }
@@ -1794,6 +1914,7 @@
             min-width: 36px;
             justify-content: center;
             flex: 0 1 auto;
+            touch-action: manipulation;
         }
         .receipt-share-btn.client { background: #2c7da0; }
         .receipt-share-btn.client:hover { background: #1f5068; transform: translateY(-1px); }
@@ -1803,6 +1924,7 @@
         .receipt-share-btn.sms:hover { background: #2980b9; transform: translateY(-1px); }
         .receipt-share-btn.close-receipt { background: #95a5a6; }
         .receipt-share-btn.close-receipt:hover { background: #7f8c8d; transform: translateY(-1px); }
+        .receipt-share-btn:active { transform: scale(0.95); }
         .receipt-share-label {
             font-size: 0.55rem;
             color: #7f8c8d;
@@ -1863,9 +1985,11 @@
             justify-content: center;
             font-weight: 700;
             z-index: 5;
+            touch-action: manipulation;
         }
         .agreement-close-x:hover { background: rgba(255, 255, 255, 0.3); transform: scale(1.1); }
-        .agreement-body { padding: 14px 18px; max-height: 55vh; overflow-y: auto; font-size: 0.8rem !important; line-height: 1.7; color: #1e3b4a; }
+        .agreement-close-x:active { transform: scale(0.95); }
+        .agreement-body { padding: 14px 18px; max-height: 55vh; overflow-y: auto; font-size: 0.8rem !important; line-height: 1.7; color: #1e3b4a; -webkit-overflow-scrolling: touch; }
         .agreement-body .clause {
             background: #f8fafc;
             border-radius: 6px;
@@ -1922,11 +2046,14 @@
             font-size: 0.68rem !important;
             cursor: pointer;
             height: 28px;
+            touch-action: manipulation;
         }
         .agreement-signature-area .sig-actions .sig-clear { background: #e74c3c; color: white; }
         .agreement-signature-area .sig-actions .sig-clear:hover { background: #c0392b; }
+        .agreement-signature-area .sig-actions .sig-clear:active { transform: scale(0.95); }
         .agreement-signature-area .sig-actions .sig-confirm { background: #27ae60; color: white; }
         .agreement-signature-area .sig-actions .sig-confirm:hover { background: #1e8449; }
+        .agreement-signature-area .sig-actions .sig-confirm:active { transform: scale(0.95); }
         .sig-preview { max-width: 110px; max-height: 45px; border: 1px solid #ddd; border-radius: 4px; display: none; margin-top: 3px; }
         .sig-preview.show { display: block; }
         .agreement-status { font-size: 0.68rem; color: #7f8c8d; text-align: center; margin-top: 3px; }
@@ -1968,9 +2095,11 @@
             justify-content: center;
             font-weight: 700;
             z-index: 5;
+            touch-action: manipulation;
         }
         .report-close-x:hover { background: rgba(255, 255, 255, 0.3); transform: scale(1.1); }
-        .report-body { padding: 14px 18px; max-height: 55vh; overflow-y: auto; }
+        .report-close-x:active { transform: scale(0.95); }
+        .report-body { padding: 14px 18px; max-height: 55vh; overflow-y: auto; -webkit-overflow-scrolling: touch; }
         .report-body .info-row {
             display: flex;
             justify-content: space-between;
@@ -2095,9 +2224,11 @@
             justify-content: center;
             font-weight: 700;
             z-index: 5;
+            touch-action: manipulation;
         }
         .converter-close-x:hover { background: rgba(255, 255, 255, 0.3); transform: scale(1.1); }
-        .converter-body { padding: 14px 18px 12px 18px; overflow-y: auto; max-height: 70vh; }
+        .converter-close-x:active { transform: scale(0.95); }
+        .converter-body { padding: 14px 18px 12px 18px; overflow-y: auto; max-height: 70vh; -webkit-overflow-scrolling: touch; }
         .converter-body .input-group { margin-bottom: 0.4rem; }
         .converter-body .input-group label { font-size: 0.75rem !important; font-weight: 700; color: #1e3b4a; }
         .converter-body .input-group input, .converter-body .input-group select {
@@ -2214,8 +2345,10 @@
             cursor: pointer;
             transition: background 0.2s;
             font-size: 0.8rem !important;
+            touch-action: manipulation;
         }
         .goods-item:hover { background: #fef9f0; }
+        .goods-item:active { background: #f0e8d0; transform: scale(0.98); }
         .goods-name { font-weight: 600; font-size: 0.8rem !important; }
         .goods-price { color: #f4a261; font-weight: 700; font-size: 0.8rem !important; }
     </style>
@@ -5565,64 +5698,91 @@
         }
 
         // ================================================================
-        // SETUP EVENT LISTENERS - FIXED DASHBOARD
+        // SETUP EVENT LISTENERS - FIXED DASHBOARD & MOBILE
         // ================================================================
         function setupEventListeners() {
             // Language
             const langSelect = getEl('langSelect');
             if (langSelect) langSelect.addEventListener('change', function() { setLanguage(this.value); });
+            // Also handle touch for mobile
+            langSelect.addEventListener('touchstart', function(e) { e.stopPropagation(); }, { passive: true });
 
-            // Login
+            // Login - Fix for mobile: use both click and touchstart
             const loginBtn = getEl('loginBtn');
-            if (loginBtn) loginBtn.onclick = function() {
-                const loginError = getEl('loginError');
-                if (loginError) loginError.innerHTML = '';
-                const loginModal = getEl('loginModal');
-                if (loginModal) loginModal.style.display = 'flex';
-            };
+            if (loginBtn) {
+                const loginHandler = function(e) {
+                    e.preventDefault();
+                    const loginError = getEl('loginError');
+                    if (loginError) loginError.innerHTML = '';
+                    const loginModal = getEl('loginModal');
+                    if (loginModal) loginModal.style.display = 'flex';
+                };
+                loginBtn.addEventListener('click', loginHandler);
+                loginBtn.addEventListener('touchstart', loginHandler, { passive: true });
+            }
 
-            // Register
+            // Register - Fix for mobile
             const registerBtn = getEl('registerBtn');
-            if (registerBtn) registerBtn.onclick = function() {
-                const regError = getEl('regError');
-                const regSuccess = getEl('regSuccess');
-                if (regError) regError.innerText = '';
-                if (regSuccess) regSuccess.innerText = '';
-                const registerModal = getEl('registerModal');
-                if (registerModal) registerModal.style.display = 'flex';
-                const grid = getEl('emojiPickerGrid');
-                if (grid) {
-                    const first = grid.querySelector('.emoji-option');
-                    grid.querySelectorAll('.emoji-option').forEach(o => o.classList.remove('selected'));
-                    if (first) { first.classList.add('selected'); }
-                }
-                const regUssdResult = getEl('regUssdResult');
-                if (regUssdResult) regUssdResult.style.display = 'none';
-                const regProfilePreview = getEl('regProfilePreview');
-                if (regProfilePreview) regProfilePreview.style.display = 'none';
-                const regProfileImage = getEl('regProfileImage');
-                if (regProfileImage) regProfileImage.value = '';
-            };
+            if (registerBtn) {
+                const registerHandler = function(e) {
+                    e.preventDefault();
+                    const regError = getEl('regError');
+                    const regSuccess = getEl('regSuccess');
+                    if (regError) regError.innerText = '';
+                    if (regSuccess) regSuccess.innerText = '';
+                    const registerModal = getEl('registerModal');
+                    if (registerModal) registerModal.style.display = 'flex';
+                    const grid = getEl('emojiPickerGrid');
+                    if (grid) {
+                        const first = grid.querySelector('.emoji-option');
+                        grid.querySelectorAll('.emoji-option').forEach(o => o.classList.remove('selected'));
+                        if (first) { first.classList.add('selected'); }
+                    }
+                    const regUssdResult = getEl('regUssdResult');
+                    if (regUssdResult) regUssdResult.style.display = 'none';
+                    const regProfilePreview = getEl('regProfilePreview');
+                    if (regProfilePreview) regProfilePreview.style.display = 'none';
+                    const regProfileImage = getEl('regProfileImage');
+                    if (regProfileImage) regProfileImage.value = '';
+                };
+                registerBtn.addEventListener('click', registerHandler);
+                registerBtn.addEventListener('touchstart', registerHandler, { passive: true });
+            }
 
             // Logout
             const logoutBtn = getEl('logoutBtn');
-            if (logoutBtn) logoutBtn.onclick = function() { clearUserStorage(); showToast('Logged out'); };
+            if (logoutBtn) {
+                const logoutHandler = function(e) { e.preventDefault(); clearUserStorage(); showToast('Logged out'); };
+                logoutBtn.addEventListener('click', logoutHandler);
+                logoutBtn.addEventListener('touchstart', logoutHandler, { passive: true });
+            }
 
             // Edit Account
             const editAccountBtn = getEl('editAccountBtn');
-            if (editAccountBtn) editAccountBtn.addEventListener('click', openEditAccountModal);
+            if (editAccountBtn) {
+                const editHandler = function(e) { e.preventDefault(); openEditAccountModal(); };
+                editAccountBtn.addEventListener('click', editHandler);
+                editAccountBtn.addEventListener('touchstart', editHandler, { passive: true });
+            }
             const saveEditAccountBtn = getEl('saveEditAccountBtn');
-            if (saveEditAccountBtn) saveEditAccountBtn.addEventListener('click', saveEditAccount);
+            if (saveEditAccountBtn) {
+                const saveHandler = function(e) { e.preventDefault(); saveEditAccount(); };
+                saveEditAccountBtn.addEventListener('click', saveHandler);
+                saveEditAccountBtn.addEventListener('touchstart', saveHandler, { passive: true });
+            }
 
             // Agent Dropdown
             const agentDropdownBtn = getEl('agentDropdownBtn');
             if (agentDropdownBtn) {
-                agentDropdownBtn.addEventListener('click', function(e) {
+                const dropdownHandler = function(e) {
+                    e.preventDefault();
                     e.stopPropagation();
                     const list = getEl('agentDropdownList');
                     if (list) list.classList.toggle('open');
                     renderAgentDropdown();
-                });
+                };
+                agentDropdownBtn.addEventListener('click', dropdownHandler);
+                agentDropdownBtn.addEventListener('touchstart', dropdownHandler, { passive: true });
             }
             document.addEventListener('click', function(e) {
                 const container = document.querySelector('.agent-dropdown-container');
@@ -5631,83 +5791,118 @@
                     if (list) list.classList.remove('open');
                 }
             });
+            document.addEventListener('touchstart', function(e) {
+                const container = document.querySelector('.agent-dropdown-container');
+                if (container && !container.contains(e.target)) {
+                    const list = getEl('agentDropdownList');
+                    if (list) list.classList.remove('open');
+                }
+            }, { passive: true });
 
             // TX ID
             const generateTxBtn = getEl('generateTxBtn');
-            if (generateTxBtn) generateTxBtn.addEventListener('click', setGeneratedTransactionId);
+            if (generateTxBtn) {
+                const genHandler = function(e) { e.preventDefault(); setGeneratedTransactionId(); };
+                generateTxBtn.addEventListener('click', genHandler);
+                generateTxBtn.addEventListener('touchstart', genHandler, { passive: true });
+            }
             const copyTxBtn = getEl('copyTxBtn');
-            if (copyTxBtn) copyTxBtn.addEventListener('click', copyTransactionIdToClipboard);
+            if (copyTxBtn) {
+                const copyHandler = function(e) { e.preventDefault(); copyTransactionIdToClipboard(); };
+                copyTxBtn.addEventListener('click', copyHandler);
+                copyTxBtn.addEventListener('touchstart', copyHandler, { passive: true });
+            }
 
             // Close modal buttons
             document.querySelectorAll('.close-modal').forEach(btn => {
-                btn.addEventListener('click', function() {
+                const closeHandler = function(e) {
+                    e.preventDefault();
                     const modal = this.closest('.modal');
                     if (modal) { modal.style.display = 'none'; }
-                });
+                };
+                btn.addEventListener('click', closeHandler);
+                btn.addEventListener('touchstart', closeHandler, { passive: true });
             });
 
             // Provider modal
-            document.querySelectorAll('#providerModal .action-btn[data-provider]').forEach(btn =>
-                btn.addEventListener('click', () => onProviderSelected(btn.getAttribute('data-provider')))
-            );
+            document.querySelectorAll('#providerModal .action-btn[data-provider]').forEach(btn => {
+                const providerHandler = function(e) { e.preventDefault(); onProviderSelected(btn.getAttribute('data-provider')); };
+                btn.addEventListener('click', providerHandler);
+                btn.addEventListener('touchstart', providerHandler, { passive: true });
+            });
 
             // Role modal
-            document.querySelectorAll('#roleButtons .action-btn[data-role]').forEach(btn =>
-                btn.addEventListener('click', () => onRoleSelected(btn.getAttribute('data-role')))
-            );
+            document.querySelectorAll('#roleButtons .action-btn[data-role]').forEach(btn => {
+                const roleHandler = function(e) { e.preventDefault(); onRoleSelected(btn.getAttribute('data-role')); };
+                btn.addEventListener('click', roleHandler);
+                btn.addEventListener('touchstart', roleHandler, { passive: true });
+            });
 
             // Action modal
             const actionTransfer = getEl('actionTransfer');
             if (actionTransfer) {
-                actionTransfer.addEventListener('click', function() {
+                const transferHandler = function(e) {
+                    e.preventDefault();
                     buildAndDialUSSD('Transfer');
                     getEl('actionModal').style.display = 'none';
                     selectedRole = '';
                     selectedProvider = '';
-                });
+                };
+                actionTransfer.addEventListener('click', transferHandler);
+                actionTransfer.addEventListener('touchstart', transferHandler, { passive: true });
             }
             const actionPay = getEl('actionPay');
             if (actionPay) {
-                actionPay.addEventListener('click', function() {
+                const payHandler = function(e) {
+                    e.preventDefault();
                     buildAndDialUSSD('Pay');
                     getEl('actionModal').style.display = 'none';
                     selectedRole = '';
                     selectedProvider = '';
-                });
+                };
+                actionPay.addEventListener('click', payHandler);
+                actionPay.addEventListener('touchstart', payHandler, { passive: true });
             }
             const actionCashout = getEl('actionCashout');
             if (actionCashout) {
-                actionCashout.addEventListener('click', function() {
+                const cashoutHandler = function(e) {
+                    e.preventDefault();
                     buildAndDialUSSD('Cash Out');
                     getEl('actionModal').style.display = 'none';
                     selectedRole = '';
                     selectedProvider = '';
-                });
+                };
+                actionCashout.addEventListener('click', cashoutHandler);
+                actionCashout.addEventListener('touchstart', cashoutHandler, { passive: true });
             }
 
             // Main MM button
             const mainMmBtn = getEl('mainMmBtn');
             if (mainMmBtn) {
-                mainMmBtn.addEventListener('click', function() {
+                const mmHandler = function(e) {
+                    e.preventDefault();
                     const amountInput = getEl('amountInput');
                     if (parseFloat(amountInput?.value) <= 0) { showToast('⚠️ Enter amount'); return; }
                     if (!getEl('agentName')?.value?.trim()) { showToast('⚠️ Select agent first.'); return; }
                     openProviderModal();
-                });
+                };
+                mainMmBtn.addEventListener('click', mmHandler);
+                mainMmBtn.addEventListener('touchstart', mmHandler, { passive: true });
             }
 
             // Intl Toggle
             const intlToggleBtn = getEl('intlToggleBtn');
             if (intlToggleBtn) {
-                intlToggleBtn.addEventListener('click', function() {
-                    setLocalMode(isLocalMode);
-                });
+                const intlHandler = function(e) { e.preventDefault(); setLocalMode(isLocalMode); };
+                intlToggleBtn.addEventListener('click', intlHandler);
+                intlToggleBtn.addEventListener('touchstart', intlHandler, { passive: true });
             }
 
             // Add Client
             const addClientBtnHeader = getEl('addClientBtnHeader');
             if (addClientBtnHeader) {
-                addClientBtnHeader.addEventListener('click', function() {
+                const addHandler = function(e) {
+                    e.preventDefault();
                     getEl('newClientName').value = '';
                     getEl('newClientPhone').value = '';
                     getEl('newClientAddress').value = '';
@@ -5715,11 +5910,14 @@
                     getEl('newClientCountrySelect').value = 'Sierra Leone';
                     getEl('addClientError').textContent = '';
                     getEl('addClientModal').style.display = 'flex';
-                });
+                };
+                addClientBtnHeader.addEventListener('click', addHandler);
+                addClientBtnHeader.addEventListener('touchstart', addHandler, { passive: true });
             }
             const saveClientBtn = getEl('saveClientBtn');
             if (saveClientBtn) {
-                saveClientBtn.addEventListener('click', function() {
+                const saveHandler = function(e) {
+                    e.preventDefault();
                     const name = SecurityUtils.sanitizeInput(getEl('newClientName').value.trim(), 100);
                     const phone = SecurityUtils.sanitizePhone(getEl('newClientPhone').value.trim());
                     const address = SecurityUtils.sanitizeInput(getEl('newClientAddress').value.trim(), 200);
@@ -5740,13 +5938,16 @@
                     getEl('addClientError').textContent = '';
                     renderSidebar();
                     renderAgentDropdown();
-                });
+                };
+                saveClientBtn.addEventListener('click', saveHandler);
+                saveClientBtn.addEventListener('touchstart', saveHandler, { passive: true });
             }
 
             // Register Agent
             const registerAgentBtn = getEl('registerAgentBtn');
             if (registerAgentBtn) {
-                registerAgentBtn.addEventListener('click', function() {
+                const regAgentHandler = function(e) {
+                    e.preventDefault();
                     getEl('agentRegError').textContent = '';
                     getEl('agentRegSuccess').textContent = '';
                     getEl('agentBusinessName').value = '';
@@ -5783,30 +5984,38 @@
                     updateAgreementStatus(false);
                     const sigPreview = getEl('agreementSigPreview');
                     if (sigPreview) { sigPreview.classList.remove('show'); sigPreview.src = ''; }
-                });
+                };
+                registerAgentBtn.addEventListener('click', regAgentHandler);
+                registerAgentBtn.addEventListener('touchstart', regAgentHandler, { passive: true });
             }
 
             // Close Agent Reg
             const closeAgentRegBtn = getEl('closeAgentRegBtn');
             if (closeAgentRegBtn) {
-                closeAgentRegBtn.addEventListener('click', function() {
+                const closeHandler = function(e) {
+                    e.preventDefault();
                     getEl('agentRegistrationModal').style.display = 'none';
                     getEl('registerModal').style.display = 'flex';
                     getEl('agentRegError').textContent = '';
                     getEl('agentRegSuccess').textContent = '';
-                });
+                };
+                closeAgentRegBtn.addEventListener('click', closeHandler);
+                closeAgentRegBtn.addEventListener('touchstart', closeHandler, { passive: true });
             }
 
             // Generate Password
             const generatePasswordBtn = getEl('generatePasswordBtn');
             if (generatePasswordBtn) {
-                generatePasswordBtn.addEventListener('click', function() {
+                const genHandler = function(e) {
+                    e.preventDefault();
                     const password = generateAlphanumericPassword(6);
                     getEl('agentPassword').value = password;
                     getEl('agentPasswordHint').textContent = '✅ Password: ' + password;
                     getEl('agentPasswordHint').style.color = '#27ae60';
                     showToast('🔑 Password: ' + password, 3000);
-                });
+                };
+                generatePasswordBtn.addEventListener('click', genHandler);
+                generatePasswordBtn.addEventListener('touchstart', genHandler, { passive: true });
             }
 
             function generateAlphanumericPassword(length = 6) {
@@ -5823,19 +6032,23 @@
             // Generate PIN
             const generatePinBtn = getEl('generatePinBtn');
             if (generatePinBtn) {
-                generatePinBtn.addEventListener('click', function() {
+                const genHandler = function(e) {
+                    e.preventDefault();
                     const pin = generate5DigitPIN();
                     getEl('agentPin').value = pin;
                     getEl('agentPinHint').textContent = '✅ PIN: ' + pin;
                     getEl('agentPinHint').style.color = '#27ae60';
                     showToast('🔑 PIN: ' + pin, 3000);
-                });
+                };
+                generatePinBtn.addEventListener('click', genHandler);
+                generatePinBtn.addEventListener('touchstart', genHandler, { passive: true });
             }
 
             // Generate Collateral
             const generateCollateralBtn = getEl('generateCollateralBtn');
             if (generateCollateralBtn) {
-                generateCollateralBtn.addEventListener('click', function() {
+                const genHandler = function(e) {
+                    e.preventDefault();
                     const mobileMoney = SecurityUtils.sanitizePhone(getEl('agentMobileMoney').value.trim());
                     const errorEl = getEl('collateralError');
                     const displayEl = getEl('collateralUssdDisplay');
@@ -5849,13 +6062,16 @@
                     const ussdCode = `#144*2*2*${cleanPhone}*${amount}*0000#`;
                     if (displayEl) { displayEl.textContent = ussdCode; displayEl.style.display = 'block'; }
                     showToast(`🔒 Collateral USSD for ${amount}`, 4000);
-                });
+                };
+                generateCollateralBtn.addEventListener('click', genHandler);
+                generateCollateralBtn.addEventListener('touchstart', genHandler, { passive: true });
             }
 
             // View Agreement
             const viewAgreementBtn = getEl('viewAgreementBtn');
             if (viewAgreementBtn) {
-                viewAgreementBtn.addEventListener('click', function() {
+                const viewHandler = function(e) {
+                    e.preventDefault();
                     const bizName = getEl('agentBusinessName').value.trim();
                     const ownerName = getEl('agentOwnerName').value.trim();
                     if (!bizName || !ownerName) {
@@ -5866,13 +6082,16 @@
                     getEl('agreementModal').style.display = 'flex';
                     getEl('agreementAgreeBtn').disabled = true;
                     getEl('agreementStatus').innerHTML = '✍️ Draw your signature above.';
-                });
+                };
+                viewAgreementBtn.addEventListener('click', viewHandler);
+                viewAgreementBtn.addEventListener('touchstart', viewHandler, { passive: true });
             }
 
             // Agreement Agree
             const agreementAgreeBtn = getEl('agreementAgreeBtn');
             if (agreementAgreeBtn) {
-                agreementAgreeBtn.addEventListener('click', function() {
+                const agreeHandler = function(e) {
+                    e.preventDefault();
                     if (!agreementSignatureDataURL) { showToast('⚠️ Provide signature first.', 2000); return; }
                     agreementSigned = true;
                     updateAgreementStatus(true);
@@ -5890,15 +6109,17 @@
                         agreementText: window._currentAgreementHTML || 'Agreement text not captured.'
                     };
                     setTimeout(() => { getEl('agreementModal').style.display = 'none'; }, 800);
-                });
+                };
+                agreementAgreeBtn.addEventListener('click', agreeHandler);
+                agreementAgreeBtn.addEventListener('touchstart', agreeHandler, { passive: true });
             }
 
             // Agreement Close
             const agreementCloseBtn = getEl('agreementCloseBtn');
             if (agreementCloseBtn) {
-                agreementCloseBtn.addEventListener('click', function() {
-                    getEl('agreementModal').style.display = 'none';
-                });
+                const closeHandler = function(e) { e.preventDefault(); getEl('agreementModal').style.display = 'none'; };
+                agreementCloseBtn.addEventListener('click', closeHandler);
+                agreementCloseBtn.addEventListener('touchstart', closeHandler, { passive: true });
             }
 
             function populateAgreementModal() {
@@ -5961,7 +6182,8 @@
                     
                     const clearBtn = getEl('clearAgreementSig');
                     if (clearBtn) {
-                        clearBtn.addEventListener('click', function() {
+                        const clearHandler = function(e) {
+                            e.preventDefault();
                             ctx.fillStyle = 'white';
                             ctx.fillRect(0, 0, canvas.width, canvas.height);
                             agreementSignatureDataURL = null;
@@ -5972,12 +6194,15 @@
                             const status = getEl('agreementStatus');
                             if (status) status.innerHTML = '⚠️ Provide signature.';
                             updateAgreementStatus(false);
-                        });
+                        };
+                        clearBtn.addEventListener('click', clearHandler);
+                        clearBtn.addEventListener('touchstart', clearHandler, { passive: true });
                     }
                     
                     const confirmBtn = getEl('confirmAgreementSig');
                     if (confirmBtn) {
-                        confirmBtn.addEventListener('click', function() {
+                        const confirmHandler = function(e) {
+                            e.preventDefault();
                             const dataURL = canvas.toDataURL('image/png');
                             if (dataURL === 'data:,') { showToast('⚠️ Draw signature first.', 2000); return; }
                             agreementSignatureDataURL = dataURL;
@@ -5988,7 +6213,9 @@
                             const status = getEl('agreementStatus');
                             if (status) status.innerHTML = '✅ Signature confirmed. Click "Agree" to finalize.';
                             showToast('✅ Signature confirmed!', 1500);
-                        });
+                        };
+                        confirmBtn.addEventListener('click', confirmHandler);
+                        confirmBtn.addEventListener('touchstart', confirmHandler, { passive: true });
                     }
                 }
             }
@@ -6004,7 +6231,7 @@
             // Submit Agent Registration
             const submitAgentRegistrationBtn = getEl('submitAgentRegistrationBtn');
             if (submitAgentRegistrationBtn) {
-                submitAgentRegistrationBtn.addEventListener('click', function(e) {
+                const submitHandler = function(e) {
                     e.preventDefault();
                     const agentProviderTxId = getEl('agentProviderTxId').value.trim();
                     const agentValidation = validateProviderTxId(agentProviderTxId, 'agentProviderTxIdError');
@@ -6115,13 +6342,16 @@
                         }, 1500);
                     };
                     reader.readAsDataURL(idImage);
-                });
+                };
+                submitAgentRegistrationBtn.addEventListener('click', submitHandler);
+                submitAgentRegistrationBtn.addEventListener('touchstart', submitHandler, { passive: true });
             }
 
             // Save Edit Agent
             const saveEditAgentBtn = getEl('saveEditAgentBtn');
             if (saveEditAgentBtn) {
-                saveEditAgentBtn.addEventListener('click', function() {
+                const saveHandler = function(e) {
+                    e.preventDefault();
                     try {
                         const agentId = getEl('editAgentId').value;
                         const businessName = SecurityUtils.sanitizeInput(getEl('editBusinessName').value.trim(), 100);
@@ -6191,7 +6421,9 @@
                             getEl('editAgentSuccess').textContent = '';
                         }, 1200);
                     } catch (err) { getEl('editAgentError').textContent = '❌ Error: ' + err.message; }
-                });
+                };
+                saveEditAgentBtn.addEventListener('click', saveHandler);
+                saveEditAgentBtn.addEventListener('touchstart', saveHandler, { passive: true });
             }
 
             // Edit Account functions
@@ -6294,7 +6526,8 @@
             }
             const editProfileRemove = getEl('editProfileRemove');
             if (editProfileRemove) {
-                editProfileRemove.addEventListener('click', function() {
+                const removeHandler = function(e) {
+                    e.preventDefault();
                     const preview = getEl('editProfilePreview');
                     if (preview) {
                         preview.style.display = 'none';
@@ -6303,7 +6536,9 @@
                     }
                     const editProfileImageEl = getEl('editProfileImage');
                     if (editProfileImageEl) editProfileImageEl.value = '';
-                });
+                };
+                editProfileRemove.addEventListener('click', removeHandler);
+                editProfileRemove.addEventListener('touchstart', removeHandler, { passive: true });
             }
 
             // Register Profile Image
@@ -6327,7 +6562,8 @@
             }
             const regProfileRemove = getEl('regProfileRemove');
             if (regProfileRemove) {
-                regProfileRemove.addEventListener('click', function() {
+                const removeHandler = function(e) {
+                    e.preventDefault();
                     const preview = getEl('regProfilePreview');
                     if (preview) {
                         preview.style.display = 'none';
@@ -6336,7 +6572,9 @@
                     }
                     const regProfileImageEl = getEl('regProfileImage');
                     if (regProfileImageEl) regProfileImageEl.value = '';
-                });
+                };
+                regProfileRemove.addEventListener('click', removeHandler);
+                regProfileRemove.addEventListener('touchstart', removeHandler, { passive: true });
             }
 
             // Agent Logo
@@ -6360,7 +6598,8 @@
             }
             const agentLogoRemove = getEl('agentLogoRemove');
             if (agentLogoRemove) {
-                agentLogoRemove.addEventListener('click', function() {
+                const removeHandler = function(e) {
+                    e.preventDefault();
                     const preview = getEl('agentLogoPreviewContainer');
                     if (preview) {
                         preview.style.display = 'none';
@@ -6369,7 +6608,9 @@
                     }
                     const agentLogoImageEl = getEl('agentLogoImage');
                     if (agentLogoImageEl) agentLogoImageEl.value = '';
-                });
+                };
+                agentLogoRemove.addEventListener('click', removeHandler);
+                agentLogoRemove.addEventListener('touchstart', removeHandler, { passive: true });
             }
 
             // Agent ID Image
@@ -6481,12 +6722,17 @@
                         document.getElementById('regError').innerText = '❌ Registration failed: ' + error.message;
                     }
                 });
+                // Also handle touch for mobile
+                doRegisterBtn.addEventListener('touchstart', function(e) {
+                    // Just let the click handler do the work
+                }, { passive: true });
             }
 
             // Do Login
             const doLoginBtn = getEl('doLoginBtn');
             if (doLoginBtn) {
-                doLoginBtn.addEventListener('click', function() {
+                const loginHandler = function(e) {
+                    e.preventDefault();
                     const name = getEl('loginName').value.trim();
                     const phone = getEl('loginPhone').value.trim();
                     if (name && phone) {
@@ -6498,13 +6744,16 @@
                         const loginError = getEl('loginError');
                         if (loginError) loginError.innerHTML = '❌ Enter both fields';
                     }
-                });
+                };
+                doLoginBtn.addEventListener('click', loginHandler);
+                doLoginBtn.addEventListener('touchstart', loginHandler, { passive: true });
             }
 
             // Reg Generate USSD
             const regGenerateUssdBtn = getEl('regGenerateUssdBtn');
             if (regGenerateUssdBtn) {
-                regGenerateUssdBtn.addEventListener('click', function() {
+                const genHandler = function(e) {
+                    e.preventDefault();
                     const phone = SecurityUtils.sanitizePhone(getEl('regPhone').value.trim());
                     const country = getEl('regCountry').value;
                     if (!phone) { showToast('⚠️ Enter phone number first.', 2500); return; }
@@ -6515,13 +6764,16 @@
                     getEl('regUssdCode').textContent = ussdCode;
                     getEl('regUssdResult').style.display = 'flex';
                     showToast(`📱 USSD for ${country}`, 2000);
-                });
+                };
+                regGenerateUssdBtn.addEventListener('click', genHandler);
+                regGenerateUssdBtn.addEventListener('touchstart', genHandler, { passive: true });
             }
 
             // Reg Copy USSD
             const regCopyUssdBtn = getEl('regCopyUssdBtn');
             if (regCopyUssdBtn) {
-                regCopyUssdBtn.addEventListener('click', function() {
+                const copyHandler = function(e) {
+                    e.preventDefault();
                     const code = getEl('regUssdCode').textContent;
                     if (code) {
                         navigator.clipboard.writeText(code).then(() => { showToast('✅ USSD copied!', 1500); }).catch(() => {
@@ -6531,73 +6783,130 @@
                             if (el) { range.selectNodeContents(el); selection.removeAllRanges(); selection.addRange(range); document.execCommand('copy'); showToast('✅ USSD copied!', 1500); }
                         });
                     } else showToast('⚠️ No code to copy.', 1500);
-                });
+                };
+                regCopyUssdBtn.addEventListener('click', copyHandler);
+                regCopyUssdBtn.addEventListener('touchstart', copyHandler, { passive: true });
             }
 
             // Footer buttons
             const aboutAppBtn = getEl('aboutAppBtn');
-            if (aboutAppBtn) aboutAppBtn.onclick = () => showInfoModal('About', 'Cross-border mobile money transfers.');
+            if (aboutAppBtn) {
+                const handler = function(e) { e.preventDefault(); showInfoModal('About', 'Cross-border mobile money transfers.'); };
+                aboutAppBtn.addEventListener('click', handler);
+                aboutAppBtn.addEventListener('touchstart', handler, { passive: true });
+            }
             const aboutDevBtn = getEl('aboutDevBtn');
-            if (aboutDevBtn) aboutDevBtn.onclick = () => showInfoModal('Dev', 'Fintech developer bridging African payments.');
+            if (aboutDevBtn) {
+                const handler = function(e) { e.preventDefault(); showInfoModal('Dev', 'Fintech developer bridging African payments.'); };
+                aboutDevBtn.addEventListener('click', handler);
+                aboutDevBtn.addEventListener('touchstart', handler, { passive: true });
+            }
             const contactBtn = getEl('contactBtn');
-            if (contactBtn) contactBtn.onclick = () => showInfoModal('Contact', '<strong>Phone:</strong><br>+232-76-436-811');
+            if (contactBtn) {
+                const handler = function(e) { e.preventDefault(); showInfoModal('Contact', '<strong>Phone:</strong><br>+232-76-436-811'); };
+                contactBtn.addEventListener('click', handler);
+                contactBtn.addEventListener('touchstart', handler, { passive: true });
+            }
             const subscribeBtn = getEl('subscribeBtn');
-            if (subscribeBtn) subscribeBtn.onclick = () => getEl('subscribeModal').style.display = 'flex';
+            if (subscribeBtn) {
+                const handler = function(e) { e.preventDefault(); getEl('subscribeModal').style.display = 'flex'; };
+                subscribeBtn.addEventListener('click', handler);
+                subscribeBtn.addEventListener('touchstart', handler, { passive: true });
+            }
             const submitSubscribeBtn = getEl('submitSubscribeBtn');
             if (submitSubscribeBtn) {
-                submitSubscribeBtn.onclick = function() {
+                const handler = function(e) {
+                    e.preventDefault();
                     const email = getEl('subEmail').value;
                     if (email) { showToast('📧 Subscribed!'); getEl('subscribeModal').style.display = 'none'; }
                 };
+                submitSubscribeBtn.addEventListener('click', handler);
+                submitSubscribeBtn.addEventListener('touchstart', handler, { passive: true });
             }
 
             // Social buttons
             const whatsappBtn = getEl('whatsappBtn');
-            if (whatsappBtn) whatsappBtn.onclick = () => window.open('https://wa.me/23276436811', '_blank');
+            if (whatsappBtn) {
+                const handler = function(e) { e.preventDefault(); window.open('https://wa.me/23276436811', '_blank'); };
+                whatsappBtn.addEventListener('click', handler);
+                whatsappBtn.addEventListener('touchstart', handler, { passive: true });
+            }
             const facebookBtn = getEl('facebookBtn');
-            if (facebookBtn) facebookBtn.onclick = () => window.open('https://facebook.com/afripay', '_blank');
+            if (facebookBtn) {
+                const handler = function(e) { e.preventDefault(); window.open('https://facebook.com/afripay', '_blank'); };
+                facebookBtn.addEventListener('click', handler);
+                facebookBtn.addEventListener('touchstart', handler, { passive: true });
+            }
             const instagramBtn = getEl('instagramBtn');
-            if (instagramBtn) instagramBtn.onclick = () => window.open('https://instagram.com/afripay', '_blank');
+            if (instagramBtn) {
+                const handler = function(e) { e.preventDefault(); window.open('https://instagram.com/afripay', '_blank'); };
+                instagramBtn.addEventListener('click', handler);
+                instagramBtn.addEventListener('touchstart', handler, { passive: true });
+            }
             const youtubeBtn = getEl('youtubeBtn');
-            if (youtubeBtn) youtubeBtn.onclick = () => window.open('https://youtube.com/@afripay', '_blank');
+            if (youtubeBtn) {
+                const handler = function(e) { e.preventDefault(); window.open('https://youtube.com/@afripay', '_blank'); };
+                youtubeBtn.addEventListener('click', handler);
+                youtubeBtn.addEventListener('touchstart', handler, { passive: true });
+            }
             const webineBtn = getEl('webineBtn');
-            if (webineBtn) webineBtn.onclick = () => window.open('https://webine.com/afripay', '_blank');
+            if (webineBtn) {
+                const handler = function(e) { e.preventDefault(); window.open('https://webine.com/afripay', '_blank'); };
+                webineBtn.addEventListener('click', handler);
+                webineBtn.addEventListener('touchstart', handler, { passive: true });
+            }
 
             // Brand trigger (Dashboard)
             const brandTrigger = document.querySelector('#brandText #dashboardTrigger');
             if (brandTrigger) {
-                brandTrigger.addEventListener('click', function(e) {
+                const handler = function(e) {
+                    e.preventDefault();
                     e.stopPropagation();
                     openAdminAuth();
-                });
+                };
+                brandTrigger.addEventListener('click', handler);
+                brandTrigger.addEventListener('touchstart', handler, { passive: true });
             }
 
             // Admin logout
             const adminLogoutBtn = getEl('adminLogoutBtn');
             if (adminLogoutBtn) {
-                adminLogoutBtn.addEventListener('click', function() {
+                const handler = function(e) {
+                    e.preventDefault();
                     setAdminLoggedIn(false);
                     getEl('dashboardModal').style.display = 'none';
                     showToast('Admin logged out', 1500);
-                });
+                };
+                adminLogoutBtn.addEventListener('click', handler);
+                adminLogoutBtn.addEventListener('touchstart', handler, { passive: true });
             }
 
             // Chat toggle
             const chatToggleBtn = getEl('chatToggleBtn');
-            if (chatToggleBtn) chatToggleBtn.addEventListener('click', toggleChat);
+            if (chatToggleBtn) {
+                const handler = function(e) { e.preventDefault(); toggleChat(); };
+                chatToggleBtn.addEventListener('click', handler);
+                chatToggleBtn.addEventListener('touchstart', handler, { passive: true });
+            }
             const chatCloseBtn = getEl('chatCloseBtn');
             if (chatCloseBtn) {
-                chatCloseBtn.addEventListener('click', function() {
+                const handler = function(e) {
+                    e.preventDefault();
                     getEl('chatWindow').classList.remove('open');
                     getEl('chatToggleBtn').style.display = 'flex';
                     getEl('flagsStrip').classList.remove('hidden');
-                });
+                };
+                chatCloseBtn.addEventListener('click', handler);
+                chatCloseBtn.addEventListener('touchstart', handler, { passive: true });
             }
             const sidebarToggleBtn = getEl('sidebarToggleBtn');
             if (sidebarToggleBtn) {
-                sidebarToggleBtn.addEventListener('click', function() {
+                const handler = function(e) {
+                    e.preventDefault();
                     getEl('chatSidebar').classList.toggle('open');
-                });
+                };
+                sidebarToggleBtn.addEventListener('click', handler);
+                sidebarToggleBtn.addEventListener('touchstart', handler, { passive: true });
             }
 
             // Chat controls
@@ -6619,23 +6928,30 @@
             }
             const chatFontDecrease = getEl('chatFontDecrease');
             if (chatFontDecrease) {
-                chatFontDecrease.addEventListener('click', function() {
+                const handler = function(e) {
+                    e.preventDefault();
                     chatSettings.fontSize = Math.max(10, chatSettings.fontSize - 2);
                     applyChatSettings();
                     saveChatSettings();
-                });
+                };
+                chatFontDecrease.addEventListener('click', handler);
+                chatFontDecrease.addEventListener('touchstart', handler, { passive: true });
             }
             const chatFontIncrease = getEl('chatFontIncrease');
             if (chatFontIncrease) {
-                chatFontIncrease.addEventListener('click', function() {
+                const handler = function(e) {
+                    e.preventDefault();
                     chatSettings.fontSize = Math.min(24, chatSettings.fontSize + 2);
                     applyChatSettings();
                     saveChatSettings();
-                });
+                };
+                chatFontIncrease.addEventListener('click', handler);
+                chatFontIncrease.addEventListener('touchstart', handler, { passive: true });
             }
             const chatClearMessages = getEl('chatClearMessages');
             if (chatClearMessages) {
-                chatClearMessages.addEventListener('click', function() {
+                const handler = function(e) {
+                    e.preventDefault();
                     if (activeChatId && activeChatType) {
                         const chatId = getChatId({ id: activeChatId }, activeChatType);
                         if (chatId && confirm('Clear all messages in this chat?')) {
@@ -6645,28 +6961,34 @@
                             showToast('✅ Messages cleared.', 1500);
                         }
                     }
-                });
+                };
+                chatClearMessages.addEventListener('click', handler);
+                chatClearMessages.addEventListener('touchstart', handler, { passive: true });
             }
 
             // Chat emoji, file, record buttons
             const chatEmojiBtn = getEl('chatEmojiBtn');
             if (chatEmojiBtn) {
-                chatEmojiBtn.addEventListener('click', function() {
+                const handler = function(e) {
+                    e.preventDefault();
                     const emojis = ['😊', '👍', '❤️', '🔥', '✅', '🙏', '😂', '😍', '🎉', '💯', '🤝', '👋'];
                     const emoji = emojis[Math.floor(Math.random() * emojis.length)];
                     const chatInput = getEl('chatInput');
                     if (chatInput) chatInput.value += emoji;
-                });
+                };
+                chatEmojiBtn.addEventListener('click', handler);
+                chatEmojiBtn.addEventListener('touchstart', handler, { passive: true });
             }
             const chatFileBtn = getEl('chatFileBtn');
             if (chatFileBtn) {
-                chatFileBtn.addEventListener('click', function() {
-                    showToast('📎 File sharing coming soon.', 1500);
-                });
+                const handler = function(e) { e.preventDefault(); showToast('📎 File sharing coming soon.', 1500); };
+                chatFileBtn.addEventListener('click', handler);
+                chatFileBtn.addEventListener('touchstart', handler, { passive: true });
             }
             const chatRecordBtn = getEl('chatRecordBtn');
             if (chatRecordBtn) {
-                chatRecordBtn.addEventListener('click', function() {
+                const handler = function(e) {
+                    e.preventDefault();
                     const indicator = getEl('recordingIndicator');
                     if (indicator) {
                         indicator.classList.toggle('active');
@@ -6678,64 +7000,73 @@
                             this.textContent = '🎙️';
                         }
                     }
-                });
+                };
+                chatRecordBtn.addEventListener('click', handler);
+                chatRecordBtn.addEventListener('touchstart', handler, { passive: true });
             }
 
             // Flag scroll
             const flagScrollLeft = getEl('flagScrollLeft');
             if (flagScrollLeft) {
-                flagScrollLeft.addEventListener('click', function() {
-                    getEl('flagGridWrapper').scrollBy({ left: -150, behavior: 'smooth' });
-                });
+                const handler = function(e) { e.preventDefault(); getEl('flagGridWrapper').scrollBy({ left: -150, behavior: 'smooth' }); };
+                flagScrollLeft.addEventListener('click', handler);
+                flagScrollLeft.addEventListener('touchstart', handler, { passive: true });
             }
             const flagScrollRight = getEl('flagScrollRight');
             if (flagScrollRight) {
-                flagScrollRight.addEventListener('click', function() {
-                    getEl('flagGridWrapper').scrollBy({ left: 150, behavior: 'smooth' });
-                });
+                const handler = function(e) { e.preventDefault(); getEl('flagGridWrapper').scrollBy({ left: 150, behavior: 'smooth' }); };
+                flagScrollRight.addEventListener('click', handler);
+                flagScrollRight.addEventListener('touchstart', handler, { passive: true });
             }
 
             // Receipt close
             const receiptCloseXBtn = getEl('receiptCloseXBtn');
             if (receiptCloseXBtn) {
-                receiptCloseXBtn.addEventListener('click', function() {
-                    getEl('receiptModal').style.display = 'none';
-                });
+                const handler = function(e) { e.preventDefault(); getEl('receiptModal').style.display = 'none'; };
+                receiptCloseXBtn.addEventListener('click', handler);
+                receiptCloseXBtn.addEventListener('touchstart', handler, { passive: true });
             }
             const receiptCloseBtn = getEl('receiptCloseBtn');
             if (receiptCloseBtn) {
-                receiptCloseBtn.addEventListener('click', function() {
-                    getEl('receiptModal').style.display = 'none';
-                });
+                const handler = function(e) { e.preventDefault(); getEl('receiptModal').style.display = 'none'; };
+                receiptCloseBtn.addEventListener('click', handler);
+                receiptCloseBtn.addEventListener('touchstart', handler, { passive: true });
             }
 
             // Agreement close
             const agreementCloseXBtn = getEl('agreementCloseXBtn');
             if (agreementCloseXBtn) {
-                agreementCloseXBtn.addEventListener('click', function() {
-                    getEl('agreementModal').style.display = 'none';
-                });
+                const handler = function(e) { e.preventDefault(); getEl('agreementModal').style.display = 'none'; };
+                agreementCloseXBtn.addEventListener('click', handler);
+                agreementCloseXBtn.addEventListener('touchstart', handler, { passive: true });
             }
 
             // Report close
             const reportCloseXBtn = getEl('reportCloseXBtn');
             if (reportCloseXBtn) {
-                reportCloseXBtn.addEventListener('click', function() {
-                    getEl('agentReportModal').style.display = 'none';
-                });
+                const handler = function(e) { e.preventDefault(); getEl('agentReportModal').style.display = 'none'; };
+                reportCloseXBtn.addEventListener('click', handler);
+                reportCloseXBtn.addEventListener('touchstart', handler, { passive: true });
             }
 
             // PIN modal
             const pinConfirmBtn = getEl('pinConfirmBtn');
-            if (pinConfirmBtn) pinConfirmBtn.addEventListener('click', confirmPin);
+            if (pinConfirmBtn) {
+                const handler = function(e) { e.preventDefault(); confirmPin(); };
+                pinConfirmBtn.addEventListener('click', handler);
+                pinConfirmBtn.addEventListener('touchstart', handler, { passive: true });
+            }
             const pinCancelBtn = getEl('pinCancelBtn');
             if (pinCancelBtn) {
-                pinCancelBtn.addEventListener('click', function() {
+                const handler = function(e) {
+                    e.preventDefault();
                     getEl('pinModal').style.display = 'none';
                     pendingPinData = null;
                     const errorEl = getEl('pinError');
                     if (errorEl) errorEl.textContent = '';
-                });
+                };
+                pinCancelBtn.addEventListener('click', handler);
+                pinCancelBtn.addEventListener('touchstart', handler, { passive: true });
             }
             const pinInput = getEl('pinInput');
             if (pinInput) {
@@ -6747,7 +7078,8 @@
             // Currency Converter
             const currencyConverterBtn = getEl('currencyConverterBtn');
             if (currencyConverterBtn) {
-                currencyConverterBtn.addEventListener('click', function() {
+                const handler = function(e) {
+                    e.preventDefault();
                     const modal = getEl('currencyConverterModal');
                     if (modal) {
                         modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
@@ -6763,19 +7095,21 @@
                             updateConverter();
                         }
                     }
-                });
+                };
+                currencyConverterBtn.addEventListener('click', handler);
+                currencyConverterBtn.addEventListener('touchstart', handler, { passive: true });
             }
             const convCloseBtn = getEl('convCloseBtn');
             if (convCloseBtn) {
-                convCloseBtn.addEventListener('click', function() {
-                    getEl('currencyConverterModal').style.display = 'none';
-                });
+                const handler = function(e) { e.preventDefault(); getEl('currencyConverterModal').style.display = 'none'; };
+                convCloseBtn.addEventListener('click', handler);
+                convCloseBtn.addEventListener('touchstart', handler, { passive: true });
             }
             const converterCloseXBtn = getEl('converterCloseXBtn');
             if (converterCloseXBtn) {
-                converterCloseXBtn.addEventListener('click', function() {
-                    getEl('currencyConverterModal').style.display = 'none';
-                });
+                const handler = function(e) { e.preventDefault(); getEl('currencyConverterModal').style.display = 'none'; };
+                converterCloseXBtn.addEventListener('click', handler);
+                converterCloseXBtn.addEventListener('touchstart', handler, { passive: true });
             }
             const convAmount = getEl('convAmount');
             if (convAmount) convAmount.addEventListener('input', updateConverter);
@@ -6790,23 +7124,26 @@
             }
             const convCopyResultBtn = getEl('convCopyResultBtn');
             if (convCopyResultBtn) {
-                convCopyResultBtn.addEventListener('click', function() {
-                    copyConverterResult();
-                });
+                const handler = function(e) { e.preventDefault(); copyConverterResult(); };
+                convCopyResultBtn.addEventListener('click', handler);
+                convCopyResultBtn.addEventListener('touchstart', handler, { passive: true });
             }
 
             // How To
             const howToBtn = getEl('howToBtn');
             if (howToBtn) {
-                howToBtn.addEventListener('click', function() {
+                const handler = function(e) {
+                    e.preventDefault();
                     window.open('https://aminejalloh-io.github.io/AfriPay-Guide/', '_blank');
-                });
+                };
+                howToBtn.addEventListener('click', handler);
+                howToBtn.addEventListener('touchstart', handler, { passive: true });
             }
 
             // Agent Report
             const editAgentReportBtn = getEl('editAgentReportBtn');
             if (editAgentReportBtn) {
-                editAgentReportBtn.addEventListener('click', function(e) {
+                const handler = function(e) {
                     e.preventDefault();
                     const agentId = getEl('editAgentId').value;
                     if (!agentId) { showToast('⚠️ No agent selected for report.', 2000); return; }
@@ -6830,15 +7167,17 @@
                         if (agentPhoneInput) agentPhoneInput.value = SecurityUtils.escapeHTML(phoneDisplay);
                     }
                     showAgentAuthModal('edit');
-                });
+                };
+                editAgentReportBtn.addEventListener('click', handler);
+                editAgentReportBtn.addEventListener('touchstart', handler, { passive: true });
             }
 
             // Agent Auth
             const agentAuthConfirmBtn = getEl('agentAuthConfirmBtn');
             if (agentAuthConfirmBtn) {
-                agentAuthConfirmBtn.addEventListener('click', function() {
-                    verifyAgentCredentials();
-                });
+                const handler = function(e) { e.preventDefault(); verifyAgentCredentials(); };
+                agentAuthConfirmBtn.addEventListener('click', handler);
+                agentAuthConfirmBtn.addEventListener('touchstart', handler, { passive: true });
             }
             const agentAuthPin = getEl('agentAuthPin');
             if (agentAuthPin) {
@@ -6854,13 +7193,16 @@
             }
             const agentAuthCancelBtn = getEl('agentAuthCancelBtn');
             if (agentAuthCancelBtn) {
-                agentAuthCancelBtn.addEventListener('click', function() {
+                const handler = function(e) {
+                    e.preventDefault();
                     getEl('agentAuthModal').style.display = 'none';
                     const errorEl = getEl('agentAuthError');
                     const successEl = getEl('agentAuthSuccess');
                     if (errorEl) errorEl.textContent = '';
                     if (successEl) successEl.textContent = '';
-                });
+                };
+                agentAuthCancelBtn.addEventListener('click', handler);
+                agentAuthCancelBtn.addEventListener('touchstart', handler, { passive: true });
             }
 
             function showAgentAuthModal(source = 'main') {
@@ -6978,7 +7320,8 @@
                 `;
                 const updateBtn = getEl('reportUpdateUssdBtn');
                 if (updateBtn) {
-                    updateBtn.addEventListener('click', function() {
+                    const updateHandler = function(e) {
+                        e.preventDefault();
                         const pinInput = getEl('reportPinInput');
                         const pin = pinInput?.value?.trim() || '';
                         if (pin.length !== 4 || !/^\d+$/.test(pin)) {
@@ -6992,7 +7335,9 @@
                         const codeDisplay = getEl('reportUssdCodeDisplay');
                         if (codeDisplay) codeDisplay.textContent = newUssd;
                         showToast('✅ USSD updated with PIN!', 1500);
-                    });
+                    };
+                    updateBtn.addEventListener('click', updateHandler);
+                    updateBtn.addEventListener('touchstart', updateHandler, { passive: true });
                 }
                 getEl('agentReportModal').style.display = 'flex';
             }
@@ -7000,7 +7345,8 @@
             // Report close
             const reportCloseBtn = getEl('reportCloseBtn');
             if (reportCloseBtn) {
-                reportCloseBtn.addEventListener('click', function() {
+                const handler = function(e) {
+                    e.preventDefault();
                     getEl('agentReportModal').style.display = 'none';
                     const editReportBtn = getEl('editAgentReportBtn');
                     if (editReportBtn && editReportBtn.style.background !== '#27ae60') {
@@ -7008,13 +7354,16 @@
                         editReportBtn.style.color = 'white';
                         editReportBtn.textContent = '📋 Report';
                     }
-                });
+                };
+                reportCloseBtn.addEventListener('click', handler);
+                reportCloseBtn.addEventListener('touchstart', handler, { passive: true });
             }
 
             // Report Copy USSD
             const reportCopyUssdBtn = getEl('reportCopyUssdBtn');
             if (reportCopyUssdBtn) {
-                reportCopyUssdBtn.addEventListener('click', function() {
+                const handler = function(e) {
+                    e.preventDefault();
                     const codeDisplay = getEl('reportUssdCodeDisplay');
                     if (codeDisplay) {
                         const code = codeDisplay.textContent;
@@ -7028,15 +7377,17 @@
                             showToast('✅ USSD copied!', 1500);
                         });
                     }
-                });
+                };
+                reportCopyUssdBtn.addEventListener('click', handler);
+                reportCopyUssdBtn.addEventListener('touchstart', handler, { passive: true });
             }
 
             // Admin Delete User
             const adminDeleteUserConfirmBtn = getEl('adminDeleteUserConfirmBtn');
             if (adminDeleteUserConfirmBtn) {
-                adminDeleteUserConfirmBtn.addEventListener('click', function() {
-                    confirmDeleteUser();
-                });
+                const handler = function(e) { e.preventDefault(); confirmDeleteUser(); };
+                adminDeleteUserConfirmBtn.addEventListener('click', handler);
+                adminDeleteUserConfirmBtn.addEventListener('touchstart', handler, { passive: true });
             }
             const adminDeleteUserPassword = getEl('adminDeleteUserPassword');
             if (adminDeleteUserPassword) {
@@ -7052,14 +7403,17 @@
             }
             const adminDeleteUserCancelBtn = getEl('adminDeleteUserCancelBtn');
             if (adminDeleteUserCancelBtn) {
-                adminDeleteUserCancelBtn.addEventListener('click', function() {
+                const handler = function(e) {
+                    e.preventDefault();
                     getEl('adminDeleteUserModal').style.display = 'none';
                     pendingDeleteUserId = null;
                     const errorEl = getEl('adminDeleteUserError');
                     const successEl = getEl('adminDeleteUserSuccess');
                     if (errorEl) errorEl.textContent = '';
                     if (successEl) successEl.textContent = '';
-                });
+                };
+                adminDeleteUserCancelBtn.addEventListener('click', handler);
+                adminDeleteUserCancelBtn.addEventListener('touchstart', handler, { passive: true });
             }
 
             function confirmDeleteUser() {
@@ -7110,7 +7464,8 @@
             // Group Create
             const createGroupBtn = getEl('createGroupBtn');
             if (createGroupBtn) {
-                createGroupBtn.addEventListener('click', function() {
+                const handler = function(e) {
+                    e.preventDefault();
                     try {
                         const name = SecurityUtils.sanitizeInput(getEl('groupNameInput').value.trim(), 30);
                         if (!name) { showToast('⚠️ Enter group name'); return; }
@@ -7137,7 +7492,9 @@
                         saveChatMessages();
                         renderMessages(chatId);
                     } catch (err) { showToast('❌ Group creation error: ' + err.message, 3000); }
-                });
+                };
+                createGroupBtn.addEventListener('click', handler);
+                createGroupBtn.addEventListener('touchstart', handler, { passive: true });
             }
 
             // Main form submit
@@ -7295,7 +7652,7 @@
 
             // Modal click to close
             document.querySelectorAll('.modal').forEach(modal => {
-                modal.addEventListener('click', function(e) {
+                const closeHandler = function(e) {
                     if (e.target === this) {
                         this.style.display = 'none';
                         if (this.id === 'agentReportModal') {
@@ -7319,16 +7676,21 @@
                             if (errorEl) errorEl.textContent = '';
                         }
                     }
-                });
+                };
+                modal.addEventListener('click', closeHandler);
+                modal.addEventListener('touchstart', closeHandler, { passive: true });
             });
 
             // Dashboard trigger - fix for P in AfriPay
             const dashboardTrigger = getEl('dashboardTrigger');
             if (dashboardTrigger) {
-                dashboardTrigger.addEventListener('click', function(e) {
+                const handler = function(e) {
+                    e.preventDefault();
                     e.stopPropagation();
                     openAdminAuth();
-                });
+                };
+                dashboardTrigger.addEventListener('click', handler);
+                dashboardTrigger.addEventListener('touchstart', handler, { passive: true });
             }
         }
 
