@@ -2775,7 +2775,7 @@
 
     <script>
         // ================================================================
-        // COMPLETE JAVASCRIPT - FIXED FOR MOBILE & CONVERTER
+        // COMPLETE JAVASCRIPT - FIXED FOR MOBILE
         // ================================================================
         
         // ================================================================
@@ -3955,11 +3955,35 @@
                 const infoDiv = document.createElement('div');
                 infoDiv.className = 'agent-info';
 
+                // Country flag on the left
+                const flagSpan = document.createElement('span');
+                flagSpan.className = 'agent-flag';
+                flagSpan.textContent = flag;
+                flagSpan.style.marginRight = '4px';
+                infoDiv.appendChild(flagSpan);
+
+                // Agent name
+                const nameSpan = document.createElement('span');
+                nameSpan.className = 'agent-name';
+                nameSpan.textContent = SecurityUtils.escapeHTML(agent.name);
+                nameSpan.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    selectAgent(agent.id);
+                    getEl('agentDropdownList').classList.remove('open');
+                });
+                nameSpan.addEventListener('touchstart', function(e) {
+                    e.stopPropagation();
+                    selectAgent(agent.id);
+                    getEl('agentDropdownList').classList.remove('open');
+                }, { passive: true });
+                infoDiv.appendChild(nameSpan);
+
+                // Logo on the right - click to edit
                 const logoImg = document.createElement('img');
                 logoImg.className = 'agent-logo';
                 logoImg.src = data.logoDataURL || '';
                 logoImg.alt = 'Logo';
-                logoImg.title = 'Click to edit';
+                logoImg.title = 'Click to edit agent';
                 logoImg.addEventListener('click', function(e) {
                     e.stopPropagation();
                     openEditAgentModal(agent.id);
@@ -3995,21 +4019,6 @@
                     infoDiv.appendChild(logoImg);
                 }
 
-                const nameSpan = document.createElement('span');
-                nameSpan.className = 'agent-name';
-                nameSpan.innerHTML = `<span class="agent-flag">${flag}</span> ${SecurityUtils.escapeHTML(agent.name)}`;
-                nameSpan.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    selectAgent(agent.id);
-                    getEl('agentDropdownList').classList.remove('open');
-                });
-                nameSpan.addEventListener('touchstart', function(e) {
-                    e.stopPropagation();
-                    selectAgent(agent.id);
-                    getEl('agentDropdownList').classList.remove('open');
-                }, { passive: true });
-
-                infoDiv.appendChild(nameSpan);
                 item.appendChild(infoDiv);
                 list.appendChild(item);
             });
@@ -4027,6 +4036,18 @@
             const btn = getEl('selectedAgentName');
             btn.innerHTML = '';
 
+            // Flag on left
+            const flagSpan = document.createElement('span');
+            flagSpan.className = 'agent-flag';
+            flagSpan.textContent = flag;
+            flagSpan.style.marginRight = '4px';
+            btn.appendChild(flagSpan);
+
+            // Agent name
+            const nameText = document.createTextNode(SecurityUtils.escapeHTML(agent.name));
+            btn.appendChild(nameText);
+
+            // Logo on right - click to edit
             const logoImg = document.createElement('img');
             logoImg.src = data.logoDataURL || '';
             logoImg.alt = 'Logo';
@@ -4034,9 +4055,9 @@
             logoImg.style.height = '24px';
             logoImg.style.borderRadius = '50%';
             logoImg.style.objectFit = 'cover';
-            logoImg.style.marginLeft = '4px';
+            logoImg.style.marginLeft = '6px';
             logoImg.style.border = '2px solid #ffd966';
-            logoImg.title = 'Click to edit';
+            logoImg.title = 'Click to edit agent';
             logoImg.addEventListener('click', function(e) {
                 e.stopPropagation();
                 openEditAgentModal(agent.id);
@@ -4046,16 +4067,25 @@
                 openEditAgentModal(agent.id);
             }, { passive: true });
 
-            const flagSpan = document.createElement('span');
-            flagSpan.className = 'agent-flag';
-            flagSpan.textContent = flag;
-            flagSpan.style.marginRight = '4px';
+            if (!data.logoDataURL) {
+                logoImg.style.display = 'none';
+                const fallback = document.createElement('span');
+                fallback.textContent = '🏢';
+                fallback.style.marginLeft = '6px';
+                fallback.style.fontSize = '1.1rem';
+                fallback.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    openEditAgentModal(agent.id);
+                });
+                fallback.addEventListener('touchstart', function(e) {
+                    e.stopPropagation();
+                    openEditAgentModal(agent.id);
+                }, { passive: true });
+                btn.appendChild(fallback);
+            } else {
+                btn.appendChild(logoImg);
+            }
 
-            const nameText = document.createTextNode(SecurityUtils.escapeHTML(agent.name));
-
-            btn.appendChild(flagSpan);
-            btn.appendChild(nameText);
-            btn.appendChild(logoImg);
             btn.dataset.agentId = agentId;
 
             getEl('agentName').value = SecurityUtils.escapeHTML(agent.name);
@@ -6562,7 +6592,37 @@
                             const selectedName = getEl('selectedAgentName');
                             const agentNameInput = getEl('agentName');
                             const agentPhoneInput = getEl('agentPhone');
-                            if (selectedName) selectedName.textContent = `${flag} ${businessName} (${data.ownerName})`;
+                            if (selectedName) {
+                                selectedName.innerHTML = '';
+                                const flagSpan = document.createElement('span');
+                                flagSpan.className = 'agent-flag';
+                                flagSpan.textContent = flag;
+                                flagSpan.style.marginRight = '4px';
+                                selectedName.appendChild(flagSpan);
+                                const nameText = document.createTextNode(businessName + ' (' + data.ownerName + ')');
+                                selectedName.appendChild(nameText);
+                                // Add logo
+                                if (data.logoDataURL) {
+                                    const logoImg = document.createElement('img');
+                                    logoImg.src = data.logoDataURL;
+                                    logoImg.style.width = '24px';
+                                    logoImg.style.height = '24px';
+                                    logoImg.style.borderRadius = '50%';
+                                    logoImg.style.objectFit = 'cover';
+                                    logoImg.style.marginLeft = '6px';
+                                    logoImg.style.border = '2px solid #ffd966';
+                                    logoImg.title = 'Click to edit agent';
+                                    logoImg.addEventListener('click', function(e) {
+                                        e.stopPropagation();
+                                        openEditAgentModal(agentId);
+                                    });
+                                    logoImg.addEventListener('touchstart', function(e) {
+                                        e.stopPropagation();
+                                        openEditAgentModal(agentId);
+                                    }, { passive: true });
+                                    selectedName.appendChild(logoImg);
+                                }
+                            }
                             if (agentNameInput) agentNameInput.value = businessName + ' (' + data.ownerName + ')';
                             let phoneDisplay = data.mobileMoney || '';
                             if (data.countryCode && phoneDisplay && !phoneDisplay.startsWith(data.countryCode)) {
@@ -7351,7 +7411,39 @@
                     if (agent) {
                         const flag = getFlagForCountryCode((agent.agentData || agent).countryCode || '');
                         const selectedName = getEl('selectedAgentName');
-                        if (selectedName) { selectedName.textContent = `${flag} ${SecurityUtils.escapeHTML(agent.name)}`; selectedName.dataset.agentId = agentId; }
+                        if (selectedName) {
+                            selectedName.innerHTML = '';
+                            const flagSpan = document.createElement('span');
+                            flagSpan.className = 'agent-flag';
+                            flagSpan.textContent = flag;
+                            flagSpan.style.marginRight = '4px';
+                            selectedName.appendChild(flagSpan);
+                            const nameText = document.createTextNode(SecurityUtils.escapeHTML(agent.name));
+                            selectedName.appendChild(nameText);
+                            // Add logo
+                            const data = agent.agentData || agent;
+                            if (data.logoDataURL) {
+                                const logoImg = document.createElement('img');
+                                logoImg.src = data.logoDataURL;
+                                logoImg.style.width = '24px';
+                                logoImg.style.height = '24px';
+                                logoImg.style.borderRadius = '50%';
+                                logoImg.style.objectFit = 'cover';
+                                logoImg.style.marginLeft = '6px';
+                                logoImg.style.border = '2px solid #ffd966';
+                                logoImg.title = 'Click to edit agent';
+                                logoImg.addEventListener('click', function(e) {
+                                    e.stopPropagation();
+                                    openEditAgentModal(agentId);
+                                });
+                                logoImg.addEventListener('touchstart', function(e) {
+                                    e.stopPropagation();
+                                    openEditAgentModal(agentId);
+                                }, { passive: true });
+                                selectedName.appendChild(logoImg);
+                            }
+                            selectedName.dataset.agentId = agentId;
+                        }
                         const agentNameInput = getEl('agentName');
                         if (agentNameInput) agentNameInput.value = SecurityUtils.escapeHTML(agent.name);
                         let phoneDisplay = agent.phone || '';
