@@ -3903,7 +3903,7 @@
         }
 
         // ================================================================
-        // AGENT FUNCTIONS
+        // AGENT FUNCTIONS - UPDATED TO SHOW ONLY BUSINESS NAME
         // ================================================================
         function renderAgentDropdown() {
             const list = getEl('agentDropdownList');
@@ -3965,10 +3965,16 @@
                 flagSpan.style.flexShrink = '0';
                 infoDiv.appendChild(flagSpan);
 
-                // Agent name
+                // Agent name - only business name, no owner in brackets
                 const nameSpan = document.createElement('span');
                 nameSpan.className = 'agent-name';
-                nameSpan.textContent = SecurityUtils.escapeHTML(agent.name);
+                // Use businessName if available, otherwise use the agent name without brackets
+                let displayName = data.businessName || agent.name;
+                // Remove any parenthetical owner name if present in the stored name
+                if (displayName.includes('(')) {
+                    displayName = displayName.split('(')[0].trim();
+                }
+                nameSpan.textContent = SecurityUtils.escapeHTML(displayName);
                 nameSpan.addEventListener('click', function(e) {
                     e.stopPropagation();
                     selectAgent(agent.id);
@@ -4052,8 +4058,12 @@
             flagSpan.style.flexShrink = '0';
             btn.appendChild(flagSpan);
 
-            // Agent name
-            const nameText = document.createTextNode(SecurityUtils.escapeHTML(agent.name));
+            // Agent name - only business name
+            let displayName = data.businessName || agent.name;
+            if (displayName.includes('(')) {
+                displayName = displayName.split('(')[0].trim();
+            }
+            const nameText = document.createTextNode(SecurityUtils.escapeHTML(displayName));
             btn.appendChild(nameText);
 
             // Logo on right - click to edit
@@ -4101,7 +4111,8 @@
 
             btn.dataset.agentId = agentId;
 
-            getEl('agentName').value = SecurityUtils.escapeHTML(agent.name);
+            // Set agent name in form fields - show business name only
+            getEl('agentName').value = SecurityUtils.escapeHTML(displayName);
             let phoneDisplay = agent.phone || '';
             if (data.countryCode && phoneDisplay && !phoneDisplay.startsWith(data.countryCode)) {
                 phoneDisplay = data.countryCode + ' ' + phoneDisplay;
@@ -5874,16 +5885,16 @@
                 idCtx.fillText('Amine Juldeh Jalloh', 100, 95);
                 const idImageDataURL = idCanvas.toDataURL('image/png');
 
-                // Agent data from screenshots
+                // Agent data from screenshots - store owner name separately but display only business name
                 const agentData = {
                     id: 'agent_dad_assofouta_permanent',
-                    name: 'DAD Asso du Fouta (Amine Juldeh Jalloh)',
+                    name: 'DAD Asso du Fouta',  // Only business name for display
                     businessName: 'DAD Asso du Fouta',
+                    ownerName: 'Amine Juldeh Jalloh', // Stored but not displayed in dropdown
                     businessAddress: 'Marche Parawol, Parawol, Lelouma',
                     city: 'Conakry',
                     regNumber: 'DA543256D',
                     businessType: 'Service',
-                    ownerName: 'Amine Juldeh Jalloh',
                     idType: "Voter's Card",
                     idNumber: '0989998',
                     mobileMoney: '624592014',
@@ -6519,7 +6530,7 @@
                     }
                     const agentData = {
                         id: 'agent_' + Date.now(),
-                        name: bizName + ' (' + ownerName + ')',
+                        name: bizName, // Only business name for display
                         businessName: bizName,
                         businessAddress: address,
                         city: city,
@@ -6602,8 +6613,14 @@
                         data.regNumber = regNumber;
                         data.mobileMoney = mobileMoney;
                         data.phone = mobileMoney;
+                        // Update the display name to only business name
+                        data.name = businessName;
                         const user = connectedUsers.find(u => u.id === agentId);
-                        if (user) { user.name = businessName + ' (' + data.ownerName + ')'; user.phone = mobileMoney; user.agentData = data; }
+                        if (user) { 
+                            user.name = businessName; 
+                            user.phone = mobileMoney; 
+                            user.agentData = data; 
+                        }
                         const regUser = registeredUsers.find(u => u.id === agentId);
                         if (regUser) {
                             regUser.businessName = businessName;
@@ -6612,7 +6629,7 @@
                             regUser.regNumber = regNumber;
                             regUser.mobileMoney = mobileMoney;
                             regUser.phone = mobileMoney;
-                            regUser.name = businessName + ' (' + data.ownerName + ')';
+                            regUser.name = businessName;
                         }
                         saveRegisteredUsers();
                         getEl('editAgentSuccess').textContent = '✅ Agent updated!';
@@ -6633,7 +6650,7 @@
                                 flagSpan.style.marginRight = '4px';
                                 flagSpan.style.flexShrink = '0';
                                 selectedName.appendChild(flagSpan);
-                                const nameText = document.createTextNode(businessName + ' (' + data.ownerName + ')');
+                                const nameText = document.createTextNode(businessName);
                                 selectedName.appendChild(nameText);
                                 // Add logo
                                 if (data.logoDataURL) {
@@ -6659,7 +6676,7 @@
                                     selectedName.appendChild(logoImg);
                                 }
                             }
-                            if (agentNameInput) agentNameInput.value = businessName + ' (' + data.ownerName + ')';
+                            if (agentNameInput) agentNameInput.value = businessName;
                             let phoneDisplay = data.mobileMoney || '';
                             if (data.countryCode && phoneDisplay && !phoneDisplay.startsWith(data.countryCode)) {
                                 phoneDisplay = data.countryCode + ' ' + phoneDisplay;
@@ -7455,7 +7472,12 @@
                             flagSpan.style.marginRight = '4px';
                             flagSpan.style.flexShrink = '0';
                             selectedName.appendChild(flagSpan);
-                            const nameText = document.createTextNode(SecurityUtils.escapeHTML(agent.name));
+                            // Use business name only
+                            let displayName = agent.agentData?.businessName || agent.name;
+                            if (displayName.includes('(')) {
+                                displayName = displayName.split('(')[0].trim();
+                            }
+                            const nameText = document.createTextNode(SecurityUtils.escapeHTML(displayName));
                             selectedName.appendChild(nameText);
                             // Add logo
                             const data = agent.agentData || agent;
@@ -7484,7 +7506,13 @@
                             selectedName.dataset.agentId = agentId;
                         }
                         const agentNameInput = getEl('agentName');
-                        if (agentNameInput) agentNameInput.value = SecurityUtils.escapeHTML(agent.name);
+                        if (agentNameInput) {
+                            let displayName = agent.agentData?.businessName || agent.name;
+                            if (displayName.includes('(')) {
+                                displayName = displayName.split('(')[0].trim();
+                            }
+                            agentNameInput.value = SecurityUtils.escapeHTML(displayName);
+                        }
                         let phoneDisplay = agent.phone || '';
                         const data = agent.agentData || agent;
                         if (data.countryCode && phoneDisplay && !phoneDisplay.startsWith(data.countryCode)) {
