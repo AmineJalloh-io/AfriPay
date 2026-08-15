@@ -7985,6 +7985,118 @@
                 dashboardTrigger.addEventListener('click', handler);
                 dashboardTrigger.addEventListener('touchstart', handler, { passive: true });
             }
+
+            // ================================================================
+            // FIXED: MAP MODAL - OPENING PROPERLY
+            // ================================================================
+            const mapButton = getEl('mapButton');
+            if (mapButton) {
+                // Remove any existing listeners by cloning and replacing
+                const newMapBtn = mapButton.cloneNode(true);
+                mapButton.parentNode.replaceChild(newMapBtn, mapButton);
+                
+                newMapBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const address = getEl('profileAddress')?.innerText || '';
+                    const city = getEl('profileCity')?.innerText || '';
+                    const country = getEl('profileCountry')?.innerText || '';
+                    
+                    let location = '';
+                    if (address && address !== '—') location += address;
+                    if (city && city !== '—') {
+                        if (location) location += ', ';
+                        location += city;
+                    }
+                    if (country && country !== '—') {
+                        if (location) location += ', ';
+                        location += country;
+                    }
+                    
+                    if (!location || location === '—' || location === ', ' || location === ', , ') {
+                        // Use the sender's city or a default location
+                        const senderCity = getEl('senderCitySelect')?.value || getEl('senderCityOther')?.value || '';
+                        const senderCountry = currentUser?.country || 'Sierra Leone';
+                        if (senderCity) {
+                            location = senderCity + ', ' + senderCountry;
+                        } else {
+                            location = 'Freetown, Sierra Leone';
+                        }
+                    }
+                    
+                    const encodedLocation = encodeURIComponent(location);
+                    const mapIframe = getEl('mapIframe');
+                    if (mapIframe) {
+                        mapIframe.src = `https://www.google.com/maps?q=${encodedLocation}&output=embed`;
+                    }
+                    
+                    const mapModal = getEl('mapModal');
+                    if (mapModal) {
+                        mapModal.style.display = 'flex';
+                        showToast(`📍 Loading map for: ${location}`, 2500);
+                    }
+                });
+                
+                newMapBtn.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const address = getEl('profileAddress')?.innerText || '';
+                    const city = getEl('profileCity')?.innerText || '';
+                    const country = getEl('profileCountry')?.innerText || '';
+                    
+                    let location = '';
+                    if (address && address !== '—') location += address;
+                    if (city && city !== '—') {
+                        if (location) location += ', ';
+                        location += city;
+                    }
+                    if (country && country !== '—') {
+                        if (location) location += ', ';
+                        location += country;
+                    }
+                    
+                    if (!location || location === '—' || location === ', ' || location === ', , ') {
+                        const senderCity = getEl('senderCitySelect')?.value || getEl('senderCityOther')?.value || '';
+                        const senderCountry = currentUser?.country || 'Sierra Leone';
+                        if (senderCity) {
+                            location = senderCity + ', ' + senderCountry;
+                        } else {
+                            location = 'Freetown, Sierra Leone';
+                        }
+                    }
+                    
+                    const encodedLocation = encodeURIComponent(location);
+                    const mapIframe = getEl('mapIframe');
+                    if (mapIframe) {
+                        mapIframe.src = `https://www.google.com/maps?q=${encodedLocation}&output=embed`;
+                    }
+                    
+                    const mapModal = getEl('mapModal');
+                    if (mapModal) {
+                        mapModal.style.display = 'flex';
+                        showToast(`📍 Loading map for: ${location}`, 2500);
+                    }
+                }, { passive: true });
+            }
+
+            // Also fix the close button on map modal
+            const mapModalCloseBtn = document.querySelector('#mapModal .close-modal');
+            if (mapModalCloseBtn) {
+                const newCloseBtn = mapModalCloseBtn.cloneNode(true);
+                mapModalCloseBtn.parentNode.replaceChild(newCloseBtn, mapModalCloseBtn);
+                newCloseBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const mapModal = getEl('mapModal');
+                    if (mapModal) mapModal.style.display = 'none';
+                });
+                newCloseBtn.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    const mapModal = getEl('mapModal');
+                    if (mapModal) mapModal.style.display = 'none';
+                }, { passive: true });
+            }
         }
 
         // ================================================================
