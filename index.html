@@ -156,8 +156,9 @@
         }
         .agent-dropdown-container {
             position: relative;
-            min-width: 120px;
-            max-width: 170px;
+            min-width: 170px;
+            max-width: 240px;
+            flex: 1;
         }
         .agent-dropdown-btn {
             background: rgba(255, 255, 255, 0.10);
@@ -172,7 +173,7 @@
             justify-content: space-between;
             gap: 4px;
             width: 100%;
-            min-width: 80px;
+            min-width: 100px;
             transition: 0.2s;
             white-space: nowrap;
             overflow: hidden;
@@ -205,7 +206,8 @@
             max-height: 200px;
             overflow-y: auto;
             padding: 4px 0;
-            min-width: 160px;
+            min-width: 200px;
+            width: 100%;
         }
         .agent-dropdown-list.open {
             display: block;
@@ -1425,9 +1427,9 @@
             .live-header { padding: 0.4rem 0.5rem; }
             .brand-text { font-size: 1.3rem; }
             .afripay-logo-svg { width: 34px; height: 34px; }
-            .agent-dropdown-container { min-width: 90px; max-width: 120px; }
-            .agent-dropdown-btn { padding: 2px 8px 2px 10px; height: 30px; min-width: 70px; font-size: 0.72rem !important; }
-            .agent-dropdown-list { min-width: 140px; }
+            .agent-dropdown-container { min-width: 130px; max-width: 180px; }
+            .agent-dropdown-btn { padding: 2px 8px 2px 10px; height: 30px; min-width: 80px; font-size: 0.72rem !important; }
+            .agent-dropdown-list { min-width: 160px; }
             .datetime-box { font-size: 0.55rem; min-width: 55px; padding: 0.05rem 0.35rem; }
             .datetime-box .time-text { font-size: 0.65rem; }
             .auth-btn { padding: 4px 10px; height: 30px; font-size: 0.72rem !important; }
@@ -1486,9 +1488,9 @@
         @media (max-width: 400px) {
             .brand-text { font-size: 1.05rem; }
             .afripay-logo-svg { width: 28px; height: 28px; }
-            .agent-dropdown-container { min-width: 70px; max-width: 90px; }
-            .agent-dropdown-btn { padding: 2px 6px 2px 8px; height: 26px; min-width: 55px; font-size: 0.62rem !important; }
-            .agent-dropdown-list { min-width: 120px; }
+            .agent-dropdown-container { min-width: 100px; max-width: 150px; }
+            .agent-dropdown-btn { padding: 2px 6px 2px 8px; height: 26px; min-width: 65px; font-size: 0.62rem !important; }
+            .agent-dropdown-list { min-width: 140px; }
             .agent-dropdown-item .agent-name { font-size: 0.65rem; }
             .auth-btn { padding: 3px 8px; height: 26px; font-size: 0.62rem !important; }
             .user-welcome { padding: 2px 6px 2px 3px; height: 26px; }
@@ -3960,6 +3962,7 @@
                 flagSpan.className = 'agent-flag';
                 flagSpan.textContent = flag;
                 flagSpan.style.marginRight = '4px';
+                flagSpan.style.flexShrink = '0';
                 infoDiv.appendChild(flagSpan);
 
                 // Agent name
@@ -3984,6 +3987,9 @@
                 logoImg.src = data.logoDataURL || '';
                 logoImg.alt = 'Logo';
                 logoImg.title = 'Click to edit agent';
+                logoImg.style.flexShrink = '0';
+                logoImg.style.marginLeft = '4px';
+                logoImg.style.cursor = 'pointer';
                 logoImg.addEventListener('click', function(e) {
                     e.stopPropagation();
                     openEditAgentModal(agent.id);
@@ -4002,6 +4008,8 @@
                     const fallback = document.createElement('span');
                     fallback.className = 'agent-logo-fallback';
                     fallback.textContent = '🏢';
+                    fallback.style.cursor = 'pointer';
+                    fallback.style.marginLeft = '4px';
                     fallback.addEventListener('click', function(e) {
                         e.stopPropagation();
                         openEditAgentModal(agent.id);
@@ -4041,6 +4049,7 @@
             flagSpan.className = 'agent-flag';
             flagSpan.textContent = flag;
             flagSpan.style.marginRight = '4px';
+            flagSpan.style.flexShrink = '0';
             btn.appendChild(flagSpan);
 
             // Agent name
@@ -4058,6 +4067,8 @@
             logoImg.style.marginLeft = '6px';
             logoImg.style.border = '2px solid #ffd966';
             logoImg.title = 'Click to edit agent';
+            logoImg.style.cursor = 'pointer';
+            logoImg.style.flexShrink = '0';
             logoImg.addEventListener('click', function(e) {
                 e.stopPropagation();
                 openEditAgentModal(agent.id);
@@ -4073,6 +4084,8 @@
                 fallback.textContent = '🏢';
                 fallback.style.marginLeft = '6px';
                 fallback.style.fontSize = '1.1rem';
+                fallback.style.cursor = 'pointer';
+                fallback.style.flexShrink = '0';
                 fallback.addEventListener('click', function(e) {
                     e.stopPropagation();
                     openEditAgentModal(agent.id);
@@ -5817,6 +5830,7 @@
         // ================================================================
         function initializePermanentAgents() {
             try {
+                // Check if the agent from screenshots already exists
                 const existingAgent = registeredUsers.find(u => 
                     u.businessName === 'DAD Asso du Fouta' || 
                     u.regNumber === 'DA543256D' ||
@@ -5828,6 +5842,7 @@
                     return;
                 }
 
+                // Create a logo canvas with "D" letter
                 const canvas = document.createElement('canvas');
                 canvas.width = 64;
                 canvas.height = 64;
@@ -5843,8 +5858,25 @@
                 ctx.fillText('D', 32, 34);
                 const logoDataURL = canvas.toDataURL('image/png');
 
+                // Create a placeholder ID image
+                const idCanvas = document.createElement('canvas');
+                idCanvas.width = 200;
+                idCanvas.height = 120;
+                const idCtx = idCanvas.getContext('2d');
+                idCtx.fillStyle = '#f0f4f8';
+                idCtx.fillRect(0, 0, 200, 120);
+                idCtx.fillStyle = '#1c4e6c';
+                idCtx.font = 'bold 14px Arial';
+                idCtx.textAlign = 'center';
+                idCtx.fillText('VOTER ID', 100, 40);
+                idCtx.font = '12px Arial';
+                idCtx.fillText('0989998', 100, 70);
+                idCtx.fillText('Amine Juldeh Jalloh', 100, 95);
+                const idImageDataURL = idCanvas.toDataURL('image/png');
+
+                // Agent data from screenshots
                 const agentData = {
-                    id: 'agent_dad_assofouta',
+                    id: 'agent_dad_assofouta_permanent',
                     name: 'DAD Asso du Fouta (Amine Juldeh Jalloh)',
                     businessName: 'DAD Asso du Fouta',
                     businessAddress: 'Marche Parawol, Parawol, Lelouma',
@@ -5865,10 +5897,11 @@
                     role: 'agent',
                     isAgent: true,
                     registeredAt: new Date().toISOString(),
-                    idImageDataURL: null,
+                    idImageDataURL: idImageDataURL,
                     logoDataURL: logoDataURL,
                     agreement: null,
-                    providerTxId: 'MP266546.7657.N87906'
+                    providerTxId: 'MP266546.7657.N87906',
+                    transferCode: '87906543'
                 };
                 
                 registeredUsers.push(agentData);
@@ -5876,7 +5909,7 @@
                 
                 saveRegisteredUsers();
                 syncConnectedUsersFromRegistered();
-                console.log('✅ Permanent agent (DAD Asso du Fouta) initialized successfully');
+                console.log('✅ Permanent agent (DAD Asso du Fouta) initialized successfully with all screenshot data');
             } catch (e) {
                 console.warn('⚠️ Error initializing agent:', e);
             }
@@ -6598,6 +6631,7 @@
                                 flagSpan.className = 'agent-flag';
                                 flagSpan.textContent = flag;
                                 flagSpan.style.marginRight = '4px';
+                                flagSpan.style.flexShrink = '0';
                                 selectedName.appendChild(flagSpan);
                                 const nameText = document.createTextNode(businessName + ' (' + data.ownerName + ')');
                                 selectedName.appendChild(nameText);
@@ -6612,6 +6646,8 @@
                                     logoImg.style.marginLeft = '6px';
                                     logoImg.style.border = '2px solid #ffd966';
                                     logoImg.title = 'Click to edit agent';
+                                    logoImg.style.cursor = 'pointer';
+                                    logoImg.style.flexShrink = '0';
                                     logoImg.addEventListener('click', function(e) {
                                         e.stopPropagation();
                                         openEditAgentModal(agentId);
@@ -7417,6 +7453,7 @@
                             flagSpan.className = 'agent-flag';
                             flagSpan.textContent = flag;
                             flagSpan.style.marginRight = '4px';
+                            flagSpan.style.flexShrink = '0';
                             selectedName.appendChild(flagSpan);
                             const nameText = document.createTextNode(SecurityUtils.escapeHTML(agent.name));
                             selectedName.appendChild(nameText);
@@ -7432,6 +7469,8 @@
                                 logoImg.style.marginLeft = '6px';
                                 logoImg.style.border = '2px solid #ffd966';
                                 logoImg.title = 'Click to edit agent';
+                                logoImg.style.cursor = 'pointer';
+                                logoImg.style.flexShrink = '0';
                                 logoImg.addEventListener('click', function(e) {
                                     e.stopPropagation();
                                     openEditAgentModal(agentId);
@@ -7967,6 +8006,9 @@
                         }
                         if (this.id === 'currencyConverterModal') {
                             // Do nothing special, just close
+                        }
+                        if (this.id === 'mapModal') {
+                            // Don't stop the map iframe
                         }
                     }
                 };
