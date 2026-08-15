@@ -108,14 +108,14 @@
             padding: 0.15rem 0.6rem;
             border-radius: 30px;
             text-align: center;
-            font-size: 0.65rem;
-            line-height: 1.2;
+            font-size: 0.73rem; /* increased from 0.65rem by ~12% */
+            line-height: 1.3;
             min-width: 70px;
             border: 1px solid rgba(255,255,255,0.08);
         }
         .datetime-box .time-text {
             font-weight: 700;
-            font-size: 0.75rem;
+            font-size: 0.84rem; /* increased from 0.75rem by 12% */
         }
         .header-controls {
             display: flex;
@@ -180,6 +180,13 @@
             text-overflow: ellipsis;
             font-size: 0.8rem !important;
             touch-action: manipulation;
+        }
+        .agent-dropdown-btn .agent-name-text {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            min-width: 0;
         }
         .agent-dropdown-btn:hover {
             background: rgba(255, 255, 255, 0.20);
@@ -1430,8 +1437,8 @@
             .agent-dropdown-container { min-width: 130px; max-width: 180px; }
             .agent-dropdown-btn { padding: 2px 8px 2px 10px; height: 30px; min-width: 80px; font-size: 0.72rem !important; }
             .agent-dropdown-list { min-width: 160px; }
-            .datetime-box { font-size: 0.55rem; min-width: 55px; padding: 0.05rem 0.35rem; }
-            .datetime-box .time-text { font-size: 0.65rem; }
+            .datetime-box { font-size: 0.68rem; min-width: 55px; padding: 0.05rem 0.35rem; }
+            .datetime-box .time-text { font-size: 0.78rem; }
             .auth-btn { padding: 4px 10px; height: 30px; font-size: 0.72rem !important; }
             .user-welcome { padding: 2px 8px 2px 4px; height: 30px; }
             .user-avatar { font-size: 1rem; width: 24px; height: 24px; line-height: 24px; }
@@ -1492,12 +1499,12 @@
             .agent-dropdown-btn { padding: 2px 6px 2px 8px; height: 26px; min-width: 65px; font-size: 0.62rem !important; }
             .agent-dropdown-list { min-width: 140px; }
             .agent-dropdown-item .agent-name { font-size: 0.65rem; }
+            .datetime-box { font-size: 0.62rem; min-width: 45px; padding: 0.05rem 0.25rem; }
+            .datetime-box .time-text { font-size: 0.72rem; }
             .auth-btn { padding: 3px 8px; height: 26px; font-size: 0.62rem !important; }
             .user-welcome { padding: 2px 6px 2px 3px; height: 26px; }
             .user-avatar { font-size: 0.85rem; width: 20px; height: 20px; line-height: 20px; }
             .user-name-display { font-size: 0.55rem; }
-            .datetime-box { font-size: 0.48rem; min-width: 45px; padding: 0.05rem 0.25rem; }
-            .datetime-box .time-text { font-size: 0.55rem; }
             .lang-selector { height: 26px; padding: 1px 3px 1px 4px; }
             .lang-selector select { width: 40px; font-size: 0.55rem; }
             .lang-icon { font-size: 0.65rem; }
@@ -4058,13 +4065,15 @@
             flagSpan.style.flexShrink = '0';
             btn.appendChild(flagSpan);
 
-            // Agent name - only business name
+            // Agent name - only business name (wrap in span for truncation)
             let displayName = data.businessName || agent.name;
             if (displayName.includes('(')) {
                 displayName = displayName.split('(')[0].trim();
             }
-            const nameText = document.createTextNode(SecurityUtils.escapeHTML(displayName));
-            btn.appendChild(nameText);
+            const nameSpan = document.createElement('span');
+            nameSpan.className = 'agent-name-text';
+            nameSpan.textContent = SecurityUtils.escapeHTML(displayName);
+            btn.appendChild(nameSpan);
 
             // Logo on right - click to edit
             const logoImg = document.createElement('img');
@@ -6650,8 +6659,10 @@
                                 flagSpan.style.marginRight = '4px';
                                 flagSpan.style.flexShrink = '0';
                                 selectedName.appendChild(flagSpan);
-                                const nameText = document.createTextNode(businessName);
-                                selectedName.appendChild(nameText);
+                                const nameSpan = document.createElement('span');
+                                nameSpan.className = 'agent-name-text';
+                                nameSpan.textContent = businessName;
+                                selectedName.appendChild(nameSpan);
                                 // Add logo
                                 if (data.logoDataURL) {
                                     const logoImg = document.createElement('img');
@@ -7477,8 +7488,10 @@
                             if (displayName.includes('(')) {
                                 displayName = displayName.split('(')[0].trim();
                             }
-                            const nameText = document.createTextNode(SecurityUtils.escapeHTML(displayName));
-                            selectedName.appendChild(nameText);
+                            const nameSpan = document.createElement('span');
+                            nameSpan.className = 'agent-name-text';
+                            nameSpan.textContent = SecurityUtils.escapeHTML(displayName);
+                            selectedName.appendChild(nameSpan);
                             // Add logo
                             const data = agent.agentData || agent;
                             if (data.logoDataURL) {
