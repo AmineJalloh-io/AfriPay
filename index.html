@@ -7257,88 +7257,159 @@
         }
 
         // ================================================================
-        // INITIALIZE PERMANENT AGENTS - WITH SCREENSHOT AGENT
+        // INITIALIZE PERMANENT AGENTS - WITH SCREENSHOT AGENT AND NUSWEB
         // ================================================================
         function initializePermanentAgents() {
             try {
+                // --- Agent 1: DAD Asso du Fouta ---
                 const existingAgent = registeredUsers.find(u =>
                     u.businessName === 'DAD Asso du Fouta' ||
                     u.regNumber === 'DA543256D' ||
                     (u.ownerName === 'Amine Juldeh Jalloh' && u.mobileMoney === '624592014')
                 );
 
-                if (existingAgent) {
-                    console.log('✅ Agent already initialized, skipping...');
-                    return;
+                if (!existingAgent) {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 64;
+                    canvas.height = 64;
+                    const ctx = canvas.getContext('2d');
+                    ctx.fillStyle = '#2c7da0';
+                    ctx.beginPath();
+                    ctx.arc(32, 32, 28, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = 'white';
+                    ctx.font = 'bold 28px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText('D', 32, 34);
+                    const logoDataURL = canvas.toDataURL('image/png');
+
+                    const idCanvas = document.createElement('canvas');
+                    idCanvas.width = 200;
+                    idCanvas.height = 120;
+                    const idCtx = idCanvas.getContext('2d');
+                    idCtx.fillStyle = '#f0f4f8';
+                    idCtx.fillRect(0, 0, 200, 120);
+                    idCtx.fillStyle = '#1c4e6c';
+                    idCtx.font = 'bold 14px Arial';
+                    idCtx.textAlign = 'center';
+                    idCtx.fillText('VOTER ID', 100, 40);
+                    idCtx.font = '12px Arial';
+                    idCtx.fillText('0989998', 100, 70);
+                    idCtx.fillText('Amine Juldeh Jalloh', 100, 95);
+                    const idImageDataURL = idCanvas.toDataURL('image/png');
+
+                    const agentData = {
+                        id: 'agent_dad_assofouta_permanent',
+                        name: 'DAD Asso du Fouta',
+                        businessName: 'DAD Asso du Fouta',
+                        ownerName: 'Amine Juldeh Jalloh',
+                        businessAddress: 'Marche Parawol, Parawol, Lelouma',
+                        city: 'Conakry',
+                        regNumber: 'DA543256D',
+                        businessType: 'Service',
+                        idType: "Voter's Card",
+                        idNumber: '0989998',
+                        mobileMoney: '624592014',
+                        countryCode: '+224',
+                        password: 'PJL6JY',
+                        pin: '22656',
+                        collateralAmount: 0,
+                        collateralLimit: 7000,
+                        currency: 'GNF',
+                        approved: true,
+                        role: 'agent',
+                        isAgent: true,
+                        registeredAt: new Date().toISOString(),
+                        idImageDataURL: idImageDataURL,
+                        logoDataURL: logoDataURL,
+                        agreement: null,
+                        providerTxId: 'MP266546.7657.N87906',
+                        transferCode: '87906543'
+                    };
+
+                    registeredUsers.push(agentData);
+                    ProviderTxIdManager.markAsUsed('MP266546.7657.N87906');
+                    console.log('✅ Agent DAD Asso du Fouta initialized.');
                 }
 
-                const canvas = document.createElement('canvas');
-                canvas.width = 64;
-                canvas.height = 64;
-                const ctx = canvas.getContext('2d');
-                ctx.fillStyle = '#2c7da0';
-                ctx.beginPath();
-                ctx.arc(32, 32, 28, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.fillStyle = 'white';
-                ctx.font = 'bold 28px Arial';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText('D', 32, 34);
-                const logoDataURL = canvas.toDataURL('image/png');
+                // --- Agent 2: NUSWEB Biz ---
+                const existingNUSWEB = registeredUsers.find(u =>
+                    u.businessName === 'NUSWEB Biz' ||
+                    u.regNumber === 'NW-2025-001'
+                );
 
-                const idCanvas = document.createElement('canvas');
-                idCanvas.width = 200;
-                idCanvas.height = 120;
-                const idCtx = idCanvas.getContext('2d');
-                idCtx.fillStyle = '#f0f4f8';
-                idCtx.fillRect(0, 0, 200, 120);
-                idCtx.fillStyle = '#1c4e6c';
-                idCtx.font = 'bold 14px Arial';
-                idCtx.textAlign = 'center';
-                idCtx.fillText('VOTER ID', 100, 40);
-                idCtx.font = '12px Arial';
-                idCtx.fillText('0989998', 100, 70);
-                idCtx.fillText('Amine Juldeh Jalloh', 100, 95);
-                const idImageDataURL = idCanvas.toDataURL('image/png');
+                if (!existingNUSWEB) {
+                    // Create NUSWEB logo
+                    const nCanvas = document.createElement('canvas');
+                    nCanvas.width = 64;
+                    nCanvas.height = 64;
+                    const nCtx = nCanvas.getContext('2d');
+                    nCtx.fillStyle = '#1a3a5c';
+                    nCtx.beginPath();
+                    nCtx.arc(32, 32, 28, 0, Math.PI * 2);
+                    nCtx.fill();
+                    nCtx.fillStyle = 'white';
+                    nCtx.font = 'bold 22px Arial';
+                    nCtx.textAlign = 'center';
+                    nCtx.textBaseline = 'middle';
+                    nCtx.fillText('N', 32, 34);
+                    const nLogoDataURL = nCanvas.toDataURL('image/png');
 
-                const agentData = {
-                    id: 'agent_dad_assofouta_permanent',
-                    name: 'DAD Asso du Fouta',
-                    businessName: 'DAD Asso du Fouta',
-                    ownerName: 'Amine Juldeh Jalloh',
-                    businessAddress: 'Marche Parawol, Parawol, Lelouma',
-                    city: 'Conakry',
-                    regNumber: 'DA543256D',
-                    businessType: 'Service',
-                    idType: "Voter's Card",
-                    idNumber: '0989998',
-                    mobileMoney: '624592014',
-                    countryCode: '+224',
-                    password: 'PJL6JY',
-                    pin: '22656',
-                    collateralAmount: 0,
-                    collateralLimit: 7000,
-                    currency: 'GNF',
-                    approved: true,
-                    role: 'agent',
-                    isAgent: true,
-                    registeredAt: new Date().toISOString(),
-                    idImageDataURL: idImageDataURL,
-                    logoDataURL: logoDataURL,
-                    agreement: null,
-                    providerTxId: 'MP266546.7657.N87906',
-                    transferCode: '87906543'
-                };
+                    const nIdCanvas = document.createElement('canvas');
+                    nIdCanvas.width = 200;
+                    nIdCanvas.height = 120;
+                    const nIdCtx = nIdCanvas.getContext('2d');
+                    nIdCtx.fillStyle = '#f0f4f8';
+                    nIdCtx.fillRect(0, 0, 200, 120);
+                    nIdCtx.fillStyle = '#1c4e6c';
+                    nIdCtx.font = 'bold 14px Arial';
+                    nIdCtx.textAlign = 'center';
+                    nIdCtx.fillText('BUSINESS REG', 100, 40);
+                    nIdCtx.font = '12px Arial';
+                    nIdCtx.fillText('NW-2025-001', 100, 70);
+                    nIdCtx.fillText('NUSWEB Tech', 100, 95);
+                    const nIdImageDataURL = nIdCanvas.toDataURL('image/png');
 
-                registeredUsers.push(agentData);
-                ProviderTxIdManager.markAsUsed('MP266546.7657.N87906');
+                    const nAgentData = {
+                        id: 'agent_nusweb_permanent',
+                        name: 'NUSWEB Biz',
+                        businessName: 'NUSWEB Biz',
+                        ownerName: 'Mohamed Amine Jalloh',
+                        businessAddress: '123 Tech Hub, Freetown',
+                        city: 'Freetown',
+                        regNumber: 'NW-2025-001',
+                        businessType: 'Technology',
+                        idType: 'Business Registration',
+                        idNumber: 'NW-2025-001',
+                        mobileMoney: '23276123456',
+                        countryCode: '+232',
+                        password: 'NUSWEB1',
+                        pin: '12345',
+                        collateralAmount: 0,
+                        collateralLimit: 5000,
+                        currency: 'SLL',
+                        approved: true,
+                        role: 'agent',
+                        isAgent: true,
+                        registeredAt: new Date().toISOString(),
+                        idImageDataURL: nIdImageDataURL,
+                        logoDataURL: nLogoDataURL,
+                        agreement: null,
+                        providerTxId: 'NW123456.1234.X12345',
+                        transferCode: '12345678'
+                    };
+
+                    registeredUsers.push(nAgentData);
+                    ProviderTxIdManager.markAsUsed('NW123456.1234.X12345');
+                    console.log('✅ Agent NUSWEB Biz initialized.');
+                }
 
                 saveRegisteredUsers();
                 syncConnectedUsersFromRegistered();
-                console.log('✅ Permanent agent (DAD Asso du Fouta) initialized successfully with all screenshot data');
+                console.log('✅ Permanent agents initialized successfully.');
             } catch (e) {
-                console.warn('⚠️ Error initializing agent:', e);
+                console.warn('⚠️ Error initializing agents:', e);
             }
         }
 
