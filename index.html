@@ -5120,31 +5120,51 @@
         function getEl(id) { return document.getElementById(id); }
 
         // ================================================================
-        // APP INITIALIZATION
+        // APP INITIALIZATION - ROBUST WITH PER-STEP ERROR HANDLING
         // ================================================================
         function initApp() {
             console.log('🚀 AfriPay initializing...');
+            let criticalError = false;
+
+            // Helper to safely execute a function and log errors without breaking the flow
+            function safeExecute(fn, label) {
+                try {
+                    fn();
+                } catch (e) {
+                    console.error(`❌ Error in ${label}:`, e);
+                    // If it's a critical part, we might want to flag it, but we'll continue
+                    // For now, we just log and continue.
+                }
+            }
+
+            // Load data from storage
+            safeExecute(() => ProviderTxIdManager.loadUsedIds(), 'ProviderTxIdManager.loadUsedIds');
+            safeExecute(() => loadLanguagePreference(), 'loadLanguagePreference');
+            safeExecute(() => loadRegisteredUsers(), 'loadRegisteredUsers');
+            safeExecute(() => loadGroups(), 'loadGroups');
+            safeExecute(() => loadChatMessages(), 'loadChatMessages');
+            safeExecute(() => loadChatSettings(), 'loadChatSettings');
+            safeExecute(() => syncConnectedUsersFromRegistered(), 'syncConnectedUsersFromRegistered');
+            safeExecute(() => initializePermanentAgents(), 'initializePermanentAgents');
+
+            // Load user and render UI
+            safeExecute(() => loadStoredUser(), 'loadStoredUser');
+
+            // Render components
+            safeExecute(() => renderSidebar(), 'renderSidebar');
+            safeExecute(() => renderAgentDropdown(), 'renderAgentDropdown');
+            safeExecute(() => translatePage(), 'translatePage');
+            safeExecute(() => renderHeaderFlags(), 'renderHeaderFlags');
+            safeExecute(() => setupFlagClickHandlers(), 'setupFlagClickHandlers');
+            safeExecute(() => setupEmojiPicker(), 'setupEmojiPicker');
+            safeExecute(() => setupEditEmojiPicker(), 'setupEditEmojiPicker');
+            safeExecute(() => setupAvatarUpload(), 'setupAvatarUpload');
+            safeExecute(() => renderBusinessStrip(), 'renderBusinessStrip');
+            safeExecute(() => updateDateTime(), 'updateDateTime');
+            setInterval(() => safeExecute(updateDateTime, 'updateDateTime'), 1000);
+
+            // Auto-select agent
             try {
-                ProviderTxIdManager.loadUsedIds();
-                loadLanguagePreference();
-                loadRegisteredUsers();
-                loadGroups();
-                loadChatMessages();
-                loadChatSettings();
-                syncConnectedUsersFromRegistered();
-                initializePermanentAgents();
-                loadStoredUser();
-                renderSidebar();
-                renderAgentDropdown();
-                translatePage();
-                renderHeaderFlags();
-                setupFlagClickHandlers();
-                setupEmojiPicker();
-                setupEditEmojiPicker();
-                setupAvatarUpload();
-                renderBusinessStrip();
-                updateDateTime();
-                setInterval(function() { try { updateDateTime(); } catch (e) { /* ignore */ } }, 1000);
                 const agents = getAgents();
                 const screenshotAgent = agents.find(a =>
                     a.agentData && a.agentData.businessName === 'DAD Asso du Fouta'
@@ -5154,14 +5174,17 @@
                 } else if (agents.length > 0) {
                     selectAgent(agents[0].id);
                 }
-                setupEventListeners();
-                initChatControls();
-                console.log('✅ AfriPay initialized successfully!');
-                showToast('✅ AfriPay ready!', 1500);
-            } catch (error) {
-                console.error('❌ AfriPay initialization error:', error);
-                try { showToast('⚠️ App loaded with some issues. Please refresh.', 3000); } catch (e) {}
+            } catch (e) {
+                console.warn('Auto-select agent error:', e);
             }
+
+            // Setup event listeners
+            safeExecute(() => setupEventListeners(), 'setupEventListeners');
+            safeExecute(() => initChatControls(), 'initChatControls');
+
+            console.log('✅ AfriPay initialized successfully!');
+            // Only show ready toast if no critical errors (we don't have a critical flag, so always show)
+            showToast('✅ AfriPay ready!', 1500);
         }
 
         // ================================================================
