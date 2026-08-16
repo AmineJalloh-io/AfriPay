@@ -3336,89 +3336,50 @@
         .location-footer .action-btn {
             min-width: 100px;
         }
-        .agent-loc-btn {
-            background: #2c7da0;
-            color: white;
-            border: none;
-            padding: 4px 12px;
-            border-radius: 30px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.2s;
-            height: 34px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-            font-size: 0.75rem !important;
-            touch-action: manipulation;
-        }
-        .agent-loc-btn:hover {
-            background: #1f5068;
-            transform: translateY(-1px);
-        }
-        .agent-loc-btn:active {
-            transform: scale(0.97);
-        }
-        .agent-loc-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-        .agent-loc-btn:disabled:hover {
-            background: #2c7da0;
-            transform: none;
-        }
 
         /* ================================================================
-           NEW: LOCATION BUTTON ROW - STYLED TO SIT BETWEEN FIELDS
+           NEW: AGENT LOCATION BUTTON - SMALL, BETWEEN FIELDS
            ================================================================ */
-        .agent-loc-row {
+        .agent-loc-between {
             display: flex;
-            align-items: center;
             justify-content: center;
-            gap: 8px;
-            margin: 0.2rem 0 0.3rem 0;
-            padding: 2px 0;
-            position: relative;
+            align-items: center;
+            margin: 0.1rem 0 0.2rem 0;
+            padding: 0;
         }
-        .agent-loc-row::before {
-            content: '';
-            position: absolute;
-            left: 10%;
-            right: 10%;
-            top: 50%;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, #d0dce8, transparent);
-            pointer-events: none;
-        }
-        .agent-loc-row .agent-loc-btn {
-            position: relative;
+        .agent-loc-between .agent-loc-btn {
             background: #f0f6fb;
             color: #1c6e8f;
             border: 1.5px solid #c0d8e8;
-            padding: 4px 16px;
-            height: 34px;
-            font-size: 0.8rem !important;
-            font-weight: 700;
+            padding: 2px 12px;
+            height: 28px;
+            font-size: 0.7rem !important;
+            font-weight: 600;
             border-radius: 30px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
-            transition: all 0.25s ease;
-            z-index: 2;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            touch-action: manipulation;
+            white-space: nowrap;
             background: white;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+            min-width: 60px;
         }
-        .agent-loc-row .agent-loc-btn:hover {
+        .agent-loc-between .agent-loc-btn:hover {
             background: #2c7da0;
             color: white;
             border-color: #2c7da0;
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(44, 125, 160, 0.25);
+            box-shadow: 0 4px 12px rgba(44, 125, 160, 0.2);
         }
-        .agent-loc-row .agent-loc-btn:active {
-            transform: scale(0.97);
+        .agent-loc-between .agent-loc-btn:active {
+            transform: scale(0.95);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-        .agent-loc-row .agent-loc-btn:disabled {
+        .agent-loc-between .agent-loc-btn:disabled {
             opacity: 0.4;
             cursor: not-allowed;
             transform: none !important;
@@ -3427,42 +3388,87 @@
             color: #95a5a6;
             border-color: #d0dce8;
         }
-        .agent-loc-row .agent-loc-btn:disabled:hover {
+        .agent-loc-between .agent-loc-btn:disabled:hover {
             background: #f0f4f8;
             color: #95a5a6;
             border-color: #d0dce8;
             transform: none;
         }
-        .agent-loc-row .loc-hint-text {
-            font-size: 0.62rem;
-            color: #95a5a6;
-            font-weight: 500;
-            white-space: nowrap;
-            z-index: 1;
-            background: #ffffff;
-            padding: 0 6px;
-            border-radius: 12px;
+        .agent-loc-between .agent-loc-btn .loc-icon {
+            font-size: 0.8rem;
+        }
+        .agent-loc-between .agent-loc-btn .loc-label {
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.3px;
         }
         @media (max-width: 480px) {
-            .agent-loc-row {
-                flex-wrap: wrap;
-                gap: 4px;
-                margin: 0.1rem 0 0.2rem 0;
+            .agent-loc-between .agent-loc-btn {
+                height: 26px;
+                padding: 2px 10px;
+                font-size: 0.62rem !important;
+                min-width: 50px;
             }
-            .agent-loc-row::before {
-                display: none;
+            .agent-loc-between .agent-loc-btn .loc-icon {
+                font-size: 0.7rem;
             }
-            .agent-loc-row .agent-loc-btn {
-                width: 100%;
-                justify-content: center;
-                font-size: 0.75rem !important;
-                height: 32px;
+            .agent-loc-between .agent-loc-btn .loc-label {
+                font-size: 0.58rem;
             }
-            .agent-loc-row .loc-hint-text {
-                font-size: 0.55rem;
-                white-space: normal;
-                text-align: center;
-                padding: 0 4px;
+        }
+        @media (max-width: 400px) {
+            .agent-loc-between .agent-loc-btn {
+                height: 24px;
+                padding: 1px 8px;
+                font-size: 0.55rem !important;
+                min-width: 44px;
+            }
+            .agent-loc-between .agent-loc-btn .loc-icon {
+                font-size: 0.6rem;
+            }
+            .agent-loc-between .agent-loc-btn .loc-label {
+                font-size: 0.5rem;
+            }
+        }
+
+        /* ================================================================
+           AGENT FIELDS LAYOUT - STACKED WITH BUTTON BETWEEN
+           ================================================================ */
+        .agent-fields-stacked {
+            display: flex;
+            flex-direction: column;
+            gap: 0.1rem;
+            margin-bottom: 0.35rem;
+        }
+        .agent-fields-stacked .input-group {
+            margin-bottom: 0.05rem;
+        }
+        .agent-fields-stacked .input-group input {
+            height: 38px;
+            font-size: 0.95rem;
+        }
+        .agent-fields-stacked .input-group label {
+            font-size: 0.8rem !important;
+        }
+        .agent-fields-stacked .agent-loc-between {
+            margin: 0.1rem 0 0.15rem 0;
+        }
+        @media (max-width: 600px) {
+            .agent-fields-stacked .input-group input {
+                height: 34px;
+                font-size: 0.85rem;
+            }
+            .agent-fields-stacked .agent-loc-between {
+                margin: 0.05rem 0 0.1rem 0;
+            }
+        }
+        @media (max-width: 400px) {
+            .agent-fields-stacked .input-group input {
+                height: 30px;
+                font-size: 0.8rem;
+            }
+            .agent-fields-stacked .agent-loc-between {
+                margin: 0.02rem 0 0.05rem 0;
             }
         }
     </style>
@@ -3607,14 +3613,19 @@
                 </div>
                 <div class="input-group"><label data-i18n="amount">Amount * <span id="amountLimitIndicator" class="collateral-limit-indicator" style="display:none;">Max: —</span></label><input type="number" id="amountInput" step="any" required /></div>
                 <div class="section-title" id="agentSectionTitle">👤 AGENT</div>
-                <div class="double-row">
+                <!-- ====== AGENT FIELDS - STACKED WITH LOCATION BUTTON BETWEEN ====== -->
+                <div class="agent-fields-stacked">
+                    <!-- Agent Name -->
                     <div class="input-group"><label id="agentNameLabel" data-i18n="agent">Agent *</label><input type="text" id="agentName" required readonly /></div>
+                    <!-- Location Button - Between fields, small & centered -->
+                    <div class="agent-loc-between">
+                        <button class="agent-loc-btn" id="agentLocationBtn" title="View agent location">
+                            <span class="loc-icon">📍</span>
+                            <span class="loc-label">Map</span>
+                        </button>
+                    </div>
+                    <!-- Agent Phone -->
                     <div class="input-group"><label id="agentPhoneLabel" data-i18n="phone">Phone *</label><input type="tel" id="agentPhone" required readonly /></div>
-                </div>
-                <!-- ====== LOCATION BUTTON ROW - NOW BETWEEN AGENT NAME & PHONE FIELDS ====== -->
-                <div class="agent-loc-row">
-                    <button class="agent-loc-btn" id="agentLocationBtn" title="View agent location">📍 View Location</button>
-                    <span class="loc-hint-text">Address &amp; contact</span>
                 </div>
                 <div class="section-title" id="clientSectionTitle" style="display:none;">👥 CLIENT</div>
                 <div class="double-row" id="clientFieldsRow" style="display:none;">
@@ -5265,6 +5276,9 @@
                 if (limitIndicator) limitIndicator.style.display = 'none';
                 getEl('agentDropdownList').classList.remove('open');
                 showToast('👤 ' + t('select_agent_placeholder'), 1500);
+                // Disable location button
+                const locBtn = getEl('agentLocationBtn');
+                if (locBtn) locBtn.disabled = true;
             });
             selectItem.addEventListener('touchstart', function(e) {
                 e.stopPropagation();
@@ -9501,7 +9515,7 @@
             }
 
             // ================================================================
-            // MAP MODAL
+            // MAP MODAL - USED FOR LOCATION BUTTON
             // ================================================================
             const mapButton = getEl('mapButton');
             if (mapButton) {
@@ -9611,7 +9625,7 @@
             }
 
             // ================================================================
-            // AGENT LOCATION BUTTON - FULL IMPLEMENTATION
+            // AGENT LOCATION BUTTON - OPENS MAP MODAL DIRECTLY, NO AMOUNT REQUIRED
             // ================================================================
             const agentLocationBtn = getEl('agentLocationBtn');
             if (agentLocationBtn) {
@@ -9632,8 +9646,41 @@
                         return;
                     }
 
-                    // Open the location modal with agent data
-                    openAgentLocationModal(agent);
+                    // Get agent data for location
+                    const data = agent.agentData || agent;
+                    const address = data.businessAddress || '';
+                    const city = data.city || '';
+                    const countryCode = data.countryCode || '';
+                    const countryName = COUNTRY_CODE_TO_NAME[countryCode] || '';
+
+                    // Build location string for map
+                    let location = '';
+                    if (address && address !== '—') location += address;
+                    if (city && city !== '—') {
+                        if (location) location += ', ';
+                        location += city;
+                    }
+                    if (countryName && countryName !== '—') {
+                        if (location) location += ', ';
+                        location += countryName;
+                    }
+
+                    // Fallback if no address data
+                    if (!location || location === '—' || location === ', ' || location === ', , ') {
+                        location = city + ', ' + countryName || 'Freetown, Sierra Leone';
+                    }
+
+                    const encodedLocation = encodeURIComponent(location);
+                    const mapIframe = getEl('mapIframe');
+                    if (mapIframe) {
+                        mapIframe.src = `https://www.google.com/maps?q=${encodedLocation}&output=embed`;
+                    }
+
+                    const mapModal = getEl('mapModal');
+                    if (mapModal) {
+                        mapModal.style.display = 'flex';
+                        showToast(`📍 ${location}`, 2500);
+                    }
                 };
 
                 agentLocationBtn.addEventListener('click', locHandler);
@@ -9650,7 +9697,34 @@
                         showToast('⚠️ Agent not found. Please select again.', 2500);
                         return;
                     }
-                    openAgentLocationModal(agent);
+                    const data = agent.agentData || agent;
+                    const address = data.businessAddress || '';
+                    const city = data.city || '';
+                    const countryCode = data.countryCode || '';
+                    const countryName = COUNTRY_CODE_TO_NAME[countryCode] || '';
+                    let location = '';
+                    if (address && address !== '—') location += address;
+                    if (city && city !== '—') {
+                        if (location) location += ', ';
+                        location += city;
+                    }
+                    if (countryName && countryName !== '—') {
+                        if (location) location += ', ';
+                        location += countryName;
+                    }
+                    if (!location || location === '—' || location === ', ' || location === ', , ') {
+                        location = city + ', ' + countryName || 'Freetown, Sierra Leone';
+                    }
+                    const encodedLocation = encodeURIComponent(location);
+                    const mapIframe = getEl('mapIframe');
+                    if (mapIframe) {
+                        mapIframe.src = `https://www.google.com/maps?q=${encodedLocation}&output=embed`;
+                    }
+                    const mapModal = getEl('mapModal');
+                    if (mapModal) {
+                        mapModal.style.display = 'flex';
+                        showToast(`📍 ${location}`, 2500);
+                    }
                 }, { passive: true });
 
                 // Handle disabled state
@@ -9659,7 +9733,7 @@
                 }
             }
 
-            // Agent Location Modal close buttons
+            // Agent Location Modal close buttons (for the standalone modal, but we use map modal)
             const agentLocationCloseBtn = getEl('agentLocationCloseBtn');
             if (agentLocationCloseBtn) {
                 const closeHandler = function(e) {
@@ -9887,95 +9961,83 @@
                 const validLengths = [6, 8, 10, 12, 14];
                 return /^\d+$/.test(cleaned) && validLengths.includes(cleaned.length);
             }
-        }
 
-        // ================================================================
-        // AGENT LOCATION MODAL - MAIN FUNCTION
-        // ================================================================
-        function openAgentLocationModal(agent) {
-            const modal = getEl('agentLocationModal');
-            if (!modal) {
-                showToast('⚠️ Location modal not found.', 2000);
-                return;
-            }
-
-            const data = agent.agentData || agent;
-
-            // Update header
-            const locAgentName = getEl('locAgentName');
-            if (locAgentName) {
-                let displayName = data.businessName || agent.name;
-                if (displayName.includes('(')) {
-                    displayName = displayName.split('(')[0].trim();
+            // ================================================================
+            // AGENT LOCATION MODAL - MAIN FUNCTION (for standalone modal)
+            // ================================================================
+            function openAgentLocationModal(agent) {
+                const modal = getEl('agentLocationModal');
+                if (!modal) {
+                    showToast('⚠️ Location modal not found.', 2000);
+                    return;
                 }
-                locAgentName.textContent = SecurityUtils.escapeHTML(displayName);
+
+                const data = agent.agentData || agent;
+
+                const locAgentName = getEl('locAgentName');
+                if (locAgentName) {
+                    let displayName = data.businessName || agent.name;
+                    if (displayName.includes('(')) {
+                        displayName = displayName.split('(')[0].trim();
+                    }
+                    locAgentName.textContent = SecurityUtils.escapeHTML(displayName);
+                }
+
+                const locAgentSub = getEl('locAgentSub');
+                if (locAgentSub) {
+                    const city = data.city || 'Location';
+                    const countryCode = data.countryCode || '';
+                    const flag = getFlagForCountryCode(countryCode);
+                    locAgentSub.textContent = `${flag} ${SecurityUtils.escapeHTML(city)}`;
+                }
+
+                const body = getEl('locationBody');
+                if (!body) return;
+
+                const flag = getFlagForCountryCode(data.countryCode || '');
+                const countryName = COUNTRY_CODE_TO_NAME[data.countryCode] || data.countryCode || '—';
+                const city = data.city || '—';
+                const address = data.businessAddress || '—';
+                const phone = data.mobileMoney || agent.phone || '—';
+                const businessName = data.businessName || agent.name || '—';
+                const ownerName = data.ownerName || '—';
+
+                let mapLink = '#';
+                const mapParts = [];
+                if (address && address !== '—') mapParts.push(encodeURIComponent(address));
+                if (city && city !== '—') mapParts.push(encodeURIComponent(city));
+                if (countryName && countryName !== '—') mapParts.push(encodeURIComponent(countryName));
+                if (mapParts.length > 0) {
+                    mapLink = `https://www.google.com/maps?q=${mapParts.join(',')}`;
+                } else if (phone && phone !== '—') {
+                    mapLink = `https://www.google.com/maps?q=${encodeURIComponent(phone)}`;
+                } else {
+                    mapLink = `https://www.google.com/maps?q=${encodeURIComponent(city + ', ' + countryName)}`;
+                }
+
+                let avatarHtml = '';
+                if (data.logoDataURL) {
+                    avatarHtml = `<img src="${data.logoDataURL}" alt="Logo" />`;
+                } else {
+                    avatarHtml = `<span class="loc-avatar-fallback">🏢</span>`;
+                }
+
+                body.innerHTML = `
+                        <div class="loc-agent-avatar">${avatarHtml}</div>
+                        <div class="loc-row"><span class="loc-label">🏢 Business</span><span class="loc-value">${SecurityUtils.escapeHTML(businessName)}</span></div>
+                        <div class="loc-row"><span class="loc-label">👤 Owner</span><span class="loc-value">${SecurityUtils.escapeHTML(ownerName)}</span></div>
+                        <div class="loc-row"><span class="loc-label">📍 Address</span><span class="loc-value">${SecurityUtils.escapeHTML(address)}</span></div>
+                        <div class="loc-row"><span class="loc-label">🏙️ City</span><span class="loc-value">${SecurityUtils.escapeHTML(city)}</span></div>
+                        <div class="loc-row"><span class="loc-label">🌍 Country</span><span class="loc-value"><span class="loc-flag">${flag}</span> ${SecurityUtils.escapeHTML(countryName)}</span></div>
+                        <div class="loc-row"><span class="loc-label">📞 Phone</span><span class="loc-value">${SecurityUtils.escapeHTML(phone)}</span></div>
+                        <div class="loc-row" style="border-bottom:none; padding-top:2px;"><span class="loc-label">📋 Reg #</span><span class="loc-value" style="font-family:monospace;">${SecurityUtils.escapeHTML(data.regNumber || '—')}</span></div>
+                        <hr class="loc-divider" />
+                        <a href="${mapLink}" target="_blank" class="loc-map-link" id="locMapLink">🗺️ Open in Google Maps</a>
+                        <div style="font-size:0.62rem; color:#95a5a6; text-align:center; margin-top:4px;">📍 Location based on agent address</div>
+                    `;
+
+                modal.style.display = 'flex';
             }
-
-            const locAgentSub = getEl('locAgentSub');
-            if (locAgentSub) {
-                const city = data.city || 'Location';
-                const countryCode = data.countryCode || '';
-                const flag = getFlagForCountryCode(countryCode);
-                locAgentSub.textContent = `${flag} ${SecurityUtils.escapeHTML(city)}`;
-            }
-
-            // Build the body
-            const body = getEl('locationBody');
-            if (!body) return;
-
-            const flag = getFlagForCountryCode(data.countryCode || '');
-            const countryName = COUNTRY_CODE_TO_NAME[data.countryCode] || data.countryCode || '—';
-            const city = data.city || '—';
-            const address = data.businessAddress || '—';
-            const phone = data.mobileMoney || agent.phone || '—';
-            const businessName = data.businessName || agent.name || '—';
-            const ownerName = data.ownerName || '—';
-
-            // Build Google Maps link
-            let mapLink = '#';
-            const mapParts = [];
-            if (address && address !== '—') mapParts.push(encodeURIComponent(address));
-            if (city && city !== '—') mapParts.push(encodeURIComponent(city));
-            if (countryName && countryName !== '—') mapParts.push(encodeURIComponent(countryName));
-            if (mapParts.length > 0) {
-                mapLink = `https://www.google.com/maps?q=${mapParts.join(',')}`;
-            } else if (phone && phone !== '—') {
-                mapLink = `https://www.google.com/maps?q=${encodeURIComponent(phone)}`;
-            } else {
-                mapLink = `https://www.google.com/maps?q=${encodeURIComponent(city + ', ' + countryName)}`;
-            }
-
-            // Avatar / Logo
-            let avatarHtml = '';
-            if (data.logoDataURL) {
-                avatarHtml = `<img src="${data.logoDataURL}" alt="Logo" />`;
-            } else {
-                avatarHtml = `<span class="loc-avatar-fallback">🏢</span>`;
-            }
-
-            body.innerHTML = `
-                    <div class="loc-agent-avatar">${avatarHtml}</div>
-                    <div class="loc-row"><span class="loc-label">🏢 Business</span><span class="loc-value">${SecurityUtils.escapeHTML(businessName)}</span></div>
-                    <div class="loc-row"><span class="loc-label">👤 Owner</span><span class="loc-value">${SecurityUtils.escapeHTML(ownerName)}</span></div>
-                    <div class="loc-row"><span class="loc-label">📍 Address</span><span class="loc-value">${SecurityUtils.escapeHTML(address)}</span></div>
-                    <div class="loc-row"><span class="loc-label">🏙️ City</span><span class="loc-value">${SecurityUtils.escapeHTML(city)}</span></div>
-                    <div class="loc-row"><span class="loc-label">🌍 Country</span><span class="loc-value"><span class="loc-flag">${flag}</span> ${SecurityUtils.escapeHTML(countryName)}</span></div>
-                    <div class="loc-row"><span class="loc-label">📞 Phone</span><span class="loc-value">${SecurityUtils.escapeHTML(phone)}</span></div>
-                    <div class="loc-row" style="border-bottom:none; padding-top:2px;"><span class="loc-label">📋 Reg #</span><span class="loc-value" style="font-family:monospace;">${SecurityUtils.escapeHTML(data.regNumber || '—')}</span></div>
-                    <hr class="loc-divider" />
-                    <a href="${mapLink}" target="_blank" class="loc-map-link" id="locMapLink">🗺️ Open in Google Maps</a>
-                    <div style="font-size:0.62rem; color:#95a5a6; text-align:center; margin-top:4px;">📍 Location based on agent address</div>
-                `;
-
-            // Ensure the map link is clickable
-            const mapLinkEl = getEl('locMapLink');
-            if (mapLinkEl) {
-                mapLinkEl.addEventListener('click', function(e) {
-                    // Allow the link to open
-                });
-            }
-
-            modal.style.display = 'flex';
         }
 
         // ================================================================
@@ -10001,7 +10063,7 @@
         }
 
         bootstrap();
-        console.log('🚀 AfriPay bootstrapped with Location Button between fields!');
+        console.log('🚀 AfriPay bootstrapped with Location Button between agent fields!');
     </script>
 </body>
 </html>
