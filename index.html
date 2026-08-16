@@ -3617,9 +3617,9 @@
                 <div class="agent-fields-stacked">
                     <!-- Agent Name -->
                     <div class="input-group"><label id="agentNameLabel" data-i18n="agent">Agent *</label><input type="text" id="agentName" required readonly /></div>
-                    <!-- Location Button - Between fields, small & centered -->
+                    <!-- Location Button - Between fields, small & centered, type="button" -->
                     <div class="agent-loc-between">
-                        <button class="agent-loc-btn" id="agentLocationBtn" title="View agent location">
+                        <button type="button" class="agent-loc-btn" id="agentLocationBtn" title="View agent location">
                             <span class="loc-icon">📍</span>
                             <span class="loc-label">Map</span>
                         </button>
@@ -9629,6 +9629,7 @@
             // ================================================================
             const agentLocationBtn = getEl('agentLocationBtn');
             if (agentLocationBtn) {
+                // Ensure it's a button element and has type="button" already
                 const locHandler = function(e) {
                     e.preventDefault();
                     e.stopPropagation();
@@ -9683,6 +9684,9 @@
                     }
                 };
 
+                // Remove any existing listeners to avoid duplicates
+                agentLocationBtn.removeEventListener('click', locHandler);
+                agentLocationBtn.removeEventListener('touchstart', locHandler);
                 agentLocationBtn.addEventListener('click', locHandler);
                 agentLocationBtn.addEventListener('touchstart', function(e) {
                     e.preventDefault();
