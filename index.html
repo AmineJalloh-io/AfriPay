@@ -3022,6 +3022,34 @@
         }
 
         /* ================================================================
+           ADDED: AGENT SELECT DROPDOWN STYLING
+           ================================================================ */
+        .agent-select {
+            width: 100%;
+            padding: 5px 10px;
+            border-radius: 18px;
+            border: 1.5px solid #e0e8f0;
+            font-size: 0.95rem;
+            background: #fff;
+            height: 38px;
+            appearance: auto;
+            cursor: pointer;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .agent-select:focus {
+            border-color: #f4a261;
+            box-shadow: 0 0 0 3px rgba(244, 162, 97, 0.2);
+            outline: none;
+        }
+        .agent-select option {
+            padding: 4px 8px;
+            font-size: 0.9rem;
+        }
+        .agent-select option:disabled {
+            color: #aaa;
+        }
+
+        /* ================================================================
            RESPONSIVE
            ================================================================ */
         @media (max-width: 600px) {
@@ -3134,6 +3162,10 @@
                 padding: 4px 8px;
                 font-size: 0.85rem;
                 height: 34px;
+            }
+            .agent-select {
+                height: 34px;
+                font-size: 0.85rem;
             }
             .single-mm-btn {
                 padding: 5px 12px;
@@ -3434,6 +3466,10 @@
                 font-size: 0.8rem;
                 height: 30px;
             }
+            .agent-select {
+                height: 30px;
+                font-size: 0.8rem;
+            }
             .single-mm-btn {
                 padding: 4px 10px;
                 height: 34px;
@@ -3681,7 +3717,15 @@
                 <div class="input-group"><label data-i18n="amount">Amount * <span id="amountLimitIndicator" class="collateral-limit-indicator" style="display:none;">Max: —</span></label><input type="number" id="amountInput" step="any" required /></div>
                 <div class="section-title" id="agentSectionTitle">👤 AGENT</div>
                 <div class="agent-fields-stacked">
-                    <div class="input-group"><label id="agentNameLabel" data-i18n="agent">Agent *</label><input type="text" id="agentName" required readonly /></div>
+                    <div class="input-group">
+                        <label id="agentNameLabel" data-i18n="agent">Agent *</label>
+                        <!-- new agent dropdown select -->
+                        <select id="agentNameSelect" class="agent-select" required>
+                            <option value="">-- Select Agent --</option>
+                        </select>
+                        <!-- hidden input to keep compatibility with existing code -->
+                        <input type="hidden" id="agentName" />
+                    </div>
                     <div class="agent-loc-between">
                         <button type="button" class="agent-loc-btn" id="agentLocationBtn" title="View agent location">
                             <span class="loc-icon">📍</span>
@@ -4621,7 +4665,6 @@
         let isLocalMode = true;
         let currentCountryData = { gstRate: 10, currency: 'LRD', flag: '🇱🇷', countryName: 'Liberia' };
         let pendingDeleteUserId = null;
-        // store the current filter country for the agent dropdown
         let currentAgentFilterCountry = null;
 
         // ================================================================
@@ -4677,7 +4720,6 @@
             '+243': '🇨🇩',
             '+226': '🇧🇫'
         };
-        // reverse mapping: country name -> country code
         const COUNTRY_NAME_TO_CODE = {};
         for (const code in COUNTRY_CODE_TO_NAME) {
             COUNTRY_NAME_TO_CODE[COUNTRY_CODE_TO_NAME[code]] = code;
@@ -4810,10 +4852,10 @@
                         el.setAttribute('placeholder', translation);
                     }
                 });
-                // update agent dropdown placeholder based on filter
                 updateAgentDropdownPlaceholder();
                 renderBusinessStrip();
                 renderAgentDropdown();
+                populateAgentSelect(currentAgentFilterCountry);
             } catch (e) { console.warn('translatePage error:', e); }
         }
 
@@ -4980,12 +5022,11 @@
         }
 
         // ================================================================
-        // AGENT DROPDOWN - with country filter
+        // AGENT DROPDOWN - with country filter (for header)
         // ================================================================
         function updateAgentDropdownPlaceholder() {
             const btn = getEl('selectedAgentName');
             if (!btn) return;
-            // if we have a filter and no agent selected, show placeholder with country
             if (currentAgentFilterCountry && !selectedAgentId) {
                 const flag = getFlagForCountryName(currentAgentFilterCountry);
                 const text = `Select Agent in ${flag} ${currentAgentFilterCountry}`;
@@ -5015,7 +5056,6 @@
             return COUNTRY_NAME_TO_CODE[countryName] || null;
         }
 
-        // Filter agents by country name
         function getAgentsByCountry(countryName) {
             if (!countryName) return getAgents();
             const all = getAgents();
@@ -5025,29 +5065,22 @@
             });
         }
 
-        // Main render function with optional filter
+        // ---- Render header dropdown ----
         function renderAgentDropdown(filterCountryName) {
             const list = getEl('agentDropdownList');
             if (!list) return;
-
-            // if filterCountryName is not provided, use the current filter
             if (filterCountryName === undefined) {
                 filterCountryName = currentAgentFilterCountry;
             } else {
                 currentAgentFilterCountry = filterCountryName;
             }
-
             let agents = filterCountryName ? getAgentsByCountry(filterCountryName) : getAgents();
-            // sort by business name
             agents = agents.sort((a, b) => {
                 const aName = (a.agentData && a.agentData.businessName) || a.name;
                 const bName = (b.agentData && b.agentData.businessName) || b.name;
                 return aName.localeCompare(bName);
             });
-
             list.innerHTML = '';
-
-            // If we have a filter, show a header
             if (filterCountryName) {
                 const header = document.createElement('div');
                 header.style.cssText =
@@ -5056,8 +5089,6 @@
                 header.textContent = `📍 ${flag} ${filterCountryName}`;
                 list.appendChild(header);
             }
-
-            // Add "Select Agent" placeholder
             const selectItem = document.createElement('div');
             selectItem.className = 'agent-dropdown-item';
             selectItem.style.borderBottom = '1px solid rgba(255,215,0,0.3)';
@@ -5074,7 +5105,6 @@
             selectItem.appendChild(selectInfo);
             selectItem.addEventListener('click', function(e) {
                 e.stopPropagation();
-                // Deselect agent
                 selectedAgentId = null;
                 _selectedAgentId = null;
                 const btn = getEl('selectedAgentName');
@@ -5087,17 +5117,8 @@
                     }
                     btn.dataset.agentId = '';
                 }
-                const agentNameInput = getEl('agentName');
-                if (agentNameInput) agentNameInput.value = '';
-                const agentPhoneInput = getEl('agentPhone');
-                if (agentPhoneInput) agentPhoneInput.value = '';
-                const amountInput = getEl('amountInput');
-                if (amountInput) { amountInput.max = '';
-                    amountInput.placeholder = 'Amount'; }
-                const limitIndicator = getEl('amountLimitIndicator');
-                if (limitIndicator) limitIndicator.style.display = 'none';
-                const locBtn = getEl('agentLocationBtn');
-                if (locBtn) locBtn.disabled = true;
+                // Clear form fields
+                clearAgentSelection();
                 list.classList.remove('open');
                 showToast(`👤 ${placeholderText}`, 1500);
             });
@@ -5105,9 +5126,7 @@
                 e.stopPropagation();
             }, { passive: true });
             list.appendChild(selectItem);
-
             if (agents.length === 0) {
-                // No agents: show a message and a "Register Agent" button
                 const empty = document.createElement('div');
                 empty.className = 'agent-dropdown-item';
                 empty.style.justifyContent = 'center';
@@ -5116,8 +5135,6 @@
                 empty.style.fontSize = '0.8rem';
                 empty.innerHTML = `No agents in ${filterCountryName ? filterCountryName : 'this country'}`;
                 list.appendChild(empty);
-
-                // Add "Register Agent" button for this country
                 const regBtn = document.createElement('div');
                 regBtn.className = 'agent-dropdown-item';
                 regBtn.style.justifyContent = 'center';
@@ -5132,12 +5149,9 @@
                 regBtn.addEventListener('click', function(e) {
                     e.stopPropagation();
                     list.classList.remove('open');
-                    // Open agent registration modal with country pre-selected
                     if (filterCountryName) {
-                        // Pre-fill the agent registration form with this country
                         const code = getCountryCodeFromName(filterCountryName);
                         if (code) {
-                            // Set the country code in the agent registration modal
                             const countrySelect = getEl('agentCountryCode');
                             if (countrySelect) {
                                 for (let i = 0; i < countrySelect.options.length; i++) {
@@ -5147,20 +5161,14 @@
                                     }
                                 }
                             }
-                            // Also set the city if possible? Optional.
-                            // Open the modal
                             getEl('agentRegistrationModal').style.display = 'flex';
-                            // Clear any previous errors
                             getEl('agentRegError').textContent = '';
                             getEl('agentRegSuccess').textContent = '';
-                            // Reset other fields as needed (already done in click handler)
                         } else {
                             showToast('Could not map country code', 2000);
-                            // still open the modal
                             getEl('agentRegistrationModal').style.display = 'flex';
                         }
                     } else {
-                        // no filter, just open
                         getEl('agentRegistrationModal').style.display = 'flex';
                     }
                     showToast(`📝 Register agent for ${filterCountryName || 'your country'}`, 2000);
@@ -5193,10 +5201,10 @@
                     showToast(`📝 Register agent for ${filterCountryName || 'your country'}`, 2000);
                 }, { passive: true });
                 list.appendChild(regBtn);
+                // also update the main form select
+                populateAgentSelect(filterCountryName);
                 return;
             }
-
-            // Render agents
             agents.forEach(agent => {
                 const item = document.createElement('div');
                 item.className = 'agent-dropdown-item';
@@ -5204,17 +5212,14 @@
                 const flag = getAgentFlag(agent);
                 const initials = getAgentInitials(agent);
                 const displayName = (data.businessName || agent.name || '').replace(/\(.*\)/, '').trim();
-
                 const infoDiv = document.createElement('div');
                 infoDiv.className = 'agent-info';
-
                 const flagSpan = document.createElement('span');
                 flagSpan.className = 'agent-flag';
                 flagSpan.textContent = flag;
                 flagSpan.style.marginRight = '4px';
                 flagSpan.style.flexShrink = '0';
                 infoDiv.appendChild(flagSpan);
-
                 const nameSpan = document.createElement('span');
                 nameSpan.className = 'agent-name';
                 nameSpan.textContent = SecurityUtils.escapeHTML(displayName);
@@ -5229,7 +5234,6 @@
                     list.classList.remove('open');
                 }, { passive: true });
                 infoDiv.appendChild(nameSpan);
-
                 if (data.logoDataURL) {
                     const logoImg = document.createElement('img');
                     logoImg.className = 'agent-logo';
@@ -5273,15 +5277,90 @@
                     }, { passive: true });
                     infoDiv.appendChild(fallback);
                 }
-
                 item.appendChild(infoDiv);
                 list.appendChild(item);
             });
-
-            // Update the button placeholder based on filter
             updateAgentDropdownPlaceholder();
+            // also populate the main form select
+            populateAgentSelect(filterCountryName);
         }
 
+        // ---- Populate the agent select in the main form ----
+        function populateAgentSelect(filterCountryName) {
+            const select = getEl('agentNameSelect');
+            if (!select) return;
+            // Clear existing options
+            select.innerHTML = '';
+            let agents = filterCountryName ? getAgentsByCountry(filterCountryName) : getAgents();
+            agents = agents.sort((a, b) => {
+                const aName = (a.agentData && a.agentData.businessName) || a.name;
+                const bName = (b.agentData && b.agentData.businessName) || b.name;
+                return aName.localeCompare(bName);
+            });
+            // Add placeholder option
+            const placeholderOpt = document.createElement('option');
+            placeholderOpt.value = '';
+            let placeholderText = '-- Select Agent --';
+            if (filterCountryName) {
+                const flag = getFlagForCountryName(filterCountryName);
+                placeholderText = `-- Select Agent in ${flag} ${filterCountryName} --`;
+            }
+            placeholderOpt.textContent = placeholderText;
+            placeholderOpt.disabled = true;
+            placeholderOpt.selected = true;
+            select.appendChild(placeholderOpt);
+            if (agents.length === 0) {
+                const noOpt = document.createElement('option');
+                noOpt.value = '';
+                noOpt.textContent = `No agents in ${filterCountryName || 'this country'}`;
+                noOpt.disabled = true;
+                select.appendChild(noOpt);
+                // add a "Register Agent" option? We'll handle via a separate link.
+                // We'll add a small note below the select.
+                const note = document.getElementById('agentSelectNote');
+                if (note) note.style.display = 'block';
+                return;
+            }
+            agents.forEach(agent => {
+                const opt = document.createElement('option');
+                opt.value = agent.id;
+                const data = agent.agentData || agent;
+                const flag = getAgentFlag(agent);
+                const displayName = (data.businessName || agent.name || '').replace(/\(.*\)/, '').trim();
+                opt.textContent = `${flag} ${displayName}`;
+                select.appendChild(opt);
+            });
+            // If there is a selected agent, set it
+            if (selectedAgentId) {
+                const exists = agents.some(a => a.id === selectedAgentId);
+                if (exists) {
+                    select.value = selectedAgentId;
+                } else {
+                    select.value = '';
+                }
+            }
+            const note = document.getElementById('agentSelectNote');
+            if (note) note.style.display = 'none';
+        }
+
+        // ---- Clear agent selection (form fields) ----
+        function clearAgentSelection() {
+            const agentNameInput = getEl('agentName');
+            if (agentNameInput) agentNameInput.value = '';
+            const agentPhoneInput = getEl('agentPhone');
+            if (agentPhoneInput) agentPhoneInput.value = '';
+            const amountInput = getEl('amountInput');
+            if (amountInput) { amountInput.max = '';
+                amountInput.placeholder = 'Amount'; }
+            const limitIndicator = getEl('amountLimitIndicator');
+            if (limitIndicator) limitIndicator.style.display = 'none';
+            const locBtn = getEl('agentLocationBtn');
+            if (locBtn) locBtn.disabled = true;
+            const select = getEl('agentNameSelect');
+            if (select) select.value = '';
+        }
+
+        // ---- Select agent ----
         function selectAgent(agentId) {
             const agents = getAgents();
             const agent = agents.find(a => a.id === agentId);
@@ -5298,82 +5377,65 @@
                     }
                     btn.dataset.agentId = '';
                 }
-                const agentNameInput = getEl('agentName');
-                if (agentNameInput) agentNameInput.value = '';
-                const agentPhoneInput = getEl('agentPhone');
-                if (agentPhoneInput) agentPhoneInput.value = '';
-                const amountInput = getEl('amountInput');
-                if (amountInput) { amountInput.max = '';
-                    amountInput.placeholder = 'Amount'; }
-                const limitIndicator = getEl('amountLimitIndicator');
-                if (limitIndicator) limitIndicator.style.display = 'none';
-                const locBtn = getEl('agentLocationBtn');
-                if (locBtn) locBtn.disabled = true;
+                clearAgentSelection();
                 return;
             }
-
             _selectedAgentId = agentId;
             selectedAgentId = agentId;
             const data = agent.agentData || agent;
             const flag = getAgentFlag(agent);
             const initials = getAgentInitials(agent);
             const displayName = (data.businessName || agent.name || '').replace(/\(.*\)/, '').trim();
-
             const btn = getEl('selectedAgentName');
-            if (!btn) return;
-
-            btn.innerHTML = '';
-
-            const flagSpan = document.createElement('span');
-            flagSpan.className = 'agent-flag';
-            flagSpan.textContent = flag;
-            flagSpan.style.marginRight = '4px';
-            flagSpan.style.flexShrink = '0';
-            btn.appendChild(flagSpan);
-
-            const nameSpan = document.createElement('span');
-            nameSpan.className = 'agent-name-text';
-            nameSpan.textContent = SecurityUtils.escapeHTML(displayName);
-            btn.appendChild(nameSpan);
-
-            if (data.logoDataURL) {
-                const logoImg = document.createElement('img');
-                logoImg.className = 'agent-logo-inline';
-                logoImg.src = data.logoDataURL;
-                logoImg.alt = 'Logo';
-                logoImg.title = 'Click to edit agent';
-                logoImg.style.cursor = 'pointer';
-                logoImg.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    openEditAgentModal(agent.id);
-                });
-                logoImg.addEventListener('touchstart', function(e) {
-                    e.stopPropagation();
-                    openEditAgentModal(agent.id);
-                }, { passive: true });
-                btn.appendChild(logoImg);
-            } else {
-                const initialsSpan = document.createElement('span');
-                initialsSpan.className = 'agent-initials-inline';
-                initialsSpan.textContent = initials;
-                initialsSpan.title = '2‑letter agent logo';
-                initialsSpan.style.cursor = 'pointer';
-                initialsSpan.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    openEditAgentModal(agent.id);
-                });
-                initialsSpan.addEventListener('touchstart', function(e) {
-                    e.stopPropagation();
-                    openEditAgentModal(agent.id);
-                }, { passive: true });
-                btn.appendChild(initialsSpan);
+            if (btn) {
+                btn.innerHTML = '';
+                const flagSpan = document.createElement('span');
+                flagSpan.className = 'agent-flag';
+                flagSpan.textContent = flag;
+                flagSpan.style.marginRight = '4px';
+                flagSpan.style.flexShrink = '0';
+                btn.appendChild(flagSpan);
+                const nameSpan = document.createElement('span');
+                nameSpan.className = 'agent-name-text';
+                nameSpan.textContent = SecurityUtils.escapeHTML(displayName);
+                btn.appendChild(nameSpan);
+                if (data.logoDataURL) {
+                    const logoImg = document.createElement('img');
+                    logoImg.className = 'agent-logo-inline';
+                    logoImg.src = data.logoDataURL;
+                    logoImg.alt = 'Logo';
+                    logoImg.title = 'Click to edit agent';
+                    logoImg.style.cursor = 'pointer';
+                    logoImg.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        openEditAgentModal(agent.id);
+                    });
+                    logoImg.addEventListener('touchstart', function(e) {
+                        e.stopPropagation();
+                        openEditAgentModal(agent.id);
+                    }, { passive: true });
+                    btn.appendChild(logoImg);
+                } else {
+                    const initialsSpan = document.createElement('span');
+                    initialsSpan.className = 'agent-initials-inline';
+                    initialsSpan.textContent = initials;
+                    initialsSpan.title = '2‑letter agent logo';
+                    initialsSpan.style.cursor = 'pointer';
+                    initialsSpan.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        openEditAgentModal(agent.id);
+                    });
+                    initialsSpan.addEventListener('touchstart', function(e) {
+                        e.stopPropagation();
+                        openEditAgentModal(agent.id);
+                    }, { passive: true });
+                    btn.appendChild(initialsSpan);
+                }
+                btn.dataset.agentId = agentId;
             }
-
-            btn.dataset.agentId = agentId;
-
-            const agentNameInput = getEl('agentName');
-            if (agentNameInput) agentNameInput.value = SecurityUtils.escapeHTML(displayName);
-
+            // Update form fields
+            const agentNameHidden = getEl('agentName');
+            if (agentNameHidden) agentNameHidden.value = SecurityUtils.escapeHTML(displayName);
             const agentPhoneInput = getEl('agentPhone');
             let phoneDisplay = agent.phone || '';
             if (data.countryCode && phoneDisplay && !phoneDisplay.startsWith(data.countryCode)) {
@@ -5382,7 +5444,10 @@
                 phoneDisplay = data.countryCode;
             }
             if (agentPhoneInput) agentPhoneInput.value = SecurityUtils.escapeHTML(phoneDisplay);
-
+            // Update the main form select
+            const select = getEl('agentNameSelect');
+            if (select) select.value = agentId;
+            // Collateral limit
             const limit = data.collateralLimit || 0;
             const limitIndicator = getEl('amountLimitIndicator');
             const amountInput = getEl('amountInput');
@@ -5399,10 +5464,8 @@
                 amountInput.placeholder = 'Amount';
                 if (limitIndicator) limitIndicator.style.display = 'none';
             }
-
             const locBtn = getEl('agentLocationBtn');
             if (locBtn) locBtn.disabled = false;
-
             computeCharges();
         }
 
@@ -5498,7 +5561,6 @@
                 setCityValue('senderCitySelect', 'senderCityOther', currentUser.city || '');
             }
             renderBusinessStrip();
-            // update dropdown based on current country
             updateAgentDropdownForCountry();
             const locBtn = getEl('agentLocationBtn');
             if (locBtn && selectedAgentId) locBtn.disabled = false;
@@ -5511,7 +5573,7 @@
             getEl('mainFormContainer').style.display = 'none';
             connectedUsers = connectedUsers.filter(user => user.id !== 'current');
             renderSidebar();
-            renderAgentDropdown(null); // no filter
+            renderAgentDropdown(null);
             const locBtn = getEl('agentLocationBtn');
             if (locBtn) locBtn.disabled = true;
         }
@@ -5861,7 +5923,6 @@
                         if (regUser) regUser.approved = true;
                         saveRegisteredUsers();
                         renderDashboard();
-                        // update dropdown as agents list changed
                         updateAgentDropdownForCountry();
                         showToast(`✅ Agent ${agent.name} approved!`, 2000);
                     }
@@ -5889,17 +5950,7 @@
                             }
                             btn.dataset.agentId = '';
                         }
-                        const agentNameInput = getEl('agentName');
-                        if (agentNameInput) agentNameInput.value = '';
-                        const agentPhoneInput = getEl('agentPhone');
-                        if (agentPhoneInput) agentPhoneInput.value = '';
-                        const amountInput = getEl('amountInput');
-                        if (amountInput) { amountInput.max = '';
-                            amountInput.placeholder = 'Amount'; }
-                        const limitIndicator = getEl('amountLimitIndicator');
-                        if (limitIndicator) limitIndicator.style.display = 'none';
-                        const locBtn = getEl('agentLocationBtn');
-                        if (locBtn) locBtn.disabled = true;
+                        clearAgentSelection();
                     }
                     renderDashboard();
                     updateAgentDropdownForCountry();
@@ -6806,7 +6857,6 @@
                     for (let i = 0; i < options.length; i++) {
                         if (options[i].text.startsWith(flagEmoji)) {
                             select.selectedIndex = i;
-                            // Update country data
                             const parts = select.value.split('|');
                             currentCountryData = {
                                 gstRate: parseFloat(parts[4]) || 10,
@@ -6814,7 +6864,6 @@
                                 flag: parts[3] || '🌍',
                                 countryName: parts[1] || 'Unknown'
                             };
-                            // Set to International mode
                             if (isLocalMode) {
                                 isLocalMode = false;
                                 const intlToggleBtn = getEl('intlToggleBtn');
@@ -6822,18 +6871,15 @@
                                 const countryWrapper = getEl('countryWrapper');
                                 if (countryWrapper) countryWrapper.style.display = 'block';
                             }
-                            // Update UI elements
                             const gstRateLabel = getEl('gstRateLabel');
                             const currencySymbolSpan = getEl('currencySymbol');
                             const flagSpan = getEl('flagEmoji');
                             if (gstRateLabel) gstRateLabel.innerText = currentCountryData.gstRate;
                             if (currencySymbolSpan) currencySymbolSpan.innerText = currentCountryData.currency;
                             if (flagSpan) flagSpan.innerText = currentCountryData.flag;
-                            // Trigger change event on select to update any other listeners
                             const evt = new Event('change', { bubbles: true });
                             select.dispatchEvent(evt);
                             computeCharges();
-                            // Update agent dropdown based on new country
                             updateAgentDropdownForCountry();
                             const name = options[i].text.split('(')[0].trim();
                             showToast(`📍 ${name} selected`, 1600);
@@ -6845,7 +6891,6 @@
                         showToast(t('toast_country_not_supported', { flag: flagEmoji }), 2000);
                     }
                 };
-                // Remove any previous listeners to avoid duplicates
                 el.removeEventListener('click', handler);
                 el.removeEventListener('touchstart', handler);
                 el.addEventListener('click', handler);
@@ -6859,18 +6904,17 @@
         // ---- Update agent dropdown based on current country selection ----
         function updateAgentDropdownForCountry() {
             const countryWrapper = getEl('countryWrapper');
-            // If international mode is off, or country wrapper is hidden, show all agents
             if (!countryWrapper || countryWrapper.style.display === 'none' || isLocalMode) {
                 currentAgentFilterCountry = null;
                 renderAgentDropdown(null);
+                populateAgentSelect(null);
                 return;
             }
-            // Get selected country from dropdown
             const countryName = getCountryNameFromSelect();
             if (countryName) {
                 currentAgentFilterCountry = countryName;
                 renderAgentDropdown(countryName);
-                // If currently selected agent is not from this country, deselect
+                populateAgentSelect(countryName);
                 if (selectedAgentId) {
                     const agent = getAgents().find(a => a.id === selectedAgentId);
                     if (agent) {
@@ -6885,23 +6929,14 @@
                                 btn.innerHTML = `👤 Select Agent in ${flag} ${countryName}`;
                                 btn.dataset.agentId = '';
                             }
-                            const agentNameInput = getEl('agentName');
-                            if (agentNameInput) agentNameInput.value = '';
-                            const agentPhoneInput = getEl('agentPhone');
-                            if (agentPhoneInput) agentPhoneInput.value = '';
-                            const amountInput = getEl('amountInput');
-                            if (amountInput) { amountInput.max = '';
-                                amountInput.placeholder = 'Amount'; }
-                            const limitIndicator = getEl('amountLimitIndicator');
-                            if (limitIndicator) limitIndicator.style.display = 'none';
-                            const locBtn = getEl('agentLocationBtn');
-                            if (locBtn) locBtn.disabled = true;
+                            clearAgentSelection();
                         }
                     }
                 }
             } else {
                 currentAgentFilterCountry = null;
                 renderAgentDropdown(null);
+                populateAgentSelect(null);
             }
         }
 
@@ -7219,7 +7254,7 @@
         // MAIN INIT
         // ================================================================
         function initApp() {
-            console.log('🚀 AfriPay initializing with country-filtered agent dropdown...');
+            console.log('🚀 AfriPay initializing with dynamic agent dropdown in main form...');
 
             function safeExecute(fn, label) { try { fn(); } catch (e) { console.error(`❌ Error in ${label}:`, e); } }
 
@@ -7243,17 +7278,16 @@
             safeExecute(() => updateDateTime(), 'updateDateTime');
             setInterval(() => safeExecute(updateDateTime, 'updateDateTime'), 1000);
 
-            // Initial agent dropdown render (no filter)
+            // Initial render: no filter
             renderAgentDropdown(null);
+            populateAgentSelect(null);
 
-            // If user is logged in, update based on country
             if (currentUser) {
                 updateAgentDropdownForCountry();
             }
 
             const agents = getAgents();
             if (agents.length > 0 && !selectedAgentId) {
-                // if there is a filter, try to auto-select the first agent in that country
                 let filtered = agents;
                 if (currentAgentFilterCountry) {
                     filtered = getAgentsByCountry(currentAgentFilterCountry);
@@ -7620,7 +7654,7 @@
                 }, { passive: true });
             }
 
-            // Agent Dropdown
+            // Agent Dropdown (header)
             const agentDropdownBtn = getEl('agentDropdownBtn');
             if (agentDropdownBtn) {
                 agentDropdownBtn.addEventListener('click', function(e) {
@@ -7628,7 +7662,6 @@
                     e.stopPropagation();
                     const list = getEl('agentDropdownList');
                     if (list) list.classList.toggle('open');
-                    // Re-render with current filter
                     renderAgentDropdown(currentAgentFilterCountry);
                 });
                 agentDropdownBtn.addEventListener('touchstart', function(e) {
@@ -7653,6 +7686,32 @@
                     if (list) list.classList.remove('open');
                 }
             }, { passive: true });
+
+            // Agent select in main form
+            const agentSelect = getEl('agentNameSelect');
+            if (agentSelect) {
+                agentSelect.addEventListener('change', function() {
+                    const val = this.value;
+                    if (val) {
+                        selectAgent(val);
+                    } else {
+                        // Deselect
+                        selectedAgentId = null;
+                        _selectedAgentId = null;
+                        const btn = getEl('selectedAgentName');
+                        if (btn) {
+                            if (currentAgentFilterCountry) {
+                                const flag = getFlagForCountryName(currentAgentFilterCountry);
+                                btn.innerHTML = `👤 Select Agent in ${flag} ${currentAgentFilterCountry}`;
+                            } else {
+                                btn.innerHTML = t('select_agent_placeholder');
+                            }
+                            btn.dataset.agentId = '';
+                        }
+                        clearAgentSelection();
+                    }
+                });
+            }
 
             // TX ID
             const generateTxBtn = getEl('generateTxBtn');
@@ -7962,7 +8021,6 @@
                         if (currencySymbolSpan) currencySymbolSpan.innerText = "Local";
                     }
                     computeCharges();
-                    // Update agent dropdown based on country
                     updateAgentDropdownForCountry();
                 });
                 intlToggleBtn.addEventListener('touchstart', function(e) {
@@ -8041,6 +8099,7 @@
                     getEl('addClientError').textContent = '';
                     renderSidebar();
                     renderAgentDropdown(currentAgentFilterCountry);
+                    populateAgentSelect(currentAgentFilterCountry);
                 });
                 saveClientBtn.addEventListener('touchstart', function(e) {
                     e.preventDefault();
@@ -8065,6 +8124,7 @@
                     getEl('addClientError').textContent = '';
                     renderSidebar();
                     renderAgentDropdown(currentAgentFilterCountry);
+                    populateAgentSelect(currentAgentFilterCountry);
                 }, { passive: true });
             }
 
@@ -8610,6 +8670,7 @@
                         saveRegisteredUsers();
                         showToast('✅ Agent ' + bizName + ' registered! PIN: ' + pin, 4000);
                         renderAgentDropdown(currentAgentFilterCountry);
+                        populateAgentSelect(currentAgentFilterCountry);
                         renderSidebar();
                         selectAgent(agentData.id);
                         getEl('agentRegSuccess').textContent = '✅ Agent ' + bizName + ' registered! PIN: ' + pin;
@@ -8724,6 +8785,7 @@
                         saveRegisteredUsers();
                         showToast('✅ Agent ' + bizName + ' registered! PIN: ' + pin, 4000);
                         renderAgentDropdown(currentAgentFilterCountry);
+                        populateAgentSelect(currentAgentFilterCountry);
                         renderSidebar();
                         selectAgent(agentData.id);
                         getEl('agentRegSuccess').textContent = '✅ Agent ' + bizName + ' registered! PIN: ' + pin;
@@ -8795,6 +8857,7 @@
                         getEl('editAgentSuccess').textContent = '✅ Agent updated!';
                         getEl('editAgentError').textContent = '';
                         renderAgentDropdown(currentAgentFilterCountry);
+                        populateAgentSelect(currentAgentFilterCountry);
                         renderSidebar();
                         showToast('✅ Agent ' + businessName + ' updated!', 2000);
                         if (selectedAgentId === agentId) {
@@ -8839,8 +8902,8 @@
                                 }
                                 btn.dataset.agentId = agentId;
                             }
-                            const agentNameInput = getEl('agentName');
-                            if (agentNameInput) agentNameInput.value = displayName;
+                            const agentNameHidden = getEl('agentName');
+                            if (agentNameHidden) agentNameHidden.value = displayName;
                             let phoneDisplay = data.mobileMoney || '';
                             if (data.countryCode && phoneDisplay && !phoneDisplay.startsWith(data.countryCode)) {
                                 phoneDisplay = data.countryCode + ' ' + phoneDisplay;
@@ -8851,6 +8914,9 @@
                             if (agentPhoneInput) agentPhoneInput.value = phoneDisplay;
                             const locBtn = getEl('agentLocationBtn');
                             if (locBtn) locBtn.disabled = false;
+                            // update select
+                            const select = getEl('agentNameSelect');
+                            if (select) select.value = agentId;
                         }
                         setTimeout(() => {
                             getEl('editAgentModal').style.display = 'none';
@@ -8913,6 +8979,7 @@
                         getEl('editAgentSuccess').textContent = '✅ Agent updated!';
                         getEl('editAgentError').textContent = '';
                         renderAgentDropdown(currentAgentFilterCountry);
+                        populateAgentSelect(currentAgentFilterCountry);
                         renderSidebar();
                         showToast('✅ Agent ' + businessName + ' updated!', 2000);
                         if (selectedAgentId === agentId) {
@@ -8957,8 +9024,8 @@
                                 }
                                 btn.dataset.agentId = agentId;
                             }
-                            const agentNameInput = getEl('agentName');
-                            if (agentNameInput) agentNameInput.value = displayName;
+                            const agentNameHidden = getEl('agentName');
+                            if (agentNameHidden) agentNameHidden.value = displayName;
                             let phoneDisplay = data.mobileMoney || '';
                             if (data.countryCode && phoneDisplay && !phoneDisplay.startsWith(data.countryCode)) {
                                 phoneDisplay = data.countryCode + ' ' + phoneDisplay;
@@ -8969,6 +9036,8 @@
                             if (agentPhoneInput) agentPhoneInput.value = phoneDisplay;
                             const locBtn = getEl('agentLocationBtn');
                             if (locBtn) locBtn.disabled = false;
+                            const select = getEl('agentNameSelect');
+                            if (select) select.value = agentId;
                         }
                         setTimeout(() => {
                             getEl('editAgentModal').style.display = 'none';
@@ -9031,8 +9100,8 @@
                             }
                             btn.dataset.agentId = agentId;
                         }
-                        const agentNameInput = getEl('agentName');
-                        if (agentNameInput) agentNameInput.value = displayName;
+                        const agentNameHidden = getEl('agentName');
+                        if (agentNameHidden) agentNameHidden.value = displayName;
                         let phoneDisplay = agent.phone || '';
                         const data = agent.agentData || agent;
                         if (data.countryCode && phoneDisplay && !phoneDisplay.startsWith(data.countryCode)) {
@@ -9044,6 +9113,9 @@
                         if (agentPhoneInput) agentPhoneInput.value = phoneDisplay;
                         const locBtn = getEl('agentLocationBtn');
                         if (locBtn) locBtn.disabled = false;
+                        // update select
+                        const select = getEl('agentNameSelect');
+                        if (select) select.value = agentId;
                     }
                     showAgentAuthModal('edit');
                 });
@@ -9097,8 +9169,8 @@
                             }
                             btn.dataset.agentId = agentId;
                         }
-                        const agentNameInput = getEl('agentName');
-                        if (agentNameInput) agentNameInput.value = displayName;
+                        const agentNameHidden = getEl('agentName');
+                        if (agentNameHidden) agentNameHidden.value = displayName;
                         let phoneDisplay = agent.phone || '';
                         const data = agent.agentData || agent;
                         if (data.countryCode && phoneDisplay && !phoneDisplay.startsWith(data.countryCode)) {
@@ -9110,6 +9182,8 @@
                         if (agentPhoneInput) agentPhoneInput.value = phoneDisplay;
                         const locBtn = getEl('agentLocationBtn');
                         if (locBtn) locBtn.disabled = false;
+                        const select = getEl('agentNameSelect');
+                        if (select) select.value = agentId;
                     }
                     showAgentAuthModal('edit');
                 }, { passive: true });
@@ -9427,6 +9501,7 @@
                     renderSidebar();
                     showLoggedInUI();
                     renderAgentDropdown(currentAgentFilterCountry);
+                    populateAgentSelect(currentAgentFilterCountry);
                     setTimeout(() => { getEl('registerModal').style.display = 'none'; }, 1500);
                 });
                 doRegisterBtn.addEventListener('touchstart', function(e) {
@@ -9494,6 +9569,7 @@
                     renderSidebar();
                     showLoggedInUI();
                     renderAgentDropdown(currentAgentFilterCountry);
+                    populateAgentSelect(currentAgentFilterCountry);
                     setTimeout(() => { getEl('registerModal').style.display = 'none'; }, 1500);
                 }, { passive: true });
             }
@@ -10322,8 +10398,8 @@
                         const senderAddress = SecurityUtils.sanitizeInput(getEl('senderAddress').value.trim(),
                         200);
                         const senderCity = getCityValue('senderCitySelect', 'senderCityOther');
-                        const agentName = SecurityUtils.sanitizeInput(getEl('agentName').value.trim(), 100);
-                        const agentPhone = SecurityUtils.sanitizePhone(getEl('agentPhone').value.trim());
+                        const agentName = getEl('agentName')?.value?.trim() || '';
+                        const agentPhone = getEl('agentPhone')?.value?.trim() || '';
                         const clientName = SecurityUtils.sanitizeInput(getEl('clientName').value.trim(), 100);
                         const clientPhone = SecurityUtils.sanitizePhone(getEl('clientPhone').value.trim());
                         if (!senderName || !senderPhone || !agentName) {
@@ -10655,8 +10731,6 @@
             const countrySelect = getEl('countryCodeSelect');
             if (countrySelect) {
                 countrySelect.addEventListener('change', function() {
-                    // Update country data and charges (already handled in intl toggle)
-                    // Also update agent dropdown
                     updateAgentDropdownForCountry();
                 });
             }
@@ -10685,7 +10759,7 @@
         }
 
         bootstrap();
-        console.log('🚀 AfriPay fully bootstrapped — country-filtered agent dropdown active.');
+        console.log('🚀 AfriPay fully bootstrapped — dynamic agent dropdown in main form active.');
     </script>
 </body>
 </html>
