@@ -6601,6 +6601,68 @@
             });
         }
 
+        // ---- FIXED FLAG CLICK HANDLER ----
+        function setupFlagClickHandlers() {
+            document.querySelectorAll('#headerFlagGrid .flag-icon').forEach(el => {
+                const handler = function(e) {
+                    e.stopPropagation();
+                    const flagEmoji = this.textContent.trim();
+                    if (!flagEmoji) return;
+                    const select = getEl('countryCodeSelect');
+                    if (!select) return;
+                    const options = select.options;
+                    let found = false;
+                    for (let i = 0; i < options.length; i++) {
+                        if (options[i].text.startsWith(flagEmoji)) {
+                            select.selectedIndex = i;
+                            // Update country data
+                            const parts = select.value.split('|');
+                            currentCountryData = {
+                                gstRate: parseFloat(parts[4]) || 10,
+                                currency: parts[2] || 'USD',
+                                flag: parts[3] || '🌍',
+                                countryName: parts[1] || 'Unknown'
+                            };
+                            // Set to International mode
+                            if (isLocalMode) {
+                                isLocalMode = false;
+                                const intlToggleBtn = getEl('intlToggleBtn');
+                                if (intlToggleBtn) intlToggleBtn.classList.add('active');
+                                const countryWrapper = getEl('countryWrapper');
+                                if (countryWrapper) countryWrapper.style.display = 'block';
+                            }
+                            // Update UI elements
+                            const gstRateLabel = getEl('gstRateLabel');
+                            const currencySymbolSpan = getEl('currencySymbol');
+                            const flagSpan = getEl('flagEmoji');
+                            if (gstRateLabel) gstRateLabel.innerText = currentCountryData.gstRate;
+                            if (currencySymbolSpan) currencySymbolSpan.innerText = currentCountryData.currency;
+                            if (flagSpan) flagSpan.innerText = currentCountryData.flag;
+                            // Trigger change event on select to update any other listeners
+                            const evt = new Event('change', { bubbles: true });
+                            select.dispatchEvent(evt);
+                            computeCharges();
+                            const name = options[i].text.split('(')[0].trim();
+                            showToast(t('toast_selected_country', { name }), 1600);
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        showToast(t('toast_country_not_supported', { flag: flagEmoji }), 2000);
+                    }
+                };
+                // Remove any previous listeners to avoid duplicates
+                el.removeEventListener('click', handler);
+                el.removeEventListener('touchstart', handler);
+                el.addEventListener('click', handler);
+                el.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    handler.call(this, e);
+                }, { passive: true });
+            });
+        }
+
         // ================================================================
         // CONVERTER HELPERS
         // ================================================================
@@ -6932,6 +6994,7 @@
             safeExecute(() => renderAgentDropdown(), 'renderAgentDropdown');
             safeExecute(() => renderBusinessStrip(), 'renderBusinessStrip');
             safeExecute(() => renderHeaderFlags(), 'renderHeaderFlags');
+            safeExecute(() => setupFlagClickHandlers(), 'setupFlagClickHandlers');
             safeExecute(() => setupEmojiPicker(), 'setupEmojiPicker');
             safeExecute(() => setupEditEmojiPicker(), 'setupEditEmojiPicker');
             safeExecute(() => setupAvatarUpload(), 'setupAvatarUpload');
@@ -10358,7 +10421,7 @@
         }
 
         bootstrap();
-        console.log('🚀 AfriPay fully bootstrapped — all buttons, translation, and date/time fixed.');
+        console.log('🚀 AfriPay fully bootstrapped — all buttons, translation, date/time, and flag strip fixed.');
     </script>
 </body>
 </html>
