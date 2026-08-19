@@ -4621,6 +4621,8 @@
         let isLocalMode = true;
         let currentCountryData = { gstRate: 10, currency: 'LRD', flag: '🇱🇷', countryName: 'Liberia' };
         let pendingDeleteUserId = null;
+        // store the current filter country for the agent dropdown
+        let currentAgentFilterCountry = null;
 
         // ================================================================
         // COUNTRY MAPPING
@@ -4675,6 +4677,12 @@
             '+243': '🇨🇩',
             '+226': '🇧🇫'
         };
+        // reverse mapping: country name -> country code
+        const COUNTRY_NAME_TO_CODE = {};
+        for (const code in COUNTRY_CODE_TO_NAME) {
+            COUNTRY_NAME_TO_CODE[COUNTRY_CODE_TO_NAME[code]] = code;
+        }
+
         const SUPPORTED_COUNTRY_FLAGS = ['🇱🇷', '🇬🇳', '🇸🇳', '🇲🇱', '🇨🇮', '🇬🇭', '🇳🇪', '🇧🇯', '🇬🇼', '🇬🇲', '🇹🇬', '🇰🇪', '🇨🇫',
             '🇪🇹', '🇬🇦', '🇲🇬', '🇲🇦', '🇷🇼', '🇺🇬', '🇨🇩', '🇧🇫', '🇸🇱'
         ];
@@ -4802,10 +4810,8 @@
                         el.setAttribute('placeholder', translation);
                     }
                 });
-                const selectedName = getEl('selectedAgentName');
-                if (selectedName && !selectedName.dataset.agentId) {
-                    selectedName.textContent = t('select_agent_placeholder');
-                }
+                // update agent dropdown placeholder based on filter
+                updateAgentDropdownPlaceholder();
                 renderBusinessStrip();
                 renderAgentDropdown();
             } catch (e) { console.warn('translatePage error:', e); }
@@ -4938,6 +4944,12 @@
             return COUNTRY_CODE_TO_FLAG[code] || '🌍';
         }
 
+        function getAgentCountryName(agent) {
+            const data = agent.agentData || agent;
+            const code = data.countryCode || '';
+            return COUNTRY_CODE_TO_NAME[code] || '';
+        }
+
         function getAllContacts() {
             const map = new Map();
             connectedUsers.forEach(u => {
@@ -4968,30 +4980,113 @@
         }
 
         // ================================================================
-        // AGENT DROPDOWN
+        // AGENT DROPDOWN - with country filter
         // ================================================================
-        function renderAgentDropdown() {
+        function updateAgentDropdownPlaceholder() {
+            const btn = getEl('selectedAgentName');
+            if (!btn) return;
+            // if we have a filter and no agent selected, show placeholder with country
+            if (currentAgentFilterCountry && !selectedAgentId) {
+                const flag = getFlagForCountryName(currentAgentFilterCountry);
+                const text = `Select Agent in ${flag} ${currentAgentFilterCountry}`;
+                btn.innerHTML = text;
+                btn.dataset.agentId = '';
+            } else if (!selectedAgentId) {
+                btn.innerHTML = t('select_agent_placeholder');
+                btn.dataset.agentId = '';
+            }
+        }
+
+        function getFlagForCountryName(countryName) {
+            const code = COUNTRY_NAME_TO_CODE[countryName];
+            return code ? COUNTRY_CODE_TO_FLAG[code] : '🌍';
+        }
+
+        function getCountryNameFromSelect() {
+            const select = getEl('countryCodeSelect');
+            if (!select) return null;
+            const val = select.value;
+            if (!val) return null;
+            const parts = val.split('|');
+            return parts[1] || null;
+        }
+
+        function getCountryCodeFromName(countryName) {
+            return COUNTRY_NAME_TO_CODE[countryName] || null;
+        }
+
+        // Filter agents by country name
+        function getAgentsByCountry(countryName) {
+            if (!countryName) return getAgents();
+            const all = getAgents();
+            return all.filter(agent => {
+                const agentCountry = getAgentCountryName(agent);
+                return agentCountry.toLowerCase() === countryName.toLowerCase();
+            });
+        }
+
+        // Main render function with optional filter
+        function renderAgentDropdown(filterCountryName) {
             const list = getEl('agentDropdownList');
             if (!list) return;
-            const agents = getAgents();
+
+            // if filterCountryName is not provided, use the current filter
+            if (filterCountryName === undefined) {
+                filterCountryName = currentAgentFilterCountry;
+            } else {
+                currentAgentFilterCountry = filterCountryName;
+            }
+
+            let agents = filterCountryName ? getAgentsByCountry(filterCountryName) : getAgents();
+            // sort by business name
+            agents = agents.sort((a, b) => {
+                const aName = (a.agentData && a.agentData.businessName) || a.name;
+                const bName = (b.agentData && b.agentData.businessName) || b.name;
+                return aName.localeCompare(bName);
+            });
+
             list.innerHTML = '';
 
+            // If we have a filter, show a header
+            if (filterCountryName) {
+                const header = document.createElement('div');
+                header.style.cssText =
+                    'padding: 6px 10px; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 0.7rem; color: #aaa; text-align: center;';
+                const flag = getFlagForCountryName(filterCountryName);
+                header.textContent = `📍 ${flag} ${filterCountryName}`;
+                list.appendChild(header);
+            }
+
+            // Add "Select Agent" placeholder
             const selectItem = document.createElement('div');
             selectItem.className = 'agent-dropdown-item';
             selectItem.style.borderBottom = '1px solid rgba(255,215,0,0.3)';
             selectItem.style.fontWeight = '600';
             const selectInfo = document.createElement('div');
             selectInfo.className = 'agent-info';
+            let placeholderText = t('select_agent_placeholder');
+            if (filterCountryName) {
+                const flag = getFlagForCountryName(filterCountryName);
+                placeholderText = `👤 Select Agent in ${flag} ${filterCountryName}`;
+            }
             selectInfo.innerHTML =
-                `<span style="color:#FFD966; margin-right:6px;">👤</span> <span class="agent-name">${t('select_agent_placeholder')}</span>`;
+                `<span style="color:#FFD966; margin-right:6px;">👤</span> <span class="agent-name">${placeholderText}</span>`;
             selectItem.appendChild(selectInfo);
             selectItem.addEventListener('click', function(e) {
                 e.stopPropagation();
+                // Deselect agent
                 selectedAgentId = null;
                 _selectedAgentId = null;
                 const btn = getEl('selectedAgentName');
-                if (btn) { btn.innerHTML = t('select_agent_placeholder');
-                    btn.dataset.agentId = ''; }
+                if (btn) {
+                    if (filterCountryName) {
+                        const flag = getFlagForCountryName(filterCountryName);
+                        btn.innerHTML = `👤 Select Agent in ${flag} ${filterCountryName}`;
+                    } else {
+                        btn.innerHTML = t('select_agent_placeholder');
+                    }
+                    btn.dataset.agentId = '';
+                }
                 const agentNameInput = getEl('agentName');
                 if (agentNameInput) agentNameInput.value = '';
                 const agentPhoneInput = getEl('agentPhone');
@@ -5004,7 +5099,7 @@
                 const locBtn = getEl('agentLocationBtn');
                 if (locBtn) locBtn.disabled = true;
                 list.classList.remove('open');
-                showToast('👤 ' + t('select_agent_placeholder'), 1500);
+                showToast(`👤 ${placeholderText}`, 1500);
             });
             selectItem.addEventListener('touchstart', function(e) {
                 e.stopPropagation();
@@ -5012,20 +5107,97 @@
             list.appendChild(selectItem);
 
             if (agents.length === 0) {
+                // No agents: show a message and a "Register Agent" button
                 const empty = document.createElement('div');
-                empty.className = 'agent-dropdown-empty';
-                empty.textContent = t('no_agents');
+                empty.className = 'agent-dropdown-item';
+                empty.style.justifyContent = 'center';
+                empty.style.padding = '10px';
+                empty.style.color = '#ccc';
+                empty.style.fontSize = '0.8rem';
+                empty.innerHTML = `No agents in ${filterCountryName ? filterCountryName : 'this country'}`;
                 list.appendChild(empty);
+
+                // Add "Register Agent" button for this country
+                const regBtn = document.createElement('div');
+                regBtn.className = 'agent-dropdown-item';
+                regBtn.style.justifyContent = 'center';
+                regBtn.style.background = 'rgba(255,215,0,0.15)';
+                regBtn.style.borderTop = '1px solid rgba(255,215,0,0.3)';
+                regBtn.style.cursor = 'pointer';
+                const regText = document.createElement('span');
+                regText.textContent = `➕ Register Agent in ${filterCountryName || 'your country'}`;
+                regText.style.color = '#ffd966';
+                regText.style.fontWeight = '600';
+                regBtn.appendChild(regText);
+                regBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    list.classList.remove('open');
+                    // Open agent registration modal with country pre-selected
+                    if (filterCountryName) {
+                        // Pre-fill the agent registration form with this country
+                        const code = getCountryCodeFromName(filterCountryName);
+                        if (code) {
+                            // Set the country code in the agent registration modal
+                            const countrySelect = getEl('agentCountryCode');
+                            if (countrySelect) {
+                                for (let i = 0; i < countrySelect.options.length; i++) {
+                                    if (countrySelect.options[i].value === code) {
+                                        countrySelect.selectedIndex = i;
+                                        break;
+                                    }
+                                }
+                            }
+                            // Also set the city if possible? Optional.
+                            // Open the modal
+                            getEl('agentRegistrationModal').style.display = 'flex';
+                            // Clear any previous errors
+                            getEl('agentRegError').textContent = '';
+                            getEl('agentRegSuccess').textContent = '';
+                            // Reset other fields as needed (already done in click handler)
+                        } else {
+                            showToast('Could not map country code', 2000);
+                            // still open the modal
+                            getEl('agentRegistrationModal').style.display = 'flex';
+                        }
+                    } else {
+                        // no filter, just open
+                        getEl('agentRegistrationModal').style.display = 'flex';
+                    }
+                    showToast(`📝 Register agent for ${filterCountryName || 'your country'}`, 2000);
+                });
+                regBtn.addEventListener('touchstart', function(e) {
+                    e.stopPropagation();
+                    list.classList.remove('open');
+                    if (filterCountryName) {
+                        const code = getCountryCodeFromName(filterCountryName);
+                        if (code) {
+                            const countrySelect = getEl('agentCountryCode');
+                            if (countrySelect) {
+                                for (let i = 0; i < countrySelect.options.length; i++) {
+                                    if (countrySelect.options[i].value === code) {
+                                        countrySelect.selectedIndex = i;
+                                        break;
+                                    }
+                                }
+                            }
+                            getEl('agentRegistrationModal').style.display = 'flex';
+                            getEl('agentRegError').textContent = '';
+                            getEl('agentRegSuccess').textContent = '';
+                        } else {
+                            showToast('Could not map country code', 2000);
+                            getEl('agentRegistrationModal').style.display = 'flex';
+                        }
+                    } else {
+                        getEl('agentRegistrationModal').style.display = 'flex';
+                    }
+                    showToast(`📝 Register agent for ${filterCountryName || 'your country'}`, 2000);
+                }, { passive: true });
+                list.appendChild(regBtn);
                 return;
             }
 
-            const sorted = [...agents].sort((a, b) => {
-                const aName = (a.agentData && a.agentData.businessName) || a.name;
-                const bName = (b.agentData && b.agentData.businessName) || b.name;
-                return aName.localeCompare(bName);
-            });
-
-            sorted.forEach(agent => {
+            // Render agents
+            agents.forEach(agent => {
                 const item = document.createElement('div');
                 item.className = 'agent-dropdown-item';
                 const data = agent.agentData || agent;
@@ -5105,6 +5277,9 @@
                 item.appendChild(infoDiv);
                 list.appendChild(item);
             });
+
+            // Update the button placeholder based on filter
+            updateAgentDropdownPlaceholder();
         }
 
         function selectAgent(agentId) {
@@ -5114,8 +5289,15 @@
                 selectedAgentId = null;
                 _selectedAgentId = null;
                 const btn = getEl('selectedAgentName');
-                if (btn) { btn.innerHTML = t('select_agent_placeholder');
-                    btn.dataset.agentId = ''; }
+                if (btn) {
+                    if (currentAgentFilterCountry) {
+                        const flag = getFlagForCountryName(currentAgentFilterCountry);
+                        btn.innerHTML = `👤 Select Agent in ${flag} ${currentAgentFilterCountry}`;
+                    } else {
+                        btn.innerHTML = t('select_agent_placeholder');
+                    }
+                    btn.dataset.agentId = '';
+                }
                 const agentNameInput = getEl('agentName');
                 if (agentNameInput) agentNameInput.value = '';
                 const agentPhoneInput = getEl('agentPhone');
@@ -5316,7 +5498,8 @@
                 setCityValue('senderCitySelect', 'senderCityOther', currentUser.city || '');
             }
             renderBusinessStrip();
-            renderAgentDropdown();
+            // update dropdown based on current country
+            updateAgentDropdownForCountry();
             const locBtn = getEl('agentLocationBtn');
             if (locBtn && selectedAgentId) locBtn.disabled = false;
             else if (locBtn) locBtn.disabled = true;
@@ -5328,7 +5511,7 @@
             getEl('mainFormContainer').style.display = 'none';
             connectedUsers = connectedUsers.filter(user => user.id !== 'current');
             renderSidebar();
-            renderAgentDropdown();
+            renderAgentDropdown(null); // no filter
             const locBtn = getEl('agentLocationBtn');
             if (locBtn) locBtn.disabled = true;
         }
@@ -5387,7 +5570,7 @@
                     renderSidebar();
                     showToast('✅ Welcome ' + user.name + '!', 1800);
                     showLoggedInUI();
-                    renderAgentDropdown();
+                    renderAgentDropdown(currentAgentFilterCountry);
                     getEl('loginError').innerHTML = '';
                     return true;
                 } else {
@@ -5678,7 +5861,8 @@
                         if (regUser) regUser.approved = true;
                         saveRegisteredUsers();
                         renderDashboard();
-                        renderAgentDropdown();
+                        // update dropdown as agents list changed
+                        updateAgentDropdownForCountry();
                         showToast(`✅ Agent ${agent.name} approved!`, 2000);
                     }
                 });
@@ -5696,8 +5880,15 @@
                         selectedAgentId = null;
                         _selectedAgentId = null;
                         const btn = getEl('selectedAgentName');
-                        if (btn) { btn.innerHTML = t('select_agent_placeholder');
-                            btn.dataset.agentId = ''; }
+                        if (btn) {
+                            if (currentAgentFilterCountry) {
+                                const flag = getFlagForCountryName(currentAgentFilterCountry);
+                                btn.innerHTML = `👤 Select Agent in ${flag} ${currentAgentFilterCountry}`;
+                            } else {
+                                btn.innerHTML = t('select_agent_placeholder');
+                            }
+                            btn.dataset.agentId = '';
+                        }
                         const agentNameInput = getEl('agentName');
                         if (agentNameInput) agentNameInput.value = '';
                         const agentPhoneInput = getEl('agentPhone');
@@ -5711,7 +5902,7 @@
                         if (locBtn) locBtn.disabled = true;
                     }
                     renderDashboard();
-                    renderAgentDropdown();
+                    updateAgentDropdownForCountry();
                     showToast(`✅ Agent "${agent.name}" removed.`, 3000);
                 });
             });
@@ -6642,8 +6833,10 @@
                             const evt = new Event('change', { bubbles: true });
                             select.dispatchEvent(evt);
                             computeCharges();
+                            // Update agent dropdown based on new country
+                            updateAgentDropdownForCountry();
                             const name = options[i].text.split('(')[0].trim();
-                            showToast(t('toast_selected_country', { name }), 1600);
+                            showToast(`📍 ${name} selected`, 1600);
                             found = true;
                             break;
                         }
@@ -6661,6 +6854,55 @@
                     handler.call(this, e);
                 }, { passive: true });
             });
+        }
+
+        // ---- Update agent dropdown based on current country selection ----
+        function updateAgentDropdownForCountry() {
+            const countryWrapper = getEl('countryWrapper');
+            // If international mode is off, or country wrapper is hidden, show all agents
+            if (!countryWrapper || countryWrapper.style.display === 'none' || isLocalMode) {
+                currentAgentFilterCountry = null;
+                renderAgentDropdown(null);
+                return;
+            }
+            // Get selected country from dropdown
+            const countryName = getCountryNameFromSelect();
+            if (countryName) {
+                currentAgentFilterCountry = countryName;
+                renderAgentDropdown(countryName);
+                // If currently selected agent is not from this country, deselect
+                if (selectedAgentId) {
+                    const agent = getAgents().find(a => a.id === selectedAgentId);
+                    if (agent) {
+                        const agentCountry = getAgentCountryName(agent);
+                        if (agentCountry.toLowerCase() !== countryName.toLowerCase()) {
+                            // deselect
+                            selectedAgentId = null;
+                            _selectedAgentId = null;
+                            const btn = getEl('selectedAgentName');
+                            if (btn) {
+                                const flag = getFlagForCountryName(countryName);
+                                btn.innerHTML = `👤 Select Agent in ${flag} ${countryName}`;
+                                btn.dataset.agentId = '';
+                            }
+                            const agentNameInput = getEl('agentName');
+                            if (agentNameInput) agentNameInput.value = '';
+                            const agentPhoneInput = getEl('agentPhone');
+                            if (agentPhoneInput) agentPhoneInput.value = '';
+                            const amountInput = getEl('amountInput');
+                            if (amountInput) { amountInput.max = '';
+                                amountInput.placeholder = 'Amount'; }
+                            const limitIndicator = getEl('amountLimitIndicator');
+                            if (limitIndicator) limitIndicator.style.display = 'none';
+                            const locBtn = getEl('agentLocationBtn');
+                            if (locBtn) locBtn.disabled = true;
+                        }
+                    }
+                }
+            } else {
+                currentAgentFilterCountry = null;
+                renderAgentDropdown(null);
+            }
         }
 
         // ================================================================
@@ -6977,7 +7219,7 @@
         // MAIN INIT
         // ================================================================
         function initApp() {
-            console.log('🚀 AfriPay initializing with all features fixed...');
+            console.log('🚀 AfriPay initializing with country-filtered agent dropdown...');
 
             function safeExecute(fn, label) { try { fn(); } catch (e) { console.error(`❌ Error in ${label}:`, e); } }
 
@@ -6991,7 +7233,6 @@
             safeExecute(() => loadChatMessages(), 'loadChatMessages');
             safeExecute(() => loadChatSettings(), 'loadChatSettings');
             safeExecute(() => renderSidebar(), 'renderSidebar');
-            safeExecute(() => renderAgentDropdown(), 'renderAgentDropdown');
             safeExecute(() => renderBusinessStrip(), 'renderBusinessStrip');
             safeExecute(() => renderHeaderFlags(), 'renderHeaderFlags');
             safeExecute(() => setupFlagClickHandlers(), 'setupFlagClickHandlers');
@@ -7002,19 +7243,28 @@
             safeExecute(() => updateDateTime(), 'updateDateTime');
             setInterval(() => safeExecute(updateDateTime, 'updateDateTime'), 1000);
 
+            // Initial agent dropdown render (no filter)
+            renderAgentDropdown(null);
+
+            // If user is logged in, update based on country
+            if (currentUser) {
+                updateAgentDropdownForCountry();
+            }
+
             const agents = getAgents();
-            if (agents.length > 0) {
-                const first = agents[0];
-                if (first) {
-                    selectAgent(first.id);
-                    console.log('✅ Auto-selected approved agent:', first.agentData?.businessName || first.name);
+            if (agents.length > 0 && !selectedAgentId) {
+                // if there is a filter, try to auto-select the first agent in that country
+                let filtered = agents;
+                if (currentAgentFilterCountry) {
+                    filtered = getAgentsByCountry(currentAgentFilterCountry);
                 }
-            } else {
-                const btn = getEl('selectedAgentName');
-                if (btn) { btn.innerHTML = t('select_agent_placeholder');
-                    btn.dataset.agentId = ''; }
-                const locBtn = getEl('agentLocationBtn');
-                if (locBtn) locBtn.disabled = true;
+                if (filtered.length > 0) {
+                    const first = filtered[0];
+                    if (first) {
+                        selectAgent(first.id);
+                        console.log('✅ Auto-selected agent:', first.agentData?.businessName || first.name);
+                    }
+                }
             }
 
             translatePage();
@@ -7378,14 +7628,15 @@
                     e.stopPropagation();
                     const list = getEl('agentDropdownList');
                     if (list) list.classList.toggle('open');
-                    renderAgentDropdown();
+                    // Re-render with current filter
+                    renderAgentDropdown(currentAgentFilterCountry);
                 });
                 agentDropdownBtn.addEventListener('touchstart', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
                     const list = getEl('agentDropdownList');
                     if (list) list.classList.toggle('open');
-                    renderAgentDropdown();
+                    renderAgentDropdown(currentAgentFilterCountry);
                 }, { passive: true });
             }
             document.addEventListener('click', function(e) {
@@ -7711,6 +7962,8 @@
                         if (currencySymbolSpan) currencySymbolSpan.innerText = "Local";
                     }
                     computeCharges();
+                    // Update agent dropdown based on country
+                    updateAgentDropdownForCountry();
                 });
                 intlToggleBtn.addEventListener('touchstart', function(e) {
                     e.preventDefault();
@@ -7735,6 +7988,7 @@
                         if (currencySymbolSpan) currencySymbolSpan.innerText = "Local";
                     }
                     computeCharges();
+                    updateAgentDropdownForCountry();
                 }, { passive: true });
             }
 
@@ -7786,7 +8040,7 @@
                     getEl('addClientModal').style.display = 'none';
                     getEl('addClientError').textContent = '';
                     renderSidebar();
-                    renderAgentDropdown();
+                    renderAgentDropdown(currentAgentFilterCountry);
                 });
                 saveClientBtn.addEventListener('touchstart', function(e) {
                     e.preventDefault();
@@ -7810,7 +8064,7 @@
                     getEl('addClientModal').style.display = 'none';
                     getEl('addClientError').textContent = '';
                     renderSidebar();
-                    renderAgentDropdown();
+                    renderAgentDropdown(currentAgentFilterCountry);
                 }, { passive: true });
             }
 
@@ -8355,7 +8609,7 @@
                         registeredUsers.push(agentData);
                         saveRegisteredUsers();
                         showToast('✅ Agent ' + bizName + ' registered! PIN: ' + pin, 4000);
-                        renderAgentDropdown();
+                        renderAgentDropdown(currentAgentFilterCountry);
                         renderSidebar();
                         selectAgent(agentData.id);
                         getEl('agentRegSuccess').textContent = '✅ Agent ' + bizName + ' registered! PIN: ' + pin;
@@ -8469,7 +8723,7 @@
                         registeredUsers.push(agentData);
                         saveRegisteredUsers();
                         showToast('✅ Agent ' + bizName + ' registered! PIN: ' + pin, 4000);
-                        renderAgentDropdown();
+                        renderAgentDropdown(currentAgentFilterCountry);
                         renderSidebar();
                         selectAgent(agentData.id);
                         getEl('agentRegSuccess').textContent = '✅ Agent ' + bizName + ' registered! PIN: ' + pin;
@@ -8540,7 +8794,7 @@
                         saveRegisteredUsers();
                         getEl('editAgentSuccess').textContent = '✅ Agent updated!';
                         getEl('editAgentError').textContent = '';
-                        renderAgentDropdown();
+                        renderAgentDropdown(currentAgentFilterCountry);
                         renderSidebar();
                         showToast('✅ Agent ' + businessName + ' updated!', 2000);
                         if (selectedAgentId === agentId) {
@@ -8658,7 +8912,7 @@
                         saveRegisteredUsers();
                         getEl('editAgentSuccess').textContent = '✅ Agent updated!';
                         getEl('editAgentError').textContent = '';
-                        renderAgentDropdown();
+                        renderAgentDropdown(currentAgentFilterCountry);
                         renderSidebar();
                         showToast('✅ Agent ' + businessName + ' updated!', 2000);
                         if (selectedAgentId === agentId) {
@@ -9172,7 +9426,7 @@
                     showToast('✅ Welcome ' + name + '!', 3000);
                     renderSidebar();
                     showLoggedInUI();
-                    renderAgentDropdown();
+                    renderAgentDropdown(currentAgentFilterCountry);
                     setTimeout(() => { getEl('registerModal').style.display = 'none'; }, 1500);
                 });
                 doRegisterBtn.addEventListener('touchstart', function(e) {
@@ -9239,7 +9493,7 @@
                     showToast('✅ Welcome ' + name + '!', 3000);
                     renderSidebar();
                     showLoggedInUI();
-                    renderAgentDropdown();
+                    renderAgentDropdown(currentAgentFilterCountry);
                     setTimeout(() => { getEl('registerModal').style.display = 'none'; }, 1500);
                 }, { passive: true });
             }
@@ -10396,6 +10650,16 @@
                     }
                 });
             }
+
+            // Country select change: update agent dropdown
+            const countrySelect = getEl('countryCodeSelect');
+            if (countrySelect) {
+                countrySelect.addEventListener('change', function() {
+                    // Update country data and charges (already handled in intl toggle)
+                    // Also update agent dropdown
+                    updateAgentDropdownForCountry();
+                });
+            }
         }
 
         // ================================================================
@@ -10421,7 +10685,7 @@
         }
 
         bootstrap();
-        console.log('🚀 AfriPay fully bootstrapped — all buttons, translation, date/time, and flag strip fixed.');
+        console.log('🚀 AfriPay fully bootstrapped — country-filtered agent dropdown active.');
     </script>
 </body>
 </html>
