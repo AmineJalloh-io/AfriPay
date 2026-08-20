@@ -2038,6 +2038,22 @@
             color: #0a2b3c;
             font-size: 1.05rem;
         }
+        .receipt-row.recipient-row {
+            background: #e8f8f0;
+            border-radius: 6px;
+            padding: 5px 10px;
+            margin-top: 4px;
+            border: 1px solid #b8e0d0;
+        }
+        .receipt-row.recipient-row .label {
+            color: #1a7a5a;
+            font-weight: 700;
+        }
+        .receipt-row.recipient-row .value {
+            color: #1a7a5a;
+            font-weight: 800;
+            font-size: 1.05rem;
+        }
         .receipt-footer {
             background: #f5f8fa;
             padding: 10px 16px 12px 16px;
@@ -3021,6 +3037,66 @@
             font-size: 1.05rem !important;
         }
 
+        /* EDIT AGENT – hidden collateral & upload sections */
+        .edit-agent-collateral-section,
+        .edit-agent-id-section,
+        .edit-agent-logo-section {
+            display: none;
+            margin-top: 0.35rem;
+            padding-top: 0.35rem;
+            border-top: 2px dashed #d0dce8;
+            transition: opacity 0.3s ease;
+        }
+        .edit-agent-collateral-section.open,
+        .edit-agent-id-section.open,
+        .edit-agent-logo-section.open {
+            display: block;
+        }
+        .edit-agent-collateral-section .input-group select {
+            height: 36px;
+            font-size: 0.85rem;
+        }
+        .edit-agent-id-section .id-preview-edit {
+            margin-top: 3px;
+            max-width: 100%;
+            max-height: 110px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            display: none;
+            object-fit: contain;
+            background: #f5f7fa;
+        }
+        .edit-agent-id-section .id-preview-edit.show {
+            display: block;
+        }
+        .edit-agent-logo-section .logo-preview-edit {
+            margin-top: 2px;
+            max-height: 60px;
+            border-radius: 6px;
+            display: none;
+        }
+        .edit-agent-logo-section .logo-preview-edit.show {
+            display: block;
+        }
+        .edit-agent-auth-hint {
+            font-size: 0.68rem;
+            color: #27ae60;
+            background: #e8f8f0;
+            padding: 3px 10px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-top: 2px;
+            border: 1px solid #b8e0d0;
+        }
+        .edit-agent-auth-hint.error {
+            color: #e74c3c;
+            background: #fde8e8;
+            border-color: #f5c6cb;
+        }
+        .edit-agent-auth-hint.hidden {
+            display: none;
+        }
+
         /* ================================================================
            ADDED: AGENT SELECT DROPDOWN STYLING
            ================================================================ */
@@ -3362,6 +3438,51 @@
             .edit-modal-header .add-agent-header-btn .icon {
                 font-size: 0.7rem;
             }
+            .edit-agent-collateral-section .input-group select {
+                height: 32px;
+                font-size: 0.8rem;
+            }
+            .edit-agent-id-section .id-preview-edit {
+                max-height: 80px;
+            }
+            .edit-agent-logo-section .logo-preview-edit {
+                max-height: 50px;
+            }
+            #currencyConverterModal .modal-content {
+                max-width: 95%;
+                width: 95%;
+                padding: 0;
+            }
+            .converter-body {
+                padding: 10px 12px 8px 12px;
+            }
+            .converter-body .input-group input,
+            .converter-body .input-group select {
+                height: 34px;
+                font-size: 0.85rem;
+            }
+            .converter-body .input-group .country-selector-sm,
+            .converter-body .input-group .from-currency-select {
+                height: 34px;
+            }
+            .converter-body .input-group .country-selector-sm select,
+            .converter-body .input-group .from-currency-select select {
+                height: 30px;
+                font-size: 0.8rem;
+            }
+            .converter-results .conv-row {
+                font-size: 0.7rem !important;
+            }
+            .converter-results .conv-row.total {
+                font-size: 0.8rem !important;
+            }
+            .converter-results .conv-row.recipient .value {
+                font-size: 0.9rem !important;
+            }
+            .converter-footer .action-btn {
+                height: 34px;
+                font-size: 0.75rem !important;
+            }
         }
         @media (max-width: 400px) {
             .brand-text {
@@ -3572,6 +3693,48 @@
             .edit-modal-header .add-agent-header-btn .icon {
                 font-size: 0.6rem;
             }
+            .edit-agent-collateral-section .input-group select {
+                height: 28px;
+                font-size: 0.72rem;
+            }
+            .edit-agent-id-section .id-preview-edit {
+                max-height: 60px;
+            }
+            .edit-agent-logo-section .logo-preview-edit {
+                max-height: 40px;
+            }
+            #currencyConverterModal .modal-content {
+                max-width: 98%;
+                width: 98%;
+            }
+            .converter-body .input-group input,
+            .converter-body .input-group select {
+                height: 30px;
+                font-size: 0.8rem;
+            }
+            .converter-body .input-group .country-selector-sm,
+            .converter-body .input-group .from-currency-select {
+                height: 30px;
+            }
+            .converter-body .input-group .country-selector-sm select,
+            .converter-body .input-group .from-currency-select select {
+                height: 26px;
+                font-size: 0.72rem;
+            }
+            .converter-results .conv-row {
+                font-size: 0.65rem !important;
+            }
+            .converter-results .conv-row.total {
+                font-size: 0.72rem !important;
+            }
+            .converter-results .conv-row.recipient .value {
+                font-size: 0.8rem !important;
+            }
+            .converter-footer .action-btn {
+                height: 30px;
+                font-size: 0.68rem !important;
+                padding: 3px 8px;
+            }
         }
     </style>
 </head>
@@ -3719,11 +3882,9 @@
                 <div class="agent-fields-stacked">
                     <div class="input-group">
                         <label id="agentNameLabel" data-i18n="agent">Agent *</label>
-                        <!-- new agent dropdown select -->
                         <select id="agentNameSelect" class="agent-select" required>
                             <option value="">-- Select Agent --</option>
                         </select>
-                        <!-- hidden input to keep compatibility with existing code -->
                         <input type="hidden" id="agentName" />
                     </div>
                     <div class="agent-loc-between">
@@ -3884,7 +4045,7 @@
     <div id="registerModal" class="modal"><div class="modal-content"><h3 data-i18n="register_title">📝 Register</h3><input type="text" id="regName" placeholder="Full Name *" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;" /><input type="tel" id="regPhone" placeholder="Phone *" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;" /><input type="text" id="regAddress" placeholder="Address" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;" /><div class="input-group" style="margin-bottom:0.35rem;"><label style="font-size:0.75rem;font-weight:700;color:#1e3b4a;" data-i18n="city">City *</label><div class="city-input-row"><select id="regCitySelect"><option value="">Select city...</option><option value="Freetown">Freetown</option><option value="Abuja">Abuja</option><option value="Accra">Accra</option><option value="Nairobi">Nairobi</option><option value="Monrovia">Monrovia</option><option value="Dakar">Dakar</option><option value="Conakry">Conakry</option><option value="Bamako">Bamako</option><option value="Yamoussoukro">Yamoussoukro</option><option value="Niamey">Niamey</option><option value="Porto-Novo">Porto-Novo</option><option value="Bissau">Bissau</option><option value="Banjul">Banjul</option><option value="Lomé">Lomé</option><option value="Bangui">Bangui</option><option value="Addis Ababa">Addis Ababa</option><option value="Libreville">Libreville</option><option value="Antananarivo">Antananarivo</option><option value="Rabat">Rabat</option><option value="Kigali">Kigali</option><option value="Kampala">Kampala</option><option value="Kinshasa">Kinshasa</option><option value="Ouagadougou">Ouagadougou</option></select><span class="or-text">OR</span><input type="text" id="regCityOther" placeholder="Other city" /></div></div><select id="regCountry" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;"><option value="Sierra Leone">Sierra Leone</option><option value="Nigeria">Nigeria</option><option value="Ghana">Ghana</option><option value="Kenya">Kenya</option><option value="Liberia">Liberia</option><option value="Senegal">Senegal</option><option value="Guinea">Guinea</option><option value="Mali">Mali</option><option value="Ivory Coast">Ivory Coast</option><option value="Niger">Niger</option><option value="Benin">Benin</option><option value="Guinea Bissau">Guinea Bissau</option><option value="Gambia">Gambia</option><option value="Togo">Togo</option><option value="Central Africa Rep">CAR</option><option value="Ethiopia">Ethiopia</option><option value="Gabon">Gabon</option><option value="Madagascar">Madagascar</option><option value="Morocco">Morocco</option><option value="Rwanda">Rwanda</option><option value="Uganda">Uganda</option><option value="DR Congo">DRC</option><option value="Burkina Faso">Burkina</option></select><select id="regLanguage" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;"><option value="en">English</option><option value="fr">Français</option><option value="es">Español</option></select><label style="font-size:0.75rem;font-weight:700;color:#1e3b4a;margin-top:2px;" data-i18n="choose_icon">Icon:</label><div class="emoji-grid" id="emojiPickerGrid"><span class="emoji-option" data-emoji="👤">👤</span><span class="emoji-option" data-emoji="👨">👨</span><span class="emoji-option" data-emoji="👩">👩</span><span class="emoji-option" data-emoji="🧑">🧑</span><span class="emoji-option" data-emoji="👦">👦</span><span class="emoji-option" data-emoji="👧">👧</span><span class="emoji-option" data-emoji="🧒">🧒</span><span class="emoji-option" data-emoji="👨‍💻">👨‍💻</span><span class="emoji-option" data-emoji="👩‍💻">👩‍💻</span><span class="emoji-option" data-emoji="🧑‍💻">🧑‍💻</span><span class="emoji-option" data-emoji="👨‍🎓">👨‍🎓</span><span class="emoji-option" data-emoji="👩‍🎓">👩‍🎓</span></div><div style="margin-top:4px;"><label style="font-size:0.75rem;font-weight:700;color:#1e3b4a;" data-i18n="upload_image">Upload image:</label><input type="file" id="regProfileImage" accept="image/*" style="width:100%; padding:4px; border-radius:20px; border:1px solid #ddd; font-size:0.85rem; height:36px;" /><div id="regProfilePreview" style="display:none; margin-top:2px;"><img src="#" alt="Preview" style="max-height:60px; border-radius:6px;" /><button type="button" id="regProfileRemove" style="background:#e74c3c; color:white; border:none; padding:2px 8px; border-radius:20px; font-size:0.6rem; cursor:pointer;">✕</button></div></div><div style="display:flex; gap:4px; align-items:center; margin-top:3px;"><button type="button" class="action-btn" id="regGenerateUssdBtn" style="flex:1; background:#2c7da0; height:36px; font-size:0.85rem;" data-i18n="generate_ussd">📱 USSD</button></div><div class="ussd-result-box" id="regUssdResult"><span class="ussd-label">📞 USSD:</span><span class="ussd-code-value" id="regUssdCode"></span><button class="copy-ussd-btn" id="regCopyUssdBtn">Copy</button></div><div id="regError" class="error-msg"></div><div id="regSuccess" class="success-msg"></div><div class="action-buttons-row"><button id="doRegisterBtn" class="action-btn" data-i18n="register">Register</button><button id="registerAgentBtn" class="action-btn orange" data-i18n="register_agent">🏢 Agent</button><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div></div></div>
     <div id="agentRegistrationModal" class="modal"><div class="modal-content agent-form"><h3 data-i18n="agent_reg_title">🏢 Agent Reg</h3><div id="agentRegError" class="error-msg"></div><div id="agentRegSuccess" class="success-msg"></div><div class="input-group"><label data-i18n="agent_business_name">Business *</label><input type="text" id="agentBusinessName" placeholder="Business name" /></div><div class="input-group"><label data-i18n="agent_address">Address *</label><input type="text" id="agentAddress" placeholder="Street" /></div><div class="input-group"><label data-i18n="agent_city">City *</label><div class="city-input-row"><select id="agentCitySelect"><option value="">Select city...</option><option value="Freetown">Freetown</option><option value="Abuja">Abuja</option><option value="Accra">Accra</option><option value="Nairobi">Nairobi</option><option value="Monrovia">Monrovia</option><option value="Dakar">Dakar</option><option value="Conakry">Conakry</option><option value="Bamako">Bamako</option><option value="Yamoussoukro">Yamoussoukro</option><option value="Niamey">Niamey</option><option value="Porto-Novo">Porto-Novo</option><option value="Bissau">Bissau</option><option value="Banjul">Banjul</option><option value="Lomé">Lomé</option><option value="Bangui">Bangui</option><option value="Addis Ababa">Addis Ababa</option><option value="Libreville">Libreville</option><option value="Antananarivo">Antananarivo</option><option value="Rabat">Rabat</option><option value="Kigali">Kigali</option><option value="Kampala">Kampala</option><option value="Kinshasa">Kinshasa</option><option value="Ouagadougou">Ouagadougou</option></select><span class="or-text">OR</span><input type="text" id="agentCityOther" placeholder="Other city" /></div></div><div class="input-group"><label data-i18n="agent_reg_number">Reg Number *</label><input type="text" id="agentRegNumber" placeholder="e.g. SL-2025-0042" /></div><div class="input-group"><label data-i18n="agent_business_type">Type *</label><select id="agentBusinessType"><option value="Retail">Retail</option><option value="Wholesale">Wholesale</option><option value="Service">Service</option><option value="Manufacturing">Manufacturing</option><option value="Transport">Transport</option><option value="Hospitality">Hospitality</option><option value="Financial">Financial</option><option value="Other">Other</option></select></div><div class="double-row"><div class="input-group"><label data-i18n="agent_owner_name">Owner *</label><input type="text" id="agentOwnerName" placeholder="Owner name" /></div><div class="input-group"><label data-i18n="agent_id_type">ID Type *</label><select id="agentIdType"><option value="National ID">National ID</option><option value="Passport">Passport</option><option value="Driver's License">Driver's License</option><option value="Voter's Card">Voter's Card</option><option value="Other">Other</option></select></div></div><div class="input-group"><label data-i18n="agent_id_number">ID Number *</label><input type="text" id="agentIdNumber" placeholder="e.g. SL-123456" /></div><div class="input-group"><label data-i18n="agent_id_image">ID Image *</label><input type="file" id="agentIdImage" accept="image/*" capture="environment" style="padding:4px; height:auto;" /><img id="agentIdPreview" class="id-preview" alt="ID" /></div><div class="input-group"><label data-i18n="agent_logo">Logo *</label><input type="file" id="agentLogoImage" accept="image/*" required style="padding:4px; height:auto;" /><div id="agentLogoPreviewContainer" style="display:none; margin-top:2px;"><img src="#" alt="Logo" style="max-height:60px; border-radius:6px;" /><button type="button" id="agentLogoRemove" style="background:#e74c3c; color:white; border:none; padding:2px 8px; border-radius:20px; font-size:0.6rem; cursor:pointer;">✕</button></div><div style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="agent_logo_hint">Upload business logo</div></div><div class="input-group"><label data-i18n="agent_mobile_money">Mobile Money *</label><input type="tel" id="agentMobileMoney" placeholder="e.g. 23276123456" /></div>
 
-        <!-- ====== UPDATED COLLATERAL SELECT - MINIMUM 200 ====== -->
+        <!-- Collateral select (min 200) -->
         <div class="input-group">
             <label for="agentCollateralLimit" data-i18n="collateral_limit_label">💳 Collateral *</label>
             <select id="agentCollateralLimit">
@@ -3921,7 +4082,9 @@
 
         <div class="input-group"><label data-i18n="agent_country_code">Country Code</label><select id="agentCountryCode"><option value="+232">🇸🇱 +232</option><option value="+234">🇳🇬 +234</option><option value="+233">🇬🇭 +233</option><option value="+254">🇰🇪 +254</option><option value="+231">🇱🇷 +231</option><option value="+221">🇸🇳 +221</option><option value="+224" selected>🇬🇳 +224</option><option value="+223">🇲🇱 +223</option><option value="+225">🇨🇮 +225</option><option value="+227">🇳🇪 +227</option><option value="+229">🇧🇯 +229</option><option value="+245">🇬🇼 +245</option><option value="+220">🇬🇲 +220</option><option value="+228">🇹🇬 +228</option><option value="+236">🇨🇫 +236</option><option value="+251">🇪🇹 +251</option><option value="+241">🇬🇦 +241</option><option value="+261">🇲🇬 +261</option><option value="+212">🇲🇦 +212</option><option value="+250">🇷🇼 +250</option><option value="+256">🇺🇬 +256</option><option value="+243">🇨🇩 +243</option><option value="+226">🇧🇫 +226</option></select></div><div class="input-group"><label data-i18n="agent_password">Password *</label><div style="display:flex; gap:4px; align-items:center; flex-wrap:wrap;"><input type="text" id="agentPassword" placeholder="A1B2C3" style="flex:1; min-width:80px; letter-spacing:2px; font-family:monospace;" readonly /><button type="button" class="action-btn green" id="generatePasswordBtn" style="padding:4px 12px; height:36px; font-size:0.75rem;" data-i18n="generate_password">🔑 Gen</button></div><div id="agentPasswordHint" style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="password_hint">Click Gen to create 6-char password</div></div><div class="input-group"><label data-i18n="agent_pin_label">5-Digit PIN *</label><div style="display:flex; gap:4px; align-items:center; flex-wrap:wrap;"><input type="text" id="agentPin" placeholder="12345" style="flex:1; min-width:80px; letter-spacing:2px; font-family:monospace;" readonly /><button type="button" class="action-btn green" id="generatePinBtn" style="padding:4px 12px; height:36px; font-size:0.75rem;" data-i18n="generate_pin">🔑 Gen PIN</button></div><div id="agentPinHint" style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="pin_hint">Click to create 5-digit PIN</div></div><div class="collateral-box"><div style="display:flex; align-items:center; gap:4px; flex-wrap:wrap;"><span style="font-weight:700; font-size:0.8rem; color:#1c6e8f;" data-i18n="collateral_label">🔒 Collateral</span><button class="action-btn orange" id="generateCollateralBtn" style="padding:4px 12px; height:34px; font-size:0.75rem;" data-i18n="generate_collateral">USSD</button></div><div id="collateralResult" style="margin-top:3px;"><span style="font-size:0.68rem; color:#666;" data-i18n="collateral_hint">Generate USSD for Orange Money collateral</span><div id="collateralUssdDisplay" class="ussd-code" style="display:none;"></div></div><div id="collateralError" class="error-msg" style="font-size:0.68rem;"></div><input type="hidden" id="collateralAmount" value="0" /></div><div style="margin:6px 0 4px 0; text-align:center;"><button class="action-btn orange" id="viewAgreementBtn" style="width:100%; height:38px; font-size:0.85rem;" data-i18n="view_agreement">📜 Agreement</button><div id="agreementStatusDisplay" style="font-size:0.68rem; color:#7f8c8d; margin-top:2px;"><span data-i18n="agreement_status_label">Agreement:</span> <span id="agreementStatusText" style="font-weight:700; color:#e74c3c;" data-i18n="not_signed">Not Signed</span></div></div><div class="input-group" style="margin-top:0.35rem;"><label for="agentProviderTxId" data-i18n="provider_tx_id_label">🔐 Provider TX ID *</label><input type="text" id="agentProviderTxId" placeholder="AB123456.1234.X12345" pattern="[A-Za-z]{2}[0-9]{6}\.[0-9]{4}\.[A-Za-z][0-9]{5}" /><div style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="provider_tx_id_format">Format: AB123456.1234.X12345</div><div id="agentProviderTxIdError" class="error-msg" style="font-size:0.68rem; display:none;"></div></div><div class="input-group" id="agentTransferCodeGroup" style="display:none;"><label for="agentTransferCode" data-i18n="transfer_code_label">Transfer Code *</label><input type="text" id="agentTransferCode" placeholder="6-14 digits" maxlength="14" pattern="[0-9]{6}|[0-9]{8}|[0-9]{10}|[0-9]{12}|[0-9]{14}" /><div style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="transfer_code_hint">6-14 digit code</div><div id="agentTransferCodeError" class="error-msg" style="font-size:0.68rem; display:none;"></div></div><div class="action-buttons-row" style="margin-top:6px;"><button class="action-btn" id="submitAgentRegistrationBtn" data-i18n="register_agent_submit">Register</button><button class="action-btn close-modal" id="closeAgentRegBtn" style="background:#2c7da0;" data-i18n="close">Close</button></div></div></div>
 
-    <!-- EDIT AGENT MODAL -->
+    <!-- ================================================================
+         EDIT AGENT MODAL – with collateral, ID upload & logo upload
+         ================================================================ -->
     <div id="editAgentModal" class="modal">
         <div class="modal-content agent-form">
             <div class="edit-agent-header">
@@ -3930,14 +4093,89 @@
             <input type="hidden" id="editAgentId" />
             <div id="editAgentError" class="error-msg"></div>
             <div id="editAgentSuccess" class="success-msg"></div>
+
+            <!-- Basic fields (always visible) -->
             <div class="input-group"><label data-i18n="agent_business_name">Business *</label><input type="text" id="editBusinessName" /></div>
             <div class="input-group"><label data-i18n="agent_address">Address *</label><input type="text" id="editAddress" /></div>
             <div class="input-group"><label data-i18n="agent_city">City *</label><div class="city-input-row"><select id="editCitySelect"><option value="">Select city...</option><option value="Freetown">Freetown</option><option value="Abuja">Abuja</option><option value="Accra">Accra</option><option value="Nairobi">Nairobi</option><option value="Monrovia">Monrovia</option><option value="Dakar">Dakar</option><option value="Conakry">Conakry</option><option value="Bamako">Bamako</option><option value="Yamoussoukro">Yamoussoukro</option><option value="Niamey">Niamey</option><option value="Porto-Novo">Porto-Novo</option><option value="Bissau">Bissau</option><option value="Banjul">Banjul</option><option value="Lomé">Lomé</option><option value="Bangui">Bangui</option><option value="Addis Ababa">Addis Ababa</option><option value="Libreville">Libreville</option><option value="Antananarivo">Antananarivo</option><option value="Rabat">Rabat</option><option value="Kigali">Kigali</option><option value="Kampala">Kampala</option><option value="Kinshasa">Kinshasa</option><option value="Ouagadougou">Ouagadougou</option></select><span class="or-text">OR</span><input type="text" id="editCityOther" placeholder="Other city" /></div></div>
             <div class="input-group"><label data-i18n="agent_reg_number">Reg Number *</label><input type="text" id="editRegNumber" /></div>
             <div class="input-group"><label data-i18n="agent_mobile_money">Mobile Money *</label><input type="tel" id="editMobileMoney" /></div>
-            <div class="input-group"><label data-i18n="agent_password">Password *</label><input type="password" id="editPassword" placeholder="Enter registration password" /></div>
-            <div class="input-group"><label data-i18n="agent_pin_label">5-Digit PIN *</label><input type="password" id="editPin" placeholder="Enter registration PIN" maxlength="5" /></div>
-            <div class="action-buttons-row">
+
+            <!-- Password & PIN – when correct, reveal extra fields -->
+            <div class="input-group"><label data-i18n="agent_password">Password *</label><input type="password" id="editPassword" placeholder="6‑char alphanumeric" maxlength="6" style="letter-spacing:2px; font-family:monospace;" /></div>
+            <div class="input-group"><label data-i18n="agent_pin_label">5‑Digit PIN *</label><input type="password" id="editPin" placeholder="5 digits" maxlength="5" inputmode="numeric" style="letter-spacing:2px; font-family:monospace; text-align:center;" /></div>
+            <div id="editAuthHint" class="edit-agent-auth-hint hidden" data-i18n="edit_auth_hint">✅ Correct credentials – editing unlocked</div>
+
+            <!-- ===== COLLATERAL SECTION (hidden until auth) ===== -->
+            <div class="edit-agent-collateral-section" id="editCollateralSection">
+                <div class="input-group">
+                    <label for="editCollateralLimit" data-i18n="collateral_limit_label">💳 Collateral *</label>
+                    <select id="editCollateralLimit">
+                        <option value="200">200</option>
+                        <option value="300">300</option>
+                        <option value="400">400</option>
+                        <option value="500">500</option>
+                        <option value="600">600</option>
+                        <option value="700">700</option>
+                        <option value="800">800</option>
+                        <option value="900">900</option>
+                        <option value="1000">1,000</option>
+                        <option value="1500">1,500</option>
+                        <option value="2000">2,000</option>
+                        <option value="2500">2,500</option>
+                        <option value="3000">3,000</option>
+                        <option value="3500">3,500</option>
+                        <option value="4000">4,000</option>
+                        <option value="4500">4,500</option>
+                        <option value="5000">5,000</option>
+                        <option value="5500">5,500</option>
+                        <option value="6000">6,000</option>
+                        <option value="6500">6,500</option>
+                        <option value="7000">7,000</option>
+                        <option value="7500">7,500</option>
+                        <option value="8000">8,000</option>
+                        <option value="8500">8,500</option>
+                        <option value="9000">9,000</option>
+                        <option value="9500">9,500</option>
+                        <option value="10000">10,000</option>
+                    </select>
+                    <div style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="collateral_limit_hint">Max transaction amount</div>
+                </div>
+                <div style="margin-top:3px; display:flex; gap:4px; flex-wrap:wrap;">
+                    <button class="action-btn orange" id="editGenerateCollateralBtn" style="padding:4px 12px; height:34px; font-size:0.75rem;" data-i18n="generate_collateral">USSD</button>
+                    <span id="editCollateralStatus" style="font-size:0.68rem; color:#1c6e8f; padding:4px 8px; background:#e8f0f8; border-radius:20px; display:none;">🔒 Collateral set</span>
+                </div>
+                <div id="editCollateralResult" style="margin-top:3px;">
+                    <div id="editCollateralUssdDisplay" class="ussd-code" style="display:none; font-size:0.85rem;"></div>
+                </div>
+                <div id="editCollateralError" class="error-msg" style="font-size:0.68rem;"></div>
+                <input type="hidden" id="editCollateralAmount" value="0" />
+            </div>
+
+            <!-- ===== ID UPLOAD SECTION (hidden until auth) ===== -->
+            <div class="edit-agent-id-section" id="editIdSection">
+                <div class="input-group">
+                    <label data-i18n="agent_id_image">📄 Upload ID *</label>
+                    <input type="file" id="editIdImage" accept="image/*" capture="environment" style="padding:4px; height:auto;" />
+                    <img id="editIdPreview" class="id-preview-edit" alt="ID preview" />
+                    <div style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="agent_id_image_hint">Upload a clear photo of the ID</div>
+                </div>
+            </div>
+
+            <!-- ===== LOGO UPLOAD SECTION (hidden until auth) ===== -->
+            <div class="edit-agent-logo-section" id="editLogoSection">
+                <div class="input-group">
+                    <label data-i18n="agent_logo">🖼️ Upload Logo *</label>
+                    <input type="file" id="editLogoImage" accept="image/*" style="padding:4px; height:auto;" />
+                    <div id="editLogoPreviewContainer" style="display:none; margin-top:2px;">
+                        <img src="#" alt="Logo preview" class="logo-preview-edit show" style="max-height:60px; border-radius:6px;" />
+                        <button type="button" id="editLogoRemove" style="background:#e74c3c; color:white; border:none; padding:2px 8px; border-radius:20px; font-size:0.6rem; cursor:pointer;">✕</button>
+                    </div>
+                    <div style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="agent_logo_hint">Upload business logo</div>
+                </div>
+            </div>
+
+            <div class="action-buttons-row" style="margin-top:8px;">
                 <button class="action-btn" id="saveEditAgentBtn" data-i18n="save_changes">Save</button>
                 <button class="action-btn" id="editAgentReportBtn" style="background:#1a1a1a; color:white;" data-i18n="report">📋 Report</button>
                 <button class="action-btn close-modal" style="background:#2c7da0;" data-i18n="close">Close</button>
@@ -3947,7 +4185,7 @@
 
     <div id="addClientModal" class="modal"><div class="modal-content"><h3 data-i18n="add_client">➕ Add Client</h3><div id="addClientError" class="error-msg"></div><div class="input-group"><label data-i18n="client_name">Name *</label><input type="text" id="newClientName" placeholder="Client name" /></div><div class="input-group"><label data-i18n="client_phone">Phone *</label><input type="tel" id="newClientPhone" placeholder="Phone" /></div><div class="input-group"><label data-i18n="address">Address</label><input type="text" id="newClientAddress" placeholder="Address" /></div><div class="input-group"><label data-i18n="city">City *</label><select id="newClientCitySelect"><option value="">Select city...</option><option value="Freetown">Freetown</option><option value="Abuja">Abuja</option><option value="Accra">Accra</option><option value="Nairobi">Nairobi</option><option value="Monrovia">Monrovia</option><option value="Dakar">Dakar</option><option value="Conakry">Conakry</option><option value="Bamako">Bamako</option><option value="Yamoussoukro">Yamoussoukro</option><option value="Niamey">Niamey</option><option value="Porto-Novo">Porto-Novo</option><option value="Bissau">Bissau</option><option value="Banjul">Banjul</option><option value="Lomé">Lomé</option><option value="Bangui">Bangui</option><option value="Addis Ababa">Addis Ababa</option><option value="Libreville">Libreville</option><option value="Antananarivo">Antananarivo</option><option value="Rabat">Rabat</option><option value="Kigali">Kigali</option><option value="Kampala">Kampala</option><option value="Kinshasa">Kinshasa</option><option value="Ouagadougou">Ouagadougou</option></select></div><div class="input-group"><label data-i18n="location">Country</label><select id="newClientCountrySelect"><option value="Sierra Leone">Sierra Leone</option><option value="Nigeria">Nigeria</option><option value="Ghana">Ghana</option><option value="Kenya">Kenya</option><option value="Liberia">Liberia</option><option value="Senegal">Senegal</option><option value="Guinea">Guinea</option><option value="Mali">Mali</option><option value="Ivory Coast">Ivory Coast</option><option value="Niger">Niger</option><option value="Benin">Benin</option><option value="Guinea Bissau">Guinea Bissau</option><option value="Gambia">Gambia</option><option value="Togo">Togo</option><option value="Central Africa Rep">CAR</option><option value="Ethiopia">Ethiopia</option><option value="Gabon">Gabon</option><option value="Madagascar">Madagascar</option><option value="Morocco">Morocco</option><option value="Rwanda">Rwanda</option><option value="Uganda">Uganda</option><option value="DR Congo">DRC</option><option value="Burkina Faso">Burkina</option></select></div><div class="action-buttons-row"><button class="action-btn" id="saveClientBtn" data-i18n="save">Save</button><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div></div></div>
 
-    <!-- EDIT USER (ACCOUNT) MODAL – with Add Agent button -->
+    <!-- EDIT USER (ACCOUNT) MODAL -->
     <div id="editAccountModal" class="modal">
         <div class="modal-content">
             <div class="edit-modal-header">
@@ -4006,7 +4244,77 @@
     <div id="agentReportModal" class="modal"><div class="modal-content"><div class="report-header"><button class="report-close-x" id="reportCloseXBtn">✕</button><h3 data-i18n="agent_report_title">📋 Agent Report</h3><small data-i18n="agent_report_subtitle">Tx & USSD</small></div><div class="report-body" id="reportBody"></div><div class="report-footer"><button class="action-btn copy-btn" id="reportCopyUssdBtn" data-i18n="copy_ussd">📋 Copy USSD</button><button class="action-btn close-modal" id="reportCloseBtn" data-i18n="close">Close</button></div></div></div>
     <div id="adminDeleteUserModal" class="modal"><div class="modal-content"><h3 data-i18n="admin_verify_title">🔐 Admin Verify</h3><div style="font-size:0.75rem; color:#7f8c8d; margin-bottom:4px;" data-i18n="admin_verify_subtitle">Enter admin credentials</div><div class="delete-user-warning">⚠️ You are about to delete <span id="deleteUserNameDisplay" class="delete-user-name-highlight">this user</span>. This action cannot be undone.</div><div id="adminDeleteUserError" class="error-msg"></div><div id="adminDeleteUserSuccess" class="success-msg"></div><div class="input-group"><label data-i18n="admin_name">Admin Name *</label><input type="text" id="adminDeleteUserName" placeholder="Admin name" /></div><div class="input-group"><label data-i18n="admin_password">Password *</label><input type="password" id="adminDeleteUserPassword" placeholder="••••••••" /></div><div class="action-buttons-row"><button class="action-btn" id="adminDeleteUserConfirmBtn" style="background:#e74c3c;" data-i18n="confirm_delete">✅ Delete</button><button class="action-btn close-modal" id="adminDeleteUserCancelBtn" data-i18n="cancel">Cancel</button></div></div></div>
     <div id="pinModal" class="modal"><div class="modal-content"><h3 data-i18n="enter_pin_title">🔐 PIN Required</h3><div style="font-size:0.75rem; color:#7f8c8d; margin-bottom:4px;" data-i18n="enter_pin_subtitle">Enter PIN</div><div id="pinProviderBadge" class="provider-badge orange">MB-ONE</div><div class="ussd-preview" id="pinUssdPreview">#144*2*1*73671566*500*0000#</div><div id="pinError" class="auth-error"></div><div class="input-group"><label data-i18n="pin_4_digit">4-Digit PIN *</label><input type="password" id="pinInput" placeholder="1234" maxlength="4" inputmode="numeric" style="text-align:center; letter-spacing:4px; font-family:monospace;" /></div><div class="action-buttons-row"><button class="action-btn" id="pinConfirmBtn" data-i18n="confirm_dial">✅ Dial</button><button class="action-btn close-modal" id="pinCancelBtn" data-i18n="cancel">Cancel</button></div></div></div>
-    <div id="currencyConverterModal" class="modal"><div class="modal-content"><div class="converter-header"><button class="converter-close-x" id="converterCloseXBtn">✕</button><h3 data-i18n="currency_converter">💱 Currency Converter</h3><small data-i18n="converter_subtitle">Real-time rates</small></div><div class="converter-body"><div class="user-info-badge" id="userInfoBadge">👤 <span data-i18n="user_info_badge">Country:</span> <strong id="userCountryDisplay">—</strong> · <span data-i18n="currency_label">🌍 Currency:</span> <strong id="userCurrencyDisplay">USD</strong></div><div class="input-group"><label data-i18n="from_currency_label">From Currency</label><div class="from-currency-select"><span class="flag-sm" id="convFromFlag">🇺🇸</span><select id="convFromCurrency"></select></div></div><div class="input-group"><label data-i18n="amount_to_send">💰 Amount *</label><input type="number" id="convAmount" step="any" value="100" /></div><div class="input-group"><label data-i18n="recipient_country">🌍 To Country</label><div class="country-selector-sm"><span class="flag-sm" id="convFlagEmoji">🇱🇷</span><select id="convCountrySelect"><option value="LR|Liberia|LRD|🇱🇷|10|1|2">🇱🇷 Liberia</option><option value="GN|Guinea|GNF|🇬🇳|18|2|3">🇬🇳 Guinea</option><option value="SN|Senegal|XOF|🇸🇳|18|3|5">🇸🇳 Senegal</option><option value="ML|Mali|XOF|🇲🇱|18|4|6">🇲🇱 Mali</option><option value="CI|Ivory Coast|XOF|🇨🇮|18|5|7">🇨🇮 Ivory Coast</option><option value="GH|Ghana|GHS|🇬🇭|12.5|6|4">🇬🇭 Ghana</option><option value="NE|Niger|XOF|🇳🇪|19|7|12">🇳🇪 Niger</option><option value="BJ|Benin|XOF|🇧🇯|18|8|0">🇧🇯 Benin</option><option value="GW|Guinea Bissau|XOF|🇬🇼|15|9|13">🇬🇼 Guinea Bissau</option><option value="GM|Gambia|GMD|🇬🇲|15|10|1">🇬🇲 Gambia</option><option value="TG|Togo|XOF|🇹🇬|18|11|0">🇹🇬 Togo</option><option value="KE|Kenya|KES|🇰🇪|16|12|10">🇰🇪 Kenya</option><option value="CF|Central Africa Rep|XAF|🇨🇫|19|13|0">🇨🇫 CAR</option><option value="ET|Ethiopia|ETB|🇪🇹|15|14|0">🇪🇹 Ethiopia</option><option value="GA|Gabon|XAF|🇬🇦|18|15|0">🇬🇦 Gabon</option><option value="MG|Madagascar|MGA|🇲🇬|20|16|0">🇲🇬 Madagascar</option><option value="MA|Morocco|MAD|🇲🇦|20|17|0">🇲🇦 Morocco</option><option value="RW|Rwanda|RWF|🇷🇼|18|18|0">🇷🇼 Rwanda</option><option value="UG|Uganda|UGX|🇺🇬|18|19|8">🇺🇬 Uganda</option><option value="CD|DR Congo|CDF|🇨🇩|16|0|9">🇨🇩 DRC</option><option value="BF|Burkina Faso|XOF|🇧🇫|18|0|11">🇧🇫 Burkina</option><option value="SL|Sierra Leone|SLL|🇸🇱|12.5|20|0">🇸🇱 Sierra Leone</option></select></div></div><div class="converter-results" id="converterResults"><div class="conv-row"><span class="label" data-i18n="base_amount">💰 Base:</span><span class="value" id="convBaseAmount">0.00</span></div><div class="conv-row"><span class="label" data-i18n="transfer_charge">📊 Fee (4%):</span><span class="value" id="convCharge">0.00</span></div><div class="conv-row"><span class="label" data-i18n="gst">🏛️ GST (<span id="convGstRateLabel">15</span>%):</span><span class="value" id="convGstAmount">0.00</span></div><div class="conv-row"><span class="label" data-i18n="total_deductions">📋 Deductions:</span><span class="value" id="convTotalDeductions">0.00</span></div><div class="conv-row total"><span class="label" data-i18n="total_debit">💵 Total:</span><span class="value" id="convTotalDebit">0.00</span></div><div class="conv-row"><span class="label" data-i18n="exchange_rate">🔄 Rate:</span><span class="value" id="convExchangeRate">1 USD = 0.00</span></div><div class="conv-row recipient"><span class="label" data-i18n="recipient_receives">🎯 Recipient:</span><span class="value" id="convRecipientAmount">0.00</span></div></div></div><div class="converter-footer"><button class="action-btn" id="convCopyResultBtn" data-i18n="copy_result">📋 Copy</button><button class="action-btn close-modal" id="convCloseBtn" data-i18n="close">Close</button></div></div></div>
+
+    <!-- ===== CURRENCY CONVERTER MODAL (FIXED) ===== -->
+    <div id="currencyConverterModal" class="modal">
+        <div class="modal-content">
+            <div class="converter-header">
+                <button class="converter-close-x" id="converterCloseXBtn">✕</button>
+                <h3 data-i18n="currency_converter">💱 Currency Converter</h3>
+                <small data-i18n="converter_subtitle">Real-time rates</small>
+            </div>
+            <div class="converter-body" id="converterBody">
+                <div class="user-info-badge" id="userInfoBadge">
+                    👤 <span data-i18n="user_info_badge">Country:</span> <strong id="userCountryDisplay">—</strong> ·
+                    <span data-i18n="currency_label">🌍 Currency:</span> <strong id="userCurrencyDisplay">USD</strong>
+                </div>
+                <div class="input-group">
+                    <label data-i18n="from_currency_label">From Currency</label>
+                    <div class="from-currency-select">
+                        <span class="flag-sm" id="convFromFlag">🇺🇸</span>
+                        <select id="convFromCurrency"></select>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label data-i18n="amount_to_send">💰 Amount *</label>
+                    <input type="number" id="convAmount" step="any" value="100" />
+                </div>
+                <div class="input-group">
+                    <label data-i18n="recipient_country">🌍 To Country</label>
+                    <div class="country-selector-sm">
+                        <span class="flag-sm" id="convFlagEmoji">🇱🇷</span>
+                        <select id="convCountrySelect">
+                            <option value="LR|Liberia|LRD|🇱🇷|10|1|2">🇱🇷 Liberia</option>
+                            <option value="GN|Guinea|GNF|🇬🇳|18|2|3">🇬🇳 Guinea</option>
+                            <option value="SN|Senegal|XOF|🇸🇳|18|3|5">🇸🇳 Senegal</option>
+                            <option value="ML|Mali|XOF|🇲🇱|18|4|6">🇲🇱 Mali</option>
+                            <option value="CI|Ivory Coast|XOF|🇨🇮|18|5|7">🇨🇮 Ivory Coast</option>
+                            <option value="GH|Ghana|GHS|🇬🇭|12.5|6|4">🇬🇭 Ghana</option>
+                            <option value="NE|Niger|XOF|🇳🇪|19|7|12">🇳🇪 Niger</option>
+                            <option value="BJ|Benin|XOF|🇧🇯|18|8|0">🇧🇯 Benin</option>
+                            <option value="GW|Guinea Bissau|XOF|🇬🇼|15|9|13">🇬🇼 Guinea Bissau</option>
+                            <option value="GM|Gambia|GMD|🇬🇲|15|10|1">🇬🇲 Gambia</option>
+                            <option value="TG|Togo|XOF|🇹🇬|18|11|0">🇹🇬 Togo</option>
+                            <option value="KE|Kenya|KES|🇰🇪|16|12|10">🇰🇪 Kenya</option>
+                            <option value="CF|Central Africa Rep|XAF|🇨🇫|19|13|0">🇨🇫 CAR</option>
+                            <option value="ET|Ethiopia|ETB|🇪🇹|15|14|0">🇪🇹 Ethiopia</option>
+                            <option value="GA|Gabon|XAF|🇬🇦|18|15|0">🇬🇦 Gabon</option>
+                            <option value="MG|Madagascar|MGA|🇲🇬|20|16|0">🇲🇬 Madagascar</option>
+                            <option value="MA|Morocco|MAD|🇲🇦|20|17|0">🇲🇦 Morocco</option>
+                            <option value="RW|Rwanda|RWF|🇷🇼|18|18|0">🇷🇼 Rwanda</option>
+                            <option value="UG|Uganda|UGX|🇺🇬|18|19|8">🇺🇬 Uganda</option>
+                            <option value="CD|DR Congo|CDF|🇨🇩|16|0|9">🇨🇩 DRC</option>
+                            <option value="BF|Burkina Faso|XOF|🇧🇫|18|0|11">🇧🇫 Burkina</option>
+                            <option value="SL|Sierra Leone|SLL|🇸🇱|12.5|20|0">🇸🇱 Sierra Leone</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="converter-results" id="converterResults">
+                    <div class="conv-row"><span class="label" data-i18n="base_amount">💰 Base:</span><span class="value" id="convBaseAmount">0.00</span></div>
+                    <div class="conv-row"><span class="label" data-i18n="transfer_charge">📊 Fee (4%):</span><span class="value" id="convCharge">0.00</span></div>
+                    <div class="conv-row"><span class="label" data-i18n="gst">🏛️ GST (<span id="convGstRateLabel">15</span>%):</span><span class="value" id="convGstAmount">0.00</span></div>
+                    <div class="conv-row"><span class="label" data-i18n="total_deductions">📋 Deductions:</span><span class="value" id="convTotalDeductions">0.00</span></div>
+                    <div class="conv-row total"><span class="label" data-i18n="total_debit">💵 Total:</span><span class="value" id="convTotalDebit">0.00</span></div>
+                    <div class="conv-row"><span class="label" data-i18n="exchange_rate">🔄 Rate:</span><span class="value" id="convExchangeRate">1 USD = 0.00</span></div>
+                    <div class="conv-row recipient"><span class="label" data-i18n="recipient_receives">🎯 Recipient:</span><span class="value" id="convRecipientAmount">0.00</span></div>
+                </div>
+            </div>
+            <div class="converter-footer">
+                <button class="action-btn" id="convCopyResultBtn" data-i18n="copy_result">📋 Copy</button>
+                <button class="action-btn close-modal" id="convCloseBtn" data-i18n="close">Close</button>
+            </div>
+        </div>
+    </div>
 
     <!-- AGENT LOCATION MODAL -->
     <div id="agentLocationModal" class="modal">
@@ -4112,6 +4420,7 @@
                 agent_id_type: 'ID Type *',
                 agent_id_number: 'ID Number *',
                 agent_id_image: 'ID Image *',
+                agent_id_image_hint: 'Upload a clear photo of the ID',
                 agent_logo: 'Logo *',
                 agent_logo_hint: 'Upload business logo',
                 agent_mobile_money: 'Mobile Money *',
@@ -4120,10 +4429,10 @@
                 agent_country_code: 'Country Code',
                 agent_password: 'Password *',
                 password_hint: 'Click Gen for 6-char password',
-                agent_pin_label: '5-Digit PIN *',
-                pin_hint: 'Click for 5-digit PIN',
+                agent_pin_label: '5‑Digit PIN *',
+                pin_hint: 'Click for 5‑digit PIN',
                 collateral_label: '🔒 Collateral',
-                collateral_hint: 'Generate USSD for collateral',
+                collateral_hint: 'Generate USSD for Orange Money collateral',
                 view_agreement: '📜 Agreement',
                 agreement_status_label: 'Agreement:',
                 not_signed: 'Not Signed',
@@ -4213,7 +4522,19 @@
                 about_body: 'Cross-border mobile money transfers.',
                 dev_body: 'Fintech developer bridging African payments.',
                 contact_body: '<strong>Phone:</strong><br>+232-76-436-811',
-                select_type: 'Action for'
+                select_type: 'Action for',
+                edit_auth_hint: '✅ Correct credentials – editing unlocked',
+                sender_currency_label: '💰 Sent (Sender)',
+                recipient_currency_label: '🎯 Received (Recipient)',
+                receipt_sender_amount: 'From (sender currency)',
+                receipt_recipient_amount: 'To (recipient currency)',
+                edit_collateral_label: '💳 Collateral (limit)',
+                edit_id_upload: '📄 Upload ID',
+                edit_logo_upload: '🖼️ Upload Logo',
+                edit_id_hint: 'Upload a clear photo of the ID',
+                edit_logo_hint: 'Upload business logo',
+                edit_generate_collateral: 'Generate USSD',
+                edit_collateral_set: '🔒 Collateral set'
             },
             fr: {
                 login: 'Connexion',
@@ -4267,6 +4588,7 @@
                 agent_id_type: "Type d'ID *",
                 agent_id_number: "Numéro d'ID *",
                 agent_id_image: "Image d'ID *",
+                agent_id_image_hint: 'Téléchargez une photo claire de la pièce d\'identité',
                 agent_logo: 'Logo *',
                 agent_logo_hint: 'Télécharger le logo',
                 agent_mobile_money: 'Mobile Money *',
@@ -4368,7 +4690,19 @@
                 about_body: 'Transferts d\'argent mobile transfrontaliers.',
                 dev_body: 'Développeur fintech unifiant les paiements africains.',
                 contact_body: '<strong>Téléphone:</strong><br>+232-76-436-811',
-                select_type: 'Action pour'
+                select_type: 'Action pour',
+                edit_auth_hint: '✅ Identifiants corrects – édition déverrouillée',
+                sender_currency_label: '💰 Envoyé (expéditeur)',
+                recipient_currency_label: '🎯 Reçu (bénéficiaire)',
+                receipt_sender_amount: 'De (devise expéditeur)',
+                receipt_recipient_amount: 'Vers (devise bénéficiaire)',
+                edit_collateral_label: '💳 Garantie (limite)',
+                edit_id_upload: '📄 Télécharger ID',
+                edit_logo_upload: '🖼️ Télécharger logo',
+                edit_id_hint: 'Téléchargez une photo claire de la pièce d\'identité',
+                edit_logo_hint: 'Téléchargez le logo de l\'entreprise',
+                edit_generate_collateral: 'Générer USSD',
+                edit_collateral_set: '🔒 Garantie définie'
             },
             ar: {
                 login: 'تسجيل الدخول',
@@ -4422,6 +4756,7 @@
                 agent_id_type: 'نوع الهوية *',
                 agent_id_number: 'رقم الهوية *',
                 agent_id_image: 'صورة الهوية *',
+                agent_id_image_hint: 'تحميل صورة واضحة للهوية',
                 agent_logo: 'الشعار *',
                 agent_logo_hint: 'تحميل الشعار',
                 agent_mobile_money: 'المحمول *',
@@ -4523,7 +4858,19 @@
                 about_body: 'تحويلات مالية عبر الحدود.',
                 dev_body: 'مطور تقني يربط المدفوعات الأفريقية.',
                 contact_body: '<strong>الهاتف:</strong><br>+232-76-436-811',
-                select_type: 'إجراء لـ'
+                select_type: 'إجراء لـ',
+                edit_auth_hint: '✅ بيانات صحيحة – التحرير مفتوح',
+                sender_currency_label: '💰 مرسل (المرسل)',
+                recipient_currency_label: '🎯 مستلم (المتلقي)',
+                receipt_sender_amount: 'من (عملة المرسل)',
+                receipt_recipient_amount: 'إلى (عملة المتلقي)',
+                edit_collateral_label: '💳 الضمان (الحد)',
+                edit_id_upload: '📄 تحميل الهوية',
+                edit_logo_upload: '🖼️ تحميل الشعار',
+                edit_id_hint: 'تحميل صورة واضحة للهوية',
+                edit_logo_hint: 'تحميل شعار العمل',
+                edit_generate_collateral: 'توليد USSD',
+                edit_collateral_set: '🔒 تم تعيين الضمان'
             },
             es: {
                 login: 'Iniciar sesión',
@@ -4577,6 +4924,7 @@
                 agent_id_type: 'Tipo de ID *',
                 agent_id_number: 'Nº de ID *',
                 agent_id_image: 'Imagen de ID *',
+                agent_id_image_hint: 'Sube una foto clara de la identificación',
                 agent_logo: 'Logo *',
                 agent_logo_hint: 'Subir logo',
                 agent_mobile_money: 'Mobile Money *',
@@ -4678,7 +5026,19 @@
                 about_body: 'Transferencias de dinero móvil transfronterizas.',
                 dev_body: 'Desarrollador fintech uniendo pagos africanos.',
                 contact_body: '<strong>Teléfono:</strong><br>+232-76-436-811',
-                select_type: 'Acción para'
+                select_type: 'Acción para',
+                edit_auth_hint: '✅ Credenciales correctas – edición desbloqueada',
+                sender_currency_label: '💰 Enviado (remitente)',
+                recipient_currency_label: '🎯 Recibido (destinatario)',
+                receipt_sender_amount: 'De (moneda remitente)',
+                receipt_recipient_amount: 'A (moneda destinatario)',
+                edit_collateral_label: '💳 Colateral (límite)',
+                edit_id_upload: '📄 Subir ID',
+                edit_logo_upload: '🖼️ Subir logo',
+                edit_id_hint: 'Sube una foto clara de la identificación',
+                edit_logo_hint: 'Sube el logo del negocio',
+                edit_generate_collateral: 'Generar USSD',
+                edit_collateral_set: '🔒 Colateral establecido'
             }
         };
 
@@ -4893,7 +5253,51 @@
                 renderBusinessStrip();
                 renderAgentDropdown();
                 populateAgentSelect(currentAgentFilterCountry);
+                updateEditModalTranslations();
             } catch (e) { console.warn('translatePage error:', e); }
+        }
+
+        function updateEditModalTranslations() {
+            const hint = getEl('editAuthHint');
+            if (hint) {
+                const key = hint.dataset.i18n || 'edit_auth_hint';
+                hint.textContent = t(key);
+            }
+            const collateralLabel = document.querySelector('#editCollateralSection label');
+            if (collateralLabel) {
+                const key = collateralLabel.getAttribute('data-i18n') || 'edit_collateral_label';
+                collateralLabel.textContent = t(key);
+            }
+            const idLabel = document.querySelector('#editIdSection label');
+            if (idLabel) {
+                const key = idLabel.getAttribute('data-i18n') || 'edit_id_upload';
+                idLabel.textContent = t(key);
+            }
+            const logoLabel = document.querySelector('#editLogoSection label');
+            if (logoLabel) {
+                const key = logoLabel.getAttribute('data-i18n') || 'edit_logo_upload';
+                logoLabel.textContent = t(key);
+            }
+            const idHint = document.querySelector('#editIdSection .input-group > div:last-child');
+            if (idHint) {
+                const key = idHint.getAttribute('data-i18n') || 'edit_id_hint';
+                idHint.textContent = t(key);
+            }
+            const logoHint = document.querySelector('#editLogoSection .input-group > div:last-child');
+            if (logoHint) {
+                const key = logoHint.getAttribute('data-i18n') || 'edit_logo_hint';
+                logoHint.textContent = t(key);
+            }
+            const genCollBtn = getEl('editGenerateCollateralBtn');
+            if (genCollBtn) {
+                const key = genCollBtn.getAttribute('data-i18n') || 'edit_generate_collateral';
+                genCollBtn.textContent = t(key);
+            }
+            const collStatus = getEl('editCollateralStatus');
+            if (collStatus) {
+                const key = collStatus.getAttribute('data-i18n') || 'edit_collateral_set';
+                collStatus.textContent = t(key);
+            }
         }
 
         function setLanguage(lang) {
@@ -5029,6 +5433,11 @@
             return COUNTRY_CODE_TO_NAME[code] || '';
         }
 
+        function getAgentCollateral(agent) {
+            const data = agent.agentData || agent;
+            return data.collateralLimit || 0;
+        }
+
         function getAllContacts() {
             const map = new Map();
             connectedUsers.forEach(u => {
@@ -5059,7 +5468,7 @@
         }
 
         // ================================================================
-        // AGENT DROPDOWN - with country filter (for header)
+        // AGENT DROPDOWN
         // ================================================================
         function updateAgentDropdownPlaceholder() {
             const btn = getEl('selectedAgentName');
@@ -5102,7 +5511,6 @@
             });
         }
 
-        // ---- Render header dropdown ----
         function renderAgentDropdown(filterCountryName) {
             const list = getEl('agentDropdownList');
             if (!list) return;
@@ -5319,7 +5727,6 @@
             populateAgentSelect(filterCountryName);
         }
 
-        // ---- Populate the agent select in the main form ----
         function populateAgentSelect(filterCountryName) {
             const select = getEl('agentNameSelect');
             if (!select) return;
@@ -5347,8 +5754,6 @@
                 noOpt.textContent = `No agents in ${filterCountryName || 'this country'}`;
                 noOpt.disabled = true;
                 select.appendChild(noOpt);
-                const note = document.getElementById('agentSelectNote');
-                if (note) note.style.display = 'block';
                 return;
             }
             agents.forEach(agent => {
@@ -5368,8 +5773,6 @@
                     select.value = '';
                 }
             }
-            const note = document.getElementById('agentSelectNote');
-            if (note) note.style.display = 'none';
         }
 
         function clearAgentSelection() {
@@ -5491,24 +5894,6 @@
             const locBtn = getEl('agentLocationBtn');
             if (locBtn) locBtn.disabled = false;
             computeCharges();
-        }
-
-        function openEditAgentModal(agentId) {
-            const agents = getAgents();
-            const agent = agents.find(a => a.id === agentId);
-            if (!agent) { showToast('Agent not found', 2000); return; }
-            const data = agent.agentData || agent;
-            getEl('editAgentId').value = agentId;
-            getEl('editBusinessName').value = SecurityUtils.escapeHTML(data.businessName || '');
-            getEl('editAddress').value = SecurityUtils.escapeHTML(data.businessAddress || '');
-            setCityValue('editCitySelect', 'editCityOther', data.city || '');
-            getEl('editRegNumber').value = SecurityUtils.escapeHTML(data.regNumber || '');
-            getEl('editMobileMoney').value = SecurityUtils.escapeHTML(data.mobileMoney || agent.phone || '');
-            getEl('editPassword').value = '';
-            getEl('editPin').value = '';
-            getEl('editAgentError').textContent = '';
-            getEl('editAgentSuccess').textContent = '';
-            getEl('editAgentModal').style.display = 'flex';
         }
 
         // ================================================================
@@ -6257,12 +6642,13 @@
         }
 
         // ================================================================
-        // RECEIPT
+        // RECEIPT – dual‑currency display
         // ================================================================
         function showReceiptModal(receiptData) {
             const body = getEl('receiptBody');
             const badge = getEl('receiptBadge');
             if (badge) badge.textContent = '🔹 CONFIRMED';
+
             const lines = [
                 { label: 'TX ID', value: SecurityUtils.escapeHTML(receiptData.txId) },
                 { label: 'Date', value: SecurityUtils.escapeHTML(receiptData.date) },
@@ -6272,6 +6658,10 @@
                 { label: '👥 Client', value: SecurityUtils.escapeHTML(receiptData.client || 'N/A') },
                 { label: '🔐 Provider TX ID', value: SecurityUtils.escapeHTML(receiptData.providerTxId || 'N/A') },
                 { label: 'Transfer Code', value: SecurityUtils.escapeHTML(receiptData.transferCode || 'N/A') },
+                { label: t('sender_currency_label'), value: SecurityUtils.escapeHTML(receiptData.senderCurrency + ' ' + receiptData.senderAmount),
+                    recipient: false },
+                { label: t('recipient_currency_label'), value: SecurityUtils.escapeHTML(receiptData.recipientCurrency + ' ' + receiptData.recipientAmount),
+                    recipient: true },
                 { label: 'Base', value: SecurityUtils.escapeHTML(receiptData.currency + ' ' + receiptData.baseAmount) },
                 { label: 'Fee', value: SecurityUtils.escapeHTML(receiptData.currency + ' ' + receiptData.charge) },
                 { label: 'GST (' + receiptData.gstRate + '%)',
@@ -6279,12 +6669,16 @@
                 { label: 'Total', value: SecurityUtils.escapeHTML(receiptData.currency + ' ' + receiptData.total),
                     total: true }
             ];
+
             let html = '';
             lines.forEach(line => {
-                const cls = line.total ? 'receipt-row total' : 'receipt-row';
+                let cls = 'receipt-row';
+                if (line.total) cls += ' total';
+                if (line.recipient) cls += ' recipient-row';
                 html += `<div class="${cls}"><span class="label">${line.label}</span><span class="value">${line.value}</span></div>`;
             });
             if (body) body.innerHTML = html;
+
             const clientPhone = getEl('clientPhone')?.value?.trim() || '';
             const clientName = getEl('clientName')?.value?.trim() || 'Client';
             const agentPhone = getEl('agentPhone')?.value?.trim() || '';
@@ -6300,6 +6694,9 @@
                 '👥 Client: ' + (receiptData.client || 'N/A'),
                 '🔐 Provider TX ID: ' + (receiptData.providerTxId || 'N/A'),
                 '🔑 Transfer Code: ' + transferCode,
+                t('sender_currency_label') + ': ' + receiptData.senderCurrency + ' ' + receiptData.senderAmount,
+                t('recipient_currency_label') + ': ' + receiptData.recipientCurrency + ' ' + receiptData
+                .recipientAmount,
                 'Base ' + receiptData.currency + ' ' + receiptData.baseAmount,
                 'Fee ' + receiptData.currency + ' ' + receiptData.charge,
                 'GST (' + receiptData.gstRate + '%) ' + receiptData.currency + ' ' + receiptData.gst,
@@ -6308,10 +6705,12 @@
                 '🔗 Powered by WeBine Financial'
             ].join('\n');
             const encodedText = encodeURIComponent(receiptText);
+
             const clientWA = getEl('receiptShareClientWhatsApp');
             const agentWA = getEl('receiptShareAgentWhatsApp');
             const clientSMS = getEl('receiptShareClientSMS');
             const agentSMS = getEl('receiptShareAgentSMS');
+
             if (clientPhone && clientWA) {
                 const clientClean = clientPhone.replace(/\D/g, '');
                 clientWA.onclick = () => { window.open(`https://wa.me/${clientClean}?text=${encodedText}`, '_blank');
@@ -6336,6 +6735,7 @@
                     showToast(`📤 Receipt sent to ${agentName} via SMS`, 2500); };
                 agentSMS.style.display = 'inline-flex';
             } else if (agentSMS) { agentSMS.style.display = 'none'; }
+
             getEl('receiptModal').style.display = 'flex';
             addTransaction(receiptData);
         }
@@ -6803,8 +7203,8 @@
                     if (currentUser) {
                         currentUser.avatarDataURL = dataURL;
                         saveUserToStorage(currentUser);
-                        const regUser = registeredUsers.find(u => u.phone === currentUser.phone || u.name ===
-                            currentUser.name);
+                        const regUser = registeredUsers.find(u => u.phone === currentUser.phone || u.name === currentUser
+                            .name);
                         if (regUser) { regUser.avatarDataURL = dataURL;
                             saveRegisteredUsers(); }
                         const connUser = connectedUsers.find(u => u.id === 'current');
@@ -6867,7 +7267,6 @@
             });
         }
 
-        // ---- FIXED FLAG CLICK HANDLER ----
         function setupFlagClickHandlers() {
             document.querySelectorAll('#headerFlagGrid .flag-icon').forEach(el => {
                 const handler = function(e) {
@@ -6925,7 +7324,6 @@
             });
         }
 
-        // ---- Update agent dropdown based on current country selection ----
         function updateAgentDropdownForCountry() {
             const countryWrapper = getEl('countryWrapper');
             if (!countryWrapper || countryWrapper.style.display === 'none' || isLocalMode) {
@@ -6944,7 +7342,6 @@
                     if (agent) {
                         const agentCountry = getAgentCountryName(agent);
                         if (agentCountry.toLowerCase() !== countryName.toLowerCase()) {
-                            // deselect
                             selectedAgentId = null;
                             _selectedAgentId = null;
                             const btn = getEl('selectedAgentName');
@@ -6965,32 +7362,48 @@
         }
 
         // ================================================================
-        // CONVERTER HELPERS
+        // CONVERTER HELPERS – FIXED
         // ================================================================
         function populateFromCurrencySelect() {
             const select = getEl('convFromCurrency');
             if (!select) return;
             const countrySelect = getEl('convCountrySelect');
             const currencies = new Map();
+
+            // Collect all currencies from country select
             if (countrySelect) {
                 for (let i = 0; i < countrySelect.options.length; i++) {
                     const parts = countrySelect.options[i].value.split('|');
-                    const code = parts[2];
-                    const name = parts[1];
-                    const flag = parts[3];
-                    if (!currencies.has(code)) { currencies.set(code, { code, name, flag }); }
+                    if (parts.length >= 4) {
+                        const code = parts[2];
+                        const name = parts[1];
+                        const flag = parts[3];
+                        if (code && !currencies.has(code)) {
+                            currencies.set(code, { code, name, flag });
+                        }
+                    }
                 }
             }
+
+            // Add major currencies if not present
             if (!currencies.has('USD')) currencies.set('USD', { code: 'USD', name: 'US Dollar', flag: '🇺🇸' });
             if (!currencies.has('EUR')) currencies.set('EUR', { code: 'EUR', name: 'Euro', flag: '🇪🇺' });
             if (!currencies.has('GBP')) currencies.set('GBP', { code: 'GBP', name: 'British Pound', flag: '🇬🇧' });
+
+            // Clear and repopulate
             select.innerHTML = '';
+
+            // Determine default selected value
             let selectedValue = 'USD';
             if (currentUser && currentUser.country) {
                 const userCountry = currentUser.country;
                 const userCurrency = getUserCurrencyFromCountry(userCountry);
-                if (userCurrency) { selectedValue = userCurrency; }
+                if (userCurrency && currencies.has(userCurrency)) {
+                    selectedValue = userCurrency;
+                }
             }
+
+            // Sort and add options
             const sorted = Array.from(currencies.entries()).sort((a, b) => a[0].localeCompare(b[0]));
             sorted.forEach(([code, info]) => {
                 const opt = document.createElement('option');
@@ -6999,8 +7412,13 @@
                 if (code === selectedValue) opt.selected = true;
                 select.appendChild(opt);
             });
+
+            // Update flag and badge
             updateFromFlag(select.value);
             updateUserInfoBadge();
+
+            // Trigger converter update after population
+            setTimeout(updateConverter, 50);
         }
 
         function getUserCurrencyFromCountry(countryName) {
@@ -7009,7 +7427,9 @@
             if (!select) return 'USD';
             for (let i = 0; i < select.options.length; i++) {
                 const parts = select.options[i].value.split('|');
-                if (parts[1] === countryName) { return parts[2]; }
+                if (parts.length >= 3 && parts[1] === countryName) {
+                    return parts[2];
+                }
             }
             return 'USD';
         }
@@ -7041,7 +7461,9 @@
 
         function updateFromFlag(currencyCode) {
             const flagSpan = getEl('convFromFlag');
-            if (flagSpan) { flagSpan.textContent = getFlagForCurrency(currencyCode); }
+            if (flagSpan) {
+                flagSpan.textContent = getFlagForCurrency(currencyCode) || '🌍';
+            }
         }
 
         function updateUserInfoBadge() {
@@ -7058,26 +7480,42 @@
 
         function updateConverter() {
             try {
-                const convAmount = getEl('convAmount');
-                const amount = parseFloat(convAmount?.value) || 0;
+                const amountInput = getEl('convAmount');
+                const amount = parseFloat(amountInput?.value) || 0;
                 const fromCurrency = getEl('convFromCurrency')?.value || 'USD';
                 const countrySelect = getEl('convCountrySelect');
-                const parts = countrySelect?.value?.split('|') || [];
+                if (!countrySelect) {
+                    console.warn('updateConverter: countrySelect not found');
+                    return;
+                }
+                const parts = countrySelect.value?.split('|') || [];
+                if (parts.length < 5) {
+                    console.warn('updateConverter: invalid country select value:', countrySelect.value);
+                    return;
+                }
                 const toCurrency = parts[2] || 'GNF';
                 const gstRate = parseFloat(parts[4]) || 10;
                 const flag = parts[3] || '🇱🇷';
+
+                // Update flag and GST label
                 const convFlagEmoji = getEl('convFlagEmoji');
                 const convGstRateLabel = getEl('convGstRateLabel');
                 if (convFlagEmoji) convFlagEmoji.textContent = flag;
                 if (convGstRateLabel) convGstRateLabel.textContent = gstRate;
+
+                // Get exchange rates
                 const rateFrom = EXCHANGE_RATES[fromCurrency] || 1;
                 const rateTo = EXCHANGE_RATES[toCurrency] || 1;
                 const exchangeRate = rateTo / rateFrom;
                 const convertedAmount = amount * exchangeRate;
+
+                // Calculate charges
                 const charge = amount * 0.04;
                 const gst = charge * (gstRate / 100);
                 const totalDeductions = charge + gst;
                 const totalDebit = amount + charge + gst;
+
+                // Update UI elements
                 const convBaseAmount = getEl('convBaseAmount');
                 const convCharge = getEl('convCharge');
                 const convGstAmount = getEl('convGstAmount');
@@ -7085,6 +7523,7 @@
                 const convTotalDebit = getEl('convTotalDebit');
                 const convRecipientAmount = getEl('convRecipientAmount');
                 const convExchangeRate = getEl('convExchangeRate');
+
                 if (convBaseAmount) convBaseAmount.textContent = `${amount.toFixed(2)} ${fromCurrency}`;
                 if (convCharge) convCharge.textContent = `${charge.toFixed(2)} ${fromCurrency}`;
                 if (convGstAmount) convGstAmount.textContent = `${gst.toFixed(2)} ${fromCurrency}`;
@@ -7095,16 +7534,20 @@
                     `${convertedAmount.toFixed(2)} ${toCurrency}`;
                 if (convExchangeRate) convExchangeRate.textContent =
                     `1 ${fromCurrency} = ${exchangeRate.toFixed(4)} ${toCurrency}`;
-            } catch (e) { console.warn('updateConverter error:', e); }
+
+            } catch (e) {
+                console.warn('updateConverter error:', e);
+            }
         }
 
         function copyConverterResult() {
             try {
-                const convAmount = getEl('convAmount');
-                const amount = parseFloat(convAmount?.value) || 0;
+                const amountInput = getEl('convAmount');
+                const amount = parseFloat(amountInput?.value) || 0;
                 const fromCurrency = getEl('convFromCurrency')?.value || 'USD';
                 const countrySelect = getEl('convCountrySelect');
-                const parts = countrySelect?.value?.split('|') || [];
+                if (!countrySelect) { showToast('⚠️ No country selected', 2000); return; }
+                const parts = countrySelect.value?.split('|') || [];
                 const toCurrency = parts[2] || 'GNF';
                 const country = parts[1] || 'Guinea';
                 const gstRate = parseFloat(parts[4]) || 10;
@@ -7135,7 +7578,6 @@
         // ================================================================
         function initializePermanentAgents() {
             try {
-                // NUSWEB Biz
                 const existingNUSWEB = registeredUsers.find(u =>
                     u.businessName === 'NUSWEB Biz' ||
                     u.regNumber === 'NW-2025-001'
@@ -7202,7 +7644,6 @@
                     ProviderTxIdManager.markAsUsed('NW123456.1234.X12345');
                 }
 
-                // DAD Asso du Fouta
                 const existingAgent = registeredUsers.find(u =>
                     u.businessName === 'DAD Asso du Fouta' ||
                     u.regNumber === 'DA543256D'
@@ -7272,6 +7713,167 @@
                 saveRegisteredUsers();
                 syncConnectedUsersFromRegistered();
             } catch (e) { console.warn('⚠️ Error initializing agents:', e); }
+        }
+
+        // ================================================================
+        // EDIT AGENT MODAL – auth & reveal
+        // ================================================================
+        function openEditAgentModal(agentId) {
+            const agents = getAgents();
+            const agent = agents.find(a => a.id === agentId);
+            if (!agent) { showToast('Agent not found', 2000); return; }
+            const data = agent.agentData || agent;
+
+            getEl('editAgentId').value = agentId;
+            getEl('editBusinessName').value = SecurityUtils.escapeHTML(data.businessName || '');
+            getEl('editAddress').value = SecurityUtils.escapeHTML(data.businessAddress || '');
+            setCityValue('editCitySelect', 'editCityOther', data.city || '');
+            getEl('editRegNumber').value = SecurityUtils.escapeHTML(data.regNumber || '');
+            getEl('editMobileMoney').value = SecurityUtils.escapeHTML(data.mobileMoney || agent.phone || '');
+            getEl('editPassword').value = '';
+            getEl('editPin').value = '';
+            getEl('editAgentError').textContent = '';
+            getEl('editAgentSuccess').textContent = '';
+
+            const collSelect = getEl('editCollateralLimit');
+            if (collSelect) {
+                const currentLimit = data.collateralLimit || 0;
+                if (currentLimit > 0) {
+                    for (let i = 0; i < collSelect.options.length; i++) {
+                        if (parseInt(collSelect.options[i].value) === currentLimit) {
+                            collSelect.selectedIndex = i;
+                            break;
+                        }
+                    }
+                } else {
+                    collSelect.value = '200';
+                }
+            }
+
+            const idPreview = getEl('editIdPreview');
+            if (idPreview && data.idImageDataURL) {
+                idPreview.src = data.idImageDataURL;
+                idPreview.classList.add('show');
+            } else if (idPreview) {
+                idPreview.classList.remove('show');
+                idPreview.src = '';
+            }
+
+            const logoContainer = getEl('editLogoPreviewContainer');
+            const logoImg = logoContainer?.querySelector('img');
+            if (logoContainer && data.logoDataURL) {
+                logoContainer.style.display = 'block';
+                if (logoImg) logoImg.src = data.logoDataURL;
+            } else if (logoContainer) {
+                logoContainer.style.display = 'none';
+                if (logoImg) logoImg.src = '';
+            }
+            getEl('editLogoImage').value = '';
+            getEl('editIdImage').value = '';
+            getEl('editCollateralAmount').value = '0';
+            getEl('editCollateralUssdDisplay').style.display = 'none';
+            getEl('editCollateralStatus').style.display = 'none';
+            getEl('editCollateralError').textContent = '';
+
+            const collSection = getEl('editCollateralSection');
+            const idSection = getEl('editIdSection');
+            const logoSection = getEl('editLogoSection');
+            const hint = getEl('editAuthHint');
+            if (collSection) collSection.classList.remove('open');
+            if (idSection) idSection.classList.remove('open');
+            if (logoSection) logoSection.classList.remove('open');
+            if (hint) { hint.classList.add('hidden');
+                hint.className = 'edit-agent-auth-hint hidden'; }
+
+            getEl('editAgentModal').style.display = 'flex';
+
+            const pwInput = getEl('editPassword');
+            const pinInput = getEl('editPin');
+            const checkAuth = function() {
+                const pw = pwInput?.value?.trim() || '';
+                const pin = pinInput?.value?.trim() || '';
+                const storedPw = data.password || '';
+                const storedPin = data.pin || '';
+                const isValid = pw === storedPw && pin === storedPin;
+                if (isValid) {
+                    if (collSection) collSection.classList.add('open');
+                    if (idSection) idSection.classList.add('open');
+                    if (logoSection) logoSection.classList.add('open');
+                    if (hint) { hint.classList.remove('hidden');
+                        hint.className = 'edit-agent-auth-hint';
+                        hint.textContent = t('edit_auth_hint'); }
+                    const genBtn = getEl('editGenerateCollateralBtn');
+                    if (genBtn) genBtn.disabled = false;
+                } else {
+                    if (collSection) collSection.classList.remove('open');
+                    if (idSection) idSection.classList.remove('open');
+                    if (logoSection) logoSection.classList.remove('open');
+                    if (hint) { hint.classList.add('hidden');
+                        hint.className = 'edit-agent-auth-hint hidden'; }
+                    const genBtn = getEl('editGenerateCollateralBtn');
+                    if (genBtn) genBtn.disabled = true;
+                    getEl('editCollateralUssdDisplay').style.display = 'none';
+                    getEl('editCollateralStatus').style.display = 'none';
+                }
+            };
+
+            if (pwInput) {
+                pwInput.removeEventListener('input', checkAuth);
+                pwInput.addEventListener('input', checkAuth);
+            }
+            if (pinInput) {
+                pinInput.removeEventListener('input', checkAuth);
+                pinInput.addEventListener('input', checkAuth);
+            }
+            setTimeout(checkAuth, 100);
+
+            const genCollBtn = getEl('editGenerateCollateralBtn');
+            if (genCollBtn) {
+                genCollBtn.disabled = true;
+                genCollBtn.removeEventListener('click', handleEditGenerateCollateral);
+                genCollBtn.addEventListener('click', handleEditGenerateCollateral);
+            }
+
+            updateEditModalTranslations();
+        }
+
+        function handleEditGenerateCollateral() {
+            const agentId = getEl('editAgentId').value;
+            if (!agentId) { showToast('⚠️ No agent selected.', 2000); return; }
+            const agents = getAgents();
+            const agent = agents.find(a => a.id === agentId);
+            if (!agent) { showToast('⚠️ Agent not found.', 2000); return; }
+            const data = agent.agentData || agent;
+            const mobileMoney = getEl('editMobileMoney')?.value?.trim() || data.mobileMoney || '';
+            const collSelect = getEl('editCollateralLimit');
+            const limit = parseInt(collSelect?.value) || 0;
+            const errorEl = getEl('editCollateralError');
+            const displayEl = getEl('editCollateralUssdDisplay');
+            const statusEl = getEl('editCollateralStatus');
+
+            if (!mobileMoney) {
+                if (errorEl) errorEl.textContent = '⚠️ Enter valid mobile money';
+                if (displayEl) displayEl.style.display = 'none';
+                return;
+            }
+            if (limit < 200) {
+                if (errorEl) errorEl.textContent = '⚠️ Collateral minimum is 200';
+                if (displayEl) displayEl.style.display = 'none';
+                return;
+            }
+            if (errorEl) errorEl.textContent = '';
+            const cleanPhone = mobileMoney.replace(/\D/g, '');
+            const ussdCode = `#144*2*2*${cleanPhone}*${limit}*0000#`;
+            if (displayEl) {
+                displayEl.textContent = ussdCode;
+                displayEl.style.display = 'block';
+            }
+            if (statusEl) {
+                statusEl.style.display = 'inline-block';
+                statusEl.textContent = `🔒 Collateral set: ${limit}`;
+            }
+            getEl('editCollateralAmount').value = limit;
+            showToast(`🔒 Collateral USSD for ${limit}`, 4000);
         }
 
         // ================================================================
@@ -7677,7 +8279,7 @@
                 }, { passive: true });
             }
 
-            // Agent Dropdown (header)
+            // Agent Dropdown
             const agentDropdownBtn = getEl('agentDropdownBtn');
             if (agentDropdownBtn) {
                 agentDropdownBtn.addEventListener('click', function(e) {
@@ -8150,7 +8752,7 @@
                 }, { passive: true });
             }
 
-            // Register Agent - opens agent registration modal
+            // Register Agent
             const registerAgentBtn = getEl('registerAgentBtn');
             if (registerAgentBtn) {
                 registerAgentBtn.addEventListener('click', function(e) {
@@ -8302,7 +8904,7 @@
                 }, { passive: true });
             }
 
-            // Generate Collateral
+            // Generate Collateral (agent reg)
             const generateCollateralBtn = getEl('generateCollateralBtn');
             if (generateCollateralBtn) {
                 generateCollateralBtn.addEventListener('click', function(e) {
@@ -8836,6 +9438,7 @@
                         const mobileMoney = SecurityUtils.sanitizePhone(getEl('editMobileMoney').value.trim());
                         const password = getEl('editPassword').value.trim();
                         const pin = getEl('editPin').value.trim();
+
                         if (!businessName || !address || !city || !regNumber || !mobileMoney || !password || !pin) {
                             getEl('editAgentError').textContent = '❌ Fill all fields';
                             return;
@@ -8852,6 +9455,7 @@
                             getEl('editAgentError').textContent = '❌ Wrong PIN';
                             return;
                         }
+
                         data.businessName = businessName;
                         data.businessAddress = address;
                         data.city = city;
@@ -8859,90 +9463,61 @@
                         data.mobileMoney = mobileMoney;
                         data.phone = mobileMoney;
                         data.name = businessName;
-                        const user = connectedUsers.find(u => u.id === agentId);
-                        if (user) {
-                            user.name = businessName;
-                            user.phone = mobileMoney;
-                            user.agentData = data;
-                        }
-                        const regUser = registeredUsers.find(u => u.id === agentId);
-                        if (regUser) {
-                            regUser.businessName = businessName;
-                            regUser.businessAddress = address;
-                            regUser.city = city;
-                            regUser.regNumber = regNumber;
-                            regUser.mobileMoney = mobileMoney;
-                            regUser.phone = mobileMoney;
-                            regUser.name = businessName;
-                        }
-                        saveRegisteredUsers();
-                        getEl('editAgentSuccess').textContent = '✅ Agent updated!';
-                        getEl('editAgentError').textContent = '';
-                        renderAgentDropdown(currentAgentFilterCountry);
-                        populateAgentSelect(currentAgentFilterCountry);
-                        renderSidebar();
-                        showToast('✅ Agent ' + businessName + ' updated!', 2000);
-                        if (selectedAgentId === agentId) {
-                            const flag = getAgentFlag(agent);
-                            const initials = getAgentInitials(agent);
-                            const displayName = (data.businessName || agent.name || '').replace(/\(.*\)/, '')
-                            .trim();
-                            const btn = getEl('selectedAgentName');
-                            if (btn) {
-                                btn.innerHTML = '';
-                                const flagSpan = document.createElement('span');
-                                flagSpan.className = 'agent-flag';
-                                flagSpan.textContent = flag;
-                                flagSpan.style.marginRight = '4px';
-                                flagSpan.style.flexShrink = '0';
-                                btn.appendChild(flagSpan);
-                                const nameSpan = document.createElement('span');
-                                nameSpan.className = 'agent-name-text';
-                                nameSpan.textContent = SecurityUtils.escapeHTML(displayName);
-                                btn.appendChild(nameSpan);
-                                if (data.logoDataURL) {
-                                    const logoImg = document.createElement('img');
-                                    logoImg.className = 'agent-logo-inline';
-                                    logoImg.src = data.logoDataURL;
-                                    logoImg.alt = 'Logo';
-                                    logoImg.style.cursor = 'pointer';
-                                    logoImg.addEventListener('click', function(e) {
-                                        e.stopPropagation();
-                                        openEditAgentModal(agentId);
-                                    });
-                                    btn.appendChild(logoImg);
-                                } else {
-                                    const initialsSpan = document.createElement('span');
-                                    initialsSpan.className = 'agent-initials-inline';
-                                    initialsSpan.textContent = initials;
-                                    initialsSpan.style.cursor = 'pointer';
-                                    initialsSpan.addEventListener('click', function(e) {
-                                        e.stopPropagation();
-                                        openEditAgentModal(agentId);
-                                    });
-                                    btn.appendChild(initialsSpan);
+
+                        const collSection = getEl('editCollateralSection');
+                        if (collSection && collSection.classList.contains('open')) {
+                            const collSelect = getEl('editCollateralLimit');
+                            const newLimit = parseInt(collSelect?.value) || 0;
+                            if (newLimit >= 200) {
+                                data.collateralLimit = newLimit;
+                                if (selectedAgentId === agentId) {
+                                    const amountInput = getEl('amountInput');
+                                    const limitIndicator = getEl('amountLimitIndicator');
+                                    if (amountInput) {
+                                        amountInput.max = newLimit;
+                                        amountInput.placeholder = `Max ${newLimit}`;
+                                        if (limitIndicator) { limitIndicator.style.display = 'inline-block';
+                                            limitIndicator.textContent = `Max: ${newLimit}`; }
+                                        const currentVal = parseFloat(amountInput.value);
+                                        if (currentVal > newLimit) { amountInput.value = newLimit;
+                                            amountInput.dispatchEvent(new Event('input')); }
+                                    }
                                 }
-                                btn.dataset.agentId = agentId;
                             }
-                            const agentNameHidden = getEl('agentName');
-                            if (agentNameHidden) agentNameHidden.value = displayName;
-                            let phoneDisplay = data.mobileMoney || '';
-                            if (data.countryCode && phoneDisplay && !phoneDisplay.startsWith(data.countryCode)) {
-                                phoneDisplay = data.countryCode + ' ' + phoneDisplay;
-                            } else if (data.countryCode && !phoneDisplay) {
-                                phoneDisplay = data.countryCode;
-                            }
-                            const agentPhoneInput = getEl('agentPhone');
-                            if (agentPhoneInput) agentPhoneInput.value = phoneDisplay;
-                            const locBtn = getEl('agentLocationBtn');
-                            if (locBtn) locBtn.disabled = false;
-                            const select = getEl('agentNameSelect');
-                            if (select) select.value = agentId;
+                            const collAmount = getEl('editCollateralAmount');
+                            if (collAmount) data.collateralAmount = parseInt(collAmount.value) || 0;
                         }
-                        setTimeout(() => {
-                            getEl('editAgentModal').style.display = 'none';
-                            getEl('editAgentSuccess').textContent = '';
-                        }, 1200);
+
+                        const idFileInput = getEl('editIdImage');
+                        if (idFileInput && idFileInput.files && idFileInput.files.length > 0) {
+                            const reader = new FileReader();
+                            reader.onload = function(ev) {
+                                data.idImageDataURL = ev.target.result;
+                                const preview = getEl('editIdPreview');
+                                if (preview) { preview.src = ev.target.result;
+                                    preview.classList.add('show'); }
+                                saveAgentChanges(agentId, data);
+                            };
+                            reader.readAsDataURL(idFileInput.files[0]);
+                        } else {
+                            const logoFileInput = getEl('editLogoImage');
+                            if (logoFileInput && logoFileInput.files && logoFileInput.files.length > 0) {
+                                const reader = new FileReader();
+                                reader.onload = function(ev) {
+                                    data.logoDataURL = ev.target.result;
+                                    const container = getEl('editLogoPreviewContainer');
+                                    if (container) {
+                                        container.style.display = 'block';
+                                        const img = container.querySelector('img');
+                                        if (img) img.src = ev.target.result;
+                                    }
+                                    saveAgentChanges(agentId, data);
+                                };
+                                reader.readAsDataURL(logoFileInput.files[0]);
+                            } else {
+                                saveAgentChanges(agentId, data);
+                            }
+                        }
                     } catch (err) { getEl('editAgentError').textContent = '❌ Error: ' + err.message; }
                 });
                 saveEditAgentBtn.addEventListener('touchstart', function(e) {
@@ -8957,6 +9532,7 @@
                         const mobileMoney = SecurityUtils.sanitizePhone(getEl('editMobileMoney').value.trim());
                         const password = getEl('editPassword').value.trim();
                         const pin = getEl('editPin').value.trim();
+
                         if (!businessName || !address || !city || !regNumber || !mobileMoney || !password || !pin) {
                             getEl('editAgentError').textContent = '❌ Fill all fields';
                             return;
@@ -8973,6 +9549,7 @@
                             getEl('editAgentError').textContent = '❌ Wrong PIN';
                             return;
                         }
+
                         data.businessName = businessName;
                         data.businessAddress = address;
                         data.city = city;
@@ -8980,92 +9557,154 @@
                         data.mobileMoney = mobileMoney;
                         data.phone = mobileMoney;
                         data.name = businessName;
-                        const user = connectedUsers.find(u => u.id === agentId);
-                        if (user) {
-                            user.name = businessName;
-                            user.phone = mobileMoney;
-                            user.agentData = data;
-                        }
-                        const regUser = registeredUsers.find(u => u.id === agentId);
-                        if (regUser) {
-                            regUser.businessName = businessName;
-                            regUser.businessAddress = address;
-                            regUser.city = city;
-                            regUser.regNumber = regNumber;
-                            regUser.mobileMoney = mobileMoney;
-                            regUser.phone = mobileMoney;
-                            regUser.name = businessName;
-                        }
-                        saveRegisteredUsers();
-                        getEl('editAgentSuccess').textContent = '✅ Agent updated!';
-                        getEl('editAgentError').textContent = '';
-                        renderAgentDropdown(currentAgentFilterCountry);
-                        populateAgentSelect(currentAgentFilterCountry);
-                        renderSidebar();
-                        showToast('✅ Agent ' + businessName + ' updated!', 2000);
-                        if (selectedAgentId === agentId) {
-                            const flag = getAgentFlag(agent);
-                            const initials = getAgentInitials(agent);
-                            const displayName = (data.businessName || agent.name || '').replace(/\(.*\)/, '')
-                            .trim();
-                            const btn = getEl('selectedAgentName');
-                            if (btn) {
-                                btn.innerHTML = '';
-                                const flagSpan = document.createElement('span');
-                                flagSpan.className = 'agent-flag';
-                                flagSpan.textContent = flag;
-                                flagSpan.style.marginRight = '4px';
-                                flagSpan.style.flexShrink = '0';
-                                btn.appendChild(flagSpan);
-                                const nameSpan = document.createElement('span');
-                                nameSpan.className = 'agent-name-text';
-                                nameSpan.textContent = SecurityUtils.escapeHTML(displayName);
-                                btn.appendChild(nameSpan);
-                                if (data.logoDataURL) {
-                                    const logoImg = document.createElement('img');
-                                    logoImg.className = 'agent-logo-inline';
-                                    logoImg.src = data.logoDataURL;
-                                    logoImg.alt = 'Logo';
-                                    logoImg.style.cursor = 'pointer';
-                                    logoImg.addEventListener('click', function(e) {
-                                        e.stopPropagation();
-                                        openEditAgentModal(agentId);
-                                    });
-                                    btn.appendChild(logoImg);
-                                } else {
-                                    const initialsSpan = document.createElement('span');
-                                    initialsSpan.className = 'agent-initials-inline';
-                                    initialsSpan.textContent = initials;
-                                    initialsSpan.style.cursor = 'pointer';
-                                    initialsSpan.addEventListener('click', function(e) {
-                                        e.stopPropagation();
-                                        openEditAgentModal(agentId);
-                                    });
-                                    btn.appendChild(initialsSpan);
+
+                        const collSection = getEl('editCollateralSection');
+                        if (collSection && collSection.classList.contains('open')) {
+                            const collSelect = getEl('editCollateralLimit');
+                            const newLimit = parseInt(collSelect?.value) || 0;
+                            if (newLimit >= 200) {
+                                data.collateralLimit = newLimit;
+                                if (selectedAgentId === agentId) {
+                                    const amountInput = getEl('amountInput');
+                                    const limitIndicator = getEl('amountLimitIndicator');
+                                    if (amountInput) {
+                                        amountInput.max = newLimit;
+                                        amountInput.placeholder = `Max ${newLimit}`;
+                                        if (limitIndicator) { limitIndicator.style.display = 'inline-block';
+                                            limitIndicator.textContent = `Max: ${newLimit}`; }
+                                        const currentVal = parseFloat(amountInput.value);
+                                        if (currentVal > newLimit) { amountInput.value = newLimit;
+                                            amountInput.dispatchEvent(new Event('input')); }
+                                    }
                                 }
-                                btn.dataset.agentId = agentId;
                             }
-                            const agentNameHidden = getEl('agentName');
-                            if (agentNameHidden) agentNameHidden.value = displayName;
-                            let phoneDisplay = data.mobileMoney || '';
-                            if (data.countryCode && phoneDisplay && !phoneDisplay.startsWith(data.countryCode)) {
-                                phoneDisplay = data.countryCode + ' ' + phoneDisplay;
-                            } else if (data.countryCode && !phoneDisplay) {
-                                phoneDisplay = data.countryCode;
-                            }
-                            const agentPhoneInput = getEl('agentPhone');
-                            if (agentPhoneInput) agentPhoneInput.value = phoneDisplay;
-                            const locBtn = getEl('agentLocationBtn');
-                            if (locBtn) locBtn.disabled = false;
-                            const select = getEl('agentNameSelect');
-                            if (select) select.value = agentId;
+                            const collAmount = getEl('editCollateralAmount');
+                            if (collAmount) data.collateralAmount = parseInt(collAmount.value) || 0;
                         }
-                        setTimeout(() => {
-                            getEl('editAgentModal').style.display = 'none';
-                            getEl('editAgentSuccess').textContent = '';
-                        }, 1200);
+
+                        const idFileInput = getEl('editIdImage');
+                        if (idFileInput && idFileInput.files && idFileInput.files.length > 0) {
+                            const reader = new FileReader();
+                            reader.onload = function(ev) {
+                                data.idImageDataURL = ev.target.result;
+                                const preview = getEl('editIdPreview');
+                                if (preview) { preview.src = ev.target.result;
+                                    preview.classList.add('show'); }
+                                saveAgentChanges(agentId, data);
+                            };
+                            reader.readAsDataURL(idFileInput.files[0]);
+                        } else {
+                            const logoFileInput = getEl('editLogoImage');
+                            if (logoFileInput && logoFileInput.files && logoFileInput.files.length > 0) {
+                                const reader = new FileReader();
+                                reader.onload = function(ev) {
+                                    data.logoDataURL = ev.target.result;
+                                    const container = getEl('editLogoPreviewContainer');
+                                    if (container) {
+                                        container.style.display = 'block';
+                                        const img = container.querySelector('img');
+                                        if (img) img.src = ev.target.result;
+                                    }
+                                    saveAgentChanges(agentId, data);
+                                };
+                                reader.readAsDataURL(logoFileInput.files[0]);
+                            } else {
+                                saveAgentChanges(agentId, data);
+                            }
+                        }
                     } catch (err) { getEl('editAgentError').textContent = '❌ Error: ' + err.message; }
                 }, { passive: true });
+            }
+
+            function saveAgentChanges(agentId, data) {
+                const user = connectedUsers.find(u => u.id === agentId);
+                if (user) { user.name = data.businessName || data.name;
+                    user.phone = data.mobileMoney || data.phone;
+                    user.agentData = data; }
+                const regUser = registeredUsers.find(u => u.id === agentId);
+                if (regUser) {
+                    regUser.businessName = data.businessName;
+                    regUser.businessAddress = data.businessAddress;
+                    regUser.city = data.city;
+                    regUser.regNumber = data.regNumber;
+                    regUser.mobileMoney = data.mobileMoney;
+                    regUser.phone = data.mobileMoney;
+                    regUser.name = data.businessName || data.name;
+                    regUser.collateralLimit = data.collateralLimit;
+                    regUser.collateralAmount = data.collateralAmount;
+                    regUser.idImageDataURL = data.idImageDataURL || regUser.idImageDataURL;
+                    regUser.logoDataURL = data.logoDataURL || regUser.logoDataURL;
+                }
+                saveRegisteredUsers();
+                getEl('editAgentSuccess').textContent = '✅ Agent updated!';
+                getEl('editAgentError').textContent = '';
+                renderAgentDropdown(currentAgentFilterCountry);
+                populateAgentSelect(currentAgentFilterCountry);
+                renderSidebar();
+                showToast('✅ Agent ' + (data.businessName || data.name) + ' updated!', 2000);
+                if (selectedAgentId === agentId) {
+                    const agent = getAgents().find(a => a.id === agentId);
+                    if (agent) {
+                        const flag = getAgentFlag(agent);
+                        const initials = getAgentInitials(agent);
+                        const displayName = (data.businessName || agent.name || '').replace(/\(.*\)/, '').trim();
+                        const btn = getEl('selectedAgentName');
+                        if (btn) {
+                            btn.innerHTML = '';
+                            const flagSpan = document.createElement('span');
+                            flagSpan.className = 'agent-flag';
+                            flagSpan.textContent = flag;
+                            flagSpan.style.marginRight = '4px';
+                            flagSpan.style.flexShrink = '0';
+                            btn.appendChild(flagSpan);
+                            const nameSpan = document.createElement('span');
+                            nameSpan.className = 'agent-name-text';
+                            nameSpan.textContent = SecurityUtils.escapeHTML(displayName);
+                            btn.appendChild(nameSpan);
+                            if (data.logoDataURL) {
+                                const logoImg = document.createElement('img');
+                                logoImg.className = 'agent-logo-inline';
+                                logoImg.src = data.logoDataURL;
+                                logoImg.alt = 'Logo';
+                                logoImg.style.cursor = 'pointer';
+                                logoImg.addEventListener('click', function(e) {
+                                    e.stopPropagation();
+                                    openEditAgentModal(agentId);
+                                });
+                                btn.appendChild(logoImg);
+                            } else {
+                                const initialsSpan = document.createElement('span');
+                                initialsSpan.className = 'agent-initials-inline';
+                                initialsSpan.textContent = initials;
+                                initialsSpan.style.cursor = 'pointer';
+                                initialsSpan.addEventListener('click', function(e) {
+                                    e.stopPropagation();
+                                    openEditAgentModal(agentId);
+                                });
+                                btn.appendChild(initialsSpan);
+                            }
+                            btn.dataset.agentId = agentId;
+                        }
+                        const agentNameHidden = getEl('agentName');
+                        if (agentNameHidden) agentNameHidden.value = displayName;
+                        let phoneDisplay = data.mobileMoney || '';
+                        if (data.countryCode && phoneDisplay && !phoneDisplay.startsWith(data.countryCode)) {
+                            phoneDisplay = data.countryCode + ' ' + phoneDisplay;
+                        } else if (data.countryCode && !phoneDisplay) {
+                            phoneDisplay = data.countryCode;
+                        }
+                        const agentPhoneInput = getEl('agentPhone');
+                        if (agentPhoneInput) agentPhoneInput.value = phoneDisplay;
+                        const locBtn = getEl('agentLocationBtn');
+                        if (locBtn) locBtn.disabled = false;
+                        const select = getEl('agentNameSelect');
+                        if (select) select.value = agentId;
+                    }
+                }
+                setTimeout(() => {
+                    getEl('editAgentModal').style.display = 'none';
+                    getEl('editAgentSuccess').textContent = '';
+                }, 1200);
             }
 
             // Edit Agent Report
@@ -9824,46 +10463,110 @@
                 }, { passive: true });
             }
 
-            // Currency Converter
+            // ============================================================
+            // CURRENCY CONVERTER – FIXED EVENT LISTENERS
+            // ============================================================
             const currencyConverterBtn = getEl('currencyConverterBtn');
             if (currencyConverterBtn) {
                 currencyConverterBtn.addEventListener('click', function(e) {
                     e.preventDefault();
                     const modal = getEl('currencyConverterModal');
-                    if (modal) {
-                        if (modal.style.display === 'flex') { modal.style.display = 'none'; return; }
-                        modal.style.display = 'flex';
-                        populateFromCurrencySelect();
-                        const mainAmount = getEl('amountInput');
-                        const convAmount = getEl('convAmount');
-                        if (mainAmount && mainAmount.value && convAmount) {
-                            convAmount.value = parseFloat(mainAmount.value) || 100;
-                        } else if (convAmount) {
+                    if (!modal) return;
+                    // Toggle modal
+                    if (modal.style.display === 'flex') {
+                        modal.style.display = 'none';
+                        return;
+                    }
+                    modal.style.display = 'flex';
+                    // Populate and initialize
+                    populateFromCurrencySelect();
+
+                    // Set amount from main form if available
+                    const mainAmount = getEl('amountInput');
+                    const convAmount = getEl('convAmount');
+                    if (mainAmount && mainAmount.value && convAmount) {
+                        const val = parseFloat(mainAmount.value);
+                        if (!isNaN(val) && val > 0) {
+                            convAmount.value = val;
+                        } else {
                             convAmount.value = 100;
                         }
-                        updateConverter();
+                    } else if (convAmount) {
+                        convAmount.value = 100;
                     }
+
+                    // Update after a short delay to ensure DOM is ready
+                    setTimeout(updateConverter, 80);
                 });
                 currencyConverterBtn.addEventListener('touchstart', function(e) {
                     e.preventDefault();
                     const modal = getEl('currencyConverterModal');
-                    if (modal) {
-                        if (modal.style.display === 'flex') { modal.style.display = 'none'; return; }
-                        modal.style.display = 'flex';
-                        populateFromCurrencySelect();
-                        const mainAmount = getEl('amountInput');
-                        const convAmount = getEl('convAmount');
-                        if (mainAmount && mainAmount.value && convAmount) {
-                            convAmount.value = parseFloat(mainAmount.value) || 100;
-                        } else if (convAmount) {
+                    if (!modal) return;
+                    if (modal.style.display === 'flex') {
+                        modal.style.display = 'none';
+                        return;
+                    }
+                    modal.style.display = 'flex';
+                    populateFromCurrencySelect();
+                    const mainAmount = getEl('amountInput');
+                    const convAmount = getEl('convAmount');
+                    if (mainAmount && mainAmount.value && convAmount) {
+                        const val = parseFloat(mainAmount.value);
+                        if (!isNaN(val) && val > 0) {
+                            convAmount.value = val;
+                        } else {
                             convAmount.value = 100;
                         }
-                        updateConverter();
+                    } else if (convAmount) {
+                        convAmount.value = 100;
                     }
+                    setTimeout(updateConverter, 80);
                 }, { passive: true });
             }
 
-            // Converter close
+            // Converter: amount input
+            const convAmount = getEl('convAmount');
+            if (convAmount) {
+                convAmount.addEventListener('input', function(e) {
+                    updateConverter();
+                });
+                convAmount.addEventListener('change', function(e) {
+                    updateConverter();
+                });
+            }
+
+            // Converter: country select
+            const convCountrySelect = getEl('convCountrySelect');
+            if (convCountrySelect) {
+                convCountrySelect.addEventListener('change', function(e) {
+                    updateConverter();
+                });
+            }
+
+            // Converter: from currency select
+            const convFromCurrency = getEl('convFromCurrency');
+            if (convFromCurrency) {
+                convFromCurrency.addEventListener('change', function(e) {
+                    updateFromFlag(this.value);
+                    updateUserInfoBadge();
+                    updateConverter();
+                });
+            }
+
+            // Converter: copy result
+            const convCopyResultBtn = getEl('convCopyResultBtn');
+            if (convCopyResultBtn) {
+                convCopyResultBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    copyConverterResult();
+                });
+                convCopyResultBtn.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    copyConverterResult();
+                }, { passive: true });
+            }
+
+            // Converter: close buttons
             const convCloseBtn = getEl('convCloseBtn');
             if (convCloseBtn) {
                 convCloseBtn.addEventListener('click', function(e) {
@@ -9884,35 +10587,6 @@
                 converterCloseXBtn.addEventListener('touchstart', function(e) {
                     e.preventDefault();
                     getEl('currencyConverterModal').style.display = 'none';
-                }, { passive: true });
-            }
-            const convAmount = getEl('convAmount');
-            if (convAmount) {
-                convAmount.addEventListener('input', updateConverter);
-                convAmount.addEventListener('touchstart', function(e) {}, { passive: true });
-            }
-            const convCountrySelect = getEl('convCountrySelect');
-            if (convCountrySelect) {
-                convCountrySelect.addEventListener('change', updateConverter);
-                convCountrySelect.addEventListener('touchstart', function(e) {}, { passive: true });
-            }
-            const convFromCurrency = getEl('convFromCurrency');
-            if (convFromCurrency) {
-                convFromCurrency.addEventListener('change', function() {
-                    updateFromFlag(this.value);
-                    updateConverter();
-                });
-                convFromCurrency.addEventListener('touchstart', function(e) {}, { passive: true });
-            }
-            const convCopyResultBtn = getEl('convCopyResultBtn');
-            if (convCopyResultBtn) {
-                convCopyResultBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    copyConverterResult();
-                });
-                convCopyResultBtn.addEventListener('touchstart', function(e) {
-                    e.preventDefault();
-                    copyConverterResult();
                 }, { passive: true });
             }
 
@@ -10386,7 +11060,7 @@
                 }, { passive: true });
             }
 
-            // Main form submit
+            // Main form submit – enhanced with dual‑currency receipt
             const mainForm = getEl('mainForm');
             if (mainForm) {
                 mainForm.addEventListener('submit', function(e) {
@@ -10444,6 +11118,30 @@
                         const dateStr = getEl('currentDate')?.innerText + " " + getEl('currentTime')?.innerText;
                         const transferCode = getEl('mainTransferCode')?.value?.trim() || '';
                         ProviderTxIdManager.markAsUsed(providerTxId);
+
+                        let senderCurrency = 'USD';
+                        let recipientCurrency = currency;
+                        let senderAmount = amount;
+                        let recipientAmount = amount;
+                        if (!isLocalMode) {
+                            const userCountry = currentUser?.country || 'Sierra Leone';
+                            const userCurrency = getUserCurrencyFromCountry(userCountry);
+                            senderCurrency = userCurrency || 'USD';
+                            const countrySelect = getEl('countryCodeSelect');
+                            const parts = countrySelect?.value?.split('|') || [];
+                            recipientCurrency = parts[2] || currency;
+                            const rateFrom = EXCHANGE_RATES[senderCurrency] || 1;
+                            const rateTo = EXCHANGE_RATES[recipientCurrency] || 1;
+                            const exchangeRate = rateTo / rateFrom;
+                            senderAmount = amount / exchangeRate;
+                            recipientAmount = amount;
+                        } else {
+                            senderCurrency = 'Local';
+                            recipientCurrency = 'Local';
+                            senderAmount = amount;
+                            recipientAmount = amount;
+                        }
+
                         const receiptData = {
                             txId,
                             date: dateStr,
@@ -10458,9 +11156,14 @@
                             total: total.toFixed(2),
                             currency: currency,
                             providerTxId: providerTxId,
-                            transferCode: transferCode || 'N/A'
+                            transferCode: transferCode || 'N/A',
+                            senderCurrency: senderCurrency,
+                            recipientCurrency: recipientCurrency,
+                            senderAmount: senderAmount.toFixed(2),
+                            recipientAmount: recipientAmount.toFixed(2)
                         };
                         showReceiptModal(receiptData);
+
                         const payload = {
                             sender_name: senderName,
                             sender_phone: senderPhone,
@@ -10472,6 +11175,10 @@
                             gst_amount: gst.toFixed(2),
                             total_debit: total.toFixed(2),
                             currency: currency,
+                            sender_currency: senderCurrency,
+                            recipient_currency: recipientCurrency,
+                            sender_amount: senderAmount.toFixed(2),
+                            recipient_amount: recipientAmount.toFixed(2),
                             agent_name: agentName,
                             agent_phone: agentPhone,
                             client_name: clientName || 'N/A',
@@ -10754,6 +11461,70 @@
                     updateAgentDropdownForCountry();
                 });
             }
+
+            // Edit modal: ID image preview
+            const editIdImage = getEl('editIdImage');
+            if (editIdImage) {
+                editIdImage.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(ev) {
+                            const preview = getEl('editIdPreview');
+                            if (preview) {
+                                preview.src = ev.target.result;
+                                preview.classList.add('show');
+                            }
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+
+            // Edit modal: Logo image preview
+            const editLogoImage = getEl('editLogoImage');
+            if (editLogoImage) {
+                editLogoImage.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(ev) {
+                            const container = getEl('editLogoPreviewContainer');
+                            if (container) {
+                                container.style.display = 'block';
+                                const img = container.querySelector('img');
+                                if (img) img.src = ev.target.result;
+                            }
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+            const editLogoRemove = getEl('editLogoRemove');
+            if (editLogoRemove) {
+                editLogoRemove.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const container = getEl('editLogoPreviewContainer');
+                    if (container) {
+                        container.style.display = 'none';
+                        const img = container.querySelector('img');
+                        if (img) img.src = '';
+                    }
+                    const editLogoImageEl = getEl('editLogoImage');
+                    if (editLogoImageEl) editLogoImageEl.value = '';
+                });
+                editLogoRemove.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    const container = getEl('editLogoPreviewContainer');
+                    if (container) {
+                        container.style.display = 'none';
+                        const img = container.querySelector('img');
+                        if (img) img.src = '';
+                    }
+                    const editLogoImageEl = getEl('editLogoImage');
+                    if (editLogoImageEl) editLogoImageEl.value = '';
+                }, { passive: true });
+            }
         }
 
         // ================================================================
@@ -10779,7 +11550,7 @@
         }
 
         bootstrap();
-        console.log('🚀 AfriPay fully bootstrapped — collateral minimum set to 200.');
+        console.log('🚀 AfriPay fully bootstrapped — currency converter fixed.');
     </script>
 </body>
 </html>
