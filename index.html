@@ -5886,15 +5886,17 @@
             if (limit > 0 && amountInput) {
                 amountInput.max = limit;
                 amountInput.placeholder = `Max ${limit}`;
-                if (limitIndicator) { limitIndicator.style.display = 'inline-block';
-                    limitIndicator.textContent = `Max: ${limit}`; }
+                if (limitIndicator) { limitIndicator.style.display = 'inline-block'; limitIndicator.textContent = `Max: ${limit}`; }
                 const currentVal = parseFloat(amountInput.value);
-                if (currentVal > limit) { amountInput.value = limit;
-                    amountInput.dispatchEvent(new Event('input')); }
+                if (currentVal > limit) { amountInput.value = limit; amountInput.dispatchEvent(new Event('input')); }
             } else if (amountInput) {
+                // No collateral set (limit = 0) => show "0000" as the default max
                 amountInput.removeAttribute('max');
-                amountInput.placeholder = 'Amount';
-                if (limitIndicator) limitIndicator.style.display = 'none';
+                amountInput.placeholder = 'Max: 0000';
+                if (limitIndicator) {
+                    limitIndicator.style.display = 'inline-block';
+                    limitIndicator.textContent = 'Max: 0000';
+                }
             }
             const locBtn = getEl('agentLocationBtn');
             if (locBtn) locBtn.disabled = false;
