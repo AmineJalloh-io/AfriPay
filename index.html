@@ -7371,7 +7371,10 @@
         // ================================================================
         function populateFromCurrencySelect() {
             const select = getEl('convFromCurrency');
-            if (!select) return;
+            if (!select) {
+                console.warn('populateFromCurrencySelect: convFromCurrency not found');
+                return;
+            }
             const countrySelect = getEl('convCountrySelect');
             const currencies = new Map();
 
@@ -7523,7 +7526,9 @@
                 if (convExchangeRate) convExchangeRate.textContent =
                     `1 ${fromCurrency} = ${exchangeRate.toFixed(4)} ${toCurrency}`;
 
-            } catch (e) {}
+            } catch (e) {
+                console.warn('updateConverter error:', e);
+            }
         }
 
         function copyConverterResult() {
@@ -10477,63 +10482,122 @@
             // ============================================================
             const currencyConverterBtn = getEl('currencyConverterBtn');
             if (currencyConverterBtn) {
-                currencyConverterBtn.addEventListener('click', function(e) {
+                // Remove any existing listeners by cloning and replacing
+                const newBtn = currencyConverterBtn.cloneNode(true);
+                currencyConverterBtn.parentNode.replaceChild(newBtn, currencyConverterBtn);
+                const freshBtn = getEl('currencyConverterBtn');
+
+                freshBtn.addEventListener('click', function(e) {
                     e.preventDefault();
+                    e.stopPropagation();
+                    console.log('💱 Currency converter button clicked');
+
                     const modal = getEl('currencyConverterModal');
-                    if (!modal) return;
+                    if (!modal) {
+                        console.error('❌ Currency converter modal not found!');
+                        showToast('⚠️ Modal not found', 2000);
+                        return;
+                    }
 
                     // Toggle: if already open, close it
                     if (modal.style.display === 'flex') {
                         modal.style.display = 'none';
+                        console.log('Closing currency converter');
                         return;
                     }
 
                     // Open the modal
                     modal.style.display = 'flex';
+                    console.log('Opening currency converter');
 
                     // Populate and initialize
-                    populateFromCurrencySelect();
+                    try {
+                        populateFromCurrencySelect();
+                        console.log('✅ populateFromCurrencySelect completed');
+                    } catch (err) {
+                        console.error('Error in populateFromCurrencySelect:', err);
+                    }
 
                     // Set amount from main form if available
-                    const mainAmount = getEl('amountInput');
-                    const convAmount = getEl('convAmount');
-                    if (mainAmount && mainAmount.value && convAmount) {
-                        const val = parseFloat(mainAmount.value);
-                        if (!isNaN(val) && val > 0) {
-                            convAmount.value = val;
-                        } else {
+                    try {
+                        const mainAmount = getEl('amountInput');
+                        const convAmount = getEl('convAmount');
+                        if (mainAmount && mainAmount.value && convAmount) {
+                            const val = parseFloat(mainAmount.value);
+                            if (!isNaN(val) && val > 0) {
+                                convAmount.value = val;
+                            } else {
+                                convAmount.value = 100;
+                            }
+                        } else if (convAmount) {
                             convAmount.value = 100;
                         }
-                    } else if (convAmount) {
-                        convAmount.value = 100;
+                    } catch (err) {
+                        console.error('Error setting amount:', err);
                     }
 
                     // Update after a short delay to ensure DOM is ready
-                    setTimeout(updateConverter, 80);
+                    setTimeout(function() {
+                        try {
+                            updateConverter();
+                            console.log('✅ updateConverter completed');
+                        } catch (err) {
+                            console.error('Error in updateConverter:', err);
+                        }
+                    }, 120);
                 });
-                currencyConverterBtn.addEventListener('touchstart', function(e) {
+
+                freshBtn.addEventListener('touchstart', function(e) {
                     e.preventDefault();
+                    e.stopPropagation();
+                    console.log('💱 Currency converter button touched');
+
                     const modal = getEl('currencyConverterModal');
-                    if (!modal) return;
-                    if (modal.style.display === 'flex') {
-                        modal.style.display = 'none';
+                    if (!modal) {
+                        console.error('❌ Currency converter modal not found!');
+                        showToast('⚠️ Modal not found', 2000);
                         return;
                     }
+
+                    if (modal.style.display === 'flex') {
+                        modal.style.display = 'none';
+                        console.log('Closing currency converter');
+                        return;
+                    }
+
                     modal.style.display = 'flex';
-                    populateFromCurrencySelect();
-                    const mainAmount = getEl('amountInput');
-                    const convAmount = getEl('convAmount');
-                    if (mainAmount && mainAmount.value && convAmount) {
-                        const val = parseFloat(mainAmount.value);
-                        if (!isNaN(val) && val > 0) {
-                            convAmount.value = val;
-                        } else {
+                    console.log('Opening currency converter');
+
+                    try {
+                        populateFromCurrencySelect();
+                    } catch (err) {
+                        console.error('Error in populateFromCurrencySelect:', err);
+                    }
+
+                    try {
+                        const mainAmount = getEl('amountInput');
+                        const convAmount = getEl('convAmount');
+                        if (mainAmount && mainAmount.value && convAmount) {
+                            const val = parseFloat(mainAmount.value);
+                            if (!isNaN(val) && val > 0) {
+                                convAmount.value = val;
+                            } else {
+                                convAmount.value = 100;
+                            }
+                        } else if (convAmount) {
                             convAmount.value = 100;
                         }
-                    } else if (convAmount) {
-                        convAmount.value = 100;
+                    } catch (err) {
+                        console.error('Error setting amount:', err);
                     }
-                    setTimeout(updateConverter, 80);
+
+                    setTimeout(function() {
+                        try {
+                            updateConverter();
+                        } catch (err) {
+                            console.error('Error in updateConverter:', err);
+                        }
+                    }, 120);
                 }, { passive: true });
             }
 
@@ -11563,7 +11627,7 @@
         }
 
         bootstrap();
-        console.log('🚀 AfriPay fully bootstrapped — currency converter fixed.');
+        console.log('🚀 AfriPay fully bootstrapped — registration & currency converter fixed.');
     </script>
 </body>
 </html>
