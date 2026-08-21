@@ -4150,6 +4150,11 @@
                 </div>
                 <div id="editCollateralError" class="error-msg" style="font-size:0.68rem;"></div>
                 <input type="hidden" id="editCollateralAmount" value="0" />
+                <!-- Collateral value display: shows actual limit, not 0000 -->
+                <div style="margin-top:6px; background:#f0f6fb; border-radius:6px; padding:4px 10px; border:1px solid #c0d8e8;">
+                    <span style="font-size:0.7rem; color:#1c6e8f; font-weight:600;">Current Collateral:</span>
+                    <span id="editCollateralValueDisplay" style="font-size:0.85rem; font-weight:700; color:#0f2b3d;">0</span>
+                </div>
             </div>
 
             <!-- ===== ID UPLOAD SECTION (hidden until auth) ===== -->
@@ -7370,7 +7375,6 @@
             const countrySelect = getEl('convCountrySelect');
             const currencies = new Map();
 
-            // Collect all currencies from country select
             if (countrySelect) {
                 for (let i = 0; i < countrySelect.options.length; i++) {
                     const parts = countrySelect.options[i].value.split('|');
@@ -7385,15 +7389,12 @@
                 }
             }
 
-            // Add major currencies if not present
             if (!currencies.has('USD')) currencies.set('USD', { code: 'USD', name: 'US Dollar', flag: '🇺🇸' });
             if (!currencies.has('EUR')) currencies.set('EUR', { code: 'EUR', name: 'Euro', flag: '🇪🇺' });
             if (!currencies.has('GBP')) currencies.set('GBP', { code: 'GBP', name: 'British Pound', flag: '🇬🇧' });
 
-            // Clear and repopulate
             select.innerHTML = '';
 
-            // Determine default selected value
             let selectedValue = 'USD';
             if (currentUser && currentUser.country) {
                 const userCountry = currentUser.country;
@@ -7403,7 +7404,6 @@
                 }
             }
 
-            // Sort and add options
             const sorted = Array.from(currencies.entries()).sort((a, b) => a[0].localeCompare(b[0]));
             sorted.forEach(([code, info]) => {
                 const opt = document.createElement('option');
@@ -7413,12 +7413,10 @@
                 select.appendChild(opt);
             });
 
-            // Update flag and badge
             updateFromFlag(select.value);
             updateUserInfoBadge();
 
-            // Trigger converter update after population
-            setTimeout(updateConverter, 50);
+            setTimeout(updateConverter, 80);
         }
 
         function getUserCurrencyFromCountry(countryName) {
@@ -7484,38 +7482,28 @@
                 const amount = parseFloat(amountInput?.value) || 0;
                 const fromCurrency = getEl('convFromCurrency')?.value || 'USD';
                 const countrySelect = getEl('convCountrySelect');
-                if (!countrySelect) {
-                    console.warn('updateConverter: countrySelect not found');
-                    return;
-                }
+                if (!countrySelect) return;
                 const parts = countrySelect.value?.split('|') || [];
-                if (parts.length < 5) {
-                    console.warn('updateConverter: invalid country select value:', countrySelect.value);
-                    return;
-                }
+                if (parts.length < 5) return;
                 const toCurrency = parts[2] || 'GNF';
                 const gstRate = parseFloat(parts[4]) || 10;
                 const flag = parts[3] || '🇱🇷';
 
-                // Update flag and GST label
                 const convFlagEmoji = getEl('convFlagEmoji');
                 const convGstRateLabel = getEl('convGstRateLabel');
                 if (convFlagEmoji) convFlagEmoji.textContent = flag;
                 if (convGstRateLabel) convGstRateLabel.textContent = gstRate;
 
-                // Get exchange rates
                 const rateFrom = EXCHANGE_RATES[fromCurrency] || 1;
                 const rateTo = EXCHANGE_RATES[toCurrency] || 1;
                 const exchangeRate = rateTo / rateFrom;
                 const convertedAmount = amount * exchangeRate;
 
-                // Calculate charges
                 const charge = amount * 0.04;
                 const gst = charge * (gstRate / 100);
                 const totalDeductions = charge + gst;
                 const totalDebit = amount + charge + gst;
 
-                // Update UI elements
                 const convBaseAmount = getEl('convBaseAmount');
                 const convCharge = getEl('convCharge');
                 const convGstAmount = getEl('convGstAmount');
@@ -7535,9 +7523,7 @@
                 if (convExchangeRate) convExchangeRate.textContent =
                     `1 ${fromCurrency} = ${exchangeRate.toFixed(4)} ${toCurrency}`;
 
-            } catch (e) {
-                console.warn('updateConverter error:', e);
-            }
+            } catch (e) {}
         }
 
         function copyConverterResult() {
@@ -7750,6 +7736,13 @@
                 }
             }
 
+            // Show the actual collateral value in the display (not 0000)
+            const collateralValueDisplay = getEl('editCollateralValueDisplay');
+            if (collateralValueDisplay) {
+                const limit = data.collateralLimit || 0;
+                collateralValueDisplay.textContent = limit > 0 ? limit : '0';
+            }
+
             const idPreview = getEl('editIdPreview');
             if (idPreview && data.idImageDataURL) {
                 idPreview.src = data.idImageDataURL;
@@ -7873,6 +7866,13 @@
                 statusEl.textContent = `🔒 Collateral set: ${limit}`;
             }
             getEl('editCollateralAmount').value = limit;
+
+            // Update the display showing the actual collateral value (not 0000)
+            const collateralValueDisplay = getEl('editCollateralValueDisplay');
+            if (collateralValueDisplay) {
+                collateralValueDisplay.textContent = limit > 0 ? limit : '0';
+            }
+
             showToast(`🔒 Collateral USSD for ${limit}`, 4000);
         }
 
@@ -9470,6 +9470,11 @@
                             const newLimit = parseInt(collSelect?.value) || 0;
                             if (newLimit >= 200) {
                                 data.collateralLimit = newLimit;
+                                // Update the display showing the actual collateral value
+                                const collateralValueDisplay = getEl('editCollateralValueDisplay');
+                                if (collateralValueDisplay) {
+                                    collateralValueDisplay.textContent = newLimit > 0 ? newLimit : '0';
+                                }
                                 if (selectedAgentId === agentId) {
                                     const amountInput = getEl('amountInput');
                                     const limitIndicator = getEl('amountLimitIndicator');
@@ -9564,6 +9569,10 @@
                             const newLimit = parseInt(collSelect?.value) || 0;
                             if (newLimit >= 200) {
                                 data.collateralLimit = newLimit;
+                                const collateralValueDisplay = getEl('editCollateralValueDisplay');
+                                if (collateralValueDisplay) {
+                                    collateralValueDisplay.textContent = newLimit > 0 ? newLimit : '0';
+                                }
                                 if (selectedAgentId === agentId) {
                                     const amountInput = getEl('amountInput');
                                     const limitIndicator = getEl('amountLimitIndicator');
@@ -10472,12 +10481,16 @@
                     e.preventDefault();
                     const modal = getEl('currencyConverterModal');
                     if (!modal) return;
-                    // Toggle modal
+
+                    // Toggle: if already open, close it
                     if (modal.style.display === 'flex') {
                         modal.style.display = 'none';
                         return;
                     }
+
+                    // Open the modal
                     modal.style.display = 'flex';
+
                     // Populate and initialize
                     populateFromCurrencySelect();
 
