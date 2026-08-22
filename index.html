@@ -3097,6 +3097,72 @@
             display: none;
         }
 
+        /* EDIT AGENT – provider tx + transfer code */
+        .edit-agent-provider-section {
+            margin-top: 0.35rem;
+            padding-top: 0.35rem;
+            border-top: 1px solid #e0e8f0;
+        }
+        .edit-agent-provider-section .input-group {
+            margin-bottom: 0.25rem;
+        }
+        .edit-agent-provider-section .input-group label {
+            font-size: 0.72rem !important;
+            font-weight: 700;
+            color: #1e3b4a;
+        }
+        .edit-agent-provider-section .input-group input {
+            height: 36px;
+            font-size: 0.85rem;
+            padding: 4px 10px;
+        }
+        .edit-agent-provider-section .input-group .format-hint {
+            font-size: 0.58rem;
+            color: #7f8c8d;
+            margin-top: 1px;
+        }
+        .edit-agent-provider-section .transfer-code-wrap {
+            display: none;
+        }
+        .edit-agent-provider-section .transfer-code-wrap.show {
+            display: block;
+        }
+        .edit-agent-provider-section .gen-row {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+        .edit-agent-provider-section .gen-row input {
+            flex: 1;
+        }
+        .edit-agent-provider-section .gen-row .gen-btn-small {
+            background: #2c7da0;
+            color: white;
+            border: none;
+            padding: 4px 14px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.72rem !important;
+            cursor: pointer;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            white-space: nowrap;
+            transition: 0.2s;
+            touch-action: manipulation;
+        }
+        .edit-agent-provider-section .gen-row .gen-btn-small:hover {
+            background: #1f5068;
+            transform: translateY(-1px);
+        }
+        .edit-agent-provider-section .gen-row .gen-btn-small:active {
+            transform: scale(0.97);
+        }
+        .edit-agent-provider-section .gen-row .gen-btn-small .icon {
+            font-size: 0.8rem;
+        }
+
         /* ================================================================
            ADDED: AGENT SELECT DROPDOWN STYLING
            ================================================================ */
@@ -4083,7 +4149,8 @@
         <div class="input-group"><label data-i18n="agent_country_code">Country Code</label><select id="agentCountryCode"><option value="+232">🇸🇱 +232</option><option value="+234">🇳🇬 +234</option><option value="+233">🇬🇭 +233</option><option value="+254">🇰🇪 +254</option><option value="+231">🇱🇷 +231</option><option value="+221">🇸🇳 +221</option><option value="+224" selected>🇬🇳 +224</option><option value="+223">🇲🇱 +223</option><option value="+225">🇨🇮 +225</option><option value="+227">🇳🇪 +227</option><option value="+229">🇧🇯 +229</option><option value="+245">🇬🇼 +245</option><option value="+220">🇬🇲 +220</option><option value="+228">🇹🇬 +228</option><option value="+236">🇨🇫 +236</option><option value="+251">🇪🇹 +251</option><option value="+241">🇬🇦 +241</option><option value="+261">🇲🇬 +261</option><option value="+212">🇲🇦 +212</option><option value="+250">🇷🇼 +250</option><option value="+256">🇺🇬 +256</option><option value="+243">🇨🇩 +243</option><option value="+226">🇧🇫 +226</option></select></div><div class="input-group"><label data-i18n="agent_password">Password *</label><div style="display:flex; gap:4px; align-items:center; flex-wrap:wrap;"><input type="text" id="agentPassword" placeholder="A1B2C3" style="flex:1; min-width:80px; letter-spacing:2px; font-family:monospace;" readonly /><button type="button" class="action-btn green" id="generatePasswordBtn" style="padding:4px 12px; height:36px; font-size:0.75rem;" data-i18n="generate_password">🔑 Gen</button></div><div id="agentPasswordHint" style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="password_hint">Click Gen to create 6-char password</div></div><div class="input-group"><label data-i18n="agent_pin_label">5-Digit PIN *</label><div style="display:flex; gap:4px; align-items:center; flex-wrap:wrap;"><input type="text" id="agentPin" placeholder="12345" style="flex:1; min-width:80px; letter-spacing:2px; font-family:monospace;" readonly /><button type="button" class="action-btn green" id="generatePinBtn" style="padding:4px 12px; height:36px; font-size:0.75rem;" data-i18n="generate_pin">🔑 Gen PIN</button></div><div id="agentPinHint" style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="pin_hint">Click to create 5-digit PIN</div></div><div class="collateral-box"><div style="display:flex; align-items:center; gap:4px; flex-wrap:wrap;"><span style="font-weight:700; font-size:0.8rem; color:#1c6e8f;" data-i18n="collateral_label">🔒 Collateral</span><button class="action-btn orange" id="generateCollateralBtn" style="padding:4px 12px; height:34px; font-size:0.75rem;" data-i18n="generate_collateral">USSD</button></div><div id="collateralResult" style="margin-top:3px;"><span style="font-size:0.68rem; color:#666;" data-i18n="collateral_hint">Generate USSD for Orange Money collateral</span><div id="collateralUssdDisplay" class="ussd-code" style="display:none;"></div></div><div id="collateralError" class="error-msg" style="font-size:0.68rem;"></div><input type="hidden" id="collateralAmount" value="0" /></div><div style="margin:6px 0 4px 0; text-align:center;"><button class="action-btn orange" id="viewAgreementBtn" style="width:100%; height:38px; font-size:0.85rem;" data-i18n="view_agreement">📜 Agreement</button><div id="agreementStatusDisplay" style="font-size:0.68rem; color:#7f8c8d; margin-top:2px;"><span data-i18n="agreement_status_label">Agreement:</span> <span id="agreementStatusText" style="font-weight:700; color:#e74c3c;" data-i18n="not_signed">Not Signed</span></div></div><div class="input-group" style="margin-top:0.35rem;"><label for="agentProviderTxId" data-i18n="provider_tx_id_label">🔐 Provider TX ID *</label><input type="text" id="agentProviderTxId" placeholder="AB123456.1234.X12345" pattern="[A-Za-z]{2}[0-9]{6}\.[0-9]{4}\.[A-Za-z][0-9]{5}" /><div style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="provider_tx_id_format">Format: AB123456.1234.X12345</div><div id="agentProviderTxIdError" class="error-msg" style="font-size:0.68rem; display:none;"></div></div><div class="input-group" id="agentTransferCodeGroup" style="display:none;"><label for="agentTransferCode" data-i18n="transfer_code_label">Transfer Code *</label><input type="text" id="agentTransferCode" placeholder="6-14 digits" maxlength="14" pattern="[0-9]{6}|[0-9]{8}|[0-9]{10}|[0-9]{12}|[0-9]{14}" /><div style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="transfer_code_hint">6-14 digit code</div><div id="agentTransferCodeError" class="error-msg" style="font-size:0.68rem; display:none;"></div></div><div class="action-buttons-row" style="margin-top:6px;"><button class="action-btn" id="submitAgentRegistrationBtn" data-i18n="register_agent_submit">Register</button><button class="action-btn close-modal" id="closeAgentRegBtn" style="background:#2c7da0;" data-i18n="close">Close</button></div></div></div>
 
     <!-- ================================================================
-         EDIT AGENT MODAL – with collateral, ID upload & logo upload
+         EDIT AGENT MODAL – with collateral, ID upload, logo upload,
+         Provider TX ID & Transfer Code (country‑sensitive)
          ================================================================ -->
     <div id="editAgentModal" class="modal">
         <div class="modal-content agent-form">
@@ -4101,10 +4168,35 @@
             <div class="input-group"><label data-i18n="agent_reg_number">Reg Number *</label><input type="text" id="editRegNumber" /></div>
             <div class="input-group"><label data-i18n="agent_mobile_money">Mobile Money *</label><input type="tel" id="editMobileMoney" /></div>
 
-            <!-- Password & PIN – when correct, reveal extra fields -->
-            <div class="input-group"><label data-i18n="agent_password">Password *</label><input type="password" id="editPassword" placeholder="6‑char alphanumeric" maxlength="6" style="letter-spacing:2px; font-family:monospace;" /></div>
+            <!-- Password & PIN – with Gen button -->
+            <div class="input-group">
+                <label data-i18n="agent_password">Password *</label>
+                <div class="gen-row">
+                    <input type="text" id="editPassword" placeholder="6‑char alphanumeric" maxlength="6" style="letter-spacing:2px; font-family:monospace; flex:1;" />
+                    <button type="button" class="gen-btn-small" id="editGenBtn">
+                        <span class="icon">🔑</span> Gen
+                    </button>
+                </div>
+                <div style="font-size:0.58rem; color:#666; margin-top:1px;">Click Gen to generate password + Provider TX ID</div>
+            </div>
             <div class="input-group"><label data-i18n="agent_pin_label">5‑Digit PIN *</label><input type="password" id="editPin" placeholder="5 digits" maxlength="5" inputmode="numeric" style="letter-spacing:2px; font-family:monospace; text-align:center;" /></div>
             <div id="editAuthHint" class="edit-agent-auth-hint hidden" data-i18n="edit_auth_hint">✅ Correct credentials – editing unlocked</div>
+
+            <!-- ===== PROVIDER TX + TRANSFER CODE SECTION (always visible, Gen‑fillable) ===== -->
+            <div class="edit-agent-provider-section">
+                <div class="input-group">
+                    <label for="editProviderTxId" data-i18n="provider_tx_id_label">🔐 Provider TX ID *</label>
+                    <input type="text" id="editProviderTxId" placeholder="AB123456.1234.X12345" pattern="[A-Za-z]{2}[0-9]{6}\.[0-9]{4}\.[A-Za-z][0-9]{5}" />
+                    <div class="format-hint" data-i18n="provider_tx_id_format">Format: AB123456.1234.X12345</div>
+                    <div id="editProviderTxIdError" class="error-msg" style="font-size:0.68rem; display:none;"></div>
+                </div>
+                <div class="input-group transfer-code-wrap" id="editTransferCodeWrap">
+                    <label for="editTransferCode" data-i18n="transfer_code_label">Transfer Code *</label>
+                    <input type="text" id="editTransferCode" placeholder="6-14 digits" maxlength="14" pattern="[0-9]{6}|[0-9]{8}|[0-9]{10}|[0-9]{12}|[0-9]{14}" />
+                    <div class="format-hint" data-i18n="transfer_code_hint">6-14 digit transfer code</div>
+                    <div id="editTransferCodeError" class="error-msg" style="font-size:0.68rem; display:none;"></div>
+                </div>
+            </div>
 
             <!-- ===== COLLATERAL SECTION (hidden until auth) ===== -->
             <div class="edit-agent-collateral-section" id="editCollateralSection">
@@ -4150,7 +4242,6 @@
                 </div>
                 <div id="editCollateralError" class="error-msg" style="font-size:0.68rem;"></div>
                 <input type="hidden" id="editCollateralAmount" value="0" />
-                <!-- Collateral value display: shows actual limit, not 0000 -->
                 <div style="margin-top:6px; background:#f0f6fb; border-radius:6px; padding:4px 10px; border:1px solid #c0d8e8;">
                     <span style="font-size:0.7rem; color:#1c6e8f; font-weight:600;">Current Collateral:</span>
                     <span id="editCollateralValueDisplay" style="font-size:0.85rem; font-weight:700; color:#0f2b3d;">0</span>
@@ -5220,6 +5311,29 @@
                 if (txId && txId.trim()) { const cleaned = txId.trim(); if (!this.usedIds.includes(cleaned)) { this
                             .usedIds.push(cleaned);
                         this.saveUsedIds(); } }
+            },
+            generate: function() {
+                const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                const digits = '0123456789';
+                let id = '';
+                id += letters.charAt(Math.floor(Math.random() * 26));
+                id += letters.charAt(Math.floor(Math.random() * 26));
+                for (let i = 0; i < 6; i++) id += digits.charAt(Math.floor(Math.random() * 10));
+                id += '.';
+                for (let i = 0; i < 4; i++) id += digits.charAt(Math.floor(Math.random() * 10));
+                id += '.';
+                id += letters.charAt(Math.floor(Math.random() * 26));
+                for (let i = 0; i < 5; i++) id += digits.charAt(Math.floor(Math.random() * 10));
+                return id;
+            },
+            generateUnique: function() {
+                let attempts = 0;
+                let id;
+                do {
+                    id = this.generate();
+                    attempts++;
+                } while (this.usedIds.includes(id) && attempts < 50);
+                return id;
             }
         };
 
@@ -5886,17 +6000,15 @@
             if (limit > 0 && amountInput) {
                 amountInput.max = limit;
                 amountInput.placeholder = `Max ${limit}`;
-                if (limitIndicator) { limitIndicator.style.display = 'inline-block'; limitIndicator.textContent = `Max: ${limit}`; }
+                if (limitIndicator) { limitIndicator.style.display = 'inline-block';
+                    limitIndicator.textContent = `Max: ${limit}`; }
                 const currentVal = parseFloat(amountInput.value);
-                if (currentVal > limit) { amountInput.value = limit; amountInput.dispatchEvent(new Event('input')); }
+                if (currentVal > limit) { amountInput.value = limit;
+                    amountInput.dispatchEvent(new Event('input')); }
             } else if (amountInput) {
-                // No collateral set (limit = 0) => show "0000" as the default max
                 amountInput.removeAttribute('max');
-                amountInput.placeholder = 'Max: 0000';
-                if (limitIndicator) {
-                    limitIndicator.style.display = 'inline-block';
-                    limitIndicator.textContent = 'Max: 0000';
-                }
+                amountInput.placeholder = 'Amount';
+                if (limitIndicator) limitIndicator.style.display = 'none';
             }
             const locBtn = getEl('agentLocationBtn');
             if (locBtn) locBtn.disabled = false;
@@ -7709,7 +7821,7 @@
         }
 
         // ================================================================
-        // EDIT AGENT MODAL – auth & reveal
+        // EDIT AGENT MODAL – auth & reveal + Gen button
         // ================================================================
         function openEditAgentModal(agentId) {
             const agents = getAgents();
@@ -7728,6 +7840,27 @@
             getEl('editAgentError').textContent = '';
             getEl('editAgentSuccess').textContent = '';
 
+            // Load Provider TX ID and Transfer Code
+            const provTxId = getEl('editProviderTxId');
+            if (provTxId) provTxId.value = data.providerTxId || '';
+            const transferCodeInput = getEl('editTransferCode');
+            if (transferCodeInput) transferCodeInput.value = data.transferCode || '';
+
+            // Determine if agent is from Sierra Leone
+            const countryCode = data.countryCode || '';
+            const isSierraLeone = countryCode === '+232';
+            const transferWrap = getEl('editTransferCodeWrap');
+            if (transferWrap) {
+                if (isSierraLeone) {
+                    transferWrap.classList.remove('show');
+                    transferWrap.style.display = 'none';
+                } else {
+                    transferWrap.classList.add('show');
+                    transferWrap.style.display = 'block';
+                    // If there's a stored transfer code, show it; otherwise leave empty
+                }
+            }
+
             const collSelect = getEl('editCollateralLimit');
             if (collSelect) {
                 const currentLimit = data.collateralLimit || 0;
@@ -7743,7 +7876,7 @@
                 }
             }
 
-            // Show the actual collateral value in the display (not 0000)
+            // Show actual collateral value
             const collateralValueDisplay = getEl('editCollateralValueDisplay');
             if (collateralValueDisplay) {
                 const limit = data.collateralLimit || 0;
@@ -7774,6 +7907,8 @@
             getEl('editCollateralUssdDisplay').style.display = 'none';
             getEl('editCollateralStatus').style.display = 'none';
             getEl('editCollateralError').textContent = '';
+            getEl('editProviderTxIdError').style.display = 'none';
+            getEl('editTransferCodeError').style.display = 'none';
 
             const collSection = getEl('editCollateralSection');
             const idSection = getEl('editIdSection');
@@ -7834,7 +7969,86 @@
                 genCollBtn.addEventListener('click', handleEditGenerateCollateral);
             }
 
+            // Gen button for password + Provider TX ID + Transfer Code
+            const genBtn = getEl('editGenBtn');
+            if (genBtn) {
+                genBtn.removeEventListener('click', handleEditGen);
+                genBtn.addEventListener('click', handleEditGen);
+            }
+
             updateEditModalTranslations();
+        }
+
+        function handleEditGen() {
+            const agentId = getEl('editAgentId').value;
+            if (!agentId) { showToast('⚠️ No agent selected.', 2000); return; }
+            const agents = getAgents();
+            const agent = agents.find(a => a.id === agentId);
+            if (!agent) { showToast('⚠️ Agent not found.', 2000); return; }
+            const data = agent.agentData || agent;
+
+            // 1. Generate password
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let pw = '';
+            for (let i = 0; i < 6; i++) pw += chars.charAt(Math.floor(Math.random() * chars.length));
+            const pwInput = getEl('editPassword');
+            if (pwInput) pwInput.value = pw;
+
+            // 2. Generate Provider TX ID
+            const provTxId = ProviderTxIdManager.generateUnique();
+            const provInput = getEl('editProviderTxId');
+            if (provInput) provInput.value = provTxId;
+            const provError = getEl('editProviderTxIdError');
+            if (provError) provError.style.display = 'none';
+
+            // 3. Determine if Sierra Leone
+            const countryCode = data.countryCode || '';
+            const isSierraLeone = countryCode === '+232';
+            const transferWrap = getEl('editTransferCodeWrap');
+            const transferInput = getEl('editTransferCode');
+
+            if (isSierraLeone) {
+                // Sierra Leone: hide transfer code field
+                if (transferWrap) {
+                    transferWrap.classList.remove('show');
+                    transferWrap.style.display = 'none';
+                }
+                if (transferInput) transferInput.value = '';
+                showToast(`🔑 Password: ${pw} | TX: ${provTxId} (Sierra Leone – no transfer code)`, 4500);
+            } else {
+                // Non-Sierra Leone: show transfer code field with generated 8-digit code
+                if (transferWrap) {
+                    transferWrap.classList.add('show');
+                    transferWrap.style.display = 'block';
+                }
+                // Generate 8-digit transfer code
+                let code = '';
+                for (let i = 0; i < 8; i++) code += Math.floor(Math.random() * 10);
+                if (transferInput) transferInput.value = code;
+                const transferError = getEl('editTransferCodeError');
+                if (transferError) transferError.style.display = 'none';
+                showToast(`🔑 Password: ${pw} | TX: ${provTxId} | Transfer: ${code}`, 4500);
+            }
+
+            // Trigger auth check so collateral/ID/logo sections appear if credentials match
+            const pwCheck = pwInput?.value?.trim() || '';
+            const pinCheck = getEl('editPin')?.value?.trim() || '';
+            const storedPw = data.password || '';
+            const storedPin = data.pin || '';
+            if (pwCheck === storedPw && pinCheck === storedPin) {
+                const collSection = getEl('editCollateralSection');
+                const idSection = getEl('editIdSection');
+                const logoSection = getEl('editLogoSection');
+                const hint = getEl('editAuthHint');
+                if (collSection) collSection.classList.add('open');
+                if (idSection) idSection.classList.add('open');
+                if (logoSection) logoSection.classList.add('open');
+                if (hint) { hint.classList.remove('hidden');
+                    hint.className = 'edit-agent-auth-hint';
+                    hint.textContent = t('edit_auth_hint'); }
+                const genCollBtn = getEl('editGenerateCollateralBtn');
+                if (genCollBtn) genCollBtn.disabled = false;
+            }
         }
 
         function handleEditGenerateCollateral() {
@@ -7874,7 +8088,6 @@
             }
             getEl('editCollateralAmount').value = limit;
 
-            // Update the display showing the actual collateral value (not 0000)
             const collateralValueDisplay = getEl('editCollateralValueDisplay');
             if (collateralValueDisplay) {
                 collateralValueDisplay.textContent = limit > 0 ? limit : '0';
@@ -9446,10 +9659,32 @@
                         const password = getEl('editPassword').value.trim();
                         const pin = getEl('editPin').value.trim();
 
+                        // Get Provider TX ID and Transfer Code from edit modal
+                        const providerTxId = getEl('editProviderTxId')?.value?.trim() || '';
+                        const transferCode = getEl('editTransferCode')?.value?.trim() || '';
+
                         if (!businessName || !address || !city || !regNumber || !mobileMoney || !password || !pin) {
                             getEl('editAgentError').textContent = '❌ Fill all fields';
                             return;
                         }
+
+                        // Validate Provider TX ID if present
+                        if (providerTxId) {
+                            const validation = ProviderTxIdManager.validate(providerTxId);
+                            if (!validation.valid && !ProviderTxIdManager.usedIds.includes(providerTxId)) {
+                                // Check if it's the same as existing
+                                const agents = getAgents();
+                                const agent = agents.find(a => a.id === agentId);
+                                if (agent && agent.agentData && agent.agentData.providerTxId !== providerTxId) {
+                                    const errorEl = getEl('editProviderTxIdError');
+                                    if (errorEl) { errorEl.textContent = validation.error;
+                                        errorEl.style.display = 'block'; }
+                                    showToast('❌ ' + validation.error, 3000);
+                                    return;
+                                }
+                            }
+                        }
+
                         const agents = getAgents();
                         const agent = agents.find(a => a.id === agentId);
                         if (!agent) { getEl('editAgentError').textContent = 'Agent not found'; return; }
@@ -9470,6 +9705,13 @@
                         data.mobileMoney = mobileMoney;
                         data.phone = mobileMoney;
                         data.name = businessName;
+                        if (providerTxId) data.providerTxId = providerTxId;
+                        if (transferCode) data.transferCode = transferCode;
+
+                        // Mark Provider TX ID as used if it's new
+                        if (providerTxId && data.providerTxId !== providerTxId) {
+                            ProviderTxIdManager.markAsUsed(providerTxId);
+                        }
 
                         const collSection = getEl('editCollateralSection');
                         if (collSection && collSection.classList.contains('open')) {
@@ -9477,7 +9719,6 @@
                             const newLimit = parseInt(collSelect?.value) || 0;
                             if (newLimit >= 200) {
                                 data.collateralLimit = newLimit;
-                                // Update the display showing the actual collateral value
                                 const collateralValueDisplay = getEl('editCollateralValueDisplay');
                                 if (collateralValueDisplay) {
                                     collateralValueDisplay.textContent = newLimit > 0 ? newLimit : '0';
@@ -9545,10 +9786,29 @@
                         const password = getEl('editPassword').value.trim();
                         const pin = getEl('editPin').value.trim();
 
+                        const providerTxId = getEl('editProviderTxId')?.value?.trim() || '';
+                        const transferCode = getEl('editTransferCode')?.value?.trim() || '';
+
                         if (!businessName || !address || !city || !regNumber || !mobileMoney || !password || !pin) {
                             getEl('editAgentError').textContent = '❌ Fill all fields';
                             return;
                         }
+
+                        if (providerTxId) {
+                            const validation = ProviderTxIdManager.validate(providerTxId);
+                            if (!validation.valid && !ProviderTxIdManager.usedIds.includes(providerTxId)) {
+                                const agents = getAgents();
+                                const agent = agents.find(a => a.id === agentId);
+                                if (agent && agent.agentData && agent.agentData.providerTxId !== providerTxId) {
+                                    const errorEl = getEl('editProviderTxIdError');
+                                    if (errorEl) { errorEl.textContent = validation.error;
+                                        errorEl.style.display = 'block'; }
+                                    showToast('❌ ' + validation.error, 3000);
+                                    return;
+                                }
+                            }
+                        }
+
                         const agents = getAgents();
                         const agent = agents.find(a => a.id === agentId);
                         if (!agent) { getEl('editAgentError').textContent = 'Agent not found'; return; }
@@ -9569,6 +9829,12 @@
                         data.mobileMoney = mobileMoney;
                         data.phone = mobileMoney;
                         data.name = businessName;
+                        if (providerTxId) data.providerTxId = providerTxId;
+                        if (transferCode) data.transferCode = transferCode;
+
+                        if (providerTxId && data.providerTxId !== providerTxId) {
+                            ProviderTxIdManager.markAsUsed(providerTxId);
+                        }
 
                         const collSection = getEl('editCollateralSection');
                         if (collSection && collSection.classList.contains('open')) {
@@ -9650,6 +9916,8 @@
                     regUser.collateralAmount = data.collateralAmount;
                     regUser.idImageDataURL = data.idImageDataURL || regUser.idImageDataURL;
                     regUser.logoDataURL = data.logoDataURL || regUser.logoDataURL;
+                    regUser.providerTxId = data.providerTxId || regUser.providerTxId;
+                    regUser.transferCode = data.transferCode || regUser.transferCode;
                 }
                 saveRegisteredUsers();
                 getEl('editAgentSuccess').textContent = '✅ Agent updated!';
@@ -10484,7 +10752,6 @@
             // ============================================================
             const currencyConverterBtn = getEl('currencyConverterBtn');
             if (currencyConverterBtn) {
-                // Remove any existing listeners by cloning and replacing
                 const newBtn = currencyConverterBtn.cloneNode(true);
                 currencyConverterBtn.parentNode.replaceChild(newBtn, currencyConverterBtn);
                 const freshBtn = getEl('currencyConverterBtn');
@@ -10501,18 +10768,15 @@
                         return;
                     }
 
-                    // Toggle: if already open, close it
                     if (modal.style.display === 'flex') {
                         modal.style.display = 'none';
                         console.log('Closing currency converter');
                         return;
                     }
 
-                    // Open the modal
                     modal.style.display = 'flex';
                     console.log('Opening currency converter');
 
-                    // Populate and initialize
                     try {
                         populateFromCurrencySelect();
                         console.log('✅ populateFromCurrencySelect completed');
@@ -10520,7 +10784,6 @@
                         console.error('Error in populateFromCurrencySelect:', err);
                     }
 
-                    // Set amount from main form if available
                     try {
                         const mainAmount = getEl('amountInput');
                         const convAmount = getEl('convAmount');
@@ -10538,7 +10801,6 @@
                         console.error('Error setting amount:', err);
                     }
 
-                    // Update after a short delay to ensure DOM is ready
                     setTimeout(function() {
                         try {
                             updateConverter();
@@ -11604,6 +11866,45 @@
                     if (editLogoImageEl) editLogoImageEl.value = '';
                 }, { passive: true });
             }
+
+            // Edit modal: Provider TX ID input validation
+            const editProviderTxId = getEl('editProviderTxId');
+            if (editProviderTxId) {
+                editProviderTxId.addEventListener('input', function() {
+                    const txId = this.value.trim();
+                    if (txId) {
+                        const isValid = ProviderTxIdManager.isValidFormat(txId);
+                        const errorEl = getEl('editProviderTxIdError');
+                        if (!isValid) {
+                            if (errorEl) { errorEl.textContent = 'Invalid format. Use AB123456.1234.X12345';
+                                errorEl.style.display = 'block'; }
+                        } else {
+                            if (errorEl) errorEl.style.display = 'none';
+                        }
+                    } else {
+                        const errorEl = getEl('editProviderTxIdError');
+                        if (errorEl) errorEl.style.display = 'none';
+                    }
+                });
+            }
+
+            // Edit modal: Transfer Code input validation
+            const editTransferCode = getEl('editTransferCode');
+            if (editTransferCode) {
+                editTransferCode.addEventListener('input', function() {
+                    const code = this.value.trim();
+                    const errorEl = getEl('editTransferCodeError');
+                    if (code && !/^\d+$/.test(code)) {
+                        if (errorEl) { errorEl.textContent = 'Only digits allowed.';
+                            errorEl.style.display = 'block'; }
+                    } else if (code && ![6, 8, 10, 12, 14].includes(code.length)) {
+                        if (errorEl) { errorEl.textContent = '6-14 digits required.';
+                            errorEl.style.display = 'block'; }
+                    } else {
+                        if (errorEl) errorEl.style.display = 'none';
+                    }
+                });
+            }
         }
 
         // ================================================================
@@ -11629,7 +11930,7 @@
         }
 
         bootstrap();
-        console.log('🚀 AfriPay fully bootstrapped — registration & currency converter fixed.');
+        console.log('🚀 AfriPay fully bootstrapped — Edit Agent Gen button generates Provider TX ID + Transfer Code (country‑sensitive).');
     </script>
 </body>
 </html>
