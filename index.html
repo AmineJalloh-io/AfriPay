@@ -4495,12 +4495,13 @@
         </div>
     </div>
 
-    <!-- ADD BUSINESS MODAL -->
+    <!-- ADD BUSINESS MODAL - Enhanced with full location fields -->
     <div id="addBizModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content" style="max-width:420px;">
             <h3>🏢 Add Your Business</h3>
             <div id="addBizError" class="error-msg"></div>
             <div id="addBizSuccess" class="success-msg"></div>
+
             <div class="input-group"><label>Business Name *</label><input type="text" id="bizName" placeholder="e.g. Mama's Kitchen" /></div>
             <div class="input-group"><label>Contact Phone *</label><input type="tel" id="bizContact" placeholder="e.g. +232-76-123-456" /></div>
             <div class="input-group"><label>Business Type *</label>
@@ -4528,8 +4529,79 @@
                     <span style="font-size:0.65rem; color:#666;">Pick an emoji</span>
                 </div>
             </div>
+
+            <!-- Location Fields -->
+            <div class="input-group"><label>Street Address</label><input type="text" id="bizAddress" placeholder="e.g. 123 Main St, Downtown" /></div>
+
+            <div class="input-group">
+                <label>City / Town *</label>
+                <div class="city-input-row">
+                    <select id="bizCitySelect">
+                        <option value="">Select city...</option>
+                        <option value="Freetown">Freetown</option>
+                        <option value="Abuja">Abuja</option>
+                        <option value="Accra">Accra</option>
+                        <option value="Nairobi">Nairobi</option>
+                        <option value="Monrovia">Monrovia</option>
+                        <option value="Dakar">Dakar</option>
+                        <option value="Conakry">Conakry</option>
+                        <option value="Bamako">Bamako</option>
+                        <option value="Yamoussoukro">Yamoussoukro</option>
+                        <option value="Niamey">Niamey</option>
+                        <option value="Porto-Novo">Porto-Novo</option>
+                        <option value="Bissau">Bissau</option>
+                        <option value="Banjul">Banjul</option>
+                        <option value="Lomé">Lomé</option>
+                        <option value="Bangui">Bangui</option>
+                        <option value="Addis Ababa">Addis Ababa</option>
+                        <option value="Libreville">Libreville</option>
+                        <option value="Antananarivo">Antananarivo</option>
+                        <option value="Rabat">Rabat</option>
+                        <option value="Kigali">Kigali</option>
+                        <option value="Kampala">Kampala</option>
+                        <option value="Kinshasa">Kinshasa</option>
+                        <option value="Ouagadougou">Ouagadougou</option>
+                    </select>
+                    <span class="or-text">OR</span>
+                    <input type="text" id="bizCityOther" placeholder="Other city/town" />
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Country *</label>
+                <select id="bizCountrySelect">
+                    <option value="Sierra Leone">Sierra Leone</option>
+                    <option value="Nigeria">Nigeria</option>
+                    <option value="Ghana">Ghana</option>
+                    <option value="Kenya">Kenya</option>
+                    <option value="Liberia">Liberia</option>
+                    <option value="Senegal">Senegal</option>
+                    <option value="Guinea">Guinea</option>
+                    <option value="Mali">Mali</option>
+                    <option value="Ivory Coast">Ivory Coast</option>
+                    <option value="Niger">Niger</option>
+                    <option value="Benin">Benin</option>
+                    <option value="Guinea Bissau">Guinea Bissau</option>
+                    <option value="Gambia">Gambia</option>
+                    <option value="Togo">Togo</option>
+                    <option value="Central Africa Rep">CAR</option>
+                    <option value="Ethiopia">Ethiopia</option>
+                    <option value="Gabon">Gabon</option>
+                    <option value="Madagascar">Madagascar</option>
+                    <option value="Morocco">Morocco</option>
+                    <option value="Rwanda">Rwanda</option>
+                    <option value="Uganda">Uganda</option>
+                    <option value="DR Congo">DRC</option>
+                    <option value="Burkina Faso">Burkina</option>
+                </select>
+            </div>
+
+            <div class="input-group"><label>Other Country (if not listed)</label><input type="text" id="bizCountryOther" placeholder="e.g. South Africa" /></div>
+
             <div class="input-group"><label>Website (optional)</label><input type="url" id="bizWebsite" placeholder="https://example.com" /></div>
+
             <div style="margin-top:4px; font-size:0.7rem; color:#666;">Add items after creating your business</div>
+
             <div class="action-buttons-row" style="margin-top:8px;">
                 <button class="action-btn green" id="saveBizBtn">Add Business</button>
                 <button class="action-btn close-modal" style="background:#2c7da0;">Close</button>
@@ -8294,15 +8366,20 @@
         }
 
         // ================================================================
-        // ADD BUSINESS MODAL FUNCTIONS
+        // ADD BUSINESS MODAL FUNCTIONS - Enhanced with location fields
         // ================================================================
         function openAddBizModal() {
             getEl('bizName').value = '';
             getEl('bizContact').value = '';
             getEl('bizType').value = 'Service';
             getEl('bizIcon').value = '🏪';
-            getEl('bizWebsite').value = '';
             getEl('bizIconPreview').textContent = '🏪';
+            getEl('bizAddress').value = '';
+            getEl('bizCitySelect').value = '';
+            getEl('bizCityOther').value = '';
+            getEl('bizCountrySelect').value = 'Sierra Leone';
+            getEl('bizCountryOther').value = '';
+            getEl('bizWebsite').value = '';
             getEl('addBizError').textContent = '';
             getEl('addBizSuccess').textContent = '';
             getEl('addBizModal').style.display = 'flex';
@@ -8313,6 +8390,10 @@
             const contact = SecurityUtils.sanitizePhone(getEl('bizContact').value.trim());
             const type = getEl('bizType').value;
             const icon = getEl('bizIcon').value.trim() || '🏪';
+            const address = SecurityUtils.sanitizeInput(getEl('bizAddress').value.trim(), 200);
+            const city = getCityValue('bizCitySelect', 'bizCityOther');
+            let country = getEl('bizCountrySelect').value;
+            const countryOther = SecurityUtils.sanitizeInput(getEl('bizCountryOther').value.trim(), 100);
             const website = getEl('bizWebsite').value.trim();
 
             const errorEl = getEl('addBizError');
@@ -8322,6 +8403,12 @@
 
             if (!name) { errorEl.textContent = '❌ Business name required.'; return; }
             if (!contact) { errorEl.textContent = '❌ Contact phone required.'; return; }
+            if (!city) { errorEl.textContent = '❌ City/Town required.'; return; }
+
+            // Use other country if provided
+            if (countryOther) {
+                country = countryOther;
+            }
 
             const allBiz = getAllBusinesses();
             if (allBiz.some(b => b.name.toLowerCase() === name.toLowerCase())) {
@@ -8335,6 +8422,9 @@
                 contact: contact,
                 type: type,
                 icon: icon,
+                address: address || '',
+                city: city,
+                country: country || 'Sierra Leone',
                 website: website || '',
                 goods: [{ name: 'Service Fee', price: 10 }],
                 isCustom: true
@@ -8355,7 +8445,7 @@
         // MAIN INIT
         // ================================================================
         function initApp() {
-            console.log('🚀 AfriPay initializing with Add Biz feature...');
+            console.log('🚀 AfriPay initializing with enhanced Add Biz feature...');
 
             function safeExecute(fn, label) { try { fn(); } catch (e) { console.error(`❌ Error in ${label}:`, e); } }
 
@@ -12008,7 +12098,7 @@
             }
 
             // ============================================================
-            // ADD BUSINESS MODAL EVENTS
+            // ADD BUSINESS MODAL EVENTS - Enhanced with location fields
             // ============================================================
             const addBizBtn = getEl('addBizBtn');
             if (addBizBtn) {
@@ -12068,7 +12158,7 @@
         }
 
         bootstrap();
-        console.log('🚀 AfriPay fully bootstrapped — Add Biz feature added.');
+        console.log('🚀 AfriPay fully bootstrapped — Enhanced Add Biz feature with location fields.');
     </script>
 </body>
 </html>
