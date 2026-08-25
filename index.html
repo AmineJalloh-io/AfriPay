@@ -951,6 +951,36 @@
             color: #e67e22;
             font-size: 0.58rem !important;
         }
+        .add-biz-btn {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 3px 10px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.65rem !important;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            height: 28px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            touch-action: manipulation;
+            white-space: nowrap;
+            vertical-align: middle;
+            margin-left: 4px;
+        }
+        .add-biz-btn:hover {
+            background: #1e8449;
+            transform: translateY(-1px);
+        }
+        .add-biz-btn:active {
+            transform: scale(0.95);
+        }
+        .add-biz-btn .icon {
+            font-size: 0.8rem;
+        }
 
         /* ================================================================
            FOOTER
@@ -4063,7 +4093,12 @@
                 </div>
                 <button type="submit" class="btn-submit" id="submitBtn" data-i18n="submit">Submit</button>
                 <div class="business-strip">
-                    <div class="business-title" data-i18n="quick_pay">⭐ QUICK PAY ⭐</div>
+                    <div class="business-title" style="display:flex; align-items:center; justify-content:center; gap:6px; flex-wrap:wrap;">
+                        <span>⭐ QUICK PAY ⭐</span>
+                        <button class="add-biz-btn" id="addBizBtn">
+                            <span class="icon">➕</span> Add Biz
+                        </button>
+                    </div>
                     <div class="business-icons" id="businessIconsContainer"></div>
                 </div>
             </form>
@@ -4456,6 +4491,48 @@
             </div>
             <div class="location-footer">
                 <button class="action-btn close-modal" id="agentLocationCloseBtn" style="background:#2c7da0;">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADD BUSINESS MODAL -->
+    <div id="addBizModal" class="modal">
+        <div class="modal-content">
+            <h3>🏢 Add Your Business</h3>
+            <div id="addBizError" class="error-msg"></div>
+            <div id="addBizSuccess" class="success-msg"></div>
+            <div class="input-group"><label>Business Name *</label><input type="text" id="bizName" placeholder="e.g. Mama's Kitchen" /></div>
+            <div class="input-group"><label>Contact Phone *</label><input type="tel" id="bizContact" placeholder="e.g. +232-76-123-456" /></div>
+            <div class="input-group"><label>Business Type *</label>
+                <select id="bizType">
+                    <option value="Restaurant">Restaurant</option>
+                    <option value="Electronics">Electronics</option>
+                    <option value="Education">Education</option>
+                    <option value="Healthcare">Healthcare</option>
+                    <option value="Hardware">Hardware</option>
+                    <option value="Fashion">Fashion</option>
+                    <option value="Individual">Individual</option>
+                    <option value="Service">Service</option>
+                    <option value="Retail">Retail</option>
+                    <option value="Wholesale">Wholesale</option>
+                    <option value="Transport">Transport</option>
+                    <option value="Hospitality">Hospitality</option>
+                    <option value="Financial">Financial</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="input-group"><label>Icon (emoji) *</label>
+                <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+                    <span style="font-size:1.5rem;" id="bizIconPreview">🏪</span>
+                    <input type="text" id="bizIcon" placeholder="e.g. 🍽️" style="flex:1; min-width:60px;" maxlength="2" />
+                    <span style="font-size:0.65rem; color:#666;">Pick an emoji</span>
+                </div>
+            </div>
+            <div class="input-group"><label>Website (optional)</label><input type="url" id="bizWebsite" placeholder="https://example.com" /></div>
+            <div style="margin-top:4px; font-size:0.7rem; color:#666;">Add items after creating your business</div>
+            <div class="action-buttons-row" style="margin-top:8px;">
+                <button class="action-btn green" id="saveBizBtn">Add Business</button>
+                <button class="action-btn close-modal" style="background:#2c7da0;">Close</button>
             </div>
         </div>
     </div>
@@ -5191,6 +5268,9 @@
         let pendingDeleteUserId = null;
         let currentAgentFilterCountry = null;
 
+        // Custom businesses added by users
+        let customBusinesses = [];
+
         // ================================================================
         // COUNTRY MAPPING
         // ================================================================
@@ -5318,7 +5398,8 @@
             adminLoggedIn: 'afripay_admin_logged_in',
             user: 'afripay_user',
             lang: 'afripay_lang',
-            providerTxIds: 'afripay_provider_tx_ids'
+            providerTxIds: 'afripay_provider_tx_ids',
+            customBusinesses: 'afripay_custom_businesses'
         };
 
         const ProviderTxIdManager = {
@@ -6204,16 +6285,29 @@
         // ================================================================
         // BUSINESS STRIP
         // ================================================================
+        function loadCustomBusinesses() {
+            try { customBusinesses = JSON.parse(localStorage.getItem(STORAGE_KEYS.customBusinesses) || '[]'); } catch (e) { customBusinesses = []; }
+        }
+
+        function saveCustomBusinesses() {
+            try { localStorage.setItem(STORAGE_KEYS.customBusinesses, JSON.stringify(customBusinesses)); } catch (e) {}
+        }
+
+        function getAllBusinesses() {
+            return [...businesses, ...customBusinesses];
+        }
+
         function renderBusinessStrip() {
             const container = getEl('businessIconsContainer');
             if (!container) return;
             container.innerHTML = '';
-            businesses.forEach(biz => {
+            const allBiz = getAllBusinesses();
+            allBiz.forEach(biz => {
                 const div = document.createElement('div');
                 div.className = 'business-item';
                 div.setAttribute('data-business-id', biz.id);
                 div.innerHTML =
-                    `<div class="business-icon-img">${biz.icon}</div><div class="business-name">${SecurityUtils.escapeHTML(biz.name)}</div><div class="business-category">${SecurityUtils.escapeHTML(biz.type)}</div>`;
+                    `<div class="business-icon-img">${biz.icon || '🏪'}</div><div class="business-name">${SecurityUtils.escapeHTML(biz.name)}</div><div class="business-category">${SecurityUtils.escapeHTML(biz.type)}</div>`;
                 div.addEventListener('click', () => showGoodsModal(biz.id));
                 div.addEventListener('touchstart', function(e) {
                     e.preventDefault();
@@ -6224,20 +6318,23 @@
         }
 
         function showGoodsModal(businessId) {
-            const biz = businesses.find(b => b.id === businessId);
+            const allBiz = getAllBusinesses();
+            const biz = allBiz.find(b => b.id === businessId);
             if (!biz) return;
-            const goodsHtml = biz.goods.map(g =>
+            const goodsHtml = biz.goods && biz.goods.length > 0 ? biz.goods.map(g =>
                 `<div class="goods-item" data-price="${g.price}" data-name="${SecurityUtils.escapeHTML(g.name)}"><span class="goods-name">${SecurityUtils.escapeHTML(g.name)}</span><span class="goods-price">${g.price.toFixed(2)} ${isLocalMode ? 'Local' : currentCountryData.currency}</span></div>`
-                ).join('');
+                ).join('') :
+                `<div style="text-align:center; padding:12px; color:#95a5a6;">No items added yet.</div>`;
             const goodsModalTitle = getEl('goodsModalTitle');
             const goodsList = getEl('goodsList');
             const businessWebsiteLink = getEl('businessWebsiteLink');
             if (goodsModalTitle) goodsModalTitle.innerHTML =
-                `${biz.icon} ${SecurityUtils.escapeHTML(biz.name)} – Select Item`;
+                `${biz.icon || '🏪'} ${SecurityUtils.escapeHTML(biz.name)} – Select Item`;
             if (goodsList) goodsList.innerHTML = goodsHtml;
             if (businessWebsiteLink) {
-                businessWebsiteLink.href = biz.website;
+                businessWebsiteLink.href = biz.website || '#';
                 businessWebsiteLink.innerText = `🌐 Visit Website`;
+                businessWebsiteLink.style.display = biz.website ? 'block' : 'none';
             }
             getEl('goodsModal').style.display = 'flex';
             document.querySelectorAll('.goods-item').forEach(item => {
@@ -6249,7 +6346,7 @@
                     const amountInput = getEl('amountInput');
                     if (agentName) agentName.value =
                         `${SecurityUtils.escapeHTML(biz.name)} – ${SecurityUtils.escapeHTML(goodsName)}`;
-                    if (agentPhone) agentPhone.value = SecurityUtils.escapeHTML(biz.contact);
+                    if (agentPhone) agentPhone.value = SecurityUtils.escapeHTML(biz.contact || '');
                     const maxLimit = parseFloat(amountInput?.max);
                     let finalPrice = price;
                     if (maxLimit > 0 && price > maxLimit) { finalPrice = maxLimit;
@@ -6270,7 +6367,7 @@
                     const amountInput = getEl('amountInput');
                     if (agentName) agentName.value =
                         `${SecurityUtils.escapeHTML(biz.name)} – ${SecurityUtils.escapeHTML(goodsName)}`;
-                    if (agentPhone) agentPhone.value = SecurityUtils.escapeHTML(biz.contact);
+                    if (agentPhone) agentPhone.value = SecurityUtils.escapeHTML(biz.contact || '');
                     const maxLimit = parseFloat(amountInput?.max);
                     let finalPrice = price;
                     if (maxLimit > 0 && price > maxLimit) { finalPrice = maxLimit;
@@ -8197,10 +8294,68 @@
         }
 
         // ================================================================
+        // ADD BUSINESS MODAL FUNCTIONS
+        // ================================================================
+        function openAddBizModal() {
+            getEl('bizName').value = '';
+            getEl('bizContact').value = '';
+            getEl('bizType').value = 'Service';
+            getEl('bizIcon').value = '🏪';
+            getEl('bizWebsite').value = '';
+            getEl('bizIconPreview').textContent = '🏪';
+            getEl('addBizError').textContent = '';
+            getEl('addBizSuccess').textContent = '';
+            getEl('addBizModal').style.display = 'flex';
+        }
+
+        function saveCustomBusiness() {
+            const name = SecurityUtils.sanitizeInput(getEl('bizName').value.trim(), 100);
+            const contact = SecurityUtils.sanitizePhone(getEl('bizContact').value.trim());
+            const type = getEl('bizType').value;
+            const icon = getEl('bizIcon').value.trim() || '🏪';
+            const website = getEl('bizWebsite').value.trim();
+
+            const errorEl = getEl('addBizError');
+            const successEl = getEl('addBizSuccess');
+            errorEl.textContent = '';
+            successEl.textContent = '';
+
+            if (!name) { errorEl.textContent = '❌ Business name required.'; return; }
+            if (!contact) { errorEl.textContent = '❌ Contact phone required.'; return; }
+
+            const allBiz = getAllBusinesses();
+            if (allBiz.some(b => b.name.toLowerCase() === name.toLowerCase())) {
+                errorEl.textContent = '❌ Business already exists.';
+                return;
+            }
+
+            const newBiz = {
+                id: Date.now() + Math.floor(Math.random() * 1000),
+                name: name,
+                contact: contact,
+                type: type,
+                icon: icon,
+                website: website || '',
+                goods: [{ name: 'Service Fee', price: 10 }],
+                isCustom: true
+            };
+
+            customBusinesses.push(newBiz);
+            saveCustomBusinesses();
+            renderBusinessStrip();
+            successEl.textContent = '✅ Business added successfully!';
+            showToast(`✅ "${name}" added to Quick Pay!`, 2500);
+            setTimeout(() => {
+                getEl('addBizModal').style.display = 'none';
+                successEl.textContent = '';
+            }, 1200);
+        }
+
+        // ================================================================
         // MAIN INIT
         // ================================================================
         function initApp() {
-            console.log('🚀 AfriPay initializing with fixed Edit Agent modal...');
+            console.log('🚀 AfriPay initializing with Add Biz feature...');
 
             function safeExecute(fn, label) { try { fn(); } catch (e) { console.error(`❌ Error in ${label}:`, e); } }
 
@@ -8209,6 +8364,7 @@
             safeExecute(() => loadRegisteredUsers(), 'loadRegisteredUsers');
             safeExecute(() => syncConnectedUsersFromRegistered(), 'syncConnectedUsersFromRegistered');
             safeExecute(() => initializePermanentAgents(), 'initializePermanentAgents');
+            safeExecute(() => loadCustomBusinesses(), 'loadCustomBusinesses');
             safeExecute(() => loadStoredUser(), 'loadStoredUser');
             safeExecute(() => loadGroups(), 'loadGroups');
             safeExecute(() => loadChatMessages(), 'loadChatMessages');
@@ -11850,6 +12006,43 @@
                     }
                 });
             }
+
+            // ============================================================
+            // ADD BUSINESS MODAL EVENTS
+            // ============================================================
+            const addBizBtn = getEl('addBizBtn');
+            if (addBizBtn) {
+                addBizBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    openAddBizModal();
+                });
+                addBizBtn.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    openAddBizModal();
+                }, { passive: true });
+            }
+
+            const saveBizBtn = getEl('saveBizBtn');
+            if (saveBizBtn) {
+                saveBizBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    saveCustomBusiness();
+                });
+                saveBizBtn.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    saveCustomBusiness();
+                }, { passive: true });
+            }
+
+            const bizIconInput = getEl('bizIcon');
+            if (bizIconInput) {
+                bizIconInput.addEventListener('input', function() {
+                    const preview = getEl('bizIconPreview');
+                    if (preview && this.value.trim()) {
+                        preview.textContent = this.value.trim();
+                    }
+                });
+            }
         }
 
         // ================================================================
@@ -11875,7 +12068,7 @@
         }
 
         bootstrap();
-        console.log('🚀 AfriPay fully bootstrapped — Edit Agent modal now fully functional.');
+        console.log('🚀 AfriPay fully bootstrapped — Add Biz feature added.');
     </script>
 </body>
 </html>
