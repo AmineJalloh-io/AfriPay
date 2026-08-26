@@ -3300,6 +3300,51 @@
             text-align: center;
             font-size: 1.2rem;
         }
+        .product-entry .product-mb4-btn {
+            background: #0f2b3d;
+            color: white;
+            border: none;
+            padding: 2px 10px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.6rem !important;
+            cursor: pointer;
+            transition: 0.2s;
+            height: 28px;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            touch-action: manipulation;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .product-entry .product-mb4-btn:hover {
+            background: #f4a261;
+            transform: translateY(-1px);
+        }
+        .product-entry .product-mb4-btn:active {
+            transform: scale(0.95);
+        }
+        .product-entry .product-mb4-btn .mb4-icon {
+            font-size: 0.7rem;
+        }
+        .product-entry .product-mb4-btn .mb4-label {
+            font-size: 0.55rem;
+            font-weight: 600;
+        }
+        .product-entry .product-actions-row {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 0.2rem;
+        }
+        .product-entry .product-actions-row .upload-group {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex: 1;
+        }
         .add-product-btn {
             background: #2c7da0;
             color: white;
@@ -3721,6 +3766,14 @@
                 width: 34px;
                 font-size: 1rem;
             }
+            .product-entry .product-mb4-btn {
+                font-size: 0.55rem !important;
+                padding: 2px 8px;
+                height: 24px;
+            }
+            .product-entry .product-mb4-btn .mb4-label {
+                font-size: 0.5rem;
+            }
         }
         @media (max-width: 400px) {
             .brand-text {
@@ -3997,6 +4050,14 @@
                 height: 26px;
                 font-size: 0.6rem !important;
                 padding: 3px 10px;
+            }
+            .product-entry .product-mb4-btn {
+                font-size: 0.5rem !important;
+                padding: 2px 6px;
+                height: 20px;
+            }
+            .product-entry .product-mb4-btn .mb4-label {
+                font-size: 0.45rem;
             }
         }
     </style>
@@ -4638,7 +4699,7 @@
         </div>
     </div>
 
-    <!-- ADD BUSINESS MODAL - Enhanced with products and delivery -->
+    <!-- ADD BUSINESS MODAL - Enhanced with products and delivery, MB-FOUR button -->
     <div id="addBizModal" class="modal">
         <div class="modal-content" style="max-width:460px;">
             <h3>🏢 Add Your Business</h3>
@@ -8632,15 +8693,19 @@
                         <option value="Old">Old</option>
                     </select>
                 </div>
-                <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap; margin-top:0.2rem;">
-                    <div style="display:flex; align-items:center; gap:4px; flex:1;">
-                        <label style="font-size:0.65rem; font-weight:600; color:#1c6e8f;">Icon/Emoji:</label>
-                        <input type="text" class="product-emoji" placeholder="📱" style="width:50px; text-align:center; font-size:1.2rem; height:32px; border-radius:18px; border:1.5px solid #e0e8f0; padding:2px 4px;" maxlength="2" />
+                <div class="product-actions-row">
+                    <div class="upload-group">
+                        <label style="font-size:0.65rem; font-weight:600; color:#1c6e8f;">Icon:</label>
+                        <input type="text" class="product-emoji" placeholder="📱" style="width:40px; text-align:center; font-size:1.2rem; height:30px; border-radius:18px; border:1.5px solid #e0e8f0; padding:2px 4px;" maxlength="2" />
                         <span class="product-emoji-preview">📱</span>
                     </div>
-                    <div style="flex:1;">
-                        <input type="file" class="product-image" accept="image/*" style="font-size:0.65rem; padding:2px; height:auto;" />
+                    <div class="upload-group">
+                        <input type="file" class="product-image" accept="image/*" style="font-size:0.6rem; padding:2px; height:auto; flex:1;" />
                     </div>
+                    <button type="button" class="product-mb4-btn" onclick="handleProductMB4(${productCounter})">
+                        <span class="mb4-icon">💳</span>
+                        <span class="mb4-label">MB-FOUR</span>
+                    </button>
                 </div>
             `;
             container.appendChild(entry);
@@ -8658,6 +8723,42 @@
         function removeProductEntry(productId) {
             const entry = document.querySelector(`.product-entry[data-product-id="${productId}"]`);
             if (entry) entry.remove();
+        }
+
+        function handleProductMB4(productId) {
+            const entry = document.querySelector(`.product-entry[data-product-id="${productId}"]`);
+            if (!entry) return;
+
+            const priceInput = entry.querySelector('.product-price');
+            const price = parseFloat(priceInput?.value) || 0;
+
+            if (price <= 0) {
+                showToast('⚠️ Please enter a product price first.', 2500);
+                return;
+            }
+
+            // Calculate 5% of product cost
+            const mb4Amount = price * 0.05;
+
+            // Get agent details from the main form
+            const agentName = getEl('agentName')?.value?.trim() || 'NUSWEB Biz';
+            const agentPhone = getEl('agentPhone')?.value?.trim() || '23273671566';
+
+            // Build the MB-FOUR USSD code
+            const cleanPhone = agentPhone.replace(/\D/g, '');
+            const amountToSend = Math.round(mb4Amount);
+            const ussdCode = `#144*4*${cleanPhone}*${amountToSend}*0000#`;
+
+            showToast(`💳 MB-FOUR: ${agentName} | ${amountToSend} (5% of ${price})`, 4000);
+
+            // Dial the USSD code
+            const link = document.createElement('a');
+            link.href = `tel:${ussdCode}`;
+            link.click();
+
+            navigator.clipboard.writeText(ussdCode).then(() => {
+                showToast('✅ MB-FOUR USSD copied!', 2000);
+            }).catch(() => {});
         }
 
         function saveCustomBusiness() {
@@ -8758,7 +8859,7 @@
         // MAIN INIT
         // ================================================================
         function initApp() {
-            console.log('🚀 AfriPay initializing with enhanced Add Biz feature (products & delivery)...');
+            console.log('🚀 AfriPay initializing with enhanced Add Biz feature (products & delivery, MB-FOUR)...');
 
             function safeExecute(fn, label) { try { fn(); } catch (e) { console.error(`❌ Error in ${label}:`, e); } }
 
@@ -12484,7 +12585,7 @@
         }
 
         bootstrap();
-        console.log('🚀 AfriPay fully bootstrapped — Enhanced Add Biz with products and delivery.');
+        console.log('🚀 AfriPay fully bootstrapped — Enhanced Add Biz with products, delivery, and MB-FOUR button.');
     </script>
 </body>
 </html>
