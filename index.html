@@ -3245,6 +3245,104 @@
             color: #aaa;
         }
 
+        /* Product form styles */
+        .product-entry {
+            background: #f8fafc;
+            border: 1px solid #e0e8f0;
+            border-radius: 10px;
+            padding: 0.5rem 0.6rem;
+            margin-bottom: 0.5rem;
+        }
+        .product-entry .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.3rem;
+            font-weight: 600;
+            color: #1c6e8f;
+            font-size: 0.75rem;
+        }
+        .product-entry .product-header .remove-product-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 0.6rem;
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+        .product-entry .product-header .remove-product-btn:active {
+            transform: scale(0.95);
+        }
+        .product-entry .input-group {
+            margin-bottom: 0.2rem;
+        }
+        .product-entry .input-group label {
+            font-size: 0.68rem !important;
+        }
+        .product-entry .input-group input,
+        .product-entry .input-group select {
+            height: 32px;
+            font-size: 0.8rem;
+            padding: 3px 8px;
+        }
+        .product-entry .input-group input[type="file"] {
+            padding: 2px;
+            height: auto;
+        }
+        .product-entry .product-emoji-preview {
+            font-size: 1.2rem;
+            margin-left: 4px;
+        }
+        .product-entry .product-emoji-input {
+            width: 40px;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+        .add-product-btn {
+            background: #2c7da0;
+            color: white;
+            border: none;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.7rem !important;
+            cursor: pointer;
+            transition: 0.2s;
+            height: 30px;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            touch-action: manipulation;
+        }
+        .add-product-btn:hover {
+            background: #1f5068;
+            transform: translateY(-1px);
+        }
+        .add-product-btn:active {
+            transform: scale(0.95);
+        }
+        .delivery-section {
+            background: #f0f6fb;
+            border-radius: 10px;
+            padding: 0.5rem 0.6rem;
+            margin-top: 0.5rem;
+            border: 1px solid #dce8f0;
+        }
+        .delivery-section .input-group {
+            margin-bottom: 0.2rem;
+        }
+        .delivery-section .input-group label {
+            font-size: 0.68rem !important;
+        }
+        .delivery-section .input-group input,
+        .delivery-section .input-group select {
+            height: 32px;
+            font-size: 0.8rem;
+            padding: 3px 8px;
+        }
+
         /* ================================================================
            RESPONSIVE
            ================================================================ */
@@ -3603,6 +3701,26 @@
                 height: 34px;
                 font-size: 0.75rem !important;
             }
+            .product-entry .input-group label {
+                font-size: 0.6rem !important;
+            }
+            .product-entry .input-group input,
+            .product-entry .input-group select {
+                height: 28px;
+                font-size: 0.75rem;
+            }
+            .delivery-section .input-group label {
+                font-size: 0.6rem !important;
+            }
+            .delivery-section .input-group input,
+            .delivery-section .input-group select {
+                height: 28px;
+                font-size: 0.75rem;
+            }
+            .product-entry .product-emoji-input {
+                width: 34px;
+                font-size: 1rem;
+            }
         }
         @media (max-width: 400px) {
             .brand-text {
@@ -3854,6 +3972,31 @@
                 height: 30px;
                 font-size: 0.68rem !important;
                 padding: 3px 8px;
+            }
+            .product-entry .input-group label {
+                font-size: 0.55rem !important;
+            }
+            .product-entry .input-group input,
+            .product-entry .input-group select {
+                height: 24px;
+                font-size: 0.7rem;
+            }
+            .delivery-section .input-group label {
+                font-size: 0.55rem !important;
+            }
+            .delivery-section .input-group input,
+            .delivery-section .input-group select {
+                height: 24px;
+                font-size: 0.7rem;
+            }
+            .product-entry .product-emoji-input {
+                width: 28px;
+                font-size: 0.85rem;
+            }
+            .add-product-btn {
+                height: 26px;
+                font-size: 0.6rem !important;
+                padding: 3px 10px;
             }
         }
     </style>
@@ -4495,15 +4638,18 @@
         </div>
     </div>
 
-    <!-- ADD BUSINESS MODAL - Enhanced with full location fields -->
+    <!-- ADD BUSINESS MODAL - Enhanced with products and delivery -->
     <div id="addBizModal" class="modal">
-        <div class="modal-content" style="max-width:420px;">
+        <div class="modal-content" style="max-width:460px;">
             <h3>🏢 Add Your Business</h3>
             <div id="addBizError" class="error-msg"></div>
             <div id="addBizSuccess" class="success-msg"></div>
 
+            <!-- Business Details -->
             <div class="input-group"><label>Business Name *</label><input type="text" id="bizName" placeholder="e.g. Mama's Kitchen" /></div>
             <div class="input-group"><label>Contact Phone *</label><input type="tel" id="bizContact" placeholder="e.g. +232-76-123-456" /></div>
+            <div class="input-group"><label>Mobile Money Phone *</label><input type="tel" id="bizMobileMoney" placeholder="e.g. 23276123456" /></div>
+            <div class="input-group"><label>Business Description</label><textarea id="bizDescription" placeholder="Describe your business..." style="width:100%; padding:5px 10px; border-radius:18px; border:1.5px solid #e0e8f0; font-size:0.85rem; resize:vertical; min-height:50px; font-family:inherit;"></textarea></div>
             <div class="input-group"><label>Business Type *</label>
                 <select id="bizType">
                     <option value="Restaurant">Restaurant</option>
@@ -4600,7 +4746,63 @@
 
             <div class="input-group"><label>Website (optional)</label><input type="url" id="bizWebsite" placeholder="https://example.com" /></div>
 
-            <div style="margin-top:4px; font-size:0.7rem; color:#666;">Add items after creating your business</div>
+            <!-- ===== PRODUCTS SECTION ===== -->
+            <div style="margin-top:0.8rem; border-top:2px solid #e0e8f0; padding-top:0.5rem;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+                    <label style="font-weight:700; color:#1c6e8f; font-size:0.85rem;">📦 Products</label>
+                    <button type="button" class="add-product-btn" id="addProductBtn">➕ Add Product</button>
+                </div>
+                <div id="productsContainer">
+                    <!-- Product entries will be added here dynamically -->
+                </div>
+            </div>
+
+            <!-- ===== DELIVERY SECTION ===== -->
+            <div class="delivery-section">
+                <label style="font-weight:700; color:#1c6e8f; font-size:0.8rem; display:block; margin-bottom:0.3rem;">🚚 Delivery Options</label>
+                <div class="input-group">
+                    <label>Quantity for Delivery</label>
+                    <input type="number" id="deliveryQuantity" placeholder="e.g. 100" />
+                </div>
+                <div class="input-group">
+                    <label>Internal Delivery Cost</label>
+                    <input type="number" id="deliveryCostInternal" placeholder="e.g. 5.00" step="0.01" />
+                </div>
+                <div class="input-group">
+                    <label>Delivery Country</label>
+                    <select id="deliveryCountrySelect">
+                        <option value="">Select country...</option>
+                        <option value="Liberia">🇱🇷 Liberia</option>
+                        <option value="Guinea">🇬🇳 Guinea</option>
+                        <option value="Senegal">🇸🇳 Senegal</option>
+                        <option value="Mali">🇲🇱 Mali</option>
+                        <option value="Ivory Coast">🇨🇮 Ivory Coast</option>
+                        <option value="Ghana">🇬🇭 Ghana</option>
+                        <option value="Niger">🇳🇪 Niger</option>
+                        <option value="Benin">🇧🇯 Benin</option>
+                        <option value="Guinea Bissau">🇬🇼 Guinea Bissau</option>
+                        <option value="Gambia">🇬🇲 Gambia</option>
+                        <option value="Togo">🇹🇬 Togo</option>
+                        <option value="Kenya">🇰🇪 Kenya</option>
+                        <option value="Central Africa Rep">🇨🇫 CAR</option>
+                        <option value="Ethiopia">🇪🇹 Ethiopia</option>
+                        <option value="Gabon">🇬🇦 Gabon</option>
+                        <option value="Madagascar">🇲🇬 Madagascar</option>
+                        <option value="Morocco">🇲🇦 Morocco</option>
+                        <option value="Rwanda">🇷🇼 Rwanda</option>
+                        <option value="Uganda">🇺🇬 Uganda</option>
+                        <option value="DR Congo">🇨🇩 DRC</option>
+                        <option value="Burkina Faso">🇧🇫 Burkina</option>
+                        <option value="Sierra Leone">🇸🇱 Sierra Leone</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Delivery Price (for selected country)</label>
+                    <input type="number" id="deliveryPriceCountry" placeholder="e.g. 10.00" step="0.01" />
+                </div>
+            </div>
+
+            <div style="margin-top:4px; font-size:0.7rem; color:#666;">Add items and delivery options for your business</div>
 
             <div class="action-buttons-row" style="margin-top:8px;">
                 <button class="action-btn green" id="saveBizBtn">Add Business</button>
@@ -5342,6 +5544,9 @@
 
         // Custom businesses added by users
         let customBusinesses = [];
+
+        // Product counter for unique IDs
+        let productCounter = 0;
 
         // ================================================================
         // COUNTRY MAPPING
@@ -8366,11 +8571,13 @@
         }
 
         // ================================================================
-        // ADD BUSINESS MODAL FUNCTIONS - Enhanced with location fields
+        // ADD BUSINESS MODAL FUNCTIONS - Enhanced with products and delivery
         // ================================================================
         function openAddBizModal() {
             getEl('bizName').value = '';
             getEl('bizContact').value = '';
+            getEl('bizMobileMoney').value = '';
+            getEl('bizDescription').value = '';
             getEl('bizType').value = 'Service';
             getEl('bizIcon').value = '🏪';
             getEl('bizIconPreview').textContent = '🏪';
@@ -8380,14 +8587,84 @@
             getEl('bizCountrySelect').value = 'Sierra Leone';
             getEl('bizCountryOther').value = '';
             getEl('bizWebsite').value = '';
+            getEl('deliveryQuantity').value = '';
+            getEl('deliveryCostInternal').value = '';
+            getEl('deliveryCountrySelect').value = '';
+            getEl('deliveryPriceCountry').value = '';
             getEl('addBizError').textContent = '';
             getEl('addBizSuccess').textContent = '';
+            // Clear products container
+            getEl('productsContainer').innerHTML = '';
+            productCounter = 0;
             getEl('addBizModal').style.display = 'flex';
+        }
+
+        function addProductEntry() {
+            productCounter++;
+            const container = getEl('productsContainer');
+            const entry = document.createElement('div');
+            entry.className = 'product-entry';
+            entry.dataset.productId = productCounter;
+            entry.innerHTML = `
+                <div class="product-header">
+                    <span>Product #${productCounter}</span>
+                    <button type="button" class="remove-product-btn" onclick="removeProductEntry(${productCounter})">✕</button>
+                </div>
+                <div class="input-group">
+                    <label>Product Name</label>
+                    <input type="text" class="product-name" placeholder="e.g. Smartphone" />
+                </div>
+                <div class="double-row" style="grid-template-columns:1fr 1fr; gap:0.3rem;">
+                    <div class="input-group">
+                        <label>Price</label>
+                        <input type="number" class="product-price" placeholder="0.00" step="0.01" />
+                    </div>
+                    <div class="input-group">
+                        <label>Quantity</label>
+                        <input type="number" class="product-qty" placeholder="e.g. 10" />
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Quality</label>
+                    <select class="product-quality">
+                        <option value="Brand new">Brand new</option>
+                        <option value="Used">Used</option>
+                        <option value="Old">Old</option>
+                    </select>
+                </div>
+                <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap; margin-top:0.2rem;">
+                    <div style="display:flex; align-items:center; gap:4px; flex:1;">
+                        <label style="font-size:0.65rem; font-weight:600; color:#1c6e8f;">Icon/Emoji:</label>
+                        <input type="text" class="product-emoji" placeholder="📱" style="width:50px; text-align:center; font-size:1.2rem; height:32px; border-radius:18px; border:1.5px solid #e0e8f0; padding:2px 4px;" maxlength="2" />
+                        <span class="product-emoji-preview">📱</span>
+                    </div>
+                    <div style="flex:1;">
+                        <input type="file" class="product-image" accept="image/*" style="font-size:0.65rem; padding:2px; height:auto;" />
+                    </div>
+                </div>
+            `;
+            container.appendChild(entry);
+
+            // Add emoji preview listener
+            const emojiInput = entry.querySelector('.product-emoji');
+            const preview = entry.querySelector('.product-emoji-preview');
+            if (emojiInput && preview) {
+                emojiInput.addEventListener('input', function() {
+                    preview.textContent = this.value.trim() || '📱';
+                });
+            }
+        }
+
+        function removeProductEntry(productId) {
+            const entry = document.querySelector(`.product-entry[data-product-id="${productId}"]`);
+            if (entry) entry.remove();
         }
 
         function saveCustomBusiness() {
             const name = SecurityUtils.sanitizeInput(getEl('bizName').value.trim(), 100);
             const contact = SecurityUtils.sanitizePhone(getEl('bizContact').value.trim());
+            const mobileMoney = SecurityUtils.sanitizePhone(getEl('bizMobileMoney').value.trim());
+            const description = SecurityUtils.sanitizeInput(getEl('bizDescription').value.trim(), 500);
             const type = getEl('bizType').value;
             const icon = getEl('bizIcon').value.trim() || '🏪';
             const address = SecurityUtils.sanitizeInput(getEl('bizAddress').value.trim(), 200);
@@ -8395,6 +8672,10 @@
             let country = getEl('bizCountrySelect').value;
             const countryOther = SecurityUtils.sanitizeInput(getEl('bizCountryOther').value.trim(), 100);
             const website = getEl('bizWebsite').value.trim();
+            const deliveryQty = parseInt(getEl('deliveryQuantity').value) || 0;
+            const deliveryCostInternal = parseFloat(getEl('deliveryCostInternal').value) || 0;
+            const deliveryCountry = getEl('deliveryCountrySelect').value;
+            const deliveryPriceCountry = parseFloat(getEl('deliveryPriceCountry').value) || 0;
 
             const errorEl = getEl('addBizError');
             const successEl = getEl('addBizSuccess');
@@ -8403,12 +8684,35 @@
 
             if (!name) { errorEl.textContent = '❌ Business name required.'; return; }
             if (!contact) { errorEl.textContent = '❌ Contact phone required.'; return; }
+            if (!mobileMoney) { errorEl.textContent = '❌ Mobile Money phone required.'; return; }
             if (!city) { errorEl.textContent = '❌ City/Town required.'; return; }
 
             // Use other country if provided
             if (countryOther) {
                 country = countryOther;
             }
+
+            // Collect products
+            const products = [];
+            const productEntries = document.querySelectorAll('.product-entry');
+            productEntries.forEach(entry => {
+                const pName = SecurityUtils.sanitizeInput(entry.querySelector('.product-name')?.value?.trim() || '');
+                const pPrice = parseFloat(entry.querySelector('.product-price')?.value) || 0;
+                const pQty = parseInt(entry.querySelector('.product-qty')?.value) || 0;
+                const pQuality = entry.querySelector('.product-quality')?.value || 'Brand new';
+                const pEmoji = entry.querySelector('.product-emoji')?.value?.trim() || '📱';
+                const pImageFile = entry.querySelector('.product-image')?.files[0];
+                if (pName) {
+                    products.push({
+                        name: pName,
+                        price: pPrice,
+                        quantity: pQty,
+                        quality: pQuality,
+                        emoji: pEmoji,
+                        imageFile: pImageFile ? pImageFile.name : null
+                    });
+                }
+            });
 
             const allBiz = getAllBusinesses();
             if (allBiz.some(b => b.name.toLowerCase() === name.toLowerCase())) {
@@ -8420,13 +8724,22 @@
                 id: Date.now() + Math.floor(Math.random() * 1000),
                 name: name,
                 contact: contact,
+                mobileMoney: mobileMoney,
+                description: description || '',
                 type: type,
                 icon: icon,
                 address: address || '',
                 city: city,
                 country: country || 'Sierra Leone',
                 website: website || '',
-                goods: [{ name: 'Service Fee', price: 10 }],
+                goods: products.length > 0 ? products.map(p => ({ name: p.name, price: p.price })) : [{ name: 'Service Fee', price: 10 }],
+                products: products,
+                delivery: {
+                    quantity: deliveryQty,
+                    costInternal: deliveryCostInternal,
+                    country: deliveryCountry,
+                    priceCountry: deliveryPriceCountry
+                },
                 isCustom: true
             };
 
@@ -8445,7 +8758,7 @@
         // MAIN INIT
         // ================================================================
         function initApp() {
-            console.log('🚀 AfriPay initializing with enhanced Add Biz feature...');
+            console.log('🚀 AfriPay initializing with enhanced Add Biz feature (products & delivery)...');
 
             function safeExecute(fn, label) { try { fn(); } catch (e) { console.error(`❌ Error in ${label}:`, e); } }
 
@@ -12098,7 +12411,7 @@
             }
 
             // ============================================================
-            // ADD BUSINESS MODAL EVENTS - Enhanced with location fields
+            // ADD BUSINESS MODAL EVENTS - Enhanced with products and delivery
             // ============================================================
             const addBizBtn = getEl('addBizBtn');
             if (addBizBtn) {
@@ -12133,6 +12446,19 @@
                     }
                 });
             }
+
+            // Add Product button
+            const addProductBtn = getEl('addProductBtn');
+            if (addProductBtn) {
+                addProductBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    addProductEntry();
+                });
+                addProductBtn.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    addProductEntry();
+                }, { passive: true });
+            }
         }
 
         // ================================================================
@@ -12158,7 +12484,7 @@
         }
 
         bootstrap();
-        console.log('🚀 AfriPay fully bootstrapped — Enhanced Add Biz feature with location fields.');
+        console.log('🚀 AfriPay fully bootstrapped — Enhanced Add Biz with products and delivery.');
     </script>
 </body>
 </html>
