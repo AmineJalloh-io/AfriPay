@@ -3389,6 +3389,119 @@
         }
 
         /* ================================================================
+           AUTHENTICATOR SECTION STYLES
+           ================================================================ */
+        .authenticator-section {
+            background: #f0f6fb;
+            border-radius: 10px;
+            padding: 0.6rem 0.6rem;
+            margin-top: 0.5rem;
+            border: 2px solid #2c7da0;
+            position: relative;
+        }
+        .authenticator-section .auth-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.3rem;
+        }
+        .authenticator-section .auth-header label {
+            font-weight: 700;
+            color: #1c6e8f;
+            font-size: 0.8rem;
+        }
+        .authenticator-section .auth-status {
+            font-size: 0.6rem;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        .authenticator-section .auth-status.pending {
+            background: #fdebd0;
+            color: #ca6f1e;
+        }
+        .authenticator-section .auth-status.verified {
+            background: #d5f5e3;
+            color: #1e8449;
+        }
+        .authenticator-section .auth-status.error {
+            background: #fde8e8;
+            color: #c0392b;
+        }
+        .authenticator-section .input-group {
+            margin-bottom: 0.2rem;
+        }
+        .authenticator-section .input-group label {
+            font-size: 0.68rem !important;
+        }
+        .authenticator-section .input-group input {
+            height: 32px;
+            font-size: 0.8rem;
+            padding: 3px 8px;
+            background: white;
+        }
+        .authenticator-section .input-group input:focus {
+            border-color: #f4a261;
+            box-shadow: 0 0 0 3px rgba(244, 162, 97, 0.2);
+        }
+        .authenticator-section .input-group input.valid {
+            border-color: #27ae60;
+            background: #f0fff4;
+        }
+        .authenticator-section .input-group input.invalid {
+            border-color: #e74c3c;
+            background: #fff5f5;
+        }
+        .authenticator-section .auth-hint {
+            font-size: 0.58rem;
+            color: #7f8c8d;
+            margin-top: 1px;
+        }
+        .authenticator-section .auth-error-msg {
+            font-size: 0.65rem;
+            color: #e74c3c;
+            margin-top: 2px;
+            display: none;
+        }
+        .authenticator-section .auth-success-msg {
+            font-size: 0.65rem;
+            color: #27ae60;
+            margin-top: 2px;
+            display: none;
+        }
+        .auth-btn {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 4px 14px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.7rem !important;
+            cursor: pointer;
+            transition: 0.2s;
+            height: 30px;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            touch-action: manipulation;
+        }
+        .auth-btn:hover {
+            background: #1e8449;
+            transform: translateY(-1px);
+        }
+        .auth-btn:active {
+            transform: scale(0.95);
+        }
+        .auth-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        .auth-btn .auth-icon {
+            font-size: 0.8rem;
+        }
+
+        /* ================================================================
            RESPONSIVE
            ================================================================ */
         @media (max-width: 600px) {
@@ -3774,6 +3887,21 @@
             .product-entry .product-mb4-btn .mb4-label {
                 font-size: 0.5rem;
             }
+            .authenticator-section .input-group label {
+                font-size: 0.6rem !important;
+            }
+            .authenticator-section .input-group input {
+                height: 28px;
+                font-size: 0.75rem;
+            }
+            .authenticator-section .auth-header label {
+                font-size: 0.7rem;
+            }
+            .auth-btn {
+                height: 26px;
+                font-size: 0.6rem !important;
+                padding: 3px 10px;
+            }
         }
         @media (max-width: 400px) {
             .brand-text {
@@ -4058,6 +4186,21 @@
             }
             .product-entry .product-mb4-btn .mb4-label {
                 font-size: 0.45rem;
+            }
+            .authenticator-section .input-group label {
+                font-size: 0.55rem !important;
+            }
+            .authenticator-section .input-group input {
+                height: 24px;
+                font-size: 0.7rem;
+            }
+            .authenticator-section .auth-header label {
+                font-size: 0.65rem;
+            }
+            .auth-btn {
+                height: 24px;
+                font-size: 0.55rem !important;
+                padding: 2px 8px;
             }
         }
     </style>
@@ -4699,7 +4842,7 @@
         </div>
     </div>
 
-    <!-- ADD BUSINESS MODAL - Enhanced with products and delivery, MB-FOUR button -->
+    <!-- ADD BUSINESS MODAL - Enhanced with products, delivery, and authenticator -->
     <div id="addBizModal" class="modal">
         <div class="modal-content" style="max-width:460px;">
             <h3>🏢 Add Your Business</h3>
@@ -4818,6 +4961,30 @@
                 </div>
             </div>
 
+            <!-- ===== AUTHENTICATOR SECTION ===== -->
+            <div class="authenticator-section" id="authenticatorSection">
+                <div class="auth-header">
+                    <label>🔐 Payment Authenticator</label>
+                    <span class="auth-status pending" id="authStatusBadge">Pending</span>
+                </div>
+                <div class="input-group">
+                    <label for="authProviderTxId">Provider TX ID *</label>
+                    <input type="text" id="authProviderTxId" placeholder="AB123456.1234.X12345" pattern="[A-Za-z]{2}[0-9]{6}\.[0-9]{4}\.[A-Za-z][0-9]{5}" />
+                    <div class="auth-hint">Format: AB123456.1234.X12345</div>
+                    <div class="auth-error-msg" id="authProviderError">Invalid format or already used</div>
+                </div>
+                <div class="input-group">
+                    <label for="authTransferCode">Transfer Code *</label>
+                    <input type="text" id="authTransferCode" placeholder="6-14 digits" maxlength="14" pattern="[0-9]{6}|[0-9]{8}|[0-9]{10}|[0-9]{12}|[0-9]{14}" />
+                    <div class="auth-hint">6-14 digit transfer code</div>
+                    <div class="auth-error-msg" id="authTransferError">Invalid format or already used</div>
+                </div>
+                <div class="auth-success-msg" id="authSuccessMsg">✅ Authentication verified!</div>
+                <button type="button" class="auth-btn" id="authenticateBtn">
+                    <span class="auth-icon">🔑</span> Authenticate
+                </button>
+            </div>
+
             <!-- ===== DELIVERY SECTION ===== -->
             <div class="delivery-section">
                 <label style="font-weight:700; color:#1c6e8f; font-size:0.8rem; display:block; margin-bottom:0.3rem;">🚚 Delivery Options</label>
@@ -4863,10 +5030,10 @@
                 </div>
             </div>
 
-            <div style="margin-top:4px; font-size:0.7rem; color:#666;">Add items and delivery options for your business</div>
+            <div style="margin-top:4px; font-size:0.7rem; color:#666;">All fields marked with * are required. Authentication must be verified.</div>
 
             <div class="action-buttons-row" style="margin-top:8px;">
-                <button class="action-btn green" id="saveBizBtn">Add Business</button>
+                <button class="action-btn green" id="saveBizBtn" disabled>Add Business</button>
                 <button class="action-btn close-modal" style="background:#2c7da0;">Close</button>
             </div>
         </div>
@@ -5609,6 +5776,15 @@
         // Product counter for unique IDs
         let productCounter = 0;
 
+        // Authentication state
+        let authState = {
+            isAuthenticated: false,
+            providerTxId: '',
+            transferCode: '',
+            usedProviderTxIds: [],
+            usedTransferCodes: []
+        };
+
         // ================================================================
         // COUNTRY MAPPING
         // ================================================================
@@ -5743,10 +5919,20 @@
         const ProviderTxIdManager = {
             pattern: /^[A-Za-z]{2}[0-9]{6}\.[0-9]{4}\.[A-Za-z][0-9]{5}$/,
             usedIds: [],
-            loadUsedIds: function() { try { this.usedIds = JSON.parse(localStorage.getItem(
-                        STORAGE_KEYS.providerTxIds) || '[]'); } catch (e) { this.usedIds = []; } },
-            saveUsedIds: function() { try { localStorage.setItem(STORAGE_KEYS.providerTxIds, JSON.stringify(this
-                        .usedIds)); } catch (e) {} },
+            loadUsedIds: function() {
+                try {
+                    const stored = JSON.parse(localStorage.getItem(STORAGE_KEYS.providerTxIds) || '[]');
+                    this.usedIds = stored;
+                    authState.usedProviderTxIds = [...stored];
+                } catch (e) { this.usedIds = [];
+                    authState.usedProviderTxIds = []; }
+            },
+            saveUsedIds: function() {
+                try {
+                    localStorage.setItem(STORAGE_KEYS.providerTxIds, JSON.stringify(this.usedIds));
+                    authState.usedProviderTxIds = [...this.usedIds];
+                } catch (e) {}
+            },
             isValidFormat: function(txId) { return this.pattern.test(txId); },
             isUnique: function(txId) { return !this.usedIds.includes(txId); },
             validate: function(txId) {
@@ -5758,32 +5944,57 @@
                 return { valid: true, error: null };
             },
             markAsUsed: function(txId) {
-                if (txId && txId.trim()) { const cleaned = txId.trim(); if (!this.usedIds.includes(cleaned)) { this
-                            .usedIds.push(cleaned);
-                        this.saveUsedIds(); } }
+                if (txId && txId.trim()) {
+                    const cleaned = txId.trim();
+                    if (!this.usedIds.includes(cleaned)) {
+                        this.usedIds.push(cleaned);
+                        this.saveUsedIds();
+                    }
+                }
+            }
+        };
+
+        // Transfer Code Manager
+        const TransferCodeManager = {
+            usedCodes: [],
+            pattern: /^[0-9]{6}$|^[0-9]{8}$|^[0-9]{10}$|^[0-9]{12}$|^[0-9]{14}$/,
+            loadUsedCodes: function() {
+                try {
+                    const stored = JSON.parse(localStorage.getItem('afripay_transfer_codes') || '[]');
+                    this.usedCodes = stored;
+                    authState.usedTransferCodes = [...stored];
+                } catch (e) { this.usedCodes = [];
+                    authState.usedTransferCodes = []; }
             },
-            generate: function() {
-                const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-                const digits = '0123456789';
-                let id = '';
-                id += letters.charAt(Math.floor(Math.random() * 26));
-                id += letters.charAt(Math.floor(Math.random() * 26));
-                for (let i = 0; i < 6; i++) id += digits.charAt(Math.floor(Math.random() * 10));
-                id += '.';
-                for (let i = 0; i < 4; i++) id += digits.charAt(Math.floor(Math.random() * 10));
-                id += '.';
-                id += letters.charAt(Math.floor(Math.random() * 26));
-                for (let i = 0; i < 5; i++) id += digits.charAt(Math.floor(Math.random() * 10));
-                return id;
+            saveUsedCodes: function() {
+                try {
+                    localStorage.setItem('afripay_transfer_codes', JSON.stringify(this.usedCodes));
+                    authState.usedTransferCodes = [...this.usedCodes];
+                } catch (e) {}
             },
-            generateUnique: function() {
-                let attempts = 0;
-                let id;
-                do {
-                    id = this.generate();
-                    attempts++;
-                } while (this.usedIds.includes(id) && attempts < 50);
-                return id;
+            isValidFormat: function(code) {
+                if (!code) return false;
+                return this.pattern.test(code);
+            },
+            isUnique: function(code) {
+                return !this.usedCodes.includes(code);
+            },
+            validate: function(code) {
+                if (!code || code.trim() === '') return { valid: false, error: 'Transfer Code required.' };
+                const cleaned = code.trim();
+                if (!this.isValidFormat(cleaned)) return { valid: false,
+                error: 'Must be 6, 8, 10, 12, or 14 digits.' };
+                if (!this.isUnique(cleaned)) return { valid: false, error: 'Transfer Code already used.' };
+                return { valid: true, error: null };
+            },
+            markAsUsed: function(code) {
+                if (code && code.trim()) {
+                    const cleaned = code.trim();
+                    if (!this.usedCodes.includes(cleaned)) {
+                        this.usedCodes.push(cleaned);
+                        this.saveUsedCodes();
+                    }
+                }
             }
         };
 
@@ -6655,6 +6866,7 @@
             });
         }
 
+        // ===== UPDATED showGoodsModal with auto-fill =====
         function showGoodsModal(businessId) {
             const allBiz = getAllBusinesses();
             const biz = allBiz.find(b => b.id === businessId);
@@ -6676,26 +6888,58 @@
             }
             getEl('goodsModal').style.display = 'flex';
             document.querySelectorAll('.goods-item').forEach(item => {
+                // Click handler for desktop
                 item.addEventListener('click', () => {
                     const price = parseFloat(item.getAttribute('data-price'));
                     const goodsName = item.getAttribute('data-name');
                     const agentName = getEl('agentName');
                     const agentPhone = getEl('agentPhone');
                     const amountInput = getEl('amountInput');
-                    if (agentName) agentName.value =
-                        `${SecurityUtils.escapeHTML(biz.name)} – ${SecurityUtils.escapeHTML(goodsName)}`;
-                    if (agentPhone) agentPhone.value = SecurityUtils.escapeHTML(biz.contact || '');
+
+                    // Fill Agent name with business name (no product name)
+                    if (agentName) agentName.value = SecurityUtils.escapeHTML(biz.name);
+                    // Fill Agent phone with mobile money number (fallback to contact)
+                    if (agentPhone) agentPhone.value = SecurityUtils.escapeHTML(biz.mobileMoney || biz.contact || '');
+
+                    // Update dropdown display to show business name with its icon
+                    const selectedAgentName = getEl('selectedAgentName');
+                    if (selectedAgentName) {
+                        selectedAgentName.innerHTML = '';
+                        const iconSpan = document.createElement('span');
+                        iconSpan.className = 'agent-flag';
+                        iconSpan.textContent = biz.icon || '🏪';
+                        selectedAgentName.appendChild(iconSpan);
+                        const nameSpan = document.createElement('span');
+                        nameSpan.className = 'agent-name-text';
+                        nameSpan.textContent = SecurityUtils.escapeHTML(biz.name);
+                        selectedAgentName.appendChild(nameSpan);
+                        const initialsSpan = document.createElement('span');
+                        initialsSpan.className = 'agent-initials-inline';
+                        initialsSpan.textContent = biz.name.substring(0, 2).toUpperCase() || 'BIZ';
+                        selectedAgentName.appendChild(initialsSpan);
+                        selectedAgentName.dataset.agentId = 'custom_' + biz.id;
+                    }
+
+                    // Apply collateral limit if an agent is selected
                     const maxLimit = parseFloat(amountInput?.max);
                     let finalPrice = price;
-                    if (maxLimit > 0 && price > maxLimit) { finalPrice = maxLimit;
-                        showToast(`⚠️ Capped at limit: ${maxLimit}`, 2500); }
-                    if (amountInput) { amountInput.value = finalPrice;
-                        amountInput.dispatchEvent(new Event('input')); }
-                    showToast(
-                        `💰 ${SecurityUtils.escapeHTML(goodsName)} added: ${finalPrice.toFixed(2)} ${isLocalMode ? 'Local' : currentCountryData.currency}`
-                        );
+                    if (maxLimit > 0 && price > maxLimit) {
+                        finalPrice = maxLimit;
+                        showToast(`⚠️ Capped at agent limit: ${maxLimit}`, 2500);
+                    }
+                    if (amountInput) {
+                        amountInput.value = finalPrice;
+                        amountInput.dispatchEvent(new Event('input'));
+                    }
+
+                    // Clear any selected agent ID to avoid conflicts
+                    selectedAgentId = null;
+                    _selectedAgentId = null;
+
+                    showToast(`💰 ${SecurityUtils.escapeHTML(goodsName)} added from ${SecurityUtils.escapeHTML(biz.name)}`, 2000);
                     getEl('goodsModal').style.display = 'none';
                 });
+                // Touch handler for mobile
                 item.addEventListener('touchstart', function(e) {
                     e.preventDefault();
                     const price = parseFloat(this.getAttribute('data-price'));
@@ -6703,18 +6947,41 @@
                     const agentName = getEl('agentName');
                     const agentPhone = getEl('agentPhone');
                     const amountInput = getEl('amountInput');
-                    if (agentName) agentName.value =
-                        `${SecurityUtils.escapeHTML(biz.name)} – ${SecurityUtils.escapeHTML(goodsName)}`;
-                    if (agentPhone) agentPhone.value = SecurityUtils.escapeHTML(biz.contact || '');
+
+                    if (agentName) agentName.value = SecurityUtils.escapeHTML(biz.name);
+                    if (agentPhone) agentPhone.value = SecurityUtils.escapeHTML(biz.mobileMoney || biz.contact || '');
+
+                    const selectedAgentName = getEl('selectedAgentName');
+                    if (selectedAgentName) {
+                        selectedAgentName.innerHTML = '';
+                        const iconSpan = document.createElement('span');
+                        iconSpan.className = 'agent-flag';
+                        iconSpan.textContent = biz.icon || '🏪';
+                        selectedAgentName.appendChild(iconSpan);
+                        const nameSpan = document.createElement('span');
+                        nameSpan.className = 'agent-name-text';
+                        nameSpan.textContent = SecurityUtils.escapeHTML(biz.name);
+                        selectedAgentName.appendChild(nameSpan);
+                        const initialsSpan = document.createElement('span');
+                        initialsSpan.className = 'agent-initials-inline';
+                        initialsSpan.textContent = biz.name.substring(0, 2).toUpperCase() || 'BIZ';
+                        selectedAgentName.appendChild(initialsSpan);
+                        selectedAgentName.dataset.agentId = 'custom_' + biz.id;
+                    }
+
                     const maxLimit = parseFloat(amountInput?.max);
                     let finalPrice = price;
-                    if (maxLimit > 0 && price > maxLimit) { finalPrice = maxLimit;
-                        showToast(`⚠️ Capped at limit: ${maxLimit}`, 2500); }
-                    if (amountInput) { amountInput.value = finalPrice;
-                        amountInput.dispatchEvent(new Event('input')); }
-                    showToast(
-                        `💰 ${SecurityUtils.escapeHTML(goodsName)} added: ${finalPrice.toFixed(2)} ${isLocalMode ? 'Local' : currentCountryData.currency}`
-                        );
+                    if (maxLimit > 0 && price > maxLimit) {
+                        finalPrice = maxLimit;
+                        showToast(`⚠️ Capped at agent limit: ${maxLimit}`, 2500);
+                    }
+                    if (amountInput) {
+                        amountInput.value = finalPrice;
+                        amountInput.dispatchEvent(new Event('input'));
+                    }
+                    selectedAgentId = null;
+                    _selectedAgentId = null;
+                    showToast(`💰 ${SecurityUtils.escapeHTML(goodsName)} added from ${SecurityUtils.escapeHTML(biz.name)}`, 2000);
                     getEl('goodsModal').style.display = 'none';
                 }, { passive: true });
             });
@@ -8632,7 +8899,140 @@
         }
 
         // ================================================================
-        // ADD BUSINESS MODAL FUNCTIONS - Enhanced with products and delivery
+        // AUTHENTICATOR FUNCTIONS
+        // ================================================================
+        let authProviderTxId = '';
+        let authTransferCode = '';
+        let isAuthenticated = false;
+        let usedProviderTxIds = [];
+        let usedTransferCodes = [];
+
+        function validateAuthFields() {
+            const providerTxId = getEl('authProviderTxId')?.value?.trim() || '';
+            const transferCode = getEl('authTransferCode')?.value?.trim() || '';
+            const providerError = getEl('authProviderError');
+            const transferError = getEl('authTransferError');
+            const successMsg = getEl('authSuccessMsg');
+            const statusBadge = getEl('authStatusBadge');
+
+            let providerValid = false;
+            let transferValid = false;
+
+            // Validate Provider TX ID
+            if (providerTxId) {
+                const validation = ProviderTxIdManager.validate(providerTxId);
+                if (validation.valid) {
+                    providerValid = true;
+                    if (providerError) providerError.style.display = 'none';
+                    getEl('authProviderTxId').className = 'valid';
+                } else {
+                    if (providerError) {
+                        providerError.textContent = validation.error;
+                        providerError.style.display = 'block';
+                    }
+                    getEl('authProviderTxId').className = 'invalid';
+                }
+            } else {
+                if (providerError) providerError.style.display = 'none';
+                getEl('authProviderTxId').className = '';
+            }
+
+            // Validate Transfer Code
+            if (transferCode) {
+                const validation = TransferCodeManager.validate(transferCode);
+                if (validation.valid) {
+                    transferValid = true;
+                    if (transferError) transferError.style.display = 'none';
+                    getEl('authTransferCode').className = 'valid';
+                } else {
+                    if (transferError) {
+                        transferError.textContent = validation.error;
+                        transferError.style.display = 'block';
+                    }
+                    getEl('authTransferCode').className = 'invalid';
+                }
+            } else {
+                if (transferError) transferError.style.display = 'none';
+                getEl('authTransferCode').className = '';
+            }
+
+            // Update status
+            if (providerValid && transferValid) {
+                authProviderTxId = providerTxId;
+                authTransferCode = transferCode;
+                isAuthenticated = true;
+                if (statusBadge) {
+                    statusBadge.textContent = 'Verified ✅';
+                    statusBadge.className = 'auth-status verified';
+                }
+                if (successMsg) successMsg.style.display = 'block';
+                getEl('authenticateBtn').disabled = true;
+                getEl('authenticateBtn').textContent = '✅ Verified';
+                getEl('saveBizBtn').disabled = false;
+                return true;
+            } else {
+                isAuthenticated = false;
+                if (statusBadge) {
+                    statusBadge.textContent = 'Pending';
+                    statusBadge.className = 'auth-status pending';
+                }
+                if (successMsg) successMsg.style.display = 'none';
+                getEl('authenticateBtn').disabled = false;
+                getEl('authenticateBtn').textContent = '🔑 Authenticate';
+                getEl('saveBizBtn').disabled = true;
+                return false;
+            }
+        }
+
+        function authenticateFields() {
+            const providerTxId = getEl('authProviderTxId')?.value?.trim() || '';
+            const transferCode = getEl('authTransferCode')?.value?.trim() || '';
+
+            if (!providerTxId || !transferCode) {
+                showToast('⚠️ Please fill both Provider TX ID and Transfer Code.', 2500);
+                return;
+            }
+
+            const providerValidation = ProviderTxIdManager.validate(providerTxId);
+            if (!providerValidation.valid) {
+                showToast('❌ ' + providerValidation.error, 3000);
+                return;
+            }
+
+            const transferValidation = TransferCodeManager.validate(transferCode);
+            if (!transferValidation.valid) {
+                showToast('❌ ' + transferValidation.error, 3000);
+                return;
+            }
+
+            // Mark as used
+            ProviderTxIdManager.markAsUsed(providerTxId);
+            TransferCodeManager.markAsUsed(transferCode);
+
+            authProviderTxId = providerTxId;
+            authTransferCode = transferCode;
+            isAuthenticated = true;
+
+            const statusBadge = getEl('authStatusBadge');
+            if (statusBadge) {
+                statusBadge.textContent = 'Verified ✅';
+                statusBadge.className = 'auth-status verified';
+            }
+            const successMsg = getEl('authSuccessMsg');
+            if (successMsg) successMsg.style.display = 'block';
+            getEl('authenticateBtn').disabled = true;
+            getEl('authenticateBtn').textContent = '✅ Verified';
+            getEl('saveBizBtn').disabled = false;
+
+            showToast('✅ Authentication verified!', 2000);
+        }
+
+        function checkAuthOnInput() {
+            validateAuthFields();
+        }
+
+        // ================================================================
+        // ADD BUSINESS MODAL FUNCTIONS - Enhanced with products, delivery, and authenticator
         // ================================================================
         function openAddBizModal() {
             getEl('bizName').value = '';
@@ -8657,6 +9057,25 @@
             // Clear products container
             getEl('productsContainer').innerHTML = '';
             productCounter = 0;
+            // Reset authenticator
+            getEl('authProviderTxId').value = '';
+            getEl('authTransferCode').value = '';
+            getEl('authProviderTxId').className = '';
+            getEl('authTransferCode').className = '';
+            getEl('authProviderError').style.display = 'none';
+            getEl('authTransferError').style.display = 'none';
+            getEl('authSuccessMsg').style.display = 'none';
+            const statusBadge = getEl('authStatusBadge');
+            if (statusBadge) {
+                statusBadge.textContent = 'Pending';
+                statusBadge.className = 'auth-status pending';
+            }
+            getEl('authenticateBtn').disabled = false;
+            getEl('authenticateBtn').textContent = '🔑 Authenticate';
+            getEl('saveBizBtn').disabled = true;
+            authProviderTxId = '';
+            authTransferCode = '';
+            isAuthenticated = false;
             getEl('addBizModal').style.display = 'flex';
         }
 
@@ -8718,6 +9137,23 @@
                     preview.textContent = this.value.trim() || '📱';
                 });
             }
+
+            // Add image upload listener that triggers authentication
+            const imageInput = entry.querySelector('.product-image');
+            if (imageInput) {
+                imageInput.addEventListener('change', function() {
+                    if (this.files && this.files.length > 0) {
+                        // Auto-generate authenticator fields
+                        const providerTxId = ProviderTxIdManager.generateUnique();
+                        const transferCode = String(Math.floor(100000 + Math.random() * 900000));
+                        getEl('authProviderTxId').value = providerTxId;
+                        getEl('authTransferCode').value = transferCode;
+                        // Validate automatically
+                        validateAuthFields();
+                        showToast('📸 Image uploaded - authenticator auto-generated!', 2500);
+                    }
+                });
+            }
         }
 
         function removeProductEntry(productId) {
@@ -8762,6 +9198,12 @@
         }
 
         function saveCustomBusiness() {
+            // Check authentication
+            if (!isAuthenticated) {
+                showToast('⚠️ Please authenticate first.', 2500);
+                return;
+            }
+
             const name = SecurityUtils.sanitizeInput(getEl('bizName').value.trim(), 100);
             const contact = SecurityUtils.sanitizePhone(getEl('bizContact').value.trim());
             const mobileMoney = SecurityUtils.sanitizePhone(getEl('bizMobileMoney').value.trim());
@@ -8841,7 +9283,10 @@
                     country: deliveryCountry,
                     priceCountry: deliveryPriceCountry
                 },
-                isCustom: true
+                isCustom: true,
+                providerTxId: authProviderTxId,
+                transferCode: authTransferCode,
+                authenticated: true
             };
 
             customBusinesses.push(newBiz);
@@ -8859,11 +9304,12 @@
         // MAIN INIT
         // ================================================================
         function initApp() {
-            console.log('🚀 AfriPay initializing with enhanced Add Biz feature (products & delivery, MB-FOUR)...');
+            console.log('🚀 AfriPay initializing with enhanced Add Biz feature (products, delivery, authenticator)...');
 
             function safeExecute(fn, label) { try { fn(); } catch (e) { console.error(`❌ Error in ${label}:`, e); } }
 
             safeExecute(() => ProviderTxIdManager.loadUsedIds(), 'ProviderTxIdManager.loadUsedIds');
+            safeExecute(() => TransferCodeManager.loadUsedCodes(), 'TransferCodeManager.loadUsedCodes');
             safeExecute(() => loadLanguagePreference(), 'loadLanguagePreference');
             safeExecute(() => loadRegisteredUsers(), 'loadRegisteredUsers');
             safeExecute(() => syncConnectedUsersFromRegistered(), 'syncConnectedUsersFromRegistered');
@@ -12512,7 +12958,7 @@
             }
 
             // ============================================================
-            // ADD BUSINESS MODAL EVENTS - Enhanced with products and delivery
+            // ADD BUSINESS MODAL EVENTS - Enhanced with products, delivery, and authenticator
             // ============================================================
             const addBizBtn = getEl('addBizBtn');
             if (addBizBtn) {
@@ -12560,6 +13006,27 @@
                     addProductEntry();
                 }, { passive: true });
             }
+
+            // Authenticator events
+            const authProviderInput = getEl('authProviderTxId');
+            const authTransferInput = getEl('authTransferCode');
+            const authBtn = getEl('authenticateBtn');
+
+            if (authProviderInput) {
+                authProviderInput.addEventListener('input', checkAuthOnInput);
+                authProviderInput.addEventListener('change', checkAuthOnInput);
+            }
+            if (authTransferInput) {
+                authTransferInput.addEventListener('input', checkAuthOnInput);
+                authTransferInput.addEventListener('change', checkAuthOnInput);
+            }
+            if (authBtn) {
+                authBtn.addEventListener('click', authenticateFields);
+                authBtn.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    authenticateFields();
+                }, { passive: true });
+            }
         }
 
         // ================================================================
@@ -12585,7 +13052,7 @@
         }
 
         bootstrap();
-        console.log('🚀 AfriPay fully bootstrapped — Enhanced Add Biz with products, delivery, and MB-FOUR button.');
+        console.log('🚀 AfriPay fully bootstrapped — Enhanced Add Biz with authenticator, products, and delivery.');
     </script>
 </body>
 </html>
