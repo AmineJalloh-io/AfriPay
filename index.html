@@ -2762,14 +2762,14 @@
         }
         .goods-item {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 4px 5px;
+            flex-direction: column;
+            padding: 6px 8px;
             border-bottom: 1px solid #eee;
             cursor: pointer;
             transition: background 0.2s;
             font-size: 0.8rem !important;
             touch-action: manipulation;
+            gap: 4px;
         }
         .goods-item:hover {
             background: #fef9f0;
@@ -2778,14 +2778,62 @@
             background: #f0e8d0;
             transform: scale(0.98);
         }
-        .goods-name {
+        .goods-item .goods-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+        .goods-item .goods-name {
             font-weight: 600;
             font-size: 0.8rem !important;
         }
-        .goods-price {
+        .goods-item .goods-price {
             color: #f4a261;
             font-weight: 700;
             font-size: 0.8rem !important;
+        }
+        .goods-item .goods-details {
+            display: flex;
+            gap: 12px;
+            font-size: 0.7rem;
+            color: #555;
+            flex-wrap: wrap;
+            padding-left: 4px;
+        }
+        .goods-item .goods-details span {
+            background: #f0f4f8;
+            padding: 1px 8px;
+            border-radius: 12px;
+        }
+        .goods-item .goods-details .goods-qty {
+            background: #e8f0f8;
+            color: #1c6e8f;
+        }
+        .goods-item .goods-details .goods-quality {
+            background: #f0f8f0;
+            color: #27ae60;
+        }
+        .goods-select-btn {
+            background: #2c7da0;
+            color: white;
+            border: none;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            height: 26px;
+            touch-action: manipulation;
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+        .goods-select-btn:hover {
+            background: #1f5068;
+        }
+        .goods-select-btn:active {
+            transform: scale(0.95);
         }
         #agentLocationModal .modal-content {
             max-width: 420px;
@@ -5798,7 +5846,6 @@
         let currentCountryData = { gstRate: 10, currency: 'LRD', flag: '🇱🇷', countryName: 'Liberia' };
         let pendingDeleteUserId = null;
         let currentAgentFilterCountry = null;
-        // Track if we're in business mode (showing plain field instead of dropdown)
         let isBusinessMode = false;
 
         // Pending approvals storage
@@ -5818,6 +5865,9 @@
             usedProviderTxIds: [],
             usedTransferCodes: []
         };
+
+        // ===== GLOBAL: Selected product details for receipt =====
+        let _selectedProductDetails = null;
 
         // ================================================================
         // COUNTRY MAPPING
@@ -5884,35 +5934,59 @@
         const businesses = [
             { id: 1, name: "Mama's Kitchen", contact: "+232-76-123-456", type: "Restaurant", icon: "🍽️",
                 website: "https://www.mamaskitchen.sl",
-                goods: [{ name: "Jollof Rice + Chicken", price: 25 }, { name: "Fried Rice + Fish", price: 20 },
-                { name: "Beef Kebab (5pcs)", price: 12 }] },
+                goods: [{ name: "Jollof Rice + Chicken", price: 25, quantity: 10, quality: "Fresh" },
+                    { name: "Fried Rice + Fish", price: 20, quantity: 8, quality: "Fresh" },
+                    { name: "Beef Kebab (5pcs)", price: 12, quantity: 15, quality: "Premium" }
+                ] },
             { id: 2, name: "Freetown Computer Hub", contact: "+232-80-234-567", type: "Electronics", icon: "💻",
                 website: "https://www.freetowncomputers.com",
-                goods: [{ name: "Laptop Repair", price: 50 }, { name: "Phone Screen Replacement", price: 35 },
-                { name: "USB Flash Drive 64GB", price: 15 }] },
+                goods: [{ name: "Laptop Repair", price: 50, quantity: 20, quality: "Brand new" },
+                    { name: "Phone Screen Replacement", price: 35, quantity: 12, quality: "Premium" },
+                    { name: "USB Flash Drive 64GB", price: 15, quantity: 50, quality: "Brand new" }
+                ] },
             { id: 3, name: "Excellence School", contact: "+232-73-345-678", type: "Education", icon: "📚",
                 website: "https://www.excellenceschool.edu",
-                goods: [{ name: "Tuition Fee (Monthly)", price: 120 }, { name: "School Uniform Set", price: 45 },
-                { name: "Textbook Bundle", price: 60 }] },
+                goods: [{ name: "Tuition Fee (Monthly)", price: 120, quantity: 30, quality: "Standard" },
+                    { name: "School Uniform Set", price: 45, quantity: 25, quality: "Brand new" },
+                    { name: "Textbook Bundle", price: 60, quantity: 15, quality: "New" }
+                ] },
             { id: 4, name: "Dr. Kamara Clinic", contact: "+232-76-456-789", type: "Healthcare", icon: "🏥",
                 website: "https://www.drkamaraclinic.com",
-                goods: [{ name: "Consultation", price: 30 }, { name: "Malaria Test", price: 10 },
-                { name: "Blood Pressure Check", price: 8 }] },
+                goods: [{ name: "Consultation", price: 30, quantity: 50, quality: "Premium" },
+                    { name: "Malaria Test", price: 10, quantity: 100, quality: "Standard" },
+                    { name: "Blood Pressure Check", price: 8, quantity: 80, quality: "Standard" }
+                ] },
             { id: 5, name: "John's Hardware", contact: "+232-80-567-890", type: "Hardware", icon: "🔨",
                 website: "https://www.johnshardware.sl",
-                goods: [{ name: "Cement (50kg)", price: 8 }, { name: "Paint (Gallon)", price: 22 },
-                { name: "Drill Machine", price: 75 }] },
+                goods: [{ name: "Cement (50kg)", price: 8, quantity: 200, quality: "Brand new" },
+                    { name: "Paint (Gallon)", price: 22, quantity: 40, quality: "Brand new" },
+                    { name: "Drill Machine", price: 75, quantity: 10, quality: "New" }
+                ] },
             { id: 6, name: "Salone Fashion", contact: "+232-73-678-901", type: "Fashion", icon: "👗",
                 website: "https://www.salonefashion.com",
-                goods: [{ name: "African Print Dress", price: 45 }, { name: "Men's Shirt", price: 30 },
-                { name: "Custom Tailoring", price: 60 }] },
+                goods: [{ name: "African Print Dress", price: 45, quantity: 20, quality: "Premium" },
+                    { name: "Men's Shirt", price: 30, quantity: 25, quality: "Brand new" },
+                    { name: "Custom Tailoring", price: 60, quantity: 15, quality: "Premium" }
+                ] },
             { id: 7, name: "James Williams", contact: "+232-76-012-345", type: "Individual", icon: "👤",
                 website: "https://www.jameswilliams.com",
-                goods: [{ name: "Freelance Web Design", price: 150 }, { name: "Graphic Design", price: 80 }] },
+                goods: [{ name: "Freelance Web Design", price: 150, quantity: 5, quality: "Premium" },
+                    { name: "Graphic Design", price: 80, quantity: 8, quality: "Premium" }
+                ] },
             { id: 8, name: "Mary Koroma", contact: "+232-80-123-456", type: "Individual", icon: "👩",
                 website: "https://www.marykoroma.com",
-                goods: [{ name: "Handmade Crafts", price: 25 }, { name: "Catering Service", price: 100 }] }
+                goods: [{ name: "Handmade Crafts", price: 25, quantity: 30, quality: "Brand new" },
+                    { name: "Catering Service", price: 100, quantity: 10, quality: "Premium" }
+                ] }
         ];
+
+        // Update businesses with quantity and quality defaults
+        businesses.forEach(biz => {
+            biz.goods.forEach(g => {
+                if (!g.quantity) g.quantity = 1;
+                if (!g.quality) g.quality = "Brand new";
+            });
+        });
 
         const EXCHANGE_RATES = {
             'USD': 1,
@@ -6299,7 +6373,6 @@
         function updateAgentDropdownPlaceholder() {
             const btn = getEl('selectedAgentName');
             if (!btn) return;
-            // Don't override if in business mode
             if (isBusinessMode) return;
             if (currentAgentFilterCountry && !selectedAgentId) {
                 const flag = getFlagForCountryName(currentAgentFilterCountry);
@@ -6342,7 +6415,6 @@
         function renderAgentDropdown(filterCountryName) {
             const list = getEl('agentDropdownList');
             if (!list) return;
-            // If in business mode, hide dropdown
             if (isBusinessMode) {
                 list.innerHTML = '';
                 list.classList.remove('open');
@@ -6564,7 +6636,6 @@
         function populateAgentSelect(filterCountryName) {
             const select = getEl('agentNameSelect');
             if (!select) return;
-            // If in business mode, hide the select
             if (isBusinessMode) {
                 select.style.display = 'none';
                 return;
@@ -6630,8 +6701,8 @@
             if (locBtn) locBtn.disabled = true;
             const select = getEl('agentNameSelect');
             if (select) select.value = '';
-            // Reset business mode
             exitBusinessMode();
+            _selectedProductDetails = null;
         }
 
         function exitBusinessMode() {
@@ -6641,7 +6712,6 @@
             const bizDisplay = document.getElementById('bizDisplayField');
             if (select) {
                 select.style.display = 'block';
-                // Ensure it's visible and available
             }
             if (bizDisplay) {
                 bizDisplay.style.display = 'none';
@@ -6650,12 +6720,10 @@
                 label.textContent = 'Agent *';
                 label.dataset.i18n = 'agent';
             }
-            // Re-populate the select
             populateAgentSelect(currentAgentFilterCountry);
         }
 
         function selectAgent(agentId) {
-            // Exit business mode if active
             if (isBusinessMode) exitBusinessMode();
 
             const agents = getAgents();
@@ -6952,15 +7020,36 @@
             });
         }
 
-        // ===== UPDATED showGoodsModal with auto-fill and business mode =====
+        // ===== UPDATED showGoodsModal with full product details (name, quantity, amount, quality) =====
         function showGoodsModal(businessId) {
             const allBiz = getAllBusinesses();
             const biz = allBiz.find(b => b.id === businessId);
             if (!biz) return;
-            const goodsHtml = biz.goods && biz.goods.length > 0 ? biz.goods.map(g =>
-                `<div class="goods-item" data-price="${g.price}" data-name="${SecurityUtils.escapeHTML(g.name)}"><span class="goods-name">${SecurityUtils.escapeHTML(g.name)}</span><span class="goods-price">${g.price.toFixed(2)} ${isLocalMode ? 'Local' : currentCountryData.currency}</span></div>`
-                ).join('') :
-                `<div style="text-align:center; padding:12px; color:#95a5a6;">No items added yet.</div>`;
+
+            // Build goods HTML with name, price, quantity, quality
+            let goodsHtml = '';
+            if (biz.goods && biz.goods.length > 0) {
+                goodsHtml = biz.goods.map((g, idx) => {
+                    const qty = g.quantity || 1;
+                    const quality = g.quality || 'Brand new';
+                    return `
+                        <div class="goods-item" data-price="${g.price}" data-name="${SecurityUtils.escapeHTML(g.name)}" data-quantity="${qty}" data-quality="${SecurityUtils.escapeHTML(quality)}" data-index="${idx}">
+                            <div class="goods-row">
+                                <span class="goods-name">${SecurityUtils.escapeHTML(g.name)}</span>
+                                <span class="goods-price">${g.price.toFixed(2)} ${isLocalMode ? 'Local' : currentCountryData.currency}</span>
+                                <button class="goods-select-btn" data-price="${g.price}" data-name="${SecurityUtils.escapeHTML(g.name)}" data-quantity="${qty}" data-quality="${SecurityUtils.escapeHTML(quality)}">Select</button>
+                            </div>
+                            <div class="goods-details">
+                                <span class="goods-qty">📦 Qty: ${qty}</span>
+                                <span class="goods-quality">⭐ ${quality}</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                goodsHtml = `<div style="text-align:center; padding:12px; color:#95a5a6;">No items added yet.</div>`;
+            }
+
             const goodsModalTitle = getEl('goodsModalTitle');
             const goodsList = getEl('goodsList');
             const businessWebsiteLink = getEl('businessWebsiteLink');
@@ -6973,29 +7062,44 @@
                 businessWebsiteLink.style.display = biz.website ? 'block' : 'none';
             }
             getEl('goodsModal').style.display = 'flex';
+
+            // Attach event listeners to each goods item and its select button
             document.querySelectorAll('.goods-item').forEach(item => {
-                // Click handler for desktop
-                item.addEventListener('click', () => {
-                    const price = parseFloat(item.getAttribute('data-price'));
-                    const goodsName = item.getAttribute('data-name');
+                const selectBtn = item.querySelector('.goods-select-btn');
+                const clickHandler = function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const price = parseFloat(this.getAttribute('data-price') || this.dataset.price || 0);
+                    const goodsName = this.getAttribute('data-name') || this.dataset.name || 'Product';
+                    const quantity = parseInt(this.getAttribute('data-quantity') || this.dataset.quantity || 1);
+                    const quality = this.getAttribute('data-quality') || this.dataset.quality || 'Brand new';
+
                     const agentName = getEl('agentName');
                     const agentPhone = getEl('agentPhone');
                     const amountInput = getEl('amountInput');
 
-                    // Fill Agent name with business name (no product name)
+                    // Fill Agent name with business name
                     if (agentName) agentName.value = SecurityUtils.escapeHTML(biz.name);
                     // Fill Agent phone with mobile money number (fallback to contact)
                     if (agentPhone) agentPhone.value = SecurityUtils.escapeHTML(biz.mobileMoney || biz.contact || '');
 
-                    // --- CONVERT DROPDOWN TO PLAIN FIELD ---
+                    // Store product details for receipt
+                    _selectedProductDetails = {
+                        name: goodsName,
+                        quantity: quantity,
+                        amount: price,
+                        quality: quality,
+                        businessName: biz.name,
+                        businessIcon: biz.icon || '🏪'
+                    };
+
+                    // --- Convert dropdown to plain field ---
                     const agentSelect = getEl('agentNameSelect');
                     const agentNameLabel = getEl('agentNameLabel');
                     if (agentSelect) {
-                        // Set business mode flag
                         isBusinessMode = true;
-                        // Hide the dropdown
                         agentSelect.style.display = 'none';
-                        // Create or show a plain text field showing the business name
                         let bizDisplay = document.getElementById('bizDisplayField');
                         if (!bizDisplay) {
                             bizDisplay = document.createElement('div');
@@ -7005,14 +7109,13 @@
                         }
                         bizDisplay.innerHTML = `${biz.icon || '🏪'} ${SecurityUtils.escapeHTML(biz.name)}`;
                         bizDisplay.style.display = 'flex';
-                        // Update the label to say "Business" instead of "Agent"
                         if (agentNameLabel) {
                             agentNameLabel.textContent = '🏢 Business';
                             agentNameLabel.dataset.i18n = 'business_label';
                         }
                     }
 
-                    // Update dropdown button to show business name with its icon
+                    // Update dropdown button
                     const selectedAgentName = getEl('selectedAgentName');
                     if (selectedAgentName) {
                         selectedAgentName.innerHTML = '';
@@ -7031,7 +7134,7 @@
                         selectedAgentName.dataset.agentId = 'custom_' + biz.id;
                     }
 
-                    // Apply collateral limit if an agent is selected
+                    // Apply collateral limit
                     const maxLimit = parseFloat(amountInput?.max);
                     let finalPrice = price;
                     if (maxLimit > 0 && price > maxLimit) {
@@ -7043,78 +7146,38 @@
                         amountInput.dispatchEvent(new Event('input'));
                     }
 
-                    // Clear any selected agent ID to avoid conflicts
+                    // Clear selected agent ID to avoid conflicts
                     selectedAgentId = null;
                     _selectedAgentId = null;
 
-                    showToast(`💰 ${SecurityUtils.escapeHTML(goodsName)} added from ${SecurityUtils.escapeHTML(biz.name)}`, 2000);
+                    showToast(`✅ ${goodsName} (${quality}) × ${quantity} – ${finalPrice.toFixed(2)}`, 2500);
                     getEl('goodsModal').style.display = 'none';
-                });
-                // Touch handler for mobile
+                };
+
+                // Remove previous listeners to avoid duplicates
+                item.removeEventListener('click', clickHandler);
+                item.removeEventListener('touchstart', clickHandler);
+                // Add new listeners
+                item.addEventListener('click', clickHandler);
                 item.addEventListener('touchstart', function(e) {
                     e.preventDefault();
-                    const price = parseFloat(this.getAttribute('data-price'));
-                    const goodsName = this.getAttribute('data-name');
-                    const agentName = getEl('agentName');
-                    const agentPhone = getEl('agentPhone');
-                    const amountInput = getEl('amountInput');
-
-                    if (agentName) agentName.value = SecurityUtils.escapeHTML(biz.name);
-                    if (agentPhone) agentPhone.value = SecurityUtils.escapeHTML(biz.mobileMoney || biz.contact || '');
-
-                    const agentSelect = getEl('agentNameSelect');
-                    const agentNameLabel = getEl('agentNameLabel');
-                    if (agentSelect) {
-                        isBusinessMode = true;
-                        agentSelect.style.display = 'none';
-                        let bizDisplay = document.getElementById('bizDisplayField');
-                        if (!bizDisplay) {
-                            bizDisplay = document.createElement('div');
-                            bizDisplay.id = 'bizDisplayField';
-                            bizDisplay.className = 'biz-display-field';
-                            agentSelect.parentNode.insertBefore(bizDisplay, agentSelect.nextSibling);
-                        }
-                        bizDisplay.innerHTML = `${biz.icon || '🏪'} ${SecurityUtils.escapeHTML(biz.name)}`;
-                        bizDisplay.style.display = 'flex';
-                        if (agentNameLabel) {
-                            agentNameLabel.textContent = '🏢 Business';
-                            agentNameLabel.dataset.i18n = 'business_label';
-                        }
-                    }
-
-                    const selectedAgentName = getEl('selectedAgentName');
-                    if (selectedAgentName) {
-                        selectedAgentName.innerHTML = '';
-                        const iconSpan = document.createElement('span');
-                        iconSpan.className = 'agent-flag';
-                        iconSpan.textContent = biz.icon || '🏪';
-                        selectedAgentName.appendChild(iconSpan);
-                        const nameSpan = document.createElement('span');
-                        nameSpan.className = 'agent-name-text';
-                        nameSpan.textContent = SecurityUtils.escapeHTML(biz.name);
-                        selectedAgentName.appendChild(nameSpan);
-                        const initialsSpan = document.createElement('span');
-                        initialsSpan.className = 'agent-initials-inline';
-                        initialsSpan.textContent = biz.name.substring(0, 2).toUpperCase() || 'BIZ';
-                        selectedAgentName.appendChild(initialsSpan);
-                        selectedAgentName.dataset.agentId = 'custom_' + biz.id;
-                    }
-
-                    const maxLimit = parseFloat(amountInput?.max);
-                    let finalPrice = price;
-                    if (maxLimit > 0 && price > maxLimit) {
-                        finalPrice = maxLimit;
-                        showToast(`⚠️ Capped at agent limit: ${maxLimit}`, 2500);
-                    }
-                    if (amountInput) {
-                        amountInput.value = finalPrice;
-                        amountInput.dispatchEvent(new Event('input'));
-                    }
-                    selectedAgentId = null;
-                    _selectedAgentId = null;
-                    showToast(`💰 ${SecurityUtils.escapeHTML(goodsName)} added from ${SecurityUtils.escapeHTML(biz.name)}`, 2000);
-                    getEl('goodsModal').style.display = 'none';
+                    clickHandler.call(this, e);
                 }, { passive: true });
+
+                // Also attach to select button if it exists
+                if (selectBtn) {
+                    selectBtn.removeEventListener('click', clickHandler);
+                    selectBtn.removeEventListener('touchstart', clickHandler);
+                    selectBtn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        clickHandler.call(item, e);
+                    });
+                    selectBtn.addEventListener('touchstart', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        clickHandler.call(item, e);
+                    }, { passive: true });
+                }
             });
         }
 
@@ -7350,9 +7413,7 @@
                 });
             });
 
-            // Render Pending Approvals
             renderPendingApprovals();
-
             renderUsersDashboard();
             renderTransactionsDashboard();
         }
@@ -7389,7 +7450,6 @@
             html += `</tbody></table></div>`;
             container.innerHTML = html;
 
-            // Attach event listeners
             container.querySelectorAll('.approve-pending-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const index = parseInt(this.dataset.index);
@@ -7407,8 +7467,6 @@
         function approveBusiness(index) {
             if (index < 0 || index >= pendingBusinesses.length) return;
             const approvedBiz = pendingBusinesses[index];
-
-            // Add to custom businesses
             const newBiz = {
                 id: Date.now() + Math.floor(Math.random() * 1000),
                 name: approvedBiz.name,
@@ -7421,8 +7479,10 @@
                 city: approvedBiz.city || '',
                 country: approvedBiz.country || 'Sierra Leone',
                 website: approvedBiz.website || '',
-                goods: approvedBiz.products ? approvedBiz.products.map(p => ({ name: p.name, price: p.price })) : [
-                { name: 'Service Fee', price: 10 }],
+                goods: approvedBiz.products ? approvedBiz.products.map(p => ({ name: p.name, price: p.price,
+                    quantity: p.quantity || 1, quality: p.quality || 'Brand new' })) : [
+                    { name: 'Service Fee', price: 10, quantity: 1, quality: 'Standard' }
+                ],
                 products: approvedBiz.products || [],
                 delivery: approvedBiz.delivery || { quantity: 0, costInternal: 0, country: '', priceCountry: 0 },
                 isCustom: true,
@@ -7430,15 +7490,10 @@
                 transferCode: approvedBiz.transferCode || '',
                 authenticated: true
             };
-
             customBusinesses.push(newBiz);
             saveCustomBusinesses();
-
-            // Remove from pending
             pendingBusinesses.splice(index, 1);
             savePendingBusinesses();
-
-            // Re-render
             renderDashboard();
             renderBusinessStrip();
             showToast(`✅ "${approvedBiz.name}" approved and added to Quick Pay!`, 3000);
@@ -7725,7 +7780,7 @@
         }
 
         // ================================================================
-        // RECEIPT – dual‑currency display
+        // RECEIPT – dual‑currency display with product details
         // ================================================================
         function showReceiptModal(receiptData) {
             const body = getEl('receiptBody');
@@ -7741,23 +7796,53 @@
                 { label: '👥 Client', value: SecurityUtils.escapeHTML(receiptData.client || 'N/A') },
                 { label: '🔐 Provider TX ID', value: SecurityUtils.escapeHTML(receiptData.providerTxId || 'N/A') },
                 { label: 'Transfer Code', value: SecurityUtils.escapeHTML(receiptData.transferCode || 'N/A') },
-                { label: t('sender_currency_label'), value: SecurityUtils.escapeHTML(receiptData.senderCurrency + ' ' + receiptData.senderAmount),
-                    recipient: false },
-                { label: t('recipient_currency_label'), value: SecurityUtils.escapeHTML(receiptData.recipientCurrency + ' ' + receiptData.recipientAmount),
-                    recipient: true },
-                { label: 'Base', value: SecurityUtils.escapeHTML(receiptData.currency + ' ' + receiptData.baseAmount) },
-                { label: 'Fee', value: SecurityUtils.escapeHTML(receiptData.currency + ' ' + receiptData.charge) },
-                { label: 'GST (' + receiptData.gstRate + '%)',
-                    value: SecurityUtils.escapeHTML(receiptData.currency + ' ' + receiptData.gst) },
-                { label: 'Total', value: SecurityUtils.escapeHTML(receiptData.currency + ' ' + receiptData.total),
-                    total: true }
             ];
+
+            // ===== ADD PRODUCT DETAILS IF AVAILABLE =====
+            if (_selectedProductDetails) {
+                const p = _selectedProductDetails;
+                lines.push({
+                    label: '📦 Product',
+                    value: `${p.businessIcon || '🏪'} ${SecurityUtils.escapeHTML(p.name)}`,
+                    highlight: true
+                });
+                lines.push({ label: '📦 Quantity', value: SecurityUtils.escapeHTML(String(p.quantity)), highlight: true });
+                lines.push({ label: '💰 Unit Price', value: SecurityUtils.escapeHTML(receiptData.currency + ' ' + p.amount.toFixed(2)),
+                    highlight: true });
+                lines.push({ label: '⭐ Quality', value: SecurityUtils.escapeHTML(p.quality), highlight: true });
+                const totalProductAmount = p.amount * p.quantity;
+                lines.push({
+                    label: '💵 Product Total',
+                    value: SecurityUtils.escapeHTML(receiptData.currency + ' ' + totalProductAmount.toFixed(2)),
+                    total: true,
+                    highlight: true
+                });
+            }
+
+            // Continue with standard receipt lines
+            lines.push({
+                label: t('sender_currency_label'),
+                value: SecurityUtils.escapeHTML(receiptData.senderCurrency + ' ' + receiptData.senderAmount),
+                recipient: false
+            });
+            lines.push({
+                label: t('recipient_currency_label'),
+                value: SecurityUtils.escapeHTML(receiptData.recipientCurrency + ' ' + receiptData.recipientAmount),
+                recipient: true
+            });
+            lines.push({ label: 'Base', value: SecurityUtils.escapeHTML(receiptData.currency + ' ' + receiptData.baseAmount) });
+            lines.push({ label: 'Fee', value: SecurityUtils.escapeHTML(receiptData.currency + ' ' + receiptData.charge) });
+            lines.push({ label: 'GST (' + receiptData.gstRate + '%)',
+                value: SecurityUtils.escapeHTML(receiptData.currency + ' ' + receiptData.gst) });
+            lines.push({ label: 'Total', value: SecurityUtils.escapeHTML(receiptData.currency + ' ' + receiptData.total),
+                total: true });
 
             let html = '';
             lines.forEach(line => {
                 let cls = 'receipt-row';
                 if (line.total) cls += ' total';
                 if (line.recipient) cls += ' recipient-row';
+                if (line.highlight) cls += ' recipient-row';
                 html += `<div class="${cls}"><span class="label">${line.label}</span><span class="value">${line.value}</span></div>`;
             });
             if (body) body.innerHTML = html;
@@ -7767,7 +7852,8 @@
             const agentPhone = getEl('agentPhone')?.value?.trim() || '';
             const agentName = getEl('agentName')?.value?.trim() || 'Agent';
             const transferCode = receiptData.transferCode || 'N/A';
-            const receiptText = [
+
+            let receiptLines = [
                 '🔹 AFRI·PAY RECEIPT 🔹', '─────────────────',
                 'TX ID ' + receiptData.txId,
                 'Date ' + receiptData.date,
@@ -7777,16 +7863,33 @@
                 '👥 Client: ' + (receiptData.client || 'N/A'),
                 '🔐 Provider TX ID: ' + (receiptData.providerTxId || 'N/A'),
                 '🔑 Transfer Code: ' + transferCode,
+            ];
+
+            // Add product details to plain text receipt
+            if (_selectedProductDetails) {
+                const p = _selectedProductDetails;
+                receiptLines.push('─────────────────');
+                receiptLines.push('📦 PRODUCT');
+                receiptLines.push('Name: ' + p.name);
+                receiptLines.push('Quantity: ' + p.quantity);
+                receiptLines.push('Unit Price: ' + receiptData.currency + ' ' + p.amount.toFixed(2));
+                receiptLines.push('Quality: ' + p.quality);
+                receiptLines.push('Product Total: ' + receiptData.currency + ' ' + (p.amount * p.quantity).toFixed(2));
+                receiptLines.push('─────────────────');
+            }
+
+            receiptLines.push(
                 t('sender_currency_label') + ': ' + receiptData.senderCurrency + ' ' + receiptData.senderAmount,
-                t('recipient_currency_label') + ': ' + receiptData.recipientCurrency + ' ' + receiptData
-                .recipientAmount,
+                t('recipient_currency_label') + ': ' + receiptData.recipientCurrency + ' ' + receiptData.recipientAmount,
                 'Base ' + receiptData.currency + ' ' + receiptData.baseAmount,
                 'Fee ' + receiptData.currency + ' ' + receiptData.charge,
                 'GST (' + receiptData.gstRate + '%) ' + receiptData.currency + ' ' + receiptData.gst,
                 'Total ' + receiptData.currency + ' ' + receiptData.total,
                 '─────────────────', '✨ Thank you for choosing AfriPay!',
                 '🔗 Powered by WeBine Financial'
-            ].join('\n');
+            );
+
+            const receiptText = receiptLines.join('\n');
             const encodedText = encodeURIComponent(receiptText);
 
             const clientWA = getEl('receiptShareClientWhatsApp');
@@ -7826,8 +7929,12 @@
         function addTransaction(receiptData) {
             try {
                 const txs = JSON.parse(localStorage.getItem(STORAGE_KEYS.transactions) || '[]');
-                const entry = { ...receiptData, timestamp: new Date().toISOString(),
-                    id: 'tx_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6) };
+                const entry = {
+                    ...receiptData,
+                    product: _selectedProductDetails ? { ..._selectedProductDetails } : null,
+                    timestamp: new Date().toISOString(),
+                    id: 'tx_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6)
+                };
                 txs.unshift(entry);
                 localStorage.setItem(STORAGE_KEYS.transactions, JSON.stringify(txs));
             } catch (e) {}
@@ -8793,10 +8900,7 @@
             if (!agent) { showToast('Agent not found', 2000); return; }
             const data = agent.agentData || agent;
 
-            // Set hidden ID
             getEl('editAgentId').value = agentId;
-
-            // Fill basic fields
             getEl('editBusinessName').value = SecurityUtils.escapeHTML(data.businessName || '');
             getEl('editAddress').value = SecurityUtils.escapeHTML(data.businessAddress || '');
             setCityValue('editCitySelect', 'editCityOther', data.city || '');
@@ -8807,40 +8911,32 @@
             getEl('editAgentError').textContent = '';
             getEl('editAgentSuccess').textContent = '';
 
-            // Provider section – hidden initially
             const providerSection = getEl('editProviderSection');
             if (providerSection) providerSection.classList.remove('show');
 
-            // Transfer code wrap – hidden initially
             const transferWrap = getEl('editTransferCodeWrap');
             if (transferWrap) transferWrap.classList.remove('show');
 
-            // Load existing Provider TX ID and Transfer Code (will show when section appears)
             const provTxId = getEl('editProviderTxId');
             if (provTxId) provTxId.value = data.providerTxId || '';
             const transferCodeInput = getEl('editTransferCode');
             if (transferCodeInput) transferCodeInput.value = data.transferCode || '';
 
-            // Determine if agent is from Sierra Leone
             const countryCode = data.countryCode || '';
             const isSierraLeone = countryCode === '+232';
 
-            // Collateral section - hidden until auth
             const collSection = getEl('editCollateralSection');
             if (collSection) collSection.classList.remove('open');
 
-            // USSD button – hidden until valid limit >0 selected
             const ussdBtn = getEl('editGenerateCollateralBtn');
             if (ussdBtn) ussdBtn.classList.remove('visible');
 
-            // Show current collateral value
             const collateralValueDisplay = getEl('editCollateralValueDisplay');
             if (collateralValueDisplay) {
                 const limit = data.collateralLimit || 0;
                 collateralValueDisplay.textContent = limit > 0 ? limit : '0';
             }
 
-            // Set collateral dropdown to current value (or 0)
             const collSelect = getEl('editCollateralLimit');
             if (collSelect) {
                 const currentLimit = data.collateralLimit || 0;
@@ -8853,11 +8949,10 @@
                     }
                 }
                 if (!found) {
-                    collSelect.selectedIndex = 0; // "000"
+                    collSelect.selectedIndex = 0;
                 }
             }
 
-            // ID preview
             const idPreview = getEl('editIdPreview');
             if (idPreview && data.idImageDataURL) {
                 idPreview.src = data.idImageDataURL;
@@ -8867,7 +8962,6 @@
                 idPreview.src = '';
             }
 
-            // Logo preview
             const logoContainer = getEl('editLogoPreviewContainer');
             const logoImg = logoContainer?.querySelector('img');
             if (logoContainer && data.logoDataURL) {
@@ -8878,7 +8972,6 @@
                 if (logoImg) logoImg.src = '';
             }
 
-            // Reset file inputs and error displays
             getEl('editLogoImage').value = '';
             getEl('editIdImage').value = '';
             getEl('editCollateralAmount').value = '0';
@@ -8891,10 +8984,8 @@
             if (hint) { hint.classList.add('hidden');
                 hint.className = 'edit-agent-auth-hint hidden'; }
 
-            // Show modal
             getEl('editAgentModal').style.display = 'flex';
 
-            // --- FIXED Auth check ---
             const pwInput = getEl('editPassword');
             const pinInput = getEl('editPin');
             const checkAuth = function() {
@@ -8904,9 +8995,7 @@
                 const storedPin = data.pin || '';
                 const isValid = pw === storedPw && pin === storedPin;
 
-                // Only update UI based on the validation state
                 if (isValid) {
-                    // Show all sections
                     if (collSection) collSection.classList.add('open');
                     const idSection = getEl('editIdSection');
                     if (idSection) idSection.classList.add('open');
@@ -8915,7 +9004,6 @@
                     if (hint) { hint.classList.remove('hidden');
                         hint.className = 'edit-agent-auth-hint';
                         hint.textContent = t('edit_auth_hint'); }
-                    // Show USSD if limit >0
                     const collSel = getEl('editCollateralLimit');
                     const usdBtn = getEl('editGenerateCollateralBtn');
                     if (collSel && parseInt(collSel.value) > 0 && usdBtn) {
@@ -8924,7 +9012,6 @@
                         usdBtn.classList.remove('visible');
                     }
                 } else {
-                    // Hide all sections
                     if (collSection) collSection.classList.remove('open');
                     const idSection = getEl('editIdSection');
                     if (idSection) idSection.classList.remove('open');
@@ -8941,7 +9028,6 @@
                 }
             };
 
-            // Attach auth listeners
             if (pwInput) {
                 pwInput.removeEventListener('input', checkAuth);
                 pwInput.addEventListener('input', checkAuth);
@@ -8950,22 +9036,18 @@
                 pinInput.removeEventListener('input', checkAuth);
                 pinInput.addEventListener('input', checkAuth);
             }
-            // Run once to set initial state
             setTimeout(checkAuth, 50);
 
-            // --- Collateral change: show/hide USSD ---
             if (collSelect) {
                 collSelect.removeEventListener('change', handleCollateralChange);
                 collSelect.addEventListener('change', handleCollateralChange);
             }
 
-            // --- USSD button click ---
             if (ussdBtn) {
                 ussdBtn.removeEventListener('click', handleEditGenerateCollateral);
                 ussdBtn.addEventListener('click', handleEditGenerateCollateral);
             }
 
-            // --- Gen buttons (optional) ---
             const genBtn = getEl('editGenBtn');
             if (genBtn) {
                 genBtn.removeEventListener('click', handleEditGen);
@@ -8977,14 +9059,12 @@
                 pinGenBtn.addEventListener('click', handleEditPinGen);
             }
 
-            // --- ID upload preview ---
             const idFileInput = getEl('editIdImage');
             if (idFileInput) {
                 idFileInput.removeEventListener('change', handleIdUpload);
                 idFileInput.addEventListener('change', handleIdUpload);
             }
 
-            // --- Logo upload preview ---
             const logoFileInput = getEl('editLogoImage');
             if (logoFileInput) {
                 logoFileInput.removeEventListener('change', handleLogoUpload);
@@ -8994,12 +9074,10 @@
             updateEditModalTranslations();
         }
 
-        // --- Collateral change handler ---
         function handleCollateralChange() {
             const collSelect = getEl('editCollateralLimit');
             const ussdBtn = getEl('editGenerateCollateralBtn');
             const collSection = getEl('editCollateralSection');
-            // Show USSD only if auth is valid and limit > 0
             if (collSection && collSection.classList.contains('open') && collSelect && parseInt(collSelect.value) > 0) {
                 if (ussdBtn) ussdBtn.classList.add('visible');
             } else {
@@ -9007,7 +9085,6 @@
             }
         }
 
-        // --- USSD generation ---
         function handleEditGenerateCollateral() {
             const agentId = getEl('editAgentId').value;
             if (!agentId) { showToast('⚠️ No agent selected.', 2000); return; }
@@ -9045,24 +9122,18 @@
                 collateralValueDisplay.textContent = limit > 0 ? limit : '0';
             }
 
-            // Show provider section
             const providerSection = getEl('editProviderSection');
             if (providerSection) providerSection.classList.add('show');
 
-            // Show transfer code only if not Sierra Leone
             const countryCode = data.countryCode || '';
             const isSierraLeone = countryCode === '+232';
             const transferWrap = getEl('editTransferCodeWrap');
             if (!isSierraLeone) {
                 if (transferWrap) transferWrap.classList.add('show');
-                // Leave transfer code empty for agent to fill
             } else {
                 if (transferWrap) transferWrap.classList.remove('show');
             }
 
-            // Leave Provider TX ID empty for agent to fill
-
-            // Open dialer
             const link = document.createElement('a');
             link.href = `tel:${ussdCode}`;
             link.click();
@@ -9070,7 +9141,6 @@
             navigator.clipboard.writeText(ussdCode).then(() => { showToast('✅ USSD copied!', 1500); }).catch(() => {});
         }
 
-        // --- Gen password (optional) ---
         function handleEditGen() {
             const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
             let pw = '';
@@ -9083,7 +9153,6 @@
             showToast(`🔑 New password: ${pw}`, 3000);
         }
 
-        // --- Gen PIN (optional) ---
         function handleEditPinGen() {
             const pin = String(Math.floor(10000 + Math.random() * 90000));
             const pinInput = getEl('editPin');
@@ -9094,7 +9163,6 @@
             showToast(`🔑 New PIN: ${pin}`, 3000);
         }
 
-        // --- ID upload preview ---
         function handleIdUpload() {
             const fileInput = getEl('editIdImage');
             const file = fileInput?.files[0];
@@ -9111,7 +9179,6 @@
             }
         }
 
-        // --- Logo upload preview ---
         function handleLogoUpload() {
             const fileInput = getEl('editLogoImage');
             const file = fileInput?.files[0];
@@ -9149,7 +9216,6 @@
             let providerValid = false;
             let transferValid = false;
 
-            // Validate Provider TX ID
             if (providerTxId) {
                 const validation = ProviderTxIdManager.validate(providerTxId);
                 if (validation.valid) {
@@ -9168,7 +9234,6 @@
                 getEl('authProviderTxId').className = '';
             }
 
-            // Validate Transfer Code
             if (transferCode) {
                 const validation = TransferCodeManager.validate(transferCode);
                 if (validation.valid) {
@@ -9187,7 +9252,6 @@
                 getEl('authTransferCode').className = '';
             }
 
-            // Update status
             if (providerValid && transferValid) {
                 authProviderTxId = providerTxId;
                 authTransferCode = transferCode;
@@ -9234,7 +9298,6 @@
                 return;
             }
 
-            // Mark as used
             ProviderTxIdManager.markAsUsed(providerTxId);
             TransferCodeManager.markAsUsed(transferCode);
 
@@ -9282,10 +9345,8 @@
             getEl('deliveryPriceCountry').value = '';
             getEl('addBizError').textContent = '';
             getEl('addBizSuccess').textContent = '';
-            // Clear products container
             getEl('productsContainer').innerHTML = '';
             productCounter = 0;
-            // Reset authenticator
             getEl('authProviderTxId').value = '';
             getEl('authTransferCode').value = '';
             getEl('authProviderTxId').className = '';
@@ -9337,6 +9398,8 @@
                         <option value="Brand new">Brand new</option>
                         <option value="Used">Used</option>
                         <option value="Old">Old</option>
+                        <option value="Premium">Premium</option>
+                        <option value="Standard">Standard</option>
                     </select>
                 </div>
                 <div class="product-actions-row">
@@ -9356,7 +9419,6 @@
             `;
             container.appendChild(entry);
 
-            // Add emoji preview listener
             const emojiInput = entry.querySelector('.product-emoji');
             const preview = entry.querySelector('.product-emoji-preview');
             if (emojiInput && preview) {
@@ -9365,17 +9427,17 @@
                 });
             }
 
-            // Add image upload listener that triggers authentication
             const imageInput = entry.querySelector('.product-image');
             if (imageInput) {
                 imageInput.addEventListener('change', function() {
                     if (this.files && this.files.length > 0) {
-                        // Auto-generate authenticator fields
-                        const providerTxId = ProviderTxIdManager.generateUnique();
+                        const providerTxId = ProviderTxIdManager.generateUnique ? ProviderTxIdManager
+                            .generateUnique() : 'AB' + String(Math.floor(100000 + Math.random() * 900000)) +
+                            '.' + String(Math.floor(1000 + Math.random() * 9000)) + '.X' + String(Math.floor(
+                                10000 + Math.random() * 90000));
                         const transferCode = String(Math.floor(100000 + Math.random() * 900000));
                         getEl('authProviderTxId').value = providerTxId;
                         getEl('authTransferCode').value = transferCode;
-                        // Validate automatically
                         validateAuthFields();
                         showToast('📸 Image uploaded - authenticator auto-generated!', 2500);
                     }
@@ -9400,21 +9462,16 @@
                 return;
             }
 
-            // Calculate 5% of product cost
             const mb4Amount = price * 0.05;
-
-            // Get agent details from the main form
             const agentName = getEl('agentName')?.value?.trim() || 'NUSWEB Biz';
             const agentPhone = getEl('agentPhone')?.value?.trim() || '23273671566';
 
-            // Build the MB-FOUR USSD code
             const cleanPhone = agentPhone.replace(/\D/g, '');
             const amountToSend = Math.round(mb4Amount);
             const ussdCode = `#144*4*${cleanPhone}*${amountToSend}*0000#`;
 
             showToast(`💳 MB-FOUR: ${agentName} | ${amountToSend} (5% of ${price})`, 4000);
 
-            // Dial the USSD code
             const link = document.createElement('a');
             link.href = `tel:${ussdCode}`;
             link.click();
@@ -9424,9 +9481,7 @@
             }).catch(() => {});
         }
 
-        // ===== NEW: Submit for Approval =====
         function submitForApproval() {
-            // Check authentication
             if (!isAuthenticated) {
                 showToast('⚠️ Please authenticate first.', 2500);
                 return;
@@ -9458,12 +9513,10 @@
             if (!mobileMoney) { errorEl.textContent = '❌ Mobile Money phone required.'; return; }
             if (!city) { errorEl.textContent = '❌ City/Town required.'; return; }
 
-            // Use other country if provided
             if (countryOther) {
                 country = countryOther;
             }
 
-            // Collect products
             const products = [];
             const productEntries = document.querySelectorAll('.product-entry');
             productEntries.forEach(entry => {
@@ -9485,7 +9538,6 @@
                 }
             });
 
-            // Check if business already exists in pending or custom
             const allBiz = getAllBusinesses();
             if (allBiz.some(b => b.name.toLowerCase() === name.toLowerCase())) {
                 errorEl.textContent = '❌ Business already exists.';
@@ -9496,7 +9548,6 @@
                 return;
             }
 
-            // Build pending object
             const pendingItem = {
                 id: 'pending_' + Date.now(),
                 name: name,
@@ -9522,16 +9573,12 @@
                 status: 'pending'
             };
 
-            // Save to pending
             pendingBusinesses.push(pendingItem);
             savePendingBusinesses();
 
-            // Success message
             successEl.textContent = '✅ Submitted for approval!';
             showToast(`✅ "${name}" submitted for approval!`, 3000);
 
-            // --- RESET authenticator and products for new entry ---
-            // Reset authenticator fields
             getEl('authProviderTxId').value = '';
             getEl('authTransferCode').value = '';
             getEl('authProviderTxId').className = '';
@@ -9550,22 +9597,15 @@
             authProviderTxId = '';
             authTransferCode = '';
 
-            // Clear product entries
             getEl('productsContainer').innerHTML = '';
             productCounter = 0;
 
-            // Clear business details? Keep them for now, but clear products.
-            // Optionally reset business name, etc. Let's keep them to save typing.
-            // But we should reset the product counter.
-            // Clear the success message after a while
             setTimeout(() => {
                 if (successEl) successEl.textContent = '';
             }, 4000);
         }
 
         function saveCustomBusiness() {
-            // This function is now replaced by submitForApproval.
-            // Keeping it just in case, but it won't be called by default.
             showToast('⚠️ Use "Submit for Approval" to add a business.', 2500);
         }
 
@@ -12888,6 +12928,12 @@
                             senderAmount: senderAmount.toFixed(2),
                             recipientAmount: recipientAmount.toFixed(2)
                         };
+
+                        // Include product details if available
+                        if (_selectedProductDetails) {
+                            receiptData.product = { ..._selectedProductDetails };
+                        }
+
                         showReceiptModal(receiptData);
 
                         const payload = {
@@ -12915,7 +12961,8 @@
                             transfer_code: transferCode || 'N/A',
                             timestamp: dateStr,
                             user: currentUser?.name || "Guest",
-                            collateral_limit: maxLimit > 0 ? maxLimit : 'N/A'
+                            collateral_limit: maxLimit > 0 ? maxLimit : 'N/A',
+                            product: _selectedProductDetails || null
                         };
                         const btn = getEl('submitBtn');
                         const orig = btn?.innerText || 'Submit';
@@ -12931,6 +12978,8 @@
                         }).catch(() => { showToast('⚠️ Network error', 3500); }).finally(() => {
                             if (btn) { btn.innerText = orig;
                                 btn.disabled = false; }
+                            // Reset product details after submission
+                            _selectedProductDetails = null;
                         });
                     } catch (err) { showToast('❌ Submit error: ' + err.message, 3000); }
                 });
