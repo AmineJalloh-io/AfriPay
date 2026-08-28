@@ -4969,7 +4969,9 @@
 
     <div id="addClientModal" class="modal"><div class="modal-content"><h3 data-i18n="add_client">➕ Add Client</h3><div id="addClientError" class="error-msg"></div><div class="input-group"><label data-i18n="client_name">Name *</label><input type="text" id="newClientName" placeholder="Client name" /></div><div class="input-group"><label data-i18n="client_phone">Phone *</label><input type="tel" id="newClientPhone" placeholder="Phone" /></div><div class="input-group"><label data-i18n="address">Address</label><input type="text" id="newClientAddress" placeholder="Address" /></div><div class="input-group"><label data-i18n="city">City *</label><select id="newClientCitySelect"><option value="">Select city...</option><option value="Freetown">Freetown</option><option value="Abuja">Abuja</option><option value="Accra">Accra</option><option value="Nairobi">Nairobi</option><option value="Monrovia">Monrovia</option><option value="Dakar">Dakar</option><option value="Conakry">Conakry</option><option value="Bamako">Bamako</option><option value="Yamoussoukro">Yamoussoukro</option><option value="Niamey">Niamey</option><option value="Porto-Novo">Porto-Novo</option><option value="Bissau">Bissau</option><option value="Banjul">Banjul</option><option value="Lomé">Lomé</option><option value="Bangui">Bangui</option><option value="Addis Ababa">Addis Ababa</option><option value="Libreville">Libreville</option><option value="Antananarivo">Antananarivo</option><option value="Rabat">Rabat</option><option value="Kigali">Kigali</option><option value="Kampala">Kampala</option><option value="Kinshasa">Kinshasa</option><option value="Ouagadougou">Ouagadougou</option></select></div><div class="input-group"><label data-i18n="location">Country</label><select id="newClientCountrySelect"><option value="Sierra Leone">Sierra Leone</option><option value="Nigeria">Nigeria</option><option value="Ghana">Ghana</option><option value="Kenya">Kenya</option><option value="Liberia">Liberia</option><option value="Senegal">Senegal</option><option value="Guinea">Guinea</option><option value="Mali">Mali</option><option value="Ivory Coast">Ivory Coast</option><option value="Niger">Niger</option><option value="Benin">Benin</option><option value="Guinea Bissau">Guinea Bissau</option><option value="Gambia">Gambia</option><option value="Togo">Togo</option><option value="Central Africa Rep">CAR</option><option value="Ethiopia">Ethiopia</option><option value="Gabon">Gabon</option><option value="Madagascar">Madagascar</option><option value="Morocco">Morocco</option><option value="Rwanda">Rwanda</option><option value="Uganda">Uganda</option><option value="DR Congo">DRC</option><option value="Burkina Faso">Burkina</option></select></div><div class="action-buttons-row"><button class="action-btn" id="saveClientBtn" data-i18n="save">Save</button><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div></div></div>
 
-    <!-- EDIT USER (ACCOUNT) MODAL -->
+    <!-- ================================================================
+         EDIT USER (ACCOUNT) MODAL – with NIN and ID Number fields added
+         ================================================================ -->
     <div id="editAccountModal" class="modal">
         <div class="modal-content">
             <div class="edit-modal-header">
@@ -4985,6 +4987,17 @@
             <div class="input-group"><label data-i18n="address">Address</label><input type="text" id="editAccountAddress" /></div>
             <div class="input-group"><label data-i18n="city">City *</label><div class="city-input-row"><select id="editAccountCitySelect"><option value="">Select city...</option><option value="Freetown">Freetown</option><option value="Abuja">Abuja</option><option value="Accra">Accra</option><option value="Nairobi">Nairobi</option><option value="Monrovia">Monrovia</option><option value="Dakar">Dakar</option><option value="Conakry">Conakry</option><option value="Bamako">Bamako</option><option value="Yamoussoukro">Yamoussoukro</option><option value="Niamey">Niamey</option><option value="Porto-Novo">Porto-Novo</option><option value="Bissau">Bissau</option><option value="Banjul">Banjul</option><option value="Lomé">Lomé</option><option value="Bangui">Bangui</option><option value="Addis Ababa">Addis Ababa</option><option value="Libreville">Libreville</option><option value="Antananarivo">Antananarivo</option><option value="Rabat">Rabat</option><option value="Kigali">Kigali</option><option value="Kampala">Kampala</option><option value="Kinshasa">Kinshasa</option><option value="Ouagadougou">Ouagadougou</option></select><span class="or-text">OR</span><input type="text" id="editAccountCityOther" placeholder="Other city" /></div></div>
             <div class="input-group"><label data-i18n="location">Country</label><select id="editAccountCountry"><option value="Sierra Leone">Sierra Leone</option><option value="Nigeria">Nigeria</option><option value="Ghana">Ghana</option><option value="Kenya">Kenya</option><option value="Liberia">Liberia</option><option value="Senegal">Senegal</option><option value="Guinea">Guinea</option><option value="Mali">Mali</option><option value="Ivory Coast">Ivory Coast</option><option value="Niger">Niger</option><option value="Benin">Benin</option><option value="Guinea Bissau">Guinea Bissau</option><option value="Gambia">Gambia</option><option value="Togo">Togo</option><option value="Central Africa Rep">CAR</option><option value="Ethiopia">Ethiopia</option><option value="Gabon">Gabon</option><option value="Madagascar">Madagascar</option><option value="Morocco">Morocco</option><option value="Rwanda">Rwanda</option><option value="Uganda">Uganda</option><option value="DR Congo">DRC</option><option value="Burkina Faso">Burkina</option></select></div>
+
+            <!-- NEW FIELDS: National ID (NIN) and ID Number -->
+            <div class="input-group">
+                <label style="font-size:0.75rem;font-weight:700;color:#1e3b4a;">🪪 National ID (NIN)</label>
+                <input type="text" id="editAccountNin" placeholder="e.g. SL-123456789" />
+            </div>
+            <div class="input-group">
+                <label style="font-size:0.75rem;font-weight:700;color:#1e3b4a;">📄 ID Number</label>
+                <input type="text" id="editAccountIdNumber" placeholder="e.g. 0987654321" />
+            </div>
+
             <label style="font-size:0.75rem;font-weight:700;color:#1e3b4a;margin-top:2px;" data-i18n="choose_icon">Icon:</label>
             <div class="emoji-grid" id="editEmojiPickerGrid">
                 <span class="emoji-option" data-emoji="👤">👤</span>
@@ -10023,6 +10036,9 @@
                     getEl('editAccountAddress').value = SecurityUtils.escapeHTML(currentUser.address || '');
                     setCityValue('editAccountCitySelect', 'editAccountCityOther', currentUser.city || '');
                     getEl('editAccountCountry').value = SecurityUtils.escapeHTML(currentUser.country || 'Sierra Leone');
+                    // Populate NIN and ID Number fields
+                    getEl('editAccountNin').value = currentUser.nin || '';
+                    getEl('editAccountIdNumber').value = currentUser.idNumber || '';
                     getEl('editAccountError').textContent = '';
                     getEl('editAccountSuccess').textContent = '';
                     const previewContainer = getEl('editProfilePreview');
@@ -10057,6 +10073,8 @@
                     getEl('editAccountAddress').value = SecurityUtils.escapeHTML(currentUser.address || '');
                     setCityValue('editAccountCitySelect', 'editAccountCityOther', currentUser.city || '');
                     getEl('editAccountCountry').value = SecurityUtils.escapeHTML(currentUser.country || 'Sierra Leone');
+                    getEl('editAccountNin').value = currentUser.nin || '';
+                    getEl('editAccountIdNumber').value = currentUser.idNumber || '';
                     getEl('editAccountError').textContent = '';
                     getEl('editAccountSuccess').textContent = '';
                     const previewContainer = getEl('editProfilePreview');
@@ -10085,7 +10103,7 @@
                 }, { passive: true });
             }
 
-            // Save Edit Account
+            // Save Edit Account – includes NIN and ID Number
             const saveEditAccountBtn = getEl('saveEditAccountBtn');
             if (saveEditAccountBtn) {
                 saveEditAccountBtn.addEventListener('click', function(e) {
@@ -10095,6 +10113,8 @@
                     const address = SecurityUtils.sanitizeInput(getEl('editAccountAddress').value.trim(), 200);
                     const city = getCityValue('editAccountCitySelect', 'editAccountCityOther');
                     const country = SecurityUtils.sanitizeInput(getEl('editAccountCountry').value, 100);
+                    const nin = SecurityUtils.sanitizeInput(getEl('editAccountNin').value.trim(), 50);
+                    const idNumber = SecurityUtils.sanitizeInput(getEl('editAccountIdNumber').value.trim(), 50);
                     const errorEl = getEl('editAccountError');
                     const successEl = getEl('editAccountSuccess');
                     errorEl.textContent = '';
@@ -10114,6 +10134,8 @@
                     currentUser.city = city;
                     currentUser.country = country;
                     currentUser.emoji = emoji;
+                    currentUser.nin = nin;
+                    currentUser.idNumber = idNumber;
                     if (avatarDataURL) currentUser.avatarDataURL = avatarDataURL;
                     saveUserToStorage(currentUser);
                     const existing = connectedUsers.find(u => u.id === 'current');
@@ -10129,6 +10151,8 @@
                         regUser.city = city;
                         regUser.country = country;
                         regUser.address = address;
+                        regUser.nin = nin;
+                        regUser.idNumber = idNumber;
                     }
                     saveRegisteredUsers();
                     showLoggedInUI();
@@ -10144,6 +10168,8 @@
                     const address = SecurityUtils.sanitizeInput(getEl('editAccountAddress').value.trim(), 200);
                     const city = getCityValue('editAccountCitySelect', 'editAccountCityOther');
                     const country = SecurityUtils.sanitizeInput(getEl('editAccountCountry').value, 100);
+                    const nin = SecurityUtils.sanitizeInput(getEl('editAccountNin').value.trim(), 50);
+                    const idNumber = SecurityUtils.sanitizeInput(getEl('editAccountIdNumber').value.trim(), 50);
                     const errorEl = getEl('editAccountError');
                     const successEl = getEl('editAccountSuccess');
                     errorEl.textContent = '';
@@ -10163,6 +10189,8 @@
                     currentUser.city = city;
                     currentUser.country = country;
                     currentUser.emoji = emoji;
+                    currentUser.nin = nin;
+                    currentUser.idNumber = idNumber;
                     if (avatarDataURL) currentUser.avatarDataURL = avatarDataURL;
                     saveUserToStorage(currentUser);
                     const existing = connectedUsers.find(u => u.id === 'current');
@@ -10178,6 +10206,8 @@
                         regUser.city = city;
                         regUser.country = country;
                         regUser.address = address;
+                        regUser.nin = nin;
+                        regUser.idNumber = idNumber;
                     }
                     saveRegisteredUsers();
                     showLoggedInUI();
