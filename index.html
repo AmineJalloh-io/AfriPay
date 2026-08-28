@@ -1505,7 +1505,7 @@
         }
 
         /* ================================================================
-           MODALS (abridged)
+           MODALS
            ================================================================ */
         .modal {
             display: none;
@@ -1941,13 +1941,14 @@
             font-size: 0.75rem !important;
         }
         #dashboardModal .modal-content {
-            max-width: 700px;
+            max-width: 900px;
             width: 95%;
         }
         #dashboardModal table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 5px;
+            font-size: 0.7rem;
         }
         #dashboardModal th {
             background: #f0f4f8;
@@ -1957,14 +1958,27 @@
             color: #1c6e8f;
             border-bottom: 2px solid #dce8f0;
             white-space: nowrap;
-            font-size: 0.7rem !important;
+            font-size: 0.65rem !important;
         }
         #dashboardModal td {
             padding: 3px 5px;
             border-bottom: 1px solid #eee;
             vertical-align: middle;
-            font-size: 0.7rem !important;
+            font-size: 0.65rem !important;
+            word-break: break-word;
+            max-width: 80px;
         }
+        #dashboardModal td .id-thumb {
+            max-width: 40px;
+            max-height: 30px;
+            border-radius: 3px;
+            border: 1px solid #ddd;
+            cursor: pointer;
+        }
+        #dashboardModal td .id-thumb:hover {
+            opacity: 0.8;
+        }
+
         /* ===== RECEIPT MODAL – FIXED FOOTER & FONT SIZE ===== */
         #receiptModal .modal-content {
             display: flex;
@@ -1989,14 +2003,12 @@
             border-top: 1px solid #e8edf2;
             text-align: center;
         }
-        /* Reduce green text size by ~10% */
         .receipt-row.recipient-row .value {
-            font-size: 0.95rem; /* was 1.05rem */
+            font-size: 0.95rem;
         }
         .receipt-row.recipient-row .label {
-            font-size: 0.82rem; /* match base receipt-row */
+            font-size: 0.82rem;
         }
-        /* Keep other receipt styles */
         .receipt-header {
             background: linear-gradient(135deg, #0a2b3c 0%, #1c4e6c 100%);
             padding: 14px 18px 12px 18px;
@@ -2192,7 +2204,6 @@
             flex: 0 1 auto;
             min-width: 32px;
         }
-        /* end receipt modal fixes */
 
         #agreementModal .modal-content {
             max-width: 540px;
@@ -3127,7 +3138,6 @@
             font-size: 1.05rem !important;
         }
 
-        /* EDIT AGENT – hidden collateral & upload sections */
         .edit-agent-collateral-section,
         .edit-agent-id-section,
         .edit-agent-logo-section {
@@ -3187,7 +3197,6 @@
             display: none;
         }
 
-        /* EDIT AGENT – provider tx + transfer code (hidden initially, shown after USSD) */
         .edit-agent-provider-section {
             display: none;
             margin-top: 0.35rem;
@@ -3227,7 +3236,6 @@
             display: block;
         }
 
-        /* Gen buttons row */
         .gen-buttons-row {
             display: flex;
             gap: 4px;
@@ -3268,7 +3276,6 @@
             background: #e08e4a;
         }
 
-        /* USSD button inside collateral – hidden until limit selected */
         #editGenerateCollateralBtn {
             display: none;
             margin-top: 0.25rem;
@@ -3277,9 +3284,6 @@
             display: inline-flex;
         }
 
-        /* ================================================================
-           ADDED: AGENT SELECT DROPDOWN STYLING
-           ================================================================ */
         .agent-select {
             width: 100%;
             padding: 5px 10px;
@@ -3305,7 +3309,6 @@
             color: #aaa;
         }
 
-        /* ===== BIZ DISPLAY FIELD (plain text replacement for dropdown) ===== */
         .biz-display-field {
             padding: 5px 10px;
             border-radius: 18px;
@@ -3320,7 +3323,6 @@
             gap: 6px;
         }
 
-        /* Product form styles */
         .product-entry {
             background: #f8fafc;
             border: 1px solid #e0e8f0;
@@ -3463,9 +3465,6 @@
             padding: 3px 8px;
         }
 
-        /* ================================================================
-           AUTHENTICATOR SECTION STYLES
-           ================================================================ */
         .authenticator-section {
             background: #f0f6fb;
             border-radius: 10px;
@@ -3977,6 +3976,23 @@
                 font-size: 0.6rem !important;
                 padding: 3px 10px;
             }
+            #dashboardModal .modal-content {
+                max-width: 98%;
+                padding: 0.5rem;
+            }
+            #dashboardModal table {
+                font-size: 0.55rem;
+            }
+            #dashboardModal th,
+            #dashboardModal td {
+                padding: 2px 3px;
+                font-size: 0.55rem !important;
+                max-width: 50px;
+            }
+            #dashboardModal td .id-thumb {
+                max-width: 30px;
+                max-height: 22px;
+            }
         }
         @media (max-width: 400px) {
             .brand-text {
@@ -4276,6 +4292,23 @@
                 height: 24px;
                 font-size: 0.55rem !important;
                 padding: 2px 8px;
+            }
+            #dashboardModal .modal-content {
+                max-width: 100%;
+                padding: 0.3rem;
+            }
+            #dashboardModal table {
+                font-size: 0.5rem;
+            }
+            #dashboardModal th,
+            #dashboardModal td {
+                padding: 1px 2px;
+                font-size: 0.5rem !important;
+                max-width: 35px;
+            }
+            #dashboardModal td .id-thumb {
+                max-width: 24px;
+                max-height: 18px;
             }
         }
     </style>
@@ -4584,53 +4617,220 @@
         </div>
     </div>
 
-    <!-- MODALS -->
+    <!-- ================================================================
+         MODALS
+         ================================================================ -->
     <div id="mapModal" class="modal"><div class="modal-content"><h3 data-i18n="map_title">📍 Location</h3><iframe id="mapIframe" allowfullscreen loading="lazy" style="width:100%; height:300px; border:none; border-radius:8px;"></iframe><button class="action-btn close-modal" data-i18n="close">Close</button></div></div>
     <div id="infoModal" class="modal"><div class="modal-content"><h3 id="modalTitle"></h3><div id="modalBody"></div><button class="action-btn close-modal" data-i18n="close">Close</button></div></div>
     <div id="subscribeModal" class="modal"><div class="modal-content"><h3 data-i18n="subscribe_title">📧 Subscribe</h3><input type="email" id="subEmail" placeholder="Email" style="width:100%; padding:5px 10px; margin:3px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;" /><div class="action-buttons-row"><button id="submitSubscribeBtn" class="action-btn" data-i18n="subscribe">Subscribe</button><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div></div></div>
     <div id="loginModal" class="modal"><div class="modal-content"><h3 data-i18n="login_title">🔐 Login</h3><input type="text" id="loginName" placeholder="Full Name" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;" /><input type="tel" id="loginPhone" placeholder="Phone" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;" /><div id="loginError" class="error-msg"></div><div class="action-buttons-row"><button id="doLoginBtn" class="action-btn" data-i18n="login">Login</button><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div></div></div>
-    <div id="registerModal" class="modal"><div class="modal-content"><h3 data-i18n="register_title">📝 Register</h3><input type="text" id="regName" placeholder="Full Name *" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;" /><input type="tel" id="regPhone" placeholder="Phone *" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;" /><input type="text" id="regAddress" placeholder="Address" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;" /><div class="input-group" style="margin-bottom:0.35rem;"><label style="font-size:0.75rem;font-weight:700;color:#1e3b4a;" data-i18n="city">City *</label><div class="city-input-row"><select id="regCitySelect"><option value="">Select city...</option><option value="Freetown">Freetown</option><option value="Abuja">Abuja</option><option value="Accra">Accra</option><option value="Nairobi">Nairobi</option><option value="Monrovia">Monrovia</option><option value="Dakar">Dakar</option><option value="Conakry">Conakry</option><option value="Bamako">Bamako</option><option value="Yamoussoukro">Yamoussoukro</option><option value="Niamey">Niamey</option><option value="Porto-Novo">Porto-Novo</option><option value="Bissau">Bissau</option><option value="Banjul">Banjul</option><option value="Lomé">Lomé</option><option value="Bangui">Bangui</option><option value="Addis Ababa">Addis Ababa</option><option value="Libreville">Libreville</option><option value="Antananarivo">Antananarivo</option><option value="Rabat">Rabat</option><option value="Kigali">Kigali</option><option value="Kampala">Kampala</option><option value="Kinshasa">Kinshasa</option><option value="Ouagadougou">Ouagadougou</option></select><span class="or-text">OR</span><input type="text" id="regCityOther" placeholder="Other city" /></div></div><select id="regCountry" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;"><option value="Sierra Leone">Sierra Leone</option><option value="Nigeria">Nigeria</option><option value="Ghana">Ghana</option><option value="Kenya">Kenya</option><option value="Liberia">Liberia</option><option value="Senegal">Senegal</option><option value="Guinea">Guinea</option><option value="Mali">Mali</option><option value="Ivory Coast">Ivory Coast</option><option value="Niger">Niger</option><option value="Benin">Benin</option><option value="Guinea Bissau">Guinea Bissau</option><option value="Gambia">Gambia</option><option value="Togo">Togo</option><option value="Central Africa Rep">CAR</option><option value="Ethiopia">Ethiopia</option><option value="Gabon">Gabon</option><option value="Madagascar">Madagascar</option><option value="Morocco">Morocco</option><option value="Rwanda">Rwanda</option><option value="Uganda">Uganda</option><option value="DR Congo">DRC</option><option value="Burkina Faso">Burkina</option></select><select id="regLanguage" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;"><option value="en">English</option><option value="fr">Français</option><option value="es">Español</option></select><label style="font-size:0.75rem;font-weight:700;color:#1e3b4a;margin-top:2px;" data-i18n="choose_icon">Icon:</label><div class="emoji-grid" id="emojiPickerGrid"><span class="emoji-option" data-emoji="👤">👤</span><span class="emoji-option" data-emoji="👨">👨</span><span class="emoji-option" data-emoji="👩">👩</span><span class="emoji-option" data-emoji="🧑">🧑</span><span class="emoji-option" data-emoji="👦">👦</span><span class="emoji-option" data-emoji="👧">👧</span><span class="emoji-option" data-emoji="🧒">🧒</span><span class="emoji-option" data-emoji="👨‍💻">👨‍💻</span><span class="emoji-option" data-emoji="👩‍💻">👩‍💻</span><span class="emoji-option" data-emoji="🧑‍💻">🧑‍💻</span><span class="emoji-option" data-emoji="👨‍🎓">👨‍🎓</span><span class="emoji-option" data-emoji="👩‍🎓">👩‍🎓</span></div><div style="margin-top:4px;"><label style="font-size:0.75rem;font-weight:700;color:#1e3b4a;" data-i18n="upload_image">Upload image:</label><input type="file" id="regProfileImage" accept="image/*" style="width:100%; padding:4px; border-radius:20px; border:1px solid #ddd; font-size:0.85rem; height:36px;" /><div id="regProfilePreview" style="display:none; margin-top:2px;"><img src="#" alt="Preview" style="max-height:60px; border-radius:6px;" /><button type="button" id="regProfileRemove" style="background:#e74c3c; color:white; border:none; padding:2px 8px; border-radius:20px; font-size:0.6rem; cursor:pointer;">✕</button></div></div><div style="display:flex; gap:4px; align-items:center; margin-top:3px;"><button type="button" class="action-btn" id="regGenerateUssdBtn" style="flex:1; background:#2c7da0; height:36px; font-size:0.85rem;" data-i18n="generate_ussd">📱 USSD</button></div><div class="ussd-result-box" id="regUssdResult"><span class="ussd-label">📞 USSD:</span><span class="ussd-code-value" id="regUssdCode"></span><button class="copy-ussd-btn" id="regCopyUssdBtn">Copy</button></div><div id="regError" class="error-msg"></div><div id="regSuccess" class="success-msg"></div><div class="action-buttons-row"><button id="doRegisterBtn" class="action-btn" data-i18n="register">Register</button><button id="registerAgentBtn" class="action-btn orange" data-i18n="register_agent">🏢 Agent</button><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div></div></div>
-    <div id="agentRegistrationModal" class="modal"><div class="modal-content agent-form"><h3 data-i18n="agent_reg_title">🏢 Agent Reg</h3><div id="agentRegError" class="error-msg"></div><div id="agentRegSuccess" class="success-msg"></div><div class="input-group"><label data-i18n="agent_business_name">Business *</label><input type="text" id="agentBusinessName" placeholder="Business name" /></div><div class="input-group"><label data-i18n="agent_address">Address *</label><input type="text" id="agentAddress" placeholder="Street" /></div><div class="input-group"><label data-i18n="agent_city">City *</label><div class="city-input-row"><select id="agentCitySelect"><option value="">Select city...</option><option value="Freetown">Freetown</option><option value="Abuja">Abuja</option><option value="Accra">Accra</option><option value="Nairobi">Nairobi</option><option value="Monrovia">Monrovia</option><option value="Dakar">Dakar</option><option value="Conakry">Conakry</option><option value="Bamako">Bamako</option><option value="Yamoussoukro">Yamoussoukro</option><option value="Niamey">Niamey</option><option value="Porto-Novo">Porto-Novo</option><option value="Bissau">Bissau</option><option value="Banjul">Banjul</option><option value="Lomé">Lomé</option><option value="Bangui">Bangui</option><option value="Addis Ababa">Addis Ababa</option><option value="Libreville">Libreville</option><option value="Antananarivo">Antananarivo</option><option value="Rabat">Rabat</option><option value="Kigali">Kigali</option><option value="Kampala">Kampala</option><option value="Kinshasa">Kinshasa</option><option value="Ouagadougou">Ouagadougou</option></select><span class="or-text">OR</span><input type="text" id="agentCityOther" placeholder="Other city" /></div></div><div class="input-group"><label data-i18n="agent_reg_number">Reg Number *</label><input type="text" id="agentRegNumber" placeholder="e.g. SL-2025-0042" /></div><div class="input-group"><label data-i18n="agent_business_type">Type *</label><select id="agentBusinessType"><option value="Retail">Retail</option><option value="Wholesale">Wholesale</option><option value="Service">Service</option><option value="Manufacturing">Manufacturing</option><option value="Transport">Transport</option><option value="Hospitality">Hospitality</option><option value="Financial">Financial</option><option value="Other">Other</option></select></div><div class="double-row"><div class="input-group"><label data-i18n="agent_owner_name">Owner *</label><input type="text" id="agentOwnerName" placeholder="Owner name" /></div><div class="input-group"><label data-i18n="agent_id_type">ID Type *</label><select id="agentIdType"><option value="National ID">National ID</option><option value="Passport">Passport</option><option value="Driver's License">Driver's License</option><option value="Voter's Card">Voter's Card</option><option value="Other">Other</option></select></div></div><div class="input-group"><label data-i18n="agent_id_number">ID Number *</label><input type="text" id="agentIdNumber" placeholder="e.g. SL-123456" /></div><div class="input-group"><label data-i18n="agent_id_image">ID Image *</label><input type="file" id="agentIdImage" accept="image/*" capture="environment" style="padding:4px; height:auto;" /><img id="agentIdPreview" class="id-preview" alt="ID" /></div><div class="input-group"><label data-i18n="agent_logo">Logo *</label><input type="file" id="agentLogoImage" accept="image/*" required style="padding:4px; height:auto;" /><div id="agentLogoPreviewContainer" style="display:none; margin-top:2px;"><img src="#" alt="Logo" style="max-height:60px; border-radius:6px;" /><button type="button" id="agentLogoRemove" style="background:#e74c3c; color:white; border:none; padding:2px 8px; border-radius:20px; font-size:0.6rem; cursor:pointer;">✕</button></div><div style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="agent_logo_hint">Upload business logo</div></div><div class="input-group"><label data-i18n="agent_mobile_money">Mobile Money *</label><input type="tel" id="agentMobileMoney" placeholder="e.g. 23276123456" /></div>
-
-        <!-- Collateral select (min 200) -->
-        <div class="input-group">
-            <label for="agentCollateralLimit" data-i18n="collateral_limit_label">💳 Collateral *</label>
-            <select id="agentCollateralLimit">
-                <option value="200">200</option>
-                <option value="300">300</option>
-                <option value="400">400</option>
-                <option value="500">500</option>
-                <option value="600">600</option>
-                <option value="700">700</option>
-                <option value="800">800</option>
-                <option value="900">900</option>
-                <option value="1000">1,000</option>
-                <option value="1500">1,500</option>
-                <option value="2000">2,000</option>
-                <option value="2500">2,500</option>
-                <option value="3000">3,000</option>
-                <option value="3500">3,500</option>
-                <option value="4000">4,000</option>
-                <option value="4500">4,500</option>
-                <option value="5000" selected>5,000</option>
-                <option value="5500">5,500</option>
-                <option value="6000">6,000</option>
-                <option value="6500">6,500</option>
-                <option value="7000">7,000</option>
-                <option value="7500">7,500</option>
-                <option value="8000">8,000</option>
-                <option value="8500">8,500</option>
-                <option value="9000">9,000</option>
-                <option value="9500">9,500</option>
-                <option value="10000">10,000</option>
-            </select>
-            <div style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="collateral_limit_hint">Max transaction amount</div>
-        </div>
-
-        <div class="input-group"><label data-i18n="agent_country_code">Country Code</label><select id="agentCountryCode"><option value="+232">🇸🇱 +232</option><option value="+234">🇳🇬 +234</option><option value="+233">🇬🇭 +233</option><option value="+254">🇰🇪 +254</option><option value="+231">🇱🇷 +231</option><option value="+221">🇸🇳 +221</option><option value="+224" selected>🇬🇳 +224</option><option value="+223">🇲🇱 +223</option><option value="+225">🇨🇮 +225</option><option value="+227">🇳🇪 +227</option><option value="+229">🇧🇯 +229</option><option value="+245">🇬🇼 +245</option><option value="+220">🇬🇲 +220</option><option value="+228">🇹🇬 +228</option><option value="+236">🇨🇫 +236</option><option value="+251">🇪🇹 +251</option><option value="+241">🇬🇦 +241</option><option value="+261">🇲🇬 +261</option><option value="+212">🇲🇦 +212</option><option value="+250">🇷🇼 +250</option><option value="+256">🇺🇬 +256</option><option value="+243">🇨🇩 +243</option><option value="+226">🇧🇫 +226</option></select></div><div class="input-group"><label data-i18n="agent_password">Password *</label><div style="display:flex; gap:4px; align-items:center; flex-wrap:wrap;"><input type="text" id="agentPassword" placeholder="A1B2C3" style="flex:1; min-width:80px; letter-spacing:2px; font-family:monospace;" readonly /><button type="button" class="action-btn green" id="generatePasswordBtn" style="padding:4px 12px; height:36px; font-size:0.75rem;" data-i18n="generate_password">🔑 Gen</button></div><div id="agentPasswordHint" style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="password_hint">Click Gen to create 6-char password</div></div><div class="input-group"><label data-i18n="agent_pin_label">5-Digit PIN *</label><div style="display:flex; gap:4px; align-items:center; flex-wrap:wrap;"><input type="text" id="agentPin" placeholder="12345" style="flex:1; min-width:80px; letter-spacing:2px; font-family:monospace;" readonly /><button type="button" class="action-btn green" id="generatePinBtn" style="padding:4px 12px; height:36px; font-size:0.75rem;" data-i18n="generate_pin">🔑 Gen PIN</button></div><div id="agentPinHint" style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="pin_hint">Click to create 5-digit PIN</div></div><div class="collateral-box"><div style="display:flex; align-items:center; gap:4px; flex-wrap:wrap;"><span style="font-weight:700; font-size:0.8rem; color:#1c6e8f;" data-i18n="collateral_label">🔒 Collateral</span><button class="action-btn orange" id="generateCollateralBtn" style="padding:4px 12px; height:34px; font-size:0.75rem;" data-i18n="generate_collateral">USSD</button></div><div id="collateralResult" style="margin-top:3px;"><span style="font-size:0.68rem; color:#666;" data-i18n="collateral_hint">Generate USSD for Orange Money collateral</span><div id="collateralUssdDisplay" class="ussd-code" style="display:none;"></div></div><div id="collateralError" class="error-msg" style="font-size:0.68rem;"></div><input type="hidden" id="collateralAmount" value="0" /></div><div style="margin:6px 0 4px 0; text-align:center;"><button class="action-btn orange" id="viewAgreementBtn" style="width:100%; height:38px; font-size:0.85rem;" data-i18n="view_agreement">📜 Agreement</button><div id="agreementStatusDisplay" style="font-size:0.68rem; color:#7f8c8d; margin-top:2px;"><span data-i18n="agreement_status_label">Agreement:</span> <span id="agreementStatusText" style="font-weight:700; color:#e74c3c;" data-i18n="not_signed">Not Signed</span></div></div><div class="input-group" style="margin-top:0.35rem;"><label for="agentProviderTxId" data-i18n="provider_tx_id_label">🔐 Provider TX ID *</label><input type="text" id="agentProviderTxId" placeholder="AB123456.1234.X12345" pattern="[A-Za-z]{2}[0-9]{6}\.[0-9]{4}\.[A-Za-z][0-9]{5}" /><div style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="provider_tx_id_format">Format: AB123456.1234.X12345</div><div id="agentProviderTxIdError" class="error-msg" style="font-size:0.68rem; display:none;"></div></div><div class="input-group" id="agentTransferCodeGroup" style="display:none;"><label for="agentTransferCode" data-i18n="transfer_code_label">Transfer Code *</label><input type="text" id="agentTransferCode" placeholder="6-14 digits" maxlength="14" pattern="[0-9]{6}|[0-9]{8}|[0-9]{10}|[0-9]{12}|[0-9]{14}" /><div style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="transfer_code_hint">6-14 digit code</div><div id="agentTransferCodeError" class="error-msg" style="font-size:0.68rem; display:none;"></div></div><div class="action-buttons-row" style="margin-top:6px;"><button class="action-btn" id="submitAgentRegistrationBtn" data-i18n="register_agent_submit">Register</button><button class="action-btn close-modal" id="closeAgentRegBtn" style="background:#2c7da0;" data-i18n="close">Close</button></div></div></div>
 
     <!-- ================================================================
-         EDIT AGENT MODAL – with fixed authentication logic
+         REGISTER MODAL – with NIN, ID Number, and ID Upload (hidden from main page)
+         ================================================================ -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <h3 data-i18n="register_title">📝 Register</h3>
+            <input type="text" id="regName" placeholder="Full Name *" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;" />
+            <input type="tel" id="regPhone" placeholder="Phone *" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;" />
+            <input type="text" id="regAddress" placeholder="Address" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;" />
+            <div class="input-group" style="margin-bottom:0.35rem;">
+                <label style="font-size:0.75rem;font-weight:700;color:#1e3b4a;" data-i18n="city">City *</label>
+                <div class="city-input-row">
+                    <select id="regCitySelect">
+                        <option value="">Select city...</option>
+                        <option value="Freetown">Freetown</option>
+                        <option value="Abuja">Abuja</option>
+                        <option value="Accra">Accra</option>
+                        <option value="Nairobi">Nairobi</option>
+                        <option value="Monrovia">Monrovia</option>
+                        <option value="Dakar">Dakar</option>
+                        <option value="Conakry">Conakry</option>
+                        <option value="Bamako">Bamako</option>
+                        <option value="Yamoussoukro">Yamoussoukro</option>
+                        <option value="Niamey">Niamey</option>
+                        <option value="Porto-Novo">Porto-Novo</option>
+                        <option value="Bissau">Bissau</option>
+                        <option value="Banjul">Banjul</option>
+                        <option value="Lomé">Lomé</option>
+                        <option value="Bangui">Bangui</option>
+                        <option value="Addis Ababa">Addis Ababa</option>
+                        <option value="Libreville">Libreville</option>
+                        <option value="Antananarivo">Antananarivo</option>
+                        <option value="Rabat">Rabat</option>
+                        <option value="Kigali">Kigali</option>
+                        <option value="Kampala">Kampala</option>
+                        <option value="Kinshasa">Kinshasa</option>
+                        <option value="Ouagadougou">Ouagadougou</option>
+                    </select>
+                    <span class="or-text">OR</span>
+                    <input type="text" id="regCityOther" placeholder="Other city" />
+                </div>
+            </div>
+            <select id="regCountry" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;">
+                <option value="Sierra Leone">Sierra Leone</option>
+                <option value="Nigeria">Nigeria</option>
+                <option value="Ghana">Ghana</option>
+                <option value="Kenya">Kenya</option>
+                <option value="Liberia">Liberia</option>
+                <option value="Senegal">Senegal</option>
+                <option value="Guinea">Guinea</option>
+                <option value="Mali">Mali</option>
+                <option value="Ivory Coast">Ivory Coast</option>
+                <option value="Niger">Niger</option>
+                <option value="Benin">Benin</option>
+                <option value="Guinea Bissau">Guinea Bissau</option>
+                <option value="Gambia">Gambia</option>
+                <option value="Togo">Togo</option>
+                <option value="Central Africa Rep">CAR</option>
+                <option value="Ethiopia">Ethiopia</option>
+                <option value="Gabon">Gabon</option>
+                <option value="Madagascar">Madagascar</option>
+                <option value="Morocco">Morocco</option>
+                <option value="Rwanda">Rwanda</option>
+                <option value="Uganda">Uganda</option>
+                <option value="DR Congo">DRC</option>
+                <option value="Burkina Faso">Burkina</option>
+            </select>
+            <select id="regLanguage" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;">
+                <option value="en">English</option>
+                <option value="fr">Français</option>
+                <option value="es">Español</option>
+            </select>
+
+            <!-- ===== NEW: NIN, ID Number, ID Upload (hidden from main page) ===== -->
+            <div style="margin-top:0.4rem; border-top:1px dashed #d0dce8; padding-top:0.4rem;">
+                <div class="input-group">
+                    <label style="font-size:0.75rem;font-weight:700;color:#1e3b4a;">🪪 National ID (NIN) *</label>
+                    <input type="text" id="regNin" placeholder="e.g. SL-123456789" style="width:100%; padding:5px 10px; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;" />
+                </div>
+                <div class="input-group">
+                    <label style="font-size:0.75rem;font-weight:700;color:#1e3b4a;">📄 ID Number *</label>
+                    <input type="text" id="regIdNumber" placeholder="e.g. 0987654321" style="width:100%; padding:5px 10px; border-radius:30px; border:1px solid #ddd; font-size:0.9rem; height:38px;" />
+                </div>
+                <div class="input-group">
+                    <label style="font-size:0.75rem;font-weight:700;color:#1e3b4a;">📎 Upload ID *</label>
+                    <input type="file" id="regIdImage" accept="image/*" capture="environment" style="width:100%; padding:4px; border-radius:20px; border:1px solid #ddd; font-size:0.85rem; height:36px;" />
+                    <img id="regIdPreview" class="id-preview" alt="ID preview" />
+                    <div style="font-size:0.62rem; color:#666; margin-top:1px;">Upload a clear photo of your ID</div>
+                </div>
+            </div>
+
+            <label style="font-size:0.75rem;font-weight:700;color:#1e3b4a;margin-top:2px;" data-i18n="choose_icon">Icon:</label>
+            <div class="emoji-grid" id="emojiPickerGrid">
+                <span class="emoji-option" data-emoji="👤">👤</span>
+                <span class="emoji-option" data-emoji="👨">👨</span>
+                <span class="emoji-option" data-emoji="👩">👩</span>
+                <span class="emoji-option" data-emoji="🧑">🧑</span>
+                <span class="emoji-option" data-emoji="👦">👦</span>
+                <span class="emoji-option" data-emoji="👧">👧</span>
+                <span class="emoji-option" data-emoji="🧒">🧒</span>
+                <span class="emoji-option" data-emoji="👨‍💻">👨‍💻</span>
+                <span class="emoji-option" data-emoji="👩‍💻">👩‍💻</span>
+                <span class="emoji-option" data-emoji="🧑‍💻">🧑‍💻</span>
+                <span class="emoji-option" data-emoji="👨‍🎓">👨‍🎓</span>
+                <span class="emoji-option" data-emoji="👩‍🎓">👩‍🎓</span>
+            </div>
+            <div style="margin-top:4px;">
+                <label style="font-size:0.75rem;font-weight:700;color:#1e3b4a;" data-i18n="upload_image">Upload image:</label>
+                <input type="file" id="regProfileImage" accept="image/*" style="width:100%; padding:4px; border-radius:20px; border:1px solid #ddd; font-size:0.85rem; height:36px;" />
+                <div id="regProfilePreview" style="display:none; margin-top:2px;">
+                    <img src="#" alt="Preview" style="max-height:60px; border-radius:6px;" />
+                    <button type="button" id="regProfileRemove" style="background:#e74c3c; color:white; border:none; padding:2px 8px; border-radius:20px; font-size:0.6rem; cursor:pointer;">✕</button>
+                </div>
+            </div>
+            <div style="display:flex; gap:4px; align-items:center; margin-top:3px;">
+                <button type="button" class="action-btn" id="regGenerateUssdBtn" style="flex:1; background:#2c7da0; height:36px; font-size:0.85rem;" data-i18n="generate_ussd">📱 USSD</button>
+            </div>
+            <div class="ussd-result-box" id="regUssdResult">
+                <span class="ussd-label">📞 USSD:</span>
+                <span class="ussd-code-value" id="regUssdCode"></span>
+                <button class="copy-ussd-btn" id="regCopyUssdBtn">Copy</button>
+            </div>
+            <div id="regError" class="error-msg"></div>
+            <div id="regSuccess" class="success-msg"></div>
+            <div class="action-buttons-row">
+                <button id="doRegisterBtn" class="action-btn" data-i18n="register">Register</button>
+                <button id="registerAgentBtn" class="action-btn orange" data-i18n="register_agent">🏢 Agent</button>
+                <button class="action-btn close-modal" data-i18n="cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================================================================
+         AGENT REGISTRATION MODAL – with NIN field
+         ================================================================ -->
+    <div id="agentRegistrationModal" class="modal">
+        <div class="modal-content agent-form">
+            <h3 data-i18n="agent_reg_title">🏢 Agent Reg</h3>
+            <div id="agentRegError" class="error-msg"></div>
+            <div id="agentRegSuccess" class="success-msg"></div>
+            <div class="input-group"><label data-i18n="agent_business_name">Business *</label><input type="text" id="agentBusinessName" placeholder="Business name" /></div>
+            <div class="input-group"><label data-i18n="agent_address">Address *</label><input type="text" id="agentAddress" placeholder="Street" /></div>
+            <div class="input-group"><label data-i18n="agent_city">City *</label><div class="city-input-row"><select id="agentCitySelect"><option value="">Select city...</option><option value="Freetown">Freetown</option><option value="Abuja">Abuja</option><option value="Accra">Accra</option><option value="Nairobi">Nairobi</option><option value="Monrovia">Monrovia</option><option value="Dakar">Dakar</option><option value="Conakry">Conakry</option><option value="Bamako">Bamako</option><option value="Yamoussoukro">Yamoussoukro</option><option value="Niamey">Niamey</option><option value="Porto-Novo">Porto-Novo</option><option value="Bissau">Bissau</option><option value="Banjul">Banjul</option><option value="Lomé">Lomé</option><option value="Bangui">Bangui</option><option value="Addis Ababa">Addis Ababa</option><option value="Libreville">Libreville</option><option value="Antananarivo">Antananarivo</option><option value="Rabat">Rabat</option><option value="Kigali">Kigali</option><option value="Kampala">Kampala</option><option value="Kinshasa">Kinshasa</option><option value="Ouagadougou">Ouagadougou</option></select><span class="or-text">OR</span><input type="text" id="agentCityOther" placeholder="Other city" /></div></div>
+            <div class="input-group"><label data-i18n="agent_reg_number">Reg Number *</label><input type="text" id="agentRegNumber" placeholder="e.g. SL-2025-0042" /></div>
+            <div class="input-group"><label data-i18n="agent_business_type">Type *</label><select id="agentBusinessType"><option value="Retail">Retail</option><option value="Wholesale">Wholesale</option><option value="Service">Service</option><option value="Manufacturing">Manufacturing</option><option value="Transport">Transport</option><option value="Hospitality">Hospitality</option><option value="Financial">Financial</option><option value="Other">Other</option></select></div>
+            <div class="double-row"><div class="input-group"><label data-i18n="agent_owner_name">Owner *</label><input type="text" id="agentOwnerName" placeholder="Owner name" /></div><div class="input-group"><label data-i18n="agent_id_type">ID Type *</label><select id="agentIdType"><option value="National ID">National ID</option><option value="Passport">Passport</option><option value="Driver's License">Driver's License</option><option value="Voter's Card">Voter's Card</option><option value="Other">Other</option></select></div></div>
+            <div class="input-group"><label data-i18n="agent_id_number">ID Number *</label><input type="text" id="agentIdNumber" placeholder="e.g. SL-123456" /></div>
+            <div class="input-group"><label data-i18n="agent_id_image">ID Image *</label><input type="file" id="agentIdImage" accept="image/*" capture="environment" style="padding:4px; height:auto;" /><img id="agentIdPreview" class="id-preview" alt="ID" /></div>
+
+            <!-- ===== NEW: Agent NIN field ===== -->
+            <div class="input-group">
+                <label style="font-weight:700; color:#1e3b4a; font-size:0.7rem !important;">🪪 National ID (NIN) *</label>
+                <input type="text" id="agentNin" placeholder="e.g. SL-987654321" />
+                <div style="font-size:0.62rem; color:#666; margin-top:1px;">Enter agent's National Identification Number</div>
+            </div>
+
+            <div class="input-group"><label data-i18n="agent_logo">Logo *</label><input type="file" id="agentLogoImage" accept="image/*" required style="padding:4px; height:auto;" /><div id="agentLogoPreviewContainer" style="display:none; margin-top:2px;"><img src="#" alt="Logo" style="max-height:60px; border-radius:6px;" /><button type="button" id="agentLogoRemove" style="background:#e74c3c; color:white; border:none; padding:2px 8px; border-radius:20px; font-size:0.6rem; cursor:pointer;">✕</button></div><div style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="agent_logo_hint">Upload business logo</div></div>
+            <div class="input-group"><label data-i18n="agent_mobile_money">Mobile Money *</label><input type="tel" id="agentMobileMoney" placeholder="e.g. 23276123456" /></div>
+
+            <div class="input-group">
+                <label for="agentCollateralLimit" data-i18n="collateral_limit_label">💳 Collateral *</label>
+                <select id="agentCollateralLimit">
+                    <option value="200">200</option>
+                    <option value="300">300</option>
+                    <option value="400">400</option>
+                    <option value="500">500</option>
+                    <option value="600">600</option>
+                    <option value="700">700</option>
+                    <option value="800">800</option>
+                    <option value="900">900</option>
+                    <option value="1000">1,000</option>
+                    <option value="1500">1,500</option>
+                    <option value="2000">2,000</option>
+                    <option value="2500">2,500</option>
+                    <option value="3000">3,000</option>
+                    <option value="3500">3,500</option>
+                    <option value="4000">4,000</option>
+                    <option value="4500">4,500</option>
+                    <option value="5000" selected>5,000</option>
+                    <option value="5500">5,500</option>
+                    <option value="6000">6,000</option>
+                    <option value="6500">6,500</option>
+                    <option value="7000">7,000</option>
+                    <option value="7500">7,500</option>
+                    <option value="8000">8,000</option>
+                    <option value="8500">8,500</option>
+                    <option value="9000">9,000</option>
+                    <option value="9500">9,500</option>
+                    <option value="10000">10,000</option>
+                </select>
+                <div style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="collateral_limit_hint">Max transaction amount</div>
+            </div>
+
+            <div class="input-group"><label data-i18n="agent_country_code">Country Code</label><select id="agentCountryCode"><option value="+232">🇸🇱 +232</option><option value="+234">🇳🇬 +234</option><option value="+233">🇬🇭 +233</option><option value="+254">🇰🇪 +254</option><option value="+231">🇱🇷 +231</option><option value="+221">🇸🇳 +221</option><option value="+224" selected>🇬🇳 +224</option><option value="+223">🇲🇱 +223</option><option value="+225">🇨🇮 +225</option><option value="+227">🇳🇪 +227</option><option value="+229">🇧🇯 +229</option><option value="+245">🇬🇼 +245</option><option value="+220">🇬🇲 +220</option><option value="+228">🇹🇬 +228</option><option value="+236">🇨🇫 +236</option><option value="+251">🇪🇹 +251</option><option value="+241">🇬🇦 +241</option><option value="+261">🇲🇬 +261</option><option value="+212">🇲🇦 +212</option><option value="+250">🇷🇼 +250</option><option value="+256">🇺🇬 +256</option><option value="+243">🇨🇩 +243</option><option value="+226">🇧🇫 +226</option></select></div>
+            <div class="input-group"><label data-i18n="agent_password">Password *</label><div style="display:flex; gap:4px; align-items:center; flex-wrap:wrap;"><input type="text" id="agentPassword" placeholder="A1B2C3" style="flex:1; min-width:80px; letter-spacing:2px; font-family:monospace;" readonly /><button type="button" class="action-btn green" id="generatePasswordBtn" style="padding:4px 12px; height:36px; font-size:0.75rem;" data-i18n="generate_password">🔑 Gen</button></div><div id="agentPasswordHint" style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="password_hint">Click Gen to create 6-char password</div></div>
+            <div class="input-group"><label data-i18n="agent_pin_label">5-Digit PIN *</label><div style="display:flex; gap:4px; align-items:center; flex-wrap:wrap;"><input type="text" id="agentPin" placeholder="12345" style="flex:1; min-width:80px; letter-spacing:2px; font-family:monospace;" readonly /><button type="button" class="action-btn green" id="generatePinBtn" style="padding:4px 12px; height:36px; font-size:0.75rem;" data-i18n="generate_pin">🔑 Gen PIN</button></div><div id="agentPinHint" style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="pin_hint">Click to create 5-digit PIN</div></div>
+            <div class="collateral-box"><div style="display:flex; align-items:center; gap:4px; flex-wrap:wrap;"><span style="font-weight:700; font-size:0.8rem; color:#1c6e8f;" data-i18n="collateral_label">🔒 Collateral</span><button class="action-btn orange" id="generateCollateralBtn" style="padding:4px 12px; height:34px; font-size:0.75rem;" data-i18n="generate_collateral">USSD</button></div><div id="collateralResult" style="margin-top:3px;"><span style="font-size:0.68rem; color:#666;" data-i18n="collateral_hint">Generate USSD for Orange Money collateral</span><div id="collateralUssdDisplay" class="ussd-code" style="display:none;"></div></div><div id="collateralError" class="error-msg" style="font-size:0.68rem;"></div><input type="hidden" id="collateralAmount" value="0" /></div>
+            <div style="margin:6px 0 4px 0; text-align:center;"><button class="action-btn orange" id="viewAgreementBtn" style="width:100%; height:38px; font-size:0.85rem;" data-i18n="view_agreement">📜 Agreement</button><div id="agreementStatusDisplay" style="font-size:0.68rem; color:#7f8c8d; margin-top:2px;"><span data-i18n="agreement_status_label">Agreement:</span> <span id="agreementStatusText" style="font-weight:700; color:#e74c3c;" data-i18n="not_signed">Not Signed</span></div></div>
+            <div class="input-group" style="margin-top:0.35rem;"><label for="agentProviderTxId" data-i18n="provider_tx_id_label">🔐 Provider TX ID *</label><input type="text" id="agentProviderTxId" placeholder="AB123456.1234.X12345" pattern="[A-Za-z]{2}[0-9]{6}\.[0-9]{4}\.[A-Za-z][0-9]{5}" /><div style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="provider_tx_id_format">Format: AB123456.1234.X12345</div><div id="agentProviderTxIdError" class="error-msg" style="font-size:0.68rem; display:none;"></div></div>
+            <div class="input-group" id="agentTransferCodeGroup" style="display:none;"><label for="agentTransferCode" data-i18n="transfer_code_label">Transfer Code *</label><input type="text" id="agentTransferCode" placeholder="6-14 digits" maxlength="14" pattern="[0-9]{6}|[0-9]{8}|[0-9]{10}|[0-9]{12}|[0-9]{14}" /><div style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="transfer_code_hint">6-14 digit code</div><div id="agentTransferCodeError" class="error-msg" style="font-size:0.68rem; display:none;"></div></div>
+            <div class="action-buttons-row" style="margin-top:6px;"><button class="action-btn" id="submitAgentRegistrationBtn" data-i18n="register_agent_submit">Register</button><button class="action-btn close-modal" id="closeAgentRegBtn" style="background:#2c7da0;" data-i18n="close">Close</button></div>
+        </div>
+    </div>
+
+    <!-- ================================================================
+         EDIT AGENT MODAL
          ================================================================ -->
     <div id="editAgentModal" class="modal">
         <div class="modal-content agent-form">
@@ -4641,14 +4841,19 @@
             <div id="editAgentError" class="error-msg"></div>
             <div id="editAgentSuccess" class="success-msg"></div>
 
-            <!-- Basic fields (always visible) -->
             <div class="input-group"><label data-i18n="agent_business_name">Business *</label><input type="text" id="editBusinessName" /></div>
             <div class="input-group"><label data-i18n="agent_address">Address *</label><input type="text" id="editAddress" /></div>
             <div class="input-group"><label data-i18n="agent_city">City *</label><div class="city-input-row"><select id="editCitySelect"><option value="">Select city...</option><option value="Freetown">Freetown</option><option value="Abuja">Abuja</option><option value="Accra">Accra</option><option value="Nairobi">Nairobi</option><option value="Monrovia">Monrovia</option><option value="Dakar">Dakar</option><option value="Conakry">Conakry</option><option value="Bamako">Bamako</option><option value="Yamoussoukro">Yamoussoukro</option><option value="Niamey">Niamey</option><option value="Porto-Novo">Porto-Novo</option><option value="Bissau">Bissau</option><option value="Banjul">Banjul</option><option value="Lomé">Lomé</option><option value="Bangui">Bangui</option><option value="Addis Ababa">Addis Ababa</option><option value="Libreville">Libreville</option><option value="Antananarivo">Antananarivo</option><option value="Rabat">Rabat</option><option value="Kigali">Kigali</option><option value="Kampala">Kampala</option><option value="Kinshasa">Kinshasa</option><option value="Ouagadougou">Ouagadougou</option></select><span class="or-text">OR</span><input type="text" id="editCityOther" placeholder="Other city" /></div></div>
             <div class="input-group"><label data-i18n="agent_reg_number">Reg Number *</label><input type="text" id="editRegNumber" /></div>
             <div class="input-group"><label data-i18n="agent_mobile_money">Mobile Money *</label><input type="tel" id="editMobileMoney" /></div>
 
-            <!-- Password & PIN – with Gen buttons (optional) -->
+            <!-- Agent NIN (editable) -->
+            <div class="input-group">
+                <label style="font-weight:700; color:#1e3b4a; font-size:0.7rem !important;">🪪 National ID (NIN)</label>
+                <input type="text" id="editAgentNin" placeholder="e.g. SL-987654321" />
+                <div style="font-size:0.58rem; color:#666; margin-top:1px;">Agent's National Identification Number</div>
+            </div>
+
             <div class="input-group">
                 <label data-i18n="agent_password">Password *</label>
                 <div style="display:flex; gap:4px; align-items:center; flex-wrap:wrap;">
@@ -4671,7 +4876,6 @@
             </div>
             <div id="editAuthHint" class="edit-agent-auth-hint hidden" data-i18n="edit_auth_hint">✅ Correct credentials – editing unlocked</div>
 
-            <!-- ===== COLLATERAL SECTION (hidden until auth) ===== -->
             <div class="edit-agent-collateral-section" id="editCollateralSection">
                 <div class="input-group">
                     <label for="editCollateralLimit" data-i18n="collateral_limit_label">💳 Collateral *</label>
@@ -4707,7 +4911,6 @@
                     </select>
                     <div style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="collateral_limit_hint">Max transaction amount – select a value</div>
                 </div>
-                <!-- USSD button – hidden until a valid limit (>0) is selected -->
                 <button class="action-btn orange" id="editGenerateCollateralBtn" data-i18n="generate_collateral">📞 USSD</button>
                 <div id="editCollateralResult" style="margin-top:3px;">
                     <div id="editCollateralUssdDisplay" class="ussd-code" style="display:none; font-size:0.85rem;"></div>
@@ -4720,7 +4923,6 @@
                 </div>
             </div>
 
-            <!-- ===== PROVIDER TX + TRANSFER CODE SECTION (hidden until USSD click) ===== -->
             <div class="edit-agent-provider-section" id="editProviderSection">
                 <div class="input-group">
                     <label for="editProviderTxId" data-i18n="provider_tx_id_label">🔐 Provider TX ID *</label>
@@ -4736,7 +4938,6 @@
                 </div>
             </div>
 
-            <!-- ===== ID UPLOAD SECTION (hidden until auth) ===== -->
             <div class="edit-agent-id-section" id="editIdSection">
                 <div class="input-group">
                     <label data-i18n="agent_id_image">📄 Upload ID *</label>
@@ -4746,7 +4947,6 @@
                 </div>
             </div>
 
-            <!-- ===== LOGO UPLOAD SECTION (hidden until auth) ===== -->
             <div class="edit-agent-logo-section" id="editLogoSection">
                 <div class="input-group">
                     <label data-i18n="agent_logo">🖼️ Upload Logo *</label>
@@ -4821,18 +5021,78 @@
     <div id="actionModal" class="modal"><div class="modal-content"><h3 data-i18n="select_type">Action for <span id="modalProviderName">—</span></h3><div id="selectedRoleDisplay" style="font-size:0.8rem; color:#1c6e8f; margin-bottom:4px;">Type: —</div><div class="action-buttons-row"><button class="action-btn" id="actionTransfer" style="background:#f39c12;">💸 Transfer</button><button class="action-btn" id="actionPay" style="background:#27ae60;">💰 Pay</button><button class="action-btn" id="actionCashout" style="background:#e74c3c;">🏦 Cash Out</button></div><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div></div>
     <div id="goodsModal" class="modal"><div class="modal-content"><h3 id="goodsModalTitle">📦 Select Item</h3><div id="goodsList"></div><a id="businessWebsiteLink" href="#" target="_blank" style="display:block; margin:4px 0; color:#2c7da0; font-size:0.75rem; text-decoration:none;">🌐 Website</a><button class="action-btn close-modal" data-i18n="close">Close</button></div></div>
     <div id="adminAuthModal" class="modal admin-auth-modal"><div class="modal-content" id="adminAuthBody"></div></div>
-    <div id="dashboardModal" class="modal"><div class="modal-content" style="max-width:700px; width:95%;"><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; flex-wrap:wrap;"><h3 data-i18n="dashboard_title">📊 Dashboard</h3><div style="display:flex; gap:4px; flex-wrap:wrap;"><button class="action-btn" id="adminLogoutBtn" style="background:#e74c3c; padding:4px 12px; height:32px; font-size:0.7rem;">Logout</button><button class="action-btn close-modal" style="background:#2c7da0; padding:4px 12px; height:32px; font-size:0.7rem;">Close</button></div></div><div id="dashboardContent">
+
+    <!-- ================================================================
+         DASHBOARD MODAL – with NIN, ID Number, ID Image columns for users and NIN for agents
+         ================================================================ -->
+    <div id="dashboardModal" class="modal">
+        <div class="modal-content" style="max-width:900px; width:95%;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; flex-wrap:wrap;">
+                <h3 data-i18n="dashboard_title">📊 Dashboard</h3>
+                <div style="display:flex; gap:4px; flex-wrap:wrap;">
+                    <button class="action-btn" id="adminLogoutBtn" style="background:#e74c3c; padding:4px 12px; height:32px; font-size:0.7rem;">Logout</button>
+                    <button class="action-btn close-modal" style="background:#2c7da0; padding:4px 12px; height:32px; font-size:0.7rem;">Close</button>
+                </div>
+            </div>
+            <div id="dashboardContent">
                 <h4 style="color:#1c6e8f; font-size:0.8rem;">🏢 Agents</h4>
-                <div style="overflow-x:auto; max-height:250px; overflow-y:auto;"><table><thead><tr><th data-i18n="agent_name_th">Agent</th><th data-i18n="business_th">Business</th><th data-i18n="address_th">Address</th><th data-i18n="type_th">Type</th><th data-i18n="password_th">Pass</th><th data-i18n="pin_th">PIN</th><th data-i18n="collateral_th">Limit</th><th data-i18n="country_th">Country</th><th data-i18n="status_th">Status</th><th data-i18n="agreement_th">Agree</th><th data-i18n="action_th">Action</th><th data-i18n="remove_th">Remove</th></tr></thead><tbody id="dashboardTableBody"></tbody></table></div>
+                <div style="overflow-x:auto; max-height:250px; overflow-y:auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th data-i18n="agent_name_th">Agent</th>
+                                <th data-i18n="business_th">Business</th>
+                                <th data-i18n="address_th">Address</th>
+                                <th data-i18n="type_th">Type</th>
+                                <th data-i18n="password_th">Pass</th>
+                                <th data-i18n="pin_th">PIN</th>
+                                <th data-i18n="collateral_th">Limit</th>
+                                <th>🪪 NIN</th>
+                                <th data-i18n="country_th">Country</th>
+                                <th data-i18n="status_th">Status</th>
+                                <th data-i18n="agreement_th">Agree</th>
+                                <th data-i18n="action_th">Action</th>
+                                <th data-i18n="remove_th">Remove</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dashboardTableBody"></tbody>
+                    </table>
+                </div>
+
                 <!-- Pending Approvals Section -->
                 <div style="margin-top: 16px; border-top: 2px solid #f4a261; padding-top: 8px;">
                     <h4 style="color: #e67e22; font-size:0.85rem;">📋 Pending Approvals</h4>
                     <div id="pendingApprovalsContainer"></div>
                 </div>
-                <div class="users-section-title"><span data-i18n="registered_users_label">👤 Users</span><span class="badge-count" id="userCountBadge">0</span></div>
-                <div style="overflow-x:auto; max-height:150px; overflow-y:auto;"><table><thead><tr><th data-i18n="name_th">Name</th><th data-i18n="address">Address</th><th data-i18n="phone_th">Phone</th><th data-i18n="city_th">City</th><th data-i18n="location">Country</th><th data-i18n="action_th">Action</th></tr></thead><tbody id="dashboardUsersBody"></tbody></table><div id="noUsersMsg" class="no-users-msg" data-i18n="no_users_msg">No users</div></div>
+
+                <div class="users-section-title">
+                    <span data-i18n="registered_users_label">👤 Users</span>
+                    <span class="badge-count" id="userCountBadge">0</span>
+                </div>
+                <div style="overflow-x:auto; max-height:200px; overflow-y:auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th data-i18n="name_th">Name</th>
+                                <th data-i18n="address">Address</th>
+                                <th data-i18n="phone_th">Phone</th>
+                                <th data-i18n="city_th">City</th>
+                                <th data-i18n="location">Country</th>
+                                <th>🪪 NIN</th>
+                                <th>📄 ID #</th>
+                                <th>📎 ID Image</th>
+                                <th data-i18n="action_th">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dashboardUsersBody"></tbody>
+                    </table>
+                    <div id="noUsersMsg" class="no-users-msg" data-i18n="no_users_msg">No users</div>
+                </div>
                 <div id="dashboardTransactionsContainer"></div>
-            </div></div></div>
+            </div>
+        </div>
+    </div>
+
     <div id="receiptModal" class="modal"><div class="modal-content"><div class="receipt-header"><button class="receipt-close-x" id="receiptCloseXBtn">✕</button><div class="receipt-logo">Afri·Pay</div><div class="receipt-sub" data-i18n="receipt_sub">RECEIPT</div><div class="receipt-badge" id="receiptBadge">🔹 CONFIRMED</div></div><div class="receipt-body" id="receiptBody"></div><div class="receipt-footer"><div class="thanks" data-i18n="receipt_thanks">✨ Thank you!</div><div class="powered" data-i18n="receipt_powered">WeBine Financial</div><div class="receipt-share-row"><div class="receipt-share-group"><div class="receipt-share-label" data-i18n="send_receipt_to">📤 Send:</div><div class="share-row"><button class="receipt-share-btn client" id="receiptShareClientWhatsApp">📱 Client</button><button class="receipt-share-btn agent" id="receiptShareAgentWhatsApp">📱 Agent</button><button class="receipt-share-btn sms" id="receiptShareClientSMS">✉️ Client</button><button class="receipt-share-btn sms" id="receiptShareAgentSMS">✉️ Agent</button><button class="receipt-share-btn close-receipt" id="receiptCloseBtn">✕</button></div></div></div></div></div></div>
     <div id="agreementModal" class="modal"><div class="modal-content"><div class="agreement-modal-header"><button class="agreement-close-x" id="agreementCloseXBtn">✕</button><h3 data-i18n="agreement_title">📜 AGREEMENT</h3><small data-i18n="agreement_subtitle">Read & sign</small></div><div class="agreement-body" id="agreementBody"></div><div class="agreement-footer"><button class="action-btn agree-btn" id="agreementAgreeBtn" data-i18n="agree_sign">✋ Agree</button><button class="action-btn close-modal" id="agreementCloseBtn" data-i18n="close">Close</button></div><div class="agreement-status" id="agreementStatus" data-i18n="agreement_status_prompt">Read & sign below</div></div></div>
     <div id="agentAuthModal" class="modal"><div class="modal-content"><h3 data-i18n="agent_auth_title">🔐 Agent Auth</h3><div style="font-size:0.75rem; color:#7f8c8d; margin-bottom:4px;" data-i18n="agent_auth_subtitle">Enter credentials</div><div id="agentAuthError" class="error-msg"></div><div id="agentAuthSuccess" class="success-msg"></div><div class="input-group"><label data-i18n="agent_password">Password *</label><input type="password" id="agentAuthPassword" placeholder="6 chars" maxlength="6" /></div><div class="input-group"><label data-i18n="agent_pin_label">5-Digit PIN *</label><input type="password" id="agentAuthPin" placeholder="5 digits" maxlength="5" /></div><div class="action-buttons-row"><button class="action-btn" id="agentAuthConfirmBtn" data-i18n="confirm">✅ Confirm</button><button class="action-btn close-modal" id="agentAuthCancelBtn" data-i18n="cancel">Cancel</button></div></div></div>
@@ -4840,7 +5100,7 @@
     <div id="adminDeleteUserModal" class="modal"><div class="modal-content"><h3 data-i18n="admin_verify_title">🔐 Admin Verify</h3><div style="font-size:0.75rem; color:#7f8c8d; margin-bottom:4px;" data-i18n="admin_verify_subtitle">Enter admin credentials</div><div class="delete-user-warning">⚠️ You are about to delete <span id="deleteUserNameDisplay" class="delete-user-name-highlight">this user</span>. This action cannot be undone.</div><div id="adminDeleteUserError" class="error-msg"></div><div id="adminDeleteUserSuccess" class="success-msg"></div><div class="input-group"><label data-i18n="admin_name">Admin Name *</label><input type="text" id="adminDeleteUserName" placeholder="Admin name" /></div><div class="input-group"><label data-i18n="admin_password">Password *</label><input type="password" id="adminDeleteUserPassword" placeholder="••••••••" /></div><div class="action-buttons-row"><button class="action-btn" id="adminDeleteUserConfirmBtn" style="background:#e74c3c;" data-i18n="confirm_delete">✅ Delete</button><button class="action-btn close-modal" id="adminDeleteUserCancelBtn" data-i18n="cancel">Cancel</button></div></div></div>
     <div id="pinModal" class="modal"><div class="modal-content"><h3 data-i18n="enter_pin_title">🔐 PIN Required</h3><div style="font-size:0.75rem; color:#7f8c8d; margin-bottom:4px;" data-i18n="enter_pin_subtitle">Enter PIN</div><div id="pinProviderBadge" class="provider-badge orange">MB-ONE</div><div class="ussd-preview" id="pinUssdPreview">#144*2*1*73671566*500*0000#</div><div id="pinError" class="auth-error"></div><div class="input-group"><label data-i18n="pin_4_digit">4-Digit PIN *</label><input type="password" id="pinInput" placeholder="1234" maxlength="4" inputmode="numeric" style="text-align:center; letter-spacing:4px; font-family:monospace;" /></div><div class="action-buttons-row"><button class="action-btn" id="pinConfirmBtn" data-i18n="confirm_dial">✅ Dial</button><button class="action-btn close-modal" id="pinCancelBtn" data-i18n="cancel">Cancel</button></div></div></div>
 
-    <!-- ===== CURRENCY CONVERTER MODAL (FIXED) ===== -->
+    <!-- ===== CURRENCY CONVERTER MODAL ===== -->
     <div id="currencyConverterModal" class="modal">
         <div class="modal-content">
             <div class="converter-header">
@@ -4928,14 +5188,13 @@
         </div>
     </div>
 
-    <!-- ADD BUSINESS MODAL - Enhanced with products, delivery, and authenticator -->
+    <!-- ADD BUSINESS MODAL -->
     <div id="addBizModal" class="modal">
         <div class="modal-content" style="max-width:460px;">
             <h3>🏢 Add Your Business</h3>
             <div id="addBizError" class="error-msg"></div>
             <div id="addBizSuccess" class="success-msg"></div>
 
-            <!-- Business Details -->
             <div class="input-group"><label>Business Name *</label><input type="text" id="bizName" placeholder="e.g. Mama's Kitchen" /></div>
             <div class="input-group"><label>Contact Phone *</label><input type="tel" id="bizContact" placeholder="e.g. +232-76-123-456" /></div>
             <div class="input-group"><label>Mobile Money Phone *</label><input type="tel" id="bizMobileMoney" placeholder="e.g. 23276123456" /></div>
@@ -4966,7 +5225,6 @@
                 </div>
             </div>
 
-            <!-- Location Fields -->
             <div class="input-group"><label>Street Address</label><input type="text" id="bizAddress" placeholder="e.g. 123 Main St, Downtown" /></div>
 
             <div class="input-group">
@@ -5042,9 +5300,7 @@
                     <label style="font-weight:700; color:#1c6e8f; font-size:0.85rem;">📦 Products</label>
                     <button type="button" class="add-product-btn" id="addProductBtn">➕ Add Product</button>
                 </div>
-                <div id="productsContainer">
-                    <!-- Product entries will be added here dynamically -->
-                </div>
+                <div id="productsContainer"></div>
             </div>
 
             <!-- ===== AUTHENTICATOR SECTION ===== -->
@@ -5069,7 +5325,6 @@
                 <button type="button" class="auth-btn" id="authenticateBtn">
                     <span class="auth-icon">🔑</span> Authenticate
                 </button>
-                <!-- NEW: Submit for Approval Button -->
                 <button type="button" class="auth-btn" id="submitForApprovalBtn" style="width:100%; justify-content:center; background:#0f2b3d; margin-top:6px;">
                     <span class="auth-icon">📤</span> Submit for Approval
                 </button>
@@ -5860,16 +6115,10 @@
         let currentAgentFilterCountry = null;
         let isBusinessMode = false;
 
-        // Pending approvals storage
         let pendingBusinesses = [];
-
-        // Custom businesses added by users
         let customBusinesses = [];
-
-        // Product counter for unique IDs
         let productCounter = 0;
 
-        // Authentication state
         let authState = {
             isAuthenticated: false,
             providerTxId: '',
@@ -5878,7 +6127,6 @@
             usedTransferCodes: []
         };
 
-        // ===== GLOBAL: Selected product details for receipt =====
         let _selectedProductDetails = null;
 
         // ================================================================
@@ -5992,7 +6240,6 @@
                 ] }
         ];
 
-        // Update businesses with quantity and quality defaults
         businesses.forEach(biz => {
             biz.goods.forEach(g => {
                 if (!g.quantity) g.quantity = 1;
@@ -6075,7 +6322,6 @@
             }
         };
 
-        // Transfer Code Manager
         const TransferCodeManager = {
             usedCodes: [],
             pattern: /^[0-9]{6}$|^[0-9]{8}$|^[0-9]{10}$|^[0-9]{12}$|^[0-9]{14}$/,
@@ -6369,7 +6615,7 @@
         }
 
         // ================================================================
-        // PENDING BUSINESSES (Approval System)
+        // PENDING BUSINESSES
         // ================================================================
         function loadPendingBusinesses() {
             try { pendingBusinesses = JSON.parse(localStorage.getItem(STORAGE_KEYS.pendingBusinesses) || '[]'); } catch (e) { pendingBusinesses = []; }
@@ -7032,13 +7278,11 @@
             });
         }
 
-        // ===== UPDATED showGoodsModal with full product details (name, quantity, amount, quality) =====
         function showGoodsModal(businessId) {
             const allBiz = getAllBusinesses();
             const biz = allBiz.find(b => b.id === businessId);
             if (!biz) return;
 
-            // Build goods HTML with name, price, quantity, quality
             let goodsHtml = '';
             if (biz.goods && biz.goods.length > 0) {
                 goodsHtml = biz.goods.map((g, idx) => {
@@ -7075,7 +7319,6 @@
             }
             getEl('goodsModal').style.display = 'flex';
 
-            // Attach event listeners to each goods item and its select button
             document.querySelectorAll('.goods-item').forEach(item => {
                 const selectBtn = item.querySelector('.goods-select-btn');
                 const clickHandler = function(e) {
@@ -7091,12 +7334,9 @@
                     const agentPhone = getEl('agentPhone');
                     const amountInput = getEl('amountInput');
 
-                    // Fill Agent name with business name
                     if (agentName) agentName.value = SecurityUtils.escapeHTML(biz.name);
-                    // Fill Agent phone with mobile money number (fallback to contact)
                     if (agentPhone) agentPhone.value = SecurityUtils.escapeHTML(biz.mobileMoney || biz.contact || '');
 
-                    // Store product details for receipt
                     _selectedProductDetails = {
                         name: goodsName,
                         quantity: quantity,
@@ -7106,7 +7346,6 @@
                         businessIcon: biz.icon || '🏪'
                     };
 
-                    // --- Convert dropdown to plain field ---
                     const agentSelect = getEl('agentNameSelect');
                     const agentNameLabel = getEl('agentNameLabel');
                     if (agentSelect) {
@@ -7127,7 +7366,6 @@
                         }
                     }
 
-                    // Update dropdown button
                     const selectedAgentName = getEl('selectedAgentName');
                     if (selectedAgentName) {
                         selectedAgentName.innerHTML = '';
@@ -7146,7 +7384,6 @@
                         selectedAgentName.dataset.agentId = 'custom_' + biz.id;
                     }
 
-                    // Apply collateral limit
                     const maxLimit = parseFloat(amountInput?.max);
                     let finalPrice = price;
                     if (maxLimit > 0 && price > maxLimit) {
@@ -7158,7 +7395,6 @@
                         amountInput.dispatchEvent(new Event('input'));
                     }
 
-                    // Clear selected agent ID to avoid conflicts
                     selectedAgentId = null;
                     _selectedAgentId = null;
 
@@ -7166,17 +7402,14 @@
                     getEl('goodsModal').style.display = 'none';
                 };
 
-                // Remove previous listeners to avoid duplicates
                 item.removeEventListener('click', clickHandler);
                 item.removeEventListener('touchstart', clickHandler);
-                // Add new listeners
                 item.addEventListener('click', clickHandler);
                 item.addEventListener('touchstart', function(e) {
                     e.preventDefault();
                     clickHandler.call(this, e);
                 }, { passive: true });
 
-                // Also attach to select button if it exists
                 if (selectBtn) {
                     selectBtn.removeEventListener('click', clickHandler);
                     selectBtn.removeEventListener('touchstart', clickHandler);
@@ -7335,6 +7568,9 @@
             });
         }
 
+        // ================================================================
+        // DASHBOARD – updated with NIN, ID Number, ID Image for users; NIN for agents
+        // ================================================================
         function openDashboard() {
             renderDashboard();
             getEl('dashboardModal').style.display = 'flex';
@@ -7349,7 +7585,7 @@
             let html = '';
             if (agents.length === 0) {
                 html +=
-                    `<tr><td colspan="12" style="text-align:center; padding:10px; color:#95a5a6; font-size:0.75rem;">No agents</td></tr>`;
+                    `<tr><td colspan="13" style="text-align:center; padding:10px; color:#95a5a6; font-size:0.75rem;">No agents</td></tr>`;
             } else {
                 agents.forEach(agent => {
                     const data = agent.agentData || agent;
@@ -7358,6 +7594,7 @@
                     const statusText = approved ? 'Approved' : 'Pending';
                     const hasAgreement = data.agreement && data.agreement.signed;
                     const flag = getAgentFlag(agent);
+                    const nin = data.nin || data.agentNin || '—';
                     html += `
                             <tr class="agent-row">
                                 <td>${flag} ${SecurityUtils.escapeHTML(agent.name)}</td>
@@ -7367,6 +7604,7 @@
                                 <td style="font-family:monospace;">${SecurityUtils.escapeHTML(data.password || 'N/A')}</td>
                                 <td style="font-family:monospace;">${SecurityUtils.escapeHTML(data.pin || 'N/A')}</td>
                                 <td>${data.collateralLimit || 0}</td>
+                                <td style="font-size:0.6rem; max-width:60px; word-break:break-all;">${SecurityUtils.escapeHTML(nin)}</td>
                                 <td>${SecurityUtils.escapeHTML(data.countryCode || 'N/A')}</td>
                                 <td><span class="status-badge ${statusClass}">${statusText}</span></td>
                                 <td>${hasAgreement ? `<button class="action-btn view-agreement-btn" data-agent-id="${agent.id}" style="background:#2c7da0; padding:2px 8px; height:26px; font-size:0.62rem;">📜</button>` : '—'}</td>
@@ -7520,6 +7758,7 @@
             showToast(`❌ "${rejectedBiz.name}" rejected.`, 2000);
         }
 
+        // ===== UPDATED renderUsersDashboard with NIN, ID Number, ID Image =====
         function renderUsersDashboard() {
             const tbody = getEl('dashboardUsersBody');
             const noMsg = getEl('noUsersMsg');
@@ -7544,6 +7783,10 @@
                 const city = user.city || '—';
                 const country = user.country || '—';
                 const fullAddress = [address, city, country].filter(Boolean).join(', ') || '—';
+                const nin = user.nin || user.userNin || '—';
+                const idNumber = user.idNumber || '—';
+                const idImage = user.idImageDataURL || user.userIdImageDataURL || null;
+                const idThumb = idImage ? `<img src="${idImage}" class="id-thumb" alt="ID" title="Click to view" onclick="window.open('${idImage}','_blank')" />` : '—';
                 html += `
                         <tr class="user-row">
                             <td>${SecurityUtils.escapeHTML(user.name)}</td>
@@ -7551,6 +7794,9 @@
                             <td>${SecurityUtils.escapeHTML(user.phone || '—')}</td>
                             <td>${SecurityUtils.escapeHTML(city)}</td>
                             <td>${SecurityUtils.escapeHTML(country)}</td>
+                            <td style="font-size:0.6rem; max-width:50px; word-break:break-all;">${SecurityUtils.escapeHTML(nin)}</td>
+                            <td style="font-size:0.6rem; max-width:50px; word-break:break-all;">${SecurityUtils.escapeHTML(idNumber)}</td>
+                            <td>${idThumb}</td>
                             <td><button class="user-delete-btn" data-user-id="${user.id}" data-user-name="${SecurityUtils.escapeHTML(user.name)}">🗑️</button></td>
                         </tr>
                     `;
@@ -7792,7 +8038,7 @@
         }
 
         // ================================================================
-        // RECEIPT – dual‑currency display with product details
+        // RECEIPT
         // ================================================================
         function showReceiptModal(receiptData) {
             const body = getEl('receiptBody');
@@ -7810,7 +8056,6 @@
                 { label: 'Transfer Code', value: SecurityUtils.escapeHTML(receiptData.transferCode || 'N/A') },
             ];
 
-            // ===== ADD PRODUCT DETAILS IF AVAILABLE =====
             if (_selectedProductDetails) {
                 const p = _selectedProductDetails;
                 lines.push({
@@ -7831,7 +8076,6 @@
                 });
             }
 
-            // Continue with standard receipt lines
             lines.push({
                 label: t('sender_currency_label'),
                 value: SecurityUtils.escapeHTML(receiptData.senderCurrency + ' ' + receiptData.senderAmount),
@@ -7877,7 +8121,6 @@
                 '🔑 Transfer Code: ' + transferCode,
             ];
 
-            // Add product details to plain text receipt
             if (_selectedProductDetails) {
                 const p = _selectedProductDetails;
                 receiptLines.push('─────────────────');
@@ -7964,7 +8207,7 @@
         }
 
         // ================================================================
-        // CHAT (minimal)
+        // CHAT
         // ================================================================
         function renderSidebar() {
             const sidebar = getEl('chatSidebar');
@@ -8564,7 +8807,7 @@
         }
 
         // ================================================================
-        // CONVERTER HELPERS – FIXED
+        // CONVERTER HELPERS
         // ================================================================
         function populateFromCurrencySelect() {
             const select = getEl('convFromCurrency');
@@ -8827,7 +9070,8 @@
                         logoDataURL: nLogoDataURL,
                         agreement: null,
                         providerTxId: 'NW123456.1234.X12345',
-                        transferCode: '12345678'
+                        transferCode: '12345678',
+                        nin: 'SL-123456789' // permanent agent NIN
                     });
                     ProviderTxIdManager.markAsUsed('NW123456.1234.X12345');
                 }
@@ -8893,7 +9137,8 @@
                         logoDataURL: logoDataURL,
                         agreement: null,
                         providerTxId: 'MP266546.7657.N87906',
-                        transferCode: '87906543'
+                        transferCode: '87906543',
+                        nin: 'GN-987654321' // permanent agent NIN
                     });
                     ProviderTxIdManager.markAsUsed('MP266546.7657.N87906');
                 }
@@ -8904,7 +9149,7 @@
         }
 
         // ================================================================
-        // EDIT AGENT MODAL – with FIXED authentication logic
+        // EDIT AGENT MODAL – with NIN support
         // ================================================================
         function openEditAgentModal(agentId) {
             const agents = getAgents();
@@ -8918,6 +9163,7 @@
             setCityValue('editCitySelect', 'editCityOther', data.city || '');
             getEl('editRegNumber').value = SecurityUtils.escapeHTML(data.regNumber || '');
             getEl('editMobileMoney').value = SecurityUtils.escapeHTML(data.mobileMoney || agent.phone || '');
+            getEl('editAgentNin').value = SecurityUtils.escapeHTML(data.nin || data.agentNin || '');
             getEl('editPassword').value = '';
             getEl('editPin').value = '';
             getEl('editAgentError').textContent = '';
@@ -9335,7 +9581,7 @@
         }
 
         // ================================================================
-        // ADD BUSINESS MODAL FUNCTIONS - Enhanced with products, delivery, and authenticator
+        // ADD BUSINESS MODAL FUNCTIONS
         // ================================================================
         function openAddBizModal() {
             getEl('bizName').value = '';
@@ -9625,7 +9871,7 @@
         // MAIN INIT
         // ================================================================
         function initApp() {
-            console.log('🚀 AfriPay initializing with enhanced Add Biz feature (products, delivery, authenticator)...');
+            console.log('🚀 AfriPay initializing with NIN, ID Number, and ID Upload features...');
 
             function safeExecute(fn, label) { try { fn(); } catch (e) { console.error(`❌ Error in ${label}:`, e); } }
 
@@ -9680,7 +9926,7 @@
         }
 
         // ================================================================
-        // FULL SETUP EVENT LISTENERS – all buttons restored
+        // FULL SETUP EVENT LISTENERS
         // ================================================================
         function setupEventListeners() {
             // Language
@@ -9722,6 +9968,11 @@
                     getEl('regUssdResult').style.display = 'none';
                     getEl('regProfilePreview').style.display = 'none';
                     getEl('regProfileImage').value = '';
+                    getEl('regNin').value = '';
+                    getEl('regIdNumber').value = '';
+                    getEl('regIdImage').value = '';
+                    getEl('regIdPreview').style.display = 'none';
+                    getEl('regIdPreview').src = '';
                 });
                 registerBtn.addEventListener('touchstart', function(e) {
                     e.preventDefault();
@@ -9738,6 +9989,11 @@
                     getEl('regUssdResult').style.display = 'none';
                     getEl('regProfilePreview').style.display = 'none';
                     getEl('regProfileImage').value = '';
+                    getEl('regNin').value = '';
+                    getEl('regIdNumber').value = '';
+                    getEl('regIdImage').value = '';
+                    getEl('regIdPreview').style.display = 'none';
+                    getEl('regIdPreview').src = '';
                 }, { passive: true });
             }
 
@@ -9969,6 +10225,7 @@
                     getEl('agentTransferCode').value = '';
                     getEl('agentTransferCodeGroup').style.display = 'none';
                     getEl('agentCollateralLimit').value = '200';
+                    getEl('agentNin').value = '';
                     agreementSigned = false;
                     agreementSignatureDataURL = null;
                     const statusText = getEl('agreementStatusText');
@@ -10014,6 +10271,7 @@
                     getEl('agentTransferCode').value = '';
                     getEl('agentTransferCodeGroup').style.display = 'none';
                     getEl('agentCollateralLimit').value = '200';
+                    getEl('agentNin').value = '';
                     agreementSigned = false;
                     agreementSignatureDataURL = null;
                     const statusText = getEl('agreementStatusText');
@@ -10535,6 +10793,7 @@
                     getEl('agentTransferCode').value = '';
                     getEl('agentTransferCodeGroup').style.display = 'none';
                     getEl('agentCollateralLimit').value = '200';
+                    getEl('agentNin').value = '';
                     agreementSigned = false;
                     agreementSignatureDataURL = null;
                     const statusText = getEl('agreementStatusText');
@@ -10577,6 +10836,7 @@
                     getEl('agentTransferCode').value = '';
                     getEl('agentTransferCodeGroup').style.display = 'none';
                     getEl('agentCollateralLimit').value = '200';
+                    getEl('agentNin').value = '';
                     agreementSigned = false;
                     agreementSignatureDataURL = null;
                     const statusText = getEl('agreementStatusText');
@@ -10936,7 +11196,7 @@
                 }, { passive: true });
             }
 
-            // Submit Agent Registration
+            // Submit Agent Registration – with NIN support
             const submitAgentRegistrationBtn = getEl('submitAgentRegistrationBtn');
             if (submitAgentRegistrationBtn) {
                 submitAgentRegistrationBtn.addEventListener('click', function(e) {
@@ -10976,9 +11236,11 @@
                     const pin = getEl('agentPin').value.trim();
                     const idImage = getEl('agentIdImage').files[0];
                     const collateralAmount = parseFloat(getEl('collateralAmount').value) || 0;
+                    const nin = SecurityUtils.sanitizeInput(getEl('agentNin').value.trim(), 50);
+
                     if (!bizName || !address || !city || !regNumber || !ownerName || !idNumber ||
-                        !mobileMoney || !idImage || !password || !pin) {
-                        getEl('agentRegError').textContent = '❌ Fill all fields';
+                        !mobileMoney || !idImage || !password || !pin || !nin) {
+                        getEl('agentRegError').textContent = '❌ Fill all fields (including NIN)';
                         return;
                     }
                     if (password.length !== 6) {
@@ -11033,7 +11295,8 @@
                         idImageDataURL: null,
                         logoDataURL: logoDataURL,
                         agreement: window._agentAgreement || null,
-                        providerTxId: agentProviderTxId
+                        providerTxId: agentProviderTxId,
+                        nin: nin // Agent NIN
                     };
                     const reader = new FileReader();
                     reader.onload = function(ev) {
@@ -11091,9 +11354,11 @@
                     const pin = getEl('agentPin').value.trim();
                     const idImage = getEl('agentIdImage').files[0];
                     const collateralAmount = parseFloat(getEl('collateralAmount').value) || 0;
+                    const nin = SecurityUtils.sanitizeInput(getEl('agentNin').value.trim(), 50);
+
                     if (!bizName || !address || !city || !regNumber || !ownerName || !idNumber ||
-                        !mobileMoney || !idImage || !password || !pin) {
-                        getEl('agentRegError').textContent = '❌ Fill all fields';
+                        !mobileMoney || !idImage || !password || !pin || !nin) {
+                        getEl('agentRegError').textContent = '❌ Fill all fields (including NIN)';
                         return;
                     }
                     if (password.length !== 6) {
@@ -11148,7 +11413,8 @@
                         idImageDataURL: null,
                         logoDataURL: logoDataURL,
                         agreement: window._agentAgreement || null,
-                        providerTxId: agentProviderTxId
+                        providerTxId: agentProviderTxId,
+                        nin: nin
                     };
                     const reader = new FileReader();
                     reader.onload = function(ev) {
@@ -11171,7 +11437,7 @@
                 }, { passive: true });
             }
 
-            // Save Edit Agent
+            // Save Edit Agent – with NIN support
             const saveEditAgentBtn = getEl('saveEditAgentBtn');
             if (saveEditAgentBtn) {
                 saveEditAgentBtn.addEventListener('click', function(e) {
@@ -11186,6 +11452,7 @@
                         const mobileMoney = SecurityUtils.sanitizePhone(getEl('editMobileMoney').value.trim());
                         const password = getEl('editPassword').value.trim();
                         const pin = getEl('editPin').value.trim();
+                        const nin = SecurityUtils.sanitizeInput(getEl('editAgentNin').value.trim(), 50);
 
                         const providerTxId = getEl('editProviderTxId')?.value?.trim() || '';
                         const transferCode = getEl('editTransferCode')?.value?.trim() || '';
@@ -11230,6 +11497,8 @@
                         data.mobileMoney = mobileMoney;
                         data.phone = mobileMoney;
                         data.name = businessName;
+                        data.nin = nin;
+                        data.agentNin = nin;
                         if (providerTxId) data.providerTxId = providerTxId;
                         if (transferCode) data.transferCode = transferCode;
 
@@ -11309,6 +11578,7 @@
                         const mobileMoney = SecurityUtils.sanitizePhone(getEl('editMobileMoney').value.trim());
                         const password = getEl('editPassword').value.trim();
                         const pin = getEl('editPin').value.trim();
+                        const nin = SecurityUtils.sanitizeInput(getEl('editAgentNin').value.trim(), 50);
 
                         const providerTxId = getEl('editProviderTxId')?.value?.trim() || '';
                         const transferCode = getEl('editTransferCode')?.value?.trim() || '';
@@ -11353,6 +11623,8 @@
                         data.mobileMoney = mobileMoney;
                         data.phone = mobileMoney;
                         data.name = businessName;
+                        data.nin = nin;
+                        data.agentNin = nin;
                         if (providerTxId) data.providerTxId = providerTxId;
                         if (transferCode) data.transferCode = transferCode;
 
@@ -11442,6 +11714,7 @@
                     regUser.logoDataURL = data.logoDataURL || regUser.logoDataURL;
                     regUser.providerTxId = data.providerTxId || regUser.providerTxId;
                     regUser.transferCode = data.transferCode || regUser.transferCode;
+                    regUser.nin = data.nin || data.agentNin || regUser.nin;
                 }
                 saveRegisteredUsers();
                 getEl('editAgentSuccess').textContent = '✅ Agent updated!';
@@ -11900,7 +12173,9 @@
                 }, { passive: true });
             }
 
-            // Do Register
+            // ============================================================
+            // DO REGISTER – with NIN, ID Number, ID Upload
+            // ============================================================
             const doRegisterBtn = getEl('doRegisterBtn');
             if (doRegisterBtn) {
                 doRegisterBtn.addEventListener('click', function(e) {
@@ -11911,6 +12186,10 @@
                     const city = getCityValue('regCitySelect', 'regCityOther');
                     const country = getEl('regCountry').value;
                     const language = getEl('regLanguage').value;
+                    const nin = getEl('regNin').value.trim();
+                    const idNumber = getEl('regIdNumber').value.trim();
+                    const idImageFile = getEl('regIdImage').files[0];
+
                     let avatarDataURL = null;
                     const previewContainer = getEl('regProfilePreview');
                     if (previewContainer && previewContainer.style.display !== 'none') {
@@ -11919,10 +12198,12 @@
                     }
                     const selectedEmojiEl = document.querySelector('#emojiPickerGrid .emoji-option.selected');
                     const emoji = selectedEmojiEl ? selectedEmojiEl.getAttribute('data-emoji') : '👤';
-                    if (!name || !phone || !city) {
-                        getEl('regError').innerText = '❌ Please fill in Name, Phone and City';
+
+                    if (!name || !phone || !city || !nin || !idNumber) {
+                        getEl('regError').innerText = '❌ Please fill in Name, Phone, City, NIN, and ID Number';
                         return;
                     }
+
                     const userObj = {
                         name,
                         phone,
@@ -11932,44 +12213,66 @@
                         language: language || 'en',
                         emoji: avatarDataURL ? '' : emoji,
                         avatarDataURL: avatarDataURL || null,
-                        registeredAt: new Date().toISOString()
+                        registeredAt: new Date().toISOString(),
+                        nin: nin,
+                        idNumber: idNumber,
+                        userIdImageDataURL: null
                     };
-                    currentUser = userObj;
-                    saveUserToStorage(userObj);
-                    loadRegisteredUsers();
-                    const exists = registeredUsers.some(u => u.phone === phone || u.name === name);
-                    if (!exists) {
-                        registeredUsers.push({
-                            id: 'user_' + Date.now(),
-                            name,
-                            phone,
-                            emoji: userObj.emoji || '👤',
-                            avatarDataURL: avatarDataURL || null,
-                            address: address || '',
-                            city,
-                            country: country || 'Sierra Leone'
-                        });
-                        saveRegisteredUsers();
+
+                    const processRegistration = (idImageDataURL) => {
+                        if (idImageDataURL) {
+                            userObj.userIdImageDataURL = idImageDataURL;
+                        }
+                        currentUser = userObj;
+                        saveUserToStorage(userObj);
+                        loadRegisteredUsers();
+                        const exists = registeredUsers.some(u => u.phone === phone || u.name === name);
+                        if (!exists) {
+                            registeredUsers.push({
+                                id: 'user_' + Date.now(),
+                                name,
+                                phone,
+                                emoji: userObj.emoji || '👤',
+                                avatarDataURL: avatarDataURL || null,
+                                address: address || '',
+                                city,
+                                country: country || 'Sierra Leone',
+                                nin: nin,
+                                idNumber: idNumber,
+                                userIdImageDataURL: idImageDataURL || null
+                            });
+                            saveRegisteredUsers();
+                        }
+                        const existingConnected = connectedUsers.find(u => u.name === name || u.phone === phone);
+                        if (!existingConnected) {
+                            connectedUsers.push({
+                                id: 'user_' + Date.now(),
+                                name,
+                                emoji: userObj.emoji || '👤',
+                                phone,
+                                avatarDataURL: avatarDataURL || null,
+                                status: 'online'
+                            });
+                        }
+                        getEl('regSuccess').innerText = '✅ Account created successfully!';
+                        getEl('regError').innerText = '';
+                        showToast('✅ Welcome ' + name + '!', 3000);
+                        renderSidebar();
+                        showLoggedInUI();
+                        renderAgentDropdown(currentAgentFilterCountry);
+                        populateAgentSelect(currentAgentFilterCountry);
+                        setTimeout(() => { getEl('registerModal').style.display = 'none'; }, 1500);
+                    };
+
+                    if (idImageFile) {
+                        const reader = new FileReader();
+                        reader.onload = function(ev) {
+                            processRegistration(ev.target.result);
+                        };
+                        reader.readAsDataURL(idImageFile);
+                    } else {
+                        processRegistration(null);
                     }
-                    const existingConnected = connectedUsers.find(u => u.name === name || u.phone === phone);
-                    if (!existingConnected) {
-                        connectedUsers.push({
-                            id: 'user_' + Date.now(),
-                            name,
-                            emoji: userObj.emoji || '👤',
-                            phone,
-                            avatarDataURL: avatarDataURL || null,
-                            status: 'online'
-                        });
-                    }
-                    getEl('regSuccess').innerText = '✅ Account created successfully!';
-                    getEl('regError').innerText = '';
-                    showToast('✅ Welcome ' + name + '!', 3000);
-                    renderSidebar();
-                    showLoggedInUI();
-                    renderAgentDropdown(currentAgentFilterCountry);
-                    populateAgentSelect(currentAgentFilterCountry);
-                    setTimeout(() => { getEl('registerModal').style.display = 'none'; }, 1500);
                 });
                 doRegisterBtn.addEventListener('touchstart', function(e) {
                     e.preventDefault();
@@ -11979,6 +12282,10 @@
                     const city = getCityValue('regCitySelect', 'regCityOther');
                     const country = getEl('regCountry').value;
                     const language = getEl('regLanguage').value;
+                    const nin = getEl('regNin').value.trim();
+                    const idNumber = getEl('regIdNumber').value.trim();
+                    const idImageFile = getEl('regIdImage').files[0];
+
                     let avatarDataURL = null;
                     const previewContainer = getEl('regProfilePreview');
                     if (previewContainer && previewContainer.style.display !== 'none') {
@@ -11987,10 +12294,12 @@
                     }
                     const selectedEmojiEl = document.querySelector('#emojiPickerGrid .emoji-option.selected');
                     const emoji = selectedEmojiEl ? selectedEmojiEl.getAttribute('data-emoji') : '👤';
-                    if (!name || !phone || !city) {
-                        getEl('regError').innerText = '❌ Please fill in Name, Phone and City';
+
+                    if (!name || !phone || !city || !nin || !idNumber) {
+                        getEl('regError').innerText = '❌ Please fill in Name, Phone, City, NIN, and ID Number';
                         return;
                     }
+
                     const userObj = {
                         name,
                         phone,
@@ -12000,44 +12309,66 @@
                         language: language || 'en',
                         emoji: avatarDataURL ? '' : emoji,
                         avatarDataURL: avatarDataURL || null,
-                        registeredAt: new Date().toISOString()
+                        registeredAt: new Date().toISOString(),
+                        nin: nin,
+                        idNumber: idNumber,
+                        userIdImageDataURL: null
                     };
-                    currentUser = userObj;
-                    saveUserToStorage(userObj);
-                    loadRegisteredUsers();
-                    const exists = registeredUsers.some(u => u.phone === phone || u.name === name);
-                    if (!exists) {
-                        registeredUsers.push({
-                            id: 'user_' + Date.now(),
-                            name,
-                            phone,
-                            emoji: userObj.emoji || '👤',
-                            avatarDataURL: avatarDataURL || null,
-                            address: address || '',
-                            city,
-                            country: country || 'Sierra Leone'
-                        });
-                        saveRegisteredUsers();
+
+                    const processRegistration = (idImageDataURL) => {
+                        if (idImageDataURL) {
+                            userObj.userIdImageDataURL = idImageDataURL;
+                        }
+                        currentUser = userObj;
+                        saveUserToStorage(userObj);
+                        loadRegisteredUsers();
+                        const exists = registeredUsers.some(u => u.phone === phone || u.name === name);
+                        if (!exists) {
+                            registeredUsers.push({
+                                id: 'user_' + Date.now(),
+                                name,
+                                phone,
+                                emoji: userObj.emoji || '👤',
+                                avatarDataURL: avatarDataURL || null,
+                                address: address || '',
+                                city,
+                                country: country || 'Sierra Leone',
+                                nin: nin,
+                                idNumber: idNumber,
+                                userIdImageDataURL: idImageDataURL || null
+                            });
+                            saveRegisteredUsers();
+                        }
+                        const existingConnected = connectedUsers.find(u => u.name === name || u.phone === phone);
+                        if (!existingConnected) {
+                            connectedUsers.push({
+                                id: 'user_' + Date.now(),
+                                name,
+                                emoji: userObj.emoji || '👤',
+                                phone,
+                                avatarDataURL: avatarDataURL || null,
+                                status: 'online'
+                            });
+                        }
+                        getEl('regSuccess').innerText = '✅ Account created successfully!';
+                        getEl('regError').innerText = '';
+                        showToast('✅ Welcome ' + name + '!', 3000);
+                        renderSidebar();
+                        showLoggedInUI();
+                        renderAgentDropdown(currentAgentFilterCountry);
+                        populateAgentSelect(currentAgentFilterCountry);
+                        setTimeout(() => { getEl('registerModal').style.display = 'none'; }, 1500);
+                    };
+
+                    if (idImageFile) {
+                        const reader = new FileReader();
+                        reader.onload = function(ev) {
+                            processRegistration(ev.target.result);
+                        };
+                        reader.readAsDataURL(idImageFile);
+                    } else {
+                        processRegistration(null);
                     }
-                    const existingConnected = connectedUsers.find(u => u.name === name || u.phone === phone);
-                    if (!existingConnected) {
-                        connectedUsers.push({
-                            id: 'user_' + Date.now(),
-                            name,
-                            emoji: userObj.emoji || '👤',
-                            phone,
-                            avatarDataURL: avatarDataURL || null,
-                            status: 'online'
-                        });
-                    }
-                    getEl('regSuccess').innerText = '✅ Account created successfully!';
-                    getEl('regError').innerText = '';
-                    showToast('✅ Welcome ' + name + '!', 3000);
-                    renderSidebar();
-                    showLoggedInUI();
-                    renderAgentDropdown(currentAgentFilterCountry);
-                    populateAgentSelect(currentAgentFilterCountry);
-                    setTimeout(() => { getEl('registerModal').style.display = 'none'; }, 1500);
                 }, { passive: true });
             }
 
@@ -12138,6 +12469,25 @@
                             });
                     } else showToast('⚠️ No code to copy.', 1500);
                 }, { passive: true });
+            }
+
+            // Reg ID Image preview
+            const regIdImage = getEl('regIdImage');
+            if (regIdImage) {
+                regIdImage.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(ev) {
+                            const preview = getEl('regIdPreview');
+                            if (preview) {
+                                preview.style.display = 'block';
+                                preview.src = ev.target.result;
+                            }
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
             }
 
             // Footer buttons
@@ -12941,7 +13291,6 @@
                             recipientAmount: recipientAmount.toFixed(2)
                         };
 
-                        // Include product details if available
                         if (_selectedProductDetails) {
                             receiptData.product = { ..._selectedProductDetails };
                         }
@@ -12990,7 +13339,6 @@
                         }).catch(() => { showToast('⚠️ Network error', 3500); }).finally(() => {
                             if (btn) { btn.innerText = orig;
                                 btn.disabled = false; }
-                            // Reset product details after submission
                             _selectedProductDetails = null;
                         });
                     } catch (err) { showToast('❌ Submit error: ' + err.message, 3000); }
@@ -13289,7 +13637,7 @@
             }
 
             // ============================================================
-            // ADD BUSINESS MODAL EVENTS - Enhanced with products, delivery, and authenticator
+            // ADD BUSINESS MODAL EVENTS
             // ============================================================
             const addBizBtn = getEl('addBizBtn');
             if (addBizBtn) {
@@ -13303,7 +13651,6 @@
                 }, { passive: true });
             }
 
-            // ===== NEW: Submit for Approval Button =====
             const submitForApprovalBtn = getEl('submitForApprovalBtn');
             if (submitForApprovalBtn) {
                 submitForApprovalBtn.addEventListener('click', function(e) {
@@ -13326,7 +13673,6 @@
                 });
             }
 
-            // Add Product button
             const addProductBtn = getEl('addProductBtn');
             if (addProductBtn) {
                 addProductBtn.addEventListener('click', function(e) {
@@ -13339,7 +13685,6 @@
                 }, { passive: true });
             }
 
-            // Authenticator events
             const authProviderInput = getEl('authProviderTxId');
             const authTransferInput = getEl('authTransferCode');
             const authBtn = getEl('authenticateBtn');
@@ -13384,7 +13729,7 @@
         }
 
         bootstrap();
-        console.log('🚀 AfriPay fully bootstrapped — Enhanced Add Biz with authenticator, products, and delivery.');
+        console.log('🚀 AfriPay fully bootstrapped — NIN, ID Number, and ID Upload features added.');
     </script>
 </body>
 </html>
