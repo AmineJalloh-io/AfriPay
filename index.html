@@ -12211,31 +12211,48 @@
             // ============================================================
             // DO REGISTER – with NIN, ID Number, ID Upload
             // ============================================================
-            const doRegisterBtn = getEl('doRegisterBtn');
+            // FIX: Re-bind the register button with a direct click handler
+            const doRegisterBtn = document.getElementById('doRegisterBtn');
             if (doRegisterBtn) {
-                doRegisterBtn.addEventListener('click', function(e) {
+                // Remove any existing listeners by cloning
+                const newBtn = doRegisterBtn.cloneNode(true);
+                doRegisterBtn.parentNode.replaceChild(newBtn, doRegisterBtn);
+                const freshBtn = document.getElementById('doRegisterBtn');
+
+                freshBtn.addEventListener('click', function(e) {
                     e.preventDefault();
-                    const name = getEl('regName').value.trim();
-                    const phone = getEl('regPhone').value.trim();
-                    const address = getEl('regAddress').value.trim();
+                    console.log('Register button clicked!');
+                    const name = document.getElementById('regName').value.trim();
+                    const phone = document.getElementById('regPhone').value.trim();
+                    const address = document.getElementById('regAddress').value.trim();
                     const city = getCityValue('regCitySelect', 'regCityOther');
-                    const country = getEl('regCountry').value;
-                    const language = getEl('regLanguage').value;
-                    const nin = getEl('regNin').value.trim();
-                    const idNumber = getEl('regIdNumber').value.trim();
-                    const idImageFile = getEl('regIdImage').files[0];
+                    const country = document.getElementById('regCountry').value;
+                    const language = document.getElementById('regLanguage').value;
+                    const nin = document.getElementById('regNin').value.trim();
+                    const idNumber = document.getElementById('regIdNumber').value.trim();
+                    const idImageFile = document.getElementById('regIdImage').files[0];
 
                     let avatarDataURL = null;
-                    const previewContainer = getEl('regProfilePreview');
+                    const previewContainer = document.getElementById('regProfilePreview');
                     if (previewContainer && previewContainer.style.display !== 'none') {
                         const img = previewContainer.querySelector('img');
                         if (img && img.src && !img.src.startsWith('#')) { avatarDataURL = img.src; }
                     }
                     const selectedEmojiEl = document.querySelector('#emojiPickerGrid .emoji-option.selected');
                     const emoji = selectedEmojiEl ? selectedEmojiEl.getAttribute('data-emoji') : '👤';
+                    const errorEl = document.getElementById('regError');
+                    const successEl = document.getElementById('regSuccess');
 
                     if (!name || !phone || !city || !nin || !idNumber) {
-                        getEl('regError').innerText = '❌ Please fill in Name, Phone, City, NIN, and ID Number';
+                        errorEl.innerText = '❌ Please fill in Name, Phone, City, NIN, and ID Number';
+                        return;
+                    }
+
+                    // Check if user already exists
+                    loadRegisteredUsers();
+                    const exists = registeredUsers.some(u => u.phone === phone || u.name === name);
+                    if (exists) {
+                        errorEl.innerText = '❌ User with this name or phone already exists. Please login.';
                         return;
                     }
 
@@ -12261,23 +12278,21 @@
                         currentUser = userObj;
                         saveUserToStorage(userObj);
                         loadRegisteredUsers();
-                        const exists = registeredUsers.some(u => u.phone === phone || u.name === name);
-                        if (!exists) {
-                            registeredUsers.push({
-                                id: 'user_' + Date.now(),
-                                name,
-                                phone,
-                                emoji: userObj.emoji || '👤',
-                                avatarDataURL: avatarDataURL || null,
-                                address: address || '',
-                                city,
-                                country: country || 'Sierra Leone',
-                                nin: nin,
-                                idNumber: idNumber,
-                                userIdImageDataURL: idImageDataURL || null
-                            });
-                            saveRegisteredUsers();
-                        }
+                        registeredUsers.push({
+                            id: 'user_' + Date.now(),
+                            name,
+                            phone,
+                            emoji: userObj.emoji || '👤',
+                            avatarDataURL: avatarDataURL || null,
+                            address: address || '',
+                            city,
+                            country: country || 'Sierra Leone',
+                            nin: nin,
+                            idNumber: idNumber,
+                            userIdImageDataURL: idImageDataURL || null
+                        });
+                        saveRegisteredUsers();
+
                         const existingConnected = connectedUsers.find(u => u.name === name || u.phone === phone);
                         if (!existingConnected) {
                             connectedUsers.push({
@@ -12289,14 +12304,17 @@
                                 status: 'online'
                             });
                         }
-                        getEl('regSuccess').innerText = '✅ Account created successfully!';
-                        getEl('regError').innerText = '';
+                        successEl.innerText = '✅ Account created successfully!';
+                        errorEl.innerText = '';
                         showToast('✅ Welcome ' + name + '!', 3000);
                         renderSidebar();
                         showLoggedInUI();
                         renderAgentDropdown(currentAgentFilterCountry);
                         populateAgentSelect(currentAgentFilterCountry);
-                        setTimeout(() => { getEl('registerModal').style.display = 'none'; }, 1500);
+                        setTimeout(() => {
+                            document.getElementById('registerModal').style.display = 'none';
+                            successEl.innerText = '';
+                        }, 1500);
                     };
 
                     if (idImageFile) {
@@ -12309,101 +12327,13 @@
                         processRegistration(null);
                     }
                 });
-                doRegisterBtn.addEventListener('touchstart', function(e) {
+
+                freshBtn.addEventListener('touchstart', function(e) {
                     e.preventDefault();
-                    const name = getEl('regName').value.trim();
-                    const phone = getEl('regPhone').value.trim();
-                    const address = getEl('regAddress').value.trim();
-                    const city = getCityValue('regCitySelect', 'regCityOther');
-                    const country = getEl('regCountry').value;
-                    const language = getEl('regLanguage').value;
-                    const nin = getEl('regNin').value.trim();
-                    const idNumber = getEl('regIdNumber').value.trim();
-                    const idImageFile = getEl('regIdImage').files[0];
-
-                    let avatarDataURL = null;
-                    const previewContainer = getEl('regProfilePreview');
-                    if (previewContainer && previewContainer.style.display !== 'none') {
-                        const img = previewContainer.querySelector('img');
-                        if (img && img.src && !img.src.startsWith('#')) { avatarDataURL = img.src; }
-                    }
-                    const selectedEmojiEl = document.querySelector('#emojiPickerGrid .emoji-option.selected');
-                    const emoji = selectedEmojiEl ? selectedEmojiEl.getAttribute('data-emoji') : '👤';
-
-                    if (!name || !phone || !city || !nin || !idNumber) {
-                        getEl('regError').innerText = '❌ Please fill in Name, Phone, City, NIN, and ID Number';
-                        return;
-                    }
-
-                    const userObj = {
-                        name,
-                        phone,
-                        address: address || '',
-                        city,
-                        country: country || 'Sierra Leone',
-                        language: language || 'en',
-                        emoji: avatarDataURL ? '' : emoji,
-                        avatarDataURL: avatarDataURL || null,
-                        registeredAt: new Date().toISOString(),
-                        nin: nin,
-                        idNumber: idNumber,
-                        userIdImageDataURL: null
-                    };
-
-                    const processRegistration = (idImageDataURL) => {
-                        if (idImageDataURL) {
-                            userObj.userIdImageDataURL = idImageDataURL;
-                        }
-                        currentUser = userObj;
-                        saveUserToStorage(userObj);
-                        loadRegisteredUsers();
-                        const exists = registeredUsers.some(u => u.phone === phone || u.name === name);
-                        if (!exists) {
-                            registeredUsers.push({
-                                id: 'user_' + Date.now(),
-                                name,
-                                phone,
-                                emoji: userObj.emoji || '👤',
-                                avatarDataURL: avatarDataURL || null,
-                                address: address || '',
-                                city,
-                                country: country || 'Sierra Leone',
-                                nin: nin,
-                                idNumber: idNumber,
-                                userIdImageDataURL: idImageDataURL || null
-                            });
-                            saveRegisteredUsers();
-                        }
-                        const existingConnected = connectedUsers.find(u => u.name === name || u.phone === phone);
-                        if (!existingConnected) {
-                            connectedUsers.push({
-                                id: 'user_' + Date.now(),
-                                name,
-                                emoji: userObj.emoji || '👤',
-                                phone,
-                                avatarDataURL: avatarDataURL || null,
-                                status: 'online'
-                            });
-                        }
-                        getEl('regSuccess').innerText = '✅ Account created successfully!';
-                        getEl('regError').innerText = '';
-                        showToast('✅ Welcome ' + name + '!', 3000);
-                        renderSidebar();
-                        showLoggedInUI();
-                        renderAgentDropdown(currentAgentFilterCountry);
-                        populateAgentSelect(currentAgentFilterCountry);
-                        setTimeout(() => { getEl('registerModal').style.display = 'none'; }, 1500);
-                    };
-
-                    if (idImageFile) {
-                        const reader = new FileReader();
-                        reader.onload = function(ev) {
-                            processRegistration(ev.target.result);
-                        };
-                        reader.readAsDataURL(idImageFile);
-                    } else {
-                        processRegistration(null);
-                    }
+                    console.log('Register button touched!');
+                    // Trigger the same logic
+                    const clickEvent = new Event('click');
+                    this.dispatchEvent(clickEvent);
                 }, { passive: true });
             }
 
