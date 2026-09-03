@@ -5111,7 +5111,38 @@
         </div>
     </div>
 
-    <div id="receiptModal" class="modal"><div class="modal-content"><div class="receipt-header"><button class="receipt-close-x" id="receiptCloseXBtn">✕</button><div class="receipt-logo">Afri·Pay</div><div class="receipt-sub" data-i18n="receipt_sub">RECEIPT</div><div class="receipt-badge" id="receiptBadge">🔹 CONFIRMED</div></div><div class="receipt-body" id="receiptBody"></div><div class="receipt-footer"><div class="thanks" data-i18n="receipt_thanks">✨ Thank you!</div><div class="powered" data-i18n="receipt_powered">WeBine Financial</div><div class="receipt-share-row"><div class="receipt-share-group"><div class="receipt-share-label" data-i18n="send_receipt_to">📤 Send:</div><div class="share-row"><button class="receipt-share-btn client" id="receiptShareClientWhatsApp">📱 Client</button><button class="receipt-share-btn agent" id="receiptShareAgentWhatsApp">📱 Agent</button><button class="receipt-share-btn sms" id="receiptShareClientSMS">✉️ Client</button><button class="receipt-share-btn sms" id="receiptShareAgentSMS">✉️ Agent</button><button class="receipt-share-btn close-receipt" id="receiptCloseBtn">✕</button></div></div></div></div></div></div>
+    <!-- ================================================================
+         RECEIPT MODAL – fixed buttons now reliable
+         ================================================================ -->
+    <div id="receiptModal" class="modal">
+        <div class="modal-content">
+            <div class="receipt-header">
+                <button class="receipt-close-x" id="receiptCloseXBtn">✕</button>
+                <div class="receipt-logo">Afri·Pay</div>
+                <div class="receipt-sub" data-i18n="receipt_sub">RECEIPT</div>
+                <div class="receipt-badge" id="receiptBadge">🔹 CONFIRMED</div>
+            </div>
+            <div class="receipt-body" id="receiptBody"></div>
+            <div class="receipt-footer">
+                <div class="thanks" data-i18n="receipt_thanks">✨ Thank you!</div>
+                <div class="powered" data-i18n="receipt_powered">WeBine Financial</div>
+                <div class="receipt-share-row">
+                    <div class="receipt-share-group">
+                        <div class="receipt-share-label" data-i18n="send_receipt_to">📤 Send:</div>
+                        <div class="share-row">
+                            <!-- Client WhatsApp & SMS buttons – they will be shown dynamically -->
+                            <button class="receipt-share-btn client" id="receiptShareClientWhatsApp">📱 Client</button>
+                            <button class="receipt-share-btn sms" id="receiptShareClientSMS">✉️ Client</button>
+                            <button class="receipt-share-btn agent" id="receiptShareAgentWhatsApp">📱 Agent</button>
+                            <button class="receipt-share-btn sms" id="receiptShareAgentSMS">✉️ Agent</button>
+                            <button class="receipt-share-btn close-receipt" id="receiptCloseBtn">✕</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="agreementModal" class="modal"><div class="modal-content"><div class="agreement-modal-header"><button class="agreement-close-x" id="agreementCloseXBtn">✕</button><h3 data-i18n="agreement_title">📜 AGREEMENT</h3><small data-i18n="agreement_subtitle">Read & sign</small></div><div class="agreement-body" id="agreementBody"></div><div class="agreement-footer"><button class="action-btn agree-btn" id="agreementAgreeBtn" data-i18n="agree_sign">✋ Agree</button><button class="action-btn close-modal" id="agreementCloseBtn" data-i18n="close">Close</button></div><div class="agreement-status" id="agreementStatus" data-i18n="agreement_status_prompt">Read & sign below</div></div></div>
     <div id="agentAuthModal" class="modal"><div class="modal-content"><h3 data-i18n="agent_auth_title">🔐 Agent Auth</h3><div style="font-size:0.75rem; color:#7f8c8d; margin-bottom:4px;" data-i18n="agent_auth_subtitle">Enter credentials</div><div id="agentAuthError" class="error-msg"></div><div id="agentAuthSuccess" class="success-msg"></div><div class="input-group"><label data-i18n="agent_password">Password *</label><input type="password" id="agentAuthPassword" placeholder="6 chars" maxlength="6" /></div><div class="input-group"><label data-i18n="agent_pin_label">5-Digit PIN *</label><input type="password" id="agentAuthPin" placeholder="5 digits" maxlength="5" /></div><div class="action-buttons-row"><button class="action-btn" id="agentAuthConfirmBtn" data-i18n="confirm">✅ Confirm</button><button class="action-btn close-modal" id="agentAuthCancelBtn" data-i18n="cancel">Cancel</button></div></div></div>
     <div id="agentReportModal" class="modal"><div class="modal-content"><div class="report-header"><button class="report-close-x" id="reportCloseXBtn">✕</button><h3 data-i18n="agent_report_title">📋 Agent Report</h3><small data-i18n="agent_report_subtitle">Tx & USSD</small></div><div class="report-body" id="reportBody"></div><div class="report-footer"><button class="action-btn copy-btn" id="reportCopyUssdBtn" data-i18n="copy_ussd">📋 Copy USSD</button><button class="action-btn close-modal" id="reportCloseBtn" data-i18n="close">Close</button></div></div></div>
@@ -7319,50 +7350,93 @@
             }
         }
 
+        // ================================================================
+        // LOGIN FIX: check both stored user and registeredUsers
+        // ================================================================
         function loginUser(fullName, phoneNumber) {
             const name = SecurityUtils.sanitizeInput(fullName.trim(), 100);
             const phone = SecurityUtils.sanitizePhone(phoneNumber.trim());
-            if (!name || !phone) { getEl('loginError').innerHTML = '❌ Enter both fields'; return false; }
-            const stored = localStorage.getItem(STORAGE_KEYS.user);
-            if (!stored) {
-                getEl('loginError').innerHTML = '❌ No account. <a href="#" id="loginToRegisterLink" style="color:#f4a261;text-decoration:underline;">Register</a>';
-                return false;
+            if (!name || !phone) { 
+                getEl('loginError').innerHTML = '❌ Enter both fields'; 
+                return false; 
             }
+
+            // First, try to load the stored user
+            let storedUser = null;
             try {
-                const user = JSON.parse(stored);
-                if (user.name.toLowerCase() === name.toLowerCase() && user.phone === phone) {
-                    currentUser = user;
-                    if (user.emoji) selectedEmoji = user.emoji;
-                    saveUserToStorage(user);
-                    const existing = connectedUsers.find(u => u.id === 'current');
-                    if (existing) {
-                        existing.name = user.name;
-                        existing.emoji = user.emoji || '👤';
-                        existing.avatarDataURL = user.avatarDataURL || null;
-                    } else {
-                        connectedUsers.unshift({ id: 'current', name: user.name, emoji: user.emoji || '👤',
-                            avatarDataURL: user.avatarDataURL || null, status: 'online' });
-                    }
-                    loadRegisteredUsers();
-                    const regExists = registeredUsers.some(u => u.phone === user.phone || u.name === user.name);
-                    if (!regExists) {
-                        registeredUsers.push({ id: 'user_' + Date.now(), name: user.name, phone: user.phone,
-                            emoji: user.emoji || '👤', avatarDataURL: user.avatarDataURL || null,
-                            address: user.address || '',
-                            city: user.city || '', country: user.country || '' });
-                        saveRegisteredUsers();
-                    }
-                    renderSidebar();
-                    showToast('✅ Welcome ' + user.name + '!', 1800);
-                    showLoggedInUI();
-                    renderAgentDropdown(currentAgentFilterCountry);
-                    getEl('loginError').innerHTML = '';
-                    return true;
+                const stored = localStorage.getItem(STORAGE_KEYS.user);
+                if (stored) storedUser = JSON.parse(stored);
+            } catch (e) {}
+
+            // Check if stored user matches
+            if (storedUser && storedUser.name.toLowerCase() === name.toLowerCase() && storedUser.phone === phone) {
+                currentUser = storedUser;
+                if (storedUser.emoji) selectedEmoji = storedUser.emoji;
+                saveUserToStorage(storedUser);
+                const existing = connectedUsers.find(u => u.id === 'current');
+                if (existing) {
+                    existing.name = storedUser.name;
+                    existing.emoji = storedUser.emoji || '👤';
+                    existing.avatarDataURL = storedUser.avatarDataURL || null;
                 } else {
-                    getEl('loginError').innerHTML = '❌ Mismatch. <a href="#" id="loginToRegisterLink2" style="color:#f4a261;text-decoration:underline;">Register</a>';
-                    return false;
+                    connectedUsers.unshift({ id: 'current', name: storedUser.name, emoji: storedUser.emoji || '👤',
+                        avatarDataURL: storedUser.avatarDataURL || null, status: 'online' });
                 }
-            } catch (e) { getEl('loginError').innerHTML = '❌ Error loading account'; return false; }
+                // Ensure user exists in registeredUsers
+                loadRegisteredUsers();
+                const regExists = registeredUsers.some(u => u.phone === phone || u.name === name);
+                if (!regExists) {
+                    registeredUsers.push({ id: 'user_' + Date.now(), name: storedUser.name, phone: storedUser.phone,
+                        emoji: storedUser.emoji || '👤', avatarDataURL: storedUser.avatarDataURL || null,
+                        address: storedUser.address || '',
+                        city: storedUser.city || '', country: storedUser.country || '' });
+                    saveRegisteredUsers();
+                }
+                renderSidebar();
+                showToast('✅ Welcome ' + storedUser.name + '!', 1800);
+                showLoggedInUI();
+                renderAgentDropdown(currentAgentFilterCountry);
+                getEl('loginError').innerHTML = '';
+                return true;
+            }
+
+            // If stored user doesn't match, check registeredUsers list
+            loadRegisteredUsers();
+            const user = registeredUsers.find(u => u.name.toLowerCase() === name.toLowerCase() && u.phone === phone);
+            if (user) {
+                // Found in registeredUsers, log them in
+                currentUser = {
+                    name: user.name,
+                    phone: user.phone,
+                    address: user.address || '',
+                    city: user.city || '',
+                    country: user.country || '',
+                    emoji: user.emoji || '👤',
+                    avatarDataURL: user.avatarDataURL || null,
+                    nin: user.nin || '',
+                    idNumber: user.idNumber || ''
+                };
+                saveUserToStorage(currentUser);
+                const existing = connectedUsers.find(u => u.id === 'current');
+                if (existing) {
+                    existing.name = currentUser.name;
+                    existing.emoji = currentUser.emoji || '👤';
+                    existing.avatarDataURL = currentUser.avatarDataURL || null;
+                } else {
+                    connectedUsers.unshift({ id: 'current', name: currentUser.name, emoji: currentUser.emoji || '👤',
+                        avatarDataURL: currentUser.avatarDataURL || null, status: 'online' });
+                }
+                renderSidebar();
+                showToast('✅ Welcome ' + currentUser.name + '!', 1800);
+                showLoggedInUI();
+                renderAgentDropdown(currentAgentFilterCountry);
+                getEl('loginError').innerHTML = '';
+                return true;
+            }
+
+            // No match
+            getEl('loginError').innerHTML = '❌ Account not found. <a href="#" id="loginToRegisterLink" style="color:#f4a261;text-decoration:underline;">Register</a>';
+            return false;
         }
 
         // ================================================================
@@ -8160,7 +8234,7 @@
         }
 
         // ================================================================
-        // RECEIPT – fully translated with WhatsApp & SMS buttons
+        // RECEIPT – fully translated with WhatsApp & SMS buttons (FIXED)
         // ================================================================
         function showReceiptModal(receiptData) {
             const body = getEl('receiptBody');
@@ -8235,13 +8309,14 @@
             });
             if (body) body.innerHTML = html;
 
-            // Build share text
-            const clientPhone = getEl('clientPhone')?.value?.trim() || '';
-            const clientName = getEl('clientName')?.value?.trim() || 'Client';
+            // --- FIX: get client phone from receiptData or form field ---
+            let clientPhone = receiptData.clientPhone || getEl('clientPhone')?.value?.trim() || '';
+            const clientName = receiptData.clientName || getEl('clientName')?.value?.trim() || 'Client';
             const agentPhone = getEl('agentPhone')?.value?.trim() || '';
             const agentName = getEl('agentName')?.value?.trim() || 'Agent';
             const transferCode = receiptData.transferCode || 'N/A';
 
+            // Build share text
             let receiptLines = [
                 '🔹 AFRI·PAY RECEIPT 🔹', '─────────────────',
                 t('receipt_tx_id') + ' ' + receiptData.txId,
@@ -8282,54 +8357,40 @@
             const receiptText = receiptLines.join('\n');
             const encodedText = encodeURIComponent(receiptText);
 
+            // Get button elements
             const clientWA = getEl('receiptShareClientWhatsApp');
             const agentWA = getEl('receiptShareAgentWhatsApp');
             const clientSMS = getEl('receiptShareClientSMS');
             const agentSMS = getEl('receiptShareAgentSMS');
 
+            // Helper to safely show/hide buttons
+            function setButton(btn, phone, name, type, linkFn) {
+                if (!btn) return;
+                if (phone) {
+                    const clean = phone.replace(/\D/g, '');
+                    btn.onclick = () => {
+                        if (type === 'whatsapp') {
+                            window.open(`https://wa.me/${clean}?text=${encodedText}`, '_blank');
+                        } else if (type === 'sms') {
+                            window.location.href = `sms:${clean}?body=${encodedText}`;
+                        }
+                        showToast(`📤 ${t('receipt_share_' + (type === 'whatsapp' ? 'client_wa' : 'client_sms'))} ${name}`, 2500);
+                    };
+                    btn.style.display = 'inline-flex';
+                    btn.textContent = t('receipt_share_' + (type === 'whatsapp' ? 'client_wa' : 'client_sms')) || (type === 'whatsapp' ? '📱 Client' : '✉️ Client');
+                } else {
+                    btn.style.display = 'none';
+                }
+            }
+
             // Client WhatsApp
-            if (clientPhone && clientWA) {
-                const clientClean = clientPhone.replace(/\D/g, '');
-                clientWA.onclick = () => {
-                    window.open(`https://wa.me/${clientClean}?text=${encodedText}`, '_blank');
-                    showToast(`📤 ${t('receipt_share_client_wa')} ${clientName}`, 2500);
-                };
-                clientWA.style.display = 'inline-flex';
-                clientWA.textContent = t('receipt_share_client_wa') || '📱 Client';
-            } else if (clientWA) { clientWA.style.display = 'none'; }
-
-            // Agent WhatsApp
-            if (agentPhone && agentWA) {
-                const agentClean = agentPhone.replace(/\D/g, '');
-                agentWA.onclick = () => {
-                    window.open(`https://wa.me/${agentClean}?text=${encodedText}`, '_blank');
-                    showToast(`📤 ${t('receipt_share_agent_wa')} ${agentName}`, 2500);
-                };
-                agentWA.style.display = 'inline-flex';
-                agentWA.textContent = t('receipt_share_agent_wa') || '📱 Agent';
-            } else if (agentWA) { agentWA.style.display = 'none'; }
-
+            setButton(clientWA, clientPhone, clientName, 'whatsapp');
             // Client SMS
-            if (clientPhone && clientSMS) {
-                const clientClean = clientPhone.replace(/\D/g, '');
-                clientSMS.onclick = () => {
-                    window.location.href = `sms:${clientClean}?body=${encodedText}`;
-                    showToast(`📤 ${t('receipt_share_client_sms')} ${clientName}`, 2500);
-                };
-                clientSMS.style.display = 'inline-flex';
-                clientSMS.textContent = t('receipt_share_client_sms') || '✉️ Client';
-            } else if (clientSMS) { clientSMS.style.display = 'none'; }
-
+            setButton(clientSMS, clientPhone, clientName, 'sms');
+            // Agent WhatsApp
+            setButton(agentWA, agentPhone, agentName, 'whatsapp');
             // Agent SMS
-            if (agentPhone && agentSMS) {
-                const agentClean = agentPhone.replace(/\D/g, '');
-                agentSMS.onclick = () => {
-                    window.location.href = `sms:${agentClean}?body=${encodedText}`;
-                    showToast(`📤 ${t('receipt_share_agent_sms')} ${agentName}`, 2500);
-                };
-                agentSMS.style.display = 'inline-flex';
-                agentSMS.textContent = t('receipt_share_agent_sms') || '✉️ Agent';
-            } else if (agentSMS) { agentSMS.style.display = 'none'; }
+            setButton(agentSMS, agentPhone, agentName, 'sms');
 
             getEl('receiptModal').style.display = 'flex';
             addTransaction(receiptData);
@@ -13371,6 +13432,8 @@
                             sender: `${senderName} (${senderPhone})`,
                             agent: `${agentName} (${agentPhone})`,
                             client: clientName ? `${clientName} (${clientPhone})` : 'N/A',
+                            clientName: clientName || '',
+                            clientPhone: clientPhone || '',
                             baseAmount: amount.toFixed(2),
                             charge: charge.toFixed(2),
                             gstRate: gstRate,
