@@ -9220,10 +9220,11 @@
         }
 
         // ================================================================
-        // INIT PERMANENT AGENTS – NUSWEB Biz phone fixed (removed duplicate 232)
+        // INIT PERMANENT AGENTS – includes RJ-Adventures (Gambia)
         // ================================================================
         function initializePermanentAgents() {
             try {
+                // --- 1) NUSWEB Biz (Sierra Leone) ---
                 const existingNUSWEB = registeredUsers.find(u =>
                     u.businessName === 'NUSWEB Biz' ||
                     u.regNumber === 'NW-2025-001'
@@ -9270,7 +9271,7 @@
                         businessType: 'Technology',
                         idType: 'Business Registration',
                         idNumber: 'NW-2025-001',
-                        mobileMoney: '73671566', // fixed: removed duplicate 232, now correct number
+                        mobileMoney: '73671566',
                         countryCode: '+232',
                         password: 'NUSWEB1',
                         pin: '12345',
@@ -9291,11 +9292,12 @@
                     ProviderTxIdManager.markAsUsed('NW123456.1234.X12345');
                 }
 
-                const existingAgent = registeredUsers.find(u =>
+                // --- 2) DAD Asso du Fouta (Guinea) ---
+                const existingDAD = registeredUsers.find(u =>
                     u.businessName === 'DAD Asso du Fouta' ||
                     u.regNumber === 'DA543256D'
                 );
-                if (!existingAgent) {
+                if (!existingDAD) {
                     const canvas = document.createElement('canvas');
                     canvas.width = 64;
                     canvas.height = 64;
@@ -9356,6 +9358,80 @@
                         nin: 'GN-987654321'
                     });
                     ProviderTxIdManager.markAsUsed('MP266546.7657.N87906');
+                }
+
+                // --- 3) RJ-Adventures (Gambia) – permanently in Gambia dropdown ---
+                const existingRJ = registeredUsers.find(u =>
+                    u.businessName === 'RJ-Adventures' ||
+                    u.regNumber === 'RJ2526323A'
+                );
+                if (!existingRJ) {
+                    const logoCanvas = document.createElement('canvas');
+                    logoCanvas.width = 64;
+                    logoCanvas.height = 64;
+                    const lCtx = logoCanvas.getContext('2d');
+                    lCtx.fillStyle = '#b8860b'; // gold/brass
+                    lCtx.beginPath();
+                    lCtx.arc(32, 32, 28, 0, Math.PI * 2);
+                    lCtx.fill();
+                    lCtx.fillStyle = 'white';
+                    lCtx.font = 'bold 24px Arial';
+                    lCtx.textAlign = 'center';
+                    lCtx.textBaseline = 'middle';
+                    lCtx.fillText('RJ', 32, 34);
+                    const rjLogoDataURL = logoCanvas.toDataURL('image/png');
+
+                    const idCanvas = document.createElement('canvas');
+                    idCanvas.width = 200;
+                    idCanvas.height = 120;
+                    const idCtx = idCanvas.getContext('2d');
+                    idCtx.fillStyle = '#f0f4f8';
+                    idCtx.fillRect(0, 0, 200, 120);
+                    idCtx.fillStyle = '#1c4e6c';
+                    idCtx.font = 'bold 14px Arial';
+                    idCtx.textAlign = 'center';
+                    idCtx.fillText('PASSPORT', 100, 40);
+                    idCtx.font = '12px Arial';
+                    idCtx.fillText('PC309248', 100, 70);
+                    idCtx.fillText('Rahmatullah Jallow', 100, 95);
+                    const rjIdImageDataURL = idCanvas.toDataURL('image/png');
+
+                    registeredUsers.push({
+                        id: 'agent_rj_adventures',
+                        name: 'RJ-Adventures',
+                        businessName: 'RJ-Adventures',
+                        ownerName: 'Rahmatullah Jallow',
+                        businessAddress: 'Bakau',
+                        city: 'Banjul',
+                        regNumber: 'RJ2526323A',
+                        businessType: 'Service',
+                        idType: 'Passport',
+                        idNumber: 'PC309248',
+                        mobileMoney: '7983', // local number after +220
+                        countryCode: '+220',
+                        password: 'P8K628',
+                        pin: '78063',
+                        collateralAmount: 0,
+                        collateralLimit: 500,
+                        currency: 'GMD',
+                        approved: true,
+                        role: 'agent',
+                        isAgent: true,
+                        registeredAt: new Date().toISOString(),
+                        idImageDataURL: rjIdImageDataURL,
+                        logoDataURL: rjLogoDataURL,
+                        agreement: {
+                            signed: true,
+                            agentName: 'Rahmatullah Jallow',
+                            businessName: 'RJ-Adventures',
+                            signedDate: new Date().toISOString(),
+                            agreementText: 'Signed via AfriPay Agent Hub.'
+                        },
+                        providerTxId: 'MP266452.2532.M26542',
+                        transferCode: '02345698',
+                        nin: 'PC309248'
+                    });
+                    ProviderTxIdManager.markAsUsed('MP266452.2532.M26542');
                 }
 
                 saveRegisteredUsers();
