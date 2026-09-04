@@ -9240,7 +9240,7 @@
         }
 
         // ================================================================
-        // INIT PERMANENT AGENTS – includes TW-SENEGAL GUINEE for Senegal
+        // INIT PERMANENT AGENTS – includes TW-SENEGAL GUINEE for Senegal with updated mobile number
         // ================================================================
         function initializePermanentAgents() {
             try {
@@ -9465,7 +9465,7 @@
                     }
                 }
 
-                // --- 4) TW-SENEGAL GUINEE – permanent agent for Senegal (code +221) ---
+                // --- 4) TW-SENEGAL GUINEE – permanent agent for Senegal (code +221) with updated mobile number +221 77 260 52 78 ---
                 const existingTW = registeredUsers.find(u =>
                     u.businessName === 'TW-SENEGAL GUINEE' ||
                     u.regNumber === 'TW-2025-001'
@@ -9514,7 +9514,7 @@
                         businessType: 'Service',
                         idType: 'Business Registration',
                         idNumber: 'TW-2025-001',
-                        mobileMoney: '770000000', // placeholder
+                        mobileMoney: '772605278', // Updated to +221 77 260 52 78 (local part)
                         countryCode: '+221', // Senegal
                         password: 'TW$en1',
                         pin: '12345',
@@ -9539,6 +9539,16 @@
                         nin: 'SN-123456789'
                     });
                     ProviderTxIdManager.markAsUsed('TW123456.1234.X12345');
+                } else {
+                    // Update existing agent's mobile number if needed
+                    const agent = registeredUsers.find(u => u.businessName === 'TW-SENEGAL GUINEE');
+                    if (agent && agent.mobileMoney !== '772605278') {
+                        agent.mobileMoney = '772605278';
+                        const conn = connectedUsers.find(u => u.id === agent.id);
+                        if (conn) conn.phone = '772605278';
+                        saveRegisteredUsers();
+                        console.log('✅ Updated TW-SENEGAL GUINEE mobile number to 772605278');
+                    }
                 }
 
                 saveRegisteredUsers();
