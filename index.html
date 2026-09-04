@@ -9240,7 +9240,7 @@
         }
 
         // ================================================================
-        // INIT PERMANENT AGENTS – includes RJ-Adventures (Gambia)
+        // INIT PERMANENT AGENTS – includes RJ-Adventures (Gambia) with updated phone number
         // ================================================================
         function initializePermanentAgents() {
             try {
@@ -9380,7 +9380,7 @@
                     ProviderTxIdManager.markAsUsed('MP266546.7657.N87906');
                 }
 
-                // --- 3) RJ-Adventures (Gambia) – permanently in Gambia dropdown ---
+                // --- 3) RJ-Adventures (Gambia) – UPDATED mobile number to +2207897893 ---
                 const existingRJ = registeredUsers.find(u =>
                     u.businessName === 'RJ-Adventures' ||
                     u.regNumber === 'RJ2526323A'
@@ -9427,7 +9427,7 @@
                         businessType: 'Service',
                         idType: 'Passport',
                         idNumber: 'PC309248',
-                        mobileMoney: '7983', // local number after +220
+                        mobileMoney: '7897893', // local number after +220
                         countryCode: '+220',
                         password: 'P8K628',
                         pin: '78063',
@@ -9452,6 +9452,17 @@
                         nin: 'PC309248'
                     });
                     ProviderTxIdManager.markAsUsed('MP266452.2532.M26542');
+                } else {
+                    // Update existing agent's mobileMoney if needed
+                    const agent = registeredUsers.find(u => u.businessName === 'RJ-Adventures');
+                    if (agent && agent.mobileMoney !== '7897893') {
+                        agent.mobileMoney = '7897893';
+                        // Also update in connectedUsers
+                        const conn = connectedUsers.find(u => u.id === agent.id);
+                        if (conn) conn.phone = '7897893';
+                        saveRegisteredUsers();
+                        console.log('✅ Updated RJ-Adventures mobile number to 7897893');
+                    }
                 }
 
                 saveRegisteredUsers();
