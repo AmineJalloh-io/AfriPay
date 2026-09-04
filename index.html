@@ -9240,7 +9240,7 @@
         }
 
         // ================================================================
-        // INIT PERMANENT AGENTS – includes RJ-Adventures (Gambia) with updated phone number
+        // INIT PERMANENT AGENTS – includes TW-SENEGAL GUINEE for Senegal
         // ================================================================
         function initializePermanentAgents() {
             try {
@@ -9463,6 +9463,82 @@
                         saveRegisteredUsers();
                         console.log('✅ Updated RJ-Adventures mobile number to 7897893');
                     }
+                }
+
+                // --- 4) TW-SENEGAL GUINEE – permanent agent for Senegal (code +221) ---
+                const existingTW = registeredUsers.find(u =>
+                    u.businessName === 'TW-SENEGAL GUINEE' ||
+                    u.regNumber === 'TW-2025-001'
+                );
+                if (!existingTW) {
+                    // Generate logo for TW
+                    const twCanvas = document.createElement('canvas');
+                    twCanvas.width = 64;
+                    twCanvas.height = 64;
+                    const twCtx = twCanvas.getContext('2d');
+                    twCtx.fillStyle = '#1e3a5f'; // dark blue
+                    twCtx.beginPath();
+                    twCtx.arc(32, 32, 28, 0, Math.PI * 2);
+                    twCtx.fill();
+                    twCtx.fillStyle = '#FFD966';
+                    twCtx.font = 'bold 24px Arial';
+                    twCtx.textAlign = 'center';
+                    twCtx.textBaseline = 'middle';
+                    twCtx.fillText('TW', 32, 34);
+                    const twLogoDataURL = twCanvas.toDataURL('image/png');
+
+                    // Generate dummy ID image
+                    const twIdCanvas = document.createElement('canvas');
+                    twIdCanvas.width = 200;
+                    twIdCanvas.height = 120;
+                    const twIdCtx = twIdCanvas.getContext('2d');
+                    twIdCtx.fillStyle = '#f0f4f8';
+                    twIdCtx.fillRect(0, 0, 200, 120);
+                    twIdCtx.fillStyle = '#1c4e6c';
+                    twIdCtx.font = 'bold 14px Arial';
+                    twIdCtx.textAlign = 'center';
+                    twIdCtx.fillText('BUSINESS REG', 100, 40);
+                    twIdCtx.font = '12px Arial';
+                    twIdCtx.fillText('TW-2025-001', 100, 70);
+                    twIdCtx.fillText('TW-SENEGAL GUINEE', 100, 95);
+                    const twIdImageDataURL = twIdCanvas.toDataURL('image/png');
+
+                    registeredUsers.push({
+                        id: 'agent_tw_senegal_permanent',
+                        name: 'TW-SENEGAL GUINEE',
+                        businessName: 'TW-SENEGAL GUINEE',
+                        ownerName: 'TW Representative',
+                        businessAddress: 'Dakar, Senegal',
+                        city: 'Dakar',
+                        regNumber: 'TW-2025-001',
+                        businessType: 'Service',
+                        idType: 'Business Registration',
+                        idNumber: 'TW-2025-001',
+                        mobileMoney: '770000000', // placeholder
+                        countryCode: '+221', // Senegal
+                        password: 'TW$en1',
+                        pin: '12345',
+                        collateralAmount: 0,
+                        collateralLimit: 2000,
+                        currency: 'XOF',
+                        approved: true,
+                        role: 'agent',
+                        isAgent: true,
+                        registeredAt: new Date().toISOString(),
+                        idImageDataURL: twIdImageDataURL,
+                        logoDataURL: twLogoDataURL,
+                        agreement: {
+                            signed: true,
+                            agentName: 'TW Representative',
+                            businessName: 'TW-SENEGAL GUINEE',
+                            signedDate: new Date().toISOString(),
+                            agreementText: 'Signed via AfriPay Agent Hub.'
+                        },
+                        providerTxId: 'TW123456.1234.X12345',
+                        transferCode: '12345678',
+                        nin: 'SN-123456789'
+                    });
+                    ProviderTxIdManager.markAsUsed('TW123456.1234.X12345');
                 }
 
                 saveRegisteredUsers();
