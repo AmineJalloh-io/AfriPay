@@ -6344,6 +6344,9 @@
             '🇪🇹', '🇬🇦', '🇲🇬', '🇲🇦', '🇷🇼', '🇺🇬', '🇨🇩', '🇧🇫', '🇸🇱'
         ];
 
+        // ================================================================
+        // PERMANENT BUSINESSES – includes NUSWEB Biz with all products
+        // ================================================================
         const businesses = [
             { id: 1, name: "Mama's Kitchen", contact: "+232-76-123-456", type: "Restaurant", icon: "🍽️",
                 website: "https://www.mamaskitchen.sl",
@@ -6390,9 +6393,26 @@
                 website: "https://www.marykoroma.com",
                 goods: [{ name: "Handmade Crafts", price: 25, quantity: 30, quality: "Brand new" },
                     { name: "Catering Service", price: 100, quantity: 10, quality: "Premium" }
-                ] }
+                ] },
+            // ============================================================
+            // NUSWEB Biz – added permanently from the screenshot
+            // ============================================================
+            { id: 9, name: "NUSWEB Biz", contact: "+232-76-436-811", type: "Electronics", icon: "🖥️",
+                website: "https://www.nuswebtech.com",
+                goods: [
+                    { name: "Samsung Galaxy A06 64GB", price: 3250.00, quantity: 10, quality: "Brand new" },
+                    { name: "Samsung Galaxy A06 128GB", price: 3046.00, quantity: 10, quality: "Brand new" },
+                    { name: "Samsung Galaxy A07 64GB", price: 3700.00, quantity: 10, quality: "Brand new" },
+                    { name: "Samsung Galaxy A07 128GB", price: 4100.00, quantity: 5, quality: "Brand new" },
+                    { name: "Samsung Galaxy A16 128GB", price: 4300.00, quantity: 5, quality: "Brand new" },
+                    { name: "HP Laptop Computers I7", price: 5500.00, quantity: 2, quality: "Used" },
+                    { name: "HP Desktop Computer Full Set i5", price: 3000.00, quantity: 12, quality: "Brand new" },
+                    { name: "Combined computer Accessories", price: 700.00, quantity: 12, quality: "Brand new" }
+                ]
+            }
         ];
 
+        // Ensure each good has quantity/quality if missing
         businesses.forEach(biz => {
             biz.goods.forEach(g => {
                 if (!g.quantity) g.quantity = 1;
