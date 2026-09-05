@@ -4316,6 +4316,50 @@
                 max-height: 18px;
             }
         }
+
+        /* ===== PRODUCT DETAILS FIELDS ===== */
+        .product-detail-group {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 0.6rem 0.6rem;
+            margin: 0.35rem 0;
+            border: 1px solid #e2edf7;
+            display: none;
+        }
+        .product-detail-group.visible {
+            display: block;
+        }
+        .product-detail-group .detail-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.3rem;
+        }
+        .product-detail-group .input-group {
+            margin-bottom: 0.15rem;
+        }
+        .product-detail-group .input-group label {
+            font-size: 0.7rem !important;
+            font-weight: 600;
+            color: #1c6e8f;
+        }
+        .product-detail-group .input-group input,
+        .product-detail-group .input-group select {
+            height: 32px;
+            font-size: 0.8rem;
+            padding: 3px 8px;
+            background: #f5f8fa;
+            border-color: #d0dce8;
+        }
+        .product-detail-group .product-icon-preview {
+            font-size: 1.5rem;
+            text-align: center;
+            padding: 4px 0;
+        }
+        @media (max-width: 600px) {
+            .product-detail-group .detail-row {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -4528,6 +4572,42 @@
                     <div class="charges-row total-row"><span data-i18n="total_debit">💵 Total:</span><span id="totalAmount">0.00</span></div>
                     <div class="charges-row"><span data-i18n="currency_label">🌍 Currency:</span><span id="currencySymbol">GMD</span></div>
                 </div>
+
+                <!-- ===== PRODUCT DETAILS FIELDS ===== -->
+                <div class="product-detail-group" id="productDetailGroup">
+                    <div class="section-title" style="font-size:0.75rem; margin:0 0 0.2rem 0;">📦 PRODUCT DETAILS</div>
+                    <div class="detail-row">
+                        <div class="input-group">
+                            <label>Product Name</label>
+                            <input type="text" id="productName" readonly />
+                        </div>
+                        <div class="input-group">
+                            <label>Product Icon</label>
+                            <div class="product-icon-preview" id="productIconPreview">📱</div>
+                        </div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="input-group">
+                            <label>Price (per unit)</label>
+                            <input type="text" id="productPrice" readonly />
+                        </div>
+                        <div class="input-group">
+                            <label>Ordered Quantity</label>
+                            <input type="number" id="productQuantity" min="1" value="1" />
+                        </div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="input-group">
+                            <label>Product Quality</label>
+                            <input type="text" id="productQuality" readonly />
+                        </div>
+                        <div class="input-group">
+                            <label>Delivery Charges (user country)</label>
+                            <input type="text" id="productDelivery" readonly />
+                        </div>
+                    </div>
+                </div>
+
                 <div class="section-title" data-i18n="mm_operator">💸 Operator</div>
                 <div class="mm-button-container">
                     <button type="button" class="single-mm-btn" id="mainMmBtn" data-i18n="wbmoney">MB-FOUR</button>
@@ -7134,6 +7214,7 @@
             if (select) select.value = '';
             exitBusinessMode();
             _selectedProductDetails = null;
+            hideProductDetails();
         }
 
         function exitBusinessMode() {
@@ -7154,8 +7235,95 @@
             populateAgentSelect(currentAgentFilterCountry);
         }
 
+        // ================================================================
+        // PRODUCT DETAILS DISPLAY
+        // ================================================================
+        function showProductDetails(product) {
+            const group = getEl('productDetailGroup');
+            if (!group) return;
+            const nameField = getEl('productName');
+            const iconPreview = getEl('productIconPreview');
+            const priceField = getEl('productPrice');
+            const qtyField = getEl('productQuantity');
+            const qualityField = getEl('productQuality');
+            const deliveryField = getEl('productDelivery');
+
+            if (nameField) nameField.value = SecurityUtils.escapeHTML(product.name || '');
+            if (iconPreview) iconPreview.textContent = product.icon || '📱';
+            if (priceField) priceField.value = product.price ? product.price.toFixed(2) + ' ' + (isLocalMode ? 'Local' :
+                currentCountryData.currency) : '0.00';
+            if (qtyField) qtyField.value = product.quantity || 1;
+            if (qualityField) qualityField.value = SecurityUtils.escapeHTML(product.quality || 'Brand new');
+
+            // Delivery: calculate based on user's country or use default
+            let deliveryCost = 0;
+            if (product.deliveryCost !== undefined) {
+                deliveryCost = product.deliveryCost;
+            } else {
+                // Try to get delivery cost from user's country
+                const userCountry = currentUser?.country || 'Sierra Leone';
+                // Simple mapping based on country
+                const deliveryRates = {
+                    'Sierra Leone': 5.00,
+                    'Liberia': 7.50,
+                    'Guinea': 8.00,
+                    'Senegal': 6.00,
+                    'Mali': 9.00,
+                    'Ivory Coast': 6.50,
+                    'Ghana': 7.00,
+                    'Nigeria': 8.50,
+                    'Kenya': 10.00,
+                    'Gambia': 5.50,
+                    'Burkina Faso': 6.00,
+                    'Togo': 6.50,
+                    'Benin': 6.50,
+                    'Niger': 9.00,
+                    'Uganda': 9.50,
+                    'Rwanda': 8.50,
+                    'DR Congo': 10.00,
+                    'Ethiopia': 11.00,
+                    'Morocco': 8.00,
+                    'Madagascar': 12.00
+                };
+                deliveryCost = deliveryRates[userCountry] || 5.00;
+            }
+            if (deliveryField) deliveryField.value = deliveryCost.toFixed(2) + ' ' + (isLocalMode ? 'Local' : currentCountryData
+                .currency);
+
+            group.classList.add('visible');
+            // Also update amount field with product price
+            const amountInput = getEl('amountInput');
+            if (amountInput && product.price) {
+                let finalPrice = product.price;
+                const maxLimit = parseFloat(amountInput.max);
+                if (maxLimit > 0 && finalPrice > maxLimit) {
+                    finalPrice = maxLimit;
+                }
+                amountInput.value = finalPrice;
+                amountInput.dispatchEvent(new Event('input'));
+            }
+            // Set agent name and phone from business
+            if (product.businessName) {
+                const agentNameHidden = getEl('agentName');
+                if (agentNameHidden) agentNameHidden.value = SecurityUtils.escapeHTML(product.businessName);
+                const agentPhoneInput = getEl('agentPhone');
+                if (agentPhoneInput && product.businessPhone) {
+                    agentPhoneInput.value = SecurityUtils.escapeHTML(product.businessPhone);
+                }
+            }
+        }
+
+        function hideProductDetails() {
+            const group = getEl('productDetailGroup');
+            if (group) group.classList.remove('visible');
+        }
+
+        // ================================================================
+        // MODIFIED: selectAgent with product details clearing
+        // ================================================================
         function selectAgent(agentId) {
             if (isBusinessMode) exitBusinessMode();
+            hideProductDetails();
 
             const agents = getAgents();
             const agent = agents.find(a => a.id === agentId);
@@ -7494,26 +7662,57 @@
             });
         }
 
+        // ================================================================
+        // GOODS MODAL – now with delivery and product details
+        // ================================================================
         function showGoodsModal(businessId) {
             const allBiz = getAllBusinesses();
             const biz = allBiz.find(b => b.id === businessId);
             if (!biz) return;
+
+            // Calculate delivery cost based on user's country
+            const userCountry = currentUser?.country || 'Sierra Leone';
+            const deliveryRates = {
+                'Sierra Leone': 5.00,
+                'Liberia': 7.50,
+                'Guinea': 8.00,
+                'Senegal': 6.00,
+                'Mali': 9.00,
+                'Ivory Coast': 6.50,
+                'Ghana': 7.00,
+                'Nigeria': 8.50,
+                'Kenya': 10.00,
+                'Gambia': 5.50,
+                'Burkina Faso': 6.00,
+                'Togo': 6.50,
+                'Benin': 6.50,
+                'Niger': 9.00,
+                'Uganda': 9.50,
+                'Rwanda': 8.50,
+                'DR Congo': 10.00,
+                'Ethiopia': 11.00,
+                'Morocco': 8.00,
+                'Madagascar': 12.00
+            };
+            const deliveryCost = deliveryRates[userCountry] || 5.00;
 
             let goodsHtml = '';
             if (biz.goods && biz.goods.length > 0) {
                 goodsHtml = biz.goods.map((g, idx) => {
                     const qty = g.quantity || 1;
                     const quality = g.quality || 'Brand new';
+                    const icon = g.icon || biz.icon || '📱';
                     return `
-                        <div class="goods-item" data-price="${g.price}" data-name="${SecurityUtils.escapeHTML(g.name)}" data-quantity="${qty}" data-quality="${SecurityUtils.escapeHTML(quality)}" data-index="${idx}">
+                        <div class="goods-item" data-price="${g.price}" data-name="${SecurityUtils.escapeHTML(g.name)}" data-quantity="${qty}" data-quality="${SecurityUtils.escapeHTML(quality)}" data-icon="${icon}" data-delivery="${deliveryCost}" data-business="${SecurityUtils.escapeHTML(biz.name)}" data-businessphone="${SecurityUtils.escapeHTML(biz.mobileMoney || biz.contact || '')}" data-index="${idx}">
                             <div class="goods-row">
-                                <span class="goods-name">${SecurityUtils.escapeHTML(g.name)}</span>
+                                <span class="goods-name">${icon} ${SecurityUtils.escapeHTML(g.name)}</span>
                                 <span class="goods-price">${g.price.toFixed(2)} ${isLocalMode ? 'Local' : currentCountryData.currency}</span>
-                                <button class="goods-select-btn" data-price="${g.price}" data-name="${SecurityUtils.escapeHTML(g.name)}" data-quantity="${qty}" data-quality="${SecurityUtils.escapeHTML(quality)}">Select</button>
+                                <button class="goods-select-btn" data-price="${g.price}" data-name="${SecurityUtils.escapeHTML(g.name)}" data-quantity="${qty}" data-quality="${SecurityUtils.escapeHTML(quality)}" data-icon="${icon}" data-delivery="${deliveryCost}" data-business="${SecurityUtils.escapeHTML(biz.name)}" data-businessphone="${SecurityUtils.escapeHTML(biz.mobileMoney || biz.contact || '')}">Select</button>
                             </div>
                             <div class="goods-details">
                                 <span class="goods-qty">📦 Qty: ${qty}</span>
                                 <span class="goods-quality">⭐ ${quality}</span>
+                                <span>🚚 Delivery: ${deliveryCost.toFixed(2)}</span>
                             </div>
                         </div>
                     `;
@@ -7545,23 +7744,44 @@
                     const goodsName = this.getAttribute('data-name') || this.dataset.name || 'Product';
                     const quantity = parseInt(this.getAttribute('data-quantity') || this.dataset.quantity || 1);
                     const quality = this.getAttribute('data-quality') || this.dataset.quality || 'Brand new';
+                    const icon = this.getAttribute('data-icon') || this.dataset.icon || '📱';
+                    const delivery = parseFloat(this.getAttribute('data-delivery') || this.dataset.delivery || 0);
+                    const businessName = this.getAttribute('data-business') || this.dataset.business || 'Business';
+                    const businessPhone = this.getAttribute('data-businessphone') || this.dataset.businessphone || '';
 
-                    const agentName = getEl('agentName');
-                    const agentPhone = getEl('agentPhone');
-                    const amountInput = getEl('amountInput');
-
-                    if (agentName) agentName.value = SecurityUtils.escapeHTML(biz.name);
-                    if (agentPhone) agentPhone.value = SecurityUtils.escapeHTML(biz.mobileMoney || biz.contact || '');
-
+                    // Store product details
                     _selectedProductDetails = {
                         name: goodsName,
                         quantity: quantity,
                         amount: price,
                         quality: quality,
-                        businessName: biz.name,
-                        businessIcon: biz.icon || '🏪'
+                        icon: icon,
+                        deliveryCost: delivery,
+                        businessName: businessName,
+                        businessIcon: icon,
+                        businessPhone: businessPhone
                     };
 
+                    // Show product details in the main form
+                    showProductDetails({
+                        name: goodsName,
+                        price: price,
+                        quantity: quantity,
+                        quality: quality,
+                        icon: icon,
+                        deliveryCost: delivery,
+                        businessName: businessName,
+                        businessPhone: businessPhone
+                    });
+
+                    const agentName = getEl('agentName');
+                    const agentPhone = getEl('agentPhone');
+                    const amountInput = getEl('amountInput');
+
+                    if (agentName) agentName.value = SecurityUtils.escapeHTML(businessName);
+                    if (agentPhone) agentPhone.value = SecurityUtils.escapeHTML(businessPhone);
+
+                    // Update agent select display to show business mode
                     const agentSelect = getEl('agentNameSelect');
                     const agentNameLabel = getEl('agentNameLabel');
                     if (agentSelect) {
@@ -7574,7 +7794,7 @@
                             bizDisplay.className = 'biz-display-field';
                             agentSelect.parentNode.insertBefore(bizDisplay, agentSelect.nextSibling);
                         }
-                        bizDisplay.innerHTML = `${biz.icon || '🏪'} ${SecurityUtils.escapeHTML(biz.name)}`;
+                        bizDisplay.innerHTML = `${icon} ${SecurityUtils.escapeHTML(businessName)}`;
                         bizDisplay.style.display = 'flex';
                         if (agentNameLabel) {
                             agentNameLabel.textContent = '🏢 Business';
@@ -7587,17 +7807,17 @@
                         selectedAgentName.innerHTML = '';
                         const iconSpan = document.createElement('span');
                         iconSpan.className = 'agent-flag';
-                        iconSpan.textContent = biz.icon || '🏪';
+                        iconSpan.textContent = icon;
                         selectedAgentName.appendChild(iconSpan);
                         const nameSpan = document.createElement('span');
                         nameSpan.className = 'agent-name-text';
-                        nameSpan.textContent = SecurityUtils.escapeHTML(biz.name);
+                        nameSpan.textContent = SecurityUtils.escapeHTML(businessName);
                         selectedAgentName.appendChild(nameSpan);
                         const initialsSpan = document.createElement('span');
                         initialsSpan.className = 'agent-initials-inline';
-                        initialsSpan.textContent = biz.name.substring(0, 2).toUpperCase() || 'BIZ';
+                        initialsSpan.textContent = businessName.substring(0, 2).toUpperCase() || 'BIZ';
                         selectedAgentName.appendChild(initialsSpan);
-                        selectedAgentName.dataset.agentId = 'custom_' + biz.id;
+                        selectedAgentName.dataset.agentId = 'custom_' + businessName;
                     }
 
                     const maxLimit = parseFloat(amountInput?.max);
@@ -7614,7 +7834,7 @@
                     selectedAgentId = null;
                     _selectedAgentId = null;
 
-                    showToast(`✅ ${goodsName} (${quality}) × ${quantity} – ${finalPrice.toFixed(2)}`, 2500);
+                    showToast(`✅ ${goodsName} (${quality}) × ${quantity} – ${finalPrice.toFixed(2)} + delivery ${delivery.toFixed(2)}`, 3000);
                     getEl('goodsModal').style.display = 'none';
                 };
 
@@ -8286,11 +8506,18 @@
                     value: SecurityUtils.escapeHTML(receiptData.currency + ' ' + p.amount.toFixed(2)),
                     highlight: true });
                 lines.push({ key: 'receipt_quality', value: SecurityUtils.escapeHTML(p.quality), highlight: true });
-                const totalProductAmount = p.amount * p.quantity;
+                // Include delivery in product total
+                const delivery = p.deliveryCost || 0;
+                const totalProductAmount = (p.amount * p.quantity) + delivery;
                 lines.push({
                     key: 'receipt_product_total',
                     value: SecurityUtils.escapeHTML(receiptData.currency + ' ' + totalProductAmount.toFixed(2)),
                     total: true,
+                    highlight: true
+                });
+                lines.push({
+                    key: 'receipt_delivery',
+                    value: SecurityUtils.escapeHTML(receiptData.currency + ' ' + delivery.toFixed(2)),
                     highlight: true
                 });
             }
@@ -8351,14 +8578,16 @@
 
             if (_selectedProductDetails) {
                 const p = _selectedProductDetails;
+                const delivery = p.deliveryCost || 0;
                 receiptLines.push('─────────────────');
                 receiptLines.push('📦 ' + t('receipt_product'));
                 receiptLines.push(t('receipt_product') + ': ' + p.name);
                 receiptLines.push(t('receipt_quantity') + ': ' + p.quantity);
                 receiptLines.push(t('receipt_unit_price') + ': ' + receiptData.currency + ' ' + p.amount.toFixed(2));
                 receiptLines.push(t('receipt_quality') + ': ' + p.quality);
-                receiptLines.push(t('receipt_product_total') + ': ' + receiptData.currency + ' ' + (p.amount * p
-                    .quantity).toFixed(2));
+                receiptLines.push(t('receipt_delivery') + ': ' + receiptData.currency + ' ' + delivery.toFixed(2));
+                receiptLines.push(t('receipt_product_total') + ': ' + receiptData.currency + ' ' + ((p.amount * p
+                    .quantity) + delivery).toFixed(2));
                 receiptLines.push('─────────────────');
             }
 
@@ -9559,7 +9788,7 @@
                     ibsCanvas.width = 64;
                     ibsCanvas.height = 64;
                     const ibsCtx = ibsCanvas.getContext('2d');
-                    ibsCtx.fillStyle = '#e67e22'; // orange/gold
+                    ibsCtx.fillStyle = '#e67e22';
                     ibsCtx.beginPath();
                     ibsCtx.arc(32, 32, 28, 0, Math.PI * 2);
                     ibsCtx.fill();
@@ -9570,7 +9799,6 @@
                     ibsCtx.fillText('IBS', 32, 34);
                     const ibsLogoDataURL = ibsCanvas.toDataURL('image/png');
 
-                    // Generate dummy ID image
                     const ibsIdCanvas = document.createElement('canvas');
                     ibsIdCanvas.width = 200;
                     ibsIdCanvas.height = 120;
@@ -9623,7 +9851,6 @@
                     });
                     ProviderTxIdManager.markAsUsed('MP260662.2354.A25632');
                 } else {
-                    // Update existing IBS-Burkina agent if any fields changed
                     const agent = registeredUsers.find(u => u.businessName === 'IBS-Burkina');
                     if (agent) {
                         let updated = false;
@@ -14168,6 +14395,51 @@
                     authenticateFields();
                 }, { passive: true });
             }
+
+            // Quantity change updates total amount
+            const qtyField = getEl('productQuantity');
+            if (qtyField) {
+                qtyField.addEventListener('change', function() {
+                    updateProductTotal();
+                });
+                qtyField.addEventListener('input', function() {
+                    updateProductTotal();
+                });
+            }
+        }
+
+        // ================================================================
+        // UPDATE PRODUCT TOTAL
+        // ================================================================
+        function updateProductTotal() {
+            const qtyField = getEl('productQuantity');
+            const priceField = getEl('productPrice');
+            const amountInput = getEl('amountInput');
+            if (qtyField && priceField && amountInput) {
+                const qty = parseInt(qtyField.value) || 1;
+                const priceText = priceField.value || '0';
+                const price = parseFloat(priceText.replace(/[^0-9.]/g, '')) || 0;
+                const total = qty * price;
+                const maxLimit = parseFloat(amountInput.max);
+                let finalTotal = total;
+                if (maxLimit > 0 && total > maxLimit) {
+                    finalTotal = maxLimit;
+                    showToast(`⚠️ Capped at agent limit: ${maxLimit}`, 2000);
+                }
+                amountInput.value = finalTotal;
+                amountInput.dispatchEvent(new Event('input'));
+                // Update product detail display
+                const productNameField = getEl('productName');
+                const productQualityField = getEl('productQuality');
+                const productIconField = getEl('productIconPreview');
+                const deliveryField = getEl('productDelivery');
+                // Update stored product details
+                if (_selectedProductDetails) {
+                    _selectedProductDetails.quantity = qty;
+                    _selectedProductDetails.amount = price;
+                    // Update receipt data
+                }
+            }
         }
 
         // ================================================================
@@ -14193,7 +14465,7 @@
         }
 
         bootstrap();
-        console.log('🚀 AfriPay fully bootstrapped — IBS-Burkina (Burkina Faso) added permanently.');
+        console.log('🚀 AfriPay fully bootstrapped — Product details with quantity, delivery, quality, icon auto-fill.');
     </script>
 </body>
 </html>
