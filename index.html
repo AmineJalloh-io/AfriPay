@@ -4823,7 +4823,7 @@
                 <div style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="collateral_limit_hint">Max transaction amount</div>
             </div>
 
-            <div class="input-group"><label data-i18n="agent_country_code">Country Code</label><select id="agentCountryCode"><option value="+232">🇸🇱 +232</option><option value="+234">🇳🇬 +234</option><option value="+233">🇬🇭 +233</option><option value="+254">🇰🇪 +254</option><option value="+231">🇱🇷 +231</option><option value="+221">🇸🇳 +221</option><option value="+224" selected>🇬🇳 +224</option><option value="+223">🇲🇱 +223</option><option value="+225">🇨🇮 +225</option><option value="+227">🇳🇪 +227</option><option value="+229">🇧🇯 +229</option><option value="+245">🇬🇼 +245</option><option value="+220">🇬🇲 +220</option><option value="+228">🇹🇬 +228</option><option value="+236">🇨🇫 +236</option><option value="+251">🇪🇹 +251</option><option value="+241">🇬🇦 +241</option><option value="+261">🇲🇬 +261</option><option value="+212">🇲🇦 +212</option><option value="+250">🇷🇼 +250</option><option value="+256">🇺🇬 +256</option><option value="+243">🇨🇩 +243</option><option value="+226">🇧🇫 +226</option></select></div>
+            <div class="input-group"><label data-i18n="agent_country_code">Country Code</label><select id="agentCountryCode"><option value="+232">🇸🇱 +232</option><option value="+234">🇳🇬 +234</option><option value="+233">🇬🇭 +233</option><option value="+254">🇰🇪 +254</option><option value="+231">🇱🇷 +231</option><option value="+221">🇸🇳 +221</option><option value="+224" selected>🇬🇳 +224</option><option value="+223">🇲🇱 +223</option><option value="+225">🇨🇮 +225</option><option value="+227">🇳🇪 +227</option><option value="+229">🇧🇯 +229</option><option value="+245">🇬🇼 +245</option><option value="+220">🇬🇲 +220</option><option value="+228">🇹🇬 +228</option><option value="+236">🇨🇫 +236</option><option value="+251">🇪🇹 +251</option><option value="+241">🇬🇦 +241</option><option value="+261">🇲🇬 +261</option><option value="+212">🇲🇦 +212</option><option value="+250">🇷🇼 +250</option><option value="+256">🇺🇬 +256</option><option value="+243">🇨🇩 +243</option><option value="+226" selected>🇧🇫 +226</option></select></div>
             <div class="input-group"><label data-i18n="agent_password">Password *</label><div style="display:flex; gap:4px; align-items:center; flex-wrap:wrap;"><input type="text" id="agentPassword" placeholder="A1B2C3" style="flex:1; min-width:80px; letter-spacing:2px; font-family:monospace;" readonly /><button type="button" class="action-btn green" id="generatePasswordBtn" style="padding:4px 12px; height:36px; font-size:0.75rem;" data-i18n="generate_password">🔑 Gen</button></div><div id="agentPasswordHint" style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="password_hint">Click Gen to create 6-char password</div></div>
             <div class="input-group"><label data-i18n="agent_pin_label">5-Digit PIN *</label><div style="display:flex; gap:4px; align-items:center; flex-wrap:wrap;"><input type="text" id="agentPin" placeholder="12345" style="flex:1; min-width:80px; letter-spacing:2px; font-family:monospace;" readonly /><button type="button" class="action-btn green" id="generatePinBtn" style="padding:4px 12px; height:36px; font-size:0.75rem;" data-i18n="generate_pin">🔑 Gen PIN</button></div><div id="agentPinHint" style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="pin_hint">Click to create 5-digit PIN</div></div>
             <div class="collateral-box"><div style="display:flex; align-items:center; gap:4px; flex-wrap:wrap;"><span style="font-weight:700; font-size:0.8rem; color:#1c6e8f;" data-i18n="collateral_label">🔒 Collateral</span><button class="action-btn orange" id="generateCollateralBtn" style="padding:4px 12px; height:34px; font-size:0.75rem;" data-i18n="generate_collateral">USSD</button></div><div id="collateralResult" style="margin-top:3px;"><span style="font-size:0.68rem; color:#666;" data-i18n="collateral_hint">Generate USSD for Orange Money collateral</span><div id="collateralUssdDisplay" class="ussd-code" style="display:none;"></div></div><div id="collateralError" class="error-msg" style="font-size:0.68rem;"></div><input type="hidden" id="collateralAmount" value="0" /></div>
@@ -7376,9 +7376,9 @@
         function loginUser(fullName, phoneNumber) {
             const name = SecurityUtils.sanitizeInput(fullName.trim(), 100);
             const phone = SecurityUtils.sanitizePhone(phoneNumber.trim());
-            if (!name || !phone) { 
-                getEl('loginError').innerHTML = '❌ Enter both fields'; 
-                return false; 
+            if (!name || !phone) {
+                getEl('loginError').innerHTML = '❌ Enter both fields';
+                return false;
             }
 
             // First, try to load the stored user
@@ -9240,7 +9240,7 @@
         }
 
         // ================================================================
-        // INIT PERMANENT AGENTS – includes TW-SENEGAL GUINEE for Senegal with updated mobile number
+        // INIT PERMANENT AGENTS – includes IBS-Burkina (Burkina Faso)
         // ================================================================
         function initializePermanentAgents() {
             try {
@@ -9380,7 +9380,7 @@
                     ProviderTxIdManager.markAsUsed('MP266546.7657.N87906');
                 }
 
-                // --- 3) RJ-Adventures (Gambia) – UPDATED mobile number to +2207897893 ---
+                // --- 3) RJ-Adventures (Gambia) ---
                 const existingRJ = registeredUsers.find(u =>
                     u.businessName === 'RJ-Adventures' ||
                     u.regNumber === 'RJ2526323A'
@@ -9390,7 +9390,7 @@
                     logoCanvas.width = 64;
                     logoCanvas.height = 64;
                     const lCtx = logoCanvas.getContext('2d');
-                    lCtx.fillStyle = '#b8860b'; // gold/brass
+                    lCtx.fillStyle = '#b8860b';
                     lCtx.beginPath();
                     lCtx.arc(32, 32, 28, 0, Math.PI * 2);
                     lCtx.fill();
@@ -9427,7 +9427,7 @@
                         businessType: 'Service',
                         idType: 'Passport',
                         idNumber: 'PC309248',
-                        mobileMoney: '7897893', // local number after +220
+                        mobileMoney: '7897893',
                         countryCode: '+220',
                         password: 'P8K628',
                         pin: '78063',
@@ -9453,11 +9453,9 @@
                     });
                     ProviderTxIdManager.markAsUsed('MP266452.2532.M26542');
                 } else {
-                    // Update existing agent's mobileMoney if needed
                     const agent = registeredUsers.find(u => u.businessName === 'RJ-Adventures');
                     if (agent && agent.mobileMoney !== '7897893') {
                         agent.mobileMoney = '7897893';
-                        // Also update in connectedUsers
                         const conn = connectedUsers.find(u => u.id === agent.id);
                         if (conn) conn.phone = '7897893';
                         saveRegisteredUsers();
@@ -9465,18 +9463,17 @@
                     }
                 }
 
-                // --- 4) TW-SENEGAL GUINEE – permanent agent for Senegal (code +221) with updated mobile number +221 77 260 52 78 ---
+                // --- 4) TW-SENEGAL GUINEE (Senegal) ---
                 const existingTW = registeredUsers.find(u =>
                     u.businessName === 'TW-SENEGAL GUINEE' ||
                     u.regNumber === 'TW-2025-001'
                 );
                 if (!existingTW) {
-                    // Generate logo for TW
                     const twCanvas = document.createElement('canvas');
                     twCanvas.width = 64;
                     twCanvas.height = 64;
                     const twCtx = twCanvas.getContext('2d');
-                    twCtx.fillStyle = '#1e3a5f'; // dark blue
+                    twCtx.fillStyle = '#1e3a5f';
                     twCtx.beginPath();
                     twCtx.arc(32, 32, 28, 0, Math.PI * 2);
                     twCtx.fill();
@@ -9487,7 +9484,6 @@
                     twCtx.fillText('TW', 32, 34);
                     const twLogoDataURL = twCanvas.toDataURL('image/png');
 
-                    // Generate dummy ID image
                     const twIdCanvas = document.createElement('canvas');
                     twIdCanvas.width = 200;
                     twIdCanvas.height = 120;
@@ -9514,8 +9510,8 @@
                         businessType: 'Service',
                         idType: 'Business Registration',
                         idNumber: 'TW-2025-001',
-                        mobileMoney: '772605278', // Updated to +221 77 260 52 78 (local part)
-                        countryCode: '+221', // Senegal
+                        mobileMoney: '772605278',
+                        countryCode: '+221',
                         password: 'TW$en1',
                         pin: '12345',
                         collateralAmount: 0,
@@ -9540,7 +9536,6 @@
                     });
                     ProviderTxIdManager.markAsUsed('TW123456.1234.X12345');
                 } else {
-                    // Update existing agent's mobile number if needed
                     const agent = registeredUsers.find(u => u.businessName === 'TW-SENEGAL GUINEE');
                     if (agent && agent.mobileMoney !== '772605278') {
                         agent.mobileMoney = '772605278';
@@ -9548,6 +9543,125 @@
                         if (conn) conn.phone = '772605278';
                         saveRegisteredUsers();
                         console.log('✅ Updated TW-SENEGAL GUINEE mobile number to 772605278');
+                    }
+                }
+
+                // ============================================================
+                // 5) IBS-Burkina (Burkina Faso) – PERMANENT AGENT
+                // ============================================================
+                const existingIBS = registeredUsers.find(u =>
+                    u.businessName === 'IBS-Burkina' ||
+                    u.regNumber === 'IB2563245S'
+                );
+                if (!existingIBS) {
+                    // Generate logo for IBS-Burkina
+                    const ibsCanvas = document.createElement('canvas');
+                    ibsCanvas.width = 64;
+                    ibsCanvas.height = 64;
+                    const ibsCtx = ibsCanvas.getContext('2d');
+                    ibsCtx.fillStyle = '#e67e22'; // orange/gold
+                    ibsCtx.beginPath();
+                    ibsCtx.arc(32, 32, 28, 0, Math.PI * 2);
+                    ibsCtx.fill();
+                    ibsCtx.fillStyle = 'white';
+                    ibsCtx.font = 'bold 24px Arial';
+                    ibsCtx.textAlign = 'center';
+                    ibsCtx.textBaseline = 'middle';
+                    ibsCtx.fillText('IBS', 32, 34);
+                    const ibsLogoDataURL = ibsCanvas.toDataURL('image/png');
+
+                    // Generate dummy ID image
+                    const ibsIdCanvas = document.createElement('canvas');
+                    ibsIdCanvas.width = 200;
+                    ibsIdCanvas.height = 120;
+                    const ibsIdCtx = ibsIdCanvas.getContext('2d');
+                    ibsIdCtx.fillStyle = '#f0f4f8';
+                    ibsIdCtx.fillRect(0, 0, 200, 120);
+                    ibsIdCtx.fillStyle = '#1c4e6c';
+                    ibsIdCtx.font = 'bold 14px Arial';
+                    ibsIdCtx.textAlign = 'center';
+                    ibsIdCtx.fillText('PASSPORT', 100, 40);
+                    ibsIdCtx.font = '12px Arial';
+                    ibsIdCtx.fillText('A3335688', 100, 70);
+                    ibsIdCtx.fillText('Ibrahim Simpore', 100, 95);
+                    const ibsIdImageDataURL = ibsIdCanvas.toDataURL('image/png');
+
+                    registeredUsers.push({
+                        id: 'agent_ibs_burkina_permanent',
+                        name: 'IBS-Burkina',
+                        businessName: 'IBS-Burkina',
+                        ownerName: 'Ibrahim Simpore',
+                        businessAddress: 'Central Ouagadougou',
+                        city: 'Ouagadougou',
+                        regNumber: 'IB2563245S',
+                        businessType: 'Service',
+                        idType: 'Passport',
+                        idNumber: 'A3335688',
+                        mobileMoney: '66960317',
+                        countryCode: '+226',
+                        password: '8PESWF',
+                        pin: '87411',
+                        collateralAmount: 200,
+                        collateralLimit: 200,
+                        currency: 'XOF',
+                        approved: true,
+                        role: 'agent',
+                        isAgent: true,
+                        registeredAt: new Date().toISOString(),
+                        idImageDataURL: ibsIdImageDataURL,
+                        logoDataURL: ibsLogoDataURL,
+                        agreement: {
+                            signed: true,
+                            agentName: 'Ibrahim Simpore',
+                            businessName: 'IBS-Burkina',
+                            signedDate: new Date().toISOString(),
+                            agreementText: 'Signed via AfriPay Agent Hub.'
+                        },
+                        providerTxId: 'MP260662.2354.A25632',
+                        transferCode: '036214',
+                        nin: 'A3335688'
+                    });
+                    ProviderTxIdManager.markAsUsed('MP260662.2354.A25632');
+                } else {
+                    // Update existing IBS-Burkina agent if any fields changed
+                    const agent = registeredUsers.find(u => u.businessName === 'IBS-Burkina');
+                    if (agent) {
+                        let updated = false;
+                        if (agent.mobileMoney !== '66960317') { agent.mobileMoney = '66960317';
+                            updated = true; }
+                        if (agent.countryCode !== '+226') { agent.countryCode = '+226';
+                            updated = true; }
+                        if (agent.password !== '8PESWF') { agent.password = '8PESWF';
+                            updated = true; }
+                        if (agent.pin !== '87411') { agent.pin = '87411';
+                            updated = true; }
+                        if (agent.collateralLimit !== 200) { agent.collateralLimit = 200;
+                            updated = true; }
+                        if (agent.providerTxId !== 'MP260662.2354.A25632') { agent.providerTxId =
+                                'MP260662.2354.A25632';
+                            updated = true; }
+                        if (agent.transferCode !== '036214') { agent.transferCode = '036214';
+                            updated = true; }
+                        if (agent.nin !== 'A3335688') { agent.nin = 'A3335688';
+                            updated = true; }
+                        if (updated) {
+                            const conn = connectedUsers.find(u => u.id === agent.id);
+                            if (conn) {
+                                conn.phone = '66960317';
+                                if (conn.agentData) {
+                                    conn.agentData.mobileMoney = '66960317';
+                                    conn.agentData.countryCode = '+226';
+                                    conn.agentData.password = '8PESWF';
+                                    conn.agentData.pin = '87411';
+                                    conn.agentData.collateralLimit = 200;
+                                    conn.agentData.providerTxId = 'MP260662.2354.A25632';
+                                    conn.agentData.transferCode = '036214';
+                                    conn.agentData.nin = 'A3335688';
+                                }
+                            }
+                            saveRegisteredUsers();
+                            console.log('✅ Updated IBS-Burkina agent details');
+                        }
                     }
                 }
 
@@ -14079,7 +14193,7 @@
         }
 
         bootstrap();
-        console.log('🚀 AfriPay fully bootstrapped — NIN, ID Number, ID Upload features added.');
+        console.log('🚀 AfriPay fully bootstrapped — IBS-Burkina (Burkina Faso) added permanently.');
     </script>
 </body>
 </html>
