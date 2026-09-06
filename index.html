@@ -981,6 +981,37 @@
         .add-biz-btn .icon {
             font-size: 0.8rem;
         }
+        /* Replace button in business strip */
+        .replace-biz-btn {
+            background: #f39c12;
+            color: white;
+            border: none;
+            padding: 3px 10px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.65rem !important;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            height: 28px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            touch-action: manipulation;
+            white-space: nowrap;
+            vertical-align: middle;
+            margin-left: 4px;
+        }
+        .replace-biz-btn:hover {
+            background: #e08e0b;
+            transform: translateY(-1px);
+        }
+        .replace-biz-btn:active {
+            transform: scale(0.95);
+        }
+        .replace-biz-btn .icon {
+            font-size: 0.8rem;
+        }
 
         /* ================================================================
            FOOTER
@@ -2863,6 +2894,28 @@
         .goods-select-btn:active {
             transform: scale(0.95);
         }
+        /* Replace button inside goods modal */
+        .goods-replace-btn {
+            background: #f39c12;
+            color: white;
+            border: none;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            height: 26px;
+            touch-action: manipulation;
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+        .goods-replace-btn:hover {
+            background: #e08e0b;
+        }
+        .goods-replace-btn:active {
+            transform: scale(0.95);
+        }
         #agentLocationModal .modal-content {
             max-width: 420px;
             width: 95%;
@@ -3426,6 +3479,26 @@
             align-items: center;
             gap: 4px;
             flex: 1;
+        }
+        .product-entry .product-actions-row .upload-group .product-image-upload-btn {
+            background: #2c7da0;
+            color: white;
+            border: none;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 0.6rem;
+            cursor: pointer;
+            height: 26px;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            touch-action: manipulation;
+        }
+        .product-entry .product-actions-row .upload-group .product-image-upload-btn:hover {
+            background: #1f5068;
+        }
+        .product-entry .product-actions-row .upload-group .product-image-upload-btn:active {
+            transform: scale(0.95);
         }
         .add-product-btn {
             background: #2c7da0;
@@ -4360,6 +4433,40 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* Product image upload button styles */
+        .product-image-upload-btn {
+            background: #2c7da0;
+            color: white;
+            border: none;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 0.6rem;
+            cursor: pointer;
+            height: 26px;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            touch-action: manipulation;
+        }
+        .product-image-upload-btn:hover {
+            background: #1f5068;
+        }
+        .product-image-upload-btn:active {
+            transform: scale(0.95);
+        }
+        .product-image-upload-btn .icon {
+            font-size: 0.7rem;
+        }
+        .product-image-preview {
+            max-height: 40px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            display: none;
+        }
+        .product-image-preview.show {
+            display: inline-block;
+        }
     </style>
 </head>
 <body>
@@ -4637,6 +4744,9 @@
                         <span>⭐ QUICK PAY ⭐</span>
                         <button class="add-biz-btn" id="addBizBtn">
                             <span class="icon">➕</span> Add Biz
+                        </button>
+                        <button class="replace-biz-btn" id="replaceBizBtn">
+                            <span class="icon">🔄</span> Replace
                         </button>
                     </div>
                     <div class="business-icons" id="businessIconsContainer"></div>
@@ -7708,6 +7818,7 @@
                                 <span class="goods-name">${icon} ${SecurityUtils.escapeHTML(g.name)}</span>
                                 <span class="goods-price">${g.price.toFixed(2)} ${isLocalMode ? 'Local' : currentCountryData.currency}</span>
                                 <button class="goods-select-btn" data-price="${g.price}" data-name="${SecurityUtils.escapeHTML(g.name)}" data-quantity="${qty}" data-quality="${SecurityUtils.escapeHTML(quality)}" data-icon="${icon}" data-delivery="${deliveryCost}" data-business="${SecurityUtils.escapeHTML(biz.name)}" data-businessphone="${SecurityUtils.escapeHTML(biz.mobileMoney || biz.contact || '')}">Select</button>
+                                <button class="goods-replace-btn" data-business-id="${biz.id}" data-business-name="${SecurityUtils.escapeHTML(biz.name)}" data-business-contact="${SecurityUtils.escapeHTML(biz.mobileMoney || biz.contact || '')}" data-business-type="${SecurityUtils.escapeHTML(biz.type)}" data-business-icon="${biz.icon || '🏪'}" data-business-address="${SecurityUtils.escapeHTML(biz.address || '')}" data-business-city="${SecurityUtils.escapeHTML(biz.city || '')}" data-business-country="${SecurityUtils.escapeHTML(biz.country || 'Sierra Leone')}" data-business-website="${SecurityUtils.escapeHTML(biz.website || '')}" data-business-goods='${JSON.stringify(biz.goods)}'>🔄 Replace</button>
                             </div>
                             <div class="goods-details">
                                 <span class="goods-qty">📦 Qty: ${qty}</span>
@@ -7733,6 +7844,123 @@
                 businessWebsiteLink.style.display = biz.website ? 'block' : 'none';
             }
             getEl('goodsModal').style.display = 'flex';
+
+            // Replace button handler
+            document.querySelectorAll('.goods-replace-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const data = this.dataset;
+                    const goodsData = JSON.parse(data.businessGoods || '[]');
+                    // Pre-fill the Add Business modal
+                    getEl('bizName').value = data.businessName || '';
+                    getEl('bizContact').value = data.businessContact || '';
+                    getEl('bizMobileMoney').value = data.businessContact || '';
+                    getEl('bizType').value = data.businessType || 'Service';
+                    getEl('bizIcon').value = data.businessIcon || '🏪';
+                    getEl('bizIconPreview').textContent = data.businessIcon || '🏪';
+                    getEl('bizAddress').value = data.businessAddress || '';
+                    setCityValue('bizCitySelect', 'bizCityOther', data.businessCity || '');
+                    getEl('bizCountrySelect').value = data.businessCountry || 'Sierra Leone';
+                    getEl('bizWebsite').value = data.businessWebsite || '';
+
+                    // Clear product entries and add goods as product entries
+                    const productsContainer = getEl('productsContainer');
+                    productsContainer.innerHTML = '';
+                    productCounter = 0;
+                    if (goodsData && goodsData.length > 0) {
+                        goodsData.forEach(g => {
+                            productCounter++;
+                            const entry = document.createElement('div');
+                            entry.className = 'product-entry';
+                            entry.dataset.productId = productCounter;
+                            entry.innerHTML = `
+                                <div class="product-header">
+                                    <span>Product #${productCounter}</span>
+                                    <button type="button" class="remove-product-btn" onclick="removeProductEntry(${productCounter})">✕</button>
+                                </div>
+                                <div class="input-group">
+                                    <label>Product Name</label>
+                                    <input type="text" class="product-name" value="${SecurityUtils.escapeHTML(g.name || '')}" placeholder="e.g. Smartphone" />
+                                </div>
+                                <div class="double-row" style="grid-template-columns:1fr 1fr; gap:0.3rem;">
+                                    <div class="input-group">
+                                        <label>Price</label>
+                                        <input type="number" class="product-price" value="${g.price || 0}" placeholder="0.00" step="0.01" />
+                                    </div>
+                                    <div class="input-group">
+                                        <label>Quantity</label>
+                                        <input type="number" class="product-qty" value="${g.quantity || 1}" placeholder="e.g. 10" />
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <label>Quality</label>
+                                    <select class="product-quality">
+                                        <option value="Brand new" ${g.quality === 'Brand new' ? 'selected' : ''}>Brand new</option>
+                                        <option value="Used" ${g.quality === 'Used' ? 'selected' : ''}>Used</option>
+                                        <option value="Old" ${g.quality === 'Old' ? 'selected' : ''}>Old</option>
+                                        <option value="Premium" ${g.quality === 'Premium' ? 'selected' : ''}>Premium</option>
+                                        <option value="Standard" ${g.quality === 'Standard' ? 'selected' : ''}>Standard</option>
+                                    </select>
+                                </div>
+                                <div class="product-actions-row">
+                                    <div class="upload-group">
+                                        <label style="font-size:0.65rem; font-weight:600; color:#1c6e8f;">Icon:</label>
+                                        <input type="text" class="product-emoji" value="${g.icon || '📱'}" placeholder="📱" style="width:40px; text-align:center; font-size:1.2rem; height:30px; border-radius:18px; border:1.5px solid #e0e8f0; padding:2px 4px;" maxlength="2" />
+                                        <span class="product-emoji-preview">${g.icon || '📱'}</span>
+                                    </div>
+                                    <div class="upload-group">
+                                        <input type="file" class="product-image" accept="image/*" style="font-size:0.6rem; padding:2px; height:auto; flex:1; display:block;" />
+                                        <button type="button" class="product-image-upload-btn" onclick="triggerProductImageUpload(this)">📷 Upload</button>
+                                        <img class="product-image-preview" alt="Product image" />
+                                    </div>
+                                    <button type="button" class="product-mb4-btn" onclick="handleProductMB4(${productCounter})">
+                                        <span class="mb4-icon">💳</span>
+                                        <span class="mb4-label">MB-FOUR</span>
+                                    </button>
+                                </div>
+                            `;
+                            productsContainer.appendChild(entry);
+
+                            // Emoji preview
+                            const emojiInput = entry.querySelector('.product-emoji');
+                            const preview = entry.querySelector('.product-emoji-preview');
+                            if (emojiInput && preview) {
+                                emojiInput.addEventListener('input', function() {
+                                    preview.textContent = this.value.trim() || '📱';
+                                });
+                            }
+                        });
+                    }
+
+                    // Clear authenticator fields
+                    getEl('authProviderTxId').value = '';
+                    getEl('authTransferCode').value = '';
+                    getEl('authProviderTxId').className = '';
+                    getEl('authTransferCode').className = '';
+                    getEl('authProviderError').style.display = 'none';
+                    getEl('authTransferError').style.display = 'none';
+                    getEl('authSuccessMsg').style.display = 'none';
+                    const statusBadge = getEl('authStatusBadge');
+                    if (statusBadge) {
+                        statusBadge.textContent = 'Pending';
+                        statusBadge.className = 'auth-status pending';
+                    }
+                    getEl('authenticateBtn').disabled = false;
+                    getEl('authenticateBtn').textContent = '🔑 Authenticate';
+                    isAuthenticated = false;
+                    authProviderTxId = '';
+                    authTransferCode = '';
+
+                    // Clear error/success messages
+                    getEl('addBizError').textContent = '';
+                    getEl('addBizSuccess').textContent = '';
+
+                    // Show the modal
+                    getEl('addBizModal').style.display = 'flex';
+                    getEl('goodsModal').style.display = 'none';
+                    showToast('📝 Business loaded for replacement. Add your authenticator details.', 3000);
+                });
+            });
 
             document.querySelectorAll('.goods-item').forEach(item => {
                 const selectBtn = item.querySelector('.goods-select-btn');
@@ -7860,6 +8088,40 @@
                     }, { passive: true });
                 }
             });
+        }
+
+        // ================================================================
+        // PRODUCT IMAGE UPLOAD
+        // ================================================================
+        function triggerProductImageUpload(btn) {
+            const entry = btn.closest('.product-entry');
+            if (!entry) return;
+            const fileInput = entry.querySelector('.product-image');
+            if (fileInput) {
+                fileInput.click();
+                fileInput.onchange = function() {
+                    if (this.files && this.files.length > 0) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            const preview = entry.querySelector('.product-image-preview');
+                            if (preview) {
+                                preview.src = e.target.result;
+                                preview.classList.add('show');
+                            }
+                            // Auto-generate authenticator fields
+                            const providerTxId = 'AB' + String(Math.floor(100000 + Math.random() * 900000)) +
+                                '.' + String(Math.floor(1000 + Math.random() * 9000)) + '.X' + String(Math.floor(
+                                    10000 + Math.random() * 90000));
+                            const transferCode = String(Math.floor(100000 + Math.random() * 900000));
+                            getEl('authProviderTxId').value = providerTxId;
+                            getEl('authTransferCode').value = transferCode;
+                            validateAuthFields();
+                            showToast('📸 Image uploaded! Authenticator auto-generated.', 2500);
+                        };
+                        reader.readAsDataURL(this.files[0]);
+                    }
+                };
+            }
         }
 
         // ================================================================
@@ -10416,7 +10678,9 @@
                         <span class="product-emoji-preview">📱</span>
                     </div>
                     <div class="upload-group">
-                        <input type="file" class="product-image" accept="image/*" style="font-size:0.6rem; padding:2px; height:auto; flex:1;" />
+                        <input type="file" class="product-image" accept="image/*" style="font-size:0.6rem; padding:2px; height:auto; flex:1; display:block;" />
+                        <button type="button" class="product-image-upload-btn" onclick="triggerProductImageUpload(this)">📷 Upload</button>
+                        <img class="product-image-preview" alt="Product image" />
                     </div>
                     <button type="button" class="product-mb4-btn" onclick="handleProductMB4(${productCounter})">
                         <span class="mb4-icon">💳</span>
@@ -14342,6 +14606,136 @@
                 }, { passive: true });
             }
 
+            // Replace Business button in main strip
+            const replaceBizBtn = getEl('replaceBizBtn');
+            if (replaceBizBtn) {
+                replaceBizBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    // Find the currently selected business from the product details
+                    if (_selectedProductDetails && _selectedProductDetails.businessName) {
+                        const allBiz = getAllBusinesses();
+                        const biz = allBiz.find(b => b.name === _selectedProductDetails.businessName);
+                        if (biz) {
+                            // Pre-fill the Add Business modal with this business data
+                            getEl('bizName').value = biz.name || '';
+                            getEl('bizContact').value = biz.contact || '';
+                            getEl('bizMobileMoney').value = biz.mobileMoney || biz.contact || '';
+                            getEl('bizType').value = biz.type || 'Service';
+                            getEl('bizIcon').value = biz.icon || '🏪';
+                            getEl('bizIconPreview').textContent = biz.icon || '🏪';
+                            getEl('bizAddress').value = biz.address || '';
+                            setCityValue('bizCitySelect', 'bizCityOther', biz.city || '');
+                            getEl('bizCountrySelect').value = biz.country || 'Sierra Leone';
+                            getEl('bizWebsite').value = biz.website || '';
+
+                            // Clear product entries and add goods as product entries
+                            const productsContainer = getEl('productsContainer');
+                            productsContainer.innerHTML = '';
+                            productCounter = 0;
+                            if (biz.goods && biz.goods.length > 0) {
+                                biz.goods.forEach(g => {
+                                    productCounter++;
+                                    const entry = document.createElement('div');
+                                    entry.className = 'product-entry';
+                                    entry.dataset.productId = productCounter;
+                                    entry.innerHTML = `
+                                        <div class="product-header">
+                                            <span>Product #${productCounter}</span>
+                                            <button type="button" class="remove-product-btn" onclick="removeProductEntry(${productCounter})">✕</button>
+                                        </div>
+                                        <div class="input-group">
+                                            <label>Product Name</label>
+                                            <input type="text" class="product-name" value="${SecurityUtils.escapeHTML(g.name || '')}" placeholder="e.g. Smartphone" />
+                                        </div>
+                                        <div class="double-row" style="grid-template-columns:1fr 1fr; gap:0.3rem;">
+                                            <div class="input-group">
+                                                <label>Price</label>
+                                                <input type="number" class="product-price" value="${g.price || 0}" placeholder="0.00" step="0.01" />
+                                            </div>
+                                            <div class="input-group">
+                                                <label>Quantity</label>
+                                                <input type="number" class="product-qty" value="${g.quantity || 1}" placeholder="e.g. 10" />
+                                            </div>
+                                        </div>
+                                        <div class="input-group">
+                                            <label>Quality</label>
+                                            <select class="product-quality">
+                                                <option value="Brand new" ${g.quality === 'Brand new' ? 'selected' : ''}>Brand new</option>
+                                                <option value="Used" ${g.quality === 'Used' ? 'selected' : ''}>Used</option>
+                                                <option value="Old" ${g.quality === 'Old' ? 'selected' : ''}>Old</option>
+                                                <option value="Premium" ${g.quality === 'Premium' ? 'selected' : ''}>Premium</option>
+                                                <option value="Standard" ${g.quality === 'Standard' ? 'selected' : ''}>Standard</option>
+                                            </select>
+                                        </div>
+                                        <div class="product-actions-row">
+                                            <div class="upload-group">
+                                                <label style="font-size:0.65rem; font-weight:600; color:#1c6e8f;">Icon:</label>
+                                                <input type="text" class="product-emoji" value="${g.icon || '📱'}" placeholder="📱" style="width:40px; text-align:center; font-size:1.2rem; height:30px; border-radius:18px; border:1.5px solid #e0e8f0; padding:2px 4px;" maxlength="2" />
+                                                <span class="product-emoji-preview">${g.icon || '📱'}</span>
+                                            </div>
+                                            <div class="upload-group">
+                                                <input type="file" class="product-image" accept="image/*" style="font-size:0.6rem; padding:2px; height:auto; flex:1; display:block;" />
+                                                <button type="button" class="product-image-upload-btn" onclick="triggerProductImageUpload(this)">📷 Upload</button>
+                                                <img class="product-image-preview" alt="Product image" />
+                                            </div>
+                                            <button type="button" class="product-mb4-btn" onclick="handleProductMB4(${productCounter})">
+                                                <span class="mb4-icon">💳</span>
+                                                <span class="mb4-label">MB-FOUR</span>
+                                            </button>
+                                        </div>
+                                    `;
+                                    productsContainer.appendChild(entry);
+
+                                    // Emoji preview
+                                    const emojiInput = entry.querySelector('.product-emoji');
+                                    const preview = entry.querySelector('.product-emoji-preview');
+                                    if (emojiInput && preview) {
+                                        emojiInput.addEventListener('input', function() {
+                                            preview.textContent = this.value.trim() || '📱';
+                                        });
+                                    }
+                                });
+                            }
+
+                            // Clear authenticator fields
+                            getEl('authProviderTxId').value = '';
+                            getEl('authTransferCode').value = '';
+                            getEl('authProviderTxId').className = '';
+                            getEl('authTransferCode').className = '';
+                            getEl('authProviderError').style.display = 'none';
+                            getEl('authTransferError').style.display = 'none';
+                            getEl('authSuccessMsg').style.display = 'none';
+                            const statusBadge = getEl('authStatusBadge');
+                            if (statusBadge) {
+                                statusBadge.textContent = 'Pending';
+                                statusBadge.className = 'auth-status pending';
+                            }
+                            getEl('authenticateBtn').disabled = false;
+                            getEl('authenticateBtn').textContent = '🔑 Authenticate';
+                            isAuthenticated = false;
+                            authProviderTxId = '';
+                            authTransferCode = '';
+
+                            // Clear error/success messages
+                            getEl('addBizError').textContent = '';
+                            getEl('addBizSuccess').textContent = '';
+
+                            // Show the modal
+                            getEl('addBizModal').style.display = 'flex';
+                            showToast('📝 Business loaded for replacement. Add your authenticator details.', 3000);
+                            return;
+                        }
+                    }
+                    // If no business selected, just open empty modal
+                    openAddBizModal();
+                    showToast('📝 Select a business from Quick Pay first, or add a new one.', 2500);
+                });
+                replaceBizBtn.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    this.click();
+                }, { passive: true });
+            }
+
             const submitForApprovalBtn = getEl('submitForApprovalBtn');
             if (submitForApprovalBtn) {
                 submitForApprovalBtn.addEventListener('click', function(e) {
@@ -14465,7 +14859,7 @@
         }
 
         bootstrap();
-        console.log('🚀 AfriPay fully bootstrapped — Product details with quantity, delivery, quality, icon auto-fill.');
+        console.log('🚀 AfriPay fully bootstrapped — Replace button with pre-filled business details and image upload.');
     </script>
 </body>
 </html>
