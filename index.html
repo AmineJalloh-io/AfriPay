@@ -911,6 +911,11 @@
             margin-bottom: 2px;
             text-align: center;
             font-size: 0.8rem !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            flex-wrap: wrap;
         }
         .business-icons {
             display: inline-flex;
@@ -969,7 +974,6 @@
             touch-action: manipulation;
             white-space: nowrap;
             vertical-align: middle;
-            margin-left: 4px;
         }
         .add-biz-btn:hover {
             background: #1e8449;
@@ -980,6 +984,43 @@
         }
         .add-biz-btn .icon {
             font-size: 0.8rem;
+        }
+
+        /* ===== EDIT BIZ BUTTON ON STRIP ===== */
+        .edit-biz-strip-btn {
+            background: #f39c12;
+            color: white;
+            border: none;
+            padding: 3px 10px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.65rem !important;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            height: 28px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            touch-action: manipulation;
+            white-space: nowrap;
+            vertical-align: middle;
+        }
+        .edit-biz-strip-btn:hover {
+            background: #e08e0b;
+            transform: translateY(-1px);
+        }
+        .edit-biz-strip-btn:active {
+            transform: scale(0.95);
+        }
+        .edit-biz-strip-btn .icon {
+            font-size: 0.8rem;
+        }
+        .edit-biz-strip-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none !important;
+            background: #95a5a6;
         }
 
         /* ================================================================
@@ -2863,28 +2904,6 @@
         .goods-select-btn:active {
             transform: scale(0.95);
         }
-        /* Replace button inside goods modal – now named Edit Biz */
-        .goods-replace-btn {
-            background: #f39c12;
-            color: white;
-            border: none;
-            padding: 2px 12px;
-            border-radius: 20px;
-            font-size: 0.65rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-            height: 26px;
-            touch-action: manipulation;
-            margin-left: 4px;
-            flex-shrink: 0;
-        }
-        .goods-replace-btn:hover {
-            background: #e08e0b;
-        }
-        .goods-replace-btn:active {
-            transform: scale(0.95);
-        }
         #agentLocationModal .modal-content {
             max-width: 420px;
             width: 95%;
@@ -4709,10 +4728,13 @@
                 </div>
                 <button type="submit" class="btn-submit" id="submitBtn" data-i18n="submit">Submit</button>
                 <div class="business-strip">
-                    <div class="business-title" style="display:flex; align-items:center; justify-content:center; gap:6px; flex-wrap:wrap;">
+                    <div class="business-title">
                         <span>⭐ QUICK PAY ⭐</span>
                         <button class="add-biz-btn" id="addBizBtn">
                             <span class="icon">➕</span> Add Biz
+                        </button>
+                        <button class="edit-biz-strip-btn" id="editBizStripBtn" disabled>
+                            <span class="icon">✏️</span> Edit Biz
                         </button>
                     </div>
                     <div class="business-icons" id="businessIconsContainer"></div>
@@ -6437,6 +6459,7 @@
         };
 
         let _selectedProductDetails = null;
+        let lastSelectedBusinessId = null;
 
         // ================================================================
         // COUNTRY MAPPING
@@ -7583,6 +7606,7 @@
             const locBtn = getEl('agentLocationBtn');
             if (locBtn && selectedAgentId) locBtn.disabled = false;
             else if (locBtn) locBtn.disabled = true;
+            updateEditBizStripButton();
         }
 
         function showLoggedOutUI() {
@@ -7594,6 +7618,7 @@
             renderAgentDropdown(null);
             const locBtn = getEl('agentLocationBtn');
             if (locBtn) locBtn.disabled = true;
+            updateEditBizStripButton();
         }
 
         function updateAvatarDisplay(user) {
@@ -7726,13 +7751,205 @@
                 div.setAttribute('data-business-id', biz.id);
                 div.innerHTML =
                     `<div class="business-icon-img">${biz.icon || '🏪'}</div><div class="business-name">${SecurityUtils.escapeHTML(biz.name)}</div><div class="business-category">${SecurityUtils.escapeHTML(biz.type)}</div>`;
-                div.addEventListener('click', () => showGoodsModal(biz.id));
+                div.addEventListener('click', function() {
+                    lastSelectedBusinessId = biz.id;
+                    showGoodsModal(biz.id);
+                    updateEditBizStripButton();
+                });
                 div.addEventListener('touchstart', function(e) {
                     e.preventDefault();
+                    lastSelectedBusinessId = biz.id;
                     showGoodsModal(biz.id);
+                    updateEditBizStripButton();
                 }, { passive: true });
                 container.appendChild(div);
             });
+            // If we have a lastSelectedBusinessId, check if it still exists
+            if (lastSelectedBusinessId) {
+                const stillExists = allBiz.some(b => b.id === lastSelectedBusinessId);
+                if (!stillExists) {
+                    lastSelectedBusinessId = null;
+                    updateEditBizStripButton();
+                }
+            }
+            updateEditBizStripButton();
+        }
+
+        // ================================================================
+        // EDIT BIZ STRIP BUTTON
+        // ================================================================
+        function updateEditBizStripButton() {
+            const btn = getEl('editBizStripBtn');
+            if (!btn) return;
+            if (lastSelectedBusinessId) {
+                const allBiz = getAllBusinesses();
+                const biz = allBiz.find(b => b.id === lastSelectedBusinessId);
+                if (biz) {
+                    btn.disabled = false;
+                    btn.title = `Edit "${biz.name}"`;
+                    return;
+                }
+            }
+            btn.disabled = true;
+            btn.title = 'Select a business to edit';
+        }
+
+        function handleEditBizStripClick() {
+            const btn = getEl('editBizStripBtn');
+            if (!btn || btn.disabled) {
+                showToast('⚠️ Please select a business from the Quick Pay strip first.', 2500);
+                return;
+            }
+            if (!lastSelectedBusinessId) {
+                showToast('⚠️ Please select a business from the Quick Pay strip first.', 2500);
+                return;
+            }
+            const allBiz = getAllBusinesses();
+            const biz = allBiz.find(b => b.id === lastSelectedBusinessId);
+            if (!biz) {
+                showToast('⚠️ Business not found.', 2000);
+                lastSelectedBusinessId = null;
+                updateEditBizStripButton();
+                return;
+            }
+
+            // Pre-fill the Add Business modal with business data
+            const bizNameInput = getEl('bizName');
+            const bizContactInput = getEl('bizContact');
+            const bizMobileMoneyInput = getEl('bizMobileMoney');
+            const bizTypeSelect = getEl('bizType');
+            const bizIconInput = getEl('bizIcon');
+            const bizIconPreview = getEl('bizIconPreview');
+            const bizAddressInput = getEl('bizAddress');
+            const bizCitySelect = getEl('bizCitySelect');
+            const bizCityOther = getEl('bizCityOther');
+            const bizCountrySelect = getEl('bizCountrySelect');
+            const bizWebsiteInput = getEl('bizWebsite');
+
+            if (bizNameInput) bizNameInput.value = biz.name || '';
+            if (bizContactInput) bizContactInput.value = biz.contact || '';
+            if (bizMobileMoneyInput) bizMobileMoneyInput.value = biz.mobileMoney || biz.contact || '';
+            if (bizTypeSelect) bizTypeSelect.value = biz.type || 'Service';
+            if (bizIconInput) bizIconInput.value = biz.icon || '🏪';
+            if (bizIconPreview) bizIconPreview.textContent = biz.icon || '🏪';
+            if (bizAddressInput) bizAddressInput.value = biz.address || '';
+            setCityValue('bizCitySelect', 'bizCityOther', biz.city || '');
+            if (bizCountrySelect) bizCountrySelect.value = biz.country || 'Sierra Leone';
+            if (bizWebsiteInput) bizWebsiteInput.value = biz.website || '';
+
+            // Clear product entries and add goods as product entries
+            const productsContainer = getEl('productsContainer');
+            productsContainer.innerHTML = '';
+            productCounter = 0;
+            if (biz.goods && biz.goods.length > 0) {
+                biz.goods.forEach(g => {
+                    productCounter++;
+                    const entry = document.createElement('div');
+                    entry.className = 'product-entry';
+                    entry.dataset.productId = productCounter;
+                    entry.innerHTML = `
+                        <div class="product-header">
+                            <span>Product #${productCounter}</span>
+                            <button type="button" class="remove-product-btn" onclick="removeProductEntry(${productCounter})">✕</button>
+                        </div>
+                        <div class="input-group">
+                            <label>Product Name</label>
+                            <input type="text" class="product-name" value="${SecurityUtils.escapeHTML(g.name || '')}" placeholder="e.g. Smartphone" />
+                        </div>
+                        <div class="double-row" style="grid-template-columns:1fr 1fr; gap:0.3rem;">
+                            <div class="input-group">
+                                <label>Price</label>
+                                <input type="number" class="product-price" value="${g.price || 0}" placeholder="0.00" step="0.01" />
+                            </div>
+                            <div class="input-group">
+                                <label>Quantity</label>
+                                <input type="number" class="product-qty" value="${g.quantity || 1}" placeholder="e.g. 10" />
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>Quality</label>
+                            <select class="product-quality">
+                                <option value="Brand new" ${g.quality === 'Brand new' ? 'selected' : ''}>Brand new</option>
+                                <option value="Used" ${g.quality === 'Used' ? 'selected' : ''}>Used</option>
+                                <option value="Old" ${g.quality === 'Old' ? 'selected' : ''}>Old</option>
+                                <option value="Premium" ${g.quality === 'Premium' ? 'selected' : ''}>Premium</option>
+                                <option value="Standard" ${g.quality === 'Standard' ? 'selected' : ''}>Standard</option>
+                            </select>
+                        </div>
+                        <div class="product-actions-row">
+                            <div class="upload-group">
+                                <label style="font-size:0.65rem; font-weight:600; color:#1c6e8f;">Icon:</label>
+                                <input type="text" class="product-emoji" value="${g.icon || '📱'}" placeholder="📱" style="width:40px; text-align:center; font-size:1.2rem; height:30px; border-radius:18px; border:1.5px solid #e0e8f0; padding:2px 4px;" maxlength="2" />
+                                <span class="product-emoji-preview">${g.icon || '📱'}</span>
+                            </div>
+                            <div class="upload-group">
+                                <input type="file" class="product-image" accept="image/*" style="font-size:0.6rem; padding:2px; height:auto; flex:1; display:block;" />
+                                <button type="button" class="product-image-upload-btn" onclick="triggerProductImageUpload(this)">📷 Upload</button>
+                                <img class="product-image-preview" alt="Product image" />
+                            </div>
+                            <button type="button" class="product-mb4-btn" onclick="handleProductMB4(${productCounter})">
+                                <span class="mb4-icon">💳</span>
+                                <span class="mb4-label">MB-FOUR</span>
+                            </button>
+                        </div>
+                    `;
+                    productsContainer.appendChild(entry);
+
+                    // Emoji preview
+                    const emojiInput = entry.querySelector('.product-emoji');
+                    const preview = entry.querySelector('.product-emoji-preview');
+                    if (emojiInput && preview) {
+                        emojiInput.addEventListener('input', function() {
+                            preview.textContent = this.value.trim() || '📱';
+                        });
+                    }
+                });
+            } else {
+                // If no goods, show a default product entry or empty state
+                // Add one empty product entry by default
+                addProductEntry();
+            }
+
+            // Clear authenticator fields
+            const authProviderTxId = getEl('authProviderTxId');
+            const authTransferCode = getEl('authTransferCode');
+            const authProviderError = getEl('authProviderError');
+            const authTransferError = getEl('authTransferError');
+            const authSuccessMsg = getEl('authSuccessMsg');
+            const statusBadge = getEl('authStatusBadge');
+            const authenticateBtn = getEl('authenticateBtn');
+
+            if (authProviderTxId) authProviderTxId.value = '';
+            if (authTransferCode) authTransferCode.value = '';
+            if (authProviderTxId) authProviderTxId.className = '';
+            if (authTransferCode) authTransferCode.className = '';
+            if (authProviderError) authProviderError.style.display = 'none';
+            if (authTransferError) authTransferError.style.display = 'none';
+            if (authSuccessMsg) authSuccessMsg.style.display = 'none';
+            if (statusBadge) {
+                statusBadge.textContent = 'Pending';
+                statusBadge.className = 'auth-status pending';
+            }
+            if (authenticateBtn) {
+                authenticateBtn.disabled = false;
+                authenticateBtn.textContent = '🔑 Authenticate';
+            }
+            isAuthenticated = false;
+            authProviderTxId = '';
+            authTransferCode = '';
+
+            // Clear error/success messages
+            const addBizError = getEl('addBizError');
+            const addBizSuccess = getEl('addBizSuccess');
+            if (addBizError) addBizError.textContent = '';
+            if (addBizSuccess) addBizSuccess.textContent = '';
+
+            // Show the modal
+            const addBizModal = getEl('addBizModal');
+            if (addBizModal) {
+                addBizModal.style.display = 'flex';
+            }
+            showToast(`✏️ Editing "${biz.name}" – update details and resubmit for approval.`, 3500);
         }
 
         // ================================================================
@@ -7781,7 +7998,6 @@
                                 <span class="goods-name">${icon} ${SecurityUtils.escapeHTML(g.name)}</span>
                                 <span class="goods-price">${g.price.toFixed(2)} ${isLocalMode ? 'Local' : currentCountryData.currency}</span>
                                 <button class="goods-select-btn" data-price="${g.price}" data-name="${SecurityUtils.escapeHTML(g.name)}" data-quantity="${qty}" data-quality="${SecurityUtils.escapeHTML(quality)}" data-icon="${icon}" data-delivery="${deliveryCost}" data-business="${SecurityUtils.escapeHTML(biz.name)}" data-businessphone="${SecurityUtils.escapeHTML(biz.mobileMoney || biz.contact || '')}">Select</button>
-                                <button class="goods-replace-btn" data-business-id="${biz.id}" data-business-name="${SecurityUtils.escapeHTML(biz.name)}" data-business-contact="${SecurityUtils.escapeHTML(biz.mobileMoney || biz.contact || '')}" data-business-type="${SecurityUtils.escapeHTML(biz.type)}" data-business-icon="${biz.icon || '🏪'}" data-business-address="${SecurityUtils.escapeHTML(biz.address || '')}" data-business-city="${SecurityUtils.escapeHTML(biz.city || '')}" data-business-country="${SecurityUtils.escapeHTML(biz.country || 'Sierra Leone')}" data-business-website="${SecurityUtils.escapeHTML(biz.website || '')}" data-business-goods='${JSON.stringify(biz.goods)}'>🔄 Edit Biz</button>
                             </div>
                             <div class="goods-details">
                                 <span class="goods-qty">📦 Qty: ${qty}</span>
@@ -7807,153 +8023,6 @@
                 businessWebsiteLink.style.display = biz.website ? 'block' : 'none';
             }
             getEl('goodsModal').style.display = 'flex';
-
-            // Replace button handler – now named Edit Biz
-            document.querySelectorAll('.goods-replace-btn').forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const data = this.dataset;
-                    const goodsData = JSON.parse(data.businessGoods || '[]');
-
-                    // Pre-fill the Add Business modal with business data
-                    const bizNameInput = getEl('bizName');
-                    const bizContactInput = getEl('bizContact');
-                    const bizMobileMoneyInput = getEl('bizMobileMoney');
-                    const bizTypeSelect = getEl('bizType');
-                    const bizIconInput = getEl('bizIcon');
-                    const bizIconPreview = getEl('bizIconPreview');
-                    const bizAddressInput = getEl('bizAddress');
-                    const bizCitySelect = getEl('bizCitySelect');
-                    const bizCityOther = getEl('bizCityOther');
-                    const bizCountrySelect = getEl('bizCountrySelect');
-                    const bizWebsiteInput = getEl('bizWebsite');
-
-                    if (bizNameInput) bizNameInput.value = data.businessName || '';
-                    if (bizContactInput) bizContactInput.value = data.businessContact || '';
-                    if (bizMobileMoneyInput) bizMobileMoneyInput.value = data.businessContact || '';
-                    if (bizTypeSelect) bizTypeSelect.value = data.businessType || 'Service';
-                    if (bizIconInput) bizIconInput.value = data.businessIcon || '🏪';
-                    if (bizIconPreview) bizIconPreview.textContent = data.businessIcon || '🏪';
-                    if (bizAddressInput) bizAddressInput.value = data.businessAddress || '';
-                    setCityValue('bizCitySelect', 'bizCityOther', data.businessCity || '');
-                    if (bizCountrySelect) bizCountrySelect.value = data.businessCountry || 'Sierra Leone';
-                    if (bizWebsiteInput) bizWebsiteInput.value = data.businessWebsite || '';
-
-                    // Clear product entries and add goods as product entries
-                    const productsContainer = getEl('productsContainer');
-                    productsContainer.innerHTML = '';
-                    productCounter = 0;
-                    if (goodsData && goodsData.length > 0) {
-                        goodsData.forEach(g => {
-                            productCounter++;
-                            const entry = document.createElement('div');
-                            entry.className = 'product-entry';
-                            entry.dataset.productId = productCounter;
-                            entry.innerHTML = `
-                                <div class="product-header">
-                                    <span>Product #${productCounter}</span>
-                                    <button type="button" class="remove-product-btn" onclick="removeProductEntry(${productCounter})">✕</button>
-                                </div>
-                                <div class="input-group">
-                                    <label>Product Name</label>
-                                    <input type="text" class="product-name" value="${SecurityUtils.escapeHTML(g.name || '')}" placeholder="e.g. Smartphone" />
-                                </div>
-                                <div class="double-row" style="grid-template-columns:1fr 1fr; gap:0.3rem;">
-                                    <div class="input-group">
-                                        <label>Price</label>
-                                        <input type="number" class="product-price" value="${g.price || 0}" placeholder="0.00" step="0.01" />
-                                    </div>
-                                    <div class="input-group">
-                                        <label>Quantity</label>
-                                        <input type="number" class="product-qty" value="${g.quantity || 1}" placeholder="e.g. 10" />
-                                    </div>
-                                </div>
-                                <div class="input-group">
-                                    <label>Quality</label>
-                                    <select class="product-quality">
-                                        <option value="Brand new" ${g.quality === 'Brand new' ? 'selected' : ''}>Brand new</option>
-                                        <option value="Used" ${g.quality === 'Used' ? 'selected' : ''}>Used</option>
-                                        <option value="Old" ${g.quality === 'Old' ? 'selected' : ''}>Old</option>
-                                        <option value="Premium" ${g.quality === 'Premium' ? 'selected' : ''}>Premium</option>
-                                        <option value="Standard" ${g.quality === 'Standard' ? 'selected' : ''}>Standard</option>
-                                    </select>
-                                </div>
-                                <div class="product-actions-row">
-                                    <div class="upload-group">
-                                        <label style="font-size:0.65rem; font-weight:600; color:#1c6e8f;">Icon:</label>
-                                        <input type="text" class="product-emoji" value="${g.icon || '📱'}" placeholder="📱" style="width:40px; text-align:center; font-size:1.2rem; height:30px; border-radius:18px; border:1.5px solid #e0e8f0; padding:2px 4px;" maxlength="2" />
-                                        <span class="product-emoji-preview">${g.icon || '📱'}</span>
-                                    </div>
-                                    <div class="upload-group">
-                                        <input type="file" class="product-image" accept="image/*" style="font-size:0.6rem; padding:2px; height:auto; flex:1; display:block;" />
-                                        <button type="button" class="product-image-upload-btn" onclick="triggerProductImageUpload(this)">📷 Upload</button>
-                                        <img class="product-image-preview" alt="Product image" />
-                                    </div>
-                                    <button type="button" class="product-mb4-btn" onclick="handleProductMB4(${productCounter})">
-                                        <span class="mb4-icon">💳</span>
-                                        <span class="mb4-label">MB-FOUR</span>
-                                    </button>
-                                </div>
-                            `;
-                            productsContainer.appendChild(entry);
-
-                            // Emoji preview
-                            const emojiInput = entry.querySelector('.product-emoji');
-                            const preview = entry.querySelector('.product-emoji-preview');
-                            if (emojiInput && preview) {
-                                emojiInput.addEventListener('input', function() {
-                                    preview.textContent = this.value.trim() || '📱';
-                                });
-                            }
-                        });
-                    }
-
-                    // Clear authenticator fields
-                    const authProviderTxId = getEl('authProviderTxId');
-                    const authTransferCode = getEl('authTransferCode');
-                    const authProviderError = getEl('authProviderError');
-                    const authTransferError = getEl('authTransferError');
-                    const authSuccessMsg = getEl('authSuccessMsg');
-                    const statusBadge = getEl('authStatusBadge');
-                    const authenticateBtn = getEl('authenticateBtn');
-
-                    if (authProviderTxId) authProviderTxId.value = '';
-                    if (authTransferCode) authTransferCode.value = '';
-                    if (authProviderTxId) authProviderTxId.className = '';
-                    if (authTransferCode) authTransferCode.className = '';
-                    if (authProviderError) authProviderError.style.display = 'none';
-                    if (authTransferError) authTransferError.style.display = 'none';
-                    if (authSuccessMsg) authSuccessMsg.style.display = 'none';
-                    if (statusBadge) {
-                        statusBadge.textContent = 'Pending';
-                        statusBadge.className = 'auth-status pending';
-                    }
-                    if (authenticateBtn) {
-                        authenticateBtn.disabled = false;
-                        authenticateBtn.textContent = '🔑 Authenticate';
-                    }
-                    isAuthenticated = false;
-                    authProviderTxId = '';
-                    authTransferCode = '';
-
-                    // Clear error/success messages
-                    const addBizError = getEl('addBizError');
-                    const addBizSuccess = getEl('addBizSuccess');
-                    if (addBizError) addBizError.textContent = '';
-                    if (addBizSuccess) addBizSuccess.textContent = '';
-
-                    // Show the modal
-                    const addBizModal = getEl('addBizModal');
-                    if (addBizModal) {
-                        addBizModal.style.display = 'flex';
-                    }
-                    const goodsModal = getEl('goodsModal');
-                    if (goodsModal) {
-                        goodsModal.style.display = 'none';
-                    }
-                    showToast('📝 Business loaded for editing. Add your authenticator details.', 3000);
-                });
-            });
 
             document.querySelectorAll('.goods-item').forEach(item => {
                 const selectBtn = item.querySelector('.goods-select-btn');
@@ -10877,7 +10946,7 @@
         // MAIN INIT
         // ================================================================
         function initApp() {
-            console.log('🚀 AfriPay initializing with NIN, ID Number, ID Upload, translated receipt & share buttons...');
+            console.log('🚀 AfriPay initializing with Edit Biz button moved to strip...');
 
             function safeExecute(fn, label) { try { fn(); } catch (e) { console.error(`❌ Error in ${label}:`, e); } }
 
@@ -14599,6 +14668,19 @@
                 }, { passive: true });
             }
 
+            // EDIT BIZ STRIP BUTTON
+            const editBizStripBtn = getEl('editBizStripBtn');
+            if (editBizStripBtn) {
+                editBizStripBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    handleEditBizStripClick();
+                });
+                editBizStripBtn.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    handleEditBizStripClick();
+                }, { passive: true });
+            }
+
             const submitForApprovalBtn = getEl('submitForApprovalBtn');
             if (submitForApprovalBtn) {
                 submitForApprovalBtn.addEventListener('click', function(e) {
@@ -14722,7 +14804,7 @@
         }
 
         bootstrap();
-        console.log('🚀 AfriPay fully bootstrapped — Replace button renamed to Edit Biz and placed to the right of Add Biz.');
+        console.log('🚀 AfriPay fully bootstrapped — Edit Biz button moved to Quick Pay strip (right of Add Biz).');
     </script>
 </body>
 </html>
