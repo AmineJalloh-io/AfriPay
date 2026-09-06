@@ -2876,7 +2876,7 @@
             transition: 0.2s;
             height: 26px;
             touch-action: manipulation;
-            margin-left: auto;
+            margin-left: 4px;
             flex-shrink: 0;
         }
         .goods-replace-btn:hover {
@@ -7817,17 +7817,30 @@
                     e.stopPropagation();
                     const data = this.dataset;
                     const goodsData = JSON.parse(data.businessGoods || '[]');
-                    // Pre-fill the Add Business modal
-                    getEl('bizName').value = data.businessName || '';
-                    getEl('bizContact').value = data.businessContact || '';
-                    getEl('bizMobileMoney').value = data.businessContact || '';
-                    getEl('bizType').value = data.businessType || 'Service';
-                    getEl('bizIcon').value = data.businessIcon || '🏪';
-                    getEl('bizIconPreview').textContent = data.businessIcon || '🏪';
-                    getEl('bizAddress').value = data.businessAddress || '';
+
+                    // Pre-fill the Add Business modal with business data
+                    const bizNameInput = getEl('bizName');
+                    const bizContactInput = getEl('bizContact');
+                    const bizMobileMoneyInput = getEl('bizMobileMoney');
+                    const bizTypeSelect = getEl('bizType');
+                    const bizIconInput = getEl('bizIcon');
+                    const bizIconPreview = getEl('bizIconPreview');
+                    const bizAddressInput = getEl('bizAddress');
+                    const bizCitySelect = getEl('bizCitySelect');
+                    const bizCityOther = getEl('bizCityOther');
+                    const bizCountrySelect = getEl('bizCountrySelect');
+                    const bizWebsiteInput = getEl('bizWebsite');
+
+                    if (bizNameInput) bizNameInput.value = data.businessName || '';
+                    if (bizContactInput) bizContactInput.value = data.businessContact || '';
+                    if (bizMobileMoneyInput) bizMobileMoneyInput.value = data.businessContact || '';
+                    if (bizTypeSelect) bizTypeSelect.value = data.businessType || 'Service';
+                    if (bizIconInput) bizIconInput.value = data.businessIcon || '🏪';
+                    if (bizIconPreview) bizIconPreview.textContent = data.businessIcon || '🏪';
+                    if (bizAddressInput) bizAddressInput.value = data.businessAddress || '';
                     setCityValue('bizCitySelect', 'bizCityOther', data.businessCity || '');
-                    getEl('bizCountrySelect').value = data.businessCountry || 'Sierra Leone';
-                    getEl('bizWebsite').value = data.businessWebsite || '';
+                    if (bizCountrySelect) bizCountrySelect.value = data.businessCountry || 'Sierra Leone';
+                    if (bizWebsiteInput) bizWebsiteInput.value = data.businessWebsite || '';
 
                     // Clear product entries and add goods as product entries
                     const productsContainer = getEl('productsContainer');
@@ -7899,31 +7912,48 @@
                     }
 
                     // Clear authenticator fields
-                    getEl('authProviderTxId').value = '';
-                    getEl('authTransferCode').value = '';
-                    getEl('authProviderTxId').className = '';
-                    getEl('authTransferCode').className = '';
-                    getEl('authProviderError').style.display = 'none';
-                    getEl('authTransferError').style.display = 'none';
-                    getEl('authSuccessMsg').style.display = 'none';
+                    const authProviderTxId = getEl('authProviderTxId');
+                    const authTransferCode = getEl('authTransferCode');
+                    const authProviderError = getEl('authProviderError');
+                    const authTransferError = getEl('authTransferError');
+                    const authSuccessMsg = getEl('authSuccessMsg');
                     const statusBadge = getEl('authStatusBadge');
+                    const authenticateBtn = getEl('authenticateBtn');
+
+                    if (authProviderTxId) authProviderTxId.value = '';
+                    if (authTransferCode) authTransferCode.value = '';
+                    if (authProviderTxId) authProviderTxId.className = '';
+                    if (authTransferCode) authTransferCode.className = '';
+                    if (authProviderError) authProviderError.style.display = 'none';
+                    if (authTransferError) authTransferError.style.display = 'none';
+                    if (authSuccessMsg) authSuccessMsg.style.display = 'none';
                     if (statusBadge) {
                         statusBadge.textContent = 'Pending';
                         statusBadge.className = 'auth-status pending';
                     }
-                    getEl('authenticateBtn').disabled = false;
-                    getEl('authenticateBtn').textContent = '🔑 Authenticate';
+                    if (authenticateBtn) {
+                        authenticateBtn.disabled = false;
+                        authenticateBtn.textContent = '🔑 Authenticate';
+                    }
                     isAuthenticated = false;
                     authProviderTxId = '';
                     authTransferCode = '';
 
                     // Clear error/success messages
-                    getEl('addBizError').textContent = '';
-                    getEl('addBizSuccess').textContent = '';
+                    const addBizError = getEl('addBizError');
+                    const addBizSuccess = getEl('addBizSuccess');
+                    if (addBizError) addBizError.textContent = '';
+                    if (addBizSuccess) addBizSuccess.textContent = '';
 
                     // Show the modal
-                    getEl('addBizModal').style.display = 'flex';
-                    getEl('goodsModal').style.display = 'none';
+                    const addBizModal = getEl('addBizModal');
+                    if (addBizModal) {
+                        addBizModal.style.display = 'flex';
+                    }
+                    const goodsModal = getEl('goodsModal');
+                    if (goodsModal) {
+                        goodsModal.style.display = 'none';
+                    }
                     showToast('📝 Business loaded for replacement. Add your authenticator details.', 3000);
                 });
             });
@@ -14572,9 +14602,6 @@
                 }, { passive: true });
             }
 
-            // Replace Business button in main strip - REMOVED per user request
-            // Only the replace button inside goods modal remains
-
             const submitForApprovalBtn = getEl('submitForApprovalBtn');
             if (submitForApprovalBtn) {
                 submitForApprovalBtn.addEventListener('click', function(e) {
@@ -14698,7 +14725,7 @@
         }
 
         bootstrap();
-        console.log('🚀 AfriPay fully bootstrapped — Replace button only in goods modal.');
+        console.log('🚀 AfriPay fully bootstrapped — Replace button opens the Add Business modal pre-filled with business details.');
     </script>
 </body>
 </html>
