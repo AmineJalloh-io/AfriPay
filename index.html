@@ -2863,7 +2863,7 @@
         .goods-select-btn:active {
             transform: scale(0.95);
         }
-        /* Replace button inside goods modal */
+        /* Replace button inside goods modal – now named Edit Biz */
         .goods-replace-btn {
             background: #f39c12;
             color: white;
@@ -7681,19 +7681,16 @@
                     idNumber: user.idNumber || ''
                 };
                 saveUserToStorage(currentUser);
-                const existing = connectedUsers.find(u => u.id === 'current');
-                if (existing) {
-                    existing.name = currentUser.name;
-                    existing.emoji = currentUser.emoji || '👤';
-                    existing.avatarDataURL = currentUser.avatarDataURL || null;
-                } else {
-                    connectedUsers.unshift({ id: 'current', name: currentUser.name, emoji: currentUser.emoji || '👤',
-                        avatarDataURL: currentUser.avatarDataURL || null, status: 'online' });
+                const existing = connectedUsers.find(u => u.name === name || u.phone === phone);
+                if (!existing) {
+                    connectedUsers.unshift({ id: 'user_' + Date.now(), name, emoji: user.emoji || '👤', phone,
+                        avatarDataURL: user.avatarDataURL || null, status: 'online' });
                 }
                 renderSidebar();
                 showToast('✅ Welcome ' + currentUser.name + '!', 1800);
                 showLoggedInUI();
                 renderAgentDropdown(currentAgentFilterCountry);
+                populateAgentSelect(currentAgentFilterCountry);
                 getEl('loginError').innerHTML = '';
                 return true;
             }
@@ -7784,7 +7781,7 @@
                                 <span class="goods-name">${icon} ${SecurityUtils.escapeHTML(g.name)}</span>
                                 <span class="goods-price">${g.price.toFixed(2)} ${isLocalMode ? 'Local' : currentCountryData.currency}</span>
                                 <button class="goods-select-btn" data-price="${g.price}" data-name="${SecurityUtils.escapeHTML(g.name)}" data-quantity="${qty}" data-quality="${SecurityUtils.escapeHTML(quality)}" data-icon="${icon}" data-delivery="${deliveryCost}" data-business="${SecurityUtils.escapeHTML(biz.name)}" data-businessphone="${SecurityUtils.escapeHTML(biz.mobileMoney || biz.contact || '')}">Select</button>
-                                <button class="goods-replace-btn" data-business-id="${biz.id}" data-business-name="${SecurityUtils.escapeHTML(biz.name)}" data-business-contact="${SecurityUtils.escapeHTML(biz.mobileMoney || biz.contact || '')}" data-business-type="${SecurityUtils.escapeHTML(biz.type)}" data-business-icon="${biz.icon || '🏪'}" data-business-address="${SecurityUtils.escapeHTML(biz.address || '')}" data-business-city="${SecurityUtils.escapeHTML(biz.city || '')}" data-business-country="${SecurityUtils.escapeHTML(biz.country || 'Sierra Leone')}" data-business-website="${SecurityUtils.escapeHTML(biz.website || '')}" data-business-goods='${JSON.stringify(biz.goods)}'>🔄 Replace</button>
+                                <button class="goods-replace-btn" data-business-id="${biz.id}" data-business-name="${SecurityUtils.escapeHTML(biz.name)}" data-business-contact="${SecurityUtils.escapeHTML(biz.mobileMoney || biz.contact || '')}" data-business-type="${SecurityUtils.escapeHTML(biz.type)}" data-business-icon="${biz.icon || '🏪'}" data-business-address="${SecurityUtils.escapeHTML(biz.address || '')}" data-business-city="${SecurityUtils.escapeHTML(biz.city || '')}" data-business-country="${SecurityUtils.escapeHTML(biz.country || 'Sierra Leone')}" data-business-website="${SecurityUtils.escapeHTML(biz.website || '')}" data-business-goods='${JSON.stringify(biz.goods)}'>🔄 Edit Biz</button>
                             </div>
                             <div class="goods-details">
                                 <span class="goods-qty">📦 Qty: ${qty}</span>
@@ -7811,7 +7808,7 @@
             }
             getEl('goodsModal').style.display = 'flex';
 
-            // Replace button handler
+            // Replace button handler – now named Edit Biz
             document.querySelectorAll('.goods-replace-btn').forEach(btn => {
                 btn.addEventListener('click', function(e) {
                     e.stopPropagation();
@@ -7954,7 +7951,7 @@
                     if (goodsModal) {
                         goodsModal.style.display = 'none';
                     }
-                    showToast('📝 Business loaded for replacement. Add your authenticator details.', 3000);
+                    showToast('📝 Business loaded for editing. Add your authenticator details.', 3000);
                 });
             });
 
@@ -14725,7 +14722,7 @@
         }
 
         bootstrap();
-        console.log('🚀 AfriPay fully bootstrapped — Replace button opens the Add Business modal pre-filled with business details.');
+        console.log('🚀 AfriPay fully bootstrapped — Replace button renamed to Edit Biz and placed to the right of Add Biz.');
     </script>
 </body>
 </html>
