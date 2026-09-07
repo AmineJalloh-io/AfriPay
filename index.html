@@ -93,15 +93,12 @@
             cursor: default;
             line-height: 1.2;
         }
-        #dashboardTrigger {
-            cursor: pointer;
-            transition: 0.15s;
-            display: inline-block;
+        /* Remove the dashboard trigger from the 'P' – keep only static 'AfriPay' */
+        .brand-text span {
+            cursor: default;
         }
-        #dashboardTrigger:hover {
-            transform: scale(1.1);
-            color: #ffd966;
-            text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+        #dashboardTrigger {
+            display: none; /* hide the trigger */
         }
         .datetime-box {
             background: rgba(0, 0, 0, 0.25);
@@ -1981,43 +1978,39 @@
             text-align: center;
             font-size: 0.75rem !important;
         }
+
+        /* Dashboard modal – now opens external link instead of inline */
         #dashboardModal .modal-content {
-            max-width: 900px;
+            max-width: 600px;
             width: 95%;
         }
-        #dashboardModal table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 5px;
-            font-size: 0.7rem;
+        #dashboardModal .external-dashboard {
+            text-align: center;
+            padding: 20px 10px;
         }
-        #dashboardModal th {
-            background: #f0f4f8;
-            padding: 3px 5px;
-            text-align: left;
+        #dashboardModal .external-dashboard p {
+            font-size: 1rem;
+            color: #1e3b4a;
+            margin-bottom: 16px;
+        }
+        #dashboardModal .external-dashboard .dashboard-link-btn {
+            background: #0f2b3d;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 40px;
             font-weight: 700;
-            color: #1c6e8f;
-            border-bottom: 2px solid #dce8f0;
-            white-space: nowrap;
-            font-size: 0.65rem !important;
-        }
-        #dashboardModal td {
-            padding: 3px 5px;
-            border-bottom: 1px solid #eee;
-            vertical-align: middle;
-            font-size: 0.65rem !important;
-            word-break: break-word;
-            max-width: 80px;
-        }
-        #dashboardModal td .id-thumb {
-            max-width: 40px;
-            max-height: 30px;
-            border-radius: 3px;
-            border: 1px solid #ddd;
+            font-size: 1rem;
             cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
         }
-        #dashboardModal td .id-thumb:hover {
-            opacity: 0.8;
+        #dashboardModal .external-dashboard .dashboard-link-btn:hover {
+            background: #f4a261;
+            transform: translateY(-2px);
         }
 
         /* ===== RECEIPT MODAL – FIXED FOOTER & FONT SIZE ===== */
@@ -4046,18 +4039,9 @@
                 max-width: 98%;
                 padding: 0.5rem;
             }
-            #dashboardModal table {
-                font-size: 0.55rem;
-            }
-            #dashboardModal th,
-            #dashboardModal td {
-                padding: 2px 3px;
-                font-size: 0.55rem !important;
-                max-width: 50px;
-            }
-            #dashboardModal td .id-thumb {
-                max-width: 30px;
-                max-height: 22px;
+            #dashboardModal .external-dashboard .dashboard-link-btn {
+                font-size: 0.9rem;
+                padding: 10px 18px;
             }
         }
         @media (max-width: 400px) {
@@ -4363,18 +4347,9 @@
                 max-width: 100%;
                 padding: 0.3rem;
             }
-            #dashboardModal table {
-                font-size: 0.5rem;
-            }
-            #dashboardModal th,
-            #dashboardModal td {
-                padding: 1px 2px;
-                font-size: 0.5rem !important;
-                max-width: 35px;
-            }
-            #dashboardModal td .id-thumb {
-                max-width: 24px;
-                max-height: 18px;
+            #dashboardModal .external-dashboard .dashboard-link-btn {
+                font-size: 0.8rem;
+                padding: 8px 14px;
             }
         }
 
@@ -4487,7 +4462,7 @@
                             </defs>
                         </svg>
                     </div>
-                    <span class="brand-text">Afri<span id="dashboardTrigger">P</span>ay</span>
+                    <span class="brand-text">Afri<span id="dashboardTrigger" style="display:none;">P</span>ay</span>
                     <div class="datetime-box">
                         <div id="currentDate">--</div>
                         <div class="time-text" id="currentTime">--:--:--</div>
@@ -5219,72 +5194,20 @@
     <div id="adminAuthModal" class="modal admin-auth-modal"><div class="modal-content" id="adminAuthBody"></div></div>
 
     <!-- ================================================================
-         DASHBOARD MODAL – with NIN, ID Number, ID Image columns for users and NIN for agents
+         DASHBOARD MODAL – now opens external link instead of inline
          ================================================================ -->
     <div id="dashboardModal" class="modal">
-        <div class="modal-content" style="max-width:900px; width:95%;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; flex-wrap:wrap;">
+        <div class="modal-content" style="max-width:600px; width:95%;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap;">
                 <h3 data-i18n="dashboard_title">📊 Dashboard</h3>
-                <div style="display:flex; gap:4px; flex-wrap:wrap;">
-                    <button class="action-btn" id="adminLogoutBtn" style="background:#e74c3c; padding:4px 12px; height:32px; font-size:0.7rem;">Logout</button>
-                    <button class="action-btn close-modal" style="background:#2c7da0; padding:4px 12px; height:32px; font-size:0.7rem;">Close</button>
-                </div>
+                <button class="action-btn close-modal" style="background:#2c7da0; padding:4px 12px; height:32px; font-size:0.7rem;">Close</button>
             </div>
-            <div id="dashboardContent">
-                <h4 style="color:#1c6e8f; font-size:0.8rem;">🏢 Agents</h4>
-                <div style="overflow-x:auto; max-height:250px; overflow-y:auto;">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th data-i18n="agent_name_th">Agent</th>
-                                <th data-i18n="business_th">Business</th>
-                                <th data-i18n="address_th">Address</th>
-                                <th data-i18n="type_th">Type</th>
-                                <th data-i18n="password_th">Pass</th>
-                                <th data-i18n="pin_th">PIN</th>
-                                <th data-i18n="collateral_th">Limit</th>
-                                <th>🪪 NIN</th>
-                                <th data-i18n="country_th">Country</th>
-                                <th data-i18n="status_th">Status</th>
-                                <th data-i18n="agreement_th">Agree</th>
-                                <th data-i18n="action_th">Action</th>
-                                <th data-i18n="remove_th">Remove</th>
-                            </tr>
-                        </thead>
-                        <tbody id="dashboardTableBody"></tbody>
-                    </table>
-                </div>
-
-                <!-- Pending Approvals Section -->
-                <div style="margin-top: 16px; border-top: 2px solid #f4a261; padding-top: 8px;">
-                    <h4 style="color: #e67e22; font-size:0.85rem;">📋 Pending Approvals</h4>
-                    <div id="pendingApprovalsContainer"></div>
-                </div>
-
-                <div class="users-section-title">
-                    <span data-i18n="registered_users_label">👤 Users</span>
-                    <span class="badge-count" id="userCountBadge">0</span>
-                </div>
-                <div style="overflow-x:auto; max-height:200px; overflow-y:auto;">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th data-i18n="name_th">Name</th>
-                                <th data-i18n="address">Address</th>
-                                <th data-i18n="phone_th">Phone</th>
-                                <th data-i18n="city_th">City</th>
-                                <th data-i18n="location">Country</th>
-                                <th>🪪 NIN</th>
-                                <th>📄 ID #</th>
-                                <th>📎 ID Image</th>
-                                <th data-i18n="action_th">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="dashboardUsersBody"></tbody>
-                    </table>
-                    <div id="noUsersMsg" class="no-users-msg" data-i18n="no_users_msg">No users</div>
-                </div>
-                <div id="dashboardTransactionsContainer"></div>
+            <div class="external-dashboard">
+                <p>📊 View all registered users, agents, and transactions on the full dashboard.</p>
+                <a href="https://aminejalloh-io.github.io/AfriPay-D-B/" target="_blank" class="dashboard-link-btn">
+                    🚀 Open Full Dashboard
+                </a>
+                <p style="margin-top:16px; font-size:0.75rem; color:#95a5a6;">External dashboard shows all data synced from this app.</p>
             </div>
         </div>
     </div>
@@ -8328,304 +8251,10 @@
         }
 
         // ================================================================
-        // DASHBOARD – updated with NIN, ID Number, ID Image for users; NIN for agents
+        // DASHBOARD – now opens external link
         // ================================================================
         function openDashboard() {
-            renderDashboard();
             getEl('dashboardModal').style.display = 'flex';
-        }
-
-        function renderDashboard() {
-            const tbody = getEl('dashboardTableBody');
-            if (!tbody) return;
-            const agents = connectedUsers.filter(u =>
-                (u.isAgent === true || u.role === 'agent') && u.agentData
-            );
-            let html = '';
-            if (agents.length === 0) {
-                html +=
-                    `<tr><td colspan="13" style="text-align:center; padding:10px; color:#95a5a6; font-size:0.75rem;">No agents</td></tr>`;
-            } else {
-                agents.forEach(agent => {
-                    const data = agent.agentData || agent;
-                    const approved = data.approved || false;
-                    const statusClass = approved ? 'approved' : 'pending';
-                    const statusText = approved ? 'Approved' : 'Pending';
-                    const hasAgreement = data.agreement && data.agreement.signed;
-                    const flag = getAgentFlag(agent);
-                    const nin = data.nin || data.agentNin || '—';
-                    html += `
-                            <tr class="agent-row">
-                                <td>${flag} ${SecurityUtils.escapeHTML(agent.name)}</td>
-                                <td>${SecurityUtils.escapeHTML(data.businessName || 'N/A')}</td>
-                                <td>${SecurityUtils.escapeHTML(data.businessAddress || 'N/A')}</td>
-                                <td>${SecurityUtils.escapeHTML(data.businessType || 'N/A')}</td>
-                                <td style="font-family:monospace;">${SecurityUtils.escapeHTML(data.password || 'N/A')}</td>
-                                <td style="font-family:monospace;">${SecurityUtils.escapeHTML(data.pin || 'N/A')}</td>
-                                <td>${data.collateralLimit || 0}</td>
-                                <td style="font-size:0.6rem; max-width:60px; word-break:break-all;">${SecurityUtils.escapeHTML(nin)}</td>
-                                <td>${SecurityUtils.escapeHTML(data.countryCode || 'N/A')}</td>
-                                <td><span class="status-badge ${statusClass}">${statusText}</span></td>
-                                <td>${hasAgreement ? `<button class="action-btn view-agreement-btn" data-agent-id="${agent.id}" style="background:#2c7da0; padding:2px 8px; height:26px; font-size:0.62rem;">📜</button>` : '—'}</td>
-                                <td>${approved ? '✅' : `<button class="action-btn approve-btn" data-agent-id="${agent.id}" style="padding:2px 8px; height:26px; font-size:0.62rem;">Approve</button>`}</td>
-                                <td><button class="action-btn remove-agent-btn" data-agent-id="${agent.id}" style="background:#e74c3c; padding:2px 8px; height:26px; font-size:0.62rem;">✕</button></td>
-                            </tr>
-                        `;
-                });
-            }
-            tbody.innerHTML = html;
-            tbody.querySelectorAll('.view-agreement-btn').forEach(btn => {
-                btn.addEventListener('click', function() { viewAgentAgreement(this.dataset.agentId); });
-            });
-            tbody.querySelectorAll('.approve-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const agentId = this.dataset.agentId;
-                    const agent = connectedUsers.find(u => u.id === agentId);
-                    if (agent && agent.agentData) {
-                        agent.agentData.approved = true;
-                        const regUser = registeredUsers.find(u => u.id === agentId);
-                        if (regUser) regUser.approved = true;
-                        saveRegisteredUsers();
-                        renderDashboard();
-                        updateAgentDropdownForCountry();
-                        showToast(`✅ Agent ${agent.name} approved!`, 2000);
-                    }
-                });
-            });
-            tbody.querySelectorAll('.remove-agent-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const agentId = this.dataset.agentId;
-                    const agent = connectedUsers.find(u => u.id === agentId);
-                    if (!agent) return;
-                    if (!confirm(`Remove agent "${agent.name}"?`)) return;
-                    registeredUsers = registeredUsers.filter(u => u.id !== agentId);
-                    connectedUsers = connectedUsers.filter(u => u.id !== agentId);
-                    saveRegisteredUsers();
-                    if (selectedAgentId === agentId) {
-                        selectedAgentId = null;
-                        _selectedAgentId = null;
-                        const btn = getEl('selectedAgentName');
-                        if (btn) {
-                            if (currentAgentFilterCountry) {
-                                const flag = getFlagForCountryName(currentAgentFilterCountry);
-                                btn.innerHTML = `👤 Select Agent in ${flag} ${currentAgentFilterCountry}`;
-                            } else {
-                                btn.innerHTML = t('select_agent_placeholder');
-                            }
-                            btn.dataset.agentId = '';
-                        }
-                        clearAgentSelection();
-                    }
-                    renderDashboard();
-                    updateAgentDropdownForCountry();
-                    showToast(`✅ Agent "${agent.name}" removed.`, 3000);
-                });
-            });
-
-            renderPendingApprovals();
-            renderUsersDashboard();
-            renderTransactionsDashboard();
-        }
-
-        function renderPendingApprovals() {
-            const container = getEl('pendingApprovalsContainer');
-            if (!container) return;
-
-            if (pendingBusinesses.length === 0) {
-                container.innerHTML =
-                    `<p style="text-align:center; color:#95a5a6; padding:8px; font-size:0.75rem;">No pending approvals.</p>`;
-                return;
-            }
-
-            let html = `<div style="overflow-x:auto; max-height:250px; overflow-y:auto;"><table style="width:100%; font-size:0.7rem; border-collapse:collapse;">
-                        <thead><tr style="background:#fef5e7;"><th style="padding:2px 5px;">Business</th><th style="padding:2px 5px;">Products</th><th style="padding:2px 5px;">Provider TX</th><th style="padding:2px 5px;">Transfer Code</th><th style="padding:2px 5px;">Actions</th></tr></thead><tbody>`;
-
-            pendingBusinesses.forEach((item, index) => {
-                const productNames = item.products ? item.products.map(p => p.name).join(', ') : 'N/A';
-                html += `
-                            <tr style="border-bottom:1px solid #eee;">
-                                <td style="padding:2px 5px;">${SecurityUtils.escapeHTML(item.name)}</td>
-                                <td style="padding:2px 5px;">${SecurityUtils.escapeHTML(productNames)}</td>
-                                <td style="padding:2px 5px; font-family:monospace;">${SecurityUtils.escapeHTML(item.providerTxId || 'N/A')}</td>
-                                <td style="padding:2px 5px; font-family:monospace;">${SecurityUtils.escapeHTML(item.transferCode || 'N/A')}</td>
-                                <td style="padding:2px 5px; white-space:nowrap;">
-                                    <button class="action-btn approve-pending-btn" data-index="${index}" style="background:#27ae60; padding:2px 6px; height:24px; font-size:0.6rem; margin-right:2px;">✅ Approve</button>
-                                    <button class="action-btn reject-pending-btn" data-index="${index}" style="background:#e74c3c; padding:2px 6px; height:24px; font-size:0.6rem;">❌ Reject</button>
-                                </td>
-                            </tr>
-                        `;
-            });
-
-            html += `</tbody></table></div>`;
-            container.innerHTML = html;
-
-            container.querySelectorAll('.approve-pending-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const index = parseInt(this.dataset.index);
-                    approveBusiness(index);
-                });
-            });
-            container.querySelectorAll('.reject-pending-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const index = parseInt(this.dataset.index);
-                    rejectBusiness(index);
-                });
-            });
-        }
-
-        function approveBusiness(index) {
-            if (index < 0 || index >= pendingBusinesses.length) return;
-            const approvedBiz = pendingBusinesses[index];
-            const newBiz = {
-                id: Date.now() + Math.floor(Math.random() * 1000),
-                name: approvedBiz.name,
-                contact: approvedBiz.contact || '',
-                mobileMoney: approvedBiz.mobileMoney || '',
-                description: approvedBiz.description || '',
-                type: approvedBiz.type || 'Service',
-                icon: approvedBiz.icon || '🏪',
-                address: approvedBiz.address || '',
-                city: approvedBiz.city || '',
-                country: approvedBiz.country || 'Sierra Leone',
-                website: approvedBiz.website || '',
-                goods: approvedBiz.products ? approvedBiz.products.map(p => ({ name: p.name, price: p.price,
-                    quantity: p.quantity || 1, quality: p.quality || 'Brand new' })) : [
-                    { name: 'Service Fee', price: 10, quantity: 1, quality: 'Standard' }
-                ],
-                products: approvedBiz.products || [],
-                delivery: approvedBiz.delivery || { quantity: 0, costInternal: 0, country: '', priceCountry: 0 },
-                isCustom: true,
-                providerTxId: approvedBiz.providerTxId || '',
-                transferCode: approvedBiz.transferCode || '',
-                authenticated: true
-            };
-            customBusinesses.push(newBiz);
-            saveCustomBusinesses();
-            pendingBusinesses.splice(index, 1);
-            savePendingBusinesses();
-            renderDashboard();
-            renderBusinessStrip();
-            showToast(`✅ "${approvedBiz.name}" approved and added to Quick Pay!`, 3000);
-        }
-
-        function rejectBusiness(index) {
-            if (index < 0 || index >= pendingBusinesses.length) return;
-            const rejectedBiz = pendingBusinesses[index];
-            pendingBusinesses.splice(index, 1);
-            savePendingBusinesses();
-            renderDashboard();
-            showToast(`❌ "${rejectedBiz.name}" rejected.`, 2000);
-        }
-
-        // ===== UPDATED renderUsersDashboard with NIN, ID Number, ID Image =====
-        function renderUsersDashboard() {
-            const tbody = getEl('dashboardUsersBody');
-            const noMsg = getEl('noUsersMsg');
-            const badge = getEl('userCountBadge');
-            if (!tbody || !noMsg || !badge) return;
-            const currentPhone = currentUser?.phone || '';
-            const currentName = currentUser?.name || '';
-            const users = registeredUsers.filter(u =>
-                !u.isAgent &&
-                u.role !== 'agent' &&
-                u.phone !== currentPhone &&
-                u.name !== currentName &&
-                u.id !== 'current'
-            );
-            badge.textContent = users.length;
-            if (users.length === 0) { tbody.innerHTML = '';
-                noMsg.style.display = 'block'; return; }
-            noMsg.style.display = 'none';
-            let html = '';
-            users.forEach(user => {
-                const address = user.address || user.businessAddress || '—';
-                const city = user.city || '—';
-                const country = user.country || '—';
-                const fullAddress = [address, city, country].filter(Boolean).join(', ') || '—';
-                const nin = user.nin || user.userNin || '—';
-                const idNumber = user.idNumber || '—';
-                const idImage = user.idImageDataURL || user.userIdImageDataURL || null;
-                const idThumb = idImage ? `<img src="${idImage}" class="id-thumb" alt="ID" title="Click to view" onclick="window.open('${idImage}','_blank')" />` : '—';
-                html += `
-                        <tr class="user-row">
-                            <td>${SecurityUtils.escapeHTML(user.name)}</td>
-                            <td>${SecurityUtils.escapeHTML(fullAddress)}</td>
-                            <td>${SecurityUtils.escapeHTML(user.phone || '—')}</td>
-                            <td>${SecurityUtils.escapeHTML(city)}</td>
-                            <td>${SecurityUtils.escapeHTML(country)}</td>
-                            <td style="font-size:0.6rem; max-width:50px; word-break:break-all;">${SecurityUtils.escapeHTML(nin)}</td>
-                            <td style="font-size:0.6rem; max-width:50px; word-break:break-all;">${SecurityUtils.escapeHTML(idNumber)}</td>
-                            <td>${idThumb}</td>
-                            <td><button class="user-delete-btn" data-user-id="${user.id}" data-user-name="${SecurityUtils.escapeHTML(user.name)}">🗑️</button></td>
-                        </tr>
-                    `;
-            });
-            tbody.innerHTML = html;
-            tbody.querySelectorAll('.user-delete-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    openAdminDeleteUserModal(this.dataset.userId, this.dataset.userName);
-                });
-            });
-        }
-
-        function renderTransactionsDashboard() {
-            const container = getEl('dashboardTransactionsContainer');
-            if (!container) return;
-            try {
-                const txs = JSON.parse(localStorage.getItem(STORAGE_KEYS.transactions) || '[]');
-                if (txs.length === 0) {
-                    container.innerHTML =
-                        `<p style="text-align:center; color:#95a5a6; padding:8px; font-size:0.75rem;">No transactions</p>`;
-                    return;
-                }
-                let html =
-                    `<div style="margin-top:12px; border-top:2px solid #dce8f0; padding-top:8px;"><h4 style="color:#1c6e8f; font-size:0.8rem;">📋 Recent Transactions (${txs.length})</h4><div style="overflow-x:auto; max-height:200px; overflow-y:auto;"><table style="width:100%; font-size:0.68rem; border-collapse:collapse;"><thead><tr style="background:#f0f4f8;"><th style="padding:2px 5px; text-align:left;">Date</th><th style="padding:2px 5px; text-align:left;">TX ID</th><th style="padding:2px 5px; text-align:left;">Amount</th><th style="padding:2px 5px; text-align:left;">Total</th><th style="padding:2px 5px; text-align:left;">Agent</th><th style="padding:2px 5px; text-align:left;">Client</th></tr></thead><tbody>`;
-                txs.slice(0, 15).forEach(tx => {
-                    html += `<tr style="border-bottom:1px solid #eee;">
-                                <td style="padding:2px 5px;">${SecurityUtils.escapeHTML(tx.date || '')}</td>
-                                <td style="padding:2px 5px; font-family:monospace;">${SecurityUtils.escapeHTML(tx.txId || '')}</td>
-                                <td style="padding:2px 5px;">${SecurityUtils.escapeHTML(tx.currency + ' ' + tx.baseAmount || '')}</td>
-                                <td style="padding:2px 5px; font-weight:700;">${SecurityUtils.escapeHTML(tx.currency + ' ' + tx.total || '')}</td>
-                                <td style="padding:2px 5px;">${SecurityUtils.escapeHTML(tx.agent || '')}</td>
-                                <td style="padding:2px 5px;">${SecurityUtils.escapeHTML(tx.client || 'N/A')}</td>
-                            </tr>`;
-                });
-                html += `</tbody></table></div></div>`;
-                container.innerHTML = html;
-            } catch (e) { container.innerHTML =
-                    `<p style="text-align:center; color:#95a5a6; padding:8px; font-size:0.75rem;">No transactions</p>`; }
-        }
-
-        function viewAgentAgreement(agentId) {
-            const agents = connectedUsers.filter(u => (u.isAgent || u.role === 'agent') && u.agentData);
-            const agent = agents.find(a => a.id === agentId);
-            if (!agent) { showToast('Agent not found', 2000); return; }
-            const data = agent.agentData || agent;
-            if (!data.agreement || !data.agreement.signed) { showToast('No signed agreement.', 2000); return; }
-            const a = data.agreement;
-            const content = `
-                    <div style="max-height:60vh; overflow-y:auto; font-size:0.8rem;">
-                        <h3 style="font-size:1.05rem;">📜 Signed Agreement – ${SecurityUtils.escapeHTML(data.businessName || agent.name)}</h3>
-                        <p><strong>Signed by:</strong> ${SecurityUtils.escapeHTML(a.agentName || '')}</p>
-                        <p><strong>Business:</strong> ${SecurityUtils.escapeHTML(a.businessName || '')}</p>
-                        <p><strong>Date:</strong> ${new Date(a.signedDate).toLocaleString()}</p>
-                        <div style="margin-top:6px; border:1px solid #ddd; padding:8px; border-radius:6px; background:#f8fafc; max-height:200px; overflow-y:auto; font-size:0.75rem;">${a.agreementText || 'N/A'}</div>
-                        ${a.signature ? `<div style="margin-top:6px; text-align:center;"><img src="${a.signature}" alt="Signature" style="max-width:160px; max-height:65px; border:1px solid #ddd; border-radius:4px;" /></div>` : ''}
-                    </div>
-                    <button class="action-btn close-modal" style="margin-top:6px;">Close</button>
-                `;
-            showInfoModal('📜 Signed Agreement', content);
-        }
-
-        function openAdminDeleteUserModal(userId, userName) {
-            if (!userId) return;
-            pendingDeleteUserId = userId;
-            getEl('deleteUserNameDisplay').textContent = SecurityUtils.escapeHTML(userName || 'this user');
-            getEl('adminDeleteUserName').value = '';
-            getEl('adminDeleteUserPassword').value = '';
-            getEl('adminDeleteUserError').textContent = '';
-            getEl('adminDeleteUserSuccess').textContent = '';
-            getEl('adminDeleteUserModal').style.display = 'flex';
         }
 
         // ================================================================
@@ -13883,18 +13512,34 @@
                 if (!selectedAgentId) { agentLocationBtn.disabled = true; }
             }
 
-            // Dashboard Trigger
+            // Dashboard Trigger – now opens external link (no inline data)
+            // We removed the trigger from the 'P' – but keep the click handler for the hidden trigger and also add a footer button fallback
+            // The footer already has a button that opens the dashboard modal, which now redirects to external.
+            // We'll keep the hidden trigger but it won't be visible.
             const dashboardTrigger = getEl('dashboardTrigger');
             if (dashboardTrigger) {
                 dashboardTrigger.addEventListener('click', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    openAdminAuth();
+                    openDashboard();
                 });
                 dashboardTrigger.addEventListener('touchstart', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    openAdminAuth();
+                    openDashboard();
+                }, { passive: true });
+            }
+            // Also make the brand text clickable to open dashboard (optional)
+            const brandText = document.querySelector('.brand-text');
+            if (brandText) {
+                brandText.style.cursor = 'pointer';
+                brandText.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    openDashboard();
+                });
+                brandText.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    openDashboard();
                 }, { passive: true });
             }
 
@@ -13967,7 +13612,6 @@
                     showToast(`✅ User "${userName}" deleted.`, 3000);
                     pendingDeleteUserId = null;
                     setTimeout(() => {
-                        renderDashboard();
                         const modal = getEl('adminDeleteUserModal');
                         if (modal) modal.style.display = 'none';
                     }, 1000);
@@ -14002,7 +13646,6 @@
                     showToast(`✅ User "${userName}" deleted.`, 3000);
                     pendingDeleteUserId = null;
                     setTimeout(() => {
-                        renderDashboard();
                         const modal = getEl('adminDeleteUserModal');
                         if (modal) modal.style.display = 'none';
                     }, 1000);
@@ -14803,7 +14446,7 @@
         }
 
         bootstrap();
-        console.log('🚀 AfriPay fully bootstrapped — Edit Biz button moved to Quick Pay strip (right of Add Biz).');
+        console.log('🚀 AfriPay fully bootstrapped — Edit Biz button moved to Quick Pay strip (right of Add Biz). Dashboard points to external URL: https://aminejalloh-io.github.io/AfriPay-D-B/');
     </script>
 </body>
 </html>
