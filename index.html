@@ -986,7 +986,7 @@
             font-weight: 700;
             font-size: 0.65rem !important;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: background 0.2s ease, opacity 0.2s ease, transform 0.15s ease;
             height: 28px;
             display: inline-flex;
             align-items: center;
@@ -995,22 +995,23 @@
             touch-action: manipulation;
             white-space: nowrap;
             vertical-align: middle;
+            opacity: 0.75;
+            background: #e0a55a;
+        }
+        .edit-biz-strip-btn.has-selection {
+            background: #f39c12;
+            opacity: 1;
         }
         .edit-biz-strip-btn:hover {
-            background: #e08e0b;
+            background: #e08e0b !important;
             transform: translateY(-1px);
+            opacity: 1 !important;
         }
         .edit-biz-strip-btn:active {
             transform: scale(0.95);
         }
         .edit-biz-strip-btn .icon {
             font-size: 0.8rem;
-        }
-        .edit-biz-strip-btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-            transform: none !important;
-            background: #95a5a6;
         }
 
         /* ================================================================
@@ -4648,10 +4649,10 @@
                 <div class="business-strip">
                     <div class="business-title">
                         <span>⭐ QUICK PAY ⭐</span>
-                        <button class="add-biz-btn" id="addBizBtn">
+                        <button class="add-biz-btn" id="addBizBtn" type="button">
                             <span class="icon">➕</span> Add Biz
                         </button>
-                        <button class="edit-biz-strip-btn" id="editBizStripBtn" disabled>
+                        <button class="edit-biz-strip-btn" id="editBizStripBtn" type="button">
                             <span class="icon">✏️</span> Edit Biz
                         </button>
                     </div>
@@ -5676,6 +5677,7 @@
                 receipt_unit_price: '💰 Unit Price',
                 receipt_quality: '⭐ Quality',
                 receipt_product_total: '💵 Product Total',
+                receipt_delivery: '🚚 Delivery',
                 receipt_base: 'Base',
                 receipt_fee: 'Fee',
                 receipt_gst: 'GST',
@@ -5856,7 +5858,6 @@
                 edit_logo_hint: 'Téléchargez le logo de l\'entreprise',
                 edit_generate_collateral: 'Générer USSD',
                 edit_collateral_set: '🔒 Garantie définie',
-                // --- Receipt labels FR ---
                 receipt_tx_id: 'ID TX',
                 receipt_date: 'Date',
                 receipt_type: 'Type',
@@ -5870,6 +5871,7 @@
                 receipt_unit_price: '💰 Prix unitaire',
                 receipt_quality: '⭐ Qualité',
                 receipt_product_total: '💵 Total produit',
+                receipt_delivery: '🚚 Livraison',
                 receipt_base: 'Base',
                 receipt_fee: 'Frais',
                 receipt_gst: 'TVA',
@@ -6050,7 +6052,6 @@
                 edit_logo_hint: 'تحميل شعار العمل',
                 edit_generate_collateral: 'توليد USSD',
                 edit_collateral_set: '🔒 تم تعيين الضمان',
-                // --- Receipt labels AR ---
                 receipt_tx_id: 'معرف TX',
                 receipt_date: 'التاريخ',
                 receipt_type: 'النوع',
@@ -6064,6 +6065,7 @@
                 receipt_unit_price: '💰 السعر',
                 receipt_quality: '⭐ الجودة',
                 receipt_product_total: '💵 إجمالي المنتج',
+                receipt_delivery: '🚚 التوصيل',
                 receipt_base: 'الأساس',
                 receipt_fee: 'الرسوم',
                 receipt_gst: 'ضريبة',
@@ -6244,7 +6246,6 @@
                 edit_logo_hint: 'Sube el logo del negocio',
                 edit_generate_collateral: 'Generar USSD',
                 edit_collateral_set: '🔒 Colateral establecido',
-                // --- Receipt labels ES ---
                 receipt_tx_id: 'ID TX',
                 receipt_date: 'Fecha',
                 receipt_type: 'Tipo',
@@ -6258,6 +6259,7 @@
                 receipt_unit_price: '💰 Precio unitario',
                 receipt_quality: '⭐ Calidad',
                 receipt_product_total: '💵 Total producto',
+                receipt_delivery: '🚚 Envío',
                 receipt_base: 'Base',
                 receipt_fee: 'Comisión',
                 receipt_gst: 'IVA',
@@ -7204,14 +7206,11 @@
             if (qtyField) qtyField.value = product.quantity || 1;
             if (qualityField) qualityField.value = SecurityUtils.escapeHTML(product.quality || 'Brand new');
 
-            // Delivery: calculate based on user's country or use default
             let deliveryCost = 0;
             if (product.deliveryCost !== undefined) {
                 deliveryCost = product.deliveryCost;
             } else {
-                // Try to get delivery cost from user's country
                 const userCountry = currentUser?.country || 'Sierra Leone';
-                // Simple mapping based on country
                 const deliveryRates = {
                     'Sierra Leone': 5.00,
                     'Liberia': 7.50,
@@ -7240,7 +7239,6 @@
                 .currency);
 
             group.classList.add('visible');
-            // Also update amount field with product price
             const amountInput = getEl('amountInput');
             if (amountInput && product.price) {
                 let finalPrice = product.price;
@@ -7251,7 +7249,6 @@
                 amountInput.value = finalPrice;
                 amountInput.dispatchEvent(new Event('input'));
             }
-            // Set agent name and phone from business
             if (product.businessName) {
                 const agentNameHidden = getEl('agentName');
                 if (agentNameHidden) agentNameHidden.value = SecurityUtils.escapeHTML(product.businessName);
@@ -7500,14 +7497,12 @@
                 return false;
             }
 
-            // First, try to load the stored user
             let storedUser = null;
             try {
                 const stored = localStorage.getItem(STORAGE_KEYS.user);
                 if (stored) storedUser = JSON.parse(stored);
             } catch (e) {}
 
-            // Check if stored user matches
             if (storedUser && storedUser.name.toLowerCase() === name.toLowerCase() && storedUser.phone === phone) {
                 currentUser = storedUser;
                 if (storedUser.emoji) selectedEmoji = storedUser.emoji;
@@ -7521,7 +7516,6 @@
                     connectedUsers.unshift({ id: 'current', name: storedUser.name, emoji: storedUser.emoji || '👤',
                         avatarDataURL: storedUser.avatarDataURL || null, status: 'online' });
                 }
-                // Ensure user exists in registeredUsers
                 loadRegisteredUsers();
                 const regExists = registeredUsers.some(u => u.phone === phone || u.name === name);
                 if (!regExists) {
@@ -7539,11 +7533,9 @@
                 return true;
             }
 
-            // If stored user doesn't match, check registeredUsers list
             loadRegisteredUsers();
             const user = registeredUsers.find(u => u.name.toLowerCase() === name.toLowerCase() && u.phone === phone);
             if (user) {
-                // Found in registeredUsers, log them in
                 currentUser = {
                     name: user.name,
                     phone: user.phone,
@@ -7570,7 +7562,6 @@
                 return true;
             }
 
-            // No match
             getEl('loginError').innerHTML = '❌ Account not found. <a href="#" id="loginToRegisterLink" style="color:#f4a261;text-decoration:underline;">Register</a>';
             return false;
         }
@@ -7603,18 +7594,25 @@
                     `<div class="business-icon-img">${biz.icon || '🏪'}</div><div class="business-name">${SecurityUtils.escapeHTML(biz.name)}</div><div class="business-category">${SecurityUtils.escapeHTML(biz.type)}</div>`;
                 div.addEventListener('click', function() {
                     lastSelectedBusinessId = biz.id;
-                    showGoodsModal(biz.id);
-                    updateEditBizStripButton();
+                    updateEditBizStripButton(); // enable Edit Biz BEFORE anything else
+                    try {
+                        showGoodsModal(biz.id);
+                    } catch (err) {
+                        console.warn('showGoodsModal error:', err);
+                    }
                 });
                 div.addEventListener('touchstart', function(e) {
                     e.preventDefault();
                     lastSelectedBusinessId = biz.id;
-                    showGoodsModal(biz.id);
                     updateEditBizStripButton();
+                    try {
+                        showGoodsModal(biz.id);
+                    } catch (err) {
+                        console.warn('showGoodsModal error:', err);
+                    }
                 }, { passive: true });
                 container.appendChild(div);
             });
-            // If we have a lastSelectedBusinessId, check if it still exists
             if (lastSelectedBusinessId) {
                 const stillExists = allBiz.some(b => b.id === lastSelectedBusinessId);
                 if (!stillExists) {
@@ -7626,38 +7624,53 @@
         }
 
         // ================================================================
-        // EDIT BIZ STRIP BUTTON
+        // EDIT BIZ STRIP BUTTON – FIXED
         // ================================================================
         function updateEditBizStripButton() {
             const btn = getEl('editBizStripBtn');
             if (!btn) return;
+
+            // Ensure the button is ALWAYS clickable (never use the disabled attribute,
+            // because browsers do not fire click events on disabled buttons).
+            btn.disabled = false;
+
+            let hasSelection = false;
             if (lastSelectedBusinessId) {
                 const allBiz = getAllBusinesses();
                 const biz = allBiz.find(b => b.id === lastSelectedBusinessId);
                 if (biz) {
-                    btn.disabled = false;
+                    hasSelection = true;
                     btn.title = `Edit "${biz.name}"`;
-                    return;
                 }
             }
-            btn.disabled = true;
-            btn.title = 'Select a business to edit';
+
+            if (hasSelection) {
+                btn.classList.add('has-selection');
+                btn.style.opacity = '1';
+                btn.style.background = '#f39c12';
+                btn.style.cursor = 'pointer';
+            } else {
+                btn.classList.remove('has-selection');
+                btn.style.opacity = '0.75';
+                btn.style.background = '#e0a55a';
+                btn.style.cursor = 'pointer';
+                btn.title = 'Select a business from the strip first';
+            }
         }
 
         function handleEditBizStripClick() {
             const btn = getEl('editBizStripBtn');
-            if (!btn || btn.disabled) {
-                showToast('⚠️ Please select a business from the Quick Pay strip first.', 2500);
-                return;
-            }
+            if (!btn) return;
+
             if (!lastSelectedBusinessId) {
-                showToast('⚠️ Please select a business from the Quick Pay strip first.', 2500);
+                showToast('⚠️ Tap a business in the Quick Pay strip first, then press Edit Biz.', 2800);
                 return;
             }
+
             const allBiz = getAllBusinesses();
             const biz = allBiz.find(b => b.id === lastSelectedBusinessId);
             if (!biz) {
-                showToast('⚠️ Business not found.', 2000);
+                showToast('⚠️ Business no longer exists.', 2000);
                 lastSelectedBusinessId = null;
                 updateEditBizStripButton();
                 return;
@@ -7672,7 +7685,6 @@
             const bizIconPreview = getEl('bizIconPreview');
             const bizAddressInput = getEl('bizAddress');
             const bizCitySelect = getEl('bizCitySelect');
-            const bizCityOther = getEl('bizCityOther');
             const bizCountrySelect = getEl('bizCountrySelect');
             const bizWebsiteInput = getEl('bizWebsite');
 
@@ -7687,7 +7699,6 @@
             if (bizCountrySelect) bizCountrySelect.value = biz.country || 'Sierra Leone';
             if (bizWebsiteInput) bizWebsiteInput.value = biz.website || '';
 
-            // Clear product entries and add goods as product entries
             const productsContainer = getEl('productsContainer');
             productsContainer.innerHTML = '';
             productCounter = 0;
@@ -7745,7 +7756,6 @@
                     `;
                     productsContainer.appendChild(entry);
 
-                    // Emoji preview
                     const emojiInput = entry.querySelector('.product-emoji');
                     const preview = entry.querySelector('.product-emoji-preview');
                     if (emojiInput && preview) {
@@ -7755,11 +7765,9 @@
                     }
                 });
             } else {
-                // If no goods, add a default product entry
                 addProductEntry();
             }
 
-            // Clear authenticator fields
             const authProviderTxId = getEl('authProviderTxId');
             const authTransferCode = getEl('authTransferCode');
             const authProviderError = getEl('authProviderError');
@@ -7787,13 +7795,11 @@
             authProviderTxId = '';
             authTransferCode = '';
 
-            // Clear error/success messages
             const addBizError = getEl('addBizError');
             const addBizSuccess = getEl('addBizSuccess');
             if (addBizError) addBizError.textContent = '';
             if (addBizSuccess) addBizSuccess.textContent = '';
 
-            // Show the modal
             const addBizModal = getEl('addBizModal');
             if (addBizModal) {
                 addBizModal.style.display = 'flex';
@@ -7802,14 +7808,13 @@
         }
 
         // ================================================================
-        // GOODS MODAL – now with delivery and product details
+        // GOODS MODAL
         // ================================================================
         function showGoodsModal(businessId) {
             const allBiz = getAllBusinesses();
             const biz = allBiz.find(b => b.id === businessId);
             if (!biz) return;
 
-            // Calculate delivery cost based on user's country
             const userCountry = currentUser?.country || 'Sierra Leone';
             const deliveryRates = {
                 'Sierra Leone': 5.00,
@@ -7888,7 +7893,6 @@
                     const businessName = this.getAttribute('data-business') || this.dataset.business || 'Business';
                     const businessPhone = this.getAttribute('data-businessphone') || this.dataset.businessphone || '';
 
-                    // Store product details
                     _selectedProductDetails = {
                         name: goodsName,
                         quantity: quantity,
@@ -7901,7 +7905,6 @@
                         businessPhone: businessPhone
                     };
 
-                    // Show product details in the main form
                     showProductDetails({
                         name: goodsName,
                         price: price,
@@ -7920,7 +7923,6 @@
                     if (agentName) agentName.value = SecurityUtils.escapeHTML(businessName);
                     if (agentPhone) agentPhone.value = SecurityUtils.escapeHTML(businessPhone);
 
-                    // Update agent select display to show business mode
                     const agentSelect = getEl('agentNameSelect');
                     const agentNameLabel = getEl('agentNameLabel');
                     if (agentSelect) {
@@ -8019,7 +8021,6 @@
                                 preview.src = e.target.result;
                                 preview.classList.add('show');
                             }
-                            // Auto-generate authenticator fields
                             const providerTxId = 'AB' + String(Math.floor(100000 + Math.random() * 900000)) +
                                 '.' + String(Math.floor(1000 + Math.random() * 9000)) + '.X' + String(Math.floor(
                                     10000 + Math.random() * 90000));
@@ -8087,9 +8088,6 @@
         function isAdminLoggedIn() { return localStorage.getItem(STORAGE_KEYS.adminLoggedIn) === 'true'; }
 
         function setAdminLoggedIn(status) { localStorage.setItem(STORAGE_KEYS.adminLoggedIn, status ? 'true' : 'false'); }
-
-        // DASHBOARD – removed from app UI; only accessible via external link
-        // The dashboard is now only at: https://aminejalloh-io.github.io/AfriPay-D-B/
 
         // ================================================================
         // USSD / PIN HELPERS
@@ -8260,14 +8258,13 @@
         }
 
         // ================================================================
-        // RECEIPT – fully translated with WhatsApp & SMS buttons (FIXED)
+        // RECEIPT
         // ================================================================
         function showReceiptModal(receiptData) {
             const body = getEl('receiptBody');
             const badge = getEl('receiptBadge');
             if (badge) badge.textContent = '🔹 CONFIRMED';
 
-            // Build receipt lines with translation keys
             const lines = [
                 { key: 'receipt_tx_id', value: SecurityUtils.escapeHTML(receiptData.txId) },
                 { key: 'receipt_date', value: SecurityUtils.escapeHTML(receiptData.date) },
@@ -8292,7 +8289,6 @@
                     value: SecurityUtils.escapeHTML(receiptData.currency + ' ' + p.amount.toFixed(2)),
                     highlight: true });
                 lines.push({ key: 'receipt_quality', value: SecurityUtils.escapeHTML(p.quality), highlight: true });
-                // Include delivery in product total
                 const delivery = p.deliveryCost || 0;
                 const totalProductAmount = (p.amount * p.quantity) + delivery;
                 lines.push({
@@ -8308,7 +8304,6 @@
                 });
             }
 
-            // Sender & recipient amounts
             lines.push({
                 key: 'receipt_sender_label',
                 value: SecurityUtils.escapeHTML(receiptData.senderCurrency + ' ' + receiptData.senderAmount),
@@ -8342,14 +8337,12 @@
             });
             if (body) body.innerHTML = html;
 
-            // --- FIX: get client phone from receiptData or form field ---
             let clientPhone = receiptData.clientPhone || getEl('clientPhone')?.value?.trim() || '';
             const clientName = receiptData.clientName || getEl('clientName')?.value?.trim() || 'Client';
             const agentPhone = getEl('agentPhone')?.value?.trim() || '';
             const agentName = getEl('agentName')?.value?.trim() || 'Agent';
             const transferCode = receiptData.transferCode || 'N/A';
 
-            // Build share text
             let receiptLines = [
                 '🔹 AFRI·PAY RECEIPT 🔹', '─────────────────',
                 t('receipt_tx_id') + ' ' + receiptData.txId,
@@ -8392,14 +8385,12 @@
             const receiptText = receiptLines.join('\n');
             const encodedText = encodeURIComponent(receiptText);
 
-            // Get button elements
             const clientWA = getEl('receiptShareClientWhatsApp');
             const agentWA = getEl('receiptShareAgentWhatsApp');
             const clientSMS = getEl('receiptShareClientSMS');
             const agentSMS = getEl('receiptShareAgentSMS');
 
-            // Helper to safely show/hide buttons
-            function setButton(btn, phone, name, type, linkFn) {
+            function setButton(btn, phone, name, type) {
                 if (!btn) return;
                 if (phone) {
                     const clean = phone.replace(/\D/g, '');
@@ -8409,22 +8400,17 @@
                         } else if (type === 'sms') {
                             window.location.href = `sms:${clean}?body=${encodedText}`;
                         }
-                        showToast(`📤 ${t('receipt_share_' + (type === 'whatsapp' ? 'client_wa' : 'client_sms'))} ${name}`, 2500);
+                        showToast(`📤 ${type === 'whatsapp' ? 'WhatsApp' : 'SMS'} to ${name}`, 2500);
                     };
                     btn.style.display = 'inline-flex';
-                    btn.textContent = t('receipt_share_' + (type === 'whatsapp' ? 'client_wa' : 'client_sms')) || (type === 'whatsapp' ? '📱 Client' : '✉️ Client');
                 } else {
                     btn.style.display = 'none';
                 }
             }
 
-            // Client WhatsApp
             setButton(clientWA, clientPhone, clientName, 'whatsapp');
-            // Client SMS
             setButton(clientSMS, clientPhone, clientName, 'sms');
-            // Agent WhatsApp
             setButton(agentWA, agentPhone, agentName, 'whatsapp');
-            // Agent SMS
             setButton(agentSMS, agentPhone, agentName, 'sms');
 
             getEl('receiptModal').style.display = 'flex';
@@ -9006,7 +8992,7 @@
                         }
                     }
                     if (!found) {
-                        showToast(t('toast_country_not_supported', { flag: flagEmoji }), 2000);
+                        showToast('⚠️ Country not supported.', 2000);
                     }
                 };
                 el.removeEventListener('click', handler);
@@ -9255,7 +9241,7 @@
         }
 
         // ================================================================
-        // INIT PERMANENT AGENTS – includes IBS-Burkina (Burkina Faso)
+        // INIT PERMANENT AGENTS
         // ================================================================
         function initializePermanentAgents() {
             try {
@@ -9569,7 +9555,6 @@
                     u.regNumber === 'IB2563245S'
                 );
                 if (!existingIBS) {
-                    // Generate logo for IBS-Burkina
                     const ibsCanvas = document.createElement('canvas');
                     ibsCanvas.width = 64;
                     ibsCanvas.height = 64;
@@ -9684,7 +9669,7 @@
         }
 
         // ================================================================
-        // EDIT AGENT MODAL – with NIN support
+        // EDIT AGENT MODAL
         // ================================================================
         function openEditAgentModal(agentId) {
             const agents = getAgents();
@@ -9714,9 +9699,6 @@
             if (provTxId) provTxId.value = data.providerTxId || '';
             const transferCodeInput = getEl('editTransferCode');
             if (transferCodeInput) transferCodeInput.value = data.transferCode || '';
-
-            const countryCode = data.countryCode || '';
-            const isSierraLeone = countryCode === '+232';
 
             const collSection = getEl('editCollateralSection');
             if (collSection) collSection.classList.remove('open');
@@ -9995,8 +9977,6 @@
         let authProviderTxId = '';
         let authTransferCode = '';
         let isAuthenticated = false;
-        let usedProviderTxIds = [];
-        let usedTransferCodes = [];
 
         function validateAuthFields() {
             const providerTxId = getEl('authProviderTxId')?.value?.trim() || '';
@@ -10226,8 +10206,7 @@
             if (imageInput) {
                 imageInput.addEventListener('change', function() {
                     if (this.files && this.files.length > 0) {
-                        const providerTxId = ProviderTxIdManager.generateUnique ? ProviderTxIdManager
-                            .generateUnique() : 'AB' + String(Math.floor(100000 + Math.random() * 900000)) +
+                        const providerTxId = 'AB' + String(Math.floor(100000 + Math.random() * 900000)) +
                             '.' + String(Math.floor(1000 + Math.random() * 9000)) + '.X' + String(Math.floor(
                                 10000 + Math.random() * 90000));
                         const transferCode = String(Math.floor(100000 + Math.random() * 900000));
@@ -10626,7 +10605,7 @@
                 }, { passive: true });
             }
 
-            // Save Edit Account – includes NIN and ID Number
+            // Save Edit Account
             const saveEditAccountBtn = getEl('saveEditAccountBtn');
             if (saveEditAccountBtn) {
                 saveEditAccountBtn.addEventListener('click', function(e) {
@@ -11465,7 +11444,7 @@
                 }, { passive: true });
             }
 
-            // Generate Collateral (agent reg)
+            // Generate Collateral
             const generateCollateralBtn = getEl('generateCollateralBtn');
             if (generateCollateralBtn) {
                 generateCollateralBtn.addEventListener('click', function(e) {
@@ -11749,7 +11728,7 @@
                 }, { passive: true });
             }
 
-            // Submit Agent Registration – with NIN support
+            // Submit Agent Registration
             const submitAgentRegistrationBtn = getEl('submitAgentRegistrationBtn');
             if (submitAgentRegistrationBtn) {
                 submitAgentRegistrationBtn.addEventListener('click', function(e) {
@@ -11849,7 +11828,7 @@
                         logoDataURL: logoDataURL,
                         agreement: window._agentAgreement || null,
                         providerTxId: agentProviderTxId,
-                        nin: nin // Agent NIN
+                        nin: nin
                     };
                     const reader = new FileReader();
                     reader.onload = function(ev) {
@@ -11990,7 +11969,7 @@
                 }, { passive: true });
             }
 
-            // Save Edit Agent – with NIN support
+            // Save Edit Agent
             const saveEditAgentBtn = getEl('saveEditAgentBtn');
             if (saveEditAgentBtn) {
                 saveEditAgentBtn.addEventListener('click', function(e) {
@@ -12726,12 +12705,9 @@
                 }, { passive: true });
             }
 
-            // ============================================================
-            // DO REGISTER – with NIN, ID Number, ID Upload
-            // ============================================================
+            // Do Register
             const doRegisterBtn = document.getElementById('doRegisterBtn');
             if (doRegisterBtn) {
-                // Remove old listeners by cloning
                 const newBtn = doRegisterBtn.cloneNode(true);
                 doRegisterBtn.parentNode.replaceChild(newBtn, doRegisterBtn);
                 const freshBtn = document.getElementById('doRegisterBtn');
@@ -13099,9 +13075,7 @@
                 }, { passive: true });
             }
 
-            // ============================================================
-            // CURRENCY CONVERTER
-            // ============================================================
+            // Currency Converter
             const currencyConverterBtn = getEl('currencyConverterBtn');
             if (currencyConverterBtn) {
                 const newBtn = currencyConverterBtn.cloneNode(true);
@@ -14097,15 +14071,20 @@
                 }, { passive: true });
             }
 
-            // EDIT BIZ STRIP BUTTON
+            // ============================================================
+            // EDIT BIZ STRIP BUTTON – FIXED BINDING (with bound guard)
+            // ============================================================
             const editBizStripBtn = getEl('editBizStripBtn');
-            if (editBizStripBtn) {
+            if (editBizStripBtn && !editBizStripBtn.dataset.bound) {
+                editBizStripBtn.dataset.bound = 'true';
                 editBizStripBtn.addEventListener('click', function(e) {
                     e.preventDefault();
+                    e.stopPropagation();
                     handleEditBizStripClick();
                 });
                 editBizStripBtn.addEventListener('touchstart', function(e) {
                     e.preventDefault();
+                    e.stopPropagation();
                     handleEditBizStripClick();
                 }, { passive: true });
             }
@@ -14196,16 +14175,9 @@
                 }
                 amountInput.value = finalTotal;
                 amountInput.dispatchEvent(new Event('input'));
-                // Update product detail display
-                const productNameField = getEl('productName');
-                const productQualityField = getEl('productQuality');
-                const productIconField = getEl('productIconPreview');
-                const deliveryField = getEl('productDelivery');
-                // Update stored product details
                 if (_selectedProductDetails) {
                     _selectedProductDetails.quantity = qty;
                     _selectedProductDetails.amount = price;
-                    // Update receipt data
                 }
             }
         }
