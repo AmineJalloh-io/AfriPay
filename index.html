@@ -5898,7 +5898,8 @@
                 handleEditBizStripClick();
             } catch (err) {
                 console.error('❌ [EditBiz] Error opening modal:', err);
-                showToast('❌ Could not open Edit Business: ' + err.message, 4000);
+                const detail = err && err.message ? err.message : 'Unknown error';
+                showToast('❌ Could not open Edit Business: ' + detail, 5000);
             }
         };
 
@@ -6804,19 +6805,27 @@
                 addProductEntry();
             }
 
+            // ============================================================
             // Clear authenticator fields
-            const authProviderTxId = getEl('authProviderTxId');
-            const authTransferCode = getEl('authTransferCode');
+            // IMPORTANT: use distinct local names (…El) so they do NOT
+            // shadow the module-level `let authProviderTxId` and
+            // `let authTransferCode` variables. The previous code used
+            // `const authProviderTxId = ...` which caused the runtime
+            // error "Assignment to constant variable" at the end of this
+            // function.
+            // ============================================================
+            const authProviderTxIdEl = getEl('authProviderTxId');
+            const authTransferCodeEl = getEl('authTransferCode');
             const authProviderError = getEl('authProviderError');
             const authTransferError = getEl('authTransferError');
             const authSuccessMsg = getEl('authSuccessMsg');
             const statusBadge = getEl('authStatusBadge');
             const authenticateBtn = getEl('authenticateBtn');
 
-            if (authProviderTxId) authProviderTxId.value = '';
-            if (authTransferCode) authTransferCode.value = '';
-            if (authProviderTxId) authProviderTxId.className = '';
-            if (authTransferCode) authTransferCode.className = '';
+            if (authProviderTxIdEl) authProviderTxIdEl.value = '';
+            if (authTransferCodeEl) authTransferCodeEl.value = '';
+            if (authProviderTxIdEl) authProviderTxIdEl.className = '';
+            if (authTransferCodeEl) authTransferCodeEl.className = '';
             if (authProviderError) authProviderError.style.display = 'none';
             if (authTransferError) authTransferError.style.display = 'none';
             if (authSuccessMsg) authSuccessMsg.style.display = 'none';
@@ -6829,8 +6838,8 @@
                 authenticateBtn.textContent = '🔑 Authenticate';
             }
             isAuthenticated = false;
-            authProviderTxId = '';
-            authTransferCode = '';
+            authProviderTxId = '';     // ✅ refers to the module-level `let`
+            authTransferCode = '';     // ✅ refers to the module-level `let`
 
             const addBizError = getEl('addBizError');
             const addBizSuccess = getEl('addBizSuccess');
