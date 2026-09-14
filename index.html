@@ -749,20 +749,33 @@
     <div id="adminDeleteUserModal" class="modal"><div class="modal-content"><h3>🔐 Admin Verify</h3><div class="delete-user-warning">⚠️ Delete <span id="deleteUserNameDisplay">this user</span>?</div><div id="adminDeleteUserError" class="error-msg"></div><div class="input-group"><label>Admin Name *</label><input type="text" id="adminDeleteUserName" /></div><div class="input-group"><label>Password *</label><input type="password" id="adminDeleteUserPassword" /></div><div class="action-buttons-row"><button class="action-btn" id="adminDeleteUserConfirmBtn" style="background:#e74c3c;">✅ Delete</button><button class="action-btn close-modal" id="adminDeleteUserCancelBtn">Cancel</button></div></div></div>
     <div id="pinModal" class="modal"><div class="modal-content"><h3>🔐 PIN Required</h3><div id="pinProviderBadge" class="provider-badge orange">MB-ONE</div><div class="ussd-preview" id="pinUssdPreview"></div><div id="pinError" class="auth-error"></div><div class="input-group"><label>4-Digit PIN *</label><input type="password" id="pinInput" maxlength="4" /></div><div class="action-buttons-row"><button class="action-btn" id="pinConfirmBtn">✅ Dial</button><button class="action-btn close-modal" id="pinCancelBtn">Cancel</button></div></div></div>
 
+    <!-- ============================================================ -->
+    <!-- CURRENCY CONVERTER — supported countries & currencies only    -->
+    <!-- ============================================================ -->
     <div id="currencyConverterModal" class="modal"><div class="modal-content">
         <div class="converter-header"><button class="converter-close-x" id="converterCloseXBtn">✕</button><h3>💱 Currency Converter</h3></div>
         <div class="converter-body">
-            <div class="user-info-badge">👤 Country: <strong id="userCountryDisplay">—</strong> · 🌍 Currency: <strong id="userCurrencyDisplay">USD</strong></div>
-            <div class="input-group"><label>From Currency</label><div class="from-currency-select"><span class="flag-sm" id="convFromFlag">🇺🇸</span><select id="convFromCurrency"></select></div></div>
+            <div class="user-info-badge">👤 Country: <strong id="userCountryDisplay">—</strong> · 🌍 Currency: <strong id="userCurrencyDisplay">SLL</strong></div>
+
+            <div class="input-group">
+                <label>From Country / Currency</label>
+                <div class="from-currency-select"><span class="flag-sm" id="convFromFlag">🇸🇱</span><select id="convFromCurrency"></select></div>
+            </div>
+
             <div class="input-group"><label>💰 Amount *</label><input type="number" id="convAmount" step="any" value="100" /></div>
-            <div class="input-group"><label>🌍 To Country</label><div class="country-selector-sm"><span class="flag-sm" id="convFlagEmoji">🇱🇷</span><select id="convCountrySelect"><option value="LR|Liberia|LRD|🇱🇷|10|1|2">🇱🇷 Liberia</option><option value="GN|Guinea|GNF|🇬🇳|18|2|3">🇬🇳 Guinea</option><option value="GH|Ghana|GHS|🇬🇭|12.5|6|4">🇬🇭 Ghana</option></select></div></div>
+
+            <div class="input-group">
+                <label>🌍 To Country / Currency</label>
+                <div class="country-selector-sm"><span class="flag-sm" id="convFlagEmoji">🇬🇳</span><select id="convCountrySelect"></select></div>
+            </div>
+
             <div class="converter-results">
                 <div class="conv-row"><span class="label">💰 Base:</span><span class="value" id="convBaseAmount">0.00</span></div>
                 <div class="conv-row"><span class="label">📊 Fee (4%):</span><span class="value" id="convCharge">0.00</span></div>
                 <div class="conv-row"><span class="label">🏛️ GST:</span><span class="value" id="convGstAmount">0.00</span></div>
                 <div class="conv-row"><span class="label">📋 Deductions:</span><span class="value" id="convTotalDeductions">0.00</span></div>
                 <div class="conv-row total"><span class="label">💵 Total:</span><span class="value" id="convTotalDebit">0.00</span></div>
-                <div class="conv-row"><span class="label">🔄 Rate:</span><span class="value" id="convExchangeRate">1 USD = 0.00</span></div>
+                <div class="conv-row"><span class="label">🔄 Rate:</span><span class="value" id="convExchangeRate">1 = 0.00</span></div>
                 <div class="conv-row recipient"><span class="label">🎯 Recipient:</span><span class="value" id="convRecipientAmount">0.00</span></div>
             </div>
         </div>
@@ -958,7 +971,52 @@
         ];
         businesses.forEach(biz => { biz.goods.forEach(g => { if (!g.quantity) g.quantity = 1; if (!g.quality) g.quality = "Brand new"; }); });
 
-        const EXCHANGE_RATES = { 'USD':1,'EUR':0.92,'GBP':0.79,'LRD':180,'GNF':10000,'XOF':600,'GHS':14,'KES':130,'ETB':55,'MAD':10,'RWF':1300,'UGX':3700,'CDF':2800,'XAF':600,'MGA':4500,'GMD':70,'SLL':18000,'NGN':1500,'ZAR':18 };
+        // ================================================================
+        // SUPPORTED COUNTRIES & CURRENCIES (AfriPay corridor)
+        // ================================================================
+        const SUPPORTED_CURRENCIES = [
+            { code:'LR', name:'Liberia',            currency:'LRD', flag:'🇱🇷', gst:10   },
+            { code:'GN', name:'Guinea',             currency:'GNF', flag:'🇬🇳', gst:18   },
+            { code:'SN', name:'Senegal',            currency:'XOF', flag:'🇸🇳', gst:18   },
+            { code:'ML', name:'Mali',               currency:'XOF', flag:'🇲🇱', gst:18   },
+            { code:'CI', name:'Ivory Coast',        currency:'XOF', flag:'🇨🇮', gst:18   },
+            { code:'GH', name:'Ghana',              currency:'GHS', flag:'🇬🇭', gst:12.5 },
+            { code:'NE', name:'Niger',              currency:'XOF', flag:'🇳🇪', gst:19   },
+            { code:'BJ', name:'Benin',              currency:'XOF', flag:'🇧🇯', gst:18   },
+            { code:'GW', name:'Guinea Bissau',      currency:'XOF', flag:'🇬🇼', gst:15   },
+            { code:'GM', name:'Gambia',             currency:'GMD', flag:'🇬🇲', gst:15   },
+            { code:'TG', name:'Togo',               currency:'XOF', flag:'🇹🇬', gst:18   },
+            { code:'KE', name:'Kenya',              currency:'KES', flag:'🇰🇪', gst:16   },
+            { code:'CF', name:'Central Africa Rep', currency:'XAF', flag:'🇨🇫', gst:19   },
+            { code:'ET', name:'Ethiopia',           currency:'ETB', flag:'🇪🇹', gst:15   },
+            { code:'GA', name:'Gabon',              currency:'XAF', flag:'🇬🇦', gst:18   },
+            { code:'MG', name:'Madagascar',         currency:'MGA', flag:'🇲🇬', gst:20   },
+            { code:'MA', name:'Morocco',            currency:'MAD', flag:'🇲🇦', gst:20   },
+            { code:'RW', name:'Rwanda',             currency:'RWF', flag:'🇷🇼', gst:18   },
+            { code:'UG', name:'Uganda',             currency:'UGX', flag:'🇺🇬', gst:18   },
+            { code:'CD', name:'DR Congo',           currency:'CDF', flag:'🇨🇩', gst:16   },
+            { code:'BF', name:'Burkina Faso',       currency:'XOF', flag:'🇧🇫', gst:18   },
+            { code:'SL', name:'Sierra Leone',       currency:'SLL', flag:'🇸🇱', gst:12.5 }
+        ];
+
+        // Units of each currency per 1 USD (correct mid-market reference rates)
+        const EXCHANGE_RATES = {
+            USD: 1,
+            LRD: 190,   // Liberian Dollar
+            GNF: 8600,  // Guinean Franc
+            XOF: 605,   // West African CFA Franc (pegged to EUR)
+            XAF: 605,   // Central African CFA Franc (pegged to EUR)
+            GHS: 15.5,  // Ghanaian Cedi
+            GMD: 71,    // Gambian Dalasi
+            KES: 129,   // Kenyan Shilling
+            ETB: 125,   // Ethiopian Birr
+            MAD: 9.9,   // Moroccan Dirham
+            RWF: 1380,  // Rwandan Franc
+            UGX: 3700,  // Ugandan Shilling
+            CDF: 2850,  // Congolese Franc
+            MGA: 4600,  // Malagasy Ariary
+            SLL: 22500  // Sierra Leonean Leone
+        };
 
         const STORAGE_KEYS = { registeredUsers:'afripay_registered_users',groups:'afripay_groups',chatMessages:'afripay_chatMessages',chatSettings:'chatSettings',transactions:'afripay_transactions',admin:'afripay_admin',adminLoggedIn:'afripay_admin_logged_in',user:'afripay_user',lang:'afripay_lang',providerTxIds:'afripay_provider_tx_ids',customBusinesses:'afripay_custom_businesses',pendingBusinesses:'afripay_pending_businesses' };
 
@@ -2095,45 +2153,133 @@
             }
         }
 
+        // ================================================================
+        // CURRENCY CONVERTER — supported countries & currencies only
+        // ================================================================
+        function getSupportedCountryByName(name) {
+            if (!name) return null;
+            const n = String(name).toLowerCase().trim();
+            return SUPPORTED_CURRENCIES.find(c => c.name.toLowerCase() === n) || null;
+        }
+
+        function buildCountryOptionValue(c) {
+            return `${c.code}|${c.name}|${c.currency}|${c.flag}|${c.gst}`;
+        }
+
+        function buildFromOptionValue(c) {
+            return `${c.currency}|${c.name}|${c.flag}`;
+        }
+
+        function syncConverterFlags() {
+            const fromVal = getEl('convFromCurrency')?.value || '';
+            const fromFlag = fromVal.split('|')[2] || '🌍';
+            if (getEl('convFromFlag')) getEl('convFromFlag').textContent = fromFlag;
+            const toVal = getEl('convCountrySelect')?.value || '';
+            const toFlag = toVal.split('|')[3] || '🌍';
+            if (getEl('convFlagEmoji')) getEl('convFlagEmoji').textContent = toFlag;
+        }
+
+        function populateConverterCountries() {
+            const select = getEl('convCountrySelect');
+            if (!select) return;
+            const prev = select.value;
+            select.innerHTML = '';
+            SUPPORTED_CURRENCIES.forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = buildCountryOptionValue(c);
+                opt.textContent = `${c.flag} ${c.name} (${c.currency})`;
+                select.appendChild(opt);
+            });
+            if (prev && Array.from(select.options).some(o => o.value === prev)) select.value = prev;
+            if (!select.value) {
+                const userC = getSupportedCountryByName(currentUser?.country);
+                if (userC) select.value = buildCountryOptionValue(userC);
+            }
+            syncConverterFlags();
+        }
+
         function populateFromCurrencySelect() {
             const select = getEl('convFromCurrency');
             if (!select) return;
-            const currencies = new Map();
-            [['USD','US Dollar','🇺🇸'],['EUR','Euro','🇪🇺'],['GBP','British Pound','🇬🇧'],['LRD','Liberian Dollar','🇱🇷'],['GNF','Guinean Franc','🇬🇳'],['GHS','Ghanaian Cedi','🇬🇭']].forEach(([code, name, flag]) => currencies.set(code, { code, name, flag }));
+            const prev = select.value;
             select.innerHTML = '';
-            Array.from(currencies.entries()).sort((a, b) => a[0].localeCompare(b[0])).forEach(([code, info]) => {
+            SUPPORTED_CURRENCIES.forEach(c => {
                 const opt = document.createElement('option');
-                opt.value = code;
-                opt.textContent = `${info.flag} ${code} (${info.name})`;
+                opt.value = buildFromOptionValue(c);
+                opt.textContent = `${c.flag} ${c.name} (${c.currency})`;
                 select.appendChild(opt);
             });
-            setTimeout(updateConverter, 80);
+            // Default to the user's own country currency
+            const userC = getSupportedCountryByName(currentUser?.country);
+            const desired = userC ? buildFromOptionValue(userC) : null;
+            if (prev && Array.from(select.options).some(o => o.value === prev)) select.value = prev;
+            else if (desired && Array.from(select.options).some(o => o.value === desired)) select.value = desired;
+            syncConverterFlags();
+        }
+
+        function fmtMoney(n) {
+            if (!isFinite(n)) n = 0;
+            return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         }
 
         function updateConverter() {
             try {
+                syncConverterFlags();
+
                 const amount = parseFloat(getEl('convAmount')?.value) || 0;
-                const fromCurrency = getEl('convFromCurrency')?.value || 'USD';
-                const parts = getEl('convCountrySelect')?.value?.split('|') || [];
-                if (parts.length < 5) return;
-                const toCurrency = parts[2] || 'GNF';
-                const gstRate = parseFloat(parts[4]) || 10;
+
+                // From currency — value format: "CURRENCY|CountryName|Flag"
+                const fromParts = (getEl('convFromCurrency')?.value || '').split('|');
+                const fromCurrency = fromParts[0] || 'SLL';
+
+                // To country — value format: "CODE|Name|CURRENCY|Flag|GST"
+                const toParts = (getEl('convCountrySelect')?.value || '').split('|');
+                if (toParts.length < 5) return;
+                const toCurrency = toParts[2] || 'GNF';
+                const gstRate = parseFloat(toParts[4]) || 0;
+
                 const rateFrom = EXCHANGE_RATES[fromCurrency] || 1;
                 const rateTo = EXCHANGE_RATES[toCurrency] || 1;
+
+                // Both rates are "units per 1 USD"
                 const exchangeRate = rateTo / rateFrom;
                 const convertedAmount = amount * exchangeRate;
-                const charge = amount * 0.04;
-                const gst = charge * (gstRate / 100);
+
+                const charge = amount * 0.04;                 // 4% transfer fee (in FROM currency)
+                const gst = charge * (gstRate / 100);         // GST on the fee
                 const totalDeductions = charge + gst;
                 const totalDebit = amount + charge + gst;
-                if (getEl('convBaseAmount')) getEl('convBaseAmount').textContent = `${amount.toFixed(2)} ${fromCurrency}`;
-                if (getEl('convCharge')) getEl('convCharge').textContent = `${charge.toFixed(2)} ${fromCurrency}`;
-                if (getEl('convGstAmount')) getEl('convGstAmount').textContent = `${gst.toFixed(2)} ${fromCurrency}`;
-                if (getEl('convTotalDeductions')) getEl('convTotalDeductions').textContent = `${totalDeductions.toFixed(2)} ${fromCurrency}`;
-                if (getEl('convTotalDebit')) getEl('convTotalDebit').textContent = `${totalDebit.toFixed(2)} ${fromCurrency}`;
-                if (getEl('convRecipientAmount')) getEl('convRecipientAmount').textContent = `${convertedAmount.toFixed(2)} ${toCurrency}`;
-                if (getEl('convExchangeRate')) getEl('convExchangeRate').textContent = `1 ${fromCurrency} = ${exchangeRate.toFixed(4)} ${toCurrency}`;
+
+                if (getEl('convBaseAmount')) getEl('convBaseAmount').textContent = `${fmtMoney(amount)} ${fromCurrency}`;
+                if (getEl('convCharge')) getEl('convCharge').textContent = `${fmtMoney(charge)} ${fromCurrency}`;
+                if (getEl('convGstAmount')) getEl('convGstAmount').textContent = `${fmtMoney(gst)} ${fromCurrency} (${gstRate}%)`;
+                if (getEl('convTotalDeductions')) getEl('convTotalDeductions').textContent = `${fmtMoney(totalDeductions)} ${fromCurrency}`;
+                if (getEl('convTotalDebit')) getEl('convTotalDebit').textContent = `${fmtMoney(totalDebit)} ${fromCurrency}`;
+                if (getEl('convRecipientAmount')) getEl('convRecipientAmount').textContent = `${fmtMoney(convertedAmount)} ${toCurrency}`;
+                if (getEl('convExchangeRate')) {
+                    getEl('convExchangeRate').textContent = fromCurrency === toCurrency
+                        ? `1 ${fromCurrency} = 1.0000 ${toCurrency}`
+                        : `1 ${fromCurrency} = ${exchangeRate.toLocaleString('en-US', { minimumFractionDigits: 4, maximumFractionDigits: 6 })} ${toCurrency}`;
+                }
             } catch (e) {}
+        }
+
+        function buildConverterSummary() {
+            const fromParts = (getEl('convFromCurrency')?.value || '').split('|');
+            const toParts = (getEl('convCountrySelect')?.value || '').split('|');
+            return [
+                '💱 AfriPay Currency Converter',
+                '─────────────────',
+                `From: ${fromParts[1] || ''} (${fromParts[0] || ''})`,
+                `To: ${toParts[1] || ''} (${toParts[2] || ''})`,
+                `Base: ${getEl('convBaseAmount')?.textContent || ''}`,
+                `Fee (4%): ${getEl('convCharge')?.textContent || ''}`,
+                `GST: ${getEl('convGstAmount')?.textContent || ''}`,
+                `Deductions: ${getEl('convTotalDeductions')?.textContent || ''}`,
+                `Total Debit: ${getEl('convTotalDebit')?.textContent || ''}`,
+                `Rate: ${getEl('convExchangeRate')?.textContent || ''}`,
+                `Recipient Receives: ${getEl('convRecipientAmount')?.textContent || ''}`
+            ].join('\n');
         }
 
         function initializePermanentAgents() {
@@ -2543,6 +2689,9 @@
             setInterval(() => safeExecute(updateDateTime, 'updateDateTime'), 1000);
             renderAgentDropdown(null);
             populateAgentSelect(null);
+            // Pre-build converter selects so they're ready when the modal opens
+            safeExecute(() => populateConverterCountries(), 'populateConverterCountries');
+            safeExecute(() => populateFromCurrencySelect(), 'populateFromCurrencySelect');
             try {
                 if (!lastSelectedBusinessId) {
                     const allBiz = getAllBusinesses();
@@ -3057,21 +3206,49 @@
             const howToBtn = getEl('howToBtn');
             if (howToBtn) howToBtn.addEventListener('click', function(e) { e.preventDefault(); window.open('https://aminejalloh-io.github.io/AfriPay-Guide/', '_blank'); });
 
+            // ============================================================
+            // CURRENCY CONVERTER — open / populate / live update
+            // ============================================================
             const currencyConverterBtn = getEl('currencyConverterBtn');
             if (currencyConverterBtn) currencyConverterBtn.addEventListener('click', function(e) {
                 e.preventDefault(); e.stopPropagation();
                 const modal = getEl('currencyConverterModal');
                 if (modal.style.display === 'flex') { modal.style.display = 'none'; return; }
                 modal.style.display = 'flex';
+
+                // User info badge — reflect the logged-in user's country & currency
+                const userCountry = currentUser?.country || 'Sierra Leone';
+                const userCur = getSupportedCountryByName(userCountry);
+                if (getEl('userCountryDisplay')) getEl('userCountryDisplay').textContent = userCountry;
+                if (getEl('userCurrencyDisplay')) getEl('userCurrencyDisplay').textContent = userCur ? userCur.currency : 'SLL';
+
+                // Build both selects from the supported-country list only
+                populateConverterCountries();
                 populateFromCurrencySelect();
-                getEl('convAmount').value = 100;
-                setTimeout(updateConverter, 120);
+
+                if (!getEl('convAmount').value || isNaN(parseFloat(getEl('convAmount').value))) getEl('convAmount').value = 100;
+                updateConverter();
             });
-            const convAmount = getEl('convAmount'); if (convAmount) convAmount.addEventListener('input', updateConverter);
-            const convCountrySelect = getEl('convCountrySelect'); if (convCountrySelect) convCountrySelect.addEventListener('change', updateConverter);
-            const convFromCurrency = getEl('convFromCurrency'); if (convFromCurrency) convFromCurrency.addEventListener('change', updateConverter);
-            const convCloseBtn = getEl('convCloseBtn'); if (convCloseBtn) convCloseBtn.addEventListener('click', function(e) { e.preventDefault(); getEl('currencyConverterModal').style.display = 'none'; });
-            const converterCloseXBtn = getEl('converterCloseXBtn'); if (converterCloseXBtn) converterCloseXBtn.addEventListener('click', function(e) { e.preventDefault(); getEl('currencyConverterModal').style.display = 'none'; });
+
+            const convAmount = getEl('convAmount');
+            if (convAmount) convAmount.addEventListener('input', updateConverter);
+            const convCountrySelect = getEl('convCountrySelect');
+            if (convCountrySelect) convCountrySelect.addEventListener('change', updateConverter);
+            const convFromCurrency = getEl('convFromCurrency');
+            if (convFromCurrency) convFromCurrency.addEventListener('change', updateConverter);
+            const convCloseBtn = getEl('convCloseBtn');
+            if (convCloseBtn) convCloseBtn.addEventListener('click', function(e) { e.preventDefault(); getEl('currencyConverterModal').style.display = 'none'; });
+            const converterCloseXBtn = getEl('converterCloseXBtn');
+            if (converterCloseXBtn) converterCloseXBtn.addEventListener('click', function(e) { e.preventDefault(); getEl('currencyConverterModal').style.display = 'none'; });
+
+            const convCopyResultBtn = getEl('convCopyResultBtn');
+            if (convCopyResultBtn) convCopyResultBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const text = buildConverterSummary();
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(text).then(() => showToast('📋 Conversion copied!', 2000)).catch(() => showToast('📋 Conversion ready', 2000));
+                } else { showToast('📋 Conversion ready', 2000); }
+            });
 
             const mapButton = getEl('mapButton');
             if (mapButton) mapButton.addEventListener('click', function(e) {
