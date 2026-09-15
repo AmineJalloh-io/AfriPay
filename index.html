@@ -315,6 +315,11 @@
         .product-detail-group .detail-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.3rem; }
         .product-detail-group .input-group label { font-size: 0.7rem; font-weight: 600; color: #1c6e8f; }
         .product-detail-group .input-group input, .product-detail-group .input-group select { height: 32px; font-size: 0.8rem; padding: 3px 8px; background: #f5f8fa; }
+        .pin-recipient-box { background: #f8fafc; border: 1px solid #e2edf7; border-radius: 10px; padding: 6px 10px; margin: 4px 0 2px 0; text-align: left; }
+        .pin-recipient-row { display: flex; justify-content: space-between; gap: 8px; font-size: 0.78rem; padding: 2px 0; }
+        .pin-recipient-row .pin-recipient-label { color: #7f8c8d; font-weight: 600; }
+        .pin-recipient-row .pin-recipient-value { color: #0f2b3d; font-weight: 700; text-align: right; word-break: break-word; max-width: 62%; }
+        .pin-warning { color: #c0392b; font-size: 0.7rem; margin-top: 4px; display: none; text-align: center; }
         @media (max-width: 600px) {
             .double-row { grid-template-columns: 1fr; gap: 0; }
             .brand-text { font-size: 1.3rem; }
@@ -747,7 +752,7 @@
 
     <div id="agentReportModal" class="modal"><div class="modal-content"><div class="report-header"><button class="report-close-x" id="reportCloseXBtn">✕</button><h3>📋 Agent Report</h3></div><div class="report-body" id="reportBody"></div><div class="report-footer"><button class="action-btn" id="reportCopyUssdBtn" style="background:#2c7da0;">📋 Copy USSD</button><button class="action-btn close-modal" id="reportCloseBtn">Close</button></div></div></div>
     <div id="adminDeleteUserModal" class="modal"><div class="modal-content"><h3>🔐 Admin Verify</h3><div class="delete-user-warning">⚠️ Delete <span id="deleteUserNameDisplay">this user</span>?</div><div id="adminDeleteUserError" class="error-msg"></div><div class="input-group"><label>Admin Name *</label><input type="text" id="adminDeleteUserName" /></div><div class="input-group"><label>Password *</label><input type="password" id="adminDeleteUserPassword" /></div><div class="action-buttons-row"><button class="action-btn" id="adminDeleteUserConfirmBtn" style="background:#e74c3c;">✅ Delete</button><button class="action-btn close-modal" id="adminDeleteUserCancelBtn">Cancel</button></div></div></div>
-    <div id="pinModal" class="modal"><div class="modal-content"><h3>🔐 PIN Required</h3><div id="pinProviderBadge" class="provider-badge orange">MB-ONE</div><div class="ussd-preview" id="pinUssdPreview"></div><div id="pinError" class="auth-error"></div><div class="input-group"><label>4-Digit PIN *</label><input type="password" id="pinInput" maxlength="4" /></div><div class="action-buttons-row"><button class="action-btn" id="pinConfirmBtn">✅ Dial</button><button class="action-btn close-modal" id="pinCancelBtn">Cancel</button></div></div></div>
+    <div id="pinModal" class="modal"><div class="modal-content"><h3>🔐 PIN Required</h3><div id="pinProviderBadge" class="provider-badge orange">MB-ONE</div><div class="pin-recipient-box" id="pinRecipientBox"><div class="pin-recipient-row"><span class="pin-recipient-label">👤 Recipient</span><span class="pin-recipient-value" id="pinRecipientName">—</span></div><div class="pin-recipient-row"><span class="pin-recipient-label">📱 Number</span><span class="pin-recipient-value" id="pinRecipientPhone">—</span></div><div class="pin-recipient-row"><span class="pin-recipient-label">💵 Amount</span><span class="pin-recipient-value" id="pinRecipientAmount">—</span></div></div><div class="ussd-preview" id="pinUssdPreview"></div><div class="pin-warning" id="pinRecipientWarning">⚠️ No recipient number — select an agent or business first.</div><div id="pinError" class="auth-error"></div><div class="input-group"><label>4-Digit PIN *</label><input type="password" id="pinInput" maxlength="4" /></div><div class="action-buttons-row"><button class="action-btn" id="pinConfirmBtn">✅ Dial</button><button class="action-btn close-modal" id="pinCancelBtn">Cancel</button></div></div></div>
 
     <!-- ============================================================ -->
     <!-- CURRENCY CONVERTER — supported countries & currencies only    -->
@@ -1949,12 +1954,45 @@
             } catch (e) {}
         }
 
-        function showPinModal(ussdCode, provider, providerClass) {
+        // ================================================================
+        // RECIPIENT RESOLVER — single source of truth for who gets the money
+        // ================================================================
+        function resolveRecipientInfo() {
+            const digitsOnly = (s) => String(s == null ? '' : s).replace(/\D/g, '');
+            let name = (getEl('agentName') ? getEl('agentName').value : '').trim();
+            let phoneRaw = (getEl('agentPhone') ? getEl('agentPhone').value : '').trim();
+
+            // 1) If the on-screen phone is missing/too short, pull it from the selected agent record
+            if (digitsOnly(phoneRaw).length < 6) {
+                const agentId = _selectedAgentId || selectedAgentId || (getEl('agentNameSelect') ? getEl('agentNameSelect').value : '');
+                const agent = agentId ? getAgents().find(a => a.id === agentId) : null;
+                if (agent) {
+                    const d = agent.agentData || agent;
+                    const candidate = d.mobileMoney || d.phone || agent.phone || '';
+                    if (digitsOnly(candidate).length >= 6) phoneRaw = candidate;
+                    if (!name) name = (d.businessName || agent.name || '').replace(/\(.*\)/, '').trim();
+                }
+            }
+
+            // 2) Fall back to the business/product chosen from the QUICK PAY strip
+            if (!name && _selectedProductDetails && _selectedProductDetails.businessName) name = _selectedProductDetails.businessName;
+            if (digitsOnly(phoneRaw).length < 6 && _selectedProductDetails && _selectedProductDetails.businessPhone) phoneRaw = _selectedProductDetails.businessPhone;
+
+            return { name: name, phone: digitsOnly(phoneRaw), phoneDisplay: phoneRaw };
+        }
+
+        function showPinModal(ussdCode, provider, providerClass, recipient, amount) {
+            const recip = recipient || { name: '', phone: '' };
             if (getEl('pinUssdPreview')) getEl('pinUssdPreview').textContent = ussdCode;
             if (getEl('pinProviderBadge')) { getEl('pinProviderBadge').textContent = provider; getEl('pinProviderBadge').className = 'provider-badge ' + providerClass; }
+            if (getEl('pinRecipientName')) getEl('pinRecipientName').textContent = recip.name || 'Unknown recipient';
+            if (getEl('pinRecipientPhone')) getEl('pinRecipientPhone').textContent = recip.phone ? '+' + recip.phone : '—';
+            if (getEl('pinRecipientAmount')) getEl('pinRecipientAmount').textContent = (amount !== undefined && amount !== null && !isNaN(amount)) ? String(amount) : '—';
+            const warn = getEl('pinRecipientWarning');
+            if (warn) warn.style.display = (recip.phone && recip.phone.length >= 6) ? 'none' : 'block';
             if (getEl('pinError')) getEl('pinError').textContent = '';
             if (getEl('pinInput')) getEl('pinInput').value = '';
-            pendingPinData = { ussdCode, provider };
+            pendingPinData = { ussdCode, provider, recipient: recip, amount };
             getEl('pinModal').style.display = 'flex';
         }
 
@@ -1965,11 +2003,12 @@
             let ussdCode = pendingPinData.ussdCode.replace(/0000#/, `${pin}#`);
             getEl('pinModal').style.display = 'none';
             const providerName = pendingPinData.provider;
+            const recipName = pendingPinData.recipient?.name || '';
             pendingPinData = null;
             const link = document.createElement('a');
             link.href = `tel:${ussdCode}`;
             link.click();
-            showToast(`📞 Dialing ${providerName}...`, 3000);
+            showToast(`📞 Dialing ${providerName}${recipName ? ' → ' + recipName : ''}...`, 3000);
             navigator.clipboard.writeText(ussdCode).then(() => showToast('✅ USSD copied!', 1500)).catch(() => {});
         }
 
@@ -2534,11 +2573,12 @@
             const price = parseFloat(entry.querySelector('.product-price')?.value) || 0;
             if (price <= 0) { showToast('⚠️ Enter product price first.', 2500); return; }
             const mb4Amount = price * 0.05;
-            const agentPhone = getEl('agentPhone')?.value?.trim() || '23273671566';
-            const cleanPhone = agentPhone.replace(/\D/g, '');
+            const recipient = resolveRecipientInfo();
+            if (!recipient.phone || recipient.phone.length < 6) { showToast('⚠️ No recipient number — select an agent or business first.', 3500); return; }
+            const cleanPhone = recipient.phone;
             const amountToSend = Math.round(mb4Amount);
             const ussdCode = `#144*4*${cleanPhone}*${amountToSend}*0000#`;
-            showToast(`💳 MB-FOUR: ${amountToSend}`, 4000);
+            showToast(`💳 MB-FOUR → ${recipient.name || cleanPhone}: ${amountToSend}`, 4000);
             const link = document.createElement('a');
             link.href = `tel:${ussdCode}`;
             link.click();
@@ -3149,14 +3189,23 @@
                     const provider = this.getAttribute('data-provider');
                     selectedProvider = provider;
                     getEl('providerModal').style.display = 'none';
+
                     const roundedAmount = Math.round(parseFloat(getEl('amountInput')?.value) || 0);
-                    const cleanPhone = (getEl('agentPhone')?.value?.trim() || '000000000').replace(/\D/g, '');
+
+                    // Resolve the recipient (name + number) from every available source
+                    const recipient = resolveRecipientInfo();
+                    if (!recipient.phone || recipient.phone.length < 6) {
+                        showToast('⚠️ No recipient number found — select an agent or business first.', 4000);
+                        return;
+                    }
+                    const cleanPhone = recipient.phone;
+
                     let ussdCode = '';
                     if (provider === "MB-ONE") ussdCode = `#144*2*1*${cleanPhone}*${roundedAmount}*0000#`;
                     else if (provider === "MB-TWO") ussdCode = `*161*1*1*${cleanPhone}*${roundedAmount}*0000#`;
                     else if (provider === "MB-THREE") ussdCode = `*144*3*${cleanPhone}*${roundedAmount}*0000#`;
                     else if (provider === "MB-FOUR") ussdCode = `#144*4*${cleanPhone}*${roundedAmount}*0000#`;
-                    if (ussdCode) showPinModal(ussdCode, provider, 'wbmoney');
+                    if (ussdCode) showPinModal(ussdCode, provider, 'wbmoney', recipient, roundedAmount);
                 });
             });
 
