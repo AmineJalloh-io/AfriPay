@@ -1981,35 +1981,78 @@
             return { name: name, phone: digitsOnly(phoneRaw), phoneDisplay: phoneRaw };
         }
 
+        // Truncate a recipient / agent name for the PIN-modal dial-pad preview.
+        // Keeps the first `maxLen` characters and appends an ellipsis when trimmed.
+        function truncateRecipientName(name, maxLen) {
+            if (!name) return '';
+            const clean = String(name).trim().replace(/\s+/g, ' ');
+            if (clean.length <= maxLen) return clean;
+            return clean.substring(0, Math.max(1, maxLen - 1)).trim() + '…';
+        }
+
         function showPinModal(ussdCode, provider, providerClass, recipient, amount) {
             const recip = recipient || { name: '', phone: '' };
-            if (getEl('pinUssdPreview')) getEl('pinUssdPreview').textContent = ussdCode;
-            if (getEl('pinProviderBadge')) { getEl('pinProviderBadge').textContent = provider; getEl('pinProviderBadge').className = 'provider-badge ' + providerClass; }
-            if (getEl('pinRecipientName')) getEl('pinRecipientName').textContent = recip.name || 'Unknown recipient';
+
+            // Truncate the name for the dial-pad preview (keeps layout tidy on long business names)
+            const shortName = truncateRecipientName(recip.name, 24);
+
+            if (getEl('pinProviderBadge')) {
+                getEl('pinProviderBadge').textContent = provider;
+                getEl('pinProviderBadge').className = 'provider-badge ' + providerClass;
+            }
+
+            // ── USSD preview: show the code, then the (truncated) recipient name on a second line ──
+            const previewEl = getEl('pinUssdPreview');
+            if (previewEl) {
+                const safeCode = SecurityUtils.escapeHTML(ussdCode);
+                const safeName = SecurityUtils.escapeHTML(shortName);
+                previewEl.innerHTML = safeName
+                    ? `${safeCode}<br><span style="display:inline-block; margin-top:4px; font-weight:700; color:#0f2b3d; font-family:inherit; font-size:0.9rem;">👤 ${safeName}</span>`
+                    : safeCode;
+            }
+
+            if (getEl('pinRecipientName')) getEl('pinRecipientName').textContent = shortName || recip.name || 'Unknown recipient';
             if (getEl('pinRecipientPhone')) getEl('pinRecipientPhone').textContent = recip.phone ? '+' + recip.phone : '—';
-            if (getEl('pinRecipientAmount')) getEl('pinRecipientAmount').textContent = (amount !== undefined && amount !== null && !isNaN(amount)) ? String(amount) : '—';
+            if (getEl('pinRecipientAmount')) getEl('pinRecipientAmount').textContent =
+                (amount !== undefined && amount !== null && !isNaN(amount)) ? String(amount) : '—';
+
             const warn = getEl('pinRecipientWarning');
             if (warn) warn.style.display = (recip.phone && recip.phone.length >= 6) ? 'none' : 'block';
+
             if (getEl('pinError')) getEl('pinError').textContent = '';
             if (getEl('pinInput')) getEl('pinInput').value = '';
+
             pendingPinData = { ussdCode, provider, recipient: recip, amount };
             getEl('pinModal').style.display = 'flex';
         }
 
         function confirmPin() {
             const pin = getEl('pinInput')?.value?.trim() || '';
-            if (!pin || pin.length !== 4 || !/^\d+$/.test(pin)) { if (getEl('pinError')) getEl('pinError').textContent = '❌ Enter valid 4-digit PIN.'; return; }
+            if (!pin || pin.length !== 4 || !/^\d+$/.test(pin)) {
+                if (getEl('pinError')) getEl('pinError').textContent = '❌ Enter valid 4-digit PIN.';
+                return;
+            }
             if (!pendingPinData) return;
+
             let ussdCode = pendingPinData.ussdCode.replace(/0000#/, `${pin}#`);
             getEl('pinModal').style.display = 'none';
+
             const providerName = pendingPinData.provider;
-            const recipName = pendingPinData.recipient?.name || '';
+            const shortName = truncateRecipientName(pendingPinData.recipient?.name || '', 24);
             pendingPinData = null;
+
+            // Open the system dialer with the final USSD string
             const link = document.createElement('a');
             link.href = `tel:${ussdCode}`;
             link.click();
-            showToast(`📞 Dialing ${providerName}${recipName ? ' → ' + recipName : ''}...`, 3000);
-            navigator.clipboard.writeText(ussdCode).then(() => showToast('✅ USSD copied!', 1500)).catch(() => {});
+
+            // Confirmation toast now includes the (truncated) recipient name
+            const nameLabel = shortName ? ` → ${shortName}` : '';
+            showToast(`📞 Dialing ${providerName}${nameLabel}...`, 3000);
+
+            navigator.clipboard.writeText(ussdCode)
+                .then(() => showToast('✅ USSD copied!', 1500))
+                .catch(() => {});
         }
 
         function showInfoModal(title, body) {
