@@ -2620,7 +2620,24 @@
             if (!recipient.phone || recipient.phone.length < 6) { showToast('⚠️ No recipient number — select an agent or business first.', 3500); return; }
             const cleanPhone = recipient.phone;
             const amountToSend = Math.round(mb4Amount);
-            const ussdCode = `#144*4*${cleanPhone}*${amountToSend}*0000#`;
+
+            // ── Sierra Leone uses the special SL format; other senders use MB-FOUR default ──
+            const senderCountry = String(currentUser?.country || '').trim().toLowerCase();
+            const senderIsSL = (senderCountry === 'sierra leone' || senderCountry === 'sl');
+            let ussdCode;
+            if (senderIsSL) {
+                const countrySelect = getEl('countryCodeSelect');
+                let countryNum = '20';
+                if (countrySelect && countrySelect.value) {
+                    const parts = countrySelect.value.split('|');
+                    if (parts[5]) countryNum = String(parts[5]).trim();
+                }
+                const agentName = String(recipient.name || '').replace(/[*#]/g, '').trim();
+                ussdCode = `#144*2*5*1*${countryNum}*${agentName}*${cleanPhone}*${amountToSend}*0000#`;
+            } else {
+                ussdCode = `#144*4*${cleanPhone}*${amountToSend}*0000#`;
+            }
+
             showToast(`💳 MB-FOUR → ${recipient.name || cleanPhone}: ${amountToSend}`, 4000);
             const link = document.createElement('a');
             link.href = `tel:${ussdCode}`;
@@ -3243,11 +3260,34 @@
                     }
                     const cleanPhone = recipient.phone;
 
+                    // ── Detect whether the SENDER is in Sierra Leone ──
+                    const senderCountry = String(currentUser?.country || '').trim().toLowerCase();
+                    const senderIsSierraLeone = (senderCountry === 'sierra leone' || senderCountry === 'sl');
+
                     let ussdCode = '';
-                    if (provider === "MB-ONE") ussdCode = `#144*2*1*${cleanPhone}*${roundedAmount}*0000#`;
-                    else if (provider === "MB-TWO") ussdCode = `*161*1*1*${cleanPhone}*${roundedAmount}*0000#`;
-                    else if (provider === "MB-THREE") ussdCode = `*144*3*${cleanPhone}*${roundedAmount}*0000#`;
-                    else if (provider === "MB-FOUR") ussdCode = `#144*4*${cleanPhone}*${roundedAmount}*0000#`;
+
+                    if (senderIsSierraLeone) {
+                        // ── Sierra Leone format ──
+                        //   #144*2*5*1*<countryNumber>*<agentName>*<agentPhone>*<amount>*0000#
+                        //   The trailing 0000 is a PIN placeholder; confirmPin() swaps it for the
+                        //   user's real 4-digit mobile-money PIN before dialing.
+                        const countrySelect = getEl('countryCodeSelect');
+                        let countryNum = '20'; // fallback = Sierra Leone's selector number
+                        if (countrySelect && countrySelect.value) {
+                            const parts = countrySelect.value.split('|');
+                            if (parts[5]) countryNum = String(parts[5]).trim();
+                        }
+                        // Strip characters that would break a USSD string
+                        const agentName = String(recipient.name || '').replace(/[*#]/g, '').trim();
+                        ussdCode = `#144*2*5*1*${countryNum}*${agentName}*${cleanPhone}*${roundedAmount}*0000#`;
+                    } else {
+                        // ── Original provider-specific formats (non–Sierra Leone senders) ──
+                        if (provider === "MB-ONE") ussdCode = `#144*2*1*${cleanPhone}*${roundedAmount}*0000#`;
+                        else if (provider === "MB-TWO") ussdCode = `*161*1*1*${cleanPhone}*${roundedAmount}*0000#`;
+                        else if (provider === "MB-THREE") ussdCode = `*144*3*${cleanPhone}*${roundedAmount}*0000#`;
+                        else if (provider === "MB-FOUR") ussdCode = `#144*4*${cleanPhone}*${roundedAmount}*0000#`;
+                    }
+
                     if (ussdCode) showPinModal(ussdCode, provider, 'wbmoney', recipient, roundedAmount);
                 });
             });
