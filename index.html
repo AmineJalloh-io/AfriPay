@@ -1982,7 +1982,6 @@
         }
 
         // Truncate a recipient / agent name for the PIN-modal dial-pad preview.
-        // Keeps the first `maxLen` characters and appends an ellipsis when trimmed.
         function truncateRecipientName(name, maxLen) {
             if (!name) return '';
             const clean = String(name).trim().replace(/\s+/g, ' ');
@@ -1991,26 +1990,33 @@
         }
 
         // ================================================================
-        // USSD BUILDER — single source of truth for the new USSD format
-        //   New requested format:  #144*2*5*1*2*yyyyyyyyyyyyyyyy*zzzzzzzzzzzz*kkkk*1#
+        // USSD BUILDER — New requested format (from user):
+        //   #144*2*5*1*L*yyyyyyyyyyyyyyyy*kkkkkkkkkkkk*zzzz*1*0000#
         //   Where:
-        //     yyyyyyyyyyyyyyyy = agent name
-        //     zzzzzzzzzzzz     = agent phone number
-        //     kkkk             = amount
-        //     (the final "1" is the PIN placeholder — replaced by the user's 4-digit PIN)
-        //   The amount is left as a variable (`kkkk`) and the final digit is the
-        //   PIN placeholder (`0000` → user's real PIN via showPinModal/confirmPin).
+        //     L              = country selector (e.g. 20 for Sierra Leone)
+        //     yyyyyyyyyyyyyyyy = Agent or business name
+        //     kkkkkkkkkkkkkk   = Agent or business mobile money number
+        //     zzzz             = amount
+        //     0000             = replaced by user's mobile money 4-digit PIN
         // ================================================================
         function buildUssdForProvider(provider, recipient, amount) {
             const cleanPhone = recipient.phone || '';
             const agentNameSafe = String(recipient.name || '').replace(/[*#]/g, '').trim();
             const amountInt = Math.round(Number(amount) || 0);
 
-            // New universal format: #144*2*5*1*2*<agentName>*<phone>*<amount>*1#
-            // The trailing "1" is the PIN placeholder; confirmPin() swaps it for the real PIN.
-            let ussd = `#144*2*5*1*2*${agentNameSafe}*${cleanPhone}*${amountInt}*1#`;
+            // Get country selector from the country dropdown (e.g. '20' for Sierra Leone)
+            const countrySelect = getEl('countryCodeSelect');
+            let countrySelector = '20'; // default fallback
+            if (countrySelect && countrySelect.value) {
+                const parts = countrySelect.value.split('|');
+                if (parts[5] && parts[5].trim()) countrySelector = parts[5].trim();
+            }
 
-            // Preserve original non–Sierra Leone format for non-SL senders when needed
+            // NEW FORMAT: #144*2*5*1*L*<agentName>*<agentPhone>*<amount>*1*0000#
+            // The 0000 is the PIN placeholder → replaced with real PIN by confirmPin()
+            let ussd = `#144*2*5*1*${countrySelector}*${agentNameSafe}*${cleanPhone}*${amountInt}*1*0000#`;
+
+            // Preserve original non–Sierra Leone formats for non-SL senders
             const senderCountry = String(currentUser?.country || '').trim().toLowerCase();
             const senderIsSierraLeone = (senderCountry === 'sierra leone' || senderCountry === 'sl');
             if (!senderIsSierraLeone) {
@@ -2025,8 +2031,6 @@
 
         function showPinModal(ussdCode, provider, providerClass, recipient, amount) {
             const recip = recipient || { name: '', phone: '' };
-
-            // Truncate the name for the dial-pad preview (keeps layout tidy on long business names)
             const shortName = truncateRecipientName(recip.name, 24);
 
             if (getEl('pinProviderBadge')) {
@@ -2034,7 +2038,6 @@
                 getEl('pinProviderBadge').className = 'provider-badge ' + providerClass;
             }
 
-            // ── USSD preview: show the code, then the (truncated) recipient name on a second line ──
             const previewEl = getEl('pinUssdPreview');
             if (previewEl) {
                 const safeCode = SecurityUtils.escapeHTML(ussdCode);
@@ -2067,22 +2070,18 @@
             }
             if (!pendingPinData) return;
 
-            // Replace the 0000 placeholder with the user's real 4-digit PIN
+            // Replace the PIN placeholder (0000) with the user's real 4-digit PIN
             let ussdCode = pendingPinData.ussdCode.replace(/0000#/, `${pin}#`);
-            // For the new format the placeholder is the final "1" before the closing "#"
-            ussdCode = ussdCode.replace(/\*1#$/, `*${pin}#`);
             getEl('pinModal').style.display = 'none';
 
             const providerName = pendingPinData.provider;
             const shortName = truncateRecipientName(pendingPinData.recipient?.name || '', 24);
             pendingPinData = null;
 
-            // Open the system dialer with the final USSD string
             const link = document.createElement('a');
             link.href = `tel:${ussdCode}`;
             link.click();
 
-            // Confirmation toast now includes the (truncated) recipient name
             const nameLabel = shortName ? ` → ${shortName}` : '';
             showToast(`📞 Dialing ${providerName}${nameLabel}...`, 3000);
 
@@ -2327,7 +2326,6 @@
                 opt.textContent = `${c.flag} ${c.name} (${c.currency})`;
                 select.appendChild(opt);
             });
-            // Default to the user's own country currency
             const userC = getSupportedCountryByName(currentUser?.country);
             const desired = userC ? buildFromOptionValue(userC) : null;
             if (prev && Array.from(select.options).some(o => o.value === prev)) select.value = prev;
@@ -2346,11 +2344,9 @@
 
                 const amount = parseFloat(getEl('convAmount')?.value) || 0;
 
-                // From currency — value format: "CURRENCY|CountryName|Flag"
                 const fromParts = (getEl('convFromCurrency')?.value || '').split('|');
                 const fromCurrency = fromParts[0] || 'SLL';
 
-                // To country — value format: "CODE|Name|CURRENCY|Flag|GST"
                 const toParts = (getEl('convCountrySelect')?.value || '').split('|');
                 if (toParts.length < 5) return;
                 const toCurrency = toParts[2] || 'GNF';
@@ -2359,12 +2355,11 @@
                 const rateFrom = EXCHANGE_RATES[fromCurrency] || 1;
                 const rateTo = EXCHANGE_RATES[toCurrency] || 1;
 
-                // Both rates are "units per 1 USD"
                 const exchangeRate = rateTo / rateFrom;
                 const convertedAmount = amount * exchangeRate;
 
-                const charge = amount * 0.04;                 // 4% transfer fee (in FROM currency)
-                const gst = charge * (gstRate / 100);         // GST on the fee
+                const charge = amount * 0.04;
+                const gst = charge * (gstRate / 100);
                 const totalDeductions = charge + gst;
                 const totalDebit = amount + charge + gst;
 
@@ -2426,7 +2421,6 @@
             } catch (e) {}
         }
 
-        // EDIT AGENT MODAL — collateral + logo sections reveal on correct password + PIN
         function openEditAgentModal(agentId) {
             const agent = getAgents().find(a => a.id === agentId);
             if (!agent) { showToast('Agent not found', 2000); return; }
@@ -2657,7 +2651,7 @@
             const cleanPhone = recipient.phone;
             const amountToSend = Math.round(mb4Amount);
 
-            // ── Sierra Leone uses the special SL format; other senders use MB-FOUR default ──
+            // New format used for SL senders
             const senderCountry = String(currentUser?.country || '').trim().toLowerCase();
             const senderIsSL = (senderCountry === 'sierra leone' || senderCountry === 'sl');
             let ussdCode;
@@ -2669,7 +2663,8 @@
                     if (parts[5]) countryNum = String(parts[5]).trim();
                 }
                 const agentName = String(recipient.name || '').replace(/[*#]/g, '').trim();
-                ussdCode = `#144*2*5*1*${countryNum}*${agentName}*${cleanPhone}*${amountToSend}*0000#`;
+                // NEW FORMAT: #144*2*5*1*L*<agentName>*<agentPhone>*<amount>*1*0000#
+                ussdCode = `#144*2*5*1*${countryNum}*${agentName}*${cleanPhone}*${amountToSend}*1*0000#`;
             } else {
                 ussdCode = `#144*4*${cleanPhone}*${amountToSend}*0000#`;
             }
@@ -2681,7 +2676,6 @@
             navigator.clipboard.writeText(ussdCode).then(() => showToast('✅ USSD copied!', 2000)).catch(() => {});
         }
 
-        // SUBMIT FOR APPROVAL — validates & saves credentials; if editing an existing custom business, updates in place
         function submitForApproval() {
             if (!isAuthenticated) { showToast('⚠️ Authenticate first.', 2500); return; }
             const name = SecurityUtils.sanitizeInput(getEl('bizName').value.trim(), 100);
@@ -2703,7 +2697,6 @@
             if (!mobileMoney) { errorEl.textContent = '❌ Mobile Money required.'; return; }
             if (!city) { errorEl.textContent = '❌ City required.'; return; }
 
-            // Business access credentials — required for both Add and Edit
             const bizPassword = getEl('bizPassword')?.value?.trim() || '';
             const bizPin = getEl('bizPin')?.value?.trim() || '';
             if (!bizPassword || bizPassword.length !== 6) { errorEl.textContent = '❌ Generate a 6-character password first.'; return; }
@@ -2724,7 +2717,6 @@
             const editingId = getEl('bizEditingId')?.value || '';
             let updatedInPlace = false;
 
-            // If we're editing an existing CUSTOM business, update it in place
             if (editingId) {
                 const idx = customBusinesses.findIndex(b => String(b.id) === String(editingId));
                 if (idx >= 0) {
@@ -2750,7 +2742,6 @@
                 }
             }
 
-            // Otherwise treat as a NEW business → goes to pending for approval
             if (!updatedInPlace) {
                 if (getAllBusinesses().some(b => b.name.toLowerCase() === name.toLowerCase())) {
                     errorEl.textContent = '❌ Business name already exists.';
@@ -2771,7 +2762,6 @@
                 showToast(`✅ "${name}" submitted for approval!`, 3000);
             }
 
-            // Reset authenticator fields
             getEl('authProviderTxId').value = '';
             getEl('authTransferCode').value = '';
             getEl('authProviderTxId').className = '';
@@ -2788,8 +2778,6 @@
             authTransferCode = '';
             getEl('productsContainer').innerHTML = '';
             productCounter = 0;
-
-            // Clear credential / edit-id fields
             if (getEl('bizEditingId')) getEl('bizEditingId').value = '';
             if (getEl('bizPassword')) getEl('bizPassword').value = '';
             if (getEl('bizPin')) getEl('bizPin').value = '';
@@ -2825,7 +2813,6 @@
             setInterval(() => safeExecute(updateDateTime, 'updateDateTime'), 1000);
             renderAgentDropdown(null);
             populateAgentSelect(null);
-            // Pre-build converter selects so they're ready when the modal opens
             safeExecute(() => populateConverterCountries(), 'populateConverterCountries');
             safeExecute(() => populateFromCurrencySelect(), 'populateFromCurrencySelect');
             try {
@@ -3180,7 +3167,6 @@
                 reader.readAsDataURL(idImage);
             });
 
-            // SAVE EDIT AGENT
             const saveEditAgentBtn = getEl('saveEditAgentBtn');
             if (saveEditAgentBtn) saveEditAgentBtn.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -3288,7 +3274,6 @@
 
                     const roundedAmount = Math.round(parseFloat(getEl('amountInput')?.value) || 0);
 
-                    // Resolve the recipient (name + number) from every available source
                     const recipient = resolveRecipientInfo();
                     if (!recipient.phone || recipient.phone.length < 6) {
                         showToast('⚠️ No recipient number found — select an agent or business first.', 4000);
@@ -3296,21 +3281,27 @@
                     }
                     const cleanPhone = recipient.phone;
 
-                    // ── Detect whether the SENDER is in Sierra Leone ──
                     const senderCountry = String(currentUser?.country || '').trim().toLowerCase();
                     const senderIsSierraLeone = (senderCountry === 'sierra leone' || senderCountry === 'sl');
 
                     let ussdCode = '';
 
                     if (senderIsSierraLeone) {
-                        // ── New requested format ──
-                        //   #144*2*5*1*2*<agentName>*<agentPhone>*<amount>*1#
-                        //   The final "1" is the PIN placeholder; confirmPin() swaps it for the user's
-                        //   real 4-digit mobile-money PIN before dialing.
+                        // NEW FORMAT: #144*2*5*1*L*yyyyyyyyyyyyyyyy*kkkkkkkkkkkk*zzzz*1*0000#
+                        //   L              = country selector (from dropdown)
+                        //   yyyyyyyyyyyyyyyy = Agent or business name
+                        //   kkkkkkkkkkkkkk   = Agent or business mobile money number
+                        //   zzzz             = amount
+                        //   0000             = replaced by user's 4-digit PIN
+                        const countrySelect = getEl('countryCodeSelect');
+                        let countrySelector = '20';
+                        if (countrySelect && countrySelect.value) {
+                            const parts = countrySelect.value.split('|');
+                            if (parts[5] && parts[5].trim()) countrySelector = parts[5].trim();
+                        }
                         const agentNameSafe = String(recipient.name || '').replace(/[*#]/g, '').trim();
-                        ussdCode = `#144*2*5*1*2*${agentNameSafe}*${cleanPhone}*${roundedAmount}*1#`;
+                        ussdCode = `#144*2*5*1*${countrySelector}*${agentNameSafe}*${cleanPhone}*${roundedAmount}*1*0000#`;
                     } else {
-                        // ── Original provider-specific formats (non–Sierra Leone senders) ──
                         if (provider === "MB-ONE") ussdCode = `#144*2*1*${cleanPhone}*${roundedAmount}*0000#`;
                         else if (provider === "MB-TWO") ussdCode = `*161*1*1*${cleanPhone}*${roundedAmount}*0000#`;
                         else if (provider === "MB-THREE") ussdCode = `*144*3*${cleanPhone}*${roundedAmount}*0000#`;
@@ -3367,9 +3358,6 @@
             const howToBtn = getEl('howToBtn');
             if (howToBtn) howToBtn.addEventListener('click', function(e) { e.preventDefault(); window.open('https://aminejalloh-io.github.io/AfriPay-Guide/', '_blank'); });
 
-            // ============================================================
-            // CURRENCY CONVERTER — open / populate / live update
-            // ============================================================
             const currencyConverterBtn = getEl('currencyConverterBtn');
             if (currencyConverterBtn) currencyConverterBtn.addEventListener('click', function(e) {
                 e.preventDefault(); e.stopPropagation();
@@ -3377,13 +3365,11 @@
                 if (modal.style.display === 'flex') { modal.style.display = 'none'; return; }
                 modal.style.display = 'flex';
 
-                // User info badge — reflect the logged-in user's country & currency
                 const userCountry = currentUser?.country || 'Sierra Leone';
                 const userCur = getSupportedCountryByName(userCountry);
                 if (getEl('userCountryDisplay')) getEl('userCountryDisplay').textContent = userCountry;
                 if (getEl('userCurrencyDisplay')) getEl('userCurrencyDisplay').textContent = userCur ? userCur.currency : 'SLL';
 
-                // Build both selects from the supported-country list only
                 populateConverterCountries();
                 populateFromCurrencySelect();
 
@@ -3446,7 +3432,6 @@
             const addProductBtn = getEl('addProductBtn');
             if (addProductBtn) addProductBtn.addEventListener('click', function(e) { e.preventDefault(); addProductEntry(); });
 
-            // Gen buttons — Business Password
             const bizGenPasswordBtn = getEl('bizGenPasswordBtn');
             if (bizGenPasswordBtn && !bizGenPasswordBtn.dataset.bound) {
                 bizGenPasswordBtn.dataset.bound = 'true';
@@ -3460,7 +3445,6 @@
                 });
             }
 
-            // Gen buttons — Business PIN
             const bizGenPinBtn = getEl('bizGenPinBtn');
             if (bizGenPinBtn && !bizGenPinBtn.dataset.bound) {
                 bizGenPinBtn.dataset.bound = 'true';
