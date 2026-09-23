@@ -1990,6 +1990,39 @@
             return clean.substring(0, Math.max(1, maxLen - 1)).trim() + '…';
         }
 
+        // ================================================================
+        // USSD BUILDER — single source of truth for the new USSD format
+        //   New requested format:  #144*2*5*1*2*yyyyyyyyyyyyyyyy*zzzzzzzzzzzz*kkkk*1#
+        //   Where:
+        //     yyyyyyyyyyyyyyyy = agent name
+        //     zzzzzzzzzzzz     = agent phone number
+        //     kkkk             = amount
+        //     (the final "1" is the PIN placeholder — replaced by the user's 4-digit PIN)
+        //   The amount is left as a variable (`kkkk`) and the final digit is the
+        //   PIN placeholder (`0000` → user's real PIN via showPinModal/confirmPin).
+        // ================================================================
+        function buildUssdForProvider(provider, recipient, amount) {
+            const cleanPhone = recipient.phone || '';
+            const agentNameSafe = String(recipient.name || '').replace(/[*#]/g, '').trim();
+            const amountInt = Math.round(Number(amount) || 0);
+
+            // New universal format: #144*2*5*1*2*<agentName>*<phone>*<amount>*1#
+            // The trailing "1" is the PIN placeholder; confirmPin() swaps it for the real PIN.
+            let ussd = `#144*2*5*1*2*${agentNameSafe}*${cleanPhone}*${amountInt}*1#`;
+
+            // Preserve original non–Sierra Leone format for non-SL senders when needed
+            const senderCountry = String(currentUser?.country || '').trim().toLowerCase();
+            const senderIsSierraLeone = (senderCountry === 'sierra leone' || senderCountry === 'sl');
+            if (!senderIsSierraLeone) {
+                if (provider === 'MB-ONE')   return `#144*2*1*${cleanPhone}*${amountInt}*0000#`;
+                if (provider === 'MB-TWO')   return `*161*1*1*${cleanPhone}*${amountInt}*0000#`;
+                if (provider === 'MB-THREE') return `*144*3*${cleanPhone}*${amountInt}*0000#`;
+                if (provider === 'MB-FOUR')  return `#144*4*${cleanPhone}*${amountInt}*0000#`;
+            }
+
+            return ussd;
+        }
+
         function showPinModal(ussdCode, provider, providerClass, recipient, amount) {
             const recip = recipient || { name: '', phone: '' };
 
@@ -2034,7 +2067,10 @@
             }
             if (!pendingPinData) return;
 
+            // Replace the 0000 placeholder with the user's real 4-digit PIN
             let ussdCode = pendingPinData.ussdCode.replace(/0000#/, `${pin}#`);
+            // For the new format the placeholder is the final "1" before the closing "#"
+            ussdCode = ussdCode.replace(/\*1#$/, `*${pin}#`);
             getEl('pinModal').style.display = 'none';
 
             const providerName = pendingPinData.provider;
@@ -3267,19 +3303,12 @@
                     let ussdCode = '';
 
                     if (senderIsSierraLeone) {
-                        // ── Sierra Leone format ──
-                        //   #144*2*5*1*<countryNumber>*<agentName>*<agentPhone>*<amount>*0000#
-                        //   The trailing 0000 is a PIN placeholder; confirmPin() swaps it for the
-                        //   user's real 4-digit mobile-money PIN before dialing.
-                        const countrySelect = getEl('countryCodeSelect');
-                        let countryNum = '20'; // fallback = Sierra Leone's selector number
-                        if (countrySelect && countrySelect.value) {
-                            const parts = countrySelect.value.split('|');
-                            if (parts[5]) countryNum = String(parts[5]).trim();
-                        }
-                        // Strip characters that would break a USSD string
-                        const agentName = String(recipient.name || '').replace(/[*#]/g, '').trim();
-                        ussdCode = `#144*2*5*1*${countryNum}*${agentName}*${cleanPhone}*${roundedAmount}*0000#`;
+                        // ── New requested format ──
+                        //   #144*2*5*1*2*<agentName>*<agentPhone>*<amount>*1#
+                        //   The final "1" is the PIN placeholder; confirmPin() swaps it for the user's
+                        //   real 4-digit mobile-money PIN before dialing.
+                        const agentNameSafe = String(recipient.name || '').replace(/[*#]/g, '').trim();
+                        ussdCode = `#144*2*5*1*2*${agentNameSafe}*${cleanPhone}*${roundedAmount}*1#`;
                     } else {
                         // ── Original provider-specific formats (non–Sierra Leone senders) ──
                         if (provider === "MB-ONE") ussdCode = `#144*2*1*${cleanPhone}*${roundedAmount}*0000#`;
