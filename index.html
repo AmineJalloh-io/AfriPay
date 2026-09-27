@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-    <title>AfriPay | Agent Hub</title>
+    <title>AfriPay | Agent Hub – Pop-up Advert</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: linear-gradient(145deg, #eef2f7 0%, #d9e2ec 100%); min-height: 100vh; padding: 0.7rem; display: flex; justify-content: center; align-items: center; touch-action: manipulation; }
@@ -320,6 +320,31 @@
         .pin-recipient-row .pin-recipient-label { color: #7f8c8d; font-weight: 600; }
         .pin-recipient-row .pin-recipient-value { color: #0f2b3d; font-weight: 700; text-align: right; word-break: break-word; max-width: 62%; }
         .pin-warning { color: #c0392b; font-size: 0.7rem; margin-top: 4px; display: none; text-align: center; }
+
+        /* Pop-up advert modal */
+        .popup-ad-overlay { position: fixed; inset: 0; background: rgba(10, 43, 60, 0.6); backdrop-filter: blur(4px); z-index: 1200; display: flex; align-items: center; justify-content: center; animation: fadeIn 0.4s ease; }
+        .popup-ad-card { background: #fff; border-radius: 24px; max-width: 340px; width: 90%; overflow: hidden; box-shadow: 0 24px 48px -12px rgba(0,0,0,0.35); animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        .popup-ad-header { background: linear-gradient(135deg, #0a2b3c 0%, #1c4e6c 100%); padding: 16px 18px 12px; color: #fff; position: relative; text-align: center; }
+        .popup-ad-close { position: absolute; top: 8px; right: 14px; background: rgba(255,255,255,0.15); border: none; color: #fff; font-size: 1.3rem; cursor: pointer; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; transition: background 0.2s; }
+        .popup-ad-close:hover { background: rgba(255,255,255,0.3); }
+        .popup-ad-brand { font-size: 0.72rem; letter-spacing: 1px; opacity: 0.8; text-transform: uppercase; }
+        .popup-ad-product { display: flex; flex-direction: column; align-items: center; padding: 18px 16px 12px; gap: 6px; }
+        .popup-ad-icon { font-size: 3.2rem; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1)); }
+        .popup-ad-name { font-size: 1.1rem; font-weight: 800; color: #0f2b3d; text-align: center; line-height: 1.3; }
+        .popup-ad-business { font-size: 0.82rem; color: #2c7da0; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+        .popup-ad-description { font-size: 0.78rem; color: #555; text-align: center; padding: 0 12px 8px; line-height: 1.5; }
+        .popup-ad-price-row { display: flex; justify-content: center; align-items: baseline; gap: 6px; padding: 4px 0 10px; }
+        .popup-ad-price { font-size: 1.5rem; font-weight: 800; color: #f4a261; }
+        .popup-ad-currency { font-size: 0.8rem; color: #7f8c8d; font-weight: 600; }
+        .popup-ad-cta { display: flex; gap: 8px; padding: 0 16px 18px; }
+        .popup-ad-btn { flex: 1; border: none; border-radius: 30px; padding: 10px 16px; font-weight: 700; font-size: 0.82rem; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; text-align: center; }
+        .popup-ad-btn:active { transform: scale(0.96); }
+        .popup-ad-btn-primary { background: #27ae60; color: #fff; box-shadow: 0 4px 12px rgba(39, 174, 96, 0.35); }
+        .popup-ad-btn-primary:hover { background: #219a52; }
+        .popup-ad-btn-secondary { background: #f0f4f8; color: #1c6e8f; }
+        .popup-ad-btn-secondary:hover { background: #e2edf7; }
+        .popup-ad-timer { font-size: 0.6rem; color: #95a5a6; text-align: center; padding: 0 0 10px; }
         @media (max-width: 600px) {
             .double-row { grid-template-columns: 1fr; gap: 0; }
             .brand-text { font-size: 1.3rem; }
@@ -536,6 +561,32 @@
                 <a href="#" class="social-icon" id="youtubeBtn">YT</a>
                 <a href="#" class="social-icon" id="webineBtn">WB</a>
             </div>
+        </div>
+    </div>
+
+    <!-- Pop-up Advert Modal (injected by JS but also defined here as fallback) -->
+    <div id="popupAdOverlay" class="popup-ad-overlay" style="display:none;">
+        <div class="popup-ad-card" id="popupAdCard">
+            <div class="popup-ad-header">
+                <button class="popup-ad-close" id="popupAdCloseBtn">✕</button>
+                <div class="popup-ad-brand">⭐ AfriPay Quick Pay</div>
+                <div style="font-size:0.65rem; opacity:0.7; margin-top:2px;">Sponsored Product</div>
+            </div>
+            <div class="popup-ad-product">
+                <div class="popup-ad-icon" id="popupAdIcon">📱</div>
+                <div class="popup-ad-name" id="popupAdName">Product Name</div>
+                <div class="popup-ad-business" id="popupAdBusiness">🏪 Business Name</div>
+                <div class="popup-ad-description" id="popupAdDescription">Product description goes here.</div>
+                <div class="popup-ad-price-row">
+                    <span class="popup-ad-price" id="popupAdPrice">0.00</span>
+                    <span class="popup-ad-currency" id="popupAdCurrency">SLL</span>
+                </div>
+            </div>
+            <div class="popup-ad-cta">
+                <button class="popup-ad-btn popup-ad-btn-primary" id="popupAdSelectBtn">🛒 Select Product</button>
+                <button class="popup-ad-btn popup-ad-btn-secondary" id="popupAdDismissBtn">Dismiss</button>
+            </div>
+            <div class="popup-ad-timer" id="popupAdTimer">Auto‑closes in 15s</div>
         </div>
     </div>
 
@@ -929,6 +980,17 @@
         const DEFAULT_EDIT_BIZ_PASSWORD = 'EDITBIZ';
         const DEFAULT_EDIT_BIZ_PIN = '12345';
         let pendingEditBizId = null;
+
+        // ================================================================
+        // POP-UP ADVERT SYSTEM
+        // ================================================================
+        let popupAdInterval = null;
+        let popupAdTimeout = null;
+        let popupAdCountdownInterval = null;
+        let popupAdAutoCloseTimer = null;
+        let popupAdCountdownSeconds = 15;
+        let lastPopupAdShownAt = 0;
+        let popupAdShowCount = 0;
 
         // Business credentials resolver — checks business's OWN creds first, then agent, then default.
         function getBusinessCredentials(biz) {
@@ -1442,6 +1504,7 @@
             if (locBtn && selectedAgentId) locBtn.disabled = false;
             else if (locBtn) locBtn.disabled = true;
             updateEditBizStripButton();
+            startPopupAdTimer();
         }
 
         function showLoggedOutUI() {
@@ -1453,6 +1516,7 @@
             renderAgentDropdown(null);
             const locBtn = getEl('agentLocationBtn'); if (locBtn) locBtn.disabled = true;
             updateEditBizStripButton();
+            stopPopupAdTimer();
         }
 
         function updateAvatarDisplay(user) {
@@ -1796,6 +1860,130 @@
                 if (selectBtn) selectBtn.addEventListener('click', function(e) { e.stopPropagation(); clickHandler.call(item, e); });
             });
         }
+
+        // ================================================================
+        // POP-UP ADVERT — picks one product from any business in the
+        // quick-pick strip, shows an advert card, and repeats every 90s.
+        // ================================================================
+        function pickRandomProductForAdvert() {
+            const allBiz = getAllBusinesses();
+            const candidates = [];
+            allBiz.forEach(biz => {
+                if (biz.goods && biz.goods.length > 0) {
+                    biz.goods.forEach(g => {
+                        candidates.push({
+                            businessId: biz.id,
+                            businessName: biz.name,
+                            businessIcon: biz.icon || '🏪',
+                            businessPhone: biz.mobileMoney || biz.contact || '',
+                            name: g.name,
+                            price: g.price,
+                            quantity: g.quantity || 1,
+                            quality: g.quality || 'Brand new',
+                            icon: g.icon || biz.icon || '📱',
+                            description: `${g.quality || 'Brand new'} · ${g.quantity || 1} in stock`
+                        });
+                    });
+                }
+            });
+            if (candidates.length === 0) return null;
+            return candidates[Math.floor(Math.random() * candidates.length)];
+        }
+
+        function showPopupAdvert() {
+            if (!currentUser) return;
+            const now = Date.now();
+            if (now - lastPopupAdShownAt < 8000) return; // throttle rapid re-triggers
+            const product = pickRandomProductForAdvert();
+            if (!product) return;
+            lastPopupAdShownAt = now;
+            popupAdShowCount++;
+
+            const overlay = getEl('popupAdOverlay');
+            if (!overlay) return;
+
+            if (getEl('popupAdIcon')) getEl('popupAdIcon').textContent = product.icon;
+            if (getEl('popupAdName')) getEl('popupAdName').textContent = product.name;
+            if (getEl('popupAdBusiness')) getEl('popupAdBusiness').textContent = `${product.businessIcon} ${product.businessName}`;
+            if (getEl('popupAdDescription')) getEl('popupAdDescription').textContent = product.description;
+            if (getEl('popupAdPrice')) getEl('popupAdPrice').textContent = product.price.toFixed(2);
+            if (getEl('popupAdCurrency')) getEl('popupAdCurrency').textContent = isLocalMode ? 'Local' : currentCountryData.currency;
+
+            // Wire the select button
+            const selectBtn = getEl('popupAdSelectBtn');
+            if (selectBtn) {
+                selectBtn.onclick = function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    hidePopupAdvert();
+                    lastSelectedBusinessId = product.businessId;
+                    updateEditBizStripButton();
+                    try { showGoodsModal(product.businessId); } catch (err) {}
+                    setTimeout(() => {
+                        const items = document.querySelectorAll('#goodsList .goods-item');
+                        items.forEach(item => {
+                            const nameAttr = item.getAttribute('data-name');
+                            if (nameAttr && nameAttr === product.name) {
+                                item.click();
+                            }
+                        });
+                    }, 350);
+                };
+            }
+            const dismissBtn = getEl('popupAdDismissBtn');
+            if (dismissBtn) dismissBtn.onclick = function(e) { e.preventDefault(); e.stopPropagation(); hidePopupAdvert(); };
+            const closeBtn = getEl('popupAdCloseBtn');
+            if (closeBtn) closeBtn.onclick = function(e) { e.preventDefault(); e.stopPropagation(); hidePopupAdvert(); };
+
+            overlay.style.display = 'flex';
+            startPopupAdCountdown(15);
+        }
+
+        function hidePopupAdvert() {
+            const overlay = getEl('popupAdOverlay');
+            if (overlay) overlay.style.display = 'none';
+            clearInterval(popupAdCountdownInterval);
+            clearTimeout(popupAdAutoCloseTimer);
+            popupAdCountdownInterval = null;
+            popupAdAutoCloseTimer = null;
+        }
+
+        function startPopupAdCountdown(seconds) {
+            clearInterval(popupAdCountdownInterval);
+            clearTimeout(popupAdAutoCloseTimer);
+            popupAdCountdownSeconds = seconds;
+            const timerEl = getEl('popupAdTimer');
+            if (timerEl) timerEl.textContent = `Auto‑closes in ${popupAdCountdownSeconds}s`;
+            popupAdCountdownInterval = setInterval(() => {
+                popupAdCountdownSeconds--;
+                if (timerEl) timerEl.textContent = `Auto‑closes in ${popupAdCountdownSeconds}s`;
+                if (popupAdCountdownSeconds <= 0) {
+                    clearInterval(popupAdCountdownInterval);
+                    hidePopupAdvert();
+                }
+            }, 1000);
+        }
+
+        function startPopupAdTimer() {
+            stopPopupAdTimer();
+            // First advert after 4s, then every 90 seconds
+            popupAdTimeout = setTimeout(() => {
+                showPopupAdvert();
+                popupAdInterval = setInterval(() => { showPopupAdvert(); }, 90000);
+            }, 4000);
+        }
+
+        function stopPopupAdTimer() {
+            clearTimeout(popupAdTimeout);
+            clearInterval(popupAdInterval);
+            popupAdTimeout = null;
+            popupAdInterval = null;
+            hidePopupAdvert();
+        }
+
+        // ================================================================
+        // END POP-UP ADVERT
+        // ================================================================
 
         function triggerProductImageUpload(btn) {
             const entry = btn.closest('.product-entry');
@@ -2831,6 +3019,7 @@
             translatePage();
             console.log('✅ AfriPay ready.');
             showToast('✅ AfriPay ready!', 1500);
+            if (currentUser) startPopupAdTimer();
         }
 
         // SETUP EVENT LISTENERS
@@ -2845,7 +3034,7 @@
             if (registerBtn) registerBtn.addEventListener('click', function(e) { e.preventDefault(); getEl('regError').innerText = ''; getEl('regSuccess').innerText = ''; getEl('registerModal').style.display = 'flex'; });
 
             const logoutBtn = getEl('logoutBtn');
-            if (logoutBtn) logoutBtn.addEventListener('click', function(e) { e.preventDefault(); clearUserStorage(); showToast('Logged out'); });
+            if (logoutBtn) logoutBtn.addEventListener('click', function(e) { e.preventDefault(); clearUserStorage(); stopPopupAdTimer(); showToast('Logged out'); });
 
             const editAccountBtn = getEl('editAccountBtn');
             if (editAccountBtn) editAccountBtn.addEventListener('click', function(e) {
@@ -3471,6 +3660,14 @@
                     }
                 });
             });
+
+            // Close popup advert on overlay click
+            const popupOverlay = getEl('popupAdOverlay');
+            if (popupOverlay) {
+                popupOverlay.addEventListener('click', function(e) {
+                    if (e.target === popupOverlay) hidePopupAdvert();
+                });
+            }
         }
 
         function bootstrap() {
@@ -3482,7 +3679,7 @@
         }
 
         bootstrap();
-        console.log('🚀 AfriPay bootstrapped.');
+        console.log('🚀 AfriPay bootstrapped with pop-up advert system.');
     </script>
 </body>
 </html>
