@@ -321,30 +321,77 @@
         .pin-recipient-row .pin-recipient-value { color: #0f2b3d; font-weight: 700; text-align: right; word-break: break-word; max-width: 62%; }
         .pin-warning { color: #c0392b; font-size: 0.7rem; margin-top: 4px; display: none; text-align: center; }
 
-        /* Pop-up advert modal */
-        .popup-ad-overlay { position: fixed; inset: 0; background: rgba(10, 43, 60, 0.6); backdrop-filter: blur(4px); z-index: 1200; display: flex; align-items: center; justify-content: center; animation: fadeIn 0.4s ease; }
-        .popup-ad-card { background: #fff; border-radius: 24px; max-width: 340px; width: 90%; overflow: hidden; box-shadow: 0 24px 48px -12px rgba(0,0,0,0.35); animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-        .popup-ad-header { background: linear-gradient(135deg, #0a2b3c 0%, #1c4e6c 100%); padding: 16px 18px 12px; color: #fff; position: relative; text-align: center; }
-        .popup-ad-close { position: absolute; top: 8px; right: 14px; background: rgba(255,255,255,0.15); border: none; color: #fff; font-size: 1.3rem; cursor: pointer; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; transition: background 0.2s; }
-        .popup-ad-close:hover { background: rgba(255,255,255,0.3); }
-        .popup-ad-brand { font-size: 0.72rem; letter-spacing: 1px; opacity: 0.8; text-transform: uppercase; }
-        .popup-ad-product { display: flex; flex-direction: column; align-items: center; padding: 18px 16px 12px; gap: 6px; }
-        .popup-ad-icon { font-size: 3.2rem; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1)); }
-        .popup-ad-name { font-size: 1.1rem; font-weight: 800; color: #0f2b3d; text-align: center; line-height: 1.3; }
-        .popup-ad-business { font-size: 0.82rem; color: #2c7da0; font-weight: 600; display: flex; align-items: center; gap: 4px; }
-        .popup-ad-description { font-size: 0.78rem; color: #555; text-align: center; padding: 0 12px 8px; line-height: 1.5; }
-        .popup-ad-price-row { display: flex; justify-content: center; align-items: baseline; gap: 6px; padding: 4px 0 10px; }
-        .popup-ad-price { font-size: 1.5rem; font-weight: 800; color: #f4a261; }
-        .popup-ad-currency { font-size: 0.8rem; color: #7f8c8d; font-weight: 600; }
-        .popup-ad-cta { display: flex; gap: 8px; padding: 0 16px 18px; }
-        .popup-ad-btn { flex: 1; border: none; border-radius: 30px; padding: 10px 16px; font-weight: 700; font-size: 0.82rem; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; text-align: center; }
-        .popup-ad-btn:active { transform: scale(0.96); }
-        .popup-ad-btn-primary { background: #27ae60; color: #fff; box-shadow: 0 4px 12px rgba(39, 174, 96, 0.35); }
-        .popup-ad-btn-primary:hover { background: #219a52; }
+        /* ============================================================ */
+        /* POP-UP ADVERT — with cool animations                         */
+        /* ============================================================ */
+        .popup-ad-overlay { position: fixed; inset: 0; background: rgba(10, 43, 60, 0.65); backdrop-filter: blur(6px); z-index: 1200; display: flex; align-items: center; justify-content: center; animation: overlayFadeIn 0.4s ease; }
+        @keyframes overlayFadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .popup-ad-card { background: #fff; border-radius: 24px; max-width: 340px; width: 90%; overflow: hidden; box-shadow: 0 24px 48px -12px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.1); animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; }
+        @keyframes popIn { 0% { transform: scale(0.7) translateY(30px); opacity: 0; } 60% { transform: scale(1.03) translateY(-4px); opacity: 1; } 100% { transform: scale(1) translateY(0); opacity: 1; } }
+
+        /* Buy!!! tag at top corner */
+        .popup-ad-buy-tag { position: absolute; top: 12px; left: -6px; background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); color: #fff; font-weight: 900; font-size: 0.85rem; padding: 5px 16px 5px 14px; border-radius: 0 20px 20px 0; letter-spacing: 1px; text-transform: uppercase; z-index: 20; box-shadow: 0 4px 12px rgba(231, 76, 60, 0.5); animation: buyTagBounce 1.6s ease-in-out infinite; display: flex; align-items: center; gap: 4px; }
+        .popup-ad-buy-tag::before { content: '🔥'; font-size: 0.9rem; }
+        .popup-ad-buy-tag::after { content: '!!!'; font-weight: 900; margin-left: 1px; }
+        @keyframes buyTagBounce { 0%, 100% { transform: translateY(0) scale(1); box-shadow: 0 4px 12px rgba(231, 76, 60, 0.5); } 50% { transform: translateY(-3px) scale(1.05); box-shadow: 0 8px 20px rgba(231, 76, 60, 0.7); } }
+        .popup-ad-buy-tag::before { animation: flamePulse 0.8s ease-in-out infinite; }
+        @keyframes flamePulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.25); } }
+
+        .popup-ad-header { background: linear-gradient(135deg, #0a2b3c 0%, #1c4e6c 100%); padding: 16px 18px 12px; color: #fff; position: relative; text-align: center; overflow: hidden; }
+        .popup-ad-header::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,215,0,0.15) 0%, transparent 70%); animation: shimmerRotate 8s linear infinite; }
+        @keyframes shimmerRotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .popup-ad-close { position: absolute; top: 8px; right: 14px; background: rgba(255,255,255,0.15); border: none; color: #fff; font-size: 1.3rem; cursor: pointer; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; transition: all 0.25s ease; z-index: 15; }
+        .popup-ad-close:hover { background: rgba(255,255,255,0.35); transform: rotate(90deg) scale(1.1); }
+        .popup-ad-brand { font-size: 0.72rem; letter-spacing: 1px; opacity: 0.9; text-transform: uppercase; position: relative; z-index: 2; font-weight: 700; }
+        .popup-ad-subtitle { font-size: 0.62rem; opacity: 0.7; margin-top: 2px; position: relative; z-index: 2; }
+
+        .popup-ad-product { display: flex; flex-direction: column; align-items: center; padding: 22px 16px 14px; gap: 8px; background: linear-gradient(180deg, #f8fbfd 0%, #ffffff 100%); position: relative; }
+
+        /* Product icon animation */
+        .popup-ad-icon { font-size: 4rem; filter: drop-shadow(0 6px 12px rgba(0,0,0,0.15)); animation: iconFloat 3s ease-in-out infinite, iconGlow 2.5s ease-in-out infinite alternate; position: relative; }
+        .popup-ad-icon::after { content: ''; position: absolute; inset: -10px; border-radius: 50%; background: radial-gradient(circle, rgba(244,162,97,0.35) 0%, transparent 70%); z-index: -1; animation: glowPulse 2s ease-in-out infinite; }
+        @keyframes iconFloat { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-8px) rotate(3deg); } }
+        @keyframes iconGlow { 0% { filter: drop-shadow(0 6px 12px rgba(0,0,0,0.15)); } 100% { filter: drop-shadow(0 6px 18px rgba(244,162,97,0.5)); } }
+        @keyframes glowPulse { 0%, 100% { transform: scale(1); opacity: 0.6; } 50% { transform: scale(1.15); opacity: 0.9; } }
+
+        /* Product name animation */
+        .popup-ad-name { font-size: 1.15rem; font-weight: 800; color: #0f2b3d; text-align: center; line-height: 1.3; animation: nameSlideIn 0.7s ease 0.15s both; position: relative; }
+        .popup-ad-name::after { content: ''; display: block; width: 0; height: 2px; background: linear-gradient(90deg, #f4a261, #e74c3c); margin: 4px auto 0; border-radius: 2px; animation: underlineGrow 0.8s ease 0.5s forwards; }
+        @keyframes nameSlideIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes underlineGrow { from { width: 0; } to { width: 60%; } }
+
+        .popup-ad-business { font-size: 0.82rem; color: #2c7da0; font-weight: 600; display: flex; align-items: center; gap: 4px; animation: fadeSlideUp 0.6s ease 0.25s both; }
+        .popup-ad-description { font-size: 0.76rem; color: #666; text-align: center; padding: 0 12px 4px; line-height: 1.5; animation: fadeSlideUp 0.6s ease 0.35s both; }
+        @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Price animation */
+        .popup-ad-price-row { display: flex; justify-content: center; align-items: baseline; gap: 6px; padding: 6px 0 12px; animation: priceBounce 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.4s both; }
+        .popup-ad-price { font-size: 1.7rem; font-weight: 900; color: #f4a261; text-shadow: 0 2px 8px rgba(244,162,97,0.3); position: relative; }
+        .popup-ad-price::before { content: '💰'; position: absolute; left: -22px; top: 50%; transform: translateY(-50%); font-size: 1rem; opacity: 0.8; animation: coinFlip 2s ease-in-out infinite; }
+        @keyframes priceBounce { 0% { opacity: 0; transform: scale(0.5) translateY(20px); } 60% { opacity: 1; transform: scale(1.15) translateY(-4px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+        @keyframes coinFlip { 0%, 100% { transform: translateY(-50%) rotateY(0deg); } 50% { transform: translateY(-50%) rotateY(180deg); } }
+        .popup-ad-currency { font-size: 0.85rem; color: #7f8c8d; font-weight: 700; letter-spacing: 0.5px; animation: fadeSlideUp 0.6s ease 0.55s both; }
+
+        .popup-ad-cta { display: flex; gap: 8px; padding: 0 16px 18px; animation: fadeSlideUp 0.6s ease 0.6s both; }
+        .popup-ad-btn { flex: 1; border: none; border-radius: 30px; padding: 11px 16px; font-weight: 700; font-size: 0.82rem; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; text-align: center; position: relative; overflow: hidden; }
+        .popup-ad-btn::before { content: ''; position: absolute; top: 50%; left: 50%; width: 0; height: 0; border-radius: 50%; background: rgba(255,255,255,0.35); transform: translate(-50%, -50%); transition: width 0.5s ease, height 0.5s ease; }
+        .popup-ad-btn:hover::before { width: 300px; height: 300px; }
+        .popup-ad-btn:active { transform: scale(0.95); }
+        .popup-ad-btn-primary { background: linear-gradient(135deg, #27ae60 0%, #229954 100%); color: #fff; box-shadow: 0 4px 14px rgba(39, 174, 96, 0.4); animation: ctaPulse 2s ease-in-out infinite; }
+        .popup-ad-btn-primary:hover { background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%); box-shadow: 0 6px 20px rgba(39, 174, 96, 0.6); }
+        @keyframes ctaPulse { 0%, 100% { box-shadow: 0 4px 14px rgba(39, 174, 96, 0.4); } 50% { box-shadow: 0 6px 22px rgba(39, 174, 96, 0.7); } }
         .popup-ad-btn-secondary { background: #f0f4f8; color: #1c6e8f; }
         .popup-ad-btn-secondary:hover { background: #e2edf7; }
-        .popup-ad-timer { font-size: 0.6rem; color: #95a5a6; text-align: center; padding: 0 0 10px; }
+
+        .popup-ad-timer { font-size: 0.6rem; color: #95a5a6; text-align: center; padding: 0 0 12px; animation: fadeSlideUp 0.6s ease 0.7s both; }
+        .popup-ad-timer span { font-weight: 700; color: #e74c3c; }
+
+        /* Sparkle particles around the advert card */
+        .popup-ad-card::before, .popup-ad-card::after { content: '✨'; position: absolute; font-size: 1.2rem; animation: sparkle 2.5s ease-in-out infinite; z-index: 5; pointer-events: none; }
+        .popup-ad-card::before { top: 8px; right: 55px; animation-delay: 0s; }
+        .popup-ad-card::after { bottom: 55px; left: 8px; animation-delay: 1.2s; }
+        @keyframes sparkle { 0%, 100% { opacity: 0; transform: scale(0.5) rotate(0deg); } 50% { opacity: 1; transform: scale(1.2) rotate(180deg); } }
+
         @media (max-width: 600px) {
             .double-row { grid-template-columns: 1fr; gap: 0; }
             .brand-text { font-size: 1.3rem; }
@@ -564,13 +611,14 @@
         </div>
     </div>
 
-    <!-- Pop-up Advert Modal -->
+    <!-- Pop-up Advert Modal with Buy!!! tag and cool animations -->
     <div id="popupAdOverlay" class="popup-ad-overlay" style="display:none;">
         <div class="popup-ad-card" id="popupAdCard">
+            <div class="popup-ad-buy-tag">BUY</div>
             <div class="popup-ad-header">
                 <button class="popup-ad-close" id="popupAdCloseBtn">✕</button>
                 <div class="popup-ad-brand">⭐ AfriPay Quick Pay</div>
-                <div style="font-size:0.65rem; opacity:0.7; margin-top:2px;">Sponsored Product</div>
+                <div class="popup-ad-subtitle">Sponsored Product</div>
             </div>
             <div class="popup-ad-product">
                 <div class="popup-ad-icon" id="popupAdIcon">📱</div>
@@ -586,7 +634,7 @@
                 <button class="popup-ad-btn popup-ad-btn-primary" id="popupAdSelectBtn">🛒 Select Product</button>
                 <button class="popup-ad-btn popup-ad-btn-secondary" id="popupAdDismissBtn">Dismiss</button>
             </div>
-            <div class="popup-ad-timer" id="popupAdTimer">Auto‑closes in 15s</div>
+            <div class="popup-ad-timer" id="popupAdTimer">Auto‑closes in <span>15s</span></div>
         </div>
     </div>
 
@@ -982,7 +1030,6 @@
         let popupAdInterval = null;
         let popupAdTimeout = null;
         let popupAdCountdownInterval = null;
-        let popupAdAutoCloseTimer = null;
         let popupAdCountdownSeconds = 15;
         let lastPopupAdShownAt = 0;
         let popupAdShowCount = 0;
@@ -1115,7 +1162,7 @@
         businesses.forEach(biz => { biz.goods.forEach(g => { if (!g.quantity) g.quantity = 1; if (!g.quality) g.quality = "Brand new"; }); });
 
         // ================================================================
-        // SUPPORTED COUNTRIES & CURRENCIES (AfriPay corridor)
+        // SUPPORTED COUNTRIES & CURRENCIES
         // ================================================================
         const SUPPORTED_CURRENCIES = [
             { code:'LR', name:'Liberia',            currency:'LRD', flag:'🇱🇷', gst:10   },
@@ -1142,23 +1189,7 @@
             { code:'SL', name:'Sierra Leone',       currency:'SLL', flag:'🇸🇱', gst:12.5 }
         ];
 
-        const EXCHANGE_RATES = {
-            USD: 1,
-            LRD: 190,
-            GNF: 8600,
-            XOF: 605,
-            XAF: 605,
-            GHS: 15.5,
-            GMD: 71,
-            KES: 129,
-            ETB: 125,
-            MAD: 9.9,
-            RWF: 1380,
-            UGX: 3700,
-            CDF: 2850,
-            MGA: 4600,
-            SLL: 22500
-        };
+        const EXCHANGE_RATES = { USD: 1, LRD: 190, GNF: 8600, XOF: 605, XAF: 605, GHS: 15.5, GMD: 71, KES: 129, ETB: 125, MAD: 9.9, RWF: 1380, UGX: 3700, CDF: 2850, MGA: 4600, SLL: 22500 };
 
         const STORAGE_KEYS = { registeredUsers:'afripay_registered_users',groups:'afripay_groups',chatMessages:'afripay_chatMessages',chatSettings:'chatSettings',transactions:'afripay_transactions',admin:'afripay_admin',adminLoggedIn:'afripay_admin_logged_in',user:'afripay_user',lang:'afripay_lang',providerTxIds:'afripay_provider_tx_ids',customBusinesses:'afripay_custom_businesses',pendingBusinesses:'afripay_pending_businesses' };
 
@@ -1536,7 +1567,6 @@
             if (getEl('chargeAmount')) getEl('chargeAmount').innerText = charge.toFixed(2);
             if (getEl('gstAmount')) getEl('gstAmount').innerText = gst.toFixed(2);
             if (getEl('totalAmount')) getEl('totalAmount').innerText = total.toFixed(2);
-            // Update currency symbol based on user's country
             if (getEl('currencySymbol')) getEl('currencySymbol').innerText = isLocalMode ? getUserCurrency() : currentCountryData.currency;
         }
 
@@ -1575,13 +1605,10 @@
                 getEl('senderAddress').value = SecurityUtils.escapeHTML(currentUser.address || '');
                 setCityValue('senderCitySelect', 'senderCityOther', currentUser.city || '');
             }
-            
-            // Update user country data and currency display
             updateUserCountryData();
             const displayCurrency = isLocalMode ? getUserCurrency() : currentCountryData.currency;
             if (getEl('currencySymbol')) getEl('currencySymbol').innerText = displayCurrency;
             if (getEl('gstRateLabel')) getEl('gstRateLabel').innerText = currentCountryData.gstRate;
-            
             renderBusinessStrip();
             updateAgentDropdownForCountry();
             const locBtn = getEl('agentLocationBtn');
@@ -1946,8 +1973,7 @@
         }
 
         // ================================================================
-        // POP-UP ADVERT — picks one product from any business in the
-        // quick-pick strip, shows an advert card, and repeats every 90s.
+        // POP-UP ADVERT — with cool animations and Buy!!! tag
         // ================================================================
         function pickRandomProductForAdvert() {
             const allBiz = getAllBusinesses();
@@ -2026,20 +2052,17 @@
             const overlay = getEl('popupAdOverlay');
             if (overlay) overlay.style.display = 'none';
             clearInterval(popupAdCountdownInterval);
-            clearTimeout(popupAdAutoCloseTimer);
             popupAdCountdownInterval = null;
-            popupAdAutoCloseTimer = null;
         }
 
         function startPopupAdCountdown(seconds) {
             clearInterval(popupAdCountdownInterval);
-            clearTimeout(popupAdAutoCloseTimer);
             popupAdCountdownSeconds = seconds;
             const timerEl = getEl('popupAdTimer');
-            if (timerEl) timerEl.textContent = `Auto‑closes in ${popupAdCountdownSeconds}s`;
+            if (timerEl) timerEl.innerHTML = `Auto‑closes in <span>${popupAdCountdownSeconds}s</span>`;
             popupAdCountdownInterval = setInterval(() => {
                 popupAdCountdownSeconds--;
-                if (timerEl) timerEl.textContent = `Auto‑closes in ${popupAdCountdownSeconds}s`;
+                if (timerEl) timerEl.innerHTML = `Auto‑closes in <span>${popupAdCountdownSeconds}s</span>`;
                 if (popupAdCountdownSeconds <= 0) {
                     clearInterval(popupAdCountdownInterval);
                     hidePopupAdvert();
@@ -2062,10 +2085,6 @@
             popupAdInterval = null;
             hidePopupAdvert();
         }
-
-        // ================================================================
-        // END POP-UP ADVERT
-        // ================================================================
 
         function triggerProductImageUpload(btn) {
             const entry = btn.closest('.product-entry');
@@ -2110,7 +2129,6 @@
         }
         function ensureTransactionId() { const f = getEl('transactionId'); if (f && !f.value.trim()) f.value = generateTransactionId(); }
 
-        // RECEIPT MODAL
         function showReceiptModal(receiptData) {
             const body = getEl('receiptBody');
             const badge = getEl('receiptBadge');
@@ -2224,9 +2242,6 @@
             } catch (e) {}
         }
 
-        // ================================================================
-        // RECIPIENT RESOLVER
-        // ================================================================
         function resolveRecipientInfo() {
             const digitsOnly = (s) => String(s == null ? '' : s).replace(/\D/g, '');
             let name = (getEl('agentName') ? getEl('agentName').value : '').trim();
@@ -2256,9 +2271,6 @@
             return clean.substring(0, Math.max(1, maxLen - 1)).trim() + '…';
         }
 
-        // ================================================================
-        // USSD BUILDER
-        // ================================================================
         function buildUssdForProvider(provider, recipient, amount) {
             const cleanPhone = recipient.phone || '';
             const agentNameSafe = String(recipient.name || '').replace(/[*#]/g, '').trim();
@@ -2525,22 +2537,14 @@
             }
         }
 
-        // ================================================================
-        // CURRENCY CONVERTER
-        // ================================================================
         function getSupportedCountryByName(name) {
             if (!name) return null;
             const n = String(name).toLowerCase().trim();
             return SUPPORTED_CURRENCIES.find(c => c.name.toLowerCase() === n) || null;
         }
 
-        function buildCountryOptionValue(c) {
-            return `${c.code}|${c.name}|${c.currency}|${c.flag}|${c.gst}`;
-        }
-
-        function buildFromOptionValue(c) {
-            return `${c.currency}|${c.name}|${c.flag}`;
-        }
+        function buildCountryOptionValue(c) { return `${c.code}|${c.name}|${c.currency}|${c.flag}|${c.gst}`; }
+        function buildFromOptionValue(c) { return `${c.currency}|${c.name}|${c.flag}`; }
 
         function syncConverterFlags() {
             const fromVal = getEl('convFromCurrency')?.value || '';
@@ -2596,12 +2600,9 @@
         function updateConverter() {
             try {
                 syncConverterFlags();
-
                 const amount = parseFloat(getEl('convAmount')?.value) || 0;
-
                 const fromParts = (getEl('convFromCurrency')?.value || '').split('|');
                 const fromCurrency = fromParts[0] || 'SLL';
-
                 const toParts = (getEl('convCountrySelect')?.value || '').split('|');
                 if (toParts.length < 5) return;
                 const toCurrency = toParts[2] || 'GNF';
@@ -2636,8 +2637,7 @@
             const fromParts = (getEl('convFromCurrency')?.value || '').split('|');
             const toParts = (getEl('convCountrySelect')?.value || '').split('|');
             return [
-                '💱 AfriPay Currency Converter',
-                '─────────────────',
+                '💱 AfriPay Currency Converter', '─────────────────',
                 `From: ${fromParts[1] || ''} (${fromParts[0] || ''})`,
                 `To: ${toParts[1] || ''} (${toParts[2] || ''})`,
                 `Base: ${getEl('convBaseAmount')?.textContent || ''}`,
@@ -3038,7 +3038,6 @@
             setTimeout(() => { if (successEl) successEl.textContent = ''; }, 4000);
         }
 
-        // MAIN INIT
         function initApp() {
             console.log('🚀 AfriPay initializing...');
             function safeExecute(fn, label) { try { fn(); } catch (e) { console.error(`❌ Error in ${label}:`, e); } }
@@ -3091,7 +3090,6 @@
             if (currentUser) startPopupAdTimer();
         }
 
-        // SETUP EVENT LISTENERS
         function setupEventListeners() {
             const langSelect = getEl('langSelect');
             if (langSelect) langSelect.addEventListener('change', function() { setLanguage(this.value); });
@@ -3148,8 +3146,7 @@
 
             const addAgentFromEditBtn = getEl('addAgentFromEditBtn');
             if (addAgentFromEditBtn) addAgentFromEditBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
+                e.preventDefault(); e.stopPropagation();
                 getEl('editAccountModal').style.display = 'none';
                 getEl('agentRegError').textContent = '';
                 getEl('agentRegSuccess').textContent = '';
@@ -3741,7 +3738,7 @@
         }
 
         bootstrap();
-        console.log('🚀 AfriPay bootstrapped with pop-up advert system.');
+        console.log('🚀 AfriPay bootstrapped with animated pop-up advert system.');
     </script>
 </body>
 </html>
