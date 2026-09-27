@@ -491,7 +491,7 @@
                     <div class="charges-row"><span data-i18n="transfer_charge">📊 Fee (4%):</span><span id="chargeAmount">0.00</span></div>
                     <div class="charges-row" id="gstRow"><span data-i18n="gst">🏛️ GST (<span id="gstRateLabel">15</span>%):</span><span id="gstAmount">0.00</span></div>
                     <div class="charges-row total-row"><span data-i18n="total_debit">💵 Total:</span><span id="totalAmount">0.00</span></div>
-                    <div class="charges-row"><span data-i18n="currency_label">🌍 Currency:</span><span id="currencySymbol">GMD</span></div>
+                    <div class="charges-row"><span data-i18n="currency_label">🌍 Currency:</span><span id="currencySymbol">SLL</span></div>
                 </div>
 
                 <div class="product-detail-group" id="productDetailGroup">
@@ -564,7 +564,7 @@
         </div>
     </div>
 
-    <!-- Pop-up Advert Modal (injected by JS but also defined here as fallback) -->
+    <!-- Pop-up Advert Modal -->
     <div id="popupAdOverlay" class="popup-ad-overlay" style="display:none;">
         <div class="popup-ad-card" id="popupAdCard">
             <div class="popup-ad-header">
@@ -805,9 +805,6 @@
     <div id="adminDeleteUserModal" class="modal"><div class="modal-content"><h3>🔐 Admin Verify</h3><div class="delete-user-warning">⚠️ Delete <span id="deleteUserNameDisplay">this user</span>?</div><div id="adminDeleteUserError" class="error-msg"></div><div class="input-group"><label>Admin Name *</label><input type="text" id="adminDeleteUserName" /></div><div class="input-group"><label>Password *</label><input type="password" id="adminDeleteUserPassword" /></div><div class="action-buttons-row"><button class="action-btn" id="adminDeleteUserConfirmBtn" style="background:#e74c3c;">✅ Delete</button><button class="action-btn close-modal" id="adminDeleteUserCancelBtn">Cancel</button></div></div></div>
     <div id="pinModal" class="modal"><div class="modal-content"><h3>🔐 PIN Required</h3><div id="pinProviderBadge" class="provider-badge orange">MB-ONE</div><div class="pin-recipient-box" id="pinRecipientBox"><div class="pin-recipient-row"><span class="pin-recipient-label">👤 Recipient</span><span class="pin-recipient-value" id="pinRecipientName">—</span></div><div class="pin-recipient-row"><span class="pin-recipient-label">📱 Number</span><span class="pin-recipient-value" id="pinRecipientPhone">—</span></div><div class="pin-recipient-row"><span class="pin-recipient-label">💵 Amount</span><span class="pin-recipient-value" id="pinRecipientAmount">—</span></div></div><div class="ussd-preview" id="pinUssdPreview"></div><div class="pin-warning" id="pinRecipientWarning">⚠️ No recipient number — select an agent or business first.</div><div id="pinError" class="auth-error"></div><div class="input-group"><label>4-Digit PIN *</label><input type="password" id="pinInput" maxlength="4" /></div><div class="action-buttons-row"><button class="action-btn" id="pinConfirmBtn">✅ Dial</button><button class="action-btn close-modal" id="pinCancelBtn">Cancel</button></div></div></div>
 
-    <!-- ============================================================ -->
-    <!-- CURRENCY CONVERTER — supported countries & currencies only    -->
-    <!-- ============================================================ -->
     <div id="currencyConverterModal" class="modal"><div class="modal-content">
         <div class="converter-header"><button class="converter-close-x" id="converterCloseXBtn">✕</button><h3>💱 Currency Converter</h3></div>
         <div class="converter-body">
@@ -838,7 +835,6 @@
         <div class="converter-footer"><button class="action-btn" id="convCopyResultBtn">📋 Copy</button><button class="action-btn close-modal" id="convCloseBtn">Close</button></div>
     </div></div>
 
-    <!-- ADD BUSINESS MODAL — now with access credentials (Password + PIN) -->
     <div id="addBizModal" class="modal"><div class="modal-content" style="max-width:460px;">
         <h3 id="addBizTitle">🏢 Add Your Business</h3>
         <div id="addBizError" class="error-msg"></div>
@@ -858,7 +854,6 @@
         <div class="input-group"><label>Other Country (if not listed)</label><input type="text" id="bizCountryOther" /></div>
         <div class="input-group"><label>Website (optional)</label><input type="url" id="bizWebsite" /></div>
 
-        <!-- ===== BUSINESS ACCESS CREDENTIALS ===== -->
         <div style="margin-top:0.6rem; padding:0.55rem 0.7rem; background:#f0f6fb; border:1px solid #c0d8e8; border-radius:10px;">
             <div style="font-weight:700; color:#1c6e8f; font-size:0.8rem; margin-bottom:0.25rem;">🔐 Business Access Credentials</div>
             <div style="font-size:0.65rem; color:#666; margin-bottom:0.4rem;">You will need these credentials to edit this business later.</div>
@@ -992,7 +987,88 @@
         let lastPopupAdShownAt = 0;
         let popupAdShowCount = 0;
 
-        // Business credentials resolver — checks business's OWN creds first, then agent, then default.
+        // ================================================================
+        // USER CURRENCY RESOLVER
+        // ================================================================
+        function getUserCurrency() {
+            const countryCurrencyMap = {
+                'Sierra Leone': 'SLL',
+                'Liberia': 'LRD',
+                'Guinea': 'GNF',
+                'Senegal': 'XOF',
+                'Mali': 'XOF',
+                'Ivory Coast': 'XOF',
+                'Ghana': 'GHS',
+                'Niger': 'XOF',
+                'Benin': 'XOF',
+                'Guinea Bissau': 'XOF',
+                'Gambia': 'GMD',
+                'Togo': 'XOF',
+                'Kenya': 'KES',
+                'Central Africa Rep': 'XAF',
+                'Ethiopia': 'ETB',
+                'Gabon': 'XAF',
+                'Madagascar': 'MGA',
+                'Morocco': 'MAD',
+                'Rwanda': 'RWF',
+                'Uganda': 'UGX',
+                'DR Congo': 'CDF',
+                'Burkina Faso': 'XOF',
+                'Nigeria': 'NGN'
+            };
+            
+            let userCountry = currentUser?.country;
+            
+            if (userCountry && countryCurrencyMap[userCountry]) {
+                return countryCurrencyMap[userCountry];
+            }
+            
+            const countrySelect = getEl('countryCodeSelect');
+            if (countrySelect && countrySelect.value) {
+                const parts = countrySelect.value.split('|');
+                if (parts[2]) return parts[2];
+            }
+            
+            return 'SLL';
+        }
+
+        function updateUserCountryData() {
+            if (currentUser?.country) {
+                const supported = getSupportedCountryByName(currentUser.country);
+                if (supported) {
+                    currentCountryData = {
+                        gstRate: supported.gst,
+                        currency: supported.currency,
+                        flag: supported.flag,
+                        countryName: supported.name
+                    };
+                } else {
+                    const fallbackCurrencyMap = {
+                        'Sierra Leone': { currency: 'SLL', flag: '🇸🇱', gstRate: 12.5 },
+                        'Nigeria': { currency: 'NGN', flag: '🇳🇬', gstRate: 7.5 },
+                        'Ghana': { currency: 'GHS', flag: '🇬🇭', gstRate: 12.5 },
+                        'Kenya': { currency: 'KES', flag: '🇰🇪', gstRate: 16 },
+                        'Liberia': { currency: 'LRD', flag: '🇱🇷', gstRate: 10 },
+                        'Senegal': { currency: 'XOF', flag: '🇸🇳', gstRate: 18 },
+                        'Guinea': { currency: 'GNF', flag: '🇬🇳', gstRate: 18 }
+                    };
+                    
+                    const fallback = fallbackCurrencyMap[currentUser.country];
+                    if (fallback) {
+                        currentCountryData = {
+                            gstRate: fallback.gstRate,
+                            currency: fallback.currency,
+                            flag: fallback.flag,
+                            countryName: currentUser.country
+                        };
+                    }
+                }
+            }
+        }
+
+        // ================================================================
+        // BUSINESS CREDENTIALS RESOLVER
+        // ================================================================
         function getBusinessCredentials(biz) {
             if (!biz) return { password: DEFAULT_EDIT_BIZ_PASSWORD, pin: DEFAULT_EDIT_BIZ_PIN, source: 'default' };
             if (biz.password && biz.pin) {
@@ -1066,23 +1142,22 @@
             { code:'SL', name:'Sierra Leone',       currency:'SLL', flag:'🇸🇱', gst:12.5 }
         ];
 
-        // Units of each currency per 1 USD (correct mid-market reference rates)
         const EXCHANGE_RATES = {
             USD: 1,
-            LRD: 190,   // Liberian Dollar
-            GNF: 8600,  // Guinean Franc
-            XOF: 605,   // West African CFA Franc (pegged to EUR)
-            XAF: 605,   // Central African CFA Franc (pegged to EUR)
-            GHS: 15.5,  // Ghanaian Cedi
-            GMD: 71,    // Gambian Dalasi
-            KES: 129,   // Kenyan Shilling
-            ETB: 125,   // Ethiopian Birr
-            MAD: 9.9,   // Moroccan Dirham
-            RWF: 1380,  // Rwandan Franc
-            UGX: 3700,  // Ugandan Shilling
-            CDF: 2850,  // Congolese Franc
-            MGA: 4600,  // Malagasy Ariary
-            SLL: 22500  // Sierra Leonean Leone
+            LRD: 190,
+            GNF: 8600,
+            XOF: 605,
+            XAF: 605,
+            GHS: 15.5,
+            GMD: 71,
+            KES: 129,
+            ETB: 125,
+            MAD: 9.9,
+            RWF: 1380,
+            UGX: 3700,
+            CDF: 2850,
+            MGA: 4600,
+            SLL: 22500
         };
 
         const STORAGE_KEYS = { registeredUsers:'afripay_registered_users',groups:'afripay_groups',chatMessages:'afripay_chatMessages',chatSettings:'chatSettings',transactions:'afripay_transactions',admin:'afripay_admin',adminLoggedIn:'afripay_admin_logged_in',user:'afripay_user',lang:'afripay_lang',providerTxIds:'afripay_provider_tx_ids',customBusinesses:'afripay_custom_businesses',pendingBusinesses:'afripay_pending_businesses' };
@@ -1385,11 +1460,11 @@
             if (!group) return;
             if (getEl('productName')) getEl('productName').value = SecurityUtils.escapeHTML(product.name || '');
             if (getEl('productIconPreview')) getEl('productIconPreview').textContent = product.icon || '📱';
-            if (getEl('productPrice')) getEl('productPrice').value = product.price ? product.price.toFixed(2) + ' ' + (isLocalMode ? 'Local' : currentCountryData.currency) : '0.00';
+            if (getEl('productPrice')) getEl('productPrice').value = product.price ? product.price.toFixed(2) + ' ' + (isLocalMode ? getUserCurrency() : currentCountryData.currency) : '0.00';
             if (getEl('productQuantity')) getEl('productQuantity').value = product.quantity || 1;
             if (getEl('productQuality')) getEl('productQuality').value = SecurityUtils.escapeHTML(product.quality || 'Brand new');
             const deliveryCost = product.deliveryCost !== undefined ? product.deliveryCost : 5.00;
-            if (getEl('productDelivery')) getEl('productDelivery').value = deliveryCost.toFixed(2) + ' ' + (isLocalMode ? 'Local' : currentCountryData.currency);
+            if (getEl('productDelivery')) getEl('productDelivery').value = deliveryCost.toFixed(2) + ' ' + (isLocalMode ? getUserCurrency() : currentCountryData.currency);
             group.classList.add('visible');
             const amountInput = getEl('amountInput');
             if (amountInput && product.price) {
@@ -1461,6 +1536,8 @@
             if (getEl('chargeAmount')) getEl('chargeAmount').innerText = charge.toFixed(2);
             if (getEl('gstAmount')) getEl('gstAmount').innerText = gst.toFixed(2);
             if (getEl('totalAmount')) getEl('totalAmount').innerText = total.toFixed(2);
+            // Update currency symbol based on user's country
+            if (getEl('currencySymbol')) getEl('currencySymbol').innerText = isLocalMode ? getUserCurrency() : currentCountryData.currency;
         }
 
         function saveUserToStorage(user) { localStorage.setItem(STORAGE_KEYS.user, JSON.stringify(user)); }
@@ -1498,12 +1575,20 @@
                 getEl('senderAddress').value = SecurityUtils.escapeHTML(currentUser.address || '');
                 setCityValue('senderCitySelect', 'senderCityOther', currentUser.city || '');
             }
+            
+            // Update user country data and currency display
+            updateUserCountryData();
+            const displayCurrency = isLocalMode ? getUserCurrency() : currentCountryData.currency;
+            if (getEl('currencySymbol')) getEl('currencySymbol').innerText = displayCurrency;
+            if (getEl('gstRateLabel')) getEl('gstRateLabel').innerText = currentCountryData.gstRate;
+            
             renderBusinessStrip();
             updateAgentDropdownForCountry();
             const locBtn = getEl('agentLocationBtn');
             if (locBtn && selectedAgentId) locBtn.disabled = false;
             else if (locBtn) locBtn.disabled = true;
             updateEditBizStripButton();
+            computeCharges();
             startPopupAdTimer();
         }
 
@@ -1697,12 +1782,10 @@
             setVal('bizCountrySelect', biz.country || 'Sierra Leone');
             setVal('bizWebsite', biz.website);
 
-            // Set business access credentials (view/edit for existing business)
             if (getEl('bizEditingId')) getEl('bizEditingId').value = biz.id;
             if (getEl('bizPassword')) getEl('bizPassword').value = biz.password || '';
             if (getEl('bizPin')) getEl('bizPin').value = biz.pin || '';
 
-            // Update modal title to reflect Edit mode
             const titleEl = getEl('addBizTitle');
             if (titleEl) titleEl.textContent = '✏️ Edit Business – ' + biz.name;
 
@@ -1776,11 +1859,12 @@
                     const qty = g.quantity || 1;
                     const quality = g.quality || 'Brand new';
                     const icon = g.icon || biz.icon || '📱';
+                    const displayCurrency = isLocalMode ? getUserCurrency() : currentCountryData.currency;
                     return `
                         <div class="goods-item" data-price="${g.price}" data-name="${SecurityUtils.escapeHTML(g.name)}" data-quantity="${qty}" data-quality="${SecurityUtils.escapeHTML(quality)}" data-icon="${icon}" data-delivery="${deliveryCost}" data-business="${SecurityUtils.escapeHTML(biz.name)}" data-businessphone="${SecurityUtils.escapeHTML(biz.mobileMoney || biz.contact || '')}" data-index="${idx}">
                             <div class="goods-row">
                                 <span class="goods-name">${icon} ${SecurityUtils.escapeHTML(g.name)}</span>
-                                <span class="goods-price">${g.price.toFixed(2)} ${isLocalMode ? 'Local' : currentCountryData.currency}</span>
+                                <span class="goods-price">${g.price.toFixed(2)} ${displayCurrency}</span>
                                 <button class="goods-select-btn">Select</button>
                             </div>
                             <div class="goods-details">
@@ -1893,7 +1977,7 @@
         function showPopupAdvert() {
             if (!currentUser) return;
             const now = Date.now();
-            if (now - lastPopupAdShownAt < 8000) return; // throttle rapid re-triggers
+            if (now - lastPopupAdShownAt < 8000) return;
             const product = pickRandomProductForAdvert();
             if (!product) return;
             lastPopupAdShownAt = now;
@@ -1907,9 +1991,8 @@
             if (getEl('popupAdBusiness')) getEl('popupAdBusiness').textContent = `${product.businessIcon} ${product.businessName}`;
             if (getEl('popupAdDescription')) getEl('popupAdDescription').textContent = product.description;
             if (getEl('popupAdPrice')) getEl('popupAdPrice').textContent = product.price.toFixed(2);
-            if (getEl('popupAdCurrency')) getEl('popupAdCurrency').textContent = isLocalMode ? 'Local' : currentCountryData.currency;
+            if (getEl('popupAdCurrency')) getEl('popupAdCurrency').textContent = isLocalMode ? getUserCurrency() : currentCountryData.currency;
 
-            // Wire the select button
             const selectBtn = getEl('popupAdSelectBtn');
             if (selectBtn) {
                 selectBtn.onclick = function(e) {
@@ -1966,7 +2049,6 @@
 
         function startPopupAdTimer() {
             stopPopupAdTimer();
-            // First advert after 4s, then every 90 seconds
             popupAdTimeout = setTimeout(() => {
                 showPopupAdvert();
                 popupAdInterval = setInterval(() => { showPopupAdvert(); }, 90000);
@@ -2143,14 +2225,13 @@
         }
 
         // ================================================================
-        // RECIPIENT RESOLVER — single source of truth for who gets the money
+        // RECIPIENT RESOLVER
         // ================================================================
         function resolveRecipientInfo() {
             const digitsOnly = (s) => String(s == null ? '' : s).replace(/\D/g, '');
             let name = (getEl('agentName') ? getEl('agentName').value : '').trim();
             let phoneRaw = (getEl('agentPhone') ? getEl('agentPhone').value : '').trim();
 
-            // 1) If the on-screen phone is missing/too short, pull it from the selected agent record
             if (digitsOnly(phoneRaw).length < 6) {
                 const agentId = _selectedAgentId || selectedAgentId || (getEl('agentNameSelect') ? getEl('agentNameSelect').value : '');
                 const agent = agentId ? getAgents().find(a => a.id === agentId) : null;
@@ -2162,14 +2243,12 @@
                 }
             }
 
-            // 2) Fall back to the business/product chosen from the QUICK PAY strip
             if (!name && _selectedProductDetails && _selectedProductDetails.businessName) name = _selectedProductDetails.businessName;
             if (digitsOnly(phoneRaw).length < 6 && _selectedProductDetails && _selectedProductDetails.businessPhone) phoneRaw = _selectedProductDetails.businessPhone;
 
             return { name: name, phone: digitsOnly(phoneRaw), phoneDisplay: phoneRaw };
         }
 
-        // Truncate a recipient / agent name for the PIN-modal dial-pad preview.
         function truncateRecipientName(name, maxLen) {
             if (!name) return '';
             const clean = String(name).trim().replace(/\s+/g, ' ');
@@ -2178,33 +2257,22 @@
         }
 
         // ================================================================
-        // USSD BUILDER — New requested format (from user):
-        //   #144*2*5*1*L*yyyyyyyyyyyyyyyy*kkkkkkkkkkkk*zzzz*1*0000#
-        //   Where:
-        //     L              = country selector (e.g. 20 for Sierra Leone)
-        //     yyyyyyyyyyyyyyyy = Agent or business name
-        //     kkkkkkkkkkkkkk   = Agent or business mobile money number
-        //     zzzz             = amount
-        //     0000             = replaced by user's mobile money 4-digit PIN
+        // USSD BUILDER
         // ================================================================
         function buildUssdForProvider(provider, recipient, amount) {
             const cleanPhone = recipient.phone || '';
             const agentNameSafe = String(recipient.name || '').replace(/[*#]/g, '').trim();
             const amountInt = Math.round(Number(amount) || 0);
 
-            // Get country selector from the country dropdown (e.g. '20' for Sierra Leone)
             const countrySelect = getEl('countryCodeSelect');
-            let countrySelector = '20'; // default fallback
+            let countrySelector = '20';
             if (countrySelect && countrySelect.value) {
                 const parts = countrySelect.value.split('|');
                 if (parts[5] && parts[5].trim()) countrySelector = parts[5].trim();
             }
 
-            // NEW FORMAT: #144*2*5*1*L*<agentName>*<agentPhone>*<amount>*1*0000#
-            // The 0000 is the PIN placeholder → replaced with real PIN by confirmPin()
             let ussd = `#144*2*5*1*${countrySelector}*${agentNameSafe}*${cleanPhone}*${amountInt}*1*0000#`;
 
-            // Preserve original non–Sierra Leone formats for non-SL senders
             const senderCountry = String(currentUser?.country || '').trim().toLowerCase();
             const senderIsSierraLeone = (senderCountry === 'sierra leone' || senderCountry === 'sl');
             if (!senderIsSierraLeone) {
@@ -2258,7 +2326,6 @@
             }
             if (!pendingPinData) return;
 
-            // Replace the PIN placeholder (0000) with the user's real 4-digit PIN
             let ussdCode = pendingPinData.ussdCode.replace(/0000#/, `${pin}#`);
             getEl('pinModal').style.display = 'none';
 
@@ -2459,7 +2526,7 @@
         }
 
         // ================================================================
-        // CURRENCY CONVERTER — supported countries & currencies only
+        // CURRENCY CONVERTER
         // ================================================================
         function getSupportedCountryByName(name) {
             if (!name) return null;
@@ -2839,7 +2906,6 @@
             const cleanPhone = recipient.phone;
             const amountToSend = Math.round(mb4Amount);
 
-            // New format used for SL senders
             const senderCountry = String(currentUser?.country || '').trim().toLowerCase();
             const senderIsSL = (senderCountry === 'sierra leone' || senderCountry === 'sl');
             let ussdCode;
@@ -2851,7 +2917,6 @@
                     if (parts[5]) countryNum = String(parts[5]).trim();
                 }
                 const agentName = String(recipient.name || '').replace(/[*#]/g, '').trim();
-                // NEW FORMAT: #144*2*5*1*L*<agentName>*<agentPhone>*<amount>*1*0000#
                 ussdCode = `#144*2*5*1*${countryNum}*${agentName}*${cleanPhone}*${amountToSend}*1*0000#`;
             } else {
                 ussdCode = `#144*4*${cleanPhone}*${amountToSend}*0000#`;
@@ -3009,7 +3074,11 @@
                     if (allBiz.length > 0) { lastSelectedBusinessId = allBiz[0].id; updateEditBizStripButton(); }
                 }
             } catch (e) {}
-            if (currentUser) updateAgentDropdownForCountry();
+            if (currentUser) {
+                updateUserCountryData();
+                if (getEl('currencySymbol')) getEl('currencySymbol').innerText = isLocalMode ? getUserCurrency() : currentCountryData.currency;
+                updateAgentDropdownForCountry();
+            }
             const agents = getAgents();
             if (agents.length > 0 && !selectedAgentId) {
                 let filtered = agents;
@@ -3443,7 +3512,7 @@
                     ensureTransactionId();
                     const amount = parseFloat(getEl('amountInput')?.value) || 0;
                     const charge = amount * 0.04;
-                    const currency = isLocalMode ? "Local" : currentCountryData.currency;
+                    const currency = isLocalMode ? getUserCurrency() : currentCountryData.currency;
                     const txId = getEl('transactionId')?.value?.trim() || '';
                     const dateStr = getEl('currentDate')?.innerText + " " + getEl('currentTime')?.innerText;
                     ProviderTxIdManager.markAsUsed(providerTxId);
@@ -3476,12 +3545,6 @@
                     let ussdCode = '';
 
                     if (senderIsSierraLeone) {
-                        // NEW FORMAT: #144*2*5*1*L*yyyyyyyyyyyyyyyy*kkkkkkkkkkkk*zzzz*1*0000#
-                        //   L              = country selector (from dropdown)
-                        //   yyyyyyyyyyyyyyyy = Agent or business name
-                        //   kkkkkkkkkkkkkk   = Agent or business mobile money number
-                        //   zzzz             = amount
-                        //   0000             = replaced by user's 4-digit PIN
                         const countrySelect = getEl('countryCodeSelect');
                         let countrySelector = '20';
                         if (countrySelect && countrySelect.value) {
@@ -3661,7 +3724,6 @@
                 });
             });
 
-            // Close popup advert on overlay click
             const popupOverlay = getEl('popupAdOverlay');
             if (popupOverlay) {
                 popupOverlay.addEventListener('click', function(e) {
