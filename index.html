@@ -153,9 +153,6 @@
         .error-msg { color: #c0392b; margin: 2px 0; font-size: 0.75rem; }
         .success-msg { color: #27ae60; margin: 2px 0; font-size: 0.75rem; }
         .collateral-limit-indicator { font-size: 0.68rem; color: #1c6e8f; background: #e8f0f8; padding: 2px 10px; border-radius: 20px; display: inline-block; margin-left: 4px; border: 1px solid #c0d8e8; }
-        .emoji-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 3px; margin: 4px 0; }
-        .emoji-option { font-size: 1.5rem; text-align: center; cursor: pointer; padding: 2px; border-radius: 8px; border: 2px solid transparent; background: #f5f7fa; }
-        .emoji-option.selected { border-color: #f4a261; background: #fff0e0; }
         .group-member-list { max-height: 150px; overflow-y: auto; margin: 4px 0; border: 1px solid #e0e8f0; border-radius: 10px; padding: 3px 0; }
         .group-member-item { display: flex; align-items: center; padding: 3px 8px; gap: 5px; font-size: 0.75rem; }
         .group-member-item .member-avatar { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #d0dce8; font-size: 0.75rem; }
@@ -166,10 +163,6 @@
         .agent-form .input-group { margin-bottom: 0.35rem; }
         .agent-form .input-group label { font-size: 0.7rem; }
         .agent-form .input-group input, .agent-form .input-group select { height: 36px; font-size: 0.85rem; padding: 4px 10px; }
-        .ussd-result-box { display: none; margin-top: 3px; padding: 4px 10px; background: #f0f6fb; border-radius: 30px; border: 1px solid #2c7da0; align-items: center; gap: 4px; flex-wrap: wrap; }
-        .ussd-result-box .ussd-label { font-size: 0.7rem; color: #1c6e8f; }
-        .ussd-result-box .ussd-code-value { font-family: monospace; font-weight: 700; font-size: 0.8rem; flex: 1; }
-        .copy-ussd-btn { background: #2c7da0; border: none; color: white; padding: 2px 10px; border-radius: 20px; font-size: 0.65rem; cursor: pointer; }
         .delete-user-warning { font-size: 0.72rem; color: #e74c3c; background: #fde8e8; padding: 5px 12px; border-radius: 6px; margin-bottom: 6px; border-left: 3px solid #e74c3c; }
         .delete-user-name-highlight { font-weight: 700; color: #c0392b; }
         #receiptModal .modal-content { display: flex; flex-direction: column; max-height: 90vh; padding: 0; width: 95%; max-width: 420px; border-radius: 16px; overflow: hidden; background: #fcfcfc; }
@@ -305,7 +298,6 @@
         .authenticator-section .input-group input { height: 32px; font-size: 0.8rem; padding: 3px 8px; background: white; }
         .authenticator-section .input-group input.valid { border-color: #27ae60; background: #f0fff4; }
         .authenticator-section .input-group input.invalid { border-color: #e74c3c; background: #fff5f5; }
-        .authenticator-section .auth-hint { font-size: 0.58rem; color: #7f8c8d; margin-top: 1px; }
         .authenticator-section .auth-error-msg { font-size: 0.65rem; color: #e74c3c; margin-top: 2px; display: none; }
         .authenticator-section .auth-success-msg { font-size: 0.65rem; color: #27ae60; margin-top: 2px; display: none; }
         .auth-btn-green { background: #27ae60; color: white; border: none; padding: 4px 14px; border-radius: 30px; font-weight: 700; font-size: 0.7rem; cursor: pointer; height: 30px; display: inline-flex; align-items: center; gap: 3px; }
@@ -320,29 +312,20 @@
         .pin-recipient-row .pin-recipient-label { color: #7f8c8d; font-weight: 600; }
         .pin-recipient-row .pin-recipient-value { color: #0f2b3d; font-weight: 700; text-align: right; word-break: break-word; max-width: 62%; }
         .pin-warning { color: #c0392b; font-size: 0.7rem; margin-top: 4px; display: none; text-align: center; }
-
-        /* Transfer code field reveal animation */
-        @keyframes revealSlide {
-            from { opacity: 0; transform: translateY(-8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes revealSlide { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
         .transfer-code-reveal { animation: revealSlide 0.45s ease-out; }
 
-        /* ============================================================ */
-        /* POP-UP ADVERT — with cool animations                         */
-        /* ============================================================ */
+        /* POP-UP ADVERT */
         .popup-ad-overlay { position: fixed; inset: 0; background: rgba(10, 43, 60, 0.65); backdrop-filter: blur(6px); z-index: 1200; display: flex; align-items: center; justify-content: center; animation: overlayFadeIn 0.4s ease; }
         @keyframes overlayFadeIn { from { opacity: 0; } to { opacity: 1; } }
         .popup-ad-card { background: #fff; border-radius: 24px; max-width: 340px; width: 90%; overflow: hidden; box-shadow: 0 24px 48px -12px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.1); animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; }
         @keyframes popIn { 0% { transform: scale(0.7) translateY(30px); opacity: 0; } 60% { transform: scale(1.03) translateY(-4px); opacity: 1; } 100% { transform: scale(1) translateY(0); opacity: 1; } }
-
         .popup-ad-buy-tag { position: absolute; top: 12px; left: -6px; background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); color: #fff; font-weight: 900; font-size: 0.85rem; padding: 5px 16px 5px 14px; border-radius: 0 20px 20px 0; letter-spacing: 1px; text-transform: uppercase; z-index: 20; box-shadow: 0 4px 12px rgba(231, 76, 60, 0.5); animation: buyTagBounce 1.6s ease-in-out infinite; display: flex; align-items: center; gap: 4px; }
         .popup-ad-buy-tag::before { content: '🔥'; font-size: 0.9rem; }
         .popup-ad-buy-tag::after { content: '!!!'; font-weight: 900; margin-left: 1px; }
         @keyframes buyTagBounce { 0%, 100% { transform: translateY(0) scale(1); box-shadow: 0 4px 12px rgba(231, 76, 60, 0.5); } 50% { transform: translateY(-3px) scale(1.05); box-shadow: 0 8px 20px rgba(231, 76, 60, 0.7); } }
         .popup-ad-buy-tag::before { animation: flamePulse 0.8s ease-in-out infinite; }
         @keyframes flamePulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.25); } }
-
         .popup-ad-header { background: linear-gradient(135deg, #0a2b3c 0%, #1c4e6c 100%); padding: 16px 18px 12px; color: #fff; position: relative; text-align: center; overflow: hidden; }
         .popup-ad-header::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,215,0,0.15) 0%, transparent 70%); animation: shimmerRotate 8s linear infinite; }
         @keyframes shimmerRotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
@@ -350,31 +333,25 @@
         .popup-ad-close:hover { background: rgba(255,255,255,0.35); transform: rotate(90deg) scale(1.1); }
         .popup-ad-brand { font-size: 0.72rem; letter-spacing: 1px; opacity: 0.9; text-transform: uppercase; position: relative; z-index: 2; font-weight: 700; }
         .popup-ad-subtitle { font-size: 0.62rem; opacity: 0.7; margin-top: 2px; position: relative; z-index: 2; }
-
         .popup-ad-product { display: flex; flex-direction: column; align-items: center; padding: 22px 16px 14px; gap: 8px; background: linear-gradient(180deg, #f8fbfd 0%, #ffffff 100%); position: relative; }
-
         .popup-ad-icon { font-size: 4rem; filter: drop-shadow(0 6px 12px rgba(0,0,0,0.15)); animation: iconFloat 3s ease-in-out infinite, iconGlow 2.5s ease-in-out infinite alternate; position: relative; }
         .popup-ad-icon::after { content: ''; position: absolute; inset: -10px; border-radius: 50%; background: radial-gradient(circle, rgba(244,162,97,0.35) 0%, transparent 70%); z-index: -1; animation: glowPulse 2s ease-in-out infinite; }
         @keyframes iconFloat { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-8px) rotate(3deg); } }
         @keyframes iconGlow { 0% { filter: drop-shadow(0 6px 12px rgba(0,0,0,0.15)); } 100% { filter: drop-shadow(0 6px 18px rgba(244,162,97,0.5)); } }
         @keyframes glowPulse { 0%, 100% { transform: scale(1); opacity: 0.6; } 50% { transform: scale(1.15); opacity: 0.9; } }
-
         .popup-ad-name { font-size: 1.15rem; font-weight: 800; color: #0f2b3d; text-align: center; line-height: 1.3; animation: nameSlideIn 0.7s ease 0.15s both; position: relative; }
         .popup-ad-name::after { content: ''; display: block; width: 0; height: 2px; background: linear-gradient(90deg, #f4a261, #e74c3c); margin: 4px auto 0; border-radius: 2px; animation: underlineGrow 0.8s ease 0.5s forwards; }
         @keyframes nameSlideIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes underlineGrow { from { width: 0; } to { width: 60%; } }
-
         .popup-ad-business { font-size: 0.82rem; color: #2c7da0; font-weight: 600; display: flex; align-items: center; gap: 4px; animation: fadeSlideUp 0.6s ease 0.25s both; }
         .popup-ad-description { font-size: 0.76rem; color: #666; text-align: center; padding: 0 12px 4px; line-height: 1.5; animation: fadeSlideUp 0.6s ease 0.35s both; }
         @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-
         .popup-ad-price-row { display: flex; justify-content: center; align-items: baseline; gap: 6px; padding: 6px 0 12px; animation: priceBounce 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.4s both; }
         .popup-ad-price { font-size: 1.7rem; font-weight: 900; color: #f4a261; text-shadow: 0 2px 8px rgba(244,162,97,0.3); position: relative; }
         .popup-ad-price::before { content: '💰'; position: absolute; left: -22px; top: 50%; transform: translateY(-50%); font-size: 1rem; opacity: 0.8; animation: coinFlip 2s ease-in-out infinite; }
         @keyframes priceBounce { 0% { opacity: 0; transform: scale(0.5) translateY(20px); } 60% { opacity: 1; transform: scale(1.15) translateY(-4px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
         @keyframes coinFlip { 0%, 100% { transform: translateY(-50%) rotateY(0deg); } 50% { transform: translateY(-50%) rotateY(180deg); } }
         .popup-ad-currency { font-size: 0.85rem; color: #7f8c8d; font-weight: 700; letter-spacing: 0.5px; animation: fadeSlideUp 0.6s ease 0.55s both; }
-
         .popup-ad-cta { display: flex; gap: 8px; padding: 0 16px 18px; animation: fadeSlideUp 0.6s ease 0.6s both; }
         .popup-ad-btn { flex: 1; border: none; border-radius: 30px; padding: 11px 16px; font-weight: 700; font-size: 0.82rem; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; text-align: center; position: relative; overflow: hidden; }
         .popup-ad-btn::before { content: ''; position: absolute; top: 50%; left: 50%; width: 0; height: 0; border-radius: 50%; background: rgba(255,255,255,0.35); transform: translate(-50%, -50%); transition: width 0.5s ease, height 0.5s ease; }
@@ -385,15 +362,12 @@
         @keyframes ctaPulse { 0%, 100% { box-shadow: 0 4px 14px rgba(39, 174, 96, 0.4); } 50% { box-shadow: 0 6px 22px rgba(39, 174, 96, 0.7); } }
         .popup-ad-btn-secondary { background: #f0f4f8; color: #1c6e8f; }
         .popup-ad-btn-secondary:hover { background: #e2edf7; }
-
         .popup-ad-timer { font-size: 0.6rem; color: #95a5a6; text-align: center; padding: 0 0 12px; animation: fadeSlideUp 0.6s ease 0.7s both; }
         .popup-ad-timer span { font-weight: 700; color: #e74c3c; }
-
         .popup-ad-card::before, .popup-ad-card::after { content: '✨'; position: absolute; font-size: 1.2rem; animation: sparkle 2.5s ease-in-out infinite; z-index: 5; pointer-events: none; }
         .popup-ad-card::before { top: 8px; right: 55px; animation-delay: 0s; }
         .popup-ad-card::after { bottom: 55px; left: 8px; animation-delay: 1.2s; }
         @keyframes sparkle { 0%, 100% { opacity: 0; transform: scale(0.5) rotate(0deg); } 50% { opacity: 1; transform: scale(1.2) rotate(180deg); } }
-
         @media (max-width: 600px) {
             .double-row { grid-template-columns: 1fr; gap: 0; }
             .brand-text { font-size: 1.3rem; }
@@ -493,7 +467,7 @@
                     <div class="city-input-row">
                         <select id="senderCitySelect">
                             <option value="">Select city...</option>
-                            <option value="Freetown">Freetown</option><option value="Abuja">Abuja</option><option value="Accra">Accra</option><option value="Nairobi">Nairobi</option><option value="Monrovia">Monrovia</option><option value="Dakar">Dakar</option><option value="Conakry">Conakry</option><option value="Bamako">Bamako</option><option value="Yamoussoukro">Yamoussoukro</option><option value="Niamey">Niamey</option><option value="Porto-Novo">Porto-Novo</option><option value="Bissau">Bissau</option><option value="Banjul">Banjul</option><option value="Lomé">Lomé</option><option value="Bangui">Bangui</option><option value="Addis Ababa">Addis Ababa</option><option value="Libreville">Libreville</option><option value="Antananarivo">Antananarivo</option><option value="Rabat">Rabat</option><option value="Kigali">Kigali</option><option value="Kampala">Kampala</option><option value="Kinshasa">Kinshasa</option><option value="Ouagadougou">Ouagadougou</option>
+                            <option value="Freetown">Freetown</option><option value="Abuja">Abuja</option><option value="Accra">Accra</option><option value="Nairobi">Nairobi</option><option value="Monrovia">Monrovia</option><option value="Dakar">Dakar</option><option value="Conakry">Conakry</option>
                         </select>
                         <span class="or-text">OR</span>
                         <input type="text" id="senderCityOther" placeholder="Other city" />
@@ -521,8 +495,8 @@
                     <span style="font-size:0.7rem; color:#1c6e8f;" data-i18n="agent_select_hint">📋 Select agent or <strong>Add Client</strong></span>
                 </div>
                 <div class="mode-row">
-                    <button class="btn" id="intlToggleBtn" data-i18n="international">Intl</button>
-                    <button class="btn add-client-btn-header" id="addClientBtnHeader" data-i18n="add_client">➕ Client</button>
+                    <button type="button" class="btn" id="intlToggleBtn" data-i18n="international">Intl</button>
+                    <button type="button" class="btn add-client-btn-header" id="addClientBtnHeader" data-i18n="add_client">➕ Client</button>
                 </div>
                 <div class="country-selector-wrapper" id="countryWrapper" style="display:none;">
                     <div class="input-group">
@@ -576,14 +550,14 @@
                 </div>
                 <div class="input-group" id="mainTransferCodeGroup" style="display:none;">
                     <label for="mainTransferCode" data-i18n="transfer_code_label">Transfer Code *</label>
-                    <input type="text" id="mainTransferCode" placeholder="Enter the code from your provider" maxlength="14" />
-                    <div style="font-size:0.62rem; color:#666; margin-top:1px;">📱 Enter the code provided by your mobile money provider</div>
+                    <input type="text" id="mainTransferCode" data-i18n-placeholder="transfer_code_placeholder" placeholder="Enter the code from your provider" maxlength="14" />
+                    <div style="font-size:0.62rem; color:#666; margin-top:1px;" data-i18n="transfer_code_hint">📱 Enter the code provided by your mobile money provider</div>
                     <div id="mainTransferCodeError" class="error-msg" style="display:none;"></div>
                 </div>
                 <button type="submit" class="btn-submit" id="submitBtn" data-i18n="submit">Submit</button>
                 <div class="business-strip">
                     <div class="business-title">
-                        <span>⭐ QUICK PAY ⭐</span>
+                        <span data-i18n="quick_pay">⭐ QUICK PAY ⭐</span>
                         <button class="add-biz-btn" id="addBizBtn" type="button"><span class="icon">➕</span> Add Biz</button>
                         <button class="edit-biz-strip-btn" id="editBizStripBtn" type="button"
                                 onclick="window.editBusinessFromStrip &amp;&amp; window.editBusinessFromStrip(event)">
@@ -614,14 +588,14 @@
         </div>
     </div>
 
-    <!-- Pop-up Advert Modal -->
+    <!-- Pop-up Advert Modal with translation -->
     <div id="popupAdOverlay" class="popup-ad-overlay" style="display:none;">
         <div class="popup-ad-card" id="popupAdCard">
-            <div class="popup-ad-buy-tag">BUY</div>
+            <div class="popup-ad-buy-tag" data-i18n="popup_buy_tag">BUY</div>
             <div class="popup-ad-header">
                 <button class="popup-ad-close" id="popupAdCloseBtn">✕</button>
-                <div class="popup-ad-brand">⭐ AfriPay Quick Pay</div>
-                <div class="popup-ad-subtitle">Sponsored Product</div>
+                <div class="popup-ad-brand" data-i18n="popup_brand">⭐ AfriPay Quick Pay</div>
+                <div class="popup-ad-subtitle" data-i18n="popup_subtitle">Sponsored Product</div>
             </div>
             <div class="popup-ad-product">
                 <div class="popup-ad-icon" id="popupAdIcon">📱</div>
@@ -634,10 +608,10 @@
                 </div>
             </div>
             <div class="popup-ad-cta">
-                <button class="popup-ad-btn popup-ad-btn-primary" id="popupAdSelectBtn">🛒 Select Product</button>
-                <button class="popup-ad-btn popup-ad-btn-secondary" id="popupAdDismissBtn">Dismiss</button>
+                <button class="popup-ad-btn popup-ad-btn-primary" id="popupAdSelectBtn" data-i18n="popup_select">🛒 Select Product</button>
+                <button class="popup-ad-btn popup-ad-btn-secondary" id="popupAdDismissBtn" data-i18n="popup_dismiss">Dismiss</button>
             </div>
-            <div class="popup-ad-timer" id="popupAdTimer">Auto‑closes in <span>15s</span></div>
+            <div class="popup-ad-timer" id="popupAdTimer"><span data-i18n="popup_auto_close">Auto‑closes in</span> <span id="popupAdTimerSeconds">15s</span></div>
         </div>
     </div>
 
@@ -742,7 +716,7 @@
                 <label for="editCollateralLimit">💳 Collateral *</label>
                 <select id="editCollateralLimit">
                     <option value="0" selected>000</option>
-                    <option value="200">200</option><option value="300">300</option><option value="400">400</option><option value="500">500</option><option value="600">600</option><option value="700">700</option><option value="800">800</option><option value="900">900</option><option value="1000">1,000</option><option value="1500">1,500</option><option value="2000">2,000</option><option value="2500">2,500</option><option value="3000">3,000</option><option value="3500">3,500</option><option value="4000">4,000</option><option value="4500">4,500</option><option value="5000">5,000</option><option value="5500">5,500</option><option value="6000">6,000</option><option value="6500">6,500</option><option value="7000">7,000</option><option value="7500">7,500</option><option value="8000">8,000</option><option value="8500">8,500</option><option value="9000">9,000</option><option value="9500">9,500</option><option value="10000">10,000</option>
+                    <option value="200">200</option><option value="500">500</option><option value="1000">1,000</option><option value="5000">5,000</option><option value="10000">10,000</option>
                 </select>
                 <div style="font-size:0.62rem; color:#666; margin-top:1px;">Select a value to update the agent's transaction limit</div>
             </div>
@@ -860,19 +834,9 @@
         <div class="converter-header"><button class="converter-close-x" id="converterCloseXBtn">✕</button><h3>💱 Currency Converter</h3></div>
         <div class="converter-body">
             <div class="user-info-badge">👤 Country: <strong id="userCountryDisplay">—</strong> · 🌍 Currency: <strong id="userCurrencyDisplay">SLL</strong></div>
-
-            <div class="input-group">
-                <label>From Country / Currency</label>
-                <div class="from-currency-select"><span class="flag-sm" id="convFromFlag">🇸🇱</span><select id="convFromCurrency"></select></div>
-            </div>
-
+            <div class="input-group"><label>From Country / Currency</label><div class="from-currency-select"><span class="flag-sm" id="convFromFlag">🇸🇱</span><select id="convFromCurrency"></select></div></div>
             <div class="input-group"><label>💰 Amount *</label><input type="number" id="convAmount" step="any" value="100" /></div>
-
-            <div class="input-group">
-                <label>🌍 To Country / Currency</label>
-                <div class="country-selector-sm"><span class="flag-sm" id="convFlagEmoji">🇬🇳</span><select id="convCountrySelect"></select></div>
-            </div>
-
+            <div class="input-group"><label>🌍 To Country / Currency</label><div class="country-selector-sm"><span class="flag-sm" id="convFlagEmoji">🇬🇳</span><select id="convCountrySelect"></select></div></div>
             <div class="converter-results">
                 <div class="conv-row"><span class="label">💰 Base:</span><span class="value" id="convBaseAmount">0.00</span></div>
                 <div class="conv-row"><span class="label">📊 Fee (4%):</span><span class="value" id="convCharge">0.00</span></div>
@@ -890,9 +854,7 @@
         <h3 id="addBizTitle">🏢 Add Your Business</h3>
         <div id="addBizError" class="error-msg"></div>
         <div id="addBizSuccess" class="success-msg"></div>
-
         <input type="hidden" id="bizEditingId" value="" />
-
         <div class="input-group"><label>Business Name *</label><input type="text" id="bizName" /></div>
         <div class="input-group"><label>Contact Phone *</label><input type="tel" id="bizContact" /></div>
         <div class="input-group"><label>Mobile Money Phone *</label><input type="tel" id="bizMobileMoney" /></div>
@@ -952,9 +914,9 @@
     <input type="file" id="avatarUploadInput" accept="image/*" class="hidden-input" />
 
     <script>
-        // ================================================================
+        // ============================================================
         // SECURITY UTILS
-        // ================================================================
+        // ============================================================
         const SecurityUtils = {
             escapeHTML: function(str) {
                 if (!str) return '';
@@ -979,19 +941,132 @@
             }
         };
 
-        // ================================================================
+        // ============================================================
         // TRANSLATIONS
-        // ================================================================
+        // ============================================================
         const TRANSLATIONS = {
-            en: { login:'Login',register:'Register',logout:'Logout',online:'Online',location_label:'📍',map_btn:'🗺️',map_title:'📍 Location',sender_title:'👤 SENDER',full_name:'Name *',phone:'Phone *',address:'Address',city:'City *',amount:'Amount *',add_client:'➕ Client',international:'Intl',close:'Close',cancel:'Cancel',save:'Save',submit:'Submit',select_agent_placeholder:'Select Agent',no_agents:'No agents',about:'About',dev:'Dev',contact:'Contact',subscribe:'Subscribe',whatsapp:'WA',facebook:'FB',instagram:'IG',youtube:'YT',webine:'WB',how_to:'📖 How',currency_converter:'💱 Convert',generate_password:'🔑 Gen',generate_collateral:'USSD',register_agent:'🏢 Agent',agent_reg_title:'🏢 Agent Reg',register_agent_submit:'Register',save_changes:'Save',edit_agent_title:'✏️ Edit',admin_name:'Admin Name *',admin_password:'Password *',agent_business_name:'Business *',agent_address:'Address *',agent_city:'City *',agent_reg_number:'Reg Number *',agent_business_type:'Type *',agent_owner_name:'Owner *',agent_id_type:'ID Type *',agent_id_number:'ID Number *',agent_id_image:'ID Image *',agent_logo:'Logo *',agent_mobile_money:'Mobile Money *',collateral_limit_label:'💳 Collateral *',agent_country_code:'Country Code',agent_password:'Password *',agent_pin_label:'5‑Digit PIN *',collateral_label:'🔒 Collateral',view_agreement:'📜 Agreement',provider_tx_section:'🔐 Provider TX ID',provider_tx_id_label:'Provider TX ID *',transfer_code_label:'Transfer Code *',generate_pin:'🔑 Gen PIN',agreement_title:'📜 AGREEMENT',agree_sign:'✋ Agree',report:'📋 Report',client_name:'Name *',client_phone:'Phone *',group_name:'Name *',select_members:'Members (max 25)',create:'Create',select_provider:'💸 Select Provider',receipt_sub:'RECEIPT',receipt_thanks:'✨ Thank you!',receipt_powered:'WeBine Financial',send_receipt_to:'📤 Send:',edit_account_title:'✏️ Edit Account',agent_auth_title:'🔐 Auth',confirm:'✅ Confirm',agent_report_title:'📋 Report',copy_ussd:'📋 Copy USSD',admin_verify_title:'🔐 Admin Verify',confirm_delete:'✅ Delete',enter_pin_title:'🔐 PIN',pin_4_digit:'4-Digit PIN *',confirm_dial:'✅ Dial',user_info_badge:'Country:',from_currency_label:'From',amount_to_send:'💰 Amount *',recipient_country:'🌍 To',base_amount:'💰 Base:',transfer_charge:'📊 Fee (4%):',gst:'🏛️ GST (',total_debit:'💵 Total:',currency_label:'🌍 Currency:',mm_operator:'💸 Operator',tx_id_label:'🔖 TX ID',tx_id:'TX ID',gen:'Gen',copy:'Copy',quick_pay:'⭐ QUICK PAY ⭐',total_deductions:'📋 Deductions:',recipient_receives:'🎯 Recipient:',exchange_rate:'🔄 Rate:',copy_result:'📋 Copy',agent_select_hint:'📋 Select agent or <strong>Add Client</strong>',change_avatar:'📷',location:'Country',subscribe_title:'📧 Subscribe',login_title:'🔐 Login',register_title:'📝 Register',choose_icon:'Icon:',upload_image:'Upload:',generate_ussd:'📱 USSD',about_body:'Cross-border mobile money transfers.',dev_body:'Fintech developer bridging African payments.',contact_body:'<strong>Phone:</strong><br>+232-76-436-811',select_type:'Action for',edit_auth_hint:'✅ Correct credentials – editing unlocked',sender_currency_label:'💰 Sent (Sender)',recipient_currency_label:'🎯 Received (Recipient)',receipt_tx_id:'TX ID',receipt_date:'Date',receipt_type:'Type',receipt_sender:'Sender',receipt_agent:'👤 Agent',receipt_client:'👥 Client',receipt_provider_tx_id:'🔐 Provider TX ID',receipt_transfer_code:'Transfer Code',receipt_product:'📦 Product',receipt_quantity:'📦 Quantity',receipt_unit_price:'💰 Unit Price',receipt_quality:'⭐ Quality',receipt_product_total:'💵 Product Total',receipt_delivery:'🚚 Delivery',receipt_base:'Base',receipt_fee:'Fee',receipt_gst:'GST',receipt_total:'Total',receipt_recipient_label:'🎯 Recipient Amount',receipt_sender_label:'💰 Sender Amount',receipt_share_client_wa:'📱 Client',receipt_share_agent_wa:'📱 Agent',receipt_share_client_sms:'✉️ Client',receipt_share_agent_sms:'✉️ Agent' },
-            fr: { login:'Connexion',register:"S'inscrire",logout:'Déconnexion',online:'En ligne',map_title:'📍 Emplacement',sender_title:'👤 EXPÉDITEUR',full_name:'Nom *',phone:'Téléphone *',address:'Adresse',city:'Ville *',amount:'Montant *',add_client:'➕ Client',close:'Fermer',cancel:'Annuler',save:'Enregistrer',submit:'Soumettre',select_agent_placeholder:'Sélectionner un agent',about:'À propos',dev:'Développeur',contact:'Contact',whatsapp:'WA',how_to:'📖 Comment',currency_converter:'💱 Convertir',agent_business_name:'Entreprise *',agent_address:'Adresse *',agent_city:'Ville *',agent_owner_name:'Propriétaire *',agent_password:'Mot de passe *',agent_pin_label:'PIN 5 chiffres *',collateral_limit_label:'💳 Garantie *',agent_mobile_money:'Mobile Money *',edit_agent_title:'✏️ Modifier',receipt_tx_id:'ID TX',receipt_sender:'Expéditeur',receipt_agent:'👤 Agent',receipt_total:'Total',agent_auth_title:'🔐 Authentification',confirm:'✅ Confirmer',report:'📋 Rapport',copy_ussd:'📋 Copier USSD',receipt_thanks:'✨ Merci !',receipt_powered:'WeBine Financial' },
-            ar: { login:'تسجيل الدخول',register:'تسجيل',logout:'تسجيل الخروج',online:'متصل',map_title:'📍 الموقع',sender_title:'👤 المرسل',full_name:'الاسم *',phone:'الهاتف *',address:'العنوان',city:'المدينة *',amount:'المبلغ *',add_client:'➕ عميل',close:'إغلاق',cancel:'إلغاء',save:'حفظ',submit:'إرسال',select_agent_placeholder:'اختر وكيلاً',about:'حول',dev:'مطور',contact:'اتصال',whatsapp:'WA',how_to:'📖 كيفية',currency_converter:'💱 تحويل',agent_business_name:'العمل *',agent_address:'العنوان *',agent_city:'المدينة *',agent_owner_name:'المالك *',agent_password:'كلمة المرور *',agent_pin_label:'PIN 5 أرقام *',collateral_limit_label:'💳 الضمان *',agent_mobile_money:'المحمول *',edit_agent_title:'✏️ تعديل',receipt_tx_id:'معرف TX',receipt_sender:'المرسل',receipt_agent:'👤 الوكيل',receipt_total:'الإجمالي',agent_auth_title:'🔐 مصادقة',confirm:'✅ تأكيد',report:'📋 تقرير',copy_ussd:'📋 نسخ USSD',receipt_thanks:'✨ شكراً!',receipt_powered:'WeBine Financial' },
-            es: { login:'Iniciar sesión',register:'Registrarse',logout:'Cerrar sesión',online:'En línea',map_title:'📍 Ubicación',sender_title:'👤 REMITENTE',full_name:'Nombre *',phone:'Teléfono *',address:'Dirección',city:'Ciudad *',amount:'Cantidad *',add_client:'➕ Cliente',close:'Cerrar',cancel:'Cancelar',save:'Guardar',submit:'Enviar',select_agent_placeholder:'Seleccionar agente',about:'Acerca de',dev:'Desarrollador',contact:'Contacto',whatsapp:'WA',how_to:'📖 Cómo',currency_converter:'💱 Convertir',agent_business_name:'Negocio *',agent_address:'Dirección *',agent_city:'Ciudad *',agent_owner_name:'Propietario *',agent_password:'Contraseña *',agent_pin_label:'PIN 5 dígitos *',collateral_limit_label:'💳 Colateral *',agent_mobile_money:'Mobile Money *',edit_agent_title:'✏️ Editar',receipt_tx_id:'ID TX',receipt_sender:'Remitente',receipt_agent:'👤 Agente',receipt_total:'Total',agent_auth_title:'🔐 Autenticación',confirm:'✅ Confirmar',report:'📋 Informe',copy_ussd:'📋 Copiar USSD',receipt_thanks:'✨ ¡Gracias!',receipt_powered:'WeBine Financial' }
+            en: {
+                login:'Login',register:'Register',logout:'Logout',online:'Online',location_label:'📍',map_btn:'🗺️',map_title:'📍 Location',
+                sender_title:'👤 SENDER',full_name:'Name *',phone:'Phone *',address:'Address',city:'City *',amount:'Amount *',
+                add_client:'➕ Client',international:'Intl',close:'Close',cancel:'Cancel',save:'Save',submit:'Submit',
+                select_agent_placeholder:'Select Agent',no_agents:'No agents',about:'About',dev:'Dev',contact:'Contact',subscribe:'Subscribe',
+                whatsapp:'WA',facebook:'FB',instagram:'IG',youtube:'YT',webine:'WB',how_to:'📖 How',currency_converter:'💱 Convert',
+                generate_password:'🔑 Gen',generate_collateral:'USSD',register_agent:'🏢 Agent',agent_reg_title:'🏢 Agent Reg',
+                register_agent_submit:'Register',save_changes:'Save',edit_agent_title:'✏️ Edit',admin_name:'Admin Name *',
+                admin_password:'Password *',agent_business_name:'Business *',agent_address:'Address *',agent_city:'City *',
+                agent_reg_number:'Reg Number *',agent_business_type:'Type *',agent_owner_name:'Owner *',agent_id_type:'ID Type *',
+                agent_id_number:'ID Number *',agent_id_image:'ID Image *',agent_logo:'Logo *',agent_mobile_money:'Mobile Money *',
+                collateral_limit_label:'💳 Collateral *',agent_country_code:'Country Code',agent_password:'Password *',
+                agent_pin_label:'5‑Digit PIN *',collateral_label:'🔒 Collateral',view_agreement:'📜 Agreement',
+                provider_tx_section:'🔐 Provider TX ID',provider_tx_id_label:'Provider TX ID *',transfer_code_label:'Transfer Code *',
+                transfer_code_placeholder:'Enter the code from your provider',
+                transfer_code_hint:'📱 Enter the code provided by your mobile money provider',
+                generate_pin:'🔑 Gen PIN',agreement_title:'📜 AGREEMENT',agree_sign:'✋ Agree',report:'📋 Report',
+                client_name:'Name *',client_phone:'Phone *',group_name:'Name *',select_members:'Members (max 25)',create:'Create',
+                select_provider:'💸 Select Provider',receipt_sub:'RECEIPT',receipt_thanks:'✨ Thank you!',receipt_powered:'WeBine Financial',
+                send_receipt_to:'📤 Send:',edit_account_title:'✏️ Edit Account',agent_auth_title:'🔐 Auth',confirm:'✅ Confirm',
+                agent_report_title:'📋 Report',copy_ussd:'📋 Copy USSD',admin_verify_title:'🔐 Admin Verify',confirm_delete:'✅ Delete',
+                enter_pin_title:'🔐 PIN',pin_4_digit:'4-Digit PIN *',confirm_dial:'✅ Dial',user_info_badge:'Country:',
+                from_currency_label:'From',amount_to_send:'💰 Amount *',recipient_country:'🌍 To',base_amount:'💰 Base:',
+                transfer_charge:'📊 Fee (4%):',gst:'🏛️ GST (',total_debit:'💵 Total:',currency_label:'🌍 Currency:',
+                mm_operator:'💸 Operator',tx_id_label:'🔖 TX ID',tx_id:'TX ID',gen:'Gen',copy:'Copy',quick_pay:'⭐ QUICK PAY ⭐',
+                total_deductions:'📋 Deductions:',recipient_receives:'🎯 Recipient:',exchange_rate:'🔄 Rate:',copy_result:'📋 Copy',
+                agent_select_hint:'📋 Select agent or Add Client',change_avatar:'📷',location:'Country',
+                subscribe_title:'📧 Subscribe',login_title:'🔐 Login',register_title:'📝 Register',choose_icon:'Icon:',
+                upload_image:'Upload:',generate_ussd:'📱 USSD',about_body:'Cross-border mobile money transfers.',
+                dev_body:'Fintech developer bridging African payments.',contact_body:'<strong>Phone:</strong><br>+232-76-436-811',
+                select_type:'Action for',edit_auth_hint:'✅ Correct credentials – editing unlocked',
+                sender_currency_label:'💰 Sent (Sender)',recipient_currency_label:'🎯 Received (Recipient)',
+                receipt_tx_id:'TX ID',receipt_date:'Date',receipt_type:'Type',receipt_sender:'Sender',receipt_agent:'👤 Agent',
+                receipt_client:'👥 Client',receipt_provider_tx_id:'🔐 Provider TX ID',receipt_transfer_code:'Transfer Code',
+                receipt_product:'📦 Product',receipt_quantity:'📦 Quantity',receipt_unit_price:'💰 Unit Price',
+                receipt_quality:'⭐ Quality',receipt_product_total:'💵 Product Total',receipt_delivery:'🚚 Delivery',
+                receipt_base:'Base',receipt_fee:'Fee',receipt_gst:'GST',receipt_total:'Total',
+                receipt_recipient_label:'🎯 Recipient Amount',receipt_sender_label:'💰 Sender Amount',
+                receipt_share_client_wa:'📱 Client',receipt_share_agent_wa:'📱 Agent',
+                receipt_share_client_sms:'✉️ Client',receipt_share_agent_sms:'✉️ Agent',
+                popup_buy_tag:'BUY',
+                popup_brand:'⭐ AfriPay Quick Pay',
+                popup_subtitle:'Sponsored Product',
+                popup_select:'🛒 Select Product',
+                popup_dismiss:'Dismiss',
+                popup_auto_close:'Auto‑closes in',
+                popup_quality_prefix:'Quality:',
+                popup_stock_prefix:'in stock'
+            },
+            fr: {
+                login:'Connexion',register:"S'inscrire",logout:'Déconnexion',online:'En ligne',map_title:'📍 Emplacement',
+                sender_title:'👤 EXPÉDITEUR',full_name:'Nom *',phone:'Téléphone *',address:'Adresse',city:'Ville *',amount:'Montant *',
+                add_client:'➕ Client',close:'Fermer',cancel:'Annuler',save:'Enregistrer',submit:'Soumettre',
+                select_agent_placeholder:'Sélectionner un agent',about:'À propos',dev:'Développeur',contact:'Contact',
+                whatsapp:'WA',how_to:'📖 Comment',currency_converter:'💱 Convertir',agent_business_name:'Entreprise *',
+                agent_address:'Adresse *',agent_city:'Ville *',agent_owner_name:'Propriétaire *',agent_password:'Mot de passe *',
+                agent_pin_label:'PIN 5 chiffres *',collateral_limit_label:'💳 Garantie *',agent_mobile_money:'Mobile Money *',
+                edit_agent_title:'✏️ Modifier',receipt_tx_id:'ID TX',receipt_sender:'Expéditeur',receipt_agent:'👤 Agent',
+                receipt_total:'Total',agent_auth_title:'🔐 Authentification',confirm:'✅ Confirmer',report:'📋 Rapport',
+                copy_ussd:'📋 Copier USSD',receipt_thanks:'✨ Merci !',receipt_powered:'WeBine Financial',
+                transfer_code_label:'Code de transfert *',
+                transfer_code_placeholder:'Entrez le code de votre fournisseur',
+                transfer_code_hint:'📱 Entrez le code fourni par votre opérateur mobile money',
+                popup_buy_tag:'ACHETER',
+                popup_brand:'⭐ AfriPay Paiement Rapide',
+                popup_subtitle:'Produit Sponsorisé',
+                popup_select:'🛒 Sélectionner le produit',
+                popup_dismiss:'Ignorer',
+                popup_auto_close:'Fermeture auto dans',
+                popup_quality_prefix:'Qualité:',
+                popup_stock_prefix:'en stock'
+            },
+            ar: {
+                login:'تسجيل الدخول',register:'تسجيل',logout:'تسجيل الخروج',online:'متصل',map_title:'📍 الموقع',
+                sender_title:'👤 المرسل',full_name:'الاسم *',phone:'الهاتف *',address:'العنوان',city:'المدينة *',amount:'المبلغ *',
+                add_client:'➕ عميل',close:'إغلاق',cancel:'إلغاء',save:'حفظ',submit:'إرسال',select_agent_placeholder:'اختر وكيلاً',
+                about:'حول',dev:'مطور',contact:'اتصال',whatsapp:'WA',how_to:'📖 كيفية',currency_converter:'💱 تحويل',
+                agent_business_name:'العمل *',agent_address:'العنوان *',agent_city:'المدينة *',agent_owner_name:'المالك *',
+                agent_password:'كلمة المرور *',agent_pin_label:'PIN 5 أرقام *',collateral_limit_label:'💳 الضمان *',
+                agent_mobile_money:'المحمول *',edit_agent_title:'✏️ تعديل',receipt_tx_id:'معرف TX',receipt_sender:'المرسل',
+                receipt_agent:'👤 الوكيل',receipt_total:'الإجمالي',agent_auth_title:'🔐 مصادقة',confirm:'✅ تأكيد',
+                report:'📋 تقرير',copy_ussd:'📋 نسخ USSD',receipt_thanks:'✨ شكراً!',receipt_powered:'WeBine Financial',
+                transfer_code_label:'رمز التحويل *',
+                transfer_code_placeholder:'أدخل الرمز من مزودك',
+                transfer_code_hint:'📱 أدخل الرمز المقدم من مزود المحفظة الإلكترونية',
+                popup_buy_tag:'شراء',
+                popup_brand:'⭐ AfriPay الدفع السريع',
+                popup_subtitle:'منتج مدعوم',
+                popup_select:'🛒 اختر المنتج',
+                popup_dismiss:'تجاهل',
+                popup_auto_close:'يغلق تلقائياً خلال',
+                popup_quality_prefix:'الجودة:',
+                popup_stock_prefix:'في المخزون'
+            },
+            es: {
+                login:'Iniciar sesión',register:'Registrarse',logout:'Cerrar sesión',online:'En línea',map_title:'📍 Ubicación',
+                sender_title:'👤 REMITENTE',full_name:'Nombre *',phone:'Teléfono *',address:'Dirección',city:'Ciudad *',amount:'Cantidad *',
+                add_client:'➕ Cliente',close:'Cerrar',cancel:'Cancelar',save:'Guardar',submit:'Enviar',
+                select_agent_placeholder:'Seleccionar agente',about:'Acerca de',dev:'Desarrollador',contact:'Contacto',
+                whatsapp:'WA',how_to:'📖 Cómo',currency_converter:'💱 Convertir',agent_business_name:'Negocio *',
+                agent_address:'Dirección *',agent_city:'Ciudad *',agent_owner_name:'Propietario *',agent_password:'Contraseña *',
+                agent_pin_label:'PIN 5 dígitos *',collateral_limit_label:'💳 Colateral *',agent_mobile_money:'Mobile Money *',
+                edit_agent_title:'✏️ Editar',receipt_tx_id:'ID TX',receipt_sender:'Remitente',receipt_agent:'👤 Agente',
+                receipt_total:'Total',agent_auth_title:'🔐 Autenticación',confirm:'✅ Confirmar',report:'📋 Informe',
+                copy_ussd:'📋 Copiar USSD',receipt_thanks:'✨ ¡Gracias!',receipt_powered:'WeBine Financial',
+                transfer_code_label:'Código de transferencia *',
+                transfer_code_placeholder:'Ingrese el código de su proveedor',
+                transfer_code_hint:'📱 Ingrese el código proporcionado por su operador de dinero móvil',
+                popup_buy_tag:'COMPRAR',
+                popup_brand:'⭐ AfriPay Pago Rápido',
+                popup_subtitle:'Producto Patrocinado',
+                popup_select:'🛒 Seleccionar producto',
+                popup_dismiss:'Descartar',
+                popup_auto_close:'Se cierra en',
+                popup_quality_prefix:'Calidad:',
+                popup_stock_prefix:'en stock'
+            }
         };
 
-        // ================================================================
+        // ============================================================
         // STATE
-        // ================================================================
+        // ============================================================
         let currentLang = 'en';
         let currentUser = null;
         let selectedAgentId = null;
@@ -1022,14 +1097,13 @@
         let isAuthenticated = false;
         let authProviderTxId = '';
         let authTransferCode = '';
+        let currentPopupProduct = null;
 
         const DEFAULT_EDIT_BIZ_PASSWORD = 'EDITBIZ';
         const DEFAULT_EDIT_BIZ_PIN = '12345';
         let pendingEditBizId = null;
 
-        // ================================================================
         // POP-UP ADVERT SYSTEM
-        // ================================================================
         let popupAdInterval = null;
         let popupAdTimeout = null;
         let popupAdCountdownInterval = null;
@@ -1037,12 +1111,9 @@
         let lastPopupAdShownAt = 0;
         let popupAdShowCount = 0;
 
-        // ================================================================
+        // ============================================================
         // REVEAL TRANSFER CODE FIELD
-        // When a valid Provider TX ID is entered, reveal the Transfer
-        // Code input — but leave it EMPTY so the user can type the
-        // code provided by their mobile money provider.
-        // ================================================================
+        // ============================================================
         function revealTransferCodeField() {
             const providerTxId = getEl('providerTxId')?.value?.trim() || '';
             const errorEl = getEl('providerTxIdError');
@@ -1050,11 +1121,9 @@
             const transferInput = getEl('mainTransferCode');
             const transferError = getEl('mainTransferCodeError');
 
-            // Reset errors
             if (errorEl) { errorEl.style.display = 'none'; errorEl.textContent = ''; }
             if (transferError) { transferError.style.display = 'none'; transferError.textContent = ''; }
 
-            // Empty provider tx id — hide transfer code field
             if (!providerTxId) {
                 if (transferGroup) transferGroup.style.display = 'none';
                 if (transferInput) transferInput.value = '';
@@ -1062,7 +1131,6 @@
                 return;
             }
 
-            // Validate provider tx id
             const validation = ProviderTxIdManager.validate(providerTxId);
             if (!validation.valid) {
                 if (getEl('providerTxId')) getEl('providerTxId').className = 'invalid';
@@ -1072,8 +1140,6 @@
                 return;
             }
 
-            // Valid provider tx id — REVEAL the transfer code field,
-            // but leave it EMPTY for the user to fill from their provider.
             if (getEl('providerTxId')) getEl('providerTxId').className = 'valid';
             if (transferGroup) {
                 const wasHidden = transferGroup.style.display === 'none' || transferGroup.style.display === '';
@@ -1084,25 +1150,13 @@
                     transferGroup.classList.add('transfer-code-reveal');
                 }
             }
-            if (transferInput) {
-                // Keep whatever the user has already typed if still valid
-                // Otherwise leave empty for the user to enter the code
-                const currentValue = transferInput.value.trim();
-                if (currentValue) {
-                    const tcValidation = TransferCodeManager.validate(currentValue);
-                    if (!tcValidation.valid) {
-                        // Clear invalid value so user can re-enter the correct provider code
-                        transferInput.value = '';
-                    }
-                }
-                transferInput.focus();
-            }
+            if (transferInput) transferInput.focus();
             showToast('✅ Provider TX ID verified! Enter the Transfer Code from your provider.', 3500);
         }
 
-        // ================================================================
+        // ============================================================
         // USER CURRENCY RESOLVER
-        // ================================================================
+        // ============================================================
         function getUserCurrency() {
             const countryCurrencyMap = {
                 'Sierra Leone': 'SLL', 'Liberia': 'LRD', 'Guinea': 'GNF', 'Senegal': 'XOF',
@@ -1145,9 +1199,6 @@
             }
         }
 
-        // ================================================================
-        // BUSINESS CREDENTIALS RESOLVER
-        // ================================================================
         function getBusinessCredentials(biz) {
             if (!biz) return { password: DEFAULT_EDIT_BIZ_PASSWORD, pin: DEFAULT_EDIT_BIZ_PIN, source: 'default' };
             if (biz.password && biz.pin) {
@@ -1193,9 +1244,6 @@
         ];
         businesses.forEach(biz => { biz.goods.forEach(g => { if (!g.quantity) g.quantity = 1; if (!g.quality) g.quality = "Brand new"; }); });
 
-        // ================================================================
-        // SUPPORTED COUNTRIES & CURRENCIES
-        // ================================================================
         const SUPPORTED_CURRENCIES = [
             { code:'LR', name:'Liberia',            currency:'LRD', flag:'🇱🇷', gst:10   },
             { code:'GN', name:'Guinea',             currency:'GNF', flag:'🇬🇳', gst:18   },
@@ -1276,10 +1324,20 @@
                     const translation = t(key);
                     if (translation && translation !== key) el.textContent = translation;
                 });
+                document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                    const key = el.getAttribute('data-i18n-placeholder');
+                    const translation = t(key);
+                    if (translation && translation !== key) el.placeholder = translation;
+                });
                 updateAgentDropdownPlaceholder();
                 renderBusinessStrip();
                 renderAgentDropdown();
                 populateAgentSelect(currentAgentFilterCountry);
+                // Update popup dynamic content if visible
+                const overlay = getEl('popupAdOverlay');
+                if (overlay && overlay.style.display === 'flex') {
+                    refreshPopupAdvertTranslations();
+                }
             } catch (e) {}
         }
 
@@ -1311,6 +1369,29 @@
             tEl.style.opacity = '1';
             clearTimeout(tEl._hide);
             tEl._hide = setTimeout(() => { tEl.style.opacity = '0'; setTimeout(() => tEl.style.visibility = 'hidden', 300); }, dur);
+        }
+
+        // ============================================================
+        // POP-UP ADVERT TRANSLATION HELPERS
+        // ============================================================
+        function getTranslatedProductDescription(product) {
+            const qualityLabel = t('popup_quality_prefix');
+            const stockLabel = t('popup_stock_prefix');
+            const quality = product.quality || 'Brand new';
+            const stock = product.quantity || 1;
+            return `${qualityLabel} ${quality} · ${stock} ${stockLabel}`;
+        }
+
+        function refreshPopupAdvertTranslations() {
+            if (!currentPopupProduct) return;
+            if (getEl('popupAdDescription')) {
+                getEl('popupAdDescription').textContent = getTranslatedProductDescription(currentPopupProduct);
+            }
+        }
+
+        function updatePopupAdTimerText() {
+            const timerSeconds = getEl('popupAdTimerSeconds');
+            if (timerSeconds) timerSeconds.textContent = popupAdCountdownSeconds + 's';
         }
 
         // EDIT BIZ ENTRY POINT
@@ -1764,7 +1845,6 @@
             btn.style.cursor = 'pointer';
         }
 
-        // EDIT BIZ password + PIN gate
         function handleEditBizStripClick() {
             if (!lastSelectedBusinessId) {
                 const allBiz = getAllBusinesses();
@@ -2004,9 +2084,9 @@
             });
         }
 
-        // ================================================================
-        // POP-UP ADVERT — with cool animations and Buy!!! tag
-        // ================================================================
+        // ============================================================
+        // POP-UP ADVERT — with translation support
+        // ============================================================
         function pickRandomProductForAdvert() {
             const allBiz = getAllBusinesses();
             const candidates = [];
@@ -2022,8 +2102,7 @@
                             price: g.price,
                             quantity: g.quantity || 1,
                             quality: g.quality || 'Brand new',
-                            icon: g.icon || biz.icon || '📱',
-                            description: `${g.quality || 'Brand new'} · ${g.quantity || 1} in stock`
+                            icon: g.icon || biz.icon || '📱'
                         });
                     });
                 }
@@ -2040,6 +2119,7 @@
             if (!product) return;
             lastPopupAdShownAt = now;
             popupAdShowCount++;
+            currentPopupProduct = product;
 
             const overlay = getEl('popupAdOverlay');
             if (!overlay) return;
@@ -2047,7 +2127,7 @@
             if (getEl('popupAdIcon')) getEl('popupAdIcon').textContent = product.icon;
             if (getEl('popupAdName')) getEl('popupAdName').textContent = product.name;
             if (getEl('popupAdBusiness')) getEl('popupAdBusiness').textContent = `${product.businessIcon} ${product.businessName}`;
-            if (getEl('popupAdDescription')) getEl('popupAdDescription').textContent = product.description;
+            if (getEl('popupAdDescription')) getEl('popupAdDescription').textContent = getTranslatedProductDescription(product);
             if (getEl('popupAdPrice')) getEl('popupAdPrice').textContent = product.price.toFixed(2);
             if (getEl('popupAdCurrency')) getEl('popupAdCurrency').textContent = isLocalMode ? getUserCurrency() : currentCountryData.currency;
 
@@ -2064,9 +2144,7 @@
                         const items = document.querySelectorAll('#goodsList .goods-item');
                         items.forEach(item => {
                             const nameAttr = item.getAttribute('data-name');
-                            if (nameAttr && nameAttr === product.name) {
-                                item.click();
-                            }
+                            if (nameAttr && nameAttr === product.name) item.click();
                         });
                     }, 350);
                 };
@@ -2085,16 +2163,16 @@
             if (overlay) overlay.style.display = 'none';
             clearInterval(popupAdCountdownInterval);
             popupAdCountdownInterval = null;
+            currentPopupProduct = null;
         }
 
         function startPopupAdCountdown(seconds) {
             clearInterval(popupAdCountdownInterval);
             popupAdCountdownSeconds = seconds;
-            const timerEl = getEl('popupAdTimer');
-            if (timerEl) timerEl.innerHTML = `Auto‑closes in <span>${popupAdCountdownSeconds}s</span>`;
+            updatePopupAdTimerText();
             popupAdCountdownInterval = setInterval(() => {
                 popupAdCountdownSeconds--;
-                if (timerEl) timerEl.innerHTML = `Auto‑closes in <span>${popupAdCountdownSeconds}s</span>`;
+                updatePopupAdTimerText();
                 if (popupAdCountdownSeconds <= 0) {
                     clearInterval(popupAdCountdownInterval);
                     hidePopupAdvert();
@@ -2116,25 +2194,6 @@
             popupAdTimeout = null;
             popupAdInterval = null;
             hidePopupAdvert();
-        }
-
-        function triggerProductImageUpload(btn) {
-            const entry = btn.closest('.product-entry');
-            if (!entry) return;
-            const fileInput = entry.querySelector('.product-image');
-            if (fileInput) {
-                fileInput.click();
-                fileInput.onchange = function() {
-                    if (this.files && this.files.length > 0) {
-                        const providerTxId = 'AB' + String(Math.floor(100000 + Math.random() * 900000)) + '.' + String(Math.floor(1000 + Math.random() * 9000)) + '.X' + String(Math.floor(10000 + Math.random() * 90000));
-                        const transferCode = String(Math.floor(100000 + Math.random() * 900000));
-                        if (getEl('authProviderTxId')) getEl('authProviderTxId').value = providerTxId;
-                        if (getEl('authTransferCode')) getEl('authTransferCode').value = transferCode;
-                        validateAuthFields();
-                        showToast('📸 Image uploaded!', 2500);
-                    }
-                };
-            }
         }
 
         function updateDateTime() {
@@ -2289,10 +2348,8 @@
                     if (!name) name = (d.businessName || agent.name || '').replace(/\(.*\)/, '').trim();
                 }
             }
-
             if (!name && _selectedProductDetails && _selectedProductDetails.businessName) name = _selectedProductDetails.businessName;
             if (digitsOnly(phoneRaw).length < 6 && _selectedProductDetails && _selectedProductDetails.businessPhone) phoneRaw = _selectedProductDetails.businessPhone;
-
             return { name: name, phone: digitsOnly(phoneRaw), phoneDisplay: phoneRaw };
         }
 
@@ -2307,16 +2364,13 @@
             const cleanPhone = recipient.phone || '';
             const agentNameSafe = String(recipient.name || '').replace(/[*#]/g, '').trim();
             const amountInt = Math.round(Number(amount) || 0);
-
             const countrySelect = getEl('countryCodeSelect');
             let countrySelector = '20';
             if (countrySelect && countrySelect.value) {
                 const parts = countrySelect.value.split('|');
                 if (parts[5] && parts[5].trim()) countrySelector = parts[5].trim();
             }
-
             let ussd = `#144*2*5*1*${countrySelector}*${agentNameSafe}*${cleanPhone}*${amountInt}*1*0000#`;
-
             const senderCountry = String(currentUser?.country || '').trim().toLowerCase();
             const senderIsSierraLeone = (senderCountry === 'sierra leone' || senderCountry === 'sl');
             if (!senderIsSierraLeone) {
@@ -2325,19 +2379,16 @@
                 if (provider === 'MB-THREE') return `*144*3*${cleanPhone}*${amountInt}*0000#`;
                 if (provider === 'MB-FOUR')  return `#144*4*${cleanPhone}*${amountInt}*0000#`;
             }
-
             return ussd;
         }
 
         function showPinModal(ussdCode, provider, providerClass, recipient, amount) {
             const recip = recipient || { name: '', phone: '' };
             const shortName = truncateRecipientName(recip.name, 24);
-
             if (getEl('pinProviderBadge')) {
                 getEl('pinProviderBadge').textContent = provider;
                 getEl('pinProviderBadge').className = 'provider-badge ' + providerClass;
             }
-
             const previewEl = getEl('pinUssdPreview');
             if (previewEl) {
                 const safeCode = SecurityUtils.escapeHTML(ussdCode);
@@ -2346,18 +2397,13 @@
                     ? `${safeCode}<br><span style="display:inline-block; margin-top:4px; font-weight:700; color:#0f2b3d; font-family:inherit; font-size:0.9rem;">👤 ${safeName}</span>`
                     : safeCode;
             }
-
             if (getEl('pinRecipientName')) getEl('pinRecipientName').textContent = shortName || recip.name || 'Unknown recipient';
             if (getEl('pinRecipientPhone')) getEl('pinRecipientPhone').textContent = recip.phone ? '+' + recip.phone : '—';
-            if (getEl('pinRecipientAmount')) getEl('pinRecipientAmount').textContent =
-                (amount !== undefined && amount !== null && !isNaN(amount)) ? String(amount) : '—';
-
+            if (getEl('pinRecipientAmount')) getEl('pinRecipientAmount').textContent = (amount !== undefined && amount !== null && !isNaN(amount)) ? String(amount) : '—';
             const warn = getEl('pinRecipientWarning');
             if (warn) warn.style.display = (recip.phone && recip.phone.length >= 6) ? 'none' : 'block';
-
             if (getEl('pinError')) getEl('pinError').textContent = '';
             if (getEl('pinInput')) getEl('pinInput').value = '';
-
             pendingPinData = { ussdCode, provider, recipient: recip, amount };
             getEl('pinModal').style.display = 'flex';
         }
@@ -2369,24 +2415,17 @@
                 return;
             }
             if (!pendingPinData) return;
-
             let ussdCode = pendingPinData.ussdCode.replace(/0000#/, `${pin}#`);
             getEl('pinModal').style.display = 'none';
-
             const providerName = pendingPinData.provider;
             const shortName = truncateRecipientName(pendingPinData.recipient?.name || '', 24);
             pendingPinData = null;
-
             const link = document.createElement('a');
             link.href = `tel:${ussdCode}`;
             link.click();
-
             const nameLabel = shortName ? ` → ${shortName}` : '';
             showToast(`📞 Dialing ${providerName}${nameLabel}...`, 3000);
-
-            navigator.clipboard.writeText(ussdCode)
-                .then(() => showToast('✅ USSD copied!', 1500))
-                .catch(() => {});
+            navigator.clipboard.writeText(ussdCode).then(() => showToast('✅ USSD copied!', 1500)).catch(() => {});
         }
 
         function showInfoModal(title, body) {
@@ -2639,18 +2678,14 @@
                 if (toParts.length < 5) return;
                 const toCurrency = toParts[2] || 'GNF';
                 const gstRate = parseFloat(toParts[4]) || 0;
-
                 const rateFrom = EXCHANGE_RATES[fromCurrency] || 1;
                 const rateTo = EXCHANGE_RATES[toCurrency] || 1;
-
                 const exchangeRate = rateTo / rateFrom;
                 const convertedAmount = amount * exchangeRate;
-
                 const charge = amount * 0.04;
                 const gst = charge * (gstRate / 100);
                 const totalDeductions = charge + gst;
                 const totalDebit = amount + charge + gst;
-
                 if (getEl('convBaseAmount')) getEl('convBaseAmount').textContent = `${fmtMoney(amount)} ${fromCurrency}`;
                 if (getEl('convCharge')) getEl('convCharge').textContent = `${fmtMoney(charge)} ${fromCurrency}`;
                 if (getEl('convGstAmount')) getEl('convGstAmount').textContent = `${fmtMoney(gst)} ${fromCurrency} (${gstRate}%)`;
@@ -2937,7 +2972,6 @@
             if (!recipient.phone || recipient.phone.length < 6) { showToast('⚠️ No recipient number — select an agent or business first.', 3500); return; }
             const cleanPhone = recipient.phone;
             const amountToSend = Math.round(mb4Amount);
-
             const senderCountry = String(currentUser?.country || '').trim().toLowerCase();
             const senderIsSL = (senderCountry === 'sierra leone' || senderCountry === 'sl');
             let ussdCode;
@@ -2953,7 +2987,6 @@
             } else {
                 ussdCode = `#144*4*${cleanPhone}*${amountToSend}*0000#`;
             }
-
             showToast(`💳 MB-FOUR → ${recipient.name || cleanPhone}: ${amountToSend}`, 4000);
             const link = document.createElement('a');
             link.href = `tel:${ussdCode}`;
@@ -3089,8 +3122,6 @@
             safeExecute(() => renderBusinessStrip(), 'renderBusinessStrip');
             safeExecute(() => renderHeaderFlags(), 'renderHeaderFlags');
             safeExecute(() => setupFlagClickHandlers(), 'setupFlagClickHandlers');
-            safeExecute(() => setupEmojiPicker(), 'setupEmojiPicker');
-            safeExecute(() => setupEditEmojiPicker(), 'setupEditEmojiPicker');
             safeExecute(() => setupAvatarUpload(), 'setupAvatarUpload');
             safeExecute(() => setupEventListeners(), 'setupEventListeners');
             safeExecute(() => updateDateTime(), 'updateDateTime');
@@ -3350,7 +3381,6 @@
             function populateAgreementModal() {
                 const body = getEl('agreementBody');
                 if (!body) return;
-                const dateStr = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
                 const bizName = SecurityUtils.escapeHTML(getEl('agentBusinessName')?.value?.trim() || '___');
                 const ownerName = SecurityUtils.escapeHTML(getEl('agentOwnerName')?.value?.trim() || '___');
                 body.innerHTML = `
@@ -3532,7 +3562,6 @@
                     showToast('❌ ' + validation.error, 3000);
                     return;
                 }
-                // Verify the transfer code is present & valid
                 const transferCode = getEl('mainTransferCode')?.value?.trim() || '';
                 const tcValidation = TransferCodeManager.validate(transferCode);
                 if (!tcValidation.valid) {
@@ -3559,14 +3588,12 @@
                     if (_selectedProductDetails) receiptData.product = { ..._selectedProductDetails };
                     showReceiptModal(receiptData);
                     showToast('✅ Receipt generated!', 2500);
-                    // Reset fields
                     if (getEl('providerTxId')) { getEl('providerTxId').value = ''; getEl('providerTxId').className = ''; }
                     if (getEl('mainTransferCode')) { getEl('mainTransferCode').value = ''; getEl('mainTransferCode').className = ''; }
                     if (getEl('mainTransferCodeGroup')) getEl('mainTransferCodeGroup').style.display = 'none';
                 } catch (err) { showToast('❌ Submit error: ' + err.message, 3000); }
             });
 
-            // ===== PROVIDER TX ID → REVEAL TRANSFER CODE FIELD =====
             const providerTxIdInput = getEl('providerTxId');
             if (providerTxIdInput) {
                 providerTxIdInput.addEventListener('input', function() { revealTransferCodeField(); });
@@ -3574,7 +3601,6 @@
                 providerTxIdInput.addEventListener('change', function() { revealTransferCodeField(); });
             }
 
-            // Also validate transfer code on input
             const mainTransferCodeInput = getEl('mainTransferCode');
             if (mainTransferCodeInput) {
                 mainTransferCodeInput.addEventListener('input', function() {
@@ -3593,21 +3619,16 @@
                     const provider = this.getAttribute('data-provider');
                     selectedProvider = provider;
                     getEl('providerModal').style.display = 'none';
-
                     const roundedAmount = Math.round(parseFloat(getEl('amountInput')?.value) || 0);
-
                     const recipient = resolveRecipientInfo();
                     if (!recipient.phone || recipient.phone.length < 6) {
                         showToast('⚠️ No recipient number found — select an agent or business first.', 4000);
                         return;
                     }
                     const cleanPhone = recipient.phone;
-
                     const senderCountry = String(currentUser?.country || '').trim().toLowerCase();
                     const senderIsSierraLeone = (senderCountry === 'sierra leone' || senderCountry === 'sl');
-
                     let ussdCode = '';
-
                     if (senderIsSierraLeone) {
                         const countrySelect = getEl('countryCodeSelect');
                         let countrySelector = '20';
@@ -3623,7 +3644,6 @@
                         else if (provider === "MB-THREE") ussdCode = `*144*3*${cleanPhone}*${roundedAmount}*0000#`;
                         else if (provider === "MB-FOUR") ussdCode = `#144*4*${cleanPhone}*${roundedAmount}*0000#`;
                     }
-
                     if (ussdCode) showPinModal(ussdCode, provider, 'wbmoney', recipient, roundedAmount);
                 });
             });
@@ -3680,15 +3700,12 @@
                 const modal = getEl('currencyConverterModal');
                 if (modal.style.display === 'flex') { modal.style.display = 'none'; return; }
                 modal.style.display = 'flex';
-
                 const userCountry = currentUser?.country || 'Sierra Leone';
                 const userCur = getSupportedCountryByName(userCountry);
                 if (getEl('userCountryDisplay')) getEl('userCountryDisplay').textContent = userCountry;
                 if (getEl('userCurrencyDisplay')) getEl('userCurrencyDisplay').textContent = userCur ? userCur.currency : 'SLL';
-
                 populateConverterCountries();
                 populateFromCurrencySelect();
-
                 if (!getEl('convAmount').value || isNaN(parseFloat(getEl('convAmount').value))) getEl('convAmount').value = 100;
                 updateConverter();
             });
@@ -3805,7 +3822,7 @@
         }
 
         bootstrap();
-        console.log('🚀 AfriPay bootstrapped — Transfer Code field reveals but stays empty for user input.');
+        console.log('🚀 AfriPay bootstrapped — all functions restored with pop-up advert translations.');
     </script>
 </body>
 </html>
