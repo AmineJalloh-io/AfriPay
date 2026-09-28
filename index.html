@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
     <title>AfriPay | Agent Hub – Pop-up Advert</title>
+    <!-- Favicon: AP logo -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><radialGradient id='b' cx='50%25' cy='30%25' r='70%25'><stop offset='0%25' stop-color='%233b8dd4'/><stop offset='100%25' stop-color='%230a2b3c'/></radialGradient><linearGradient id='a' x1='0%25' y1='0%25' x2='0%25' y2='100%25'><stop offset='0%25' stop-color='%236bb6ff'/><stop offset='100%25' stop-color='%2314457a'/></linearGradient><linearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%23FFF3A0'/><stop offset='50%25' stop-color='%23FFD966'/><stop offset='100%25' stop-color='%23C8950F'/></linearGradient></defs><circle cx='50' cy='50' r='47' fill='none' stroke='url(%23g)' stroke-width='3.5'/><circle cx='50' cy='50' r='44' fill='url(%23b)'/><path d='M 10 60 Q 50 85 90 50' fill='none' stroke='url(%23g)' stroke-width='4.5' stroke-linecap='round' opacity='0.95'/><g transform='translate(74 66)'><circle r='12' fill='%230a2b3c' stroke='url(%23g)' stroke-width='1.8'/><ellipse cx='-3' cy='-3' rx='4' ry='2.5' fill='%23fff' opacity='0.85'/><ellipse cx='4' cy='2' rx='3.5' ry='2' fill='%23fff' opacity='0.85'/><ellipse cx='-1' cy='5' rx='3' ry='2' fill='%23fff' opacity='0.85'/><path d='M -12 0 Q 0 -14 12 0' fill='none' stroke='url(%23g)' stroke-width='1.8'/><path d='M 12 0 L 9 -3 L 9 3 Z' fill='url(%23g)'/></g><g transform='translate(50 62)'><text x='2' y='2.5' text-anchor='middle' font-family='Arial Black, sans-serif' font-size='40' font-weight='900' fill='%23000' opacity='0.35'>AP</text><text x='0' y='0' text-anchor='middle' font-family='Arial Black, sans-serif' font-size='40' font-weight='900' fill='none' stroke='url(%23g)' stroke-width='3' stroke-linejoin='round'>AP</text><text x='0' y='0' text-anchor='middle' font-family='Arial Black, sans-serif' font-size='40' font-weight='900' fill='url(%23a)'>AP</text></g><circle cx='14' cy='30' r='1.5' fill='%23FFD966' opacity='0.8'/><circle cx='18' cy='36' r='1.2' fill='%233b8dd4' opacity='0.8'/><circle cx='12' cy='40' r='1.5' fill='%23FFD966' opacity='0.7'/><circle cx='20' cy='44' r='1.2' fill='%233b8dd4' opacity='0.7'/></svg>">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: linear-gradient(145deg, #eef2f7 0%, #d9e2ec 100%); min-height: 100vh; padding: 0.7rem; display: flex; justify-content: center; align-items: center; touch-action: manipulation; }
@@ -11,8 +13,8 @@
         .live-header { background: linear-gradient(135deg, #0a2b3c 0%, #1c4e6c 100%); padding: 0.6rem 0.8rem; color: white; display: flex; flex-direction: column; gap: 6px; position: relative; z-index: 10; }
         .header-top { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 4px; }
         .logo-container { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
-        .africa-map-logo { display: flex; align-items: center; gap: 4px; background: rgba(255, 255, 255, 0.07); padding: 2px 10px 2px 5px; border-radius: 30px; }
-        .afripay-logo-svg { width: 40px; height: 40px; filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2)); }
+        .africa-map-logo { display: flex; align-items: center; gap: 6px; background: rgba(255, 255, 255, 0.10); padding: 3px 12px 3px 6px; border-radius: 30px; border: 1px solid rgba(255, 215, 0, 0.25); }
+        .afripay-logo-img { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; background: #fff; padding: 2px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), 0 0 0 2px rgba(255, 215, 0, 0.45); flex-shrink: 0; }
         .brand-text { font-size: 1.6rem; font-weight: 800; background: linear-gradient(135deg, #FFF, #FFD966, #6bc6ff); -webkit-background-clip: text; background-clip: text; color: transparent; letter-spacing: -0.5px; }
         .datetime-box { background: rgba(0, 0, 0, 0.25); padding: 0.15rem 0.6rem; border-radius: 30px; text-align: center; font-size: 0.73rem; min-width: 70px; border: 1px solid rgba(255, 255, 255, 0.08); }
         .datetime-box .time-text { font-weight: 700; font-size: 0.84rem; }
@@ -40,7 +42,8 @@
         .auth-buttons { display: flex; gap: 4px; }
         .auth-btn { background: rgba(255, 255, 255, 0.15); border: none; padding: 5px 12px; border-radius: 30px; color: white; cursor: pointer; font-weight: 600; height: 34px; font-size: 0.8rem; }
         .user-welcome { display: flex; align-items: center; gap: 4px; background: rgba(255, 255, 255, 0.12); padding: 2px 10px 2px 5px; border-radius: 30px; height: 34px; }
-        .user-avatar { width: 26px; height: 26px; border-radius: 50%; display: inline-block; background: #2c7da0; color: white; text-align: center; line-height: 26px; cursor: pointer; position: relative; }
+        .user-avatar { width: 26px; height: 26px; border-radius: 50%; display: inline-block; background: #2c7da0; color: white; text-align: center; line-height: 26px; cursor: pointer; position: relative; font-size: 0.9rem; }
+        .user-avatar:hover { background: #3a8cb0; }
         .user-avatar-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
         .user-name-display { font-weight: 700; font-size: 0.75rem; }
         .logout-btn, .edit-account-btn { background: rgba(255, 255, 255, 0.18); border: none; padding: 2px 10px; border-radius: 20px; color: white; cursor: pointer; font-size: 0.7rem; font-weight: 600; height: 26px; }
@@ -56,8 +59,13 @@
         .flag-scroll-btn { background: rgba(0, 0, 0, 0.15); border: none; color: #1e3b4a; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; font-weight: bold; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; }
         .form-container { padding: 0.7rem 0.8rem 0.5rem 0.8rem; }
         .profile-section { background: #f0f6fb; border-radius: 12px; padding: 0.5rem 0.7rem; margin-bottom: 0.5rem; border: 1px solid #dce8f0; display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0.6rem; }
+        .profile-avatar-large { width: 46px; height: 46px; border-radius: 50%; background: linear-gradient(135deg, #2c7da0, #1c4e6c); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; border: 3px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.15); transition: transform 0.2s ease; flex-shrink: 0; overflow: hidden; position: relative; }
+        .profile-avatar-large:hover { transform: scale(1.08); }
+        .profile-avatar-large:hover::after { content: '✏️'; position: absolute; inset: 0; background: rgba(0,0,0,0.45); display: flex; align-items: center; justify-content: center; font-size: 0.9rem; }
+        .profile-avatar-large img { width: 100%; height: 100%; object-fit: cover; }
+        .profile-info-block { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 0; }
         .profile-label { font-weight: 700; color: #1c6e8f; font-size: 0.85rem; }
-        .profile-field { color: #1e3b4a; background: white; padding: 2px 10px; border-radius: 30px; border: 1px solid #d0dce8; font-size: 0.8rem; }
+        .profile-field { color: #1e3b4a; background: white; padding: 2px 10px; border-radius: 30px; border: 1px solid #d0dce8; font-size: 0.8rem; display: inline-block; }
         .map-btn { background: #2c7da0; border: none; padding: 4px 12px; border-radius: 30px; color: white; font-weight: 700; cursor: pointer; height: 32px; font-size: 0.85rem; }
         .section-title { font-weight: 800; color: #1c6e8f; margin: 0.4rem 0 0.3rem 0; border-left: 3px solid #f4a261; padding-left: 8px; text-transform: uppercase; font-size: 0.85rem; }
         .input-group { margin-bottom: 0.35rem; display: flex; flex-direction: column; gap: 2px; }
@@ -91,9 +99,7 @@
         .business-name { font-weight: 700; color: #1c6e8f; font-size: 0.65rem; }
         .business-category { color: #e67e22; font-size: 0.58rem; }
         .add-biz-btn { background: #27ae60; color: white; border: none; padding: 3px 10px; border-radius: 30px; font-weight: 700; font-size: 0.65rem; cursor: pointer; height: 28px; display: inline-flex; align-items: center; gap: 3px; }
-        .add-biz-btn .icon { font-size: 0.8rem; }
         .edit-biz-strip-btn { background: #f39c12; color: white; border: none; padding: 3px 10px; border-radius: 30px; font-weight: 700; font-size: 0.65rem; cursor: pointer; height: 28px; display: inline-flex; align-items: center; gap: 3px; }
-        .edit-biz-strip-btn .icon { font-size: 0.8rem; }
         .footer-section { background: #f8fafc; border-top: 1px solid rgba(0, 0, 0, 0.06); padding: 0.35rem 0.5rem; }
         .footer-buttons { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 3px; justify-content: center; }
         .footer-btn { background: #eef2f7; border: none; padding: 4px 10px; border-radius: 30px; font-weight: 700; cursor: pointer; color: #1c6e8f; height: 32px; font-size: 0.78rem; }
@@ -153,6 +159,10 @@
         .error-msg { color: #c0392b; margin: 2px 0; font-size: 0.75rem; }
         .success-msg { color: #27ae60; margin: 2px 0; font-size: 0.75rem; }
         .collateral-limit-indicator { font-size: 0.68rem; color: #1c6e8f; background: #e8f0f8; padding: 2px 10px; border-radius: 20px; display: inline-block; margin-left: 4px; border: 1px solid #c0d8e8; }
+        .emoji-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin: 8px 0; max-height: 220px; overflow-y: auto; padding: 4px; }
+        .emoji-option { font-size: 1.6rem; text-align: center; cursor: pointer; padding: 6px 2px; border-radius: 10px; border: 2px solid transparent; background: #f5f7fa; transition: all 0.2s ease; }
+        .emoji-option:hover { background: #e8f0f8; transform: scale(1.15); }
+        .emoji-option.selected { border-color: #f4a261; background: #fff0e0; transform: scale(1.1); box-shadow: 0 2px 8px rgba(244,162,97,0.4); }
         .group-member-list { max-height: 150px; overflow-y: auto; margin: 4px 0; border: 1px solid #e0e8f0; border-radius: 10px; padding: 3px 0; }
         .group-member-item { display: flex; align-items: center; padding: 3px 8px; gap: 5px; font-size: 0.75rem; }
         .group-member-item .member-avatar { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #d0dce8; font-size: 0.75rem; }
@@ -168,10 +178,11 @@
         #receiptModal .modal-content { display: flex; flex-direction: column; max-height: 90vh; padding: 0; width: 95%; max-width: 420px; border-radius: 16px; overflow: hidden; background: #fcfcfc; }
         #receiptModal .receipt-body { flex: 1; overflow-y: auto; padding: 12px 16px 10px 16px; }
         #receiptModal .receipt-footer { flex-shrink: 0; background: #f5f8fa; padding: 10px 16px 12px 16px; border-top: 1px solid #e8edf2; text-align: center; }
-        .receipt-header { background: linear-gradient(135deg, #0a2b3c 0%, #1c4e6c 100%); padding: 14px 18px 12px 18px; color: white; text-align: center; position: relative; flex-shrink: 0; }
-        .receipt-header .receipt-logo { font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, #FFF, #FFD966, #6bc6ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .receipt-header .receipt-sub { font-size: 0.68rem; opacity: 0.8; margin-top: 2px; letter-spacing: 1px; }
-        .receipt-header .receipt-badge { background: rgba(255, 255, 255, 0.15); padding: 2px 12px; border-radius: 30px; display: inline-block; font-size: 0.62rem; font-weight: 600; margin-top: 3px; }
+        .receipt-header { background: linear-gradient(135deg, #0a2b3c 0%, #1c4e6c 100%); padding: 16px 18px 14px 18px; color: white; text-align: center; position: relative; flex-shrink: 0; }
+        .receipt-logo-img { width: 68px; height: 68px; border-radius: 50%; object-fit: cover; background: #fff; padding: 3px; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35), 0 0 0 3px rgba(255, 215, 0, 0.5); display: block; margin: 0 auto 4px; }
+        .receipt-header .receipt-brand { font-size: 1.3rem; font-weight: 800; background: linear-gradient(135deg, #FFF, #FFD966, #6bc6ff); -webkit-background-clip: text; background-clip: text; color: transparent; letter-spacing: 0.5px; }
+        .receipt-header .receipt-sub { font-size: 0.68rem; opacity: 0.8; margin-top: 2px; letter-spacing: 2px; }
+        .receipt-header .receipt-badge { background: rgba(255, 255, 255, 0.15); padding: 2px 12px; border-radius: 30px; display: inline-block; font-size: 0.62rem; font-weight: 600; margin-top: 4px; }
         .receipt-close-x { position: absolute; top: 6px; right: 12px; background: rgba(255, 255, 255, 0.15); border: none; color: white; font-size: 1.4rem; cursor: pointer; padding: 0 6px; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font-weight: 700; }
         .receipt-row { display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px solid #f0f0f0; font-size: 0.82rem; }
         .receipt-row .label { color: #7f8c8d; font-weight: 500; }
@@ -211,18 +222,6 @@
         .sig-preview { max-width: 110px; max-height: 45px; border: 1px solid #ddd; border-radius: 4px; display: none; margin-top: 3px; }
         .sig-preview.show { display: block; }
         .agreement-status { font-size: 0.68rem; color: #7f8c8d; text-align: center; margin-top: 3px; }
-        #agentReportModal .modal-content { max-width: 460px; width: 95%; padding: 0; border-radius: 16px; overflow: hidden; position: relative; }
-        .report-header { background: linear-gradient(135deg, #0a2b3c 0%, #1c4e6c 100%); padding: 12px 18px; color: white; text-align: center; position: relative; }
-        .report-close-x { position: absolute; top: 5px; right: 12px; background: rgba(255, 255, 255, 0.15); border: none; color: white; font-size: 1.3rem; cursor: pointer; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-weight: 700; }
-        .report-body { padding: 14px 18px; max-height: 55vh; overflow-y: auto; }
-        .report-body .info-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #f0f0f0; font-size: 0.8rem; }
-        .report-body .info-row .label { color: #7f8c8d; }
-        .report-body .info-row .value { color: #1e3b4a; font-weight: 600; text-align: right; }
-        .report-body .info-row.total { border-top: 2px solid #1c4e6c; border-bottom: none; font-weight: 800; }
-        .report-ussd-section { background: #f0f6fb; border-radius: 8px; padding: 10px 12px; margin-top: 8px; border: 1px dashed #2c7da0; }
-        .report-ussd-section .ussd-code { font-family: monospace; font-weight: 700; font-size: 0.9rem; color: #0f2b3d; background: white; padding: 5px 12px; border-radius: 6px; display: block; word-break: break-all; margin-top: 4px; border: 1px solid #d0dce8; }
-        .report-footer { background: #f5f8fa; padding: 10px 18px; border-top: 1px solid #e8edf2; display: flex; gap: 6px; justify-content: center; }
-        .report-footer .action-btn { flex: 1; min-width: 90px; }
         #pinModal .modal-content { max-width: 400px; }
         #pinModal .input-group input { height: 40px; font-size: 0.95rem; letter-spacing: 4px; font-family: monospace; text-align: center; }
         #pinModal .ussd-preview { background: #f0f6fb; border-radius: 8px; padding: 8px 12px; margin: 6px 0; border: 1px dashed #2c7da0; word-break: break-all; font-family: monospace; font-size: 0.85rem; text-align: center; }
@@ -331,7 +330,8 @@
         @keyframes shimmerRotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         .popup-ad-close { position: absolute; top: 8px; right: 14px; background: rgba(255,255,255,0.15); border: none; color: #fff; font-size: 1.3rem; cursor: pointer; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; transition: all 0.25s ease; z-index: 15; }
         .popup-ad-close:hover { background: rgba(255,255,255,0.35); transform: rotate(90deg) scale(1.1); }
-        .popup-ad-brand { font-size: 0.72rem; letter-spacing: 1px; opacity: 0.9; text-transform: uppercase; position: relative; z-index: 2; font-weight: 700; }
+        .popup-ad-brand { font-size: 0.72rem; letter-spacing: 1px; opacity: 0.9; text-transform: uppercase; position: relative; z-index: 2; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .popup-ad-brand-logo { width: 22px; height: 22px; border-radius: 50%; }
         .popup-ad-subtitle { font-size: 0.62rem; opacity: 0.7; margin-top: 2px; position: relative; z-index: 2; }
         .popup-ad-product { display: flex; flex-direction: column; align-items: center; padding: 22px 16px 14px; gap: 8px; background: linear-gradient(180deg, #f8fbfd 0%, #ffffff 100%); position: relative; }
         .popup-ad-icon { font-size: 4rem; filter: drop-shadow(0 6px 12px rgba(0,0,0,0.15)); animation: iconFloat 3s ease-in-out infinite, iconGlow 2.5s ease-in-out infinite alternate; position: relative; }
@@ -368,10 +368,11 @@
         .popup-ad-card::before { top: 8px; right: 55px; animation-delay: 0s; }
         .popup-ad-card::after { bottom: 55px; left: 8px; animation-delay: 1.2s; }
         @keyframes sparkle { 0%, 100% { opacity: 0; transform: scale(0.5) rotate(0deg); } 50% { opacity: 1; transform: scale(1.2) rotate(180deg); } }
+
         @media (max-width: 600px) {
             .double-row { grid-template-columns: 1fr; gap: 0; }
             .brand-text { font-size: 1.3rem; }
-            .afripay-logo-svg { width: 34px; height: 34px; }
+            .afripay-logo-img { width: 36px; height: 36px; }
             .modal-content { padding: 0.7rem; max-width: 320px; }
             .action-btn { padding: 5px 12px; height: 36px; font-size: 0.75rem; }
             .form-container { padding: 0.5rem 0.6rem 0.35rem 0.6rem; }
@@ -379,6 +380,7 @@
             .chat-sidebar { display: none; position: absolute; right: 0; top: 0; bottom: 0; width: 140px; z-index: 10; border-radius: 0 16px 16px 0; }
             .chat-sidebar.open { display: flex; }
             .sidebar-toggle { display: block; }
+            .receipt-logo-img { width: 56px; height: 56px; }
         }
     </style>
 </head>
@@ -389,13 +391,8 @@
             <div class="header-top">
                 <div class="logo-container">
                     <div class="africa-map-logo">
-                        <svg class="afripay-logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="50" cy="50" r="45" fill="url(#logoGrad)" stroke="#FFD966" stroke-width="2"/>
-                            <path d="M50 20 L50 75 L42 75 L42 55 L58 55 C68 55 68 42 58 42 L42 42 L42 20 L50 20Z" fill="white" opacity="0.9"/>
-                            <defs>
-                                <linearGradient id="logoGrad" x1="0" y1="0" x2="100" y2="100"><stop offset="0%" stop-color="#0a2b3c"/><stop offset="100%" stop-color="#1c4e6c"/></linearGradient>
-                            </defs>
-                        </svg>
+                        <!-- NEW AP LOGO -->
+                        <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><radialGradient id='b' cx='50%25' cy='30%25' r='70%25'><stop offset='0%25' stop-color='%233b8dd4'/><stop offset='100%25' stop-color='%230a2b3c'/></radialGradient><linearGradient id='a' x1='0%25' y1='0%25' x2='0%25' y2='100%25'><stop offset='0%25' stop-color='%236bb6ff'/><stop offset='100%25' stop-color='%2314457a'/></linearGradient><linearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%23FFF3A0'/><stop offset='50%25' stop-color='%23FFD966'/><stop offset='100%25' stop-color='%23C8950F'/></linearGradient></defs><circle cx='50' cy='50' r='47' fill='none' stroke='url(%23g)' stroke-width='3.5'/><circle cx='50' cy='50' r='44' fill='url(%23b)'/><path d='M 10 60 Q 50 85 90 50' fill='none' stroke='url(%23g)' stroke-width='4.5' stroke-linecap='round' opacity='0.95'/><g transform='translate(74 66)'><circle r='12' fill='%230a2b3c' stroke='url(%23g)' stroke-width='1.8'/><ellipse cx='-3' cy='-3' rx='4' ry='2.5' fill='%23fff' opacity='0.85'/><ellipse cx='4' cy='2' rx='3.5' ry='2' fill='%23fff' opacity='0.85'/><ellipse cx='-1' cy='5' rx='3' ry='2' fill='%23fff' opacity='0.85'/><path d='M -12 0 Q 0 -14 12 0' fill='none' stroke='url(%23g)' stroke-width='1.8'/><path d='M 12 0 L 9 -3 L 9 3 Z' fill='url(%23g)'/></g><g transform='translate(50 62)'><text x='2' y='2.5' text-anchor='middle' font-family='Arial Black, sans-serif' font-size='40' font-weight='900' fill='%23000' opacity='0.35'>AP</text><text x='0' y='0' text-anchor='middle' font-family='Arial Black, sans-serif' font-size='40' font-weight='900' fill='none' stroke='url(%23g)' stroke-width='3' stroke-linejoin='round'>AP</text><text x='0' y='0' text-anchor='middle' font-family='Arial Black, sans-serif' font-size='40' font-weight='900' fill='url(%23a)'>AP</text></g><circle cx='14' cy='30' r='1.5' fill='%23FFD966' opacity='0.8'/><circle cx='18' cy='36' r='1.2' fill='%233b8dd4' opacity='0.8'/><circle cx='12' cy='40' r='1.5' fill='%23FFD966' opacity='0.7'/><circle cx='20' cy='44' r='1.2' fill='%233b8dd4' opacity='0.7'/></svg>" class="afripay-logo-img" alt="AfriPay AP Logo" />
                     </div>
                     <span class="brand-text">AfriPay</span>
                     <div class="datetime-box"><div id="currentDate">--</div><div class="time-text" id="currentTime">--:--:--</div></div>
@@ -426,7 +423,7 @@
                         </div>
                         <div id="welcomeSection" style="display:none;">
                             <div class="user-welcome">
-                                <span class="user-avatar" id="userAvatarContainer">
+                                <span class="user-avatar" id="userAvatarContainer" title="Change avatar">
                                     <span id="userAvatarEmoji">👤</span>
                                     <img id="userAvatarImg" class="user-avatar-img" style="display:none;" alt="avatar" />
                                 </span>
@@ -449,10 +446,16 @@
 
         <div class="form-container" id="mainFormContainer" style="display:none;">
             <div class="profile-section" id="profileSection">
-                <span class="profile-label" data-i18n="location_label">📍</span>
-                <span class="profile-field" id="profileAddress" readonly>—</span>
-                <span class="profile-field" id="profileCity" readonly>—</span>
-                <span class="profile-field" id="profileCountry" readonly>—</span>
+                <div class="profile-avatar-large" id="profileAvatarLarge" title="Click to change avatar or emoji">
+                    <span id="profileAvatarEmoji">👤</span>
+                    <img id="profileAvatarImg" style="display:none;" alt="avatar" />
+                </div>
+                <div class="profile-info-block">
+                    <span class="profile-label" data-i18n="location_label">📍</span>
+                    <span class="profile-field" id="profileCity" readonly>—</span>
+                    <span class="profile-field" id="profileCountry" readonly>—</span>
+                    <span class="profile-field" id="profileAddress" readonly>—</span>
+                </div>
                 <button class="map-btn" id="mapButton" data-i18n="map_btn">🗺️</button>
             </div>
             <form id="mainForm">
@@ -492,7 +495,7 @@
                     <div class="input-group"><label id="clientPhoneLabel" data-i18n="client_phone">Phone *</label><input type="tel" id="clientPhone" readonly /></div>
                 </div>
                 <div style="display:flex; align-items:center; gap:4px; margin-bottom:0.35rem; flex-wrap:wrap;">
-                    <span style="font-size:0.7rem; color:#1c6e8f;" data-i18n="agent_select_hint">📋 Select agent or <strong>Add Client</strong></span>
+                    <span style="font-size:0.7rem; color:#1c6e8f;" data-i18n="agent_select_hint">📋 Select agent or Add Client</span>
                 </div>
                 <div class="mode-row">
                     <button type="button" class="btn" id="intlToggleBtn" data-i18n="international">Intl</button>
@@ -588,13 +591,16 @@
         </div>
     </div>
 
-    <!-- Pop-up Advert Modal with translation -->
+    <!-- Pop-up Advert Modal with AP logo -->
     <div id="popupAdOverlay" class="popup-ad-overlay" style="display:none;">
         <div class="popup-ad-card" id="popupAdCard">
             <div class="popup-ad-buy-tag" data-i18n="popup_buy_tag">BUY</div>
             <div class="popup-ad-header">
                 <button class="popup-ad-close" id="popupAdCloseBtn">✕</button>
-                <div class="popup-ad-brand" data-i18n="popup_brand">⭐ AfriPay Quick Pay</div>
+                <div class="popup-ad-brand">
+                    <img class="popup-ad-brand-logo" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><radialGradient id='b' cx='50%25' cy='30%25' r='70%25'><stop offset='0%25' stop-color='%233b8dd4'/><stop offset='100%25' stop-color='%230a2b3c'/></radialGradient><linearGradient id='a' x1='0%25' y1='0%25' x2='0%25' y2='100%25'><stop offset='0%25' stop-color='%236bb6ff'/><stop offset='100%25' stop-color='%2314457a'/></linearGradient><linearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%23FFF3A0'/><stop offset='50%25' stop-color='%23FFD966'/><stop offset='100%25' stop-color='%23C8950F'/></linearGradient></defs><circle cx='50' cy='50' r='47' fill='none' stroke='url(%23g)' stroke-width='3.5'/><circle cx='50' cy='50' r='44' fill='url(%23b)'/><text x='50' y='62' text-anchor='middle' font-family='Arial Black, sans-serif' font-size='40' font-weight='900' fill='url(%23a)' stroke='url(%23g)' stroke-width='1'>AP</text></svg>" alt="AP" />
+                    <span data-i18n="popup_brand">⭐ AfriPay Quick Pay</span>
+                </div>
                 <div class="popup-ad-subtitle" data-i18n="popup_subtitle">Sponsored Product</div>
             </div>
             <div class="popup-ad-product">
@@ -612,6 +618,23 @@
                 <button class="popup-ad-btn popup-ad-btn-secondary" id="popupAdDismissBtn" data-i18n="popup_dismiss">Dismiss</button>
             </div>
             <div class="popup-ad-timer" id="popupAdTimer"><span data-i18n="popup_auto_close">Auto‑closes in</span> <span id="popupAdTimerSeconds">15s</span></div>
+        </div>
+    </div>
+
+    <!-- EMOJI PICKER MODAL -->
+    <div id="emojiPickerModal" class="modal">
+        <div class="modal-content" style="max-width:380px;">
+            <h3>😊 Choose Your Avatar</h3>
+            <div style="font-size:0.72rem; color:#7f8c8d; margin-bottom:6px;">Pick an emoji or upload your own image</div>
+            <div style="display:flex; gap:6px; margin-bottom:8px;">
+                <button type="button" class="action-btn" id="emojiUploadImageBtn" style="flex:1; background:#2c7da0; height:36px; font-size:0.8rem;">📷 Upload Image</button>
+                <button type="button" class="action-btn" id="emojiRemoveImageBtn" style="flex:1; background:#e74c3c; height:36px; font-size:0.8rem;">🗑️ Remove Image</button>
+            </div>
+            <div style="font-weight:700; color:#1c6e8f; font-size:0.78rem; margin-bottom:4px;">Or select an emoji:</div>
+            <div class="emoji-grid" id="emojiGrid"></div>
+            <div class="action-buttons-row">
+                <button class="action-btn close-modal" style="width:100%;">Cancel</button>
+            </div>
         </div>
     </div>
 
@@ -699,18 +722,15 @@
         <input type="hidden" id="editAgentId" />
         <div id="editAgentError" class="error-msg"></div>
         <div id="editAgentSuccess" class="success-msg"></div>
-
         <div class="input-group"><label>Business *</label><input type="text" id="editBusinessName" /></div>
         <div class="input-group"><label>Address *</label><input type="text" id="editAddress" /></div>
         <div class="input-group"><label>City *</label><div class="city-input-row"><select id="editCitySelect"><option value="">Select city...</option><option value="Freetown">Freetown</option><option value="Conakry">Conakry</option><option value="Dakar">Dakar</option><option value="Banjul">Banjul</option><option value="Ouagadougou">Ouagadougou</option></select><span class="or-text">OR</span><input type="text" id="editCityOther" /></div></div>
         <div class="input-group"><label>Reg Number *</label><input type="text" id="editRegNumber" /></div>
         <div class="input-group"><label>Mobile Money *</label><input type="tel" id="editMobileMoney" /></div>
         <div class="input-group"><label>🪪 NIN</label><input type="text" id="editAgentNin" /></div>
-
         <div class="input-group"><label>Password *</label><div style="display:flex; gap:4px;"><input type="text" id="editPassword" maxlength="6" style="flex:1; font-family:monospace;" /><button type="button" class="gen-btn-small" id="editGenBtn">🔑 Gen</button></div></div>
         <div class="input-group"><label>5-Digit PIN *</label><div style="display:flex; gap:4px;"><input type="password" id="editPin" maxlength="5" style="flex:1; font-family:monospace; text-align:center;" /><button type="button" class="gen-btn-small orange" id="editPinGenBtn">🔑 Gen PIN</button></div></div>
         <div id="editAuthHint" class="edit-agent-auth-hint hidden">✅ Correct credentials — editing unlocked</div>
-
         <div class="edit-agent-collateral-section" id="editCollateralSection">
             <div class="input-group">
                 <label for="editCollateralLimit">💳 Collateral *</label>
@@ -718,14 +738,12 @@
                     <option value="0" selected>000</option>
                     <option value="200">200</option><option value="500">500</option><option value="1000">1,000</option><option value="5000">5,000</option><option value="10000">10,000</option>
                 </select>
-                <div style="font-size:0.62rem; color:#666; margin-top:1px;">Select a value to update the agent's transaction limit</div>
             </div>
             <div style="margin-top:6px; background:#f0f6fb; border-radius:6px; padding:4px 10px; border:1px solid #c0d8e8;">
                 <span style="font-size:0.7rem; color:#1c6e8f; font-weight:600;">Current Collateral:</span>
                 <span id="editCollateralValueDisplay" style="font-size:0.85rem; font-weight:700; color:#0f2b3d;">0</span>
             </div>
         </div>
-
         <div class="edit-agent-logo-section" id="editLogoSection">
             <div class="input-group">
                 <label>🖼️ Replace Agent Logo</label>
@@ -734,11 +752,9 @@
                     <img src="#" alt="Logo preview" class="logo-preview-edit show" style="max-height:60px; border-radius:6px;" />
                     <button type="button" id="editLogoRemove" style="background:#e74c3c; color:white; border:none; padding:2px 8px; border-radius:20px; font-size:0.6rem; cursor:pointer; margin-left:4px;">✕ Remove</button>
                 </div>
-                <div style="font-size:0.62rem; color:#666; margin-top:1px;">Upload a new logo to replace the current one</div>
             </div>
         </div>
-
-        <div class="action-buttons-row"><button class="action-btn" id="saveEditAgentBtn">Save</button><button class="action-btn" id="editAgentReportBtn" style="background:#1a1a1a;">📋 Report</button><button class="action-btn close-modal" style="background:#2c7da0;">Close</button></div>
+        <div class="action-buttons-row"><button class="action-btn" id="saveEditAgentBtn">Save</button><button class="action-btn close-modal" style="background:#2c7da0;">Close</button></div>
     </div></div>
 
     <div id="addClientModal" class="modal"><div class="modal-content"><h3>➕ Add Client</h3><div id="addClientError" class="error-msg"></div><div class="input-group"><label>Name *</label><input type="text" id="newClientName" /></div><div class="input-group"><label>Phone *</label><input type="tel" id="newClientPhone" /></div><div class="input-group"><label>Address</label><input type="text" id="newClientAddress" /></div><div class="input-group"><label>City *</label><select id="newClientCitySelect"><option value="">Select city...</option><option value="Freetown">Freetown</option><option value="Conakry">Conakry</option></select></div><div class="input-group"><label>Country</label><select id="newClientCountrySelect"><option value="Sierra Leone">Sierra Leone</option><option value="Guinea">Guinea</option></select></div><div class="action-buttons-row"><button class="action-btn" id="saveClientBtn">Save</button><button class="action-btn close-modal">Cancel</button></div></div></div>
@@ -754,6 +770,7 @@
         <div class="input-group"><label>Country</label><select id="editAccountCountry"><option value="Sierra Leone">Sierra Leone</option><option value="Guinea">Guinea</option></select></div>
         <div class="input-group"><label>🪪 National ID (NIN)</label><input type="text" id="editAccountNin" /></div>
         <div class="input-group"><label>📄 ID Number</label><input type="text" id="editAccountIdNumber" /></div>
+        <div class="input-group"><label>😊 Profile Emoji</label><div style="display:flex; gap:6px; align-items:center;"><span id="editAccountEmojiPreview" style="font-size:1.8rem;">👤</span><button type="button" class="action-btn" id="editAccountPickEmojiBtn" style="background:#2c7da0; height:36px; font-size:0.75rem;">🎨 Change Emoji</button></div></div>
         <div class="action-buttons-row"><button class="action-btn" id="saveEditAccountBtn">Save</button><button class="action-btn close-modal">Cancel</button></div>
     </div></div>
 
@@ -770,11 +787,14 @@
         <button class="action-btn close-modal" style="width:100%;">Close</button>
     </div></div>
 
+    <!-- RECEIPT MODAL with AP logo -->
     <div id="receiptModal" class="modal">
         <div class="modal-content">
             <div class="receipt-header">
                 <button class="receipt-close-x" id="receiptCloseXBtn">✕</button>
-                <div class="receipt-logo">Afri·Pay</div>
+                <!-- NEW AP LOGO -->
+                <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><radialGradient id='b' cx='50%25' cy='30%25' r='70%25'><stop offset='0%25' stop-color='%233b8dd4'/><stop offset='100%25' stop-color='%230a2b3c'/></radialGradient><linearGradient id='a' x1='0%25' y1='0%25' x2='0%25' y2='100%25'><stop offset='0%25' stop-color='%236bb6ff'/><stop offset='100%25' stop-color='%2314457a'/></linearGradient><linearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%23FFF3A0'/><stop offset='50%25' stop-color='%23FFD966'/><stop offset='100%25' stop-color='%23C8950F'/></linearGradient></defs><circle cx='50' cy='50' r='47' fill='none' stroke='url(%23g)' stroke-width='3.5'/><circle cx='50' cy='50' r='44' fill='url(%23b)'/><path d='M 10 60 Q 50 85 90 50' fill='none' stroke='url(%23g)' stroke-width='4.5' stroke-linecap='round' opacity='0.95'/><g transform='translate(74 66)'><circle r='12' fill='%230a2b3c' stroke='url(%23g)' stroke-width='1.8'/><ellipse cx='-3' cy='-3' rx='4' ry='2.5' fill='%23fff' opacity='0.85'/><ellipse cx='4' cy='2' rx='3.5' ry='2' fill='%23fff' opacity='0.85'/><ellipse cx='-1' cy='5' rx='3' ry='2' fill='%23fff' opacity='0.85'/><path d='M -12 0 Q 0 -14 12 0' fill='none' stroke='url(%23g)' stroke-width='1.8'/><path d='M 12 0 L 9 -3 L 9 3 Z' fill='url(%23g)'/></g><g transform='translate(50 62)'><text x='2' y='2.5' text-anchor='middle' font-family='Arial Black, sans-serif' font-size='40' font-weight='900' fill='%23000' opacity='0.35'>AP</text><text x='0' y='0' text-anchor='middle' font-family='Arial Black, sans-serif' font-size='40' font-weight='900' fill='none' stroke='url(%23g)' stroke-width='3' stroke-linejoin='round'>AP</text><text x='0' y='0' text-anchor='middle' font-family='Arial Black, sans-serif' font-size='40' font-weight='900' fill='url(%23a)'>AP</text></g><circle cx='14' cy='30' r='1.5' fill='%23FFD966' opacity='0.8'/><circle cx='18' cy='36' r='1.2' fill='%233b8dd4' opacity='0.8'/><circle cx='12' cy='40' r='1.5' fill='%23FFD966' opacity='0.7'/><circle cx='20' cy='44' r='1.2' fill='%233b8dd4' opacity='0.7'/></svg>" class="receipt-logo-img" alt="AfriPay AP Logo" />
+                <div class="receipt-brand">Afri·Pay</div>
                 <div class="receipt-sub">RECEIPT</div>
                 <div class="receipt-badge" id="receiptBadge">🔹 CONFIRMED</div>
             </div>
@@ -800,8 +820,6 @@
 
     <div id="agreementModal" class="modal"><div class="modal-content"><div class="agreement-modal-header"><button class="agreement-close-x" id="agreementCloseXBtn">✕</button><h3>📜 AGREEMENT</h3></div><div class="agreement-body" id="agreementBody"></div><div class="agreement-footer"><button class="action-btn agree-btn" id="agreementAgreeBtn" disabled>✋ Agree</button><button class="action-btn close-modal" id="agreementCloseBtn">Close</button></div><div class="agreement-status" id="agreementStatus"></div></div></div>
 
-    <div id="agentAuthModal" class="modal"><div class="modal-content"><h3>🔐 Agent Auth</h3><div id="agentAuthError" class="error-msg"></div><div class="input-group"><label>Password *</label><input type="password" id="agentAuthPassword" maxlength="6" /></div><div class="input-group"><label>5-Digit PIN *</label><input type="password" id="agentAuthPin" maxlength="5" /></div><div class="action-buttons-row"><button class="action-btn" id="agentAuthConfirmBtn">✅ Confirm</button><button class="action-btn close-modal" id="agentAuthCancelBtn">Cancel</button></div></div></div>
-
     <div id="editBizAuthModal" class="modal">
         <div class="modal-content" style="max-width:380px;">
             <h3>🔐 Edit Business Auth</h3>
@@ -826,8 +844,6 @@
         </div>
     </div>
 
-    <div id="agentReportModal" class="modal"><div class="modal-content"><div class="report-header"><button class="report-close-x" id="reportCloseXBtn">✕</button><h3>📋 Agent Report</h3></div><div class="report-body" id="reportBody"></div><div class="report-footer"><button class="action-btn" id="reportCopyUssdBtn" style="background:#2c7da0;">📋 Copy USSD</button><button class="action-btn close-modal" id="reportCloseBtn">Close</button></div></div></div>
-    <div id="adminDeleteUserModal" class="modal"><div class="modal-content"><h3>🔐 Admin Verify</h3><div class="delete-user-warning">⚠️ Delete <span id="deleteUserNameDisplay">this user</span>?</div><div id="adminDeleteUserError" class="error-msg"></div><div class="input-group"><label>Admin Name *</label><input type="text" id="adminDeleteUserName" /></div><div class="input-group"><label>Password *</label><input type="password" id="adminDeleteUserPassword" /></div><div class="action-buttons-row"><button class="action-btn" id="adminDeleteUserConfirmBtn" style="background:#e74c3c;">✅ Delete</button><button class="action-btn close-modal" id="adminDeleteUserCancelBtn">Cancel</button></div></div></div>
     <div id="pinModal" class="modal"><div class="modal-content"><h3>🔐 PIN Required</h3><div id="pinProviderBadge" class="provider-badge orange">MB-ONE</div><div class="pin-recipient-box" id="pinRecipientBox"><div class="pin-recipient-row"><span class="pin-recipient-label">👤 Recipient</span><span class="pin-recipient-value" id="pinRecipientName">—</span></div><div class="pin-recipient-row"><span class="pin-recipient-label">📱 Number</span><span class="pin-recipient-value" id="pinRecipientPhone">—</span></div><div class="pin-recipient-row"><span class="pin-recipient-label">💵 Amount</span><span class="pin-recipient-value" id="pinRecipientAmount">—</span></div></div><div class="ussd-preview" id="pinUssdPreview"></div><div class="pin-warning" id="pinRecipientWarning">⚠️ No recipient number — select an agent or business first.</div><div id="pinError" class="auth-error"></div><div class="input-group"><label>4-Digit PIN *</label><input type="password" id="pinInput" maxlength="4" /></div><div class="action-buttons-row"><button class="action-btn" id="pinConfirmBtn">✅ Dial</button><button class="action-btn close-modal" id="pinCancelBtn">Cancel</button></div></div></div>
 
     <div id="currencyConverterModal" class="modal"><div class="modal-content">
@@ -866,7 +882,6 @@
         <div class="input-group"><label>Country *</label><select id="bizCountrySelect"><option value="Sierra Leone">Sierra Leone</option><option value="Guinea">Guinea</option><option value="Senegal">Senegal</option></select></div>
         <div class="input-group"><label>Other Country (if not listed)</label><input type="text" id="bizCountryOther" /></div>
         <div class="input-group"><label>Website (optional)</label><input type="url" id="bizWebsite" /></div>
-
         <div style="margin-top:0.6rem; padding:0.55rem 0.7rem; background:#f0f6fb; border:1px solid #c0d8e8; border-radius:10px;">
             <div style="font-weight:700; color:#1c6e8f; font-size:0.8rem; margin-bottom:0.25rem;">🔐 Business Access Credentials</div>
             <div style="font-size:0.65rem; color:#666; margin-bottom:0.4rem;">You will need these credentials to edit this business later.</div>
@@ -885,12 +900,10 @@
                 </div>
             </div>
         </div>
-
         <div style="margin-top:0.8rem; border-top:2px solid #e0e8f0; padding-top:0.5rem;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;"><label style="font-weight:700; color:#1c6e8f; font-size:0.85rem;">📦 Products</label><button type="button" class="add-product-btn" id="addProductBtn">➕ Add Product</button></div>
             <div id="productsContainer"></div>
         </div>
-
         <div class="authenticator-section">
             <div class="auth-header"><label>🔐 Payment Authenticator</label><span class="auth-status pending" id="authStatusBadge">Pending</span></div>
             <div class="input-group"><label>Provider TX ID *</label><input type="text" id="authProviderTxId" placeholder="AB123456.1234.X12345" /><div class="auth-error-msg" id="authProviderError"></div></div>
@@ -899,7 +912,6 @@
             <button type="button" class="auth-btn-green" id="authenticateBtn">🔑 Authenticate</button>
             <button type="button" class="auth-btn-green" id="submitForApprovalBtn" style="width:100%; justify-content:center; background:#0f2b3d; margin-top:6px;">📤 Submit for Approval</button>
         </div>
-
         <div class="delivery-section">
             <label style="font-weight:700; color:#1c6e8f; font-size:0.8rem; display:block;">🚚 Delivery Options</label>
             <div class="input-group"><label>Quantity for Delivery</label><input type="number" id="deliveryQuantity" /></div>
@@ -907,7 +919,6 @@
             <div class="input-group"><label>Delivery Country</label><select id="deliveryCountrySelect"><option value="">Select country...</option><option value="Liberia">Liberia</option><option value="Guinea">Guinea</option><option value="Sierra Leone">Sierra Leone</option></select></div>
             <div class="input-group"><label>Delivery Price</label><input type="number" id="deliveryPriceCountry" step="0.01" /></div>
         </div>
-
         <div class="action-buttons-row" style="margin-top:8px;"><button class="action-btn close-modal" style="background:#2c7da0;">Close</button></div>
     </div></div>
 
@@ -985,14 +996,9 @@
                 receipt_recipient_label:'🎯 Recipient Amount',receipt_sender_label:'💰 Sender Amount',
                 receipt_share_client_wa:'📱 Client',receipt_share_agent_wa:'📱 Agent',
                 receipt_share_client_sms:'✉️ Client',receipt_share_agent_sms:'✉️ Agent',
-                popup_buy_tag:'BUY',
-                popup_brand:'⭐ AfriPay Quick Pay',
-                popup_subtitle:'Sponsored Product',
-                popup_select:'🛒 Select Product',
-                popup_dismiss:'Dismiss',
-                popup_auto_close:'Auto‑closes in',
-                popup_quality_prefix:'Quality:',
-                popup_stock_prefix:'in stock'
+                popup_buy_tag:'BUY',popup_brand:'⭐ AfriPay Quick Pay',popup_subtitle:'Sponsored Product',
+                popup_select:'🛒 Select Product',popup_dismiss:'Dismiss',popup_auto_close:'Auto‑closes in',
+                popup_quality_prefix:'Quality:',popup_stock_prefix:'in stock'
             },
             fr: {
                 login:'Connexion',register:"S'inscrire",logout:'Déconnexion',online:'En ligne',map_title:'📍 Emplacement',
@@ -1008,14 +1014,9 @@
                 transfer_code_label:'Code de transfert *',
                 transfer_code_placeholder:'Entrez le code de votre fournisseur',
                 transfer_code_hint:'📱 Entrez le code fourni par votre opérateur mobile money',
-                popup_buy_tag:'ACHETER',
-                popup_brand:'⭐ AfriPay Paiement Rapide',
-                popup_subtitle:'Produit Sponsorisé',
-                popup_select:'🛒 Sélectionner le produit',
-                popup_dismiss:'Ignorer',
-                popup_auto_close:'Fermeture auto dans',
-                popup_quality_prefix:'Qualité:',
-                popup_stock_prefix:'en stock'
+                popup_buy_tag:'ACHETER',popup_brand:'⭐ AfriPay Paiement Rapide',popup_subtitle:'Produit Sponsorisé',
+                popup_select:'🛒 Sélectionner le produit',popup_dismiss:'Ignorer',popup_auto_close:'Fermeture auto dans',
+                popup_quality_prefix:'Qualité:',popup_stock_prefix:'en stock'
             },
             ar: {
                 login:'تسجيل الدخول',register:'تسجيل',logout:'تسجيل الخروج',online:'متصل',map_title:'📍 الموقع',
@@ -1030,14 +1031,9 @@
                 transfer_code_label:'رمز التحويل *',
                 transfer_code_placeholder:'أدخل الرمز من مزودك',
                 transfer_code_hint:'📱 أدخل الرمز المقدم من مزود المحفظة الإلكترونية',
-                popup_buy_tag:'شراء',
-                popup_brand:'⭐ AfriPay الدفع السريع',
-                popup_subtitle:'منتج مدعوم',
-                popup_select:'🛒 اختر المنتج',
-                popup_dismiss:'تجاهل',
-                popup_auto_close:'يغلق تلقائياً خلال',
-                popup_quality_prefix:'الجودة:',
-                popup_stock_prefix:'في المخزون'
+                popup_buy_tag:'شراء',popup_brand:'⭐ AfriPay الدفع السريع',popup_subtitle:'منتج مدعوم',
+                popup_select:'🛒 اختر المنتج',popup_dismiss:'تجاهل',popup_auto_close:'يغلق تلقائياً خلال',
+                popup_quality_prefix:'الجودة:',popup_stock_prefix:'في المخزون'
             },
             es: {
                 login:'Iniciar sesión',register:'Registrarse',logout:'Cerrar sesión',online:'En línea',map_title:'📍 Ubicación',
@@ -1053,14 +1049,9 @@
                 transfer_code_label:'Código de transferencia *',
                 transfer_code_placeholder:'Ingrese el código de su proveedor',
                 transfer_code_hint:'📱 Ingrese el código proporcionado por su operador de dinero móvil',
-                popup_buy_tag:'COMPRAR',
-                popup_brand:'⭐ AfriPay Pago Rápido',
-                popup_subtitle:'Producto Patrocinado',
-                popup_select:'🛒 Seleccionar producto',
-                popup_dismiss:'Descartar',
-                popup_auto_close:'Se cierra en',
-                popup_quality_prefix:'Calidad:',
-                popup_stock_prefix:'en stock'
+                popup_buy_tag:'COMPRAR',popup_brand:'⭐ AfriPay Pago Rápido',popup_subtitle:'Producto Patrocinado',
+                popup_select:'🛒 Seleccionar producto',popup_dismiss:'Descartar',popup_auto_close:'Se cierra en',
+                popup_quality_prefix:'Calidad:',popup_stock_prefix:'en stock'
             }
         };
 
@@ -1098,12 +1089,22 @@
         let authProviderTxId = '';
         let authTransferCode = '';
         let currentPopupProduct = null;
+        let emojiPickerTarget = 'avatar';
 
         const DEFAULT_EDIT_BIZ_PASSWORD = 'EDITBIZ';
         const DEFAULT_EDIT_BIZ_PIN = '12345';
         let pendingEditBizId = null;
 
-        // POP-UP ADVERT SYSTEM
+        const AVAILABLE_EMOJIS = [
+            '👤','👩','👨','👧','👦','👴','👵','🧑','👶','🧒','👱','🧔','👩‍🦰','👨‍🦱','👩‍🦳','👨‍🦳',
+            '🧑‍💼','👩‍💼','👨‍💼','🧑‍🎓','👩‍🎓','👨‍🎓','🧑‍🏫','👩‍🏫','👨‍🏫','🧑‍⚕️','👩‍⚕️','👨‍⚕️',
+            '🧑‍🍳','👩‍🍳','👨‍🍳','🧑‍🌾','👩‍🌾','👨‍🌾','🧑‍🔧','👩‍🔧','👨‍🔧','🧑‍💻','👩‍💻','👨‍💻',
+            '🧑‍🎨','👩‍🎨','👨‍🎨','🧑‍🚀','👩‍🚀','👨‍🚀','🧑‍✈️','👩‍✈️','👨‍✈️',
+            '😀','😃','😄','😁','😊','🙂','😉','😍','🤩','😎','🤗','🤔','🧐','😇','🥰','😘',
+            '🦁','🐯','🐶','🐱','🐼','🦊','🐨','🐻','🐵','🐸','🐷','🐔','🦄','🐲','🦋','🐢',
+            '💰','💵','💴','💶','💷','💸','💳','🪙','🏦','📱','💻','🖥️','🛒','🛍️','🎁','⭐'
+        ];
+
         let popupAdInterval = null;
         let popupAdTimeout = null;
         let popupAdCountdownInterval = null;
@@ -1154,9 +1155,6 @@
             showToast('✅ Provider TX ID verified! Enter the Transfer Code from your provider.', 3500);
         }
 
-        // ============================================================
-        // USER CURRENCY RESOLVER
-        // ============================================================
         function getUserCurrency() {
             const countryCurrencyMap = {
                 'Sierra Leone': 'SLL', 'Liberia': 'LRD', 'Guinea': 'GNF', 'Senegal': 'XOF',
@@ -1333,11 +1331,8 @@
                 renderBusinessStrip();
                 renderAgentDropdown();
                 populateAgentSelect(currentAgentFilterCountry);
-                // Update popup dynamic content if visible
                 const overlay = getEl('popupAdOverlay');
-                if (overlay && overlay.style.display === 'flex') {
-                    refreshPopupAdvertTranslations();
-                }
+                if (overlay && overlay.style.display === 'flex') refreshPopupAdvertTranslations();
             } catch (e) {}
         }
 
@@ -1372,8 +1367,70 @@
         }
 
         // ============================================================
-        // POP-UP ADVERT TRANSLATION HELPERS
+        // EMOJI PICKER
         // ============================================================
+        function openEmojiPicker(target) {
+            emojiPickerTarget = target || 'avatar';
+            const grid = getEl('emojiGrid');
+            if (!grid) return;
+            grid.innerHTML = '';
+            AVAILABLE_EMOJIS.forEach(emoji => {
+                const span = document.createElement('span');
+                span.className = 'emoji-option';
+                span.textContent = emoji;
+                if (currentUser && currentUser.emoji === emoji && !currentUser.avatarDataURL) span.classList.add('selected');
+                span.addEventListener('click', function() {
+                    document.querySelectorAll('#emojiGrid .emoji-option').forEach(el => el.classList.remove('selected'));
+                    this.classList.add('selected');
+                    applyEmoji(emoji);
+                });
+                grid.appendChild(span);
+            });
+            getEl('emojiPickerModal').style.display = 'flex';
+        }
+
+        function applyEmoji(emoji) {
+            selectedEmoji = emoji;
+            if (currentUser) {
+                currentUser.emoji = emoji;
+                currentUser.avatarDataURL = null;
+                saveUserToStorage(currentUser);
+                updateAvatarDisplay(currentUser);
+                updateProfileAvatarDisplay(currentUser);
+                const regUser = registeredUsers.find(u => u.phone === currentUser.phone || u.name === currentUser.name);
+                if (regUser) { regUser.emoji = emoji; regUser.avatarDataURL = null; saveRegisteredUsers(); }
+                if (getEl('editAccountEmojiPreview')) getEl('editAccountEmojiPreview').textContent = emoji;
+            }
+            showToast(`✅ Avatar set to ${emoji}`, 1500);
+            setTimeout(() => { getEl('emojiPickerModal').style.display = 'none'; }, 400);
+        }
+
+        function applyAvatarImage(dataURL) {
+            if (currentUser) {
+                currentUser.avatarDataURL = dataURL;
+                saveUserToStorage(currentUser);
+                updateAvatarDisplay(currentUser);
+                updateProfileAvatarDisplay(currentUser);
+                const regUser = registeredUsers.find(u => u.phone === currentUser.phone || u.name === currentUser.name);
+                if (regUser) { regUser.avatarDataURL = dataURL; saveRegisteredUsers(); }
+            }
+            showToast('✅ Avatar image updated!', 1800);
+            getEl('emojiPickerModal').style.display = 'none';
+        }
+
+        function removeAvatarImage() {
+            if (currentUser) {
+                currentUser.avatarDataURL = null;
+                if (!currentUser.emoji) currentUser.emoji = '👤';
+                saveUserToStorage(currentUser);
+                updateAvatarDisplay(currentUser);
+                updateProfileAvatarDisplay(currentUser);
+                const regUser = registeredUsers.find(u => u.phone === currentUser.phone || u.name === currentUser.name);
+                if (regUser) { regUser.avatarDataURL = null; saveRegisteredUsers(); }
+            }
+            showToast('🗑️ Avatar image removed', 1500);
+        }
+
         function getTranslatedProductDescription(product) {
             const qualityLabel = t('popup_quality_prefix');
             const stockLabel = t('popup_stock_prefix');
@@ -1384,9 +1441,7 @@
 
         function refreshPopupAdvertTranslations() {
             if (!currentPopupProduct) return;
-            if (getEl('popupAdDescription')) {
-                getEl('popupAdDescription').textContent = getTranslatedProductDescription(currentPopupProduct);
-            }
+            if (getEl('popupAdDescription')) getEl('popupAdDescription').textContent = getTranslatedProductDescription(currentPopupProduct);
         }
 
         function updatePopupAdTimerText() {
@@ -1394,7 +1449,6 @@
             if (timerSeconds) timerSeconds.textContent = popupAdCountdownSeconds + 's';
         }
 
-        // EDIT BIZ ENTRY POINT
         window.editBusinessFromStrip = function(event) {
             if (event) { try { event.preventDefault(); } catch (e) {} try { event.stopPropagation(); } catch (e) {} }
             if (lastSelectedBusinessId === null || lastSelectedBusinessId === undefined) {
@@ -1404,8 +1458,7 @@
             }
             const biz = getAllBusinesses().find(b => b.id === lastSelectedBusinessId);
             if (!biz) { showToast('⚠️ Selected business not found.', 2500); lastSelectedBusinessId = null; try { updateEditBizStripButton(); } catch (e) {} return; }
-            try { handleEditBizStripClick(); }
-            catch (err) { console.error('❌ [EditBiz] Error:', err); showToast('❌ Could not open Edit Business: ' + (err.message || 'Unknown error'), 5000); }
+            try { handleEditBizStripClick(); } catch (err) { console.error(err); }
         };
 
         function loadRegisteredUsers() { try { registeredUsers = JSON.parse(localStorage.getItem(STORAGE_KEYS.registeredUsers) || '[]'); } catch (e) { registeredUsers = []; } }
@@ -1442,7 +1495,6 @@
             if (other && other.value.trim()) return SecurityUtils.sanitizeInput(other.value.trim());
             return '';
         }
-
         function setCityValue(selectId, otherId, value) {
             const select = getEl(selectId); const other = getEl(otherId);
             if (!select || !other) return;
@@ -1450,10 +1502,8 @@
             for (let i = 0; i < select.options.length; i++) { if (select.options[i].value === value) { select.value = value; found = true; break; } }
             if (!found && value) { select.value = ''; other.value = SecurityUtils.sanitizeInput(value); } else { other.value = ''; }
         }
-
         function loadPendingBusinesses() { try { pendingBusinesses = JSON.parse(localStorage.getItem(STORAGE_KEYS.pendingBusinesses) || '[]'); } catch (e) { pendingBusinesses = []; } }
         function savePendingBusinesses() { try { localStorage.setItem(STORAGE_KEYS.pendingBusinesses, JSON.stringify(pendingBusinesses)); } catch (e) {} }
-
         function updateAgentDropdownPlaceholder() {
             const btn = getEl('selectedAgentName');
             if (!btn) return;
@@ -1463,7 +1513,6 @@
                 btn.innerHTML = `Select Agent in ${flag} ${currentAgentFilterCountry}`;
             } else if (!selectedAgentId) { btn.innerHTML = t('select_agent_placeholder'); }
         }
-
         function getFlagForCountryName(countryName) { const code = COUNTRY_NAME_TO_CODE[countryName]; return code ? COUNTRY_CODE_TO_FLAG[code] : '🌍'; }
         function getCountryNameFromSelect() { const select = getEl('countryCodeSelect'); if (!select) return null; const val = select.value; if (!val) return null; return val.split('|')[1] || null; }
         function getAgentsByCountry(countryName) { if (!countryName) return getAgents(); return getAgents().filter(agent => getAgentCountryName(agent).toLowerCase() === countryName.toLowerCase()); }
@@ -1623,7 +1672,6 @@
                 if (getEl('agentPhone') && product.businessPhone) getEl('agentPhone').value = SecurityUtils.escapeHTML(product.businessPhone);
             }
         }
-
         function hideProductDetails() { const g = getEl('productDetailGroup'); if (g) g.classList.remove('visible'); }
 
         function selectAgent(agentId) {
@@ -1693,6 +1741,8 @@
                     const u = JSON.parse(stored);
                     if (u && u.name && u.phone) {
                         currentUser = u;
+                        if (!currentUser.emoji) currentUser.emoji = '👤';
+                        selectedEmoji = currentUser.emoji;
                         const existing = connectedUsers.find(user => user.id === 'current');
                         if (existing) { existing.name = u.name; existing.emoji = u.emoji || '👤'; existing.avatarDataURL = u.avatarDataURL || null; }
                         else connectedUsers.unshift({ id: 'current', name: u.name, emoji: u.emoji || '👤', avatarDataURL: u.avatarDataURL || null, status: 'online' });
@@ -1708,6 +1758,7 @@
             getEl('welcomeSection').style.display = 'flex';
             getEl('loggedUserName').innerText = SecurityUtils.escapeHTML(currentUser?.name || 'User');
             updateAvatarDisplay(currentUser);
+            updateProfileAvatarDisplay(currentUser);
             getEl('mainFormContainer').style.display = 'block';
             getEl('profileAddress').innerText = SecurityUtils.escapeHTML(currentUser?.address || '—');
             getEl('profileCity').innerText = SecurityUtils.escapeHTML(currentUser?.city || '—');
@@ -1752,6 +1803,15 @@
             else { emojiSpan.style.display = 'inline'; img.style.display = 'none'; emojiSpan.innerText = '👤'; }
         }
 
+        function updateProfileAvatarDisplay(user) {
+            const emojiSpan = getEl('profileAvatarEmoji');
+            const img = getEl('profileAvatarImg');
+            if (!emojiSpan || !img) return;
+            if (user && user.avatarDataURL) { emojiSpan.style.display = 'none'; img.style.display = 'block'; img.src = user.avatarDataURL; }
+            else if (user && user.emoji) { emojiSpan.style.display = 'inline'; img.style.display = 'none'; emojiSpan.innerText = user.emoji; }
+            else { emojiSpan.style.display = 'inline'; img.style.display = 'none'; emojiSpan.innerText = '👤'; }
+        }
+
         function loginUser(fullName, phoneNumber) {
             const name = SecurityUtils.sanitizeInput(fullName.trim(), 100);
             const phone = SecurityUtils.sanitizePhone(phoneNumber.trim());
@@ -1760,6 +1820,8 @@
             try { const stored = localStorage.getItem(STORAGE_KEYS.user); if (stored) storedUser = JSON.parse(stored); } catch (e) {}
             if (storedUser && storedUser.name.toLowerCase() === name.toLowerCase() && storedUser.phone === phone) {
                 currentUser = storedUser;
+                if (!currentUser.emoji) currentUser.emoji = '👤';
+                selectedEmoji = currentUser.emoji;
                 saveUserToStorage(storedUser);
                 const existing = connectedUsers.find(u => u.id === 'current');
                 if (existing) { existing.name = storedUser.name; existing.avatarDataURL = storedUser.avatarDataURL || null; }
@@ -1780,6 +1842,7 @@
             const user = registeredUsers.find(u => u.name.toLowerCase() === name.toLowerCase() && u.phone === phone);
             if (user) {
                 currentUser = { name: user.name, phone: user.phone, address: user.address || '', city: user.city || '', country: user.country || '', emoji: user.emoji || '👤', avatarDataURL: user.avatarDataURL || null, nin: user.nin || '', idNumber: user.idNumber || '' };
+                selectedEmoji = currentUser.emoji;
                 saveUserToStorage(currentUser);
                 renderSidebar();
                 showToast('✅ Welcome ' + currentUser.name + '!', 1800);
@@ -1793,7 +1856,6 @@
             return false;
         }
 
-        // BUSINESS STRIP
         function loadCustomBusinesses() { try { customBusinesses = JSON.parse(localStorage.getItem(STORAGE_KEYS.customBusinesses) || '[]'); } catch (e) { customBusinesses = []; } }
         function saveCustomBusinesses() { try { localStorage.setItem(STORAGE_KEYS.customBusinesses, JSON.stringify(customBusinesses)); } catch (e) {} }
         function getAllBusinesses() { return [...businesses, ...customBusinesses]; }
@@ -1867,13 +1929,9 @@
             if (pinEl) pinEl.value = '';
             if (hintEl) {
                 const creds = getBusinessCredentials(biz);
-                if (creds.source === 'business') {
-                    hintEl.innerHTML = '💡 Use the credentials you set for <strong>' + SecurityUtils.escapeHTML(biz.name) + '</strong> when creating it.';
-                } else if (creds.source === 'agent') {
-                    hintEl.innerHTML = '💡 Use the credentials of the registered agent <strong>' + SecurityUtils.escapeHTML(creds.agentName || biz.name) + '</strong>.';
-                } else {
-                    hintEl.innerHTML = '💡 No custom credentials found. Use the default: password <strong>' + DEFAULT_EDIT_BIZ_PASSWORD + '</strong> &middot; PIN <strong>' + DEFAULT_EDIT_BIZ_PIN + '</strong>.';
-                }
+                if (creds.source === 'business') hintEl.innerHTML = '💡 Use the credentials you set for <strong>' + SecurityUtils.escapeHTML(biz.name) + '</strong> when creating it.';
+                else if (creds.source === 'agent') hintEl.innerHTML = '💡 Use the credentials of the registered agent <strong>' + SecurityUtils.escapeHTML(creds.agentName || biz.name) + '</strong>.';
+                else hintEl.innerHTML = '💡 Default: password <strong>' + DEFAULT_EDIT_BIZ_PASSWORD + '</strong> &middot; PIN <strong>' + DEFAULT_EDIT_BIZ_PIN + '</strong>.';
             }
             const modal = getEl('editBizAuthModal');
             if (modal) modal.style.display = 'flex';
@@ -1908,26 +1966,18 @@
             if (!biz) { showToast('⚠️ Business no longer exists.', 2000); lastSelectedBusinessId = null; updateEditBizStripButton(); return; }
             lastSelectedBusinessId = biz.id;
             updateEditBizStripButton();
-
             const setVal = (id, v) => { const el = getEl(id); if (el) el.value = v || ''; };
-            setVal('bizName', biz.name);
-            setVal('bizContact', biz.contact);
+            setVal('bizName', biz.name); setVal('bizContact', biz.contact);
             setVal('bizMobileMoney', biz.mobileMoney || biz.contact);
-            setVal('bizType', biz.type || 'Service');
-            setVal('bizIcon', biz.icon || '🏪');
+            setVal('bizType', biz.type || 'Service'); setVal('bizIcon', biz.icon || '🏪');
             if (getEl('bizIconPreview')) getEl('bizIconPreview').textContent = biz.icon || '🏪';
-            setVal('bizAddress', biz.address);
-            setCityValue('bizCitySelect', 'bizCityOther', biz.city || '');
-            setVal('bizCountrySelect', biz.country || 'Sierra Leone');
-            setVal('bizWebsite', biz.website);
-
+            setVal('bizAddress', biz.address); setCityValue('bizCitySelect', 'bizCityOther', biz.city || '');
+            setVal('bizCountrySelect', biz.country || 'Sierra Leone'); setVal('bizWebsite', biz.website);
             if (getEl('bizEditingId')) getEl('bizEditingId').value = biz.id;
             if (getEl('bizPassword')) getEl('bizPassword').value = biz.password || '';
             if (getEl('bizPin')) getEl('bizPin').value = biz.pin || '';
-
             const titleEl = getEl('addBizTitle');
             if (titleEl) titleEl.textContent = '✏️ Edit Business – ' + biz.name;
-
             const productsContainer = getEl('productsContainer');
             productsContainer.innerHTML = '';
             productCounter = 0;
@@ -1964,24 +2014,18 @@
                     if (emojiInput && preview) emojiInput.addEventListener('input', function() { preview.textContent = this.value.trim() || '📱'; });
                 });
             } else { addProductEntry(); }
-
-            const authProviderTxIdEl = getEl('authProviderTxId');
-            const authTransferCodeEl = getEl('authTransferCode');
-            if (authProviderTxIdEl) { authProviderTxIdEl.value = ''; authProviderTxIdEl.className = ''; }
-            if (authTransferCodeEl) { authTransferCodeEl.value = ''; authTransferCodeEl.className = ''; }
+            if (getEl('authProviderTxId')) { getEl('authProviderTxId').value = ''; getEl('authProviderTxId').className = ''; }
+            if (getEl('authTransferCode')) { getEl('authTransferCode').value = ''; getEl('authTransferCode').className = ''; }
             if (getEl('authProviderError')) getEl('authProviderError').style.display = 'none';
             if (getEl('authTransferError')) getEl('authTransferError').style.display = 'none';
             if (getEl('authSuccessMsg')) getEl('authSuccessMsg').style.display = 'none';
             if (getEl('authStatusBadge')) { getEl('authStatusBadge').textContent = 'Pending'; getEl('authStatusBadge').className = 'auth-status pending'; }
             if (getEl('authenticateBtn')) { getEl('authenticateBtn').disabled = false; getEl('authenticateBtn').textContent = '🔑 Authenticate'; }
-            isAuthenticated = false;
-            authProviderTxId = '';
-            authTransferCode = '';
-
+            isAuthenticated = false; authProviderTxId = ''; authTransferCode = '';
             if (getEl('addBizError')) getEl('addBizError').textContent = '';
             if (getEl('addBizSuccess')) getEl('addBizSuccess').textContent = '';
             if (getEl('addBizModal')) getEl('addBizModal').style.display = 'flex';
-            showToast(`✏️ Editing "${biz.name}" – update and resubmit for approval.`, 3500);
+            showToast(`✏️ Editing "${biz.name}"`, 3500);
         }
 
         function showGoodsModal(businessId) {
@@ -2006,17 +2050,11 @@
                                 <span class="goods-price">${g.price.toFixed(2)} ${displayCurrency}</span>
                                 <button class="goods-select-btn">Select</button>
                             </div>
-                            <div class="goods-details">
-                                <span>📦 Qty: ${qty}</span>
-                                <span>⭐ ${quality}</span>
-                                <span>🚚 Delivery: ${deliveryCost.toFixed(2)}</span>
-                            </div>
+                            <div class="goods-details"><span>📦 Qty: ${qty}</span><span>⭐ ${quality}</span><span>🚚 Delivery: ${deliveryCost.toFixed(2)}</span></div>
                         </div>
                     `;
                 }).join('');
-            } else {
-                goodsHtml = `<div style="text-align:center; padding:12px; color:#95a5a6;">No items added yet.</div>`;
-            }
+            } else { goodsHtml = `<div style="text-align:center; padding:12px; color:#95a5a6;">No items added yet.</div>`; }
             if (getEl('goodsModalTitle')) getEl('goodsModalTitle').innerHTML = `${biz.icon || '🏪'} ${SecurityUtils.escapeHTML(biz.name)} – Select Item`;
             if (getEl('goodsList')) getEl('goodsList').innerHTML = goodsHtml;
             if (getEl('businessWebsiteLink')) {
@@ -2027,8 +2065,7 @@
             getEl('goodsModal').style.display = 'flex';
             document.querySelectorAll('.goods-item').forEach(item => {
                 const clickHandler = function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
+                    e.preventDefault(); e.stopPropagation();
                     const price = parseFloat(this.getAttribute('data-price') || 0);
                     const goodsName = this.getAttribute('data-name') || 'Product';
                     const quantity = parseInt(this.getAttribute('data-quantity') || 1);
@@ -2084,9 +2121,6 @@
             });
         }
 
-        // ============================================================
-        // POP-UP ADVERT — with translation support
-        // ============================================================
         function pickRandomProductForAdvert() {
             const allBiz = getAllBusinesses();
             const candidates = [];
@@ -2094,12 +2128,10 @@
                 if (biz.goods && biz.goods.length > 0) {
                     biz.goods.forEach(g => {
                         candidates.push({
-                            businessId: biz.id,
-                            businessName: biz.name,
+                            businessId: biz.id, businessName: biz.name,
                             businessIcon: biz.icon || '🏪',
                             businessPhone: biz.mobileMoney || biz.contact || '',
-                            name: g.name,
-                            price: g.price,
+                            name: g.name, price: g.price,
                             quantity: g.quantity || 1,
                             quality: g.quality || 'Brand new',
                             icon: g.icon || biz.icon || '📱'
@@ -2120,29 +2152,24 @@
             lastPopupAdShownAt = now;
             popupAdShowCount++;
             currentPopupProduct = product;
-
             const overlay = getEl('popupAdOverlay');
             if (!overlay) return;
-
             if (getEl('popupAdIcon')) getEl('popupAdIcon').textContent = product.icon;
             if (getEl('popupAdName')) getEl('popupAdName').textContent = product.name;
             if (getEl('popupAdBusiness')) getEl('popupAdBusiness').textContent = `${product.businessIcon} ${product.businessName}`;
             if (getEl('popupAdDescription')) getEl('popupAdDescription').textContent = getTranslatedProductDescription(product);
             if (getEl('popupAdPrice')) getEl('popupAdPrice').textContent = product.price.toFixed(2);
             if (getEl('popupAdCurrency')) getEl('popupAdCurrency').textContent = isLocalMode ? getUserCurrency() : currentCountryData.currency;
-
             const selectBtn = getEl('popupAdSelectBtn');
             if (selectBtn) {
                 selectBtn.onclick = function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
+                    e.preventDefault(); e.stopPropagation();
                     hidePopupAdvert();
                     lastSelectedBusinessId = product.businessId;
                     updateEditBizStripButton();
                     try { showGoodsModal(product.businessId); } catch (err) {}
                     setTimeout(() => {
-                        const items = document.querySelectorAll('#goodsList .goods-item');
-                        items.forEach(item => {
+                        document.querySelectorAll('#goodsList .goods-item').forEach(item => {
                             const nameAttr = item.getAttribute('data-name');
                             if (nameAttr && nameAttr === product.name) item.click();
                         });
@@ -2153,7 +2180,6 @@
             if (dismissBtn) dismissBtn.onclick = function(e) { e.preventDefault(); e.stopPropagation(); hidePopupAdvert(); };
             const closeBtn = getEl('popupAdCloseBtn');
             if (closeBtn) closeBtn.onclick = function(e) { e.preventDefault(); e.stopPropagation(); hidePopupAdvert(); };
-
             overlay.style.display = 'flex';
             startPopupAdCountdown(15);
         }
@@ -2173,10 +2199,7 @@
             popupAdCountdownInterval = setInterval(() => {
                 popupAdCountdownSeconds--;
                 updatePopupAdTimerText();
-                if (popupAdCountdownSeconds <= 0) {
-                    clearInterval(popupAdCountdownInterval);
-                    hidePopupAdvert();
-                }
+                if (popupAdCountdownSeconds <= 0) { clearInterval(popupAdCountdownInterval); hidePopupAdvert(); }
             }, 1000);
         }
 
@@ -2191,8 +2214,7 @@
         function stopPopupAdTimer() {
             clearTimeout(popupAdTimeout);
             clearInterval(popupAdInterval);
-            popupAdTimeout = null;
-            popupAdInterval = null;
+            popupAdTimeout = null; popupAdInterval = null;
             hidePopupAdvert();
         }
 
@@ -2211,7 +2233,6 @@
             const p3 = Math.floor(1000000 + Math.random() * 9000000);
             return `WB${p1}.${p2}.${letter}${p3}`;
         }
-
         function setGeneratedTransactionId() { const f = getEl('transactionId'); if (f) f.value = generateTransactionId(); }
         function copyTransactionIdToClipboard() {
             const val = getEl('transactionId')?.value;
@@ -2250,7 +2271,6 @@
             lines.push({ key: 'receipt_fee', value: SecurityUtils.escapeHTML(receiptData.currency + ' ' + receiptData.charge) });
             lines.push({ key: 'receipt_gst', value: SecurityUtils.escapeHTML(receiptData.currency + ' ' + receiptData.gst) + ' (' + receiptData.gstRate + '%)' });
             lines.push({ key: 'receipt_total', value: SecurityUtils.escapeHTML(receiptData.currency + ' ' + receiptData.total), total: true });
-
             let html = '';
             lines.forEach(line => {
                 let cls = 'receipt-row';
@@ -2260,13 +2280,11 @@
                 html += `<div class="${cls}"><span class="label">${t(line.key)}</span><span class="value">${line.value}</span></div>`;
             });
             if (body) body.innerHTML = html;
-
             const clientPhone = receiptData.clientPhone || getEl('clientPhone')?.value?.trim() || '';
             const clientName = receiptData.clientName || getEl('clientName')?.value?.trim() || 'Client';
             const agentPhone = getEl('agentPhone')?.value?.trim() || '';
             const agentName = getEl('agentName')?.value?.trim() || 'Agent';
             const transferCode = receiptData.transferCode || 'N/A';
-
             let receiptLines = [
                 '🔹 AFRI·PAY RECEIPT 🔹', '─────────────────',
                 t('receipt_tx_id') + ' ' + receiptData.txId,
@@ -2300,7 +2318,6 @@
                 '─────────────────', '✨ ' + t('receipt_thanks'), '🔗 ' + t('receipt_powered')
             );
             const encodedText = encodeURIComponent(receiptLines.join('\n'));
-
             const clientWA = getEl('receiptShareClientWhatsApp');
             const agentWA = getEl('receiptShareAgentWhatsApp');
             const clientSMS = getEl('receiptShareClientSMS');
@@ -2312,7 +2329,7 @@
                     btn.onclick = () => {
                         if (type === 'whatsapp') window.open(`https://wa.me/${clean}?text=${encodedText}`, '_blank');
                         else if (type === 'sms') window.location.href = `sms:${clean}?body=${encodedText}`;
-                        showToast(`📤 ${type === 'whatsapp' ? 'WhatsApp' : 'SMS'} to ${name}`, 2500);
+                        showToast(`📤 Sent to ${name}`, 2500);
                     };
                     btn.style.display = 'inline-flex';
                 } else btn.style.display = 'none';
@@ -2337,7 +2354,6 @@
             const digitsOnly = (s) => String(s == null ? '' : s).replace(/\D/g, '');
             let name = (getEl('agentName') ? getEl('agentName').value : '').trim();
             let phoneRaw = (getEl('agentPhone') ? getEl('agentPhone').value : '').trim();
-
             if (digitsOnly(phoneRaw).length < 6) {
                 const agentId = _selectedAgentId || selectedAgentId || (getEl('agentNameSelect') ? getEl('agentNameSelect').value : '');
                 const agent = agentId ? getAgents().find(a => a.id === agentId) : null;
@@ -2360,28 +2376,6 @@
             return clean.substring(0, Math.max(1, maxLen - 1)).trim() + '…';
         }
 
-        function buildUssdForProvider(provider, recipient, amount) {
-            const cleanPhone = recipient.phone || '';
-            const agentNameSafe = String(recipient.name || '').replace(/[*#]/g, '').trim();
-            const amountInt = Math.round(Number(amount) || 0);
-            const countrySelect = getEl('countryCodeSelect');
-            let countrySelector = '20';
-            if (countrySelect && countrySelect.value) {
-                const parts = countrySelect.value.split('|');
-                if (parts[5] && parts[5].trim()) countrySelector = parts[5].trim();
-            }
-            let ussd = `#144*2*5*1*${countrySelector}*${agentNameSafe}*${cleanPhone}*${amountInt}*1*0000#`;
-            const senderCountry = String(currentUser?.country || '').trim().toLowerCase();
-            const senderIsSierraLeone = (senderCountry === 'sierra leone' || senderCountry === 'sl');
-            if (!senderIsSierraLeone) {
-                if (provider === 'MB-ONE')   return `#144*2*1*${cleanPhone}*${amountInt}*0000#`;
-                if (provider === 'MB-TWO')   return `*161*1*1*${cleanPhone}*${amountInt}*0000#`;
-                if (provider === 'MB-THREE') return `*144*3*${cleanPhone}*${amountInt}*0000#`;
-                if (provider === 'MB-FOUR')  return `#144*4*${cleanPhone}*${amountInt}*0000#`;
-            }
-            return ussd;
-        }
-
         function showPinModal(ussdCode, provider, providerClass, recipient, amount) {
             const recip = recipient || { name: '', phone: '' };
             const shortName = truncateRecipientName(recip.name, 24);
@@ -2393,9 +2387,7 @@
             if (previewEl) {
                 const safeCode = SecurityUtils.escapeHTML(ussdCode);
                 const safeName = SecurityUtils.escapeHTML(shortName);
-                previewEl.innerHTML = safeName
-                    ? `${safeCode}<br><span style="display:inline-block; margin-top:4px; font-weight:700; color:#0f2b3d; font-family:inherit; font-size:0.9rem;">👤 ${safeName}</span>`
-                    : safeCode;
+                previewEl.innerHTML = safeName ? `${safeCode}<br><span style="display:inline-block; margin-top:4px; font-weight:700; color:#0f2b3d; font-family:inherit; font-size:0.9rem;">👤 ${safeName}</span>` : safeCode;
             }
             if (getEl('pinRecipientName')) getEl('pinRecipientName').textContent = shortName || recip.name || 'Unknown recipient';
             if (getEl('pinRecipientPhone')) getEl('pinRecipientPhone').textContent = recip.phone ? '+' + recip.phone : '—';
@@ -2423,8 +2415,7 @@
             const link = document.createElement('a');
             link.href = `tel:${ussdCode}`;
             link.click();
-            const nameLabel = shortName ? ` → ${shortName}` : '';
-            showToast(`📞 Dialing ${providerName}${nameLabel}...`, 3000);
+            showToast(`📞 Dialing ${providerName}${shortName ? ' → ' + shortName : ''}...`, 3000);
             navigator.clipboard.writeText(ussdCode).then(() => showToast('✅ USSD copied!', 1500)).catch(() => {});
         }
 
@@ -2520,29 +2511,36 @@
         }
 
         function setupAvatarUpload() {
-            const avatarContainer = getEl('userAvatarContainer');
             const avatarInput = getEl('avatarUploadInput');
-            if (!avatarContainer || !avatarInput) return;
-            avatarContainer.addEventListener('click', function(e) {
-                if (e.target.closest('.logout-btn') || e.target.closest('.edit-account-btn')) return;
-                if (!currentUser) { showToast('⚠️ Login first.', 2000); return; }
-                avatarInput.click();
-            });
+            if (!avatarInput) return;
             avatarInput.addEventListener('change', function(e) {
                 const file = e.target.files[0];
                 if (!file || !file.type.startsWith('image/')) { showToast('⚠️ Select an image.', 2000); avatarInput.value = ''; return; }
                 if (file.size > 2 * 1024 * 1024) { showToast('⚠️ Image must be < 2MB.', 2000); avatarInput.value = ''; return; }
                 const reader = new FileReader();
-                reader.onload = function(ev) {
-                    const dataURL = ev.target.result;
-                    if (currentUser) { currentUser.avatarDataURL = dataURL; saveUserToStorage(currentUser); updateAvatarDisplay(currentUser); showToast('✅ Picture updated!', 2000); }
-                };
+                reader.onload = function(ev) { applyAvatarImage(ev.target.result); };
                 reader.readAsDataURL(file);
                 avatarInput.value = '';
             });
         }
 
-        function setupEmojiPicker() {}
+        function setupEmojiPicker() {
+            const grid = getEl('emojiGrid');
+            if (!grid) return;
+            grid.innerHTML = '';
+            AVAILABLE_EMOJIS.forEach(emoji => {
+                const span = document.createElement('span');
+                span.className = 'emoji-option';
+                span.textContent = emoji;
+                if (currentUser && currentUser.emoji === emoji && !currentUser.avatarDataURL) span.classList.add('selected');
+                span.addEventListener('click', function() {
+                    document.querySelectorAll('#emojiGrid .emoji-option').forEach(el => el.classList.remove('selected'));
+                    this.classList.add('selected');
+                    applyEmoji(emoji);
+                });
+                grid.appendChild(span);
+            });
+        }
         function setupEditEmojiPicker() {}
 
         function renderHeaderFlags() {
@@ -2570,11 +2568,7 @@
                             select.selectedIndex = i;
                             const parts = select.value.split('|');
                             currentCountryData = { gstRate: parseFloat(parts[4]) || 10, currency: parts[2] || 'USD', flag: parts[3] || '🌍', countryName: parts[1] || 'Unknown' };
-                            if (isLocalMode) {
-                                isLocalMode = false;
-                                if (getEl('intlToggleBtn')) getEl('intlToggleBtn').classList.add('active');
-                                if (getEl('countryWrapper')) getEl('countryWrapper').style.display = 'block';
-                            }
+                            if (isLocalMode) { isLocalMode = false; if (getEl('intlToggleBtn')) getEl('intlToggleBtn').classList.add('active'); if (getEl('countryWrapper')) getEl('countryWrapper').style.display = 'block'; }
                             if (getEl('gstRateLabel')) getEl('gstRateLabel').innerText = currentCountryData.gstRate;
                             if (getEl('currencySymbol')) getEl('currencySymbol').innerText = currentCountryData.currency;
                             if (getEl('flagEmoji')) getEl('flagEmoji').innerText = currentCountryData.flag;
@@ -2597,15 +2591,8 @@
                 return;
             }
             const countryName = getCountryNameFromSelect();
-            if (countryName) {
-                currentAgentFilterCountry = countryName;
-                renderAgentDropdown(countryName);
-                populateAgentSelect(countryName);
-            } else {
-                currentAgentFilterCountry = null;
-                renderAgentDropdown(null);
-                populateAgentSelect(null);
-            }
+            if (countryName) { currentAgentFilterCountry = countryName; renderAgentDropdown(countryName); populateAgentSelect(countryName); }
+            else { currentAgentFilterCountry = null; renderAgentDropdown(null); populateAgentSelect(null); }
         }
 
         function getSupportedCountryByName(name) {
@@ -2693,9 +2680,8 @@
                 if (getEl('convTotalDebit')) getEl('convTotalDebit').textContent = `${fmtMoney(totalDebit)} ${fromCurrency}`;
                 if (getEl('convRecipientAmount')) getEl('convRecipientAmount').textContent = `${fmtMoney(convertedAmount)} ${toCurrency}`;
                 if (getEl('convExchangeRate')) {
-                    getEl('convExchangeRate').textContent = fromCurrency === toCurrency
-                        ? `1 ${fromCurrency} = 1.0000 ${toCurrency}`
-                        : `1 ${fromCurrency} = ${exchangeRate.toLocaleString('en-US', { minimumFractionDigits: 4, maximumFractionDigits: 6 })} ${toCurrency}`;
+                    getEl('convExchangeRate').textContent = fromCurrency === toCurrency ? `1 ${fromCurrency} = 1.0000 ${toCurrency}` :
+                        `1 ${fromCurrency} = ${exchangeRate.toLocaleString('en-US', { minimumFractionDigits: 4, maximumFractionDigits: 6 })} ${toCurrency}`;
                 }
             } catch (e) {}
         }
@@ -2729,8 +2715,7 @@
                             mobileMoney: mobile, countryCode: cc, password: pw, pin,
                             collateralAmount: collat, collateralLimit: collat, currency: curr,
                             approved: true, role: 'agent', isAgent: true,
-                            registeredAt: new Date().toISOString(),
-                            providerTxId, transferCode, nin
+                            registeredAt: new Date().toISOString(), providerTxId, transferCode, nin
                         });
                     }
                 };
@@ -2758,7 +2743,6 @@
             getEl('editPin').value = '';
             getEl('editAgentError').textContent = '';
             getEl('editAgentSuccess').textContent = '';
-
             const collSelect = getEl('editCollateralLimit');
             const currentLimit = data.collateralLimit || 0;
             if (collSelect) {
@@ -2769,7 +2753,6 @@
                 if (!found) collSelect.selectedIndex = 0;
             }
             if (getEl('editCollateralValueDisplay')) getEl('editCollateralValueDisplay').textContent = currentLimit > 0 ? currentLimit : '0';
-
             const logoContainer = getEl('editLogoPreviewContainer');
             const logoImg = logoContainer?.querySelector('img');
             if (logoContainer) {
@@ -2777,16 +2760,13 @@
                 else { logoContainer.style.display = 'none'; if (logoImg) logoImg.src = ''; }
             }
             if (getEl('editLogoImage')) getEl('editLogoImage').value = '';
-
             const collSection = getEl('editCollateralSection');
             const logoSection = getEl('editLogoSection');
             const hint = getEl('editAuthHint');
             if (collSection) collSection.classList.remove('open');
             if (logoSection) logoSection.classList.remove('open');
             if (hint) { hint.classList.add('hidden'); hint.className = 'edit-agent-auth-hint hidden'; }
-
             getEl('editAgentModal').style.display = 'flex';
-
             const pwInput = getEl('editPassword');
             const pinInput = getEl('editPin');
             const checkAuth = function() {
@@ -2796,7 +2776,7 @@
                 if (isValid) {
                     if (collSection) collSection.classList.add('open');
                     if (logoSection) logoSection.classList.add('open');
-                    if (hint) { hint.classList.remove('hidden'); hint.className = 'edit-agent-auth-hint'; hint.textContent = '✅ Correct credentials — you can now update the collateral limit and replace the agent logo.'; }
+                    if (hint) { hint.classList.remove('hidden'); hint.className = 'edit-agent-auth-hint'; hint.textContent = '✅ Correct credentials — editing unlocked'; }
                 } else {
                     if (collSection) collSection.classList.remove('open');
                     if (logoSection) logoSection.classList.remove('open');
@@ -2806,7 +2786,6 @@
             if (pwInput) { pwInput.removeEventListener('input', checkAuth); pwInput.addEventListener('input', checkAuth); }
             if (pinInput) { pinInput.removeEventListener('input', checkAuth); pinInput.addEventListener('input', checkAuth); }
             setTimeout(checkAuth, 50);
-
             const logoInput = getEl('editLogoImage');
             if (logoInput) {
                 logoInput.onchange = function() {
@@ -2815,16 +2794,11 @@
                     const reader = new FileReader();
                     reader.onload = function(ev) {
                         const container = getEl('editLogoPreviewContainer');
-                        if (container) {
-                            container.style.display = 'block';
-                            const img = container.querySelector('img');
-                            if (img) img.src = ev.target.result;
-                        }
+                        if (container) { container.style.display = 'block'; const img = container.querySelector('img'); if (img) img.src = ev.target.result; }
                     };
                     reader.readAsDataURL(file);
                 };
             }
-
             const removeBtn = getEl('editLogoRemove');
             if (removeBtn) {
                 removeBtn.onclick = function(e) {
@@ -2834,7 +2808,6 @@
                     if (getEl('editLogoImage')) getEl('editLogoImage').value = '';
                 };
             }
-
             const genBtn = getEl('editGenBtn');
             if (genBtn) {
                 genBtn.onclick = function(e) {
@@ -2969,7 +2942,7 @@
             if (price <= 0) { showToast('⚠️ Enter product price first.', 2500); return; }
             const mb4Amount = price * 0.05;
             const recipient = resolveRecipientInfo();
-            if (!recipient.phone || recipient.phone.length < 6) { showToast('⚠️ No recipient number — select an agent or business first.', 3500); return; }
+            if (!recipient.phone || recipient.phone.length < 6) { showToast('⚠️ No recipient number.', 3500); return; }
             const cleanPhone = recipient.phone;
             const amountToSend = Math.round(mb4Amount);
             const senderCountry = String(currentUser?.country || '').trim().toLowerCase();
@@ -2978,15 +2951,10 @@
             if (senderIsSL) {
                 const countrySelect = getEl('countryCodeSelect');
                 let countryNum = '20';
-                if (countrySelect && countrySelect.value) {
-                    const parts = countrySelect.value.split('|');
-                    if (parts[5]) countryNum = String(parts[5]).trim();
-                }
+                if (countrySelect && countrySelect.value) { const parts = countrySelect.value.split('|'); if (parts[5]) countryNum = String(parts[5]).trim(); }
                 const agentName = String(recipient.name || '').replace(/[*#]/g, '').trim();
                 ussdCode = `#144*2*5*1*${countryNum}*${agentName}*${cleanPhone}*${amountToSend}*1*0000#`;
-            } else {
-                ussdCode = `#144*4*${cleanPhone}*${amountToSend}*0000#`;
-            }
+            } else { ussdCode = `#144*4*${cleanPhone}*${amountToSend}*0000#`; }
             showToast(`💳 MB-FOUR → ${recipient.name || cleanPhone}: ${amountToSend}`, 4000);
             const link = document.createElement('a');
             link.href = `tel:${ussdCode}`;
@@ -3009,19 +2977,15 @@
             const website = getEl('bizWebsite').value.trim();
             const errorEl = getEl('addBizError'); const successEl = getEl('addBizSuccess');
             errorEl.textContent = ''; successEl.textContent = '';
-
             if (!name) { errorEl.textContent = '❌ Business name required.'; return; }
             if (!contact) { errorEl.textContent = '❌ Contact phone required.'; return; }
             if (!mobileMoney) { errorEl.textContent = '❌ Mobile Money required.'; return; }
             if (!city) { errorEl.textContent = '❌ City required.'; return; }
-
             const bizPassword = getEl('bizPassword')?.value?.trim() || '';
             const bizPin = getEl('bizPin')?.value?.trim() || '';
             if (!bizPassword || bizPassword.length !== 6) { errorEl.textContent = '❌ Generate a 6-character password first.'; return; }
             if (!bizPin || bizPin.length !== 5 || !/^\d+$/.test(bizPin)) { errorEl.textContent = '❌ Generate a 5-digit PIN first.'; return; }
-
             if (countryOther) country = countryOther;
-
             const products = [];
             document.querySelectorAll('.product-entry').forEach(entry => {
                 const pName = SecurityUtils.sanitizeInput(entry.querySelector('.product-name')?.value?.trim() || '');
@@ -3031,25 +2995,15 @@
                 const pEmoji = entry.querySelector('.product-emoji')?.value?.trim() || '📱';
                 if (pName) products.push({ name: pName, price: pPrice, quantity: pQty, quality: pQuality, icon: pEmoji });
             });
-
             const editingId = getEl('bizEditingId')?.value || '';
             let updatedInPlace = false;
-
             if (editingId) {
                 const idx = customBusinesses.findIndex(b => String(b.id) === String(editingId));
                 if (idx >= 0) {
-                    customBusinesses[idx] = {
-                        ...customBusinesses[idx],
-                        name, contact, mobileMoney, type, icon,
-                        address: address || '',
-                        city,
-                        country: country || 'Sierra Leone',
-                        website: website || '',
+                    customBusinesses[idx] = { ...customBusinesses[idx], name, contact, mobileMoney, type, icon,
+                        address: address || '', city, country: country || 'Sierra Leone', website: website || '',
                         goods: products.map(p => ({ name: p.name, price: p.price, quantity: p.quantity, quality: p.quality, icon: p.icon })),
-                        password: bizPassword,
-                        pin: bizPin,
-                        updatedAt: new Date().toISOString()
-                    };
+                        password: bizPassword, pin: bizPin, updatedAt: new Date().toISOString() };
                     saveCustomBusinesses();
                     renderBusinessStrip();
                     lastSelectedBusinessId = customBusinesses[idx].id;
@@ -3059,47 +3013,28 @@
                     updatedInPlace = true;
                 }
             }
-
             if (!updatedInPlace) {
-                if (getAllBusinesses().some(b => b.name.toLowerCase() === name.toLowerCase())) {
-                    errorEl.textContent = '❌ Business name already exists.';
-                    return;
-                }
-                pendingBusinesses.push({
-                    id: 'pending_' + Date.now(),
-                    name, contact, mobileMoney, description: description || '',
-                    type, icon, address: address || '', city,
-                    country: country || 'Sierra Leone', website: website || '',
-                    products,
-                    providerTxId: authProviderTxId, transferCode: authTransferCode,
-                    password: bizPassword, pin: bizPin,
-                    submittedAt: new Date().toISOString(), status: 'pending'
-                });
+                if (getAllBusinesses().some(b => b.name.toLowerCase() === name.toLowerCase())) { errorEl.textContent = '❌ Business name already exists.'; return; }
+                pendingBusinesses.push({ id: 'pending_' + Date.now(), name, contact, mobileMoney, description: description || '',
+                    type, icon, address: address || '', city, country: country || 'Sierra Leone', website: website || '',
+                    products, providerTxId: authProviderTxId, transferCode: authTransferCode,
+                    password: bizPassword, pin: bizPin, submittedAt: new Date().toISOString(), status: 'pending' });
                 savePendingBusinesses();
                 successEl.textContent = '✅ Submitted for approval!';
                 showToast(`✅ "${name}" submitted for approval!`, 3000);
             }
-
-            getEl('authProviderTxId').value = '';
-            getEl('authTransferCode').value = '';
-            getEl('authProviderTxId').className = '';
-            getEl('authTransferCode').className = '';
-            getEl('authProviderError').style.display = 'none';
-            getEl('authTransferError').style.display = 'none';
+            getEl('authProviderTxId').value = ''; getEl('authTransferCode').value = '';
+            getEl('authProviderTxId').className = ''; getEl('authTransferCode').className = '';
+            getEl('authProviderError').style.display = 'none'; getEl('authTransferError').style.display = 'none';
             getEl('authSuccessMsg').style.display = 'none';
             const statusBadge = getEl('authStatusBadge');
             if (statusBadge) { statusBadge.textContent = 'Pending'; statusBadge.className = 'auth-status pending'; }
-            getEl('authenticateBtn').disabled = false;
-            getEl('authenticateBtn').textContent = '🔑 Authenticate';
-            isAuthenticated = false;
-            authProviderTxId = '';
-            authTransferCode = '';
-            getEl('productsContainer').innerHTML = '';
-            productCounter = 0;
+            getEl('authenticateBtn').disabled = false; getEl('authenticateBtn').textContent = '🔑 Authenticate';
+            isAuthenticated = false; authProviderTxId = ''; authTransferCode = '';
+            getEl('productsContainer').innerHTML = ''; productCounter = 0;
             if (getEl('bizEditingId')) getEl('bizEditingId').value = '';
             if (getEl('bizPassword')) getEl('bizPassword').value = '';
             if (getEl('bizPin')) getEl('bizPin').value = '';
-
             setTimeout(() => { if (successEl) successEl.textContent = ''; }, 4000);
         }
 
@@ -3123,6 +3058,7 @@
             safeExecute(() => renderHeaderFlags(), 'renderHeaderFlags');
             safeExecute(() => setupFlagClickHandlers(), 'setupFlagClickHandlers');
             safeExecute(() => setupAvatarUpload(), 'setupAvatarUpload');
+            safeExecute(() => setupEmojiPicker(), 'setupEmojiPicker');
             safeExecute(() => setupEventListeners(), 'setupEventListeners');
             safeExecute(() => updateDateTime(), 'updateDateTime');
             setInterval(() => safeExecute(updateDateTime, 'updateDateTime'), 1000);
@@ -3166,6 +3102,28 @@
             const logoutBtn = getEl('logoutBtn');
             if (logoutBtn) logoutBtn.addEventListener('click', function(e) { e.preventDefault(); clearUserStorage(); stopPopupAdTimer(); showToast('Logged out'); });
 
+            const avatarContainer = getEl('userAvatarContainer');
+            if (avatarContainer) avatarContainer.addEventListener('click', function(e) {
+                if (e.target.closest('.logout-btn') || e.target.closest('.edit-account-btn')) return;
+                if (!currentUser) { showToast('⚠️ Login first.', 2000); return; }
+                openEmojiPicker('avatar');
+            });
+
+            const profileAvatarLarge = getEl('profileAvatarLarge');
+            if (profileAvatarLarge) profileAvatarLarge.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (!currentUser) { showToast('⚠️ Login first.', 2000); return; }
+                openEmojiPicker('profile');
+            });
+
+            const emojiUploadImageBtn = getEl('emojiUploadImageBtn');
+            if (emojiUploadImageBtn) emojiUploadImageBtn.addEventListener('click', function() {
+                const input = getEl('avatarUploadInput');
+                if (input) input.click();
+            });
+            const emojiRemoveImageBtn = getEl('emojiRemoveImageBtn');
+            if (emojiRemoveImageBtn) emojiRemoveImageBtn.addEventListener('click', function() { removeAvatarImage(); });
+
             const editAccountBtn = getEl('editAccountBtn');
             if (editAccountBtn) editAccountBtn.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -3177,10 +3135,14 @@
                 getEl('editAccountCountry').value = SecurityUtils.escapeHTML(currentUser.country || 'Sierra Leone');
                 getEl('editAccountNin').value = currentUser.nin || '';
                 getEl('editAccountIdNumber').value = currentUser.idNumber || '';
+                if (getEl('editAccountEmojiPreview')) getEl('editAccountEmojiPreview').textContent = currentUser.avatarDataURL ? '🖼️' : (currentUser.emoji || '👤');
                 getEl('editAccountError').textContent = '';
                 getEl('editAccountSuccess').textContent = '';
                 getEl('editAccountModal').style.display = 'flex';
             });
+
+            const editAccountPickEmojiBtn = getEl('editAccountPickEmojiBtn');
+            if (editAccountPickEmojiBtn) editAccountPickEmojiBtn.addEventListener('click', function() { openEmojiPicker('edit'); });
 
             const saveEditAccountBtn = getEl('saveEditAccountBtn');
             if (saveEditAccountBtn) saveEditAccountBtn.addEventListener('click', function(e) {
@@ -3502,36 +3464,21 @@
                 const data = agent.agentData || agent;
                 if (password !== data.password) { getEl('editAgentError').textContent = '❌ Wrong password'; return; }
                 if (pin !== data.pin) { getEl('editAgentError').textContent = '❌ Wrong PIN'; return; }
-
-                data.businessName = businessName;
-                data.businessAddress = address;
-                data.city = city;
-                data.regNumber = regNumber;
-                data.mobileMoney = mobileMoney;
-                data.name = businessName;
-                data.nin = nin;
-
+                data.businessName = businessName; data.businessAddress = address; data.city = city;
+                data.regNumber = regNumber; data.mobileMoney = mobileMoney;
+                data.name = businessName; data.nin = nin;
                 const collSection = getEl('editCollateralSection');
                 if (collSection && collSection.classList.contains('open')) {
                     const collSelect = getEl('editCollateralLimit');
                     const newLimit = parseInt(collSelect?.value) || 0;
-                    if (newLimit >= 0) {
-                        data.collateralLimit = newLimit;
-                        const vd = getEl('editCollateralValueDisplay');
-                        if (vd) vd.textContent = newLimit > 0 ? newLimit : '0';
-                    }
+                    if (newLimit >= 0) { data.collateralLimit = newLimit; const vd = getEl('editCollateralValueDisplay'); if (vd) vd.textContent = newLimit > 0 ? newLimit : '0'; }
                 }
-
                 const logoInput = getEl('editLogoImage');
                 const doSave = function() {
                     const regUser = registeredUsers.find(u => u.id === agentId);
                     if (regUser) {
-                        regUser.businessName = businessName;
-                        regUser.businessAddress = address;
-                        regUser.city = city;
-                        regUser.regNumber = regNumber;
-                        regUser.mobileMoney = mobileMoney;
-                        regUser.nin = nin;
+                        regUser.businessName = businessName; regUser.businessAddress = address; regUser.city = city;
+                        regUser.regNumber = regNumber; regUser.mobileMoney = mobileMoney; regUser.nin = nin;
                         regUser.collateralLimit = data.collateralLimit;
                         if (data.logoDataURL) regUser.logoDataURL = data.logoDataURL;
                     }
@@ -3543,7 +3490,6 @@
                     renderSidebar();
                     setTimeout(() => { getEl('editAgentModal').style.display = 'none'; }, 1200);
                 };
-
                 if (logoInput && logoInput.files && logoInput.files[0]) {
                     const reader = new FileReader();
                     reader.onload = function(ev) { data.logoDataURL = ev.target.result; doSave(); };
@@ -3621,10 +3567,7 @@
                     getEl('providerModal').style.display = 'none';
                     const roundedAmount = Math.round(parseFloat(getEl('amountInput')?.value) || 0);
                     const recipient = resolveRecipientInfo();
-                    if (!recipient.phone || recipient.phone.length < 6) {
-                        showToast('⚠️ No recipient number found — select an agent or business first.', 4000);
-                        return;
-                    }
+                    if (!recipient.phone || recipient.phone.length < 6) { showToast('⚠️ No recipient number found.', 4000); return; }
                     const cleanPhone = recipient.phone;
                     const senderCountry = String(currentUser?.country || '').trim().toLowerCase();
                     const senderIsSierraLeone = (senderCountry === 'sierra leone' || senderCountry === 'sl');
@@ -3632,10 +3575,7 @@
                     if (senderIsSierraLeone) {
                         const countrySelect = getEl('countryCodeSelect');
                         let countrySelector = '20';
-                        if (countrySelect && countrySelect.value) {
-                            const parts = countrySelect.value.split('|');
-                            if (parts[5] && parts[5].trim()) countrySelector = parts[5].trim();
-                        }
+                        if (countrySelect && countrySelect.value) { const parts = countrySelect.value.split('|'); if (parts[5] && parts[5].trim()) countrySelector = parts[5].trim(); }
                         const agentNameSafe = String(recipient.name || '').replace(/[*#]/g, '').trim();
                         ussdCode = `#144*2*5*1*${countrySelector}*${agentNameSafe}*${cleanPhone}*${roundedAmount}*1*0000#`;
                     } else {
@@ -3822,7 +3762,7 @@
         }
 
         bootstrap();
-        console.log('🚀 AfriPay bootstrapped — all functions restored with pop-up advert translations.');
+        console.log('🚀 AfriPay bootstrapped with AP SVG logo.');
     </script>
 </body>
 </html>
