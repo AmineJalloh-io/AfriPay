@@ -161,7 +161,6 @@
         .emoji-option { font-size: 1.6rem; text-align: center; cursor: pointer; padding: 6px 2px; border-radius: 10px; border: 2px solid transparent; background: #f5f7fa; transition: all 0.2s ease; }
         .emoji-option:hover { background: #e8f0f8; transform: scale(1.15); }
         .emoji-option.selected { border-color: #f4a261; background: #fff0e0; transform: scale(1.1); box-shadow: 0 2px 8px rgba(244,162,97,0.4); }
-        .group-member-list { max-height: 150px; overflow-y: auto; margin: 4px 0; border: 1px solid #e0e8f0; border-radius: 10px; padding: 3px 0; }
         .id-preview { margin-top: 3px; max-width: 100%; max-height: 110px; border-radius: 6px; border: 1px solid #ddd; display: none; }
         .collateral-box { background: #f0f6fb; border-radius: 8px; padding: 0.5rem; margin-top: 0.35rem; border: 1px dashed #2c7da0; }
         .collateral-box .ussd-code { font-size: 1.05rem; font-weight: 700; color: #0f2b3d; background: white; padding: 4px 12px; border-radius: 30px; display: inline-block; margin-top: 3px; border: 1px solid #d0dce8; word-break: break-all; }
@@ -220,7 +219,6 @@
         #pinModal .ussd-preview { background: #f0f6fb; border-radius: 8px; padding: 8px 12px; margin: 6px 0; border: 1px dashed #2c7da0; word-break: break-all; font-family: monospace; font-size: 0.85rem; text-align: center; }
         #pinModal .provider-badge { display: inline-block; padding: 2px 12px; border-radius: 30px; font-weight: 700; font-size: 0.75rem; margin-bottom: 4px; }
         #pinModal .provider-badge.orange { background: #ff6600; color: white; }
-        #pinModal .provider-badge.afrimoney { background: #00a651; color: white; }
         #pinModal .provider-badge.wbmoney { background: #1a3a5c; color: white; }
         #pinModal .auth-error { color: #c0392b; text-align: center; font-size: 0.75rem; }
         #currencyConverterModal .modal-content { max-width: 500px; width: 95%; padding: 0; border-radius: 16px; overflow: hidden; max-height: 95vh; }
@@ -259,9 +257,6 @@
         .edit-agent-collateral-section.open,
         .edit-agent-logo-section.open { display: block; animation: fadeIn 0.35s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
-        .edit-agent-collateral-section .input-group select { height: 36px; font-size: 0.85rem; }
-        .edit-agent-logo-section .logo-preview-edit { margin-top: 2px; max-height: 60px; border-radius: 6px; display: none; }
-        .edit-agent-logo-section .logo-preview-edit.show { display: block; }
         .edit-agent-auth-hint { font-size: 0.68rem; color: #27ae60; background: #e8f8f0; padding: 3px 10px; border-radius: 20px; display: inline-block; margin-top: 2px; border: 1px solid #b8e0d0; }
         .edit-agent-auth-hint.hidden { display: none; }
         .gen-btn-small { background: #2c7da0; color: white; border: none; padding: 4px 14px; border-radius: 30px; font-weight: 700; font-size: 0.72rem; cursor: pointer; height: 32px; display: inline-flex; align-items: center; gap: 3px; }
@@ -275,11 +270,7 @@
         .product-entry .input-group input, .product-entry .input-group select { height: 32px; font-size: 0.8rem; padding: 3px 8px; }
         .product-entry .product-actions-row { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin-top: 0.2rem; }
         .product-entry .product-actions-row .upload-group { display: flex; align-items: center; gap: 4px; flex: 1; }
-        .product-entry .product-mb4-btn { background: #0f2b3d; color: white; border: none; padding: 2px 10px; border-radius: 30px; font-weight: 700; font-size: 0.6rem; cursor: pointer; height: 28px; display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; }
         .add-product-btn { background: #2c7da0; color: white; border: none; padding: 4px 12px; border-radius: 30px; font-weight: 700; font-size: 0.7rem; cursor: pointer; height: 30px; display: inline-flex; align-items: center; gap: 3px; }
-        .delivery-section { background: #f0f6fb; border-radius: 10px; padding: 0.5rem 0.6rem; margin-top: 0.5rem; border: 1px solid #dce8f0; }
-        .delivery-section .input-group label { font-size: 0.68rem; }
-        .delivery-section .input-group input, .delivery-section .input-group select { height: 32px; font-size: 0.8rem; padding: 3px 8px; }
         .authenticator-section { background: #f0f6fb; border-radius: 10px; padding: 0.6rem; margin-top: 0.5rem; border: 2px solid #2c7da0; }
         .authenticator-section .auth-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.3rem; }
         .authenticator-section .auth-header label { font-weight: 700; color: #1c6e8f; font-size: 0.8rem; }
@@ -345,6 +336,7 @@
             .chat-sidebar { display: none; position: absolute; right: 0; top: 0; bottom: 0; width: 140px; z-index: 10; }
             .chat-sidebar.open { display: flex; }
             .sidebar-toggle { display: block; }
+            .receipt-logo-img { width: 56px; height: 56px; }
         }
     </style>
 </head>
@@ -354,7 +346,7 @@
             <div class="header-top">
                 <div class="logo-container">
                     <div class="africa-map-logo">
-                        <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><radialGradient id='b' cx='50%25' cy='30%25' r='70%25'><stop offset='0%25' stop-color='%233b8dd4'/><stop offset='100%25' stop-color='%230a2b3c'/></radialGradient><linearGradient id='a' x1='0%25' y1='0%25' x2='0%25' y2='100%25'><stop offset='0%25' stop-color='%236bb6ff'/><stop offset='100%25' stop-color='%2314457a'/></linearGradient><linearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%23FFF3A0'/><stop offset='50%25' stop-color='%23FFD966'/><stop offset='100%25' stop-color='%23C8950F'/></linearGradient></defs><circle cx='50' cy='50' r='47' fill='none' stroke='url(%23g)' stroke-width='3.5'/><circle cx='50' cy='50' r='44' fill='url(%23b)'/><path d='M 10 60 Q 50 85 90 50' fill='none' stroke='url(%23g)' stroke-width='4.5' stroke-linecap='round' opacity='0.95'/><g transform='translate(74 66)'><circle r='12' fill='%230a2b3c' stroke='url(%23g)' stroke-width='1.8'/><ellipse cx='-3' cy='-3' rx='4' ry='2.5' fill='%23fff' opacity='0.85'/><ellipse cx='4' cy='2' rx='3.5' ry='2' fill='%23fff' opacity='0.85'/><ellipse cx='-1' cy='5' rx='3' ry='2' fill='%23fff' opacity='0.85'/><path d='M -12 0 Q 0 -14 12 0' fill='none' stroke='url(%23g)' stroke-width='1.8'/><path d='M 12 0 L 9 -3 L 9 3 Z' fill='url(%23g)'/></g><g transform='translate(50 62)'><text x='2' y='2.5' text-anchor='middle' font-family='Arial Black, sans-serif' font-size='40' font-weight='900' fill='%23000' opacity='0.35'>AP</text><text x='0' y='0' text-anchor='middle' font-family='Arial Black, sans-serif' font-size='40' font-weight='900' fill='none' stroke='url(%23g)' stroke-width='3' stroke-linejoin='round'>AP</text><text x='0' y='0' text-anchor='middle' font-family='Arial Black, sans-serif' font-size='40' font-weight='900' fill='url(%23a)'>AP</text></g></svg>" class="afripay-logo-img" alt="AfriPay AP Logo" />
+                        <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><radialGradient id='b' cx='50%25' cy='30%25' r='70%25'><stop offset='0%25' stop-color='%233b8dd4'/><stop offset='100%25' stop-color='%230a2b3c'/></radialGradient><linearGradient id='a' x1='0%25' y1='0%25' x2='0%25' y2='100%25'><stop offset='0%25' stop-color='%236bb6ff'/><stop offset='100%25' stop-color='%2314457a'/></linearGradient><linearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%23FFF3A0'/><stop offset='50%25' stop-color='%23FFD966'/><stop offset='100%25' stop-color='%23C8950F'/></linearGradient></defs><circle cx='50' cy='50' r='47' fill='none' stroke='url(%23g)' stroke-width='3.5'/><circle cx='50' cy='50' r='44' fill='url(%23b)'/><path d='M 10 60 Q 50 85 90 50' fill='none' stroke='url(%23g)' stroke-width='4.5' stroke-linecap='round' opacity='0.95'/><g transform='translate(74 66)'><circle r='12' fill='%230a2b3c' stroke='url(%23g)' stroke-width='1.8'/><ellipse cx='-3' cy='-3' rx='4' ry='2.5' fill='%23fff' opacity='0.85'/><ellipse cx='4' cy='2' rx='3.5' ry='2' fill='%23fff' opacity='0.85'/><ellipse cx='-1' cy='5' rx='3' ry='2' fill='%23fff' opacity='0.85'/><path d='M -12 0 Q 0 -14 12 0' fill='none' stroke='url(%23g)' stroke-width='1.8'/><path d='M 12 0 L 9 -3 L 9 3 Z' fill='url(%23g)'/></g><g transform='translate(50 62)'><text x='2' y='2.5' text-anchor='middle' font-family='Arial Black' font-size='40' font-weight='900' fill='%23000' opacity='0.35'>AP</text><text x='0' y='0' text-anchor='middle' font-family='Arial Black' font-size='40' font-weight='900' fill='none' stroke='url(%23g)' stroke-width='3'>AP</text><text x='0' y='0' text-anchor='middle' font-family='Arial Black' font-size='40' font-weight='900' fill='url(%23a)'>AP</text></g></svg>" class="afripay-logo-img" alt="AfriPay AP Logo" />
                     </div>
                     <span class="brand-text">AfriPay</span>
                     <div class="datetime-box"><div id="currentDate">--</div><div class="time-text" id="currentTime">--:--:--</div></div>
@@ -371,15 +363,15 @@
                     </div>
                     <div class="agent-dropdown-container">
                         <button class="agent-dropdown-btn" id="agentDropdownBtn">
-                            <span id="selectedAgentName" data-i18n="select_agent_placeholder">Select Agent</span>
+                            <span id="selectedAgentName">Select Agent</span>
                             <span class="arrow">▼</span>
                         </button>
                         <div class="agent-dropdown-list" id="agentDropdownList"></div>
                     </div>
                     <div class="auth-section" id="authSection">
                         <div class="auth-buttons" id="authButtons">
-                            <button class="auth-btn" id="loginBtn" data-i18n="login">Login</button>
-                            <button class="auth-btn" id="registerBtn" data-i18n="register">Register</button>
+                            <button class="auth-btn" id="loginBtn">Login</button>
+                            <button class="auth-btn" id="registerBtn">Register</button>
                         </div>
                         <div id="welcomeSection" style="display:none;">
                             <div class="user-welcome">
@@ -400,7 +392,7 @@
 
         <div class="flags-strip" id="flagsStrip">
             <button class="flag-scroll-btn left" id="flagScrollLeft">‹</button>
-            <div class="flag-grid-wrapper" id="flagGridWrapper"><div class="flag-grid" id="headerFlagGrid"></div></div>
+            <div class="flag-grid-wrapper"><div class="flag-grid" id="headerFlagGrid"></div></div>
             <button class="flag-scroll-btn right" id="flagScrollRight">›</button>
         </div>
 
@@ -411,7 +403,7 @@
                     <img id="profileAvatarImg" style="display:none;" alt="avatar" />
                 </div>
                 <div class="profile-info-block">
-                    <span class="profile-label" data-i18n="location_label">📍</span>
+                    <span class="profile-label">📍</span>
                     <span class="profile-field" id="profileCity" readonly>—</span>
                     <span class="profile-field" id="profileCountry" readonly>—</span>
                     <span class="profile-field" id="profileAddress" readonly>—</span>
@@ -465,7 +457,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="charges-panel" id="chargesPanel">
+                <div class="charges-panel">
                     <div class="charges-row"><span>💰 Base:</span><span id="displayAmount">0.00</span></div>
                     <div class="charges-row"><span>📊 Fee (4%):</span><span id="chargeAmount">0.00</span></div>
                     <div class="charges-row"><span>🏛️ GST (<span id="gstRateLabel">15</span>%):</span><span id="gstAmount">0.00</span></div>
@@ -558,7 +550,7 @@
                 <button class="popup-ad-btn popup-ad-btn-primary" id="popupAdSelectBtn">🛒 Select Product</button>
                 <button class="popup-ad-btn popup-ad-btn-secondary" id="popupAdDismissBtn">Dismiss</button>
             </div>
-            <div class="popup-ad-timer" id="popupAdTimer">Auto‑closes in <span id="popupAdTimerSeconds">15s</span></div>
+            <div class="popup-ad-timer">Auto‑closes in <span id="popupAdTimerSeconds">15s</span></div>
         </div>
     </div>
 
@@ -576,20 +568,16 @@
     </div>
 
     <div class="toast-msg" id="toastMsg"></div>
-    <button class="chat-toggle-btn" id="chatToggleBtn">💬<span class="chat-badge">0</span></button>
+    <button class="chat-toggle-btn" id="chatToggleBtn">💬</button>
     <div class="chat-window" id="chatWindow">
         <div class="chat-sidebar" id="chatSidebar"></div>
         <div class="chat-main">
             <div class="chat-nav">
                 <button class="sidebar-toggle" id="sidebarToggleBtn">☰</button>
                 <span class="chat-contact" id="chatContact">Select a contact</span>
-                <div class="chat-actions"><button id="chatFontDecrease">A-</button><button id="chatFontIncrease">A+</button><button id="chatClearMessages">🗑️</button><button class="chat-close" id="chatCloseBtn">✕</button></div>
+                <div class="chat-actions"><button class="chat-close" id="chatCloseBtn">✕</button></div>
             </div>
             <div class="chat-messages" id="chatMessages"></div>
-            <div class="chat-controls">
-                <div class="ctrl-group"><input type="color" id="chatBgColor" value="#f5f8fa" /><input type="range" class="brightness-slider" id="brightnessSlider" min="0.3" max="1.5" step="0.05" value="1.0" /></div>
-                <div class="ctrl-group"><button id="chatEmojiBtn">😊</button><button id="chatFileBtn">📎</button><button id="chatRecordBtn">🎙️</button></div>
-            </div>
             <div class="chat-input-area"><input type="text" id="chatInput" placeholder="Type a message..." /><button id="chatSendBtn">Send</button></div>
         </div>
     </div>
@@ -607,16 +595,15 @@
         <input type="text" id="regAddress" placeholder="Address" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; height:38px;" />
         <div class="input-group"><label>City *</label><div class="city-input-row"><select id="regCitySelect"><option value="">Select city...</option></select><span class="or-text">OR</span><input type="text" id="regCityOther" placeholder="Other city" /></div></div>
         <select id="regCountry" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; height:38px;"></select>
-        <div class="input-group"><label>🪪 National ID (NIN) *</label><input type="text" id="regNin" placeholder="e.g. SL-123456789" /></div>
+        <div class="input-group"><label>🪪 NIN *</label><input type="text" id="regNin" /></div>
         <div class="input-group"><label>📄 ID Number *</label><input type="text" id="regIdNumber" /></div>
-        <div class="input-group"><label>📎 Upload ID *</label><input type="file" id="regIdImage" accept="image/*" /><img id="regIdPreview" class="id-preview" /></div>
         <div id="regError" class="error-msg"></div><div id="regSuccess" class="success-msg"></div>
         <div class="action-buttons-row"><button id="doRegisterBtn" class="action-btn">Register</button><button id="registerAgentBtn" class="action-btn orange">🏢 Agent</button><button class="action-btn close-modal">Cancel</button></div>
     </div></div>
 
     <div id="agentRegistrationModal" class="modal"><div class="modal-content agent-form">
         <h3>🏢 Agent Registration</h3>
-        <div id="agentRegError" class="error-msg"></div><div id="agentRegSuccess" class="success-msg"></div>
+        <div id="agentRegError" class="error-msg"></div>
         <div class="input-group"><label>Business *</label><input type="text" id="agentBusinessName" /></div>
         <div class="input-group"><label>Address *</label><input type="text" id="agentAddress" /></div>
         <div class="input-group"><label>City *</label><div class="city-input-row"><select id="agentCitySelect"><option value="">Select city...</option></select><span class="or-text">OR</span><input type="text" id="agentCityOther" /></div></div>
@@ -624,9 +611,7 @@
         <div class="input-group"><label>Type *</label><select id="agentBusinessType"><option>Retail</option><option>Service</option><option>Other</option></select></div>
         <div class="double-row"><div class="input-group"><label>Owner *</label><input type="text" id="agentOwnerName" /></div><div class="input-group"><label>ID Type *</label><select id="agentIdType"><option>National ID</option><option>Passport</option></select></div></div>
         <div class="input-group"><label>ID Number *</label><input type="text" id="agentIdNumber" /></div>
-        <div class="input-group"><label>ID Image *</label><input type="file" id="agentIdImage" accept="image/*" /></div>
         <div class="input-group"><label>🪪 NIN *</label><input type="text" id="agentNin" /></div>
-        <div class="input-group"><label>Logo</label><input type="file" id="agentLogoImage" accept="image/*" /></div>
         <div class="input-group"><label>Mobile Money *</label><input type="tel" id="agentMobileMoney" /></div>
         <div class="input-group"><label>💳 Collateral *</label><select id="agentCollateralLimit"></select></div>
         <div class="input-group"><label>Country Code</label><select id="agentCountryCode"><option value="+232">🇸🇱 +232</option><option value="+224" selected>🇬🇳 +224</option><option value="+221">🇸🇳 +221</option><option value="+220">🇬🇲 +220</option><option value="+226">🇧🇫 +226</option></select></div>
@@ -641,7 +626,7 @@
     <div id="editAgentModal" class="modal"><div class="modal-content agent-form">
         <div class="edit-agent-header"><h3>✏️ Edit Agent</h3></div>
         <input type="hidden" id="editAgentId" />
-        <div id="editAgentError" class="error-msg"></div><div id="editAgentSuccess" class="success-msg"></div>
+        <div id="editAgentError" class="error-msg"></div>
         <div class="input-group"><label>Business *</label><input type="text" id="editBusinessName" /></div>
         <div class="input-group"><label>Address *</label><input type="text" id="editAddress" /></div>
         <div class="input-group"><label>City *</label><div class="city-input-row"><select id="editCitySelect"><option value="">Select city...</option></select><span class="or-text">OR</span><input type="text" id="editCityOther" /></div></div>
@@ -656,7 +641,7 @@
             <div style="margin-top:6px; background:#f0f6fb; border-radius:6px; padding:4px 10px;"><span style="font-size:0.7rem; color:#1c6e8f;">Current Collateral:</span> <span id="editCollateralValueDisplay" style="font-weight:700;">0</span></div>
         </div>
         <div class="edit-agent-logo-section" id="editLogoSection">
-            <div class="input-group"><label>🖼️ Replace Agent Logo</label><input type="file" id="editLogoImage" accept="image/*" /><div id="editLogoPreviewContainer" style="display:none;"><img src="#" class="logo-preview-edit show" style="max-height:60px; border-radius:6px;" /><button type="button" id="editLogoRemove" style="background:#e74c3c; color:white; border:none; padding:2px 8px; border-radius:20px; font-size:0.6rem;">✕ Remove</button></div></div>
+            <div class="input-group"><label>🖼️ Replace Agent Logo</label><input type="file" id="editLogoImage" accept="image/*" /><div id="editLogoPreviewContainer" style="display:none;"><img src="#" style="max-height:60px; border-radius:6px;" /><button type="button" id="editLogoRemove" style="background:#e74c3c; color:white; border:none; padding:2px 8px; border-radius:20px; font-size:0.6rem;">✕ Remove</button></div></div>
         </div>
         <div class="action-buttons-row"><button class="action-btn" id="saveEditAgentBtn">Save</button><button class="action-btn close-modal" style="background:#2c7da0;">Close</button></div>
     </div></div>
@@ -665,14 +650,13 @@
 
     <div id="editAccountModal" class="modal"><div class="modal-content">
         <div class="edit-modal-header"><h3>✏️ Edit Account</h3><button class="add-agent-header-btn" id="addAgentFromEditBtn">➕ Add Agent</button></div>
-        <div id="editAccountError" class="error-msg"></div><div id="editAccountSuccess" class="success-msg"></div>
+        <div id="editAccountError" class="error-msg"></div>
         <div class="input-group"><label>Name *</label><input type="text" id="editAccountName" /></div>
         <div class="input-group"><label>Phone *</label><input type="tel" id="editAccountPhone" /></div>
         <div class="input-group"><label>Address</label><input type="text" id="editAccountAddress" /></div>
         <div class="input-group"><label>City *</label><div class="city-input-row"><select id="editAccountCitySelect"><option value="">Select city...</option></select><span class="or-text">OR</span><input type="text" id="editAccountCityOther" /></div></div>
         <div class="input-group"><label>Country</label><select id="editAccountCountry"></select></div>
         <div class="input-group"><label>🪪 NIN</label><input type="text" id="editAccountNin" /></div>
-        <div class="input-group"><label>📄 ID Number</label><input type="text" id="editAccountIdNumber" /></div>
         <div class="input-group"><label>😊 Profile Emoji</label><div style="display:flex; gap:6px; align-items:center;"><span id="editAccountEmojiPreview" style="font-size:1.8rem;">👤</span><button type="button" class="action-btn" id="editAccountPickEmojiBtn" style="background:#2c7da0; height:36px;">🎨 Change Emoji</button></div></div>
         <div class="action-buttons-row"><button class="action-btn" id="saveEditAccountBtn">Save</button><button class="action-btn close-modal">Cancel</button></div>
     </div></div>
@@ -721,7 +705,7 @@
         <div class="modal-content" style="max-width:380px;">
             <h3>🔐 Edit Business Auth</h3>
             <div style="font-size:0.75rem; color:#7f8c8d; margin-bottom:6px;">Enter credentials to edit <strong id="editBizAuthBizName">this business</strong></div>
-            <div id="editBizAuthError" class="error-msg"></div><div id="editBizAuthSuccess" class="success-msg"></div>
+            <div id="editBizAuthError" class="error-msg"></div>
             <div class="input-group"><label>Password *</label><input type="password" id="editBizAuthPassword" maxlength="6" /></div>
             <div class="input-group"><label>5-Digit PIN *</label><input type="password" id="editBizAuthPin" maxlength="5" /></div>
             <div id="editBizAuthHint" style="font-size:0.65rem; color:#1c6e8f; background:#f0f6fb; padding:6px 10px; border-radius:8px;"></div>
@@ -753,7 +737,8 @@
 
     <div id="addBizModal" class="modal"><div class="modal-content" style="max-width:460px;">
         <h3 id="addBizTitle">🏢 Add Your Business</h3>
-        <div id="addBizError" class="error-msg"></div><div id="addBizSuccess" class="success-msg"></div>
+        <div id="addBizError" class="error-msg"></div>
+        <div id="addBizSuccess" class="success-msg"></div>
         <input type="hidden" id="bizEditingId" value="" />
         <div class="input-group"><label>Business Name *</label><input type="text" id="bizName" /></div>
         <div class="input-group"><label>Contact Phone *</label><input type="tel" id="bizContact" /></div>
@@ -789,7 +774,7 @@
 
     <script>
         // ============================================================
-        // SECURITY & TRANSLATIONS
+        // SECURITY UTILS
         // ============================================================
         const SecurityUtils = {
             escapeHTML: function(str) {
@@ -815,45 +800,8 @@
             }
         };
 
-        const TRANSLATIONS = {
-            en: {
-                login:'Login',register:'Register',logout:'Logout',location_label:'📍',map_btn:'🗺️',submit:'Submit',
-                select_agent_placeholder:'Select Agent',no_agents:'No agents',submit:'Submit',popup_buy_tag:'BUY',
-                popup_brand:'⭐ AfriPay Quick Pay',popup_subtitle:'Sponsored Product',popup_select:'🛒 Select Product',
-                popup_dismiss:'Dismiss',popup_auto_close:'Auto‑closes in',popup_quality_prefix:'Quality:',popup_stock_prefix:'in stock',
-                receipt_tx_id:'TX ID',receipt_date:'Date',receipt_type:'Type',receipt_sender:'Sender',receipt_agent:'👤 Agent',
-                receipt_client:'👥 Client',receipt_provider_tx_id:'🔐 Provider TX ID',receipt_transfer_code:'Transfer Code',
-                receipt_product:'📦 Product',receipt_quantity:'📦 Quantity',receipt_unit_price:'💰 Unit Price',
-                receipt_quality:'⭐ Quality',receipt_product_total:'💵 Product Total',receipt_delivery:'🚚 Delivery',
-                receipt_base:'Base',receipt_fee:'Fee',receipt_gst:'GST',receipt_total:'Total',
-                receipt_recipient_label:'🎯 Recipient Amount',receipt_sender_label:'💰 Sender Amount',
-                receipt_thanks:'✨ Thank you!',receipt_powered:'WeBine Financial'
-            },
-            fr: {
-                login:'Connexion',register:"S'inscrire",logout:'Déconnexion',submit:'Soumettre',
-                popup_buy_tag:'ACHETER',popup_brand:'⭐ AfriPay Paiement Rapide',popup_subtitle:'Produit Sponsorisé',
-                popup_select:'🛒 Sélectionner',popup_dismiss:'Ignorer',popup_auto_close:'Fermeture dans',
-                popup_quality_prefix:'Qualité:',popup_stock_prefix:'en stock',
-                receipt_tx_id:'ID TX',receipt_sender:'Expéditeur',receipt_total:'Total',receipt_thanks:'✨ Merci !'
-            },
-            ar: {
-                login:'تسجيل الدخول',register:'تسجيل',logout:'خروج',submit:'إرسال',
-                popup_buy_tag:'شراء',popup_brand:'⭐ AfriPay',popup_subtitle:'منتج مدعوم',
-                popup_select:'اختر',popup_dismiss:'تجاهل',popup_auto_close:'يغلق خلال',
-                popup_quality_prefix:'الجودة:',popup_stock_prefix:'في المخزون',
-                receipt_tx_id:'معرف TX',receipt_sender:'المرسل',receipt_total:'الإجمالي',receipt_thanks:'✨ شكراً!'
-            },
-            es: {
-                login:'Entrar',register:'Registrarse',logout:'Salir',submit:'Enviar',
-                popup_buy_tag:'COMPRAR',popup_brand:'⭐ AfriPay Pago Rápido',popup_subtitle:'Producto Patrocinado',
-                popup_select:'🛒 Seleccionar',popup_dismiss:'Descartar',popup_auto_close:'Se cierra en',
-                popup_quality_prefix:'Calidad:',popup_stock_prefix:'en stock',
-                receipt_tx_id:'ID TX',receipt_sender:'Remitente',receipt_total:'Total',receipt_thanks:'✨ ¡Gracias!'
-            }
-        };
-
         // ============================================================
-        // SUPPORTED COUNTRIES & CAPITAL CITIES
+        // ALL COUNTRIES & CAPITAL CITIES
         // ============================================================
         const ALL_COUNTRIES = [
             'Liberia','Guinea','Senegal','Mali','Ivory Coast','Ghana','Niger','Benin',
@@ -868,7 +816,7 @@
         ];
 
         // ============================================================
-        // COLLATERAL OPTIONS (as requested)
+        // COLLATERAL OPTIONS
         // ============================================================
         const COLLATERAL_OPTIONS = [
             200, 300, 400, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000,
@@ -888,7 +836,6 @@
         let groups = [];
         let chatMessagesStore = {};
         let activeChatId = null, activeChatType = null;
-        let selectedProvider = '';
         let agreementSigned = false;
         let agreementSignatureDataURL = null;
         let pendingPinData = null;
@@ -927,16 +874,18 @@
 
         function applyBusinessPriceMarkup(price) {
             const p = parseFloat(price) || 0;
-            if (p < 100) {
-                // +50% with minimum 100
-                return Math.max(p * 1.5, 100);
-            } else if (p < 500) {
-                // +30%
-                return p * 1.3;
-            } else {
-                // +20%
-                return p * 1.2;
-            }
+            // Below 15 → no markup
+            if (p < 15) return p;
+            // 15 to 50 → +50%
+            if (p < 50) return p * 1.5;
+            // 50 to 100 → +30%
+            if (p < 100) return p * 1.3;
+            // 100 to 500 → +20%
+            if (p < 500) return p * 1.2;
+            // 500 to 1000 → +10%
+            if (p <= 1000) return p * 1.1;
+            // Above 1000 → no markup
+            return p;
         }
 
         function getDisplayPrice(biz, price) {
@@ -982,7 +931,7 @@
         };
 
         // ============================================================
-        // BUSINESSES SEED
+        // SEED BUSINESSES
         // ============================================================
         const businesses = [
             { id: 1, name: "Mama's Kitchen", contact: "+232-76-123-456", type: "Restaurant", icon: "🍽️", website: "https://www.mamaskitchen.sl", goods: [{ name: "Jollof Rice + Chicken", price: 25, quantity: 10, quality: "Fresh" }, { name: "Fried Rice + Fish", price: 20, quantity: 8, quality: "Fresh" }, { name: "Beef Kebab (5pcs)", price: 12, quantity: 15, quality: "Premium" }] },
@@ -1043,10 +992,6 @@
         // HELPERS
         // ============================================================
         function getEl(id) { return document.getElementById(id); }
-        function t(key) {
-            const dict = TRANSLATIONS[currentLang] || TRANSLATIONS.en;
-            return dict[key] || TRANSLATIONS.en[key] || key;
-        }
 
         function showToast(msg, dur = 2800) {
             const el = getEl('toastMsg');
@@ -1058,9 +1003,6 @@
             el._hide = setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.style.visibility = 'hidden', 300); }, dur);
         }
 
-        // ============================================================
-        // DROPDOWN POPULATION (COUNTRIES & CAPITALS)
-        // ============================================================
         function populateCapitalCityDropdown(selectId) {
             const select = getEl(selectId);
             if (!select) return;
@@ -1090,9 +1032,7 @@
         }
 
         function populateAllDropdowns() {
-            // City dropdowns → capital cities
             ['senderCitySelect','regCitySelect','agentCitySelect','editCitySelect','editAccountCitySelect','bizCitySelect','newClientCitySelect'].forEach(populateCapitalCityDropdown);
-            // Country dropdowns → all supported countries
             ['regCountry','editAccountCountry','newClientCountrySelect','bizCountrySelect'].forEach(populateCountryDropdown);
         }
 
@@ -1128,24 +1068,14 @@
             });
         }
 
-        // ============================================================
-        // LANGUAGE
-        // ============================================================
         function translatePage() {
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                const translation = t(key);
-                if (translation && translation !== key) el.textContent = translation;
-            });
             updateAgentDropdownPlaceholder();
             renderBusinessStrip();
             renderAgentDropdown();
             populateAgentSelect(currentAgentFilterCountry);
-            if (getEl('popupAdOverlay') && getEl('popupAdOverlay').style.display === 'flex') refreshPopupAdvertTranslations();
         }
 
         function setLanguage(lang) {
-            if (!TRANSLATIONS[lang]) return;
             currentLang = lang;
             try { localStorage.setItem('afripay_lang', lang); } catch (e) {}
             const sel = getEl('langSelect'); if (sel) sel.value = lang;
@@ -1155,16 +1085,6 @@
             showToast(`🌐 ${lang.toUpperCase()}`, 1500);
         }
 
-        function loadLanguagePreference() {
-            try { const s = localStorage.getItem('afripay_lang'); if (s && TRANSLATIONS[s]) currentLang = s; } catch (e) {}
-            const sel = getEl('langSelect'); if (sel) sel.value = currentLang;
-            const icon = getEl('langIcon');
-            if (icon) { const map = { en:'🇬🇧', fr:'🇫🇷', ar:'🇸🇦', es:'🇪🇸' }; icon.textContent = map[currentLang] || '🌐'; }
-        }
-
-        // ============================================================
-        // USER CURRENCY
-        // ============================================================
         function getUserCurrency() {
             const map = {
                 'Sierra Leone':'SLL','Liberia':'LRD','Guinea':'GNF','Senegal':'XOF','Mali':'XOF',
@@ -1189,9 +1109,6 @@
             }
         }
 
-        // ============================================================
-        // REGISTERED USERS & AGENTS
-        // ============================================================
         function loadRegisteredUsers() { try { registeredUsers = JSON.parse(localStorage.getItem('afripay_registered_users') || '[]'); } catch (e) { registeredUsers = []; } }
         function saveRegisteredUsers() { try { localStorage.setItem('afripay_registered_users', JSON.stringify(registeredUsers)); } catch (e) {} syncConnectedUsersFromRegistered(); }
 
@@ -1234,7 +1151,7 @@
             if (currentAgentFilterCountry && !selectedAgentId) {
                 const flag = COUNTRY_NAME_TO_CODE[currentAgentFilterCountry] ? COUNTRY_CODE_TO_FLAG[COUNTRY_NAME_TO_CODE[currentAgentFilterCountry]] : '🌍';
                 btn.innerHTML = `Select Agent in ${flag} ${currentAgentFilterCountry}`;
-            } else if (!selectedAgentId) { btn.innerHTML = t('select_agent_placeholder'); }
+            } else if (!selectedAgentId) { btn.textContent = 'Select Agent'; }
         }
 
         function getCountryNameFromSelect() { const s = getEl('countryCodeSelect'); if (!s || !s.value) return null; return s.value.split('|')[1] || null; }
@@ -1260,13 +1177,8 @@
             const selItem = document.createElement('div');
             selItem.className = 'agent-dropdown-item';
             selItem.style.fontWeight = '600';
-            selItem.innerHTML = `<div class="agent-info"><span style="color:#FFD966;">👤</span> <span class="agent-name">${t('select_agent_placeholder')}</span></div>`;
-            selItem.addEventListener('click', e => {
-                e.stopPropagation();
-                selectedAgentId = null; _selectedAgentId = null;
-                clearAgentSelection();
-                list.classList.remove('open');
-            });
+            selItem.innerHTML = `<div class="agent-info"><span style="color:#FFD966;">👤</span> <span class="agent-name">Select Agent</span></div>`;
+            selItem.addEventListener('click', e => { e.stopPropagation(); selectedAgentId = null; _selectedAgentId = null; clearAgentSelection(); list.classList.remove('open'); });
             list.appendChild(selItem);
             if (agents.length === 0) {
                 const em = document.createElement('div');
@@ -1274,7 +1186,6 @@
                 em.style.justifyContent = 'center';
                 em.innerHTML = `<span style="color:#ccc;">No agents</span>`;
                 list.appendChild(em);
-                populateAgentSelect(filterCountry);
                 return;
             }
             agents.forEach(agent => {
@@ -1288,7 +1199,6 @@
                 list.appendChild(item);
             });
             updateAgentDropdownPlaceholder();
-            populateAgentSelect(filterCountry);
         }
 
         function populateAgentSelect(filterCountry) {
@@ -1414,9 +1324,6 @@
             if (getEl('currencySymbol')) getEl('currencySymbol').innerText = isLocalMode ? getUserCurrency() : currentCountryData.currency;
         }
 
-        // ============================================================
-        // USER AUTH
-        // ============================================================
         function saveUserToStorage(u) { localStorage.setItem('afripay_user', JSON.stringify(u)); }
         function clearUserStorage() { localStorage.removeItem('afripay_user'); currentUser = null; showLoggedOutUI(); renderSidebar(); }
 
@@ -1459,10 +1366,6 @@
             if (getEl('gstRateLabel')) getEl('gstRateLabel').innerText = currentCountryData.gstRate;
             renderBusinessStrip();
             updateAgentDropdownForCountry();
-            const lb = getEl('agentLocationBtn');
-            if (lb && selectedAgentId) lb.disabled = false;
-            else if (lb) lb.disabled = true;
-            updateEditBizStripButton();
             computeCharges();
             startPopupAdTimer();
         }
@@ -1474,8 +1377,6 @@
             connectedUsers = connectedUsers.filter(u => u.id !== 'current');
             renderSidebar();
             renderAgentDropdown(null);
-            const lb = getEl('agentLocationBtn'); if (lb) lb.disabled = true;
-            updateEditBizStripButton();
             stopPopupAdTimer();
         }
 
@@ -1537,9 +1438,6 @@
             return false;
         }
 
-        // ============================================================
-        // BUSINESS STRIP & CUSTOM BUSINESSES
-        // ============================================================
         function loadCustomBusinesses() { try { customBusinesses = JSON.parse(localStorage.getItem('afripay_custom_businesses') || '[]'); } catch (e) { customBusinesses = []; } }
         function saveCustomBusinesses() { try { localStorage.setItem('afripay_custom_businesses', JSON.stringify(customBusinesses)); } catch (e) {} }
         function getAllBusinesses() { return [...businesses, ...customBusinesses]; }
@@ -1552,7 +1450,6 @@
             all.forEach(biz => {
                 const div = document.createElement('div');
                 div.className = 'business-item';
-                div.setAttribute('data-business-id', biz.id);
                 div.innerHTML = `<div class="business-icon-img">${biz.icon || '🏪'}</div><div class="business-name">${SecurityUtils.escapeHTML(biz.name)}</div><div class="business-category">${SecurityUtils.escapeHTML(biz.type)}</div>`;
                 div.addEventListener('click', () => {
                     lastSelectedBusinessId = biz.id;
@@ -1561,7 +1458,7 @@
                 });
                 c.appendChild(div);
             });
-            if (lastSelectedBusinessId && !all.some(b => b.id === lastSelectedBusinessId)) { lastSelectedBusinessId = null; }
+            if (lastSelectedBusinessId && !all.some(b => b.id === lastSelectedBusinessId)) lastSelectedBusinessId = null;
             updateEditBizStripButton();
         }
 
@@ -1597,7 +1494,7 @@
                 else { showToast('⚠️ No businesses available to edit.', 2500); return; }
             }
             const biz = getAllBusinesses().find(b => b.id === lastSelectedBusinessId);
-            if (!biz) { showToast('⚠️ Selected business not found.', 2000); lastSelectedBusinessId = null; updateEditBizStripButton(); return; }
+            if (!biz) { showToast('⚠️ Business not found.', 2000); lastSelectedBusinessId = null; updateEditBizStripButton(); return; }
             handleEditBizStripClick(biz);
         };
 
@@ -1605,7 +1502,6 @@
             pendingEditBizId = biz.id;
             getEl('editBizAuthBizName').textContent = biz.name || 'this business';
             getEl('editBizAuthError').textContent = '';
-            getEl('editBizAuthSuccess').textContent = '';
             getEl('editBizAuthPassword').value = '';
             getEl('editBizAuthPin').value = '';
             const creds = getBusinessCredentials(biz);
@@ -1621,13 +1517,12 @@
             err.textContent = '';
             if (!pw || !pin) { err.textContent = '❌ Enter both.'; return; }
             if (pw.length !== 6) { err.textContent = '❌ Password must be 6 chars.'; return; }
-            if (pin.length !== 5 || !/^\d+$/.test(pin)) { err.textContent = '❌ PIN must be 5 digits.'; return; }
+            if (pin.length !== 5) { err.textContent = '❌ PIN must be 5 digits.'; return; }
             if (!pendingEditBizId) { err.textContent = '❌ No business.'; return; }
             const biz = getAllBusinesses().find(b => b.id === pendingEditBizId);
             if (!biz) { err.textContent = '❌ Business not found.'; return; }
             const creds = getBusinessCredentials(biz);
             if (pw !== creds.password || pin !== creds.pin) { err.textContent = '❌ Incorrect credentials.'; return; }
-            getEl('editBizAuthSuccess').textContent = '✅ Verified!';
             const id = pendingEditBizId;
             pendingEditBizId = null;
             setTimeout(() => { getEl('editBizAuthModal').style.display = 'none'; openEditBizModal(id); }, 200);
@@ -1689,12 +1584,8 @@
             getEl('authProviderTxId').value = '';
             getEl('authTransferCode').value = '';
             getEl('addBizModal').style.display = 'flex';
-            showToast(`✏️ Editing "${biz.name}"`, 3000);
         }
 
-        // ============================================================
-        // GOODS MODAL (WITH MARKUP FOR CUSTOM BUSINESSES)
-        // ============================================================
         function showGoodsModal(businessId) {
             const biz = getAllBusinesses().find(b => b.id === businessId);
             if (!biz) return;
@@ -1711,7 +1602,6 @@
                     const qty = g.quantity || 1;
                     const quality = g.quality || 'Brand new';
                     const icon = g.icon || biz.icon || '📱';
-                    // Apply markup for custom (registered) businesses
                     const displayedPrice = custom ? applyBusinessPriceMarkup(g.price) : (parseFloat(g.price) || 0);
                     return `
                         <div class="goods-item" data-price="${displayedPrice}" data-original-price="${g.price}" data-is-marked="${custom}" data-name="${SecurityUtils.escapeHTML(g.name)}" data-quantity="${qty}" data-quality="${SecurityUtils.escapeHTML(quality)}" data-icon="${icon}" data-delivery="${dc}" data-business="${SecurityUtils.escapeHTML(biz.name)}" data-businessphone="${SecurityUtils.escapeHTML(biz.mobileMoney || biz.contact || '')}" data-index="${idx}">
@@ -1779,9 +1669,6 @@
             });
         }
 
-        // ============================================================
-        // PRODUCT ENTRIES
-        // ============================================================
         function addProductEntry() {
             productCounter++;
             const c = getEl('productsContainer');
@@ -1838,22 +1725,6 @@
             return cands[Math.floor(Math.random() * cands.length)];
         }
 
-        function getTranslatedProductDescription(p) {
-            const ql = t('popup_quality_prefix');
-            const sl = t('popup_stock_prefix');
-            return `${ql} ${p.quality || 'Brand new'} · ${p.quantity || 1} ${sl}`;
-        }
-
-        function refreshPopupAdvertTranslations() {
-            if (!currentPopupProduct) return;
-            if (getEl('popupAdDescription')) getEl('popupAdDescription').textContent = getTranslatedProductDescription(currentPopupProduct);
-        }
-
-        function updatePopupAdTimerText() {
-            const e = getEl('popupAdTimerSeconds');
-            if (e) e.textContent = popupAdCountdownSeconds + 's';
-        }
-
         function showPopupAdvert() {
             if (!currentUser) return;
             const now = Date.now();
@@ -1867,7 +1738,7 @@
             if (getEl('popupAdIcon')) getEl('popupAdIcon').textContent = p.icon;
             if (getEl('popupAdName')) getEl('popupAdName').textContent = p.name;
             if (getEl('popupAdBusiness')) getEl('popupAdBusiness').textContent = `${p.businessIcon} ${p.businessName}`;
-            if (getEl('popupAdDescription')) getEl('popupAdDescription').textContent = getTranslatedProductDescription(p);
+            if (getEl('popupAdDescription')) getEl('popupAdDescription').textContent = `Quality: ${p.quality} · ${p.quantity} in stock`;
             if (getEl('popupAdPrice')) getEl('popupAdPrice').textContent = p.price.toFixed(2);
             if (getEl('popupAdCurrency')) getEl('popupAdCurrency').textContent = isLocalMode ? getUserCurrency() : currentCountryData.currency;
             const sb = getEl('popupAdSelectBtn');
@@ -1902,10 +1773,11 @@
         function startPopupAdCountdown(s) {
             clearInterval(popupAdCountdownInterval);
             popupAdCountdownSeconds = s;
-            updatePopupAdTimerText();
+            const e = getEl('popupAdTimerSeconds');
+            if (e) e.textContent = s + 's';
             popupAdCountdownInterval = setInterval(() => {
                 popupAdCountdownSeconds--;
-                updatePopupAdTimerText();
+                if (e) e.textContent = popupAdCountdownSeconds + 's';
                 if (popupAdCountdownSeconds <= 0) { clearInterval(popupAdCountdownInterval); hidePopupAdvert(); }
             }, 1000);
         }
@@ -1955,82 +1827,46 @@
             getEl('infoModal').style.display = 'flex';
         }
 
-        // ============================================================
-        // RECEIPT
-        // ============================================================
         function showReceiptModal(data) {
             const body = getEl('receiptBody');
             const lines = [
-                { key:'receipt_tx_id', value: SecurityUtils.escapeHTML(data.txId) },
-                { key:'receipt_date', value: SecurityUtils.escapeHTML(data.date) },
-                { key:'receipt_type', value: SecurityUtils.escapeHTML(data.mode) },
-                { key:'receipt_sender', value: SecurityUtils.escapeHTML(data.sender) },
-                { key:'receipt_agent', value: SecurityUtils.escapeHTML(data.agent) },
-                { key:'receipt_client', value: SecurityUtils.escapeHTML(data.client || 'N/A') },
-                { key:'receipt_provider_tx_id', value: SecurityUtils.escapeHTML(data.providerTxId || 'N/A') },
-                { key:'receipt_transfer_code', value: SecurityUtils.escapeHTML(data.transferCode || 'N/A') }
+                { key:'TX ID', value: SecurityUtils.escapeHTML(data.txId) },
+                { key:'Date', value: SecurityUtils.escapeHTML(data.date) },
+                { key:'Type', value: SecurityUtils.escapeHTML(data.mode) },
+                { key:'Sender', value: SecurityUtils.escapeHTML(data.sender) },
+                { key:'Agent', value: SecurityUtils.escapeHTML(data.agent) },
+                { key:'Client', value: SecurityUtils.escapeHTML(data.client || 'N/A') },
+                { key:'Provider TX ID', value: SecurityUtils.escapeHTML(data.providerTxId || 'N/A') },
+                { key:'Transfer Code', value: SecurityUtils.escapeHTML(data.transferCode || 'N/A') }
             ];
             if (_selectedProductDetails) {
                 const p = _selectedProductDetails;
-                lines.push({ key:'receipt_product', value: `${p.businessIcon || '🏪'} ${SecurityUtils.escapeHTML(p.name)}`, highlight: true });
-                lines.push({ key:'receipt_quantity', value: SecurityUtils.escapeHTML(String(p.quantity)), highlight: true });
-                lines.push({ key:'receipt_unit_price', value: SecurityUtils.escapeHTML(data.currency + ' ' + p.amount.toFixed(2)), highlight: true });
-                lines.push({ key:'receipt_quality', value: SecurityUtils.escapeHTML(p.quality), highlight: true });
+                lines.push({ key:'Product', value: `${p.businessIcon || '🏪'} ${SecurityUtils.escapeHTML(p.name)}`, highlight: true });
+                lines.push({ key:'Quantity', value: SecurityUtils.escapeHTML(String(p.quantity)), highlight: true });
+                lines.push({ key:'Unit Price', value: SecurityUtils.escapeHTML(data.currency + ' ' + p.amount.toFixed(2)), highlight: true });
+                lines.push({ key:'Quality', value: SecurityUtils.escapeHTML(p.quality), highlight: true });
                 const d = p.deliveryCost || 0;
-                lines.push({ key:'receipt_delivery', value: SecurityUtils.escapeHTML(data.currency + ' ' + d.toFixed(2)), highlight: true });
-                lines.push({ key:'receipt_product_total', value: SecurityUtils.escapeHTML(data.currency + ' ' + ((p.amount * p.quantity) + d).toFixed(2)), total: true, highlight: true });
+                lines.push({ key:'Delivery', value: SecurityUtils.escapeHTML(data.currency + ' ' + d.toFixed(2)), highlight: true });
+                lines.push({ key:'Product Total', value: SecurityUtils.escapeHTML(data.currency + ' ' + ((p.amount * p.quantity) + d).toFixed(2)), total: true, highlight: true });
             }
-            lines.push({ key:'receipt_sender_label', value: SecurityUtils.escapeHTML(data.senderCurrency + ' ' + data.senderAmount) });
-            lines.push({ key:'receipt_recipient_label', value: SecurityUtils.escapeHTML(data.recipientCurrency + ' ' + data.recipientAmount), recipient: true });
-            lines.push({ key:'receipt_base', value: SecurityUtils.escapeHTML(data.currency + ' ' + data.baseAmount) });
-            lines.push({ key:'receipt_fee', value: SecurityUtils.escapeHTML(data.currency + ' ' + data.charge) });
-            lines.push({ key:'receipt_gst', value: SecurityUtils.escapeHTML(data.currency + ' ' + data.gst) + ' (' + data.gstRate + '%)' });
-            lines.push({ key:'receipt_total', value: SecurityUtils.escapeHTML(data.currency + ' ' + data.total), total: true });
+            lines.push({ key:'Sender Amount', value: SecurityUtils.escapeHTML(data.senderCurrency + ' ' + data.senderAmount) });
+            lines.push({ key:'Recipient Amount', value: SecurityUtils.escapeHTML(data.recipientCurrency + ' ' + data.recipientAmount), recipient: true });
+            lines.push({ key:'Base', value: SecurityUtils.escapeHTML(data.currency + ' ' + data.baseAmount) });
+            lines.push({ key:'Fee', value: SecurityUtils.escapeHTML(data.currency + ' ' + data.charge) });
+            lines.push({ key:'GST', value: SecurityUtils.escapeHTML(data.currency + ' ' + data.gst) + ' (' + data.gstRate + '%)' });
+            lines.push({ key:'Total', value: SecurityUtils.escapeHTML(data.currency + ' ' + data.total), total: true });
             let html = '';
             lines.forEach(l => {
                 let cls = 'receipt-row';
                 if (l.total) cls += ' total';
                 if (l.recipient) cls += ' recipient-row';
                 if (l.highlight) cls += ' recipient-row';
-                html += `<div class="${cls}"><span class="label">${t(l.key)}</span><span class="value">${l.value}</span></div>`;
+                html += `<div class="${cls}"><span class="label">${l.key}</span><span class="value">${l.value}</span></div>`;
             });
             body.innerHTML = html;
-            const clientPhone = getEl('clientPhone')?.value?.trim() || '';
-            const clientName = getEl('clientName')?.value?.trim() || 'Client';
-            const agentPhone = getEl('agentPhone')?.value?.trim() || '';
-            const agentName = getEl('agentName')?.value?.trim() || 'Agent';
-            let rl = [
-                '🔹 AFRI·PAY RECEIPT 🔹', '─────────────────',
-                t('receipt_tx_id') + ' ' + data.txId,
-                t('receipt_date') + ' ' + data.date,
-                t('receipt_type') + ' ' + data.mode,
-                t('receipt_sender') + ' ' + data.sender,
-                t('receipt_agent') + ' ' + data.agent,
-                t('receipt_total') + ' ' + data.currency + ' ' + data.total,
-                '─────────────────', t('receipt_thanks')
-            ];
-            const enc = encodeURIComponent(rl.join('\n'));
-            function setBtn(btn, phone, name, type) {
-                if (!btn) return;
-                if (phone) {
-                    const c = phone.replace(/\D/g, '');
-                    btn.onclick = () => {
-                        if (type === 'wa') window.open(`https://wa.me/${c}?text=${enc}`, '_blank');
-                        else window.location.href = `sms:${c}?body=${enc}`;
-                    };
-                    btn.style.display = 'inline-flex';
-                } else btn.style.display = 'none';
-            }
-            setBtn(getEl('receiptShareClientWhatsApp'), clientPhone, clientName, 'wa');
-            setBtn(getEl('receiptShareClientSMS'), clientPhone, clientName, 'sms');
-            setBtn(getEl('receiptShareAgentWhatsApp'), agentPhone, agentName, 'wa');
-            setBtn(getEl('receiptShareAgentSMS'), agentPhone, agentName, 'sms');
             getEl('receiptModal').style.display = 'flex';
         }
 
-        // ============================================================
-        // USSD & PIN
-        // ============================================================
         function resolveRecipientInfo() {
             const digits = s => String(s == null ? '' : s).replace(/\D/g, '');
             let name = (getEl('agentName')?.value || '').trim();
@@ -2050,11 +1886,9 @@
             return { name, phone: digits(phoneRaw), phoneDisplay: phoneRaw };
         }
 
-        function truncateName(n, m) { if (!n) return ''; const c = String(n).trim().replace(/\s+/g, ' '); return c.length <= m ? c : c.substring(0, m - 1).trim() + '…'; }
-
         function showPinModal(ussdCode, provider, cls, recipient, amount) {
             const recip = recipient || { name:'', phone:'' };
-            const shortName = truncateName(recip.name, 24);
+            const shortName = recip.name ? String(recip.name).substring(0, 24) : '';
             if (getEl('pinProviderBadge')) { getEl('pinProviderBadge').textContent = provider; getEl('pinProviderBadge').className = 'provider-badge ' + cls; }
             const pe = getEl('pinUssdPreview');
             if (pe) pe.innerHTML = shortName ? `${SecurityUtils.escapeHTML(ussdCode)}<br><span style="display:inline-block; margin-top:4px; font-weight:700;">👤 ${SecurityUtils.escapeHTML(shortName)}</span>` : SecurityUtils.escapeHTML(ussdCode);
@@ -2075,18 +1909,14 @@
             let ussd = pendingPinData.ussdCode.replace(/0000#/, pin + '#');
             getEl('pinModal').style.display = 'none';
             const pn = pendingPinData.provider;
-            const sn = truncateName(pendingPinData.recipient?.name || '', 24);
             pendingPinData = null;
             const link = document.createElement('a');
             link.href = `tel:${ussd}`;
             link.click();
-            showToast(`📞 Dialing ${pn}${sn ? ' → ' + sn : ''}...`, 3000);
+            showToast(`📞 Dialing ${pn}...`, 3000);
             navigator.clipboard.writeText(ussd).then(() => showToast('✅ USSD copied!', 1500)).catch(() => {});
         }
 
-        // ============================================================
-        // SIDEBAR / CHAT
-        // ============================================================
         function renderSidebar() {
             const sb = getEl('chatSidebar');
             if (!sb) return;
@@ -2099,47 +1929,18 @@
                     const d = document.createElement('div');
                     d.className = 'sidebar-user';
                     d.innerHTML = `<div class="avatar">${u.emoji || '👤'}</div><div class="user-info"><div class="name">${SecurityUtils.escapeHTML(u.name)}</div></div>`;
-                    d.addEventListener('click', () => setActiveChat(u.id, 'individual'));
                     sb.appendChild(d);
                 });
             }
         }
-        function setActiveChat(id, type) {
-            activeChatId = id; activeChatType = type;
-            renderMessages(getChatId({ id }, type));
-            const c = getEl('chatContact');
-            if (type === 'individual') { const u = getAllContacts().find(x => x.id === id); c.innerText = u ? SecurityUtils.escapeHTML(u.name) : ''; }
-        }
-        function renderMessages(chatId) {
-            const msgs = getMessagesForChat(chatId);
-            const me = getEl('chatMessages');
-            if (!me) return;
-            me.innerHTML = '';
-            msgs.forEach(m => {
-                const d = document.createElement('div');
-                d.className = 'chat-message' + (m.type === 'sent' ? ' sent' : '');
-                d.innerHTML = `<span>${m.content}</span>`;
-                me.appendChild(d);
-            });
-            me.scrollTop = me.scrollHeight;
-        }
-        function getChatId(c, t) { return t === 'individual' ? 'user_' + c.id : 'group_' + c.id; }
-        function getMessagesForChat(id) { if (!chatMessagesStore[id]) chatMessagesStore[id] = []; return chatMessagesStore[id]; }
-        function addMessageToChat(id, m) { if (!chatMessagesStore[id]) chatMessagesStore[id] = []; chatMessagesStore[id].push(m); try { localStorage.setItem('afripay_chatMessages', JSON.stringify(chatMessagesStore)); } catch (e) {} }
-        function loadChatMessages() { try { chatMessagesStore = JSON.parse(localStorage.getItem('afripay_chatMessages') || '{}'); } catch (e) { chatMessagesStore = {}; } }
-        function loadGroups() { try { groups = JSON.parse(localStorage.getItem('afripay_groups') || '[]'); } catch (e) { groups = []; } }
 
         function toggleChat() {
             const w = getEl('chatWindow');
             const open = w.classList.toggle('open');
             getEl('chatToggleBtn').style.display = open ? 'none' : 'flex';
             const fs = getEl('flagsStrip'); if (fs) fs.classList.toggle('hidden', open);
-            if (open) { loadGroups(); loadChatMessages(); renderSidebar(); }
         }
 
-        // ============================================================
-        // EMOJI PICKER
-        // ============================================================
         function openEmojiPicker() {
             const grid = getEl('emojiGrid');
             if (!grid) return;
@@ -2164,7 +1965,6 @@
                 updateProfileAvatarDisplay(currentUser);
                 const r = registeredUsers.find(u => u.phone === currentUser.phone || u.name === currentUser.name);
                 if (r) { r.emoji = e; r.avatarDataURL = null; saveRegisteredUsers(); }
-                if (getEl('editAccountEmojiPreview')) getEl('editAccountEmojiPreview').textContent = e;
             }
             showToast(`✅ Avatar: ${e}`, 1500);
             setTimeout(() => { getEl('emojiPickerModal').style.display = 'none'; }, 400);
@@ -2194,9 +1994,6 @@
             showToast('🗑️ Image removed', 1500);
         }
 
-        // ============================================================
-        // COUNTRY/FLAG HANDLERS
-        // ============================================================
         function renderHeaderFlags() {
             const grid = getEl('headerFlagGrid');
             if (!grid) return;
@@ -2248,9 +2045,6 @@
             populateAgentSelect(cn);
         }
 
-        // ============================================================
-        // CONVERTER
-        // ============================================================
         function populateConverterCountries() {
             const s = getEl('convCountrySelect');
             if (!s) return;
@@ -2300,9 +2094,6 @@
             } catch (e) {}
         }
 
-        // ============================================================
-        // INITIAL PERMANENT AGENTS
-        // ============================================================
         function initializePermanentAgents() {
             try {
                 const seed = (bizName, ownerName, addr, city, regNum, mobile, cc, pw, pin, collat, curr, pTxId, tCode, nin) => {
@@ -2342,16 +2133,11 @@
             getEl('editAgentNin').value = SecurityUtils.escapeHTML(data.nin || '');
             getEl('editPassword').value = '';
             getEl('editPin').value = '';
-            getEl('editAgentError').textContent = '';
-            getEl('editAgentSuccess').textContent = '';
             const cs = getEl('editCollateralLimit');
             if (cs) {
                 for (let i = 0; i < cs.options.length; i++) { if (parseInt(cs.options[i].value) === (data.collateralLimit || 0)) { cs.selectedIndex = i; break; } }
             }
             if (getEl('editCollateralValueDisplay')) getEl('editCollateralValueDisplay').textContent = data.collateralLimit || 0;
-            const lc = getEl('editLogoPreviewContainer');
-            const li = lc?.querySelector('img');
-            if (lc) { if (data.logoDataURL) { lc.style.display = 'block'; if (li) li.src = data.logoDataURL; } else lc.style.display = 'none'; }
             getEl('editAgentModal').style.display = 'flex';
             const pwI = getEl('editPassword'), pinI = getEl('editPin');
             const checkAuth = () => {
@@ -2361,15 +2147,11 @@
                 getEl('editLogoSection').classList.toggle('open', ok);
                 const h = getEl('editAuthHint');
                 h.classList.toggle('hidden', !ok);
-                if (ok) h.textContent = '✅ Credentials correct';
             };
             if (pwI) pwI.addEventListener('input', checkAuth);
             if (pinI) pinI.addEventListener('input', checkAuth);
         }
 
-        // ============================================================
-        // SAVE / SUBMIT / REGISTRATION HANDLERS
-        // ============================================================
         function submitForApproval() {
             if (!isAuthenticated) { showToast('⚠️ Authenticate first.', 2500); return; }
             const name = SecurityUtils.sanitizeInput(getEl('bizName').value.trim(), 100);
@@ -2441,453 +2223,6 @@
             if (getEl('addBizModal')) getEl('addBizModal').style.display = 'flex';
         }
 
-        // ============================================================
-        // EVENT LISTENERS
-        // ============================================================
-        function setupEventListeners() {
-            // Language
-            const ls = getEl('langSelect'); if (ls) ls.addEventListener('change', function() { setLanguage(this.value); });
-
-            // Auth
-            const lb = getEl('loginBtn'); if (lb) lb.addEventListener('click', e => { e.preventDefault(); getEl('loginError').innerHTML = ''; getEl('loginModal').style.display = 'flex'; });
-            const rb = getEl('registerBtn'); if (rb) rb.addEventListener('click', e => { e.preventDefault(); getEl('registerModal').style.display = 'flex'; });
-            const lob = getEl('logoutBtn'); if (lob) lob.addEventListener('click', e => { e.preventDefault(); clearUserStorage(); stopPopupAdTimer(); showToast('Logged out'); });
-
-            // Avatar & Emoji
-            const ac = getEl('userAvatarContainer');
-            if (ac) ac.addEventListener('click', e => { if (e.target.closest('.logout-btn') || e.target.closest('.edit-account-btn')) return; if (!currentUser) { showToast('⚠️ Login first.', 2000); return; } openEmojiPicker(); });
-            const pal = getEl('profileAvatarLarge');
-            if (pal) pal.addEventListener('click', () => { if (!currentUser) { showToast('⚠️ Login first.', 2000); return; } openEmojiPicker(); });
-            const eui = getEl('emojiUploadImageBtn'); if (eui) eui.addEventListener('click', () => getEl('avatarUploadInput').click());
-            const eri = getEl('emojiRemoveImageBtn'); if (eri) eri.addEventListener('click', removeAvatarImage);
-            const aui = getEl('avatarUploadInput');
-            if (aui) aui.addEventListener('change', function(e) {
-                const f = e.target.files[0];
-                if (!f || !f.type.startsWith('image/')) { showToast('⚠️ Image only.', 2000); this.value = ''; return; }
-                if (f.size > 2*1024*1024) { showToast('⚠️ Max 2MB.', 2000); this.value = ''; return; }
-                const r = new FileReader();
-                r.onload = ev => applyAvatarImage(ev.target.result);
-                r.readAsDataURL(f);
-                this.value = '';
-            });
-
-            // Edit account
-            const eab = getEl('editAccountBtn');
-            if (eab) eab.addEventListener('click', e => {
-                e.preventDefault();
-                if (!currentUser) { showToast('⚠️ Login first', 2000); return; }
-                getEl('editAccountName').value = SecurityUtils.escapeHTML(currentUser.name || '');
-                getEl('editAccountPhone').value = SecurityUtils.escapeHTML(currentUser.phone || '');
-                getEl('editAccountAddress').value = SecurityUtils.escapeHTML(currentUser.address || '');
-                setCityValue('editAccountCitySelect', 'editAccountCityOther', currentUser.city || '');
-                getEl('editAccountCountry').value = SecurityUtils.escapeHTML(currentUser.country || 'Sierra Leone');
-                getEl('editAccountNin').value = currentUser.nin || '';
-                getEl('editAccountIdNumber').value = currentUser.idNumber || '';
-                if (getEl('editAccountEmojiPreview')) getEl('editAccountEmojiPreview').textContent = currentUser.avatarDataURL ? '🖼️' : (currentUser.emoji || '👤');
-                getEl('editAccountModal').style.display = 'flex';
-            });
-            const eaPick = getEl('editAccountPickEmojiBtn'); if (eaPick) eaPick.addEventListener('click', openEmojiPicker);
-            const seaB = getEl('saveEditAccountBtn');
-            if (seaB) seaB.addEventListener('click', e => {
-                e.preventDefault();
-                const name = SecurityUtils.sanitizeInput(getEl('editAccountName').value.trim(), 100);
-                const phone = SecurityUtils.sanitizePhone(getEl('editAccountPhone').value.trim());
-                const address = SecurityUtils.sanitizeInput(getEl('editAccountAddress').value.trim(), 200);
-                const city = getCityValue('editAccountCitySelect', 'editAccountCityOther');
-                const country = SecurityUtils.sanitizeInput(getEl('editAccountCountry').value, 100);
-                const nin = SecurityUtils.sanitizeInput(getEl('editAccountNin').value.trim(), 50);
-                const idNumber = SecurityUtils.sanitizeInput(getEl('editAccountIdNumber').value.trim(), 50);
-                if (!name || !phone || !city) { getEl('editAccountError').textContent = '❌ Fill Name, Phone & City'; return; }
-                currentUser.name = name; currentUser.phone = phone; currentUser.address = address;
-                currentUser.city = city; currentUser.country = country; currentUser.nin = nin; currentUser.idNumber = idNumber;
-                saveUserToStorage(currentUser);
-                const r = registeredUsers.find(u => u.phone === currentUser.phone || u.name === currentUser.name);
-                if (r) { r.name = name; r.phone = phone; r.city = city; r.country = country; }
-                saveRegisteredUsers();
-                showLoggedInUI();
-                showToast('✅ Account updated!', 2000);
-                setTimeout(() => getEl('editAccountModal').style.display = 'none', 1000);
-            });
-
-            // Agent dropdown
-            const adb = getEl('agentDropdownBtn');
-            if (adb) adb.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); getEl('agentDropdownList').classList.toggle('open'); renderAgentDropdown(currentAgentFilterCountry); });
-            document.addEventListener('click', e => {
-                const c = document.querySelector('.agent-dropdown-container');
-                if (c && !c.contains(e.target)) getEl('agentDropdownList').classList.remove('open');
-            });
-            const as = getEl('agentNameSelect');
-            if (as) as.addEventListener('change', function() {
-                if (this.value) selectAgent(this.value);
-                else { selectedAgentId = null; _selectedAgentId = null; clearAgentSelection(); }
-            });
-
-            // TX ID
-            const gtb = getEl('generateTxBtn'); if (gtb) gtb.addEventListener('click', e => { e.preventDefault(); setGeneratedTransactionId(); });
-            const ctb = getEl('copyTxBtn'); if (ctb) ctb.addEventListener('click', e => { e.preventDefault(); copyTransactionIdToClipboard(); });
-
-            // Close modals
-            document.querySelectorAll('.close-modal').forEach(b => b.addEventListener('click', function(e) { e.preventDefault(); const m = this.closest('.modal'); if (m) m.style.display = 'none'; }));
-
-            // Main provider button
-            const mmb = getEl('mainMmBtn');
-            if (mmb) mmb.addEventListener('click', e => {
-                e.preventDefault();
-                const ai = getEl('amountInput');
-                if (parseFloat(ai?.value) <= 0) { showToast('⚠️ Enter amount'); return; }
-                getEl('providerModal').style.display = 'flex';
-            });
-
-            // Intl
-            const itb = getEl('intlToggleBtn');
-            if (itb) itb.addEventListener('click', function(e) {
-                e.preventDefault();
-                isLocalMode = !isLocalMode;
-                this.classList.toggle('active', !isLocalMode);
-                getEl('countryWrapper').style.display = isLocalMode ? 'none' : 'block';
-                computeCharges();
-                updateAgentDropdownForCountry();
-            });
-
-            // Add client
-            const acb = getEl('addClientBtnHeader'); if (acb) acb.addEventListener('click', e => { e.preventDefault(); getEl('addClientModal').style.display = 'flex'; });
-            const scb = getEl('saveClientBtn');
-            if (scb) scb.addEventListener('click', e => {
-                e.preventDefault();
-                const n = SecurityUtils.sanitizeInput(getEl('newClientName').value.trim(), 100);
-                const p = SecurityUtils.sanitizePhone(getEl('newClientPhone').value.trim());
-                const a = SecurityUtils.sanitizeInput(getEl('newClientAddress').value.trim(), 200);
-                const c = getEl('newClientCitySelect').value;
-                const co = getEl('newClientCountrySelect').value;
-                if (!n) { getEl('addClientError').textContent = '❌ Name.'; return; }
-                if (!p) { getEl('addClientError').textContent = '❌ Phone.'; return; }
-                if (!c) { getEl('addClientError').textContent = '❌ City.'; return; }
-                registeredUsers.push({ id:'client_' + Date.now(), name:n, phone:p, address:a, city:c, country:co, emoji:'👤', isAgent:false, role:'user' });
-                saveRegisteredUsers();
-                getEl('clientName').value = n;
-                getEl('clientPhone').value = p;
-                getEl('clientSectionTitle').style.display = 'block';
-                getEl('clientFieldsRow').style.display = 'grid';
-                showToast(`✅ Client "${n}" added!`, 2000);
-                getEl('addClientModal').style.display = 'none';
-            });
-
-            // Agent registration
-            const rab = getEl('registerAgentBtn'); if (rab) rab.addEventListener('click', e => { e.preventDefault(); getEl('agentRegistrationModal').style.display = 'flex'; });
-            const car = getEl('closeAgentRegBtn'); if (car) car.addEventListener('click', e => { e.preventDefault(); getEl('agentRegistrationModal').style.display = 'none'; });
-            const gpb = getEl('generatePasswordBtn');
-            if (gpb) gpb.addEventListener('click', e => {
-                e.preventDefault();
-                const ch = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-                let pw = '';
-                for (let i = 0; i < 6; i++) pw += ch.charAt(Math.floor(Math.random() * ch.length));
-                getEl('agentPassword').value = pw;
-                showToast('🔑 ' + pw, 3000);
-            });
-            const gpib = getEl('generatePinBtn');
-            if (gpib) gpib.addEventListener('click', e => {
-                e.preventDefault();
-                const pin = String(Math.floor(10000 + Math.random() * 90000));
-                getEl('agentPin').value = pin;
-                showToast('🔑 ' + pin, 3000);
-            });
-            const gcb = getEl('generateCollateralBtn');
-            if (gcb) gcb.addEventListener('click', e => {
-                e.preventDefault();
-                const mm = SecurityUtils.sanitizePhone(getEl('agentMobileMoney').value.trim());
-                if (!mm) { getEl('collateralError').textContent = '⚠️ Enter mobile money'; return; }
-                const amt = parseInt(getEl('agentCollateralLimit').value) || 0;
-                getEl('collateralAmount').value = amt;
-                getEl('collateralUssdDisplay').textContent = `#144*2*2*${mm.replace(/\D/g, '')}*${amt}*0000#`;
-                getEl('collateralUssdDisplay').style.display = 'block';
-            });
-
-            // Agreement
-            const vab = getEl('viewAgreementBtn');
-            if (vab) vab.addEventListener('click', e => {
-                e.preventDefault();
-                const bn = getEl('agentBusinessName').value.trim();
-                const on = getEl('agentOwnerName').value.trim();
-                if (!bn || !on) { showToast('⚠️ Fill Business & Owner.', 3000); return; }
-                const body = getEl('agreementBody');
-                body.innerHTML = `
-                    <div class="clause"><span class="tag">Clause 1</span>I <span class="placeholder">${SecurityUtils.escapeHTML(on)}</span>, Owner of: <span class="placeholder">${SecurityUtils.escapeHTML(bn)}</span> agree.</div>
-                    <div class="clause"><span class="tag">Clause 2</span>I receive 7% of charges and 12% of cash-out charges.</div>
-                    <div class="clause"><span class="tag">Clause 3</span>Taking more than my percentage closes my account.</div>
-                    <div class="clause"><span class="tag">Clause 4 – Signature</span><div class="agreement-signature-area open"><canvas id="agreementSigCanvas" width="400" height="80"></canvas><div class="sig-actions"><button class="sig-clear" id="clearAgreementSig">🗑️ Clear</button><button class="sig-confirm" id="confirmAgreementSig">✅ Confirm</button></div></div><img class="sig-preview" id="agreementSigPreview" /></div>
-                `;
-                const canvas = getEl('agreementSigCanvas');
-                const ctx = canvas.getContext('2d');
-                ctx.fillStyle = 'white'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.strokeStyle = '#0a2b3c'; ctx.lineWidth = 2;
-                let drawing = false, lx = 0, ly = 0;
-                const getPos = e => {
-                    const r = canvas.getBoundingClientRect();
-                    const x = (e.clientX || e.touches?.[0]?.clientX || 0) - r.left;
-                    const y = (e.clientY || e.touches?.[0]?.clientY || 0) - r.top;
-                    return { x: x * (canvas.width / r.width), y: y * (canvas.height / r.height) };
-                };
-                canvas.addEventListener('mousedown', e => { e.preventDefault(); drawing = true; const p = getPos(e); lx = p.x; ly = p.y; });
-                canvas.addEventListener('mousemove', e => { e.preventDefault(); if (!drawing) return; const p = getPos(e); ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(p.x, p.y); ctx.stroke(); lx = p.x; ly = p.y; });
-                canvas.addEventListener('mouseup', e => { e.preventDefault(); drawing = false; });
-                canvas.addEventListener('touchstart', e => { e.preventDefault(); drawing = true; const p = getPos(e); lx = p.x; ly = p.y; });
-                canvas.addEventListener('touchmove', e => { e.preventDefault(); if (!drawing) return; const p = getPos(e); ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(p.x, p.y); ctx.stroke(); lx = p.x; ly = p.y; });
-                canvas.addEventListener('touchend', e => { e.preventDefault(); drawing = false; });
-                getEl('clearAgreementSig').addEventListener('click', e => { e.preventDefault(); ctx.fillStyle = 'white'; ctx.fillRect(0, 0, canvas.width, canvas.height); agreementSignatureDataURL = null; getEl('agreementAgreeBtn').disabled = true; });
-                getEl('confirmAgreementSig').addEventListener('click', e => {
-                    e.preventDefault();
-                    const d = canvas.toDataURL('image/png');
-                    if (d === 'data:,') { showToast('⚠️ Draw first.', 2000); return; }
-                    agreementSignatureDataURL = d;
-                    getEl('agreementAgreeBtn').disabled = false;
-                });
-                getEl('agreementModal').style.display = 'flex';
-                getEl('agreementAgreeBtn').disabled = true;
-            });
-            const aab = getEl('agreementAgreeBtn');
-            if (aab) aab.addEventListener('click', function(e) {
-                e.preventDefault();
-                if (!agreementSignatureDataURL) { showToast('⚠️ Sign first.', 2000); return; }
-                agreementSigned = true;
-                window._agentAgreement = { signed:true, signature:agreementSignatureDataURL, date:new Date().toISOString() };
-                getEl('agreementStatusText').textContent = 'Signed ✅';
-                getEl('agreementStatusText').style.color = '#27ae60';
-                this.disabled = true;
-                setTimeout(() => getEl('agreementModal').style.display = 'none', 800);
-            });
-            const acb2 = getEl('agreementCloseBtn'); if (acb2) acb2.addEventListener('click', e => { e.preventDefault(); getEl('agreementModal').style.display = 'none'; });
-            const acxb = getEl('agreementCloseXBtn'); if (acxb) acxb.addEventListener('click', e => { e.preventDefault(); getEl('agreementModal').style.display = 'none'; });
-
-            // Submit agent registration
-            const sarb = getEl('submitAgentRegistrationBtn');
-            if (sarb) sarb.addEventListener('click', e => {
-                e.preventDefault();
-                const ptx = getEl('agentProviderTxId').value.trim();
-                const val = ProviderTxIdManager.validate(ptx);
-                if (!val.valid) { getEl('agentProviderTxIdError').textContent = val.error; getEl('agentProviderTxIdError').style.display = 'block'; return; }
-                if (!agreementSigned) { getEl('agentRegError').textContent = '❌ Sign Agreement first.'; return; }
-                const bn = SecurityUtils.sanitizeInput(getEl('agentBusinessName').value.trim(), 100);
-                const ad = SecurityUtils.sanitizeInput(getEl('agentAddress').value.trim(), 200);
-                const ci = getCityValue('agentCitySelect', 'agentCityOther');
-                const rn = SecurityUtils.sanitizeInput(getEl('agentRegNumber').value.trim(), 50);
-                const on = SecurityUtils.sanitizeInput(getEl('agentOwnerName').value.trim(), 100);
-                const idn = SecurityUtils.sanitizeInput(getEl('agentIdNumber').value.trim(), 50);
-                const mm = SecurityUtils.sanitizePhone(getEl('agentMobileMoney').value.trim());
-                const pw = getEl('agentPassword').value.trim();
-                const pin = getEl('agentPin').value.trim();
-                const idi = getEl('agentIdImage').files[0];
-                const ca = parseFloat(getEl('collateralAmount').value) || 0;
-                const nin = SecurityUtils.sanitizeInput(getEl('agentNin').value.trim(), 50);
-                if (!bn || !ad || !ci || !rn || !on || !idn || !mm || !idi || !pw || !pin || !nin) { getEl('agentRegError').textContent = '❌ Fill all fields.'; return; }
-                if (pw.length !== 6) { getEl('agentRegError').textContent = '❌ Password 6 chars.'; return; }
-                if (pin.length !== 5) { getEl('agentRegError').textContent = '❌ PIN 5 digits.'; return; }
-                if (registeredUsers.some(u => u.businessName && u.businessName.toLowerCase() === bn.toLowerCase())) { getEl('agentRegError').textContent = '❌ Agent exists.'; return; }
-                ProviderTxIdManager.markAsUsed(ptx);
-                const data = { id:'agent_' + Date.now(), name:bn, businessName:bn, businessAddress:ad, city:ci, regNumber:rn, businessType:getEl('agentBusinessType').value, ownerName:on, idType:getEl('agentIdType').value, idNumber:idn, mobileMoney:mm, countryCode:getEl('agentCountryCode').value, password:pw, pin, collateralAmount:ca, collateralLimit:parseInt(getEl('agentCollateralLimit').value) || 0, currency:'GNF', approved:true, role:'agent', isAgent:true, registeredAt:new Date().toISOString(), nin };
-                registeredUsers.push(data);
-                saveRegisteredUsers();
-                showToast('✅ Agent registered!', 3000);
-                renderAgentDropdown(currentAgentFilterCountry);
-                populateAgentSelect(currentAgentFilterCountry);
-                selectAgent(data.id);
-                setTimeout(() => getEl('agentRegistrationModal').style.display = 'none', 1200);
-            });
-
-            // Edit agent
-            const seab = getEl('saveEditAgentBtn');
-            if (seab) seab.addEventListener('click', e => {
-                e.preventDefault();
-                const aid = getEl('editAgentId').value;
-                const bn = SecurityUtils.sanitizeInput(getEl('editBusinessName').value.trim(), 100);
-                const ad = SecurityUtils.sanitizeInput(getEl('editAddress').value.trim(), 200);
-                const ci = getCityValue('editCitySelect', 'editCityOther');
-                const rn = SecurityUtils.sanitizeInput(getEl('editRegNumber').value.trim(), 50);
-                const mm = SecurityUtils.sanitizePhone(getEl('editMobileMoney').value.trim());
-                const pw = getEl('editPassword').value.trim();
-                const pin = getEl('editPin').value.trim();
-                const nin = SecurityUtils.sanitizeInput(getEl('editAgentNin').value.trim(), 50);
-                const agent = getAgents().find(a => a.id === aid);
-                if (!agent) { getEl('editAgentError').textContent = 'Agent not found'; return; }
-                const data = agent.agentData || agent;
-                if (pw !== data.password) { getEl('editAgentError').textContent = '❌ Wrong password'; return; }
-                if (pin !== data.pin) { getEl('editAgentError').textContent = '❌ Wrong PIN'; return; }
-                data.businessName = bn; data.businessAddress = ad; data.city = ci;
-                data.regNumber = rn; data.mobileMoney = mm; data.name = bn; data.nin = nin;
-                const r = registeredUsers.find(u => u.id === aid);
-                if (r) { r.businessName = bn; r.businessAddress = ad; r.city = ci; r.regNumber = rn; r.mobileMoney = mm; r.nin = nin; }
-                saveRegisteredUsers();
-                showToast('✅ Agent updated!', 2000);
-                setTimeout(() => getEl('editAgentModal').style.display = 'none', 1000);
-            });
-
-            // Main form submit
-            const mf = getEl('mainForm');
-            if (mf) mf.addEventListener('submit', e => {
-                e.preventDefault();
-                const ptx = getEl('providerTxId')?.value?.trim() || '';
-                const val = ProviderTxIdManager.validate(ptx);
-                if (!val.valid) { getEl('providerTxIdError').textContent = val.error; getEl('providerTxIdError').style.display = 'block'; return; }
-                const tc = getEl('mainTransferCode')?.value?.trim() || '';
-                const tcv = TransferCodeManager.validate(tc);
-                if (!tcv.valid) { getEl('mainTransferCodeError').textContent = tcv.error; getEl('mainTransferCodeError').style.display = 'block'; return; }
-                try {
-                    const sn = SecurityUtils.sanitizeInput(getEl('senderName').value.trim(), 100);
-                    const sp = SecurityUtils.sanitizePhone(getEl('senderPhone').value.trim());
-                    const an = getEl('agentName')?.value?.trim() || '';
-                    const ap = getEl('agentPhone')?.value?.trim() || '';
-                    if (!sn || !sp || !an) { showToast('❌ Fill required.'); return; }
-                    ensureTransactionId();
-                    const amount = parseFloat(getEl('amountInput')?.value) || 0;
-                    const charge = amount * 0.04;
-                    const currency = isLocalMode ? getUserCurrency() : currentCountryData.currency;
-                    const txId = getEl('transactionId')?.value?.trim() || '';
-                    const dateStr = getEl('currentDate')?.innerText + " " + getEl('currentTime')?.innerText;
-                    ProviderTxIdManager.markAsUsed(ptx);
-                    TransferCodeManager.markAsUsed(tc);
-                    const data = { txId, date:dateStr, mode:isLocalMode?'Local':'International', sender:`${sn} (${sp})`, agent:`${an} (${ap})`, client:'N/A', baseAmount:amount.toFixed(2), charge:charge.toFixed(2), gstRate:0, gst:'0.00', total:(amount + charge).toFixed(2), currency, providerTxId:ptx, transferCode:tc, senderCurrency:currency, recipientCurrency:currency, senderAmount:amount.toFixed(2), recipientAmount:amount.toFixed(2) };
-                    if (_selectedProductDetails) data.product = { ..._selectedProductDetails };
-                    showReceiptModal(data);
-                    showToast('✅ Receipt generated!', 2500);
-                    getEl('providerTxId').value = '';
-                    getEl('mainTransferCode').value = '';
-                    getEl('mainTransferCodeGroup').style.display = 'none';
-                } catch (err) { showToast('❌ ' + err.message, 3000); }
-            });
-
-            // Provider TX reveal
-            const pti = getEl('providerTxId');
-            if (pti) ['input','blur','change'].forEach(ev => pti.addEventListener(ev, revealTransferCodeField));
-
-            // Providers
-            document.querySelectorAll('#providerModal .action-btn[data-provider]').forEach(b => {
-                b.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const prov = this.getAttribute('data-provider');
-                    getEl('providerModal').style.display = 'none';
-                    const amt = Math.round(parseFloat(getEl('amountInput')?.value) || 0);
-                    const r = resolveRecipientInfo();
-                    if (!r.phone || r.phone.length < 6) { showToast('⚠️ No recipient.', 3500); return; }
-                    const senderCountry = String(currentUser?.country || '').trim().toLowerCase();
-                    const isSL = senderCountry === 'sierra leone' || senderCountry === 'sl';
-                    let ussd = '';
-                    if (isSL) {
-                        const cs = getEl('countryCodeSelect');
-                        let cSel = '20';
-                        if (cs && cs.value) { const p = cs.value.split('|'); if (p[5]) cSel = p[5].trim(); }
-                        ussd = `#144*2*5*1*${cSel}*${String(r.name).replace(/[*#]/g, '')}*${r.phone}*${amt}*1*0000#`;
-                    } else {
-                        if (prov === 'MB-ONE') ussd = `#144*2*1*${r.phone}*${amt}*0000#`;
-                        else if (prov === 'MB-TWO') ussd = `*161*1*1*${r.phone}*${amt}*0000#`;
-                        else if (prov === 'MB-THREE') ussd = `*144*3*${r.phone}*${amt}*0000#`;
-                        else if (prov === 'MB-FOUR') ussd = `#144*4*${r.phone}*${amt}*0000#`;
-                    }
-                    if (ussd) showPinModal(ussd, prov, 'wbmoney', r, amt);
-                });
-            });
-
-            const pcb = getEl('pinConfirmBtn'); if (pcb) pcb.addEventListener('click', e => { e.preventDefault(); confirmPin(); });
-            const pcnb = getEl('pinCancelBtn'); if (pcnb) pcnb.addEventListener('click', e => { e.preventDefault(); getEl('pinModal').style.display = 'none'; pendingPinData = null; });
-
-            // Receipt
-            const rcx = getEl('receiptCloseXBtn'); if (rcx) rcx.addEventListener('click', e => { e.preventDefault(); getEl('receiptModal').style.display = 'none'; });
-            const rcb = getEl('receiptCloseBtn'); if (rcb) rcb.addEventListener('click', e => { e.preventDefault(); getEl('receiptModal').style.display = 'none'; });
-
-            // Chat
-            const ctb2 = getEl('chatToggleBtn'); if (ctb2) ctb2.addEventListener('click', e => { e.preventDefault(); toggleChat(); });
-            const ccb = getEl('chatCloseBtn'); if (ccb) ccb.addEventListener('click', e => { e.preventDefault(); getEl('chatWindow').classList.remove('open'); getEl('chatToggleBtn').style.display = 'flex'; getEl('flagsStrip').classList.remove('hidden'); });
-            const csb = getEl('chatSendBtn'); if (csb) csb.addEventListener('click', e => {
-                e.preventDefault();
-                const ci = getEl('chatInput');
-                const text = SecurityUtils.sanitizeInput(ci?.value?.trim() || '', 500);
-                if (!text || !activeChatId) return;
-                addMessageToChat(getChatId({ id: activeChatId }, activeChatType), { type:'sent', content:text, time:new Date().toISOString() });
-                renderMessages(getChatId({ id: activeChatId }, activeChatType));
-                ci.value = '';
-            });
-
-            // Footer
-            const aab2 = getEl('aboutAppBtn'); if (aab2) aab2.addEventListener('click', e => { e.preventDefault(); showInfoModal('About', 'Cross-border mobile money transfers.'); });
-            const adb2 = getEl('aboutDevBtn'); if (adb2) adb2.addEventListener('click', e => { e.preventDefault(); showInfoModal('Dev', 'Fintech developer.'); });
-            const cb = getEl('contactBtn'); if (cb) cb.addEventListener('click', e => { e.preventDefault(); showInfoModal('Contact', '+232-76-436-811'); });
-            const subb = getEl('subscribeBtn'); if (subb) subb.addEventListener('click', e => { e.preventDefault(); getEl('subscribeModal').style.display = 'flex'; });
-            const ssb = getEl('submitSubscribeBtn'); if (ssb) ssb.addEventListener('click', e => { e.preventDefault(); showToast('📧 Subscribed!'); getEl('subscribeModal').style.display = 'none'; });
-            const htb = getEl('howToBtn'); if (htb) htb.addEventListener('click', e => { e.preventDefault(); window.open('https://aminejalloh-io.github.io/AfriPay-Guide/', '_blank'); });
-
-            // Converter
-            const ccb2 = getEl('currencyConverterBtn');
-            if (ccb2) ccb2.addEventListener('click', e => {
-                e.preventDefault(); e.stopPropagation();
-                const m = getEl('currencyConverterModal');
-                if (m.style.display === 'flex') { m.style.display = 'none'; return; }
-                m.style.display = 'flex';
-                const uc = currentUser?.country || 'Sierra Leone';
-                const ucD = SUPPORTED_CURRENCIES.find(c => c.name.toLowerCase() === uc.toLowerCase());
-                if (getEl('userCountryDisplay')) getEl('userCountryDisplay').textContent = uc;
-                if (getEl('userCurrencyDisplay')) getEl('userCurrencyDisplay').textContent = ucD ? ucD.currency : 'SLL';
-                populateConverterCountries();
-                populateFromCurrencySelect();
-                if (!getEl('convAmount').value) getEl('convAmount').value = 100;
-                updateConverter();
-            });
-            const ca = getEl('convAmount'); if (ca) ca.addEventListener('input', updateConverter);
-            const ccs = getEl('convCountrySelect'); if (ccs) ccs.addEventListener('change', updateConverter);
-            const cfc = getEl('convFromCurrency'); if (cfc) cfc.addEventListener('change', updateConverter);
-            const ccb3 = getEl('convCloseBtn'); if (ccb3) ccb3.addEventListener('click', e => { e.preventDefault(); getEl('currencyConverterModal').style.display = 'none'; });
-            const ccxb = getEl('converterCloseXBtn'); if (ccxb) ccxb.addEventListener('click', e => { e.preventDefault(); getEl('currencyConverterModal').style.display = 'none'; });
-
-            // Map
-            const mb = getEl('mapButton');
-            if (mb) mb.addEventListener('click', e => {
-                e.preventDefault();
-                const city = getEl('profileCity')?.innerText || '';
-                const country = getEl('profileCountry')?.innerText || '';
-                getEl('mapIframe').src = `https://www.google.com/maps?q=${encodeURIComponent(city + ', ' + country)}&output=embed`;
-                getEl('mapModal').style.display = 'flex';
-            });
-
-            // Add business
-            const abb = getEl('addBizBtn'); if (abb) abb.addEventListener('click', e => { e.preventDefault(); openAddBizModal(); });
-            const ebsb = getEl('editBizStripBtn');
-            if (ebsb && !ebsb.dataset.bound) {
-                ebsb.dataset.bound = 'true';
-                ebsb.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); window.editBusinessFromStrip(e); });
-            }
-            const ebacb = getEl('editBizAuthConfirmBtn'); if (ebacb) ebacb.addEventListener('click', e => { e.preventDefault(); confirmEditBizAuth(); });
-            const ebcnb = getEl('editBizAuthCancelBtn'); if (ebcnb) ebcnb.addEventListener('click', e => { e.preventDefault(); pendingEditBizId = null; getEl('editBizAuthModal').style.display = 'none'; });
-
-            const sfab = getEl('submitForApprovalBtn'); if (sfab) sfab.addEventListener('click', e => { e.preventDefault(); submitForApproval(); });
-            const apb = getEl('addProductBtn'); if (apb) apb.addEventListener('click', e => { e.preventDefault(); addProductEntry(); });
-
-            const bgpb = getEl('bizGenPasswordBtn'); if (bgpb) bgpb.addEventListener('click', e => {
-                e.preventDefault();
-                const ch = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-                let pw = '';
-                for (let i = 0; i < 6; i++) pw += ch.charAt(Math.floor(Math.random() * ch.length));
-                getEl('bizPassword').value = pw;
-                showToast('🔑 ' + pw, 3000);
-            });
-            const bgpinb = getEl('bizGenPinBtn'); if (bgpinb) bgpinb.addEventListener('click', e => {
-                e.preventDefault();
-                const pin = String(Math.floor(10000 + Math.random() * 90000));
-                getEl('bizPin').value = pin;
-                showToast('🔑 ' + pin, 3000);
-            });
-
-            const api = getEl('authProviderTxId'); if (api) api.addEventListener('input', validateAuthFields);
-            const ati = getEl('authTransferCode'); if (ati) ati.addEventListener('input', validateAuthFields);
-
-            // Modal backdrop
-            document.querySelectorAll('.modal').forEach(m => {
-                m.addEventListener('click', function(e) {
-                    if (e.target === this) { this.style.display = 'none'; if (this.id === 'editBizAuthModal') pendingEditBizId = null; }
-                });
-            });
-
-            // Popup overlay
-            const po = getEl('popupAdOverlay');
-            if (po) po.addEventListener('click', e => { if (e.target === po) hidePopupAdvert(); });
-        }
-
         function validateAuthFields() {
             const ptx = getEl('authProviderTxId')?.value?.trim() || '';
             const tc = getEl('authTransferCode')?.value?.trim() || '';
@@ -2923,20 +2258,457 @@
         }
 
         // ============================================================
+        // EVENT LISTENERS
+        // ============================================================
+        function setupEventListeners() {
+            const ls = getEl('langSelect'); if (ls) ls.addEventListener('change', function() { setLanguage(this.value); });
+
+            const lb = getEl('loginBtn'); if (lb) lb.addEventListener('click', e => { e.preventDefault(); getEl('loginError').innerHTML = ''; getEl('loginModal').style.display = 'flex'; });
+            const rb = getEl('registerBtn'); if (rb) rb.addEventListener('click', e => { e.preventDefault(); getEl('registerModal').style.display = 'flex'; });
+            const lob = getEl('logoutBtn'); if (lob) lob.addEventListener('click', e => { e.preventDefault(); clearUserStorage(); stopPopupAdTimer(); showToast('Logged out'); });
+
+            const dlb = getEl('doLoginBtn');
+            if (dlb) dlb.addEventListener('click', e => {
+                e.preventDefault();
+                if (loginUser(getEl('loginName').value, getEl('loginPhone').value)) {
+                    getEl('loginModal').style.display = 'none';
+                    getEl('loginName').value = ''; getEl('loginPhone').value = '';
+                }
+            });
+
+            const drb = getEl('doRegisterBtn');
+            if (drb) drb.addEventListener('click', e => {
+                e.preventDefault();
+                const name = SecurityUtils.sanitizeInput(getEl('regName').value.trim(), 100);
+                const phone = SecurityUtils.sanitizePhone(getEl('regPhone').value.trim());
+                const address = SecurityUtils.sanitizeInput(getEl('regAddress').value.trim(), 200);
+                const city = getCityValue('regCitySelect', 'regCityOther');
+                const country = getEl('regCountry').value;
+                const nin = SecurityUtils.sanitizeInput(getEl('regNin').value.trim(), 50);
+                const idNumber = SecurityUtils.sanitizeInput(getEl('regIdNumber').value.trim(), 50);
+                if (!name || !phone || !city) { getEl('regError').textContent = '❌ Fill Name, Phone, City.'; return; }
+                if (registeredUsers.some(u => u.phone === phone)) { getEl('regError').textContent = '❌ Phone already registered.'; return; }
+                registeredUsers.push({ id: 'user_' + Date.now(), name, phone, address, city, country, emoji: '👤', role: 'user', nin, idNumber });
+                saveRegisteredUsers();
+                currentUser = { name, phone, address, city, country, emoji:'👤', nin, idNumber };
+                saveUserToStorage(currentUser);
+                getEl('regSuccess').textContent = '✅ Registered!';
+                showToast('✅ Registered!', 1500);
+                showLoggedInUI();
+                setTimeout(() => { getEl('registerModal').style.display = 'none'; }, 1000);
+            });
+
+            const ac = getEl('userAvatarContainer');
+            if (ac) ac.addEventListener('click', e => { if (e.target.closest('.logout-btn') || e.target.closest('.edit-account-btn')) return; if (!currentUser) { showToast('⚠️ Login first.', 2000); return; } openEmojiPicker(); });
+            const pal = getEl('profileAvatarLarge');
+            if (pal) pal.addEventListener('click', () => { if (!currentUser) { showToast('⚠️ Login first.', 2000); return; } openEmojiPicker(); });
+            const eui = getEl('emojiUploadImageBtn'); if (eui) eui.addEventListener('click', () => getEl('avatarUploadInput').click());
+            const eri = getEl('emojiRemoveImageBtn'); if (eri) eri.addEventListener('click', removeAvatarImage);
+            const aui = getEl('avatarUploadInput');
+            if (aui) aui.addEventListener('change', function(e) {
+                const f = e.target.files[0];
+                if (!f || !f.type.startsWith('image/')) { showToast('⚠️ Image only.', 2000); this.value = ''; return; }
+                if (f.size > 2*1024*1024) { showToast('⚠️ Max 2MB.', 2000); this.value = ''; return; }
+                const r = new FileReader();
+                r.onload = ev => applyAvatarImage(ev.target.result);
+                r.readAsDataURL(f);
+                this.value = '';
+            });
+
+            const eab = getEl('editAccountBtn');
+            if (eab) eab.addEventListener('click', e => {
+                e.preventDefault();
+                if (!currentUser) { showToast('⚠️ Login first', 2000); return; }
+                getEl('editAccountName').value = SecurityUtils.escapeHTML(currentUser.name || '');
+                getEl('editAccountPhone').value = SecurityUtils.escapeHTML(currentUser.phone || '');
+                getEl('editAccountAddress').value = SecurityUtils.escapeHTML(currentUser.address || '');
+                setCityValue('editAccountCitySelect', 'editAccountCityOther', currentUser.city || '');
+                getEl('editAccountCountry').value = SecurityUtils.escapeHTML(currentUser.country || 'Sierra Leone');
+                getEl('editAccountNin').value = currentUser.nin || '';
+                if (getEl('editAccountEmojiPreview')) getEl('editAccountEmojiPreview').textContent = currentUser.avatarDataURL ? '🖼️' : (currentUser.emoji || '👤');
+                getEl('editAccountModal').style.display = 'flex';
+            });
+            const eaPick = getEl('editAccountPickEmojiBtn'); if (eaPick) eaPick.addEventListener('click', openEmojiPicker);
+            const seaB = getEl('saveEditAccountBtn');
+            if (seaB) seaB.addEventListener('click', e => {
+                e.preventDefault();
+                const name = SecurityUtils.sanitizeInput(getEl('editAccountName').value.trim(), 100);
+                const phone = SecurityUtils.sanitizePhone(getEl('editAccountPhone').value.trim());
+                const address = SecurityUtils.sanitizeInput(getEl('editAccountAddress').value.trim(), 200);
+                const city = getCityValue('editAccountCitySelect', 'editAccountCityOther');
+                const country = SecurityUtils.sanitizeInput(getEl('editAccountCountry').value, 100);
+                const nin = SecurityUtils.sanitizeInput(getEl('editAccountNin').value.trim(), 50);
+                if (!name || !phone || !city) { getEl('editAccountError').textContent = '❌ Fill Name, Phone & City'; return; }
+                currentUser.name = name; currentUser.phone = phone; currentUser.address = address;
+                currentUser.city = city; currentUser.country = country; currentUser.nin = nin;
+                saveUserToStorage(currentUser);
+                const r = registeredUsers.find(u => u.phone === currentUser.phone || u.name === currentUser.name);
+                if (r) { r.name = name; r.phone = phone; r.city = city; r.country = country; }
+                saveRegisteredUsers();
+                showLoggedInUI();
+                showToast('✅ Account updated!', 2000);
+                setTimeout(() => getEl('editAccountModal').style.display = 'none', 1000);
+            });
+
+            const adb = getEl('agentDropdownBtn');
+            if (adb) adb.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); getEl('agentDropdownList').classList.toggle('open'); renderAgentDropdown(currentAgentFilterCountry); });
+            document.addEventListener('click', e => {
+                const c = document.querySelector('.agent-dropdown-container');
+                if (c && !c.contains(e.target)) getEl('agentDropdownList').classList.remove('open');
+            });
+            const as = getEl('agentNameSelect');
+            if (as) as.addEventListener('change', function() {
+                if (this.value) selectAgent(this.value);
+                else { selectedAgentId = null; _selectedAgentId = null; clearAgentSelection(); }
+            });
+
+            const gtb = getEl('generateTxBtn'); if (gtb) gtb.addEventListener('click', e => { e.preventDefault(); setGeneratedTransactionId(); });
+            const ctb = getEl('copyTxBtn'); if (ctb) ctb.addEventListener('click', e => { e.preventDefault(); copyTransactionIdToClipboard(); });
+
+            document.querySelectorAll('.close-modal').forEach(b => b.addEventListener('click', function(e) { e.preventDefault(); const m = this.closest('.modal'); if (m) m.style.display = 'none'; }));
+
+            const mmb = getEl('mainMmBtn');
+            if (mmb) mmb.addEventListener('click', e => {
+                e.preventDefault();
+                const ai = getEl('amountInput');
+                if (parseFloat(ai?.value) <= 0) { showToast('⚠️ Enter amount'); return; }
+                getEl('providerModal').style.display = 'flex';
+            });
+
+            const itb = getEl('intlToggleBtn');
+            if (itb) itb.addEventListener('click', function(e) {
+                e.preventDefault();
+                isLocalMode = !isLocalMode;
+                this.classList.toggle('active', !isLocalMode);
+                getEl('countryWrapper').style.display = isLocalMode ? 'none' : 'block';
+                computeCharges();
+                updateAgentDropdownForCountry();
+            });
+
+            const acb = getEl('addClientBtnHeader'); if (acb) acb.addEventListener('click', e => { e.preventDefault(); getEl('addClientModal').style.display = 'flex'; });
+            const scb = getEl('saveClientBtn');
+            if (scb) scb.addEventListener('click', e => {
+                e.preventDefault();
+                const n = SecurityUtils.sanitizeInput(getEl('newClientName').value.trim(), 100);
+                const p = SecurityUtils.sanitizePhone(getEl('newClientPhone').value.trim());
+                const a = SecurityUtils.sanitizeInput(getEl('newClientAddress').value.trim(), 200);
+                const c = getEl('newClientCitySelect').value;
+                const co = getEl('newClientCountrySelect').value;
+                if (!n) { getEl('addClientError').textContent = '❌ Name.'; return; }
+                if (!p) { getEl('addClientError').textContent = '❌ Phone.'; return; }
+                if (!c) { getEl('addClientError').textContent = '❌ City.'; return; }
+                registeredUsers.push({ id:'client_' + Date.now(), name:n, phone:p, address:a, city:c, country:co, emoji:'👤', isAgent:false, role:'user' });
+                saveRegisteredUsers();
+                getEl('clientName').value = n;
+                getEl('clientPhone').value = p;
+                getEl('clientSectionTitle').style.display = 'block';
+                getEl('clientFieldsRow').style.display = 'grid';
+                showToast(`✅ Client "${n}" added!`, 2000);
+                getEl('addClientModal').style.display = 'none';
+            });
+
+            const rab = getEl('registerAgentBtn'); if (rab) rab.addEventListener('click', e => { e.preventDefault(); getEl('registerModal').style.display = 'none'; getEl('agentRegistrationModal').style.display = 'flex'; });
+            const car = getEl('closeAgentRegBtn'); if (car) car.addEventListener('click', e => { e.preventDefault(); getEl('agentRegistrationModal').style.display = 'none'; });
+            const gpb = getEl('generatePasswordBtn');
+            if (gpb) gpb.addEventListener('click', e => {
+                e.preventDefault();
+                const ch = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                let pw = '';
+                for (let i = 0; i < 6; i++) pw += ch.charAt(Math.floor(Math.random() * ch.length));
+                getEl('agentPassword').value = pw;
+                showToast('🔑 ' + pw, 3000);
+            });
+            const gpib = getEl('generatePinBtn');
+            if (gpib) gpib.addEventListener('click', e => {
+                e.preventDefault();
+                const pin = String(Math.floor(10000 + Math.random() * 90000));
+                getEl('agentPin').value = pin;
+                showToast('🔑 ' + pin, 3000);
+            });
+            const gcb = getEl('generateCollateralBtn');
+            if (gcb) gcb.addEventListener('click', e => {
+                e.preventDefault();
+                const mm = SecurityUtils.sanitizePhone(getEl('agentMobileMoney').value.trim());
+                if (!mm) { getEl('collateralError').textContent = '⚠️ Enter mobile money'; return; }
+                const amt = parseInt(getEl('agentCollateralLimit').value) || 0;
+                getEl('collateralAmount').value = amt;
+                getEl('collateralUssdDisplay').textContent = `#144*2*2*${mm.replace(/\D/g, '')}*${amt}*0000#`;
+                getEl('collateralUssdDisplay').style.display = 'block';
+            });
+
+            const vab = getEl('viewAgreementBtn');
+            if (vab) vab.addEventListener('click', e => {
+                e.preventDefault();
+                const bn = getEl('agentBusinessName').value.trim();
+                const on = getEl('agentOwnerName').value.trim();
+                if (!bn || !on) { showToast('⚠️ Fill Business & Owner.', 3000); return; }
+                const body = getEl('agreementBody');
+                body.innerHTML = `
+                    <div class="clause"><span class="tag">Clause 1</span>I <span class="placeholder">${SecurityUtils.escapeHTML(on)}</span>, Owner of: <span class="placeholder">${SecurityUtils.escapeHTML(bn)}</span> agree.</div>
+                    <div class="clause"><span class="tag">Clause 2</span>I receive 7% of charges and 12% of cash-out charges.</div>
+                    <div class="clause"><span class="tag">Clause 3</span>Taking more than my percentage closes my account.</div>
+                    <div class="clause"><span class="tag">Signature</span><div class="agreement-signature-area open"><canvas id="agreementSigCanvas" width="400" height="80"></canvas><div class="sig-actions"><button class="sig-clear" id="clearAgreementSig">🗑️ Clear</button><button class="sig-confirm" id="confirmAgreementSig">✅ Confirm</button></div></div></div>
+                `;
+                const canvas = getEl('agreementSigCanvas');
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = 'white'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.strokeStyle = '#0a2b3c'; ctx.lineWidth = 2;
+                let drawing = false, lx = 0, ly = 0;
+                const getPos = e => {
+                    const r = canvas.getBoundingClientRect();
+                    const x = (e.clientX || e.touches?.[0]?.clientX || 0) - r.left;
+                    const y = (e.clientY || e.touches?.[0]?.clientY || 0) - r.top;
+                    return { x: x * (canvas.width / r.width), y: y * (canvas.height / r.height) };
+                };
+                canvas.addEventListener('mousedown', e => { e.preventDefault(); drawing = true; const p = getPos(e); lx = p.x; ly = p.y; });
+                canvas.addEventListener('mousemove', e => { e.preventDefault(); if (!drawing) return; const p = getPos(e); ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(p.x, p.y); ctx.stroke(); lx = p.x; ly = p.y; });
+                canvas.addEventListener('mouseup', () => drawing = false);
+                canvas.addEventListener('touchstart', e => { e.preventDefault(); drawing = true; const p = getPos(e); lx = p.x; ly = p.y; });
+                canvas.addEventListener('touchmove', e => { e.preventDefault(); if (!drawing) return; const p = getPos(e); ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(p.x, p.y); ctx.stroke(); lx = p.x; ly = p.y; });
+                canvas.addEventListener('touchend', () => drawing = false);
+                getEl('clearAgreementSig').addEventListener('click', e => { e.preventDefault(); ctx.fillStyle = 'white'; ctx.fillRect(0, 0, canvas.width, canvas.height); agreementSignatureDataURL = null; getEl('agreementAgreeBtn').disabled = true; });
+                getEl('confirmAgreementSig').addEventListener('click', e => {
+                    e.preventDefault();
+                    const d = canvas.toDataURL('image/png');
+                    if (d === 'data:,') { showToast('⚠️ Draw first.', 2000); return; }
+                    agreementSignatureDataURL = d;
+                    getEl('agreementAgreeBtn').disabled = false;
+                });
+                getEl('agreementModal').style.display = 'flex';
+                getEl('agreementAgreeBtn').disabled = true;
+            });
+            const aab = getEl('agreementAgreeBtn');
+            if (aab) aab.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (!agreementSignatureDataURL) { showToast('⚠️ Sign first.', 2000); return; }
+                agreementSigned = true;
+                window._agentAgreement = { signed:true, signature:agreementSignatureDataURL, date:new Date().toISOString() };
+                getEl('agreementStatusText').textContent = 'Signed ✅';
+                getEl('agreementStatusText').style.color = '#27ae60';
+                this.disabled = true;
+                setTimeout(() => getEl('agreementModal').style.display = 'none', 800);
+            });
+            const acb2 = getEl('agreementCloseBtn'); if (acb2) acb2.addEventListener('click', e => { e.preventDefault(); getEl('agreementModal').style.display = 'none'; });
+            const acxb = getEl('agreementCloseXBtn'); if (acxb) acxb.addEventListener('click', e => { e.preventDefault(); getEl('agreementModal').style.display = 'none'; });
+
+            const sarb = getEl('submitAgentRegistrationBtn');
+            if (sarb) sarb.addEventListener('click', e => {
+                e.preventDefault();
+                const ptx = getEl('agentProviderTxId').value.trim();
+                const val = ProviderTxIdManager.validate(ptx);
+                if (!val.valid) { getEl('agentProviderTxIdError').textContent = val.error; getEl('agentProviderTxIdError').style.display = 'block'; return; }
+                if (!agreementSigned) { getEl('agentRegError').textContent = '❌ Sign Agreement first.'; return; }
+                const bn = SecurityUtils.sanitizeInput(getEl('agentBusinessName').value.trim(), 100);
+                const ad = SecurityUtils.sanitizeInput(getEl('agentAddress').value.trim(), 200);
+                const ci = getCityValue('agentCitySelect', 'agentCityOther');
+                const rn = SecurityUtils.sanitizeInput(getEl('agentRegNumber').value.trim(), 50);
+                const on = SecurityUtils.sanitizeInput(getEl('agentOwnerName').value.trim(), 100);
+                const idn = SecurityUtils.sanitizeInput(getEl('agentIdNumber').value.trim(), 50);
+                const mm = SecurityUtils.sanitizePhone(getEl('agentMobileMoney').value.trim());
+                const pw = getEl('agentPassword').value.trim();
+                const pin = getEl('agentPin').value.trim();
+                const ca = parseFloat(getEl('collateralAmount').value) || 0;
+                const nin = SecurityUtils.sanitizeInput(getEl('agentNin').value.trim(), 50);
+                if (!bn || !ad || !ci || !rn || !on || !idn || !mm || !pw || !pin || !nin) { getEl('agentRegError').textContent = '❌ Fill all fields.'; return; }
+                if (pw.length !== 6) { getEl('agentRegError').textContent = '❌ Password 6 chars.'; return; }
+                if (pin.length !== 5) { getEl('agentRegError').textContent = '❌ PIN 5 digits.'; return; }
+                if (registeredUsers.some(u => u.businessName && u.businessName.toLowerCase() === bn.toLowerCase())) { getEl('agentRegError').textContent = '❌ Agent exists.'; return; }
+                ProviderTxIdManager.markAsUsed(ptx);
+                const data = { id:'agent_' + Date.now(), name:bn, businessName:bn, businessAddress:ad, city:ci, regNumber:rn, businessType:getEl('agentBusinessType').value, ownerName:on, idType:getEl('agentIdType').value, idNumber:idn, mobileMoney:mm, countryCode:getEl('agentCountryCode').value, password:pw, pin, collateralAmount:ca, collateralLimit:parseInt(getEl('agentCollateralLimit').value) || 0, currency:'GNF', approved:true, role:'agent', isAgent:true, registeredAt:new Date().toISOString(), nin };
+                registeredUsers.push(data);
+                saveRegisteredUsers();
+                showToast('✅ Agent registered!', 3000);
+                renderAgentDropdown(currentAgentFilterCountry);
+                populateAgentSelect(currentAgentFilterCountry);
+                selectAgent(data.id);
+                setTimeout(() => getEl('agentRegistrationModal').style.display = 'none', 1200);
+            });
+
+            const seab = getEl('saveEditAgentBtn');
+            if (seab) seab.addEventListener('click', e => {
+                e.preventDefault();
+                const aid = getEl('editAgentId').value;
+                const bn = SecurityUtils.sanitizeInput(getEl('editBusinessName').value.trim(), 100);
+                const ad = SecurityUtils.sanitizeInput(getEl('editAddress').value.trim(), 200);
+                const ci = getCityValue('editCitySelect', 'editCityOther');
+                const rn = SecurityUtils.sanitizeInput(getEl('editRegNumber').value.trim(), 50);
+                const mm = SecurityUtils.sanitizePhone(getEl('editMobileMoney').value.trim());
+                const pw = getEl('editPassword').value.trim();
+                const pin = getEl('editPin').value.trim();
+                const nin = SecurityUtils.sanitizeInput(getEl('editAgentNin').value.trim(), 50);
+                const agent = getAgents().find(a => a.id === aid);
+                if (!agent) { getEl('editAgentError').textContent = 'Agent not found'; return; }
+                const data = agent.agentData || agent;
+                if (pw !== data.password) { getEl('editAgentError').textContent = '❌ Wrong password'; return; }
+                if (pin !== data.pin) { getEl('editAgentError').textContent = '❌ Wrong PIN'; return; }
+                data.businessName = bn; data.businessAddress = ad; data.city = ci;
+                data.regNumber = rn; data.mobileMoney = mm; data.name = bn; data.nin = nin;
+                const r = registeredUsers.find(u => u.id === aid);
+                if (r) { r.businessName = bn; r.businessAddress = ad; r.city = ci; r.regNumber = rn; r.mobileMoney = mm; r.nin = nin; }
+                saveRegisteredUsers();
+                showToast('✅ Agent updated!', 2000);
+                setTimeout(() => getEl('editAgentModal').style.display = 'none', 1000);
+            });
+
+            const mf = getEl('mainForm');
+            if (mf) mf.addEventListener('submit', e => {
+                e.preventDefault();
+                const ptx = getEl('providerTxId')?.value?.trim() || '';
+                const val = ProviderTxIdManager.validate(ptx);
+                if (!val.valid) { getEl('providerTxIdError').textContent = val.error; getEl('providerTxIdError').style.display = 'block'; return; }
+                const tc = getEl('mainTransferCode')?.value?.trim() || '';
+                const tcv = TransferCodeManager.validate(tc);
+                if (!tcv.valid) { getEl('mainTransferCodeError').textContent = tcv.error; getEl('mainTransferCodeError').style.display = 'block'; return; }
+                try {
+                    const sn = SecurityUtils.sanitizeInput(getEl('senderName').value.trim(), 100);
+                    const sp = SecurityUtils.sanitizePhone(getEl('senderPhone').value.trim());
+                    const an = getEl('agentName')?.value?.trim() || '';
+                    const ap = getEl('agentPhone')?.value?.trim() || '';
+                    if (!sn || !sp || !an) { showToast('❌ Fill required.'); return; }
+                    ensureTransactionId();
+                    const amount = parseFloat(getEl('amountInput')?.value) || 0;
+                    const charge = amount * 0.04;
+                    const currency = isLocalMode ? getUserCurrency() : currentCountryData.currency;
+                    const txId = getEl('transactionId')?.value?.trim() || '';
+                    const dateStr = getEl('currentDate')?.innerText + " " + getEl('currentTime')?.innerText;
+                    ProviderTxIdManager.markAsUsed(ptx);
+                    TransferCodeManager.markAsUsed(tc);
+                    const data = { txId, date:dateStr, mode:isLocalMode?'Local':'International', sender:`${sn} (${sp})`, agent:`${an} (${ap})`, client:'N/A', baseAmount:amount.toFixed(2), charge:charge.toFixed(2), gstRate:0, gst:'0.00', total:(amount + charge).toFixed(2), currency, providerTxId:ptx, transferCode:tc, senderCurrency:currency, recipientCurrency:currency, senderAmount:amount.toFixed(2), recipientAmount:amount.toFixed(2) };
+                    if (_selectedProductDetails) data.product = { ..._selectedProductDetails };
+                    showReceiptModal(data);
+                    showToast('✅ Receipt generated!', 2500);
+                    getEl('providerTxId').value = '';
+                    getEl('mainTransferCode').value = '';
+                    getEl('mainTransferCodeGroup').style.display = 'none';
+                } catch (err) { showToast('❌ ' + err.message, 3000); }
+            });
+
+            const pti = getEl('providerTxId');
+            if (pti) ['input','blur','change'].forEach(ev => pti.addEventListener(ev, revealTransferCodeField));
+
+            document.querySelectorAll('#providerModal .action-btn[data-provider]').forEach(b => {
+                b.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const prov = this.getAttribute('data-provider');
+                    getEl('providerModal').style.display = 'none';
+                    const amt = Math.round(parseFloat(getEl('amountInput')?.value) || 0);
+                    const r = resolveRecipientInfo();
+                    if (!r.phone || r.phone.length < 6) { showToast('⚠️ No recipient.', 3500); return; }
+                    const senderCountry = String(currentUser?.country || '').trim().toLowerCase();
+                    const isSL = senderCountry === 'sierra leone' || senderCountry === 'sl';
+                    let ussd = '';
+                    if (isSL) {
+                        const cs = getEl('countryCodeSelect');
+                        let cSel = '20';
+                        if (cs && cs.value) { const p = cs.value.split('|'); if (p[5]) cSel = p[5].trim(); }
+                        ussd = `#144*2*5*1*${cSel}*${String(r.name).replace(/[*#]/g, '')}*${r.phone}*${amt}*1*0000#`;
+                    } else {
+                        if (prov === 'MB-ONE') ussd = `#144*2*1*${r.phone}*${amt}*0000#`;
+                        else if (prov === 'MB-TWO') ussd = `*161*1*1*${r.phone}*${amt}*0000#`;
+                        else if (prov === 'MB-THREE') ussd = `*144*3*${r.phone}*${amt}*0000#`;
+                        else if (prov === 'MB-FOUR') ussd = `#144*4*${r.phone}*${amt}*0000#`;
+                    }
+                    if (ussd) showPinModal(ussd, prov, 'wbmoney', r, amt);
+                });
+            });
+
+            const pcb = getEl('pinConfirmBtn'); if (pcb) pcb.addEventListener('click', e => { e.preventDefault(); confirmPin(); });
+            const pcnb = getEl('pinCancelBtn'); if (pcnb) pcnb.addEventListener('click', e => { e.preventDefault(); getEl('pinModal').style.display = 'none'; pendingPinData = null; });
+
+            const rcx = getEl('receiptCloseXBtn'); if (rcx) rcx.addEventListener('click', e => { e.preventDefault(); getEl('receiptModal').style.display = 'none'; });
+            const rcb = getEl('receiptCloseBtn'); if (rcb) rcb.addEventListener('click', e => { e.preventDefault(); getEl('receiptModal').style.display = 'none'; });
+
+            const ctb2 = getEl('chatToggleBtn'); if (ctb2) ctb2.addEventListener('click', e => { e.preventDefault(); toggleChat(); });
+            const ccb = getEl('chatCloseBtn'); if (ccb) ccb.addEventListener('click', e => { e.preventDefault(); getEl('chatWindow').classList.remove('open'); getEl('chatToggleBtn').style.display = 'flex'; getEl('flagsStrip').classList.remove('hidden'); });
+
+            const aab2 = getEl('aboutAppBtn'); if (aab2) aab2.addEventListener('click', e => { e.preventDefault(); showInfoModal('About', 'Cross-border mobile money transfers.'); });
+            const adb2 = getEl('aboutDevBtn'); if (adb2) adb2.addEventListener('click', e => { e.preventDefault(); showInfoModal('Dev', 'Fintech developer.'); });
+            const cb = getEl('contactBtn'); if (cb) cb.addEventListener('click', e => { e.preventDefault(); showInfoModal('Contact', '+232-76-436-811'); });
+            const subb = getEl('subscribeBtn'); if (subb) subb.addEventListener('click', e => { e.preventDefault(); getEl('subscribeModal').style.display = 'flex'; });
+            const ssb = getEl('submitSubscribeBtn'); if (ssb) ssb.addEventListener('click', e => { e.preventDefault(); showToast('📧 Subscribed!'); getEl('subscribeModal').style.display = 'none'; });
+            const htb = getEl('howToBtn'); if (htb) htb.addEventListener('click', e => { e.preventDefault(); window.open('https://aminejalloh-io.github.io/AfriPay-Guide/', '_blank'); });
+
+            const ccb2 = getEl('currencyConverterBtn');
+            if (ccb2) ccb2.addEventListener('click', e => {
+                e.preventDefault(); e.stopPropagation();
+                const m = getEl('currencyConverterModal');
+                if (m.style.display === 'flex') { m.style.display = 'none'; return; }
+                m.style.display = 'flex';
+                const uc = currentUser?.country || 'Sierra Leone';
+                const ucD = SUPPORTED_CURRENCIES.find(c => c.name.toLowerCase() === uc.toLowerCase());
+                if (getEl('userCountryDisplay')) getEl('userCountryDisplay').textContent = uc;
+                if (getEl('userCurrencyDisplay')) getEl('userCurrencyDisplay').textContent = ucD ? ucD.currency : 'SLL';
+                populateConverterCountries();
+                populateFromCurrencySelect();
+                if (!getEl('convAmount').value) getEl('convAmount').value = 100;
+                updateConverter();
+            });
+            const ca = getEl('convAmount'); if (ca) ca.addEventListener('input', updateConverter);
+            const ccs = getEl('convCountrySelect'); if (ccs) ccs.addEventListener('change', updateConverter);
+            const cfc = getEl('convFromCurrency'); if (cfc) cfc.addEventListener('change', updateConverter);
+            const ccb3 = getEl('convCloseBtn'); if (ccb3) ccb3.addEventListener('click', e => { e.preventDefault(); getEl('currencyConverterModal').style.display = 'none'; });
+            const ccxb = getEl('converterCloseXBtn'); if (ccxb) ccxb.addEventListener('click', e => { e.preventDefault(); getEl('currencyConverterModal').style.display = 'none'; });
+
+            const mb = getEl('mapButton');
+            if (mb) mb.addEventListener('click', e => {
+                e.preventDefault();
+                const city = getEl('profileCity')?.innerText || '';
+                const country = getEl('profileCountry')?.innerText || '';
+                getEl('mapIframe').src = `https://www.google.com/maps?q=${encodeURIComponent(city + ', ' + country)}&output=embed`;
+                getEl('mapModal').style.display = 'flex';
+            });
+
+            const abb = getEl('addBizBtn'); if (abb) abb.addEventListener('click', e => { e.preventDefault(); openAddBizModal(); });
+            const ebsb = getEl('editBizStripBtn');
+            if (ebsb && !ebsb.dataset.bound) {
+                ebsb.dataset.bound = 'true';
+                ebsb.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); window.editBusinessFromStrip(e); });
+            }
+            const ebacb = getEl('editBizAuthConfirmBtn'); if (ebacb) ebacb.addEventListener('click', e => { e.preventDefault(); confirmEditBizAuth(); });
+
+            const sfab = getEl('submitForApprovalBtn'); if (sfab) sfab.addEventListener('click', e => { e.preventDefault(); submitForApproval(); });
+            const apb = getEl('addProductBtn'); if (apb) apb.addEventListener('click', e => { e.preventDefault(); addProductEntry(); });
+
+            const bgpb = getEl('bizGenPasswordBtn'); if (bgpb) bgpb.addEventListener('click', e => {
+                e.preventDefault();
+                const ch = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                let pw = '';
+                for (let i = 0; i < 6; i++) pw += ch.charAt(Math.floor(Math.random() * ch.length));
+                getEl('bizPassword').value = pw;
+                showToast('🔑 ' + pw, 3000);
+            });
+            const bgpinb = getEl('bizGenPinBtn'); if (bgpinb) bgpinb.addEventListener('click', e => {
+                e.preventDefault();
+                const pin = String(Math.floor(10000 + Math.random() * 90000));
+                getEl('bizPin').value = pin;
+                showToast('🔑 ' + pin, 3000);
+            });
+
+            const api = getEl('authProviderTxId'); if (api) api.addEventListener('input', validateAuthFields);
+            const ati = getEl('authTransferCode'); if (ati) ati.addEventListener('input', validateAuthFields);
+
+            document.querySelectorAll('.modal').forEach(m => {
+                m.addEventListener('click', function(e) {
+                    if (e.target === this) { this.style.display = 'none'; if (this.id === 'editBizAuthModal') pendingEditBizId = null; }
+                });
+            });
+
+            const po = getEl('popupAdOverlay');
+            if (po) po.addEventListener('click', e => { if (e.target === po) hidePopupAdvert(); });
+        }
+
+        // ============================================================
         // INIT
         // ============================================================
         function initApp() {
             try { ProviderTxIdManager.loadUsedIds(); } catch (e) {}
             try { TransferCodeManager.loadUsedCodes(); } catch (e) {}
-            try { loadLanguagePreference(); } catch (e) {}
+            try { const s = localStorage.getItem('afripay_lang'); if (s) currentLang = s; } catch (e) {}
             try { loadRegisteredUsers(); } catch (e) {}
             try { initializePermanentAgents(); } catch (e) {}
             try { loadCustomBusinesses(); } catch (e) {}
             try { loadStoredUser(); } catch (e) {}
-            try { loadGroups(); } catch (e) {}
-            try { loadChatMessages(); } catch (e) {}
 
-            // Populate all dropdowns (countries + capitals)
             populateAllDropdowns();
             populateCollateralDropdowns();
             populateCountryCodeSelect();
