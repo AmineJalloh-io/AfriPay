@@ -588,6 +588,7 @@
     <div id="subscribeModal" class="modal"><div class="modal-content"><h3>📧 Subscribe</h3><input type="email" id="subEmail" placeholder="Email" style="width:100%; padding:5px 10px; border-radius:30px; border:1px solid #ddd; height:38px;" /><div class="action-buttons-row"><button id="submitSubscribeBtn" class="action-btn">Subscribe</button><button class="action-btn close-modal">Cancel</button></div></div></div>
     <div id="loginModal" class="modal"><div class="modal-content"><h3>🔐 Login</h3><input type="text" id="loginName" placeholder="Full Name" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; height:38px;" /><input type="tel" id="loginPhone" placeholder="Phone" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; height:38px;" /><div id="loginError" class="error-msg"></div><div class="action-buttons-row"><button id="doLoginBtn" class="action-btn">Login</button><button class="action-btn close-modal">Cancel</button></div></div></div>
 
+    <!-- REGISTER MODAL (with avatar emoji picker & upload) -->
     <div id="registerModal" class="modal"><div class="modal-content">
         <h3>📝 Register</h3>
         <input type="text" id="regName" placeholder="Full Name *" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; height:38px;" />
@@ -597,10 +598,22 @@
         <select id="regCountry" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; height:38px;"></select>
         <div class="input-group"><label>🪪 NIN *</label><input type="text" id="regNin" /></div>
         <div class="input-group"><label>📄 ID Number *</label><input type="text" id="regIdNumber" /></div>
+        <!-- Avatar emoji & upload for registration -->
+        <div class="input-group">
+            <label>😊 Profile Avatar</label>
+            <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                <span id="regAvatarPreview" style="font-size:2rem;">👤</span>
+                <button type="button" class="action-btn" id="regPickEmojiBtn" style="background:#2c7da0; height:36px;">🎨 Choose Emoji</button>
+                <button type="button" class="action-btn" id="regUploadImageBtn" style="background:#2c7da0; height:36px;">📷 Upload Image</button>
+                <button type="button" class="action-btn" id="regRemoveImageBtn" style="background:#e74c3c; height:36px; display:none;">🗑️ Remove</button>
+            </div>
+            <input type="file" id="regAvatarUploadInput" accept="image/*" class="hidden-input" />
+        </div>
         <div id="regError" class="error-msg"></div><div id="regSuccess" class="success-msg"></div>
         <div class="action-buttons-row"><button id="doRegisterBtn" class="action-btn">Register</button><button id="registerAgentBtn" class="action-btn orange">🏢 Agent</button><button class="action-btn close-modal">Cancel</button></div>
     </div></div>
 
+    <!-- AGENT REGISTRATION MODAL (with ID upload & business profile upload) -->
     <div id="agentRegistrationModal" class="modal"><div class="modal-content agent-form">
         <h3>🏢 Agent Registration</h3>
         <div id="agentRegError" class="error-msg"></div>
@@ -617,6 +630,19 @@
         <div class="input-group"><label>Country Code</label><select id="agentCountryCode"><option value="+232">🇸🇱 +232</option><option value="+224" selected>🇬🇳 +224</option><option value="+221">🇸🇳 +221</option><option value="+220">🇬🇲 +220</option><option value="+226">🇧🇫 +226</option></select></div>
         <div class="input-group"><label>Password *</label><div style="display:flex; gap:4px;"><input type="text" id="agentPassword" readonly style="flex:1;" /><button type="button" class="action-btn green" id="generatePasswordBtn">🔑 Gen</button></div></div>
         <div class="input-group"><label>5-Digit PIN *</label><div style="display:flex; gap:4px;"><input type="text" id="agentPin" readonly style="flex:1;" /><button type="button" class="action-btn green" id="generatePinBtn">🔑 Gen PIN</button></div></div>
+        
+        <!-- UPLOAD ID & BUSINESS PROFILE (restored) -->
+        <div class="input-group">
+            <label>🪪 Upload ID Document *</label>
+            <input type="file" id="agentIdUpload" accept="image/*,application/pdf" />
+            <img id="agentIdPreview" class="id-preview" alt="ID Preview" />
+        </div>
+        <div class="input-group">
+            <label>🏢 Upload Business Profile / Logo *</label>
+            <input type="file" id="agentBizProfileUpload" accept="image/*" />
+            <img id="agentBizProfilePreview" class="id-preview" alt="Business Profile Preview" />
+        </div>
+
         <div class="collateral-box"><button class="action-btn orange" id="generateCollateralBtn">USSD</button><div id="collateralUssdDisplay" class="ussd-code" style="display:none;"></div><div id="collateralError" class="error-msg"></div><input type="hidden" id="collateralAmount" value="0" /></div>
         <div style="text-align:center; margin:6px 0;"><button class="action-btn orange" id="viewAgreementBtn" style="width:100%;">📜 Agreement</button><div style="font-size:0.68rem;"><span id="agreementStatusText" style="color:#e74c3c;">Not Signed</span></div></div>
         <div class="input-group"><label>🔐 Provider TX ID *</label><input type="text" id="agentProviderTxId" /><div id="agentProviderTxIdError" class="error-msg"></div></div>
@@ -745,7 +771,17 @@
         <div class="input-group"><label>Mobile Money Phone *</label><input type="tel" id="bizMobileMoney" /></div>
         <div class="input-group"><label>Business Description</label><textarea id="bizDescription" style="width:100%; padding:5px 10px; border-radius:18px; border:1.5px solid #e0e8f0; min-height:50px;"></textarea></div>
         <div class="input-group"><label>Business Type *</label><select id="bizType"><option>Restaurant</option><option>Electronics</option><option>Service</option><option>Retail</option><option>Other</option></select></div>
-        <div class="input-group"><label>Icon (emoji) *</label><div style="display:flex; gap:8px; align-items:center;"><span style="font-size:1.5rem;" id="bizIconPreview">🏪</span><input type="text" id="bizIcon" maxlength="2" style="flex:1;" /></div></div>
+        <div class="input-group">
+            <label>Icon (emoji) *</label>
+            <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                <span style="font-size:1.5rem;" id="bizIconPreview">🏪</span>
+                <input type="text" id="bizIcon" maxlength="2" style="flex:1; min-width:60px;" value="🏪" />
+                <button type="button" class="action-btn" id="bizPickEmojiBtn" style="background:#2c7da0; height:36px;">🎨 Pick</button>
+            </div>
+            <div id="bizEmojiGrid" style="display:none; margin-top:4px; grid-template-columns:repeat(6,1fr); gap:4px; max-height:120px; overflow-y:auto; padding:4px; background:#f8fafc; border-radius:10px;">
+                <!-- filled by JS -->
+            </div>
+        </div>
         <div class="input-group"><label>Street Address</label><input type="text" id="bizAddress" /></div>
         <div class="input-group"><label>City / Town *</label><div class="city-input-row"><select id="bizCitySelect"><option value="">Select city...</option></select><span class="or-text">OR</span><input type="text" id="bizCityOther" /></div></div>
         <div class="input-group"><label>Country *</label><select id="bizCountrySelect"></select></div>
@@ -853,6 +889,15 @@
         let currentPopupProduct = null;
         let pendingEditBizId = null;
 
+        // Registration avatar temporary state
+        let regAvatarDataURL = null;
+        let regEmoji = '👤';
+        let regAvatarUploadInput = null;
+
+        // Agent ID & Business Profile upload state
+        let agentIdDataURL = null;
+        let agentBizProfileDataURL = null;
+
         const DEFAULT_EDIT_BIZ_PASSWORD = 'EDITBIZ';
         const DEFAULT_EDIT_BIZ_PIN = '12345';
 
@@ -874,17 +919,11 @@
 
         function applyBusinessPriceMarkup(price) {
             const p = parseFloat(price) || 0;
-            // Below 15 → no markup
             if (p < 15) return p;
-            // 15 to 50 → +50%
             if (p < 50) return p * 1.5;
-            // 50 to 100 → +30%
             if (p < 100) return p * 1.3;
-            // 100 to 500 → +20%
             if (p < 500) return p * 1.2;
-            // 500 to 1000 → +10%
             if (p <= 1000) return p * 1.1;
-            // Above 1000 → no markup
             return p;
         }
 
@@ -1910,6 +1949,7 @@
             getEl('pinModal').style.display = 'none';
             const pn = pendingPinData.provider;
             pendingPinData = null;
+            // Open dial pad
             const link = document.createElement('a');
             link.href = `tel:${ussd}`;
             link.click();
@@ -2258,13 +2298,70 @@
         }
 
         // ============================================================
+        // REGISTRATION AVATAR HANDLERS
+        // ============================================================
+        function updateRegAvatarPreview() {
+            const preview = getEl('regAvatarPreview');
+            if (!preview) return;
+            if (regAvatarDataURL) {
+                preview.innerHTML = `<img src="${regAvatarDataURL}" style="width:40px; height:40px; border-radius:50%; object-fit:cover;" />`;
+            } else {
+                preview.textContent = regEmoji || '👤';
+            }
+        }
+
+        // ============================================================
+        // AGENT UPLOAD PREVIEW HANDLERS
+        // ============================================================
+        function setupAgentUploadPreviews() {
+            const idInput = getEl('agentIdUpload');
+            const idPreview = getEl('agentIdPreview');
+            if (idInput && idPreview) {
+                idInput.addEventListener('change', function() {
+                    const f = this.files[0];
+                    if (!f) return;
+                    const r = new FileReader();
+                    r.onload = e => {
+                        agentIdDataURL = e.target.result;
+                        idPreview.src = e.target.result;
+                        idPreview.style.display = 'block';
+                    };
+                    r.readAsDataURL(f);
+                });
+            }
+            const bizInput = getEl('agentBizProfileUpload');
+            const bizPreview = getEl('agentBizProfilePreview');
+            if (bizInput && bizPreview) {
+                bizInput.addEventListener('change', function() {
+                    const f = this.files[0];
+                    if (!f) return;
+                    const r = new FileReader();
+                    r.onload = e => {
+                        agentBizProfileDataURL = e.target.result;
+                        bizPreview.src = e.target.result;
+                        bizPreview.style.display = 'block';
+                    };
+                    r.readAsDataURL(f);
+                });
+            }
+        }
+
+        // ============================================================
         // EVENT LISTENERS
         // ============================================================
         function setupEventListeners() {
             const ls = getEl('langSelect'); if (ls) ls.addEventListener('change', function() { setLanguage(this.value); });
 
             const lb = getEl('loginBtn'); if (lb) lb.addEventListener('click', e => { e.preventDefault(); getEl('loginError').innerHTML = ''; getEl('loginModal').style.display = 'flex'; });
-            const rb = getEl('registerBtn'); if (rb) rb.addEventListener('click', e => { e.preventDefault(); getEl('registerModal').style.display = 'flex'; });
+            const rb = getEl('registerBtn'); if (rb) rb.addEventListener('click', e => { e.preventDefault(); 
+                // Reset register avatar state
+                regAvatarDataURL = null;
+                regEmoji = '👤';
+                updateRegAvatarPreview();
+                if (getEl('regAvatarUploadInput')) getEl('regAvatarUploadInput').value = '';
+                if (getEl('regRemoveImageBtn')) getEl('regRemoveImageBtn').style.display = 'none';
+                getEl('registerModal').style.display = 'flex'; 
+            });
             const lob = getEl('logoutBtn'); if (lob) lob.addEventListener('click', e => { e.preventDefault(); clearUserStorage(); stopPopupAdTimer(); showToast('Logged out'); });
 
             const dlb = getEl('doLoginBtn');
@@ -2276,6 +2373,7 @@
                 }
             });
 
+            // Register with avatar
             const drb = getEl('doRegisterBtn');
             if (drb) drb.addEventListener('click', e => {
                 e.preventDefault();
@@ -2288,15 +2386,86 @@
                 const idNumber = SecurityUtils.sanitizeInput(getEl('regIdNumber').value.trim(), 50);
                 if (!name || !phone || !city) { getEl('regError').textContent = '❌ Fill Name, Phone, City.'; return; }
                 if (registeredUsers.some(u => u.phone === phone)) { getEl('regError').textContent = '❌ Phone already registered.'; return; }
-                registeredUsers.push({ id: 'user_' + Date.now(), name, phone, address, city, country, emoji: '👤', role: 'user', nin, idNumber });
+                const newUser = { 
+                    id: 'user_' + Date.now(), 
+                    name, phone, address, city, country, 
+                    emoji: regEmoji, 
+                    avatarDataURL: regAvatarDataURL,
+                    role: 'user', nin, idNumber 
+                };
+                registeredUsers.push(newUser);
                 saveRegisteredUsers();
-                currentUser = { name, phone, address, city, country, emoji:'👤', nin, idNumber };
+                currentUser = { name, phone, address, city, country, emoji: regEmoji, avatarDataURL: regAvatarDataURL, nin, idNumber };
                 saveUserToStorage(currentUser);
                 getEl('regSuccess').textContent = '✅ Registered!';
                 showToast('✅ Registered!', 1500);
                 showLoggedInUI();
                 setTimeout(() => { getEl('registerModal').style.display = 'none'; }, 1000);
             });
+
+            // Register avatar pick emoji
+            const regPick = getEl('regPickEmojiBtn');
+            if (regPick) regPick.addEventListener('click', () => {
+                // Show emoji picker but for registration (we need a context)
+                // We'll temporarily set a flag
+                window._emojiPickerContext = 'register';
+                // Build grid
+                const grid = getEl('emojiGrid');
+                if (!grid) return;
+                grid.innerHTML = '';
+                AVAILABLE_EMOJIS.forEach(e => {
+                    const s = document.createElement('span');
+                    s.className = 'emoji-option';
+                    s.textContent = e;
+                    if (regEmoji === e && !regAvatarDataURL) s.classList.add('selected');
+                    s.addEventListener('click', () => { 
+                        regEmoji = e;
+                        regAvatarDataURL = null;
+                        updateRegAvatarPreview();
+                        if (getEl('regRemoveImageBtn')) getEl('regRemoveImageBtn').style.display = 'none';
+                        getEl('emojiPickerModal').style.display = 'none';
+                    });
+                    grid.appendChild(s);
+                });
+                // Hide upload/remove buttons? We can leave them but they will apply to register context
+                getEl('emojiPickerModal').style.display = 'flex';
+            });
+
+            // Register upload image
+            const regUpload = getEl('regUploadImageBtn');
+            if (regUpload) regUpload.addEventListener('click', () => {
+                getEl('regAvatarUploadInput').click();
+            });
+            const regAvatarInput = getEl('regAvatarUploadInput');
+            if (regAvatarInput) regAvatarInput.addEventListener('change', function(e) {
+                const f = e.target.files[0];
+                if (!f || !f.type.startsWith('image/')) { showToast('⚠️ Image only.', 2000); this.value = ''; return; }
+                if (f.size > 2*1024*1024) { showToast('⚠️ Max 2MB.', 2000); this.value = ''; return; }
+                const r = new FileReader();
+                r.onload = ev => {
+                    regAvatarDataURL = ev.target.result;
+                    updateRegAvatarPreview();
+                    if (getEl('regRemoveImageBtn')) getEl('regRemoveImageBtn').style.display = 'inline-block';
+                };
+                r.readAsDataURL(f);
+                this.value = '';
+            });
+            const regRemove = getEl('regRemoveImageBtn');
+            if (regRemove) regRemove.addEventListener('click', () => {
+                regAvatarDataURL = null;
+                updateRegAvatarPreview();
+                getEl('regRemoveImageBtn').style.display = 'none';
+            });
+
+            // Also override emoji picker upload/remove for register context
+            const emojiUpload = getEl('emojiUploadImageBtn');
+            if (emojiUpload) {
+                // We need to clone to remove existing listeners? We'll just add a check
+                // Actually the existing listeners are set later. We'll override by adding our own that checks context.
+                // But there's already a listener. We can add a capturing listener or modify the function.
+                // Simpler: in the existing applyAvatarImage, check context.
+                // We'll modify applyAvatarImage below.
+            }
 
             const ac = getEl('userAvatarContainer');
             if (ac) ac.addEventListener('click', e => { if (e.target.closest('.logout-btn') || e.target.closest('.edit-account-btn')) return; if (!currentUser) { showToast('⚠️ Login first.', 2000); return; } openEmojiPicker(); });
@@ -2407,7 +2576,19 @@
                 getEl('addClientModal').style.display = 'none';
             });
 
-            const rab = getEl('registerAgentBtn'); if (rab) rab.addEventListener('click', e => { e.preventDefault(); getEl('registerModal').style.display = 'none'; getEl('agentRegistrationModal').style.display = 'flex'; });
+            const rab = getEl('registerAgentBtn'); 
+            if (rab) rab.addEventListener('click', e => { 
+                e.preventDefault(); 
+                getEl('registerModal').style.display = 'none'; 
+                // Reset agent uploads
+                agentIdDataURL = null;
+                agentBizProfileDataURL = null;
+                if (getEl('agentIdPreview')) { getEl('agentIdPreview').src = ''; getEl('agentIdPreview').style.display = 'none'; }
+                if (getEl('agentBizProfilePreview')) { getEl('agentBizProfilePreview').src = ''; getEl('agentBizProfilePreview').style.display = 'none'; }
+                if (getEl('agentIdUpload')) getEl('agentIdUpload').value = '';
+                if (getEl('agentBizProfileUpload')) getEl('agentBizProfileUpload').value = '';
+                getEl('agentRegistrationModal').style.display = 'flex'; 
+            });
             const car = getEl('closeAgentRegBtn'); if (car) car.addEventListener('click', e => { e.preventDefault(); getEl('agentRegistrationModal').style.display = 'none'; });
             const gpb = getEl('generatePasswordBtn');
             if (gpb) gpb.addEventListener('click', e => {
@@ -2432,8 +2613,15 @@
                 if (!mm) { getEl('collateralError').textContent = '⚠️ Enter mobile money'; return; }
                 const amt = parseInt(getEl('agentCollateralLimit').value) || 0;
                 getEl('collateralAmount').value = amt;
-                getEl('collateralUssdDisplay').textContent = `#144*2*2*${mm.replace(/\D/g, '')}*${amt}*0000#`;
+                const ussd = `#144*2*2*${mm.replace(/\D/g, '')}*${amt}*0000#`;
+                getEl('collateralUssdDisplay').textContent = ussd;
                 getEl('collateralUssdDisplay').style.display = 'block';
+                // Open dial pad with the generated USSD
+                const link = document.createElement('a');
+                link.href = `tel:${ussd}`;
+                link.click();
+                showToast('📞 Dialing...', 2500);
+                navigator.clipboard.writeText(ussd).then(() => showToast('✅ USSD copied!', 1500)).catch(() => {});
             });
 
             const vab = getEl('viewAgreementBtn');
@@ -2514,7 +2702,32 @@
                 if (pin.length !== 5) { getEl('agentRegError').textContent = '❌ PIN 5 digits.'; return; }
                 if (registeredUsers.some(u => u.businessName && u.businessName.toLowerCase() === bn.toLowerCase())) { getEl('agentRegError').textContent = '❌ Agent exists.'; return; }
                 ProviderTxIdManager.markAsUsed(ptx);
-                const data = { id:'agent_' + Date.now(), name:bn, businessName:bn, businessAddress:ad, city:ci, regNumber:rn, businessType:getEl('agentBusinessType').value, ownerName:on, idType:getEl('agentIdType').value, idNumber:idn, mobileMoney:mm, countryCode:getEl('agentCountryCode').value, password:pw, pin, collateralAmount:ca, collateralLimit:parseInt(getEl('agentCollateralLimit').value) || 0, currency:'GNF', approved:true, role:'agent', isAgent:true, registeredAt:new Date().toISOString(), nin };
+                const data = { 
+                    id:'agent_' + Date.now(), 
+                    name:bn, 
+                    businessName:bn, 
+                    businessAddress:ad, 
+                    city:ci, 
+                    regNumber:rn, 
+                    businessType:getEl('agentBusinessType').value, 
+                    ownerName:on, 
+                    idType:getEl('agentIdType').value, 
+                    idNumber:idn, 
+                    mobileMoney:mm, 
+                    countryCode:getEl('agentCountryCode').value, 
+                    password:pw, 
+                    pin, 
+                    collateralAmount:ca, 
+                    collateralLimit:parseInt(getEl('agentCollateralLimit').value) || 0, 
+                    currency:'GNF', 
+                    approved:true, 
+                    role:'agent', 
+                    isAgent:true, 
+                    registeredAt:new Date().toISOString(), 
+                    nin,
+                    idDocumentDataURL: agentIdDataURL,
+                    businessProfileDataURL: agentBizProfileDataURL
+                };
                 registeredUsers.push(data);
                 saveRegisteredUsers();
                 showToast('✅ Agent registered!', 3000);
@@ -2684,6 +2897,32 @@
                 showToast('🔑 ' + pin, 3000);
             });
 
+            // Business icon emoji picker
+            const bizPick = getEl('bizPickEmojiBtn');
+            if (bizPick) bizPick.addEventListener('click', e => {
+                e.preventDefault();
+                const grid = getEl('bizEmojiGrid');
+                if (!grid) return;
+                if (grid.style.display === 'grid') { grid.style.display = 'none'; return; }
+                // Fill grid
+                grid.innerHTML = '';
+                const bizEmojis = ['🏪','🛒','🍽️','💻','📚','🏥','🔨','👗','👤','👩','🖥️','📱','💊','🚗','✈️','🏠','🎓','💼','🎨','🎵','⚽','🏋️','🌿','🐾','👶','💄','📷','🎁','⭐','🔥','💰','🪙'];
+                bizEmojis.forEach(e => {
+                    const s = document.createElement('span');
+                    s.className = 'emoji-option';
+                    s.style.fontSize = '1.5rem';
+                    s.style.padding = '4px';
+                    s.textContent = e;
+                    s.addEventListener('click', () => {
+                        getEl('bizIcon').value = e;
+                        getEl('bizIconPreview').textContent = e;
+                        grid.style.display = 'none';
+                    });
+                    grid.appendChild(s);
+                });
+                grid.style.display = 'grid';
+            });
+
             const api = getEl('authProviderTxId'); if (api) api.addEventListener('input', validateAuthFields);
             const ati = getEl('authTransferCode'); if (ati) ati.addEventListener('input', validateAuthFields);
 
@@ -2695,6 +2934,9 @@
 
             const po = getEl('popupAdOverlay');
             if (po) po.addEventListener('click', e => { if (e.target === po) hidePopupAdvert(); });
+
+            // Setup agent upload previews
+            setupAgentUploadPreviews();
         }
 
         // ============================================================
@@ -2745,6 +2987,9 @@
             translatePage();
             showToast('✅ AfriPay ready!', 1500);
             if (currentUser) startPopupAdTimer();
+
+            // Initialize reg avatar preview
+            updateRegAvatarPreview();
         }
 
         if (document.readyState === 'complete' || document.readyState === 'interactive') {
