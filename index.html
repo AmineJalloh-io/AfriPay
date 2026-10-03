@@ -150,6 +150,7 @@
         .action-btn.close-modal { background: #ccc; color: #222; }
         .action-btn.orange { background: #f4a261; }
         .action-btn.green { background: #27ae60; }
+        .action-btn.red { background: #e74c3c; }
         .hidden-input { display: none; }
         .city-input-row { display: flex; gap: 0.35rem; align-items: center; }
         .city-input-row select, .city-input-row input { flex: 1; }
@@ -631,7 +632,7 @@
         <div class="input-group"><label>Password *</label><div style="display:flex; gap:4px;"><input type="text" id="agentPassword" readonly style="flex:1;" /><button type="button" class="action-btn green" id="generatePasswordBtn">🔑 Gen</button></div></div>
         <div class="input-group"><label>5-Digit PIN *</label><div style="display:flex; gap:4px;"><input type="text" id="agentPin" readonly style="flex:1;" /><button type="button" class="action-btn green" id="generatePinBtn">🔑 Gen PIN</button></div></div>
         
-        <!-- UPLOAD ID & BUSINESS PROFILE (restored) -->
+        <!-- UPLOAD ID & BUSINESS PROFILE -->
         <div class="input-group">
             <label>🪪 Upload ID Document *</label>
             <input type="file" id="agentIdUpload" accept="image/*,application/pdf" />
@@ -649,8 +650,12 @@
         <div class="action-buttons-row"><button class="action-btn" id="submitAgentRegistrationBtn">Register</button><button class="action-btn close-modal" style="background:#2c7da0;">Close</button></div>
     </div></div>
 
+    <!-- EDIT AGENT MODAL (with restored REPORT button & form) -->
     <div id="editAgentModal" class="modal"><div class="modal-content agent-form">
-        <div class="edit-agent-header"><h3>✏️ Edit Agent</h3></div>
+        <div class="edit-agent-header">
+            <h3>✏️ Edit Agent</h3>
+            <button type="button" class="action-btn red" id="reportAgentBtn" style="height:32px; font-size:0.72rem; padding:4px 14px;">🚨 Report</button>
+        </div>
         <input type="hidden" id="editAgentId" />
         <div id="editAgentError" class="error-msg"></div>
         <div class="input-group"><label>Business *</label><input type="text" id="editBusinessName" /></div>
@@ -670,6 +675,30 @@
             <div class="input-group"><label>🖼️ Replace Agent Logo</label><input type="file" id="editLogoImage" accept="image/*" /><div id="editLogoPreviewContainer" style="display:none;"><img src="#" style="max-height:60px; border-radius:6px;" /><button type="button" id="editLogoRemove" style="background:#e74c3c; color:white; border:none; padding:2px 8px; border-radius:20px; font-size:0.6rem;">✕ Remove</button></div></div>
         </div>
         <div class="action-buttons-row"><button class="action-btn" id="saveEditAgentBtn">Save</button><button class="action-btn close-modal" style="background:#2c7da0;">Close</button></div>
+
+        <!-- REPORT FORM (hidden by default) -->
+        <div id="reportAgentForm" style="display:none; margin-top:10px; border-top:2px dashed #d0dce8; padding-top:10px;">
+            <h4 style="color:#c0392b; font-size:0.9rem; margin-bottom:6px;">🚨 Report Agent</h4>
+            <div id="reportAgentError" class="error-msg"></div>
+            <div class="input-group"><label>Your Name *</label><input type="text" id="reportName" /></div>
+            <div class="input-group"><label>Your Phone *</label><input type="tel" id="reportPhone" /></div>
+            <div class="input-group"><label>Reason *</label>
+                <select id="reportReason">
+                    <option value="">Select reason...</option>
+                    <option>Overcharging / Extra fees</option>
+                    <option>Not releasing funds</option>
+                    <option>Fake transaction</option>
+                    <option>Rude / Unprofessional</option>
+                    <option>Wrong amount sent</option>
+                    <option>Other</option>
+                </select>
+            </div>
+            <div class="input-group"><label>Details *</label><textarea id="reportDetails" style="width:100%; padding:6px 10px; border-radius:18px; border:1.5px solid #e0e8f0; min-height:60px;" placeholder="Describe what happened..."></textarea></div>
+            <div class="action-buttons-row">
+                <button type="button" class="action-btn red" id="submitReportBtn">📤 Submit Report</button>
+                <button type="button" class="action-btn close-modal" id="cancelReportBtn">Cancel</button>
+            </div>
+        </div>
     </div></div>
 
     <div id="addClientModal" class="modal"><div class="modal-content"><h3>➕ Add Client</h3><div id="addClientError" class="error-msg"></div><div class="input-group"><label>Name *</label><input type="text" id="newClientName" /></div><div class="input-group"><label>Phone *</label><input type="tel" id="newClientPhone" /></div><div class="input-group"><label>Address</label><input type="text" id="newClientAddress" /></div><div class="input-group"><label>City *</label><select id="newClientCitySelect"><option value="">Select city...</option></select></div><div class="input-group"><label>Country</label><select id="newClientCountrySelect"></select></div><div class="action-buttons-row"><button class="action-btn" id="saveClientBtn">Save</button><button class="action-btn close-modal">Cancel</button></div></div></div>
@@ -892,11 +921,13 @@
         // Registration avatar temporary state
         let regAvatarDataURL = null;
         let regEmoji = '👤';
-        let regAvatarUploadInput = null;
 
         // Agent ID & Business Profile upload state
         let agentIdDataURL = null;
         let agentBizProfileDataURL = null;
+
+        // Report state
+        let reportTargetAgentId = null;
 
         const DEFAULT_EDIT_BIZ_PASSWORD = 'EDITBIZ';
         const DEFAULT_EDIT_BIZ_PIN = '12345';
@@ -1949,7 +1980,6 @@
             getEl('pinModal').style.display = 'none';
             const pn = pendingPinData.provider;
             pendingPinData = null;
-            // Open dial pad
             const link = document.createElement('a');
             link.href = `tel:${ussd}`;
             link.click();
@@ -2160,6 +2190,9 @@
             } catch (e) {}
         }
 
+        // ============================================================
+        // OPEN EDIT AGENT MODAL (restored)
+        // ============================================================
         function openEditAgentModal(agentId) {
             const agent = getAgents().find(a => a.id === agentId);
             if (!agent) { showToast('Agent not found', 2000); return; }
@@ -2178,6 +2211,9 @@
                 for (let i = 0; i < cs.options.length; i++) { if (parseInt(cs.options[i].value) === (data.collateralLimit || 0)) { cs.selectedIndex = i; break; } }
             }
             if (getEl('editCollateralValueDisplay')) getEl('editCollateralValueDisplay').textContent = data.collateralLimit || 0;
+            // Hide report form when opening edit modal
+            const rf = getEl('reportAgentForm');
+            if (rf) rf.style.display = 'none';
             getEl('editAgentModal').style.display = 'flex';
             const pwI = getEl('editPassword'), pinI = getEl('editPin');
             const checkAuth = () => {
@@ -2192,122 +2228,67 @@
             if (pinI) pinI.addEventListener('input', checkAuth);
         }
 
-        function submitForApproval() {
-            if (!isAuthenticated) { showToast('⚠️ Authenticate first.', 2500); return; }
-            const name = SecurityUtils.sanitizeInput(getEl('bizName').value.trim(), 100);
-            const contact = SecurityUtils.sanitizePhone(getEl('bizContact').value.trim());
-            const mobileMoney = SecurityUtils.sanitizePhone(getEl('bizMobileMoney').value.trim());
-            const type = getEl('bizType').value;
-            const icon = getEl('bizIcon').value.trim() || '🏪';
-            const address = SecurityUtils.sanitizeInput(getEl('bizAddress').value.trim(), 200);
-            const city = getCityValue('bizCitySelect', 'bizCityOther');
-            const country = getEl('bizCountrySelect').value;
-            const website = getEl('bizWebsite').value.trim();
-            const errorEl = getEl('addBizError'), successEl = getEl('addBizSuccess');
-            errorEl.textContent = ''; successEl.textContent = '';
-            if (!name) { errorEl.textContent = '❌ Business name required.'; return; }
-            if (!contact) { errorEl.textContent = '❌ Contact phone required.'; return; }
-            if (!mobileMoney) { errorEl.textContent = '❌ Mobile Money required.'; return; }
-            if (!city) { errorEl.textContent = '❌ City required.'; return; }
-            const bp = getEl('bizPassword')?.value?.trim() || '';
-            const bpin = getEl('bizPin')?.value?.trim() || '';
-            if (!bp || bp.length !== 6) { errorEl.textContent = '❌ Generate 6-char password.'; return; }
-            if (!bpin || bpin.length !== 5) { errorEl.textContent = '❌ Generate 5-digit PIN.'; return; }
-            const products = [];
-            document.querySelectorAll('.product-entry').forEach(e => {
-                const pN = SecurityUtils.sanitizeInput(e.querySelector('.product-name')?.value?.trim() || '');
-                const pP = parseFloat(e.querySelector('.product-price')?.value) || 0;
-                const pQ = parseInt(e.querySelector('.product-qty')?.value) || 0;
-                const pQy = e.querySelector('.product-quality')?.value || 'Brand new';
-                const pE = e.querySelector('.product-emoji')?.value?.trim() || '📱';
-                if (pN) products.push({ name:pN, price:pP, quantity:pQ, quality:pQy, icon:pE });
-            });
-            const editingId = getEl('bizEditingId')?.value || '';
-            if (editingId) {
-                const idx = customBusinesses.findIndex(b => String(b.id) === String(editingId));
-                if (idx >= 0) {
-                    customBusinesses[idx] = { ...customBusinesses[idx], name, contact, mobileMoney, type, icon, address, city, country, website, goods: products, password: bp, pin: bpin, updatedAt: new Date().toISOString() };
-                    saveCustomBusinesses();
-                    renderBusinessStrip();
-                    lastSelectedBusinessId = customBusinesses[idx].id;
-                    updateEditBizStripButton();
-                    successEl.textContent = '✅ Business updated!';
-                    showToast(`✅ "${name}" updated!`, 3000);
-                    setTimeout(() => { getEl('addBizModal').style.display = 'none'; }, 1200);
-                    return;
-                }
-            }
-            if (getAllBusinesses().some(b => b.name.toLowerCase() === name.toLowerCase())) { errorEl.textContent = '❌ Name already exists.'; return; }
-            pendingBusinesses.push({ id: 'pending_' + Date.now(), name, contact, mobileMoney, type, icon, address, city, country, website, products, password:bp, pin:bpin, submittedAt: new Date().toISOString(), status: 'pending' });
-            try { localStorage.setItem('afripay_pending_businesses', JSON.stringify(pendingBusinesses)); } catch (e) {}
-            successEl.textContent = '✅ Submitted for approval!';
-            showToast(`✅ "${name}" submitted!`, 3000);
-            setTimeout(() => { getEl('addBizModal').style.display = 'none'; }, 1500);
-        }
-
-        function openAddBizModal() {
-            const resetVal = (id, v) => { const e = getEl(id); if (e) e.value = v; };
-            resetVal('bizName', ''); resetVal('bizContact', ''); resetVal('bizMobileMoney', ''); resetVal('bizDescription', '');
-            resetVal('bizType', 'Service'); resetVal('bizIcon', '🏪');
-            if (getEl('bizIconPreview')) getEl('bizIconPreview').textContent = '🏪';
-            resetVal('bizAddress', ''); resetVal('bizCitySelect', ''); resetVal('bizCityOther', '');
-            resetVal('bizCountrySelect', 'Sierra Leone'); resetVal('bizWebsite', '');
-            resetVal('bizPassword', ''); resetVal('bizPin', '');
-            if (getEl('bizEditingId')) getEl('bizEditingId').value = '';
-            if (getEl('addBizTitle')) getEl('addBizTitle').textContent = '🏢 Add Your Business';
-            if (getEl('addBizError')) getEl('addBizError').textContent = '';
-            if (getEl('addBizSuccess')) getEl('addBizSuccess').textContent = '';
-            if (getEl('productsContainer')) getEl('productsContainer').innerHTML = '';
-            productCounter = 0;
-            authProviderTxId = '';
-            if (getEl('addBizModal')) getEl('addBizModal').style.display = 'flex';
-        }
-
-        function validateAuthFields() {
-            const ptx = getEl('authProviderTxId')?.value?.trim() || '';
-            const tc = getEl('authTransferCode')?.value?.trim() || '';
-            let pv = false, tv = false;
-            if (ptx) {
-                const v = ProviderTxIdManager.validate(ptx);
-                if (v.valid) { pv = true; getEl('authProviderError').style.display = 'none'; }
-                else { getEl('authProviderError').textContent = v.error; getEl('authProviderError').style.display = 'block'; }
-            }
-            if (tc) {
-                const v = TransferCodeManager.validate(tc);
-                if (v.valid) { tv = true; getEl('authTransferError').style.display = 'none'; }
-                else { getEl('authTransferError').textContent = v.error; getEl('authTransferError').style.display = 'block'; }
-            }
-            isAuthenticated = pv && tv;
-            if (isAuthenticated) {
-                getEl('authStatusBadge').textContent = 'Verified ✅';
-                getEl('authStatusBadge').className = 'auth-status verified';
-                getEl('authSuccessMsg').style.display = 'block';
-            }
-        }
-
-        function revealTransferCodeField() {
-            const ptx = getEl('providerTxId')?.value?.trim() || '';
-            const eg = getEl('mainTransferCodeGroup');
-            if (!ptx) { eg.style.display = 'none'; getEl('mainTransferCode').value = ''; getEl('providerTxId').className = ''; return; }
-            const v = ProviderTxIdManager.validate(ptx);
-            if (!v.valid) { getEl('providerTxIdError').textContent = v.error; getEl('providerTxIdError').style.display = 'block'; getEl('providerTxId').className = 'invalid'; eg.style.display = 'none'; return; }
-            getEl('providerTxIdError').style.display = 'none';
-            getEl('providerTxId').className = 'valid';
-            eg.style.display = 'block';
-            eg.classList.add('transfer-code-reveal');
-        }
-
         // ============================================================
-        // REGISTRATION AVATAR HANDLERS
+        // REPORT FORM HANDLERS
         // ============================================================
-        function updateRegAvatarPreview() {
-            const preview = getEl('regAvatarPreview');
-            if (!preview) return;
-            if (regAvatarDataURL) {
-                preview.innerHTML = `<img src="${regAvatarDataURL}" style="width:40px; height:40px; border-radius:50%; object-fit:cover;" />`;
-            } else {
-                preview.textContent = regEmoji || '👤';
+        function openReportForm(agentId) {
+            reportTargetAgentId = agentId;
+            const agent = getAgents().find(a => a.id === agentId);
+            const data = agent ? (agent.agentData || agent) : null;
+            const agentName = data ? (data.businessName || data.name || 'Agent') : 'Agent';
+            if (getEl('reportName')) getEl('reportName').value = currentUser?.name || '';
+            if (getEl('reportPhone')) getEl('reportPhone').value = currentUser?.phone || '';
+            if (getEl('reportReason')) getEl('reportReason').value = '';
+            if (getEl('reportDetails')) getEl('reportDetails').value = '';
+            if (getEl('reportAgentError')) getEl('reportAgentError').textContent = '';
+            const form = getEl('reportAgentForm');
+            if (form) {
+                form.style.display = 'block';
+                const h4 = form.querySelector('h4');
+                if (h4) h4.textContent = `🚨 Report Agent: ${agentName}`;
+                form.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }
+        }
+
+        function closeReportForm() {
+            const form = getEl('reportAgentForm');
+            if (form) form.style.display = 'none';
+            reportTargetAgentId = null;
+        }
+
+        function submitReport() {
+            const err = getEl('reportAgentError');
+            const name = SecurityUtils.sanitizeInput(getEl('reportName')?.value?.trim() || '', 100);
+            const phone = SecurityUtils.sanitizePhone(getEl('reportPhone')?.value?.trim() || '');
+            const reason = getEl('reportReason')?.value || '';
+            const details = SecurityUtils.sanitizeInput(getEl('reportDetails')?.value?.trim() || '', 500);
+            err.textContent = '';
+            if (!name) { err.textContent = '❌ Your name is required.'; return; }
+            if (!phone) { err.textContent = '❌ Your phone is required.'; return; }
+            if (!reason) { err.textContent = '❌ Please select a reason.'; return; }
+            if (!details) { err.textContent = '❌ Please provide details.'; return; }
+            if (!reportTargetAgentId) { err.textContent = '❌ No agent selected.'; return; }
+            const agent = getAgents().find(a => a.id === reportTargetAgentId);
+            const agentData = agent ? (agent.agentData || agent) : null;
+            const agentName = agentData ? (agentData.businessName || agentData.name || 'Agent') : 'Unknown';
+            const report = {
+                id: 'report_' + Date.now(),
+                agentId: reportTargetAgentId,
+                agentName: agentName,
+                reporterName: name,
+                reporterPhone: phone,
+                reason: reason,
+                details: details,
+                submittedAt: new Date().toISOString(),
+                status: 'pending'
+            };
+            let reports = [];
+            try { reports = JSON.parse(localStorage.getItem('afripay_reports') || '[]'); } catch (e) { reports = []; }
+            reports.push(report);
+            try { localStorage.setItem('afripay_reports', JSON.stringify(reports)); } catch (e) {}
+            showToast(`✅ Report submitted against "${agentName}"`, 3000);
+            closeReportForm();
+            setTimeout(() => { getEl('editAgentModal').style.display = 'none'; }, 800);
         }
 
         // ============================================================
@@ -2354,7 +2335,6 @@
 
             const lb = getEl('loginBtn'); if (lb) lb.addEventListener('click', e => { e.preventDefault(); getEl('loginError').innerHTML = ''; getEl('loginModal').style.display = 'flex'; });
             const rb = getEl('registerBtn'); if (rb) rb.addEventListener('click', e => { e.preventDefault(); 
-                // Reset register avatar state
                 regAvatarDataURL = null;
                 regEmoji = '👤';
                 updateRegAvatarPreview();
@@ -2406,10 +2386,6 @@
             // Register avatar pick emoji
             const regPick = getEl('regPickEmojiBtn');
             if (regPick) regPick.addEventListener('click', () => {
-                // Show emoji picker but for registration (we need a context)
-                // We'll temporarily set a flag
-                window._emojiPickerContext = 'register';
-                // Build grid
                 const grid = getEl('emojiGrid');
                 if (!grid) return;
                 grid.innerHTML = '';
@@ -2427,7 +2403,6 @@
                     });
                     grid.appendChild(s);
                 });
-                // Hide upload/remove buttons? We can leave them but they will apply to register context
                 getEl('emojiPickerModal').style.display = 'flex';
             });
 
@@ -2456,16 +2431,6 @@
                 updateRegAvatarPreview();
                 getEl('regRemoveImageBtn').style.display = 'none';
             });
-
-            // Also override emoji picker upload/remove for register context
-            const emojiUpload = getEl('emojiUploadImageBtn');
-            if (emojiUpload) {
-                // We need to clone to remove existing listeners? We'll just add a check
-                // Actually the existing listeners are set later. We'll override by adding our own that checks context.
-                // But there's already a listener. We can add a capturing listener or modify the function.
-                // Simpler: in the existing applyAvatarImage, check context.
-                // We'll modify applyAvatarImage below.
-            }
 
             const ac = getEl('userAvatarContainer');
             if (ac) ac.addEventListener('click', e => { if (e.target.closest('.logout-btn') || e.target.closest('.edit-account-btn')) return; if (!currentUser) { showToast('⚠️ Login first.', 2000); return; } openEmojiPicker(); });
@@ -2580,7 +2545,6 @@
             if (rab) rab.addEventListener('click', e => { 
                 e.preventDefault(); 
                 getEl('registerModal').style.display = 'none'; 
-                // Reset agent uploads
                 agentIdDataURL = null;
                 agentBizProfileDataURL = null;
                 if (getEl('agentIdPreview')) { getEl('agentIdPreview').src = ''; getEl('agentIdPreview').style.display = 'none'; }
@@ -2616,7 +2580,6 @@
                 const ussd = `#144*2*2*${mm.replace(/\D/g, '')}*${amt}*0000#`;
                 getEl('collateralUssdDisplay').textContent = ussd;
                 getEl('collateralUssdDisplay').style.display = 'block';
-                // Open dial pad with the generated USSD
                 const link = document.createElement('a');
                 link.href = `tel:${ussd}`;
                 link.click();
@@ -2763,6 +2726,19 @@
                 setTimeout(() => getEl('editAgentModal').style.display = 'none', 1000);
             });
 
+            // Report button in edit agent modal
+            const reportBtn = getEl('reportAgentBtn');
+            if (reportBtn) reportBtn.addEventListener('click', e => {
+                e.preventDefault();
+                const aid = getEl('editAgentId').value;
+                if (!aid) { showToast('⚠️ No agent selected.', 2000); return; }
+                openReportForm(aid);
+            });
+            const submitReportBtn = getEl('submitReportBtn');
+            if (submitReportBtn) submitReportBtn.addEventListener('click', e => { e.preventDefault(); submitReport(); });
+            const cancelReportBtn = getEl('cancelReportBtn');
+            if (cancelReportBtn) cancelReportBtn.addEventListener('click', e => { e.preventDefault(); closeReportForm(); });
+
             const mf = getEl('mainForm');
             if (mf) mf.addEventListener('submit', e => {
                 e.preventDefault();
@@ -2904,7 +2880,6 @@
                 const grid = getEl('bizEmojiGrid');
                 if (!grid) return;
                 if (grid.style.display === 'grid') { grid.style.display = 'none'; return; }
-                // Fill grid
                 grid.innerHTML = '';
                 const bizEmojis = ['🏪','🛒','🍽️','💻','📚','🏥','🔨','👗','👤','👩','🖥️','📱','💊','🚗','✈️','🏠','🎓','💼','🎨','🎵','⚽','🏋️','🌿','🐾','👶','💄','📷','🎁','⭐','🔥','💰','🪙'];
                 bizEmojis.forEach(e => {
@@ -2937,6 +2912,19 @@
 
             // Setup agent upload previews
             setupAgentUploadPreviews();
+        }
+
+        // ============================================================
+        // REGISTRATION AVATAR PREVIEW
+        // ============================================================
+        function updateRegAvatarPreview() {
+            const preview = getEl('regAvatarPreview');
+            if (!preview) return;
+            if (regAvatarDataURL) {
+                preview.innerHTML = `<img src="${regAvatarDataURL}" style="width:40px; height:40px; border-radius:50%; object-fit:cover;" />`;
+            } else {
+                preview.textContent = regEmoji || '👤';
+            }
         }
 
         // ============================================================
@@ -2988,7 +2976,6 @@
             showToast('✅ AfriPay ready!', 1500);
             if (currentUser) startPopupAdTimer();
 
-            // Initialize reg avatar preview
             updateRegAvatarPreview();
         }
 
