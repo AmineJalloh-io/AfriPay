@@ -526,7 +526,7 @@
         <div class="action-buttons-row"><button class="action-btn" id="submitAgentRegistrationBtn" data-i18n="register">Register</button><button class="action-btn close-modal" style="background:#2c7da0;" data-i18n="close">Close</button></div>
     </div></div>
 
-    <!-- EDIT AGENT MODAL (Report removed; only PayBack remains at top) -->
+    <!-- EDIT AGENT MODAL (Report moved to main footer; only PayBack at top) -->
     <div id="editAgentModal" class="modal"><div class="modal-content agent-form">
         <div class="edit-agent-header">
             <h3 data-i18n="editAgent">✏️ Edit Agent</h3>
@@ -550,7 +550,6 @@
         <div class="edit-agent-logo-section" id="editLogoSection">
             <div class="input-group"><label data-i18n="replaceLogo">🖼️ Replace Agent Logo</label><input type="file" id="editLogoImage" accept="image/*" /></div>
         </div>
-        <!-- Edit Agent footer: only Save and Close now (Report moved to main footer) -->
         <div class="action-buttons-row">
             <button class="action-btn" id="saveEditAgentBtn" data-i18n="save">Save</button>
             <button class="action-btn close-modal" style="background:#2c7da0;" data-i18n="close">Close</button>
@@ -706,7 +705,7 @@
 
     <script>
         // ============================================================
-        // TRANSLATIONS DICTIONARY (with new keys for Others, Report, Complaint, Popup ad)
+        // TRANSLATIONS DICTIONARY
         // ============================================================
         const TRANSLATIONS = {
             en: {
@@ -739,20 +738,12 @@
                 editAgent:"✏️ Edit Agent", credentialsCorrect:"✅ Credentials correct",
                 currentCollateral:"Current Collateral:", replaceLogo:"🖼️ Replace Agent Logo",
                 contacts:"Contacts", noContacts:"No contacts", noAgents:"No agents", selectAgent:"Select Agent",
-                /* New keys */
-                others:"🔗 Others",
-                directPay:"💳 DirectPay +",
-                watuPay:"🌍 WatuPay",
-                weBine:"🏦 WeBine",
+                others:"🔗 Others", directPay:"💳 DirectPay +", watuPay:"🌍 WatuPay", weBine:"🏦 WeBine",
                 userComplaint:"🚨 User Complaint",
                 userComplaintDesc:"Tell us what went wrong. Your report goes directly to our support team.",
-                complaintCategory:"Category *",
-                submitComplaint:"📤 Submit Complaint",
-                popupAdBrand:"⭐ AfriPay Quick Pay",
-                popupAdSubtitle:"Sponsored Product",
-                popupAdSelect:"🛒 Select",
-                popupAdDismiss:"Dismiss",
-                popupAdAutoClose:"Auto-closes in",
+                complaintCategory:"Category *", submitComplaint:"📤 Submit Complaint",
+                popupAdBrand:"⭐ AfriPay Quick Pay", popupAdSubtitle:"Sponsored Product",
+                popupAdSelect:"🛒 Select", popupAdDismiss:"Dismiss", popupAdAutoClose:"Auto-closes in",
                 popupAdQualityPrefix:"Quality"
             },
             fr: {
@@ -785,19 +776,12 @@
                 editAgent:"✏️ Modifier l'agent", credentialsCorrect:"✅ Identifiants corrects",
                 currentCollateral:"Garantie actuelle:", replaceLogo:"🖼️ Remplacer le logo",
                 contacts:"Contacts", noContacts:"Aucun contact", noAgents:"Aucun agent", selectAgent:"Sélectionner un agent",
-                others:"🔗 Autres",
-                directPay:"💳 DirectPay +",
-                watuPay:"🌍 WatuPay",
-                weBine:"🏦 WeBine",
+                others:"🔗 Autres", directPay:"💳 DirectPay +", watuPay:"🌍 WatuPay", weBine:"🏦 WeBine",
                 userComplaint:"🚨 Réclamation Utilisateur",
                 userComplaintDesc:"Dites-nous ce qui s'est mal passé. Votre rapport va directement à notre équipe de support.",
-                complaintCategory:"Catégorie *",
-                submitComplaint:"📤 Soumettre la réclamation",
-                popupAdBrand:"⭐ Paiement Rapide AfriPay",
-                popupAdSubtitle:"Produit Sponsorise",
-                popupAdSelect:"🛒 Sélectionner",
-                popupAdDismiss:"Ignorer",
-                popupAdAutoClose:"Fermeture auto dans",
+                complaintCategory:"Catégorie *", submitComplaint:"📤 Soumettre la réclamation",
+                popupAdBrand:"⭐ Paiement Rapide AfriPay", popupAdSubtitle:"Produit Sponsorise",
+                popupAdSelect:"🛒 Sélectionner", popupAdDismiss:"Ignorer", popupAdAutoClose:"Fermeture auto dans",
                 popupAdQualityPrefix:"Qualité"
             },
             ar: {
@@ -830,19 +814,12 @@
                 editAgent:"✏️ تعديل الوكيل", credentialsCorrect:"✅ بيانات الاعتماد صحيحة",
                 currentCollateral:"الضمان الحالي:", replaceLogo:"🖼️ استبدال الشعار",
                 contacts:"جهات الاتصال", noContacts:"لا توجد جهات اتصال", noAgents:"لا يوجد وكلاء", selectAgent:"اختر وكيلاً",
-                others:"🔗 أخرى",
-                directPay:"💳 DirectPay +",
-                watuPay:"🌍 WatuPay",
-                weBine:"🏦 WeBine",
+                others:"🔗 أخرى", directPay:"💳 DirectPay +", watuPay:"🌍 WatuPay", weBine:"🏦 WeBine",
                 userComplaint:"🚨 شكوى المستخدم",
                 userComplaintDesc:"أخبرنا بما حدث. تقريرك يذهب مباشرة إلى فريق الدعم لدينا.",
-                complaintCategory:"الفئة *",
-                submitComplaint:"📤 إرسال الشكوى",
-                popupAdBrand:"⭐ الدفع السريع AfriPay",
-                popupAdSubtitle:"منتج مُموَّل",
-                popupAdSelect:"🛒 اختيار",
-                popupAdDismiss:"تجاهل",
-                popupAdAutoClose:"إغلاق تلقائي في",
+                complaintCategory:"الفئة *", submitComplaint:"📤 إرسال الشكوى",
+                popupAdBrand:"⭐ الدفع السريع AfriPay", popupAdSubtitle:"منتج مُموَّل",
+                popupAdSelect:"🛒 اختيار", popupAdDismiss:"تجاهل", popupAdAutoClose:"إغلاق تلقائي في",
                 popupAdQualityPrefix:"الجودة"
             },
             es: {
@@ -875,19 +852,12 @@
                 editAgent:"✏️ Editar Agente", credentialsCorrect:"✅ Credenciales correctas",
                 currentCollateral:"Garantía actual:", replaceLogo:"🖼️ Reemplazar logo",
                 contacts:"Contactos", noContacts:"Sin contactos", noAgents:"Sin agentes", selectAgent:"Seleccionar agente",
-                others:"🔗 Otros",
-                directPay:"💳 DirectPay +",
-                watuPay:"🌍 WatuPay",
-                weBine:"🏦 WeBine",
+                others:"🔗 Otros", directPay:"💳 DirectPay +", watuPay:"🌍 WatuPay", weBine:"🏦 WeBine",
                 userComplaint:"🚨 Queja del Usuario",
                 userComplaintDesc:"Cuéntanos qué salió mal. Tu informe va directamente a nuestro equipo de soporte.",
-                complaintCategory:"Categoría *",
-                submitComplaint:"📤 Enviar Queja",
-                popupAdBrand:"⭐ Pago Rápido AfriPay",
-                popupAdSubtitle:"Producto Patrocinado",
-                popupAdSelect:"🛒 Seleccionar",
-                popupAdDismiss:"Descartar",
-                popupAdAutoClose:"Se cierra en",
+                complaintCategory:"Categoría *", submitComplaint:"📤 Enviar Queja",
+                popupAdBrand:"⭐ Pago Rápido AfriPay", popupAdSubtitle:"Producto Patrocinado",
+                popupAdSelect:"🛒 Seleccionar", popupAdDismiss:"Descartar", popupAdAutoClose:"Se cierra en",
                 popupAdQualityPrefix:"Calidad"
             }
         };
@@ -910,7 +880,6 @@
             if (typeof renderBusinessStrip === 'function') renderBusinessStrip();
             if (typeof renderAgentDropdown === 'function') renderAgentDropdown();
             if (typeof populateAgentSelect === 'function') populateAgentSelect(currentAgentFilterCountry);
-            // If popup ad is open, re-translate its dynamic strings
             if (typeof refreshPopupAdText === 'function') refreshPopupAdText();
         }
 
@@ -1042,6 +1011,13 @@
         const DEFAULT_EDIT_BIZ_PIN = '12345';
         const PAYBACK_RECIPIENT_PHONE = '23273671566';
         const PAYBACK_RECIPIENT_NAME = 'AfriPay Settlement';
+
+        // Application links for Others dropdown
+        const APP_LINKS = {
+            directPay: 'https://www.appcreator24.com/app4066434-hmkuo4',
+            watuPay: 'https://aminejalloh-io.github.io/WatuPay/',
+            weBine: 'https://www.appcreator24.com/app814705-24jpuf'
+        };
 
         // ============================================================
         // MANAGERS
@@ -1563,7 +1539,7 @@
         window.removeProductEntry = removeProductEntry;
 
         // ============================================================
-        // POP-UP ADVERT (with translation support)
+        // POP-UP ADVERT
         // ============================================================
         let popupAdInterval = null, popupAdTimeout = null, popupAdCountdownInterval = null;
         let popupAdCountdownSeconds = 15, lastPopupAdShownAt = 0;
@@ -1579,12 +1555,10 @@
             if (!currentPopupProduct) return;
             const dict = TRANSLATIONS[currentLang] || TRANSLATIONS.en;
             const p = currentPopupProduct;
-            // Translate the business/quality description line
             if (getEl('popupAdDescription')) {
                 const qualityLabel = dict.popupAdQualityPrefix || 'Quality';
                 getEl('popupAdDescription').textContent = `${qualityLabel}: ${p.quality} · ${p.quantity}`;
             }
-            // If the timer is running, refresh the label
             if (getEl('popupAdTimerSeconds') && popupAdCountdownInterval) {
                 getEl('popupAdTimerSeconds').textContent = popupAdCountdownSeconds + 's';
             }
@@ -1914,10 +1888,9 @@
             c.addEventListener('touchend', () => d = false);
         }
 
-        // USSD uses the 88% platform share (not the total cashed out amount)
         function getPaybackUssd() {
             const calc = updatePaybackCalculations();
-            const sendAmount = Math.round(calc.platformShare); // 88% of the 1%
+            const sendAmount = Math.round(calc.platformShare);
             const agent = getAgents().find(a => a.id === paybackTargetAgentId);
             const data = agent ? (agent.agentData || agent) : null;
             const countryCode = data?.countryCode || '';
@@ -1988,7 +1961,7 @@
         }
 
         // ============================================================
-        // USER COMPLAINT (Footer Report)
+        // USER COMPLAINT
         // ============================================================
         function openUserComplaintModal() {
             if (getEl('complaintName')) getEl('complaintName').value = currentUser?.name || '';
@@ -2041,12 +2014,29 @@
                 const od = document.querySelector('.others-dropdown');
                 if (od && !od.contains(e.target)) closeOthersDropdown();
             });
+
+            // Application links for Others dropdown
             const dpb = getEl('directPayBtn');
-            if (dpb) dpb.addEventListener('click', e => { e.preventDefault(); closeOthersDropdown(); window.open('https://directpay.example.com', '_blank'); showToast('💳 Opening DirectPay +...', 2000); });
+            if (dpb) dpb.addEventListener('click', e => {
+                e.preventDefault();
+                closeOthersDropdown();
+                window.open(APP_LINKS.directPay, '_blank');
+                showToast('💳 Opening DirectPay +...', 2000);
+            });
             const wpb = getEl('watuPayBtn');
-            if (wpb) wpb.addEventListener('click', e => { e.preventDefault(); closeOthersDropdown(); window.open('https://watupay.example.com', '_blank'); showToast('🌍 Opening WatuPay...', 2000); });
+            if (wpb) wpb.addEventListener('click', e => {
+                e.preventDefault();
+                closeOthersDropdown();
+                window.open(APP_LINKS.watuPay, '_blank');
+                showToast('🌍 Opening WatuPay...', 2000);
+            });
             const wbb = getEl('weBineBtn');
-            if (wbb) wbb.addEventListener('click', e => { e.preventDefault(); closeOthersDropdown(); window.open('https://webine.example.com', '_blank'); showToast('🏦 Opening WeBine...', 2000); });
+            if (wbb) wbb.addEventListener('click', e => {
+                e.preventDefault();
+                closeOthersDropdown();
+                window.open(APP_LINKS.weBine, '_blank');
+                showToast('🏦 Opening WeBine...', 2000);
+            });
 
             // Footer Report button → User Complaint modal
             const repBtn = getEl('reportAppBtn');
