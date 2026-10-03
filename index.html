@@ -364,12 +364,13 @@
                 <button class="footer-btn" id="subscribeBtn" data-i18n="subscribe">Subscribe</button>
                 <button class="footer-btn" id="howToBtn" style="background:#2c7da0; color:white;" data-i18n="how">📖 How</button>
                 <button class="footer-btn" id="currencyConverterBtn" style="background:#0f2b3d; color:white;" data-i18n="convert">💱 Convert</button>
+                <button class="footer-btn red" id="reportAppBtn" style="background:#e74c3c; color:white;" data-i18n="report">🚨 Report</button>
                 <div class="others-dropdown">
-                    <button class="footer-btn" id="othersBtn" style="background:#8e44ad; color:white;">🔗 Others</button>
+                    <button class="footer-btn" id="othersBtn" style="background:#8e44ad; color:white;" data-i18n="others">🔗 Others</button>
                     <div class="others-dropdown-menu" id="othersDropdownMenu">
-                        <button class="dp-btn" id="directPayBtn">💳 DirectPay +</button>
-                        <button class="wp-btn" id="watuPayBtn">🌍 WatuPay</button>
-                        <button class="wb-btn" id="weBineBtn">🏦 WeBine</button>
+                        <button class="dp-btn" id="directPayBtn" data-i18n="directPay">💳 DirectPay +</button>
+                        <button class="wp-btn" id="watuPayBtn" data-i18n="watuPay">🌍 WatuPay</button>
+                        <button class="wb-btn" id="weBineBtn" data-i18n="weBine">🏦 WeBine</button>
                     </div>
                 </div>
             </div>
@@ -384,8 +385,8 @@
         <div class="modal-content" style="max-width:340px; border-radius:24px; padding:0; overflow:hidden;">
             <div style="background:linear-gradient(135deg,#0a2b3c,#1c4e6c); padding:16px; color:white; text-align:center; position:relative;">
                 <button id="popupAdCloseBtn" style="position:absolute; top:8px; right:14px; background:rgba(255,255,255,0.15); border:none; color:white; font-size:1.3rem; cursor:pointer; width:32px; height:32px; border-radius:50%;">✕</button>
-                <div style="font-weight:700;">⭐ AfriPay Quick Pay</div>
-                <div style="font-size:0.7rem; opacity:0.8;">Sponsored Product</div>
+                <div style="font-weight:700;" data-i18n="popupAdBrand">⭐ AfriPay Quick Pay</div>
+                <div style="font-size:0.7rem; opacity:0.8;" data-i18n="popupAdSubtitle">Sponsored Product</div>
             </div>
             <div style="padding:20px; text-align:center;">
                 <div id="popupAdIcon" style="font-size:4rem;">📱</div>
@@ -398,8 +399,39 @@
                 </div>
             </div>
             <div style="display:flex; gap:8px; padding:0 16px 18px;">
-                <button class="action-btn green" id="popupAdSelectBtn" style="flex:1;">🛒 Select</button>
-                <button class="action-btn close-modal" id="popupAdDismissBtn" style="flex:1;">Dismiss</button>
+                <button class="action-btn green" id="popupAdSelectBtn" style="flex:1;" data-i18n="popupAdSelect">🛒 Select</button>
+                <button class="action-btn close-modal" id="popupAdDismissBtn" style="flex:1;" data-i18n="popupAdDismiss">Dismiss</button>
+            </div>
+            <div style="font-size:0.6rem; color:#95a5a6; text-align:center; padding:0 0 12px;">
+                <span data-i18n="popupAdAutoClose">Auto-closes in</span> <span id="popupAdTimerSeconds">15s</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Complaint Modal (Report from footer) -->
+    <div id="userComplaintModal" class="modal">
+        <div class="modal-content" style="max-width:440px;">
+            <h3 style="color:#c0392b;" data-i18n="userComplaint">🚨 User Complaint</h3>
+            <div style="font-size:0.72rem; color:#7f8c8d; margin-bottom:6px;" data-i18n="userComplaintDesc">Tell us what went wrong. Your report goes directly to our support team.</div>
+            <div id="userComplaintError" class="error-msg"></div>
+            <div class="input-group"><label data-i18n="yourName">Your Name *</label><input type="text" id="complaintName" /></div>
+            <div class="input-group"><label data-i18n="yourPhone">Your Phone *</label><input type="tel" id="complaintPhone" /></div>
+            <div class="input-group"><label data-i18n="complaintCategory">Category *</label>
+                <select id="complaintCategory">
+                    <option value="">Select category...</option>
+                    <option>Agent issue</option>
+                    <option>Transaction not received</option>
+                    <option>Wrong amount charged</option>
+                    <option>App bug / glitch</option>
+                    <option>Payment delay</option>
+                    <option>Rude service</option>
+                    <option>Other</option>
+                </select>
+            </div>
+            <div class="input-group"><label data-i18n="details">Details *</label><textarea id="complaintDetails" style="width:100%; padding:6px 10px; border-radius:18px; border:1.5px solid #e0e8f0; min-height:70px;" placeholder="Describe your grievance..."></textarea></div>
+            <div class="action-buttons-row">
+                <button type="button" class="action-btn red" id="submitComplaintBtn" data-i18n="submitComplaint">📤 Submit Complaint</button>
+                <button type="button" class="action-btn close-modal" data-i18n="cancel">Cancel</button>
             </div>
         </div>
     </div>
@@ -494,7 +526,7 @@
         <div class="action-buttons-row"><button class="action-btn" id="submitAgentRegistrationBtn" data-i18n="register">Register</button><button class="action-btn close-modal" style="background:#2c7da0;" data-i18n="close">Close</button></div>
     </div></div>
 
-    <!-- EDIT AGENT MODAL (Report moved to footer; PayBack at top-right) -->
+    <!-- EDIT AGENT MODAL (Report removed; only PayBack remains at top) -->
     <div id="editAgentModal" class="modal"><div class="modal-content agent-form">
         <div class="edit-agent-header">
             <h3 data-i18n="editAgent">✏️ Edit Agent</h3>
@@ -518,34 +550,10 @@
         <div class="edit-agent-logo-section" id="editLogoSection">
             <div class="input-group"><label data-i18n="replaceLogo">🖼️ Replace Agent Logo</label><input type="file" id="editLogoImage" accept="image/*" /></div>
         </div>
-        <!-- Footer buttons (Report moved here) -->
+        <!-- Edit Agent footer: only Save and Close now (Report moved to main footer) -->
         <div class="action-buttons-row">
-            <button class="action-btn red" id="reportAgentBtn" data-i18n="report">🚨 Report</button>
             <button class="action-btn" id="saveEditAgentBtn" data-i18n="save">Save</button>
             <button class="action-btn close-modal" style="background:#2c7da0;" data-i18n="close">Close</button>
-        </div>
-
-        <div id="reportAgentForm" style="display:none; margin-top:10px; border-top:2px dashed #d0dce8; padding-top:10px;">
-            <h4 style="color:#c0392b; font-size:0.9rem; margin-bottom:6px;" data-i18n="reportAgent">🚨 Report Agent</h4>
-            <div id="reportAgentError" class="error-msg"></div>
-            <div class="input-group"><label data-i18n="yourName">Your Name *</label><input type="text" id="reportName" /></div>
-            <div class="input-group"><label data-i18n="yourPhone">Your Phone *</label><input type="tel" id="reportPhone" /></div>
-            <div class="input-group"><label data-i18n="reason">Reason *</label>
-                <select id="reportReason">
-                    <option value="">Select reason...</option>
-                    <option>Overcharging / Extra fees</option>
-                    <option>Not releasing funds</option>
-                    <option>Fake transaction</option>
-                    <option>Rude / Unprofessional</option>
-                    <option>Wrong amount sent</option>
-                    <option>Other</option>
-                </select>
-            </div>
-            <div class="input-group"><label data-i18n="details">Details *</label><textarea id="reportDetails" style="width:100%; padding:6px 10px; border-radius:18px; border:1.5px solid #e0e8f0; min-height:60px;" placeholder="Describe what happened..."></textarea></div>
-            <div class="action-buttons-row">
-                <button type="button" class="action-btn red" id="submitReportBtn" data-i18n="submitReport">📤 Submit</button>
-                <button type="button" class="action-btn close-modal" id="cancelReportBtn" data-i18n="cancel">Cancel</button>
-            </div>
         </div>
     </div></div>
 
@@ -698,13 +706,190 @@
 
     <script>
         // ============================================================
-        // TRANSLATIONS DICTIONARY
+        // TRANSLATIONS DICTIONARY (with new keys for Others, Report, Complaint, Popup ad)
         // ============================================================
         const TRANSLATIONS = {
-            en: { login:"Login", register:"Register", logout:"Logout", sender:"👤 SENDER", agent:"👤 AGENT", client:"👥 CLIENT", name:"Name *", phone:"Phone *", address:"Address", city:"City *", amount:"Amount *", country:"🌍 Country", base:"💰 Base:", fee:"📊 Fee (4%):", gst:"🏛️ GST", total:"💵 Total:", currency:"🌍 Currency:", productDetails:"📦 PRODUCT DETAILS", productName:"Product Name", productIcon:"Product Icon", pricePerUnit:"Price (per unit)", quantity:"Ordered Quantity", operator:"💸 Operator", txId:"🔖 TX ID", providerTxId:"🔐 Provider TX ID", transferCode:"Transfer Code *", submit:"Submit", quickPay:"⭐ QUICK PAY ⭐", addBiz:"➕ Add Biz", editBiz:"✏️ Edit Biz", about:"About", dev:"Dev", contact:"Contact", subscribe:"Subscribe", how:"📖 How", convert:"💱 Convert", addClient:"➕ Client", gen:"Gen", copy:"Copy", save:"Save", cancel:"Cancel", close:"Close", confirm:"✅ Confirm", agree:"✋ Agree", notSigned:"Not Signed", agreement:"📜 Agreement", report:"🚨 Report", reportAgent:"🚨 Report Agent", yourName:"Your Name *", yourPhone:"Your Phone *", reason:"Reason *", details:"Details *", submitReport:"📤 Submit", chooseAvatar:"😊 Choose Your Avatar", upload:"📷 Upload", remove:"🗑️ Remove", profileAvatar:"😊 Profile Avatar", emoji:"🎨 Emoji", selectContact:"Select a contact", send:"Send", location:"📍 Location", editAccount:"✏️ Edit Account", selectProvider:"💸 Select Provider", pinRequired:"🔐 PIN Required", pin:"5-Digit PIN *", recipient:"👤 Recipient", number:"📱 Number", dial:"✅ Dial", converter:"💱 Currency Converter", fromCurrency:"From Country / Currency", toCurrency:"🌍 To Country / Currency", rate:"🔄 Rate:", recipientAmount:"🎯 Recipient:", addBusiness:"🏢 Add Your Business", businessName:"Business Name *", contactPhone:"Contact Phone *", businessType:"Business Type *", icon:"Icon (emoji) *", cityTown:"City / Town *", website:"Website (optional)", accessCredentials:"🔐 Business Access Credentials", products:"📦 Products", addProduct:"➕ Add Product", genPin:"🔑 Gen PIN", thankYou:"✨ Thank you!", editBizAuth:"🔐 Edit Business Auth", agentRegistration:"🏢 Agent Registration", business:"Business *", regNumber:"Reg Number *", type:"Type *", owner:"Owner *", idType:"ID Type *", idNumber:"ID Number *", mobileMoney:"Mobile Money *", collateral:"💳 Collateral *", countryCode:"Country Code", password:"Password *", uploadId:"🪪 Upload ID Document *", uploadBizProfile:"🏢 Upload Business Profile / Logo *", editAgent:"✏️ Edit Agent", credentialsCorrect:"✅ Credentials correct", currentCollateral:"Current Collateral:", replaceLogo:"🖼️ Replace Agent Logo" },
-            fr: { login:"Connexion", register:"Inscription", logout:"Déconnexion", sender:"👤 EXPÉDITEUR", agent:"👤 AGENT", client:"👥 CLIENT", name:"Nom *", phone:"Téléphone *", address:"Adresse", city:"Ville *", amount:"Montant *", country:"🌍 Pays", base:"💰 Base:", fee:"📊 Frais (4%):", gst:"🏛️ TVA", total:"💵 Total:", currency:"🌍 Devise:", productDetails:"📦 DÉTAILS PRODUIT", productName:"Nom du produit", productIcon:"Icône du produit", pricePerUnit:"Prix (unitaire)", quantity:"Quantité commandée", operator:"💸 Opérateur", txId:"🔖 ID TX", providerTxId:"🔐 ID TX Fournisseur", transferCode:"Code de transfert *", submit:"Soumettre", quickPay:"⭐ PAIEMENT RAPIDE ⭐", addBiz:"➕ Ajouter Entreprise", editBiz:"✏️ Modifier Entreprise", about:"À propos", dev:"Développeur", contact:"Contact", subscribe:"S'abonner", how:"📖 Comment", convert:"💱 Convertir", addClient:"➕ Client", gen:"Gén", copy:"Copier", save:"Enregistrer", cancel:"Annuler", close:"Fermer", confirm:"✅ Confirmer", agree:"✋ Accepter", notSigned:"Non signé", agreement:"📜 Accord", report:"🚨 Signaler", reportAgent:"🚨 Signaler l'agent", yourName:"Votre nom *", yourPhone:"Votre téléphone *", reason:"Raison *", details:"Détails *", submitReport:"📤 Soumettre", chooseAvatar:"😊 Choisissez votre avatar", upload:"📷 Télécharger", remove:"🗑️ Supprimer", profileAvatar:"😊 Avatar du profil", emoji:"🎨 Emoji", selectContact:"Sélectionner un contact", send:"Envoyer", location:"📍 Emplacement", editAccount:"✏️ Modifier le compte", selectProvider:"💸 Sélectionner le fournisseur", pinRequired:"🔐 PIN requis", pin:"PIN à 5 chiffres *", recipient:"👤 Destinataire", number:"📱 Numéro", dial:"✅ Appeler", converter:"💱 Convertisseur de devises", fromCurrency:"De Pays / Devise", toCurrency:"🌍 Vers Pays / Devise", rate:"🔄 Taux:", recipientAmount:"🎯 Destinataire:", addBusiness:"🏢 Ajoutez votre entreprise", businessName:"Nom de l'entreprise *", contactPhone:"Téléphone de contact *", businessType:"Type d'entreprise *", icon:"Icône (emoji) *", cityTown:"Ville *", website:"Site web (optionnel)", accessCredentials:"🔐 Identifiants d'accès", products:"📦 Produits", addProduct:"➕ Ajouter un produit", genPin:"🔑 Gén PIN", thankYou:"✨ Merci!", editBizAuth:"🔐 Modifier auth entreprise", agentRegistration:"🏢 Inscription Agent", business:"Entreprise *", regNumber:"Numéro d'enregistrement *", type:"Type *", owner:"Propriétaire *", idType:"Type de pièce d'identité *", idNumber:"Numéro d'identité *", mobileMoney:"Mobile Money *", collateral:"💳 Garantie *", countryCode:"Indicatif pays", password:"Mot de passe *", uploadId:"🪪 Télécharger la pièce d'identité *", uploadBizProfile:"🏢 Télécharger le profil / logo de l'entreprise *", editAgent:"✏️ Modifier l'agent", credentialsCorrect:"✅ Identifiants corrects", currentCollateral:"Garantie actuelle:", replaceLogo:"🖼️ Remplacer le logo" },
-            ar: { login:"تسجيل الدخول", register:"تسجيل", logout:"خروج", sender:"👤 المرسل", agent:"👤 الوكيل", client:"👥 العميل", name:"الاسم *", phone:"الهاتف *", address:"العنوان", city:"المدينة *", amount:"المبلغ *", country:"🌍 البلد", base:"💰 الأساس:", fee:"📊 الرسوم (4%):", gst:"🏛️ ضريبة", total:"💵 المجموع:", currency:"🌍 العملة:", productDetails:"📦 تفاصيل المنتج", productName:"اسم المنتج", productIcon:"أيقونة المنتج", pricePerUnit:"السعر (للوحدة)", quantity:"الكمية المطلوبة", operator:"💸 المشغل", txId:"🔖 معرف المعاملة", providerTxId:"🔐 معرف مزود المعاملة", transferCode:"رمز التحويل *", submit:"إرسال", quickPay:"⭐ دفع سريع ⭐", addBiz:"➕ إضافة نشاط", editBiz:"✏️ تعديل النشاط", about:"حول", dev:"المطور", contact:"اتصل", subscribe:"اشترك", how:"📖 كيف", convert:"💱 تحويل", addClient:"➕ عميل", gen:"توليد", copy:"نسخ", save:"حفظ", cancel:"إلغاء", close:"إغلاق", confirm:"✅ تأكيد", agree:"✋ موافق", notSigned:"غير موقّع", agreement:"📜 اتفاقية", report:"🚨 إبلاغ", reportAgent:"🚨 الإبلاغ عن الوكيل", yourName:"اسمك *", yourPhone:"هاتفك *", reason:"السبب *", details:"التفاصيل *", submitReport:"📤 إرسال", chooseAvatar:"😊 اختر الصورة الرمزية", upload:"📷 رفع", remove:"🗑️ إزالة", profileAvatar:"😊 صورة الملف الشخصي", emoji:"🎨 رمز", selectContact:"اختر جهة اتصال", send:"إرسال", location:"📍 الموقع", editAccount:"✏️ تعديل الحساب", selectProvider:"💸 اختر المزود", pinRequired:"🔐 مطلوب رقم سري", pin:"رقم سري من 5 أرقام *", recipient:"👤 المستلم", number:"📱 الرقم", dial:"✅ اتصال", converter:"💱 محول العملات", fromCurrency:"من البلد / العملة", toCurrency:"🌍 إلى البلد / العملة", rate:"🔄 السعر:", recipientAmount:"🎯 المستلم:", addBusiness:"🏢 أضف عملك", businessName:"اسم النشاط *", contactPhone:"هاتف الاتصال *", businessType:"نوع النشاط *", icon:"الأيقونة (رمز) *", cityTown:"المدينة *", website:"الموقع (اختياري)", accessCredentials:"🔐 بيانات اعتماد النشاط", products:"📦 المنتجات", addProduct:"➕ إضافة منتج", genPin:"🔑 توليد PIN", thankYou:"✨ شكرًا!", editBizAuth:"🔐 تعديل مصادقة النشاط", agentRegistration:"🏢 تسجيل الوكيل", business:"النشاط *", regNumber:"رقم التسجيل *", type:"النوع *", owner:"المالك *", idType:"نوع الهوية *", idNumber:"رقم الهوية *", mobileMoney:"المحفظة المحمولة *", collateral:"💳 الضمان *", countryCode:"رمز الدولة", password:"كلمة المرور *", uploadId:"🪪 رفع وثيقة الهوية *", uploadBizProfile:"🏢 رفع ملف / شعار النشاط *", editAgent:"✏️ تعديل الوكيل", credentialsCorrect:"✅ بيانات الاعتماد صحيحة", currentCollateral:"الضمان الحالي:", replaceLogo:"🖼️ استبدال الشعار" },
-            es: { login:"Iniciar sesión", register:"Registrarse", logout:"Cerrar sesión", sender:"👤 REMITENTE", agent:"👤 AGENTE", client:"👥 CLIENTE", name:"Nombre *", phone:"Teléfono *", address:"Dirección", city:"Ciudad *", amount:"Monto *", country:"🌍 País", base:"💰 Base:", fee:"📊 Tarifa (4%):", gst:"🏛️ IVA", total:"💵 Total:", currency:"🌍 Moneda:", productDetails:"📦 DETALLES DEL PRODUCTO", productName:"Nombre del producto", productIcon:"Icono del producto", pricePerUnit:"Precio (por unidad)", quantity:"Cantidad pedida", operator:"💸 Operador", txId:"🔖 ID TX", providerTxId:"🔐 ID TX Proveedor", transferCode:"Código de transferencia *", submit:"Enviar", quickPay:"⭐ PAGO RÁPIDO ⭐", addBiz:"➕ Añadir Negocio", editBiz:"✏️ Editar Negocio", about:"Acerca de", dev:"Desarrollador", contact:"Contacto", subscribe:"Suscribirse", how:"📖 Cómo", convert:"💱 Convertir", addClient:"➕ Cliente", gen:"Gen", copy:"Copiar", save:"Guardar", cancel:"Cancelar", close:"Cerrar", confirm:"✅ Confirmar", agree:"✋ Aceptar", notSigned:"No firmado", agreement:"📜 Acuerdo", report:"🚨 Reportar", reportAgent:"🚨 Reportar agente", yourName:"Tu nombre *", yourPhone:"Tu teléfono *", reason:"Razón *", details:"Detalles *", submitReport:"📤 Enviar", chooseAvatar:"😊 Elige tu avatar", upload:"📷 Subir", remove:"🗑️ Eliminar", profileAvatar:"😊 Avatar del perfil", emoji:"🎨 Emoji", selectContact:"Selecciona un contacto", send:"Enviar", location:"📍 Ubicación", editAccount:"✏️ Editar cuenta", selectProvider:"💸 Seleccionar proveedor", pinRequired:"🔐 PIN requerido", pin:"PIN de 5 dígitos *", recipient:"👤 Destinatario", number:"📱 Número", dial:"✅ Marcar", converter:"💱 Conversor de moneda", fromCurrency:"De País / Moneda", toCurrency:"🌍 A País / Moneda", rate:"🔄 Tasa:", recipientAmount:"🎯 Destinatario:", addBusiness:"🏢 Añade tu negocio", businessName:"Nombre del negocio *", contactPhone:"Teléfono de contacto *", businessType:"Tipo de negocio *", icon:"Icono (emoji) *", cityTown:"Ciudad *", website:"Sitio web (opcional)", accessCredentials:"🔐 Credenciales de acceso", products:"📦 Productos", addProduct:"➕ Añadir producto", genPin:"🔑 Gen PIN", thankYou:"✨ ¡Gracias!", editBizAuth:"🔐 Editar auth negocio", agentRegistration:"🏢 Registro de Agente", business:"Negocio *", regNumber:"Número de registro *", type:"Tipo *", owner:"Propietario *", idType:"Tipo de ID *", idNumber:"Número de ID *", mobileMoney:"Dinero móvil *", collateral:"💳 Garantía *", countryCode:"Código de país", password:"Contraseña *", uploadId:"🪪 Subir documento de ID *", uploadBizProfile:"🏢 Subir perfil / logo del negocio *", editAgent:"✏️ Editar Agente", credentialsCorrect:"✅ Credenciales correctas", currentCollateral:"Garantía actual:", replaceLogo:"🖼️ Reemplazar logo" }
+            en: {
+                login:"Login", register:"Register", logout:"Logout", sender:"👤 SENDER", agent:"👤 AGENT", client:"👥 CLIENT",
+                name:"Name *", phone:"Phone *", address:"Address", city:"City *", amount:"Amount *", country:"🌍 Country",
+                base:"💰 Base:", fee:"📊 Fee (4%):", gst:"🏛️ GST", total:"💵 Total:", currency:"🌍 Currency:",
+                productDetails:"📦 PRODUCT DETAILS", productName:"Product Name", productIcon:"Product Icon",
+                pricePerUnit:"Price (per unit)", quantity:"Ordered Quantity", operator:"💸 Operator",
+                txId:"🔖 TX ID", providerTxId:"🔐 Provider TX ID", transferCode:"Transfer Code *", submit:"Submit",
+                quickPay:"⭐ QUICK PAY ⭐", addBiz:"➕ Add Biz", editBiz:"✏️ Edit Biz",
+                about:"About", dev:"Dev", contact:"Contact", subscribe:"Subscribe", how:"📖 How", convert:"💱 Convert",
+                addClient:"➕ Client", gen:"Gen", copy:"Copy", save:"Save", cancel:"Cancel", close:"Close",
+                confirm:"✅ Confirm", agree:"✋ Agree", notSigned:"Not Signed", agreement:"📜 Agreement",
+                report:"🚨 Report", reportAgent:"🚨 Report Agent", yourName:"Your Name *", yourPhone:"Your Phone *",
+                reason:"Reason *", details:"Details *", submitReport:"📤 Submit",
+                chooseAvatar:"😊 Choose Your Avatar", upload:"📷 Upload", remove:"🗑️ Remove",
+                profileAvatar:"😊 Profile Avatar", emoji:"🎨 Emoji", selectContact:"Select a contact", send:"Send",
+                location:"📍 Location", editAccount:"✏️ Edit Account", selectProvider:"💸 Select Provider",
+                pinRequired:"🔐 PIN Required", pin:"5-Digit PIN *", recipient:"👤 Recipient", number:"📱 Number",
+                dial:"✅ Dial", converter:"💱 Currency Converter", fromCurrency:"From Country / Currency",
+                toCurrency:"🌍 To Country / Currency", rate:"🔄 Rate:", recipientAmount:"🎯 Recipient:",
+                addBusiness:"🏢 Add Your Business", businessName:"Business Name *", contactPhone:"Contact Phone *",
+                businessType:"Business Type *", icon:"Icon (emoji) *", cityTown:"City / Town *", website:"Website (optional)",
+                accessCredentials:"🔐 Business Access Credentials", products:"📦 Products", addProduct:"➕ Add Product",
+                genPin:"🔑 Gen PIN", thankYou:"✨ Thank you!", editBizAuth:"🔐 Edit Business Auth",
+                agentRegistration:"🏢 Agent Registration", business:"Business *", regNumber:"Reg Number *",
+                type:"Type *", owner:"Owner *", idType:"ID Type *", idNumber:"ID Number *", mobileMoney:"Mobile Money *",
+                collateral:"💳 Collateral *", countryCode:"Country Code", password:"Password *",
+                uploadId:"🪪 Upload ID Document *", uploadBizProfile:"🏢 Upload Business Profile / Logo *",
+                editAgent:"✏️ Edit Agent", credentialsCorrect:"✅ Credentials correct",
+                currentCollateral:"Current Collateral:", replaceLogo:"🖼️ Replace Agent Logo",
+                contacts:"Contacts", noContacts:"No contacts", noAgents:"No agents", selectAgent:"Select Agent",
+                /* New keys */
+                others:"🔗 Others",
+                directPay:"💳 DirectPay +",
+                watuPay:"🌍 WatuPay",
+                weBine:"🏦 WeBine",
+                userComplaint:"🚨 User Complaint",
+                userComplaintDesc:"Tell us what went wrong. Your report goes directly to our support team.",
+                complaintCategory:"Category *",
+                submitComplaint:"📤 Submit Complaint",
+                popupAdBrand:"⭐ AfriPay Quick Pay",
+                popupAdSubtitle:"Sponsored Product",
+                popupAdSelect:"🛒 Select",
+                popupAdDismiss:"Dismiss",
+                popupAdAutoClose:"Auto-closes in",
+                popupAdQualityPrefix:"Quality"
+            },
+            fr: {
+                login:"Connexion", register:"Inscription", logout:"Déconnexion", sender:"👤 EXPÉDITEUR", agent:"👤 AGENT", client:"👥 CLIENT",
+                name:"Nom *", phone:"Téléphone *", address:"Adresse", city:"Ville *", amount:"Montant *", country:"🌍 Pays",
+                base:"💰 Base:", fee:"📊 Frais (4%):", gst:"🏛️ TVA", total:"💵 Total:", currency:"🌍 Devise:",
+                productDetails:"📦 DÉTAILS PRODUIT", productName:"Nom du produit", productIcon:"Icône du produit",
+                pricePerUnit:"Prix (unitaire)", quantity:"Quantité commandée", operator:"💸 Opérateur",
+                txId:"🔖 ID TX", providerTxId:"🔐 ID TX Fournisseur", transferCode:"Code de transfert *", submit:"Soumettre",
+                quickPay:"⭐ PAIEMENT RAPIDE ⭐", addBiz:"➕ Ajouter Entreprise", editBiz:"✏️ Modifier Entreprise",
+                about:"À propos", dev:"Développeur", contact:"Contact", subscribe:"S'abonner", how:"📖 Comment", convert:"💱 Convertir",
+                addClient:"➕ Client", gen:"Gén", copy:"Copier", save:"Enregistrer", cancel:"Annuler", close:"Fermer",
+                confirm:"✅ Confirmer", agree:"✋ Accepter", notSigned:"Non signé", agreement:"📜 Accord",
+                report:"🚨 Signaler", reportAgent:"🚨 Signaler l'agent", yourName:"Votre nom *", yourPhone:"Votre téléphone *",
+                reason:"Raison *", details:"Détails *", submitReport:"📤 Soumettre",
+                chooseAvatar:"😊 Choisissez votre avatar", upload:"📷 Télécharger", remove:"🗑️ Supprimer",
+                profileAvatar:"😊 Avatar du profil", emoji:"🎨 Emoji", selectContact:"Sélectionner un contact", send:"Envoyer",
+                location:"📍 Emplacement", editAccount:"✏️ Modifier le compte", selectProvider:"💸 Sélectionner le fournisseur",
+                pinRequired:"🔐 PIN requis", pin:"PIN à 5 chiffres *", recipient:"👤 Destinataire", number:"📱 Numéro",
+                dial:"✅ Appeler", converter:"💱 Convertisseur de devises", fromCurrency:"De Pays / Devise",
+                toCurrency:"🌍 Vers Pays / Devise", rate:"🔄 Taux:", recipientAmount:"🎯 Destinataire:",
+                addBusiness:"🏢 Ajoutez votre entreprise", businessName:"Nom de l'entreprise *", contactPhone:"Téléphone de contact *",
+                businessType:"Type d'entreprise *", icon:"Icône (emoji) *", cityTown:"Ville *", website:"Site web (optionnel)",
+                accessCredentials:"🔐 Identifiants d'accès", products:"📦 Produits", addProduct:"➕ Ajouter un produit",
+                genPin:"🔑 Gén PIN", thankYou:"✨ Merci!", editBizAuth:"🔐 Modifier auth entreprise",
+                agentRegistration:"🏢 Inscription Agent", business:"Entreprise *", regNumber:"Numéro d'enregistrement *",
+                type:"Type *", owner:"Propriétaire *", idType:"Type de pièce d'identité *", idNumber:"Numéro d'identité *", mobileMoney:"Mobile Money *",
+                collateral:"💳 Garantie *", countryCode:"Indicatif pays", password:"Mot de passe *",
+                uploadId:"🪪 Télécharger la pièce d'identité *", uploadBizProfile:"🏢 Télécharger le profil / logo de l'entreprise *",
+                editAgent:"✏️ Modifier l'agent", credentialsCorrect:"✅ Identifiants corrects",
+                currentCollateral:"Garantie actuelle:", replaceLogo:"🖼️ Remplacer le logo",
+                contacts:"Contacts", noContacts:"Aucun contact", noAgents:"Aucun agent", selectAgent:"Sélectionner un agent",
+                others:"🔗 Autres",
+                directPay:"💳 DirectPay +",
+                watuPay:"🌍 WatuPay",
+                weBine:"🏦 WeBine",
+                userComplaint:"🚨 Réclamation Utilisateur",
+                userComplaintDesc:"Dites-nous ce qui s'est mal passé. Votre rapport va directement à notre équipe de support.",
+                complaintCategory:"Catégorie *",
+                submitComplaint:"📤 Soumettre la réclamation",
+                popupAdBrand:"⭐ Paiement Rapide AfriPay",
+                popupAdSubtitle:"Produit Sponsorise",
+                popupAdSelect:"🛒 Sélectionner",
+                popupAdDismiss:"Ignorer",
+                popupAdAutoClose:"Fermeture auto dans",
+                popupAdQualityPrefix:"Qualité"
+            },
+            ar: {
+                login:"تسجيل الدخول", register:"تسجيل", logout:"خروج", sender:"👤 المرسل", agent:"👤 الوكيل", client:"👥 العميل",
+                name:"الاسم *", phone:"الهاتف *", address:"العنوان", city:"المدينة *", amount:"المبلغ *", country:"🌍 البلد",
+                base:"💰 الأساس:", fee:"📊 الرسوم (4%):", gst:"🏛️ ضريبة", total:"💵 المجموع:", currency:"🌍 العملة:",
+                productDetails:"📦 تفاصيل المنتج", productName:"اسم المنتج", productIcon:"أيقونة المنتج",
+                pricePerUnit:"السعر (للوحدة)", quantity:"الكمية المطلوبة", operator:"💸 المشغل",
+                txId:"🔖 معرف المعاملة", providerTxId:"🔐 معرف مزود المعاملة", transferCode:"رمز التحويل *", submit:"إرسال",
+                quickPay:"⭐ دفع سريع ⭐", addBiz:"➕ إضافة نشاط", editBiz:"✏️ تعديل النشاط",
+                about:"حول", dev:"المطور", contact:"اتصل", subscribe:"اشترك", how:"📖 كيف", convert:"💱 تحويل",
+                addClient:"➕ عميل", gen:"توليد", copy:"نسخ", save:"حفظ", cancel:"إلغاء", close:"إغلاق",
+                confirm:"✅ تأكيد", agree:"✋ موافق", notSigned:"غير موقّع", agreement:"📜 اتفاقية",
+                report:"🚨 إبلاغ", reportAgent:"🚨 الإبلاغ عن الوكيل", yourName:"اسمك *", yourPhone:"هاتفك *",
+                reason:"السبب *", details:"التفاصيل *", submitReport:"📤 إرسال",
+                chooseAvatar:"😊 اختر الصورة الرمزية", upload:"📷 رفع", remove:"🗑️ إزالة",
+                profileAvatar:"😊 صورة الملف الشخصي", emoji:"🎨 رمز", selectContact:"اختر جهة اتصال", send:"إرسال",
+                location:"📍 الموقع", editAccount:"✏️ تعديل الحساب", selectProvider:"💸 اختر المزود",
+                pinRequired:"🔐 مطلوب رقم سري", pin:"رقم سري من 5 أرقام *", recipient:"👤 المستلم", number:"📱 الرقم",
+                dial:"✅ اتصال", converter:"💱 محول العملات", fromCurrency:"من البلد / العملة",
+                toCurrency:"🌍 إلى البلد / العملة", rate:"🔄 السعر:", recipientAmount:"🎯 المستلم:",
+                addBusiness:"🏢 أضف عملك", businessName:"اسم النشاط *", contactPhone:"هاتف الاتصال *",
+                businessType:"نوع النشاط *", icon:"الأيقونة (رمز) *", cityTown:"المدينة *", website:"الموقع (اختياري)",
+                accessCredentials:"🔐 بيانات اعتماد النشاط", products:"📦 المنتجات", addProduct:"➕ إضافة منتج",
+                genPin:"🔑 توليد PIN", thankYou:"✨ شكرًا!", editBizAuth:"🔐 تعديل مصادقة النشاط",
+                agentRegistration:"🏢 تسجيل الوكيل", business:"النشاط *", regNumber:"رقم التسجيل *",
+                type:"النوع *", owner:"المالك *", idType:"نوع الهوية *", idNumber:"رقم الهوية *", mobileMoney:"المحفظة المحمولة *",
+                collateral:"💳 الضمان *", countryCode:"رمز الدولة", password:"كلمة المرور *",
+                uploadId:"🪪 رفع وثيقة الهوية *", uploadBizProfile:"🏢 رفع ملف / شعار النشاط *",
+                editAgent:"✏️ تعديل الوكيل", credentialsCorrect:"✅ بيانات الاعتماد صحيحة",
+                currentCollateral:"الضمان الحالي:", replaceLogo:"🖼️ استبدال الشعار",
+                contacts:"جهات الاتصال", noContacts:"لا توجد جهات اتصال", noAgents:"لا يوجد وكلاء", selectAgent:"اختر وكيلاً",
+                others:"🔗 أخرى",
+                directPay:"💳 DirectPay +",
+                watuPay:"🌍 WatuPay",
+                weBine:"🏦 WeBine",
+                userComplaint:"🚨 شكوى المستخدم",
+                userComplaintDesc:"أخبرنا بما حدث. تقريرك يذهب مباشرة إلى فريق الدعم لدينا.",
+                complaintCategory:"الفئة *",
+                submitComplaint:"📤 إرسال الشكوى",
+                popupAdBrand:"⭐ الدفع السريع AfriPay",
+                popupAdSubtitle:"منتج مُموَّل",
+                popupAdSelect:"🛒 اختيار",
+                popupAdDismiss:"تجاهل",
+                popupAdAutoClose:"إغلاق تلقائي في",
+                popupAdQualityPrefix:"الجودة"
+            },
+            es: {
+                login:"Iniciar sesión", register:"Registrarse", logout:"Cerrar sesión", sender:"👤 REMITENTE", agent:"👤 AGENTE", client:"👥 CLIENTE",
+                name:"Nombre *", phone:"Teléfono *", address:"Dirección", city:"Ciudad *", amount:"Monto *", country:"🌍 País",
+                base:"💰 Base:", fee:"📊 Tarifa (4%):", gst:"🏛️ IVA", total:"💵 Total:", currency:"🌍 Moneda:",
+                productDetails:"📦 DETALLES DEL PRODUCTO", productName:"Nombre del producto", productIcon:"Icono del producto",
+                pricePerUnit:"Precio (por unidad)", quantity:"Cantidad pedida", operator:"💸 Operador",
+                txId:"🔖 ID TX", providerTxId:"🔐 ID TX Proveedor", transferCode:"Código de transferencia *", submit:"Enviar",
+                quickPay:"⭐ PAGO RÁPIDO ⭐", addBiz:"➕ Añadir Negocio", editBiz:"✏️ Editar Negocio",
+                about:"Acerca de", dev:"Desarrollador", contact:"Contacto", subscribe:"Suscribirse", how:"📖 Cómo", convert:"💱 Convertir",
+                addClient:"➕ Cliente", gen:"Gen", copy:"Copiar", save:"Guardar", cancel:"Cancelar", close:"Cerrar",
+                confirm:"✅ Confirmar", agree:"✋ Aceptar", notSigned:"No firmado", agreement:"📜 Acuerdo",
+                report:"🚨 Reportar", reportAgent:"🚨 Reportar agente", yourName:"Tu nombre *", yourPhone:"Tu teléfono *",
+                reason:"Razón *", details:"Detalles *", submitReport:"📤 Enviar",
+                chooseAvatar:"😊 Elige tu avatar", upload:"📷 Subir", remove:"🗑️ Eliminar",
+                profileAvatar:"😊 Avatar del perfil", emoji:"🎨 Emoji", selectContact:"Selecciona un contacto", send:"Enviar",
+                location:"📍 Ubicación", editAccount:"✏️ Editar cuenta", selectProvider:"💸 Seleccionar proveedor",
+                pinRequired:"🔐 PIN requerido", pin:"PIN de 5 dígitos *", recipient:"👤 Destinatario", number:"📱 Número",
+                dial:"✅ Marcar", converter:"💱 Conversor de moneda", fromCurrency:"De País / Moneda",
+                toCurrency:"🌍 A País / Moneda", rate:"🔄 Tasa:", recipientAmount:"🎯 Destinatario:",
+                addBusiness:"🏢 Añade tu negocio", businessName:"Nombre del negocio *", contactPhone:"Teléfono de contacto *",
+                businessType:"Tipo de negocio *", icon:"Icono (emoji) *", cityTown:"Ciudad *", website:"Sitio web (opcional)",
+                accessCredentials:"🔐 Credenciales de acceso", products:"📦 Productos", addProduct:"➕ Añadir producto",
+                genPin:"🔑 Gen PIN", thankYou:"✨ ¡Gracias!", editBizAuth:"🔐 Editar auth negocio",
+                agentRegistration:"🏢 Registro de Agente", business:"Negocio *", regNumber:"Número de registro *",
+                type:"Tipo *", owner:"Propietario *", idType:"Tipo de ID *", idNumber:"Número de ID *", mobileMoney:"Dinero móvil *",
+                collateral:"💳 Garantía *", countryCode:"Código de país", password:"Contraseña *",
+                uploadId:"🪪 Subir documento de ID *", uploadBizProfile:"🏢 Subir perfil / logo del negocio *",
+                editAgent:"✏️ Editar Agente", credentialsCorrect:"✅ Credenciales correctas",
+                currentCollateral:"Garantía actual:", replaceLogo:"🖼️ Reemplazar logo",
+                contacts:"Contactos", noContacts:"Sin contactos", noAgents:"Sin agentes", selectAgent:"Seleccionar agente",
+                others:"🔗 Otros",
+                directPay:"💳 DirectPay +",
+                watuPay:"🌍 WatuPay",
+                weBine:"🏦 WeBine",
+                userComplaint:"🚨 Queja del Usuario",
+                userComplaintDesc:"Cuéntanos qué salió mal. Tu informe va directamente a nuestro equipo de soporte.",
+                complaintCategory:"Categoría *",
+                submitComplaint:"📤 Enviar Queja",
+                popupAdBrand:"⭐ Pago Rápido AfriPay",
+                popupAdSubtitle:"Producto Patrocinado",
+                popupAdSelect:"🛒 Seleccionar",
+                popupAdDismiss:"Descartar",
+                popupAdAutoClose:"Se cierra en",
+                popupAdQualityPrefix:"Calidad"
+            }
         };
 
         let currentLang = 'en';
@@ -725,6 +910,8 @@
             if (typeof renderBusinessStrip === 'function') renderBusinessStrip();
             if (typeof renderAgentDropdown === 'function') renderAgentDropdown();
             if (typeof populateAgentSelect === 'function') populateAgentSelect(currentAgentFilterCountry);
+            // If popup ad is open, re-translate its dynamic strings
+            if (typeof refreshPopupAdText === 'function') refreshPopupAdText();
         }
 
         function setLanguage(lang) {
@@ -785,7 +972,6 @@
         for (const code in COUNTRY_CODE_TO_NAME) { COUNTRY_NAME_TO_CODE[COUNTRY_CODE_TO_NAME[code]] = code; }
         const SUPPORTED_COUNTRY_FLAGS = ['🇱🇷','🇬🇳','🇸🇳','🇲🇱','🇨🇮','🇬🇭','🇳🇪','🇧🇯','🇬🇼','🇬🇲','🇹🇬','🇰🇪','🇨🇫','🇪🇹','🇬🇦','🇲🇬','🇲🇦','🇷🇼','🇺🇬','🇨🇩','🇧🇫','🇸🇱'];
 
-        // USSD codes for sending money abroad by agent country
         const AGENT_SEND_ABROAD_USSD = {
             'Sierra Leone': '#144*2*5*1*20*{RECIPIENT_NAME}*{RECIPIENT_PHONE}*{AMOUNT}*1*0000#',
             'Guinea': '*144*3*{RECIPIENT_PHONE}*{AMOUNT}*0000#',
@@ -848,9 +1034,9 @@
         let pendingEditBizId = null;
         let regAvatarDataURL = null;
         let regEmoji = '👤';
-        let reportTargetAgentId = null;
         let paybackSignatureDataURL = null;
         let paybackTargetAgentId = null;
+        let currentPopupProduct = null;
 
         const DEFAULT_EDIT_BIZ_PASSWORD = 'EDITBIZ';
         const DEFAULT_EDIT_BIZ_PIN = '12345';
@@ -899,25 +1085,20 @@
         // ============================================================
         function getEl(id) { return document.getElementById(id); }
         function showToast(msg, dur = 2800) {
-            const el = getEl('toastMsg');
-            if (!el) return;
-            el.innerText = msg;
-            el.style.visibility = 'visible';
-            el.style.opacity = '1';
+            const el = getEl('toastMsg'); if (!el) return;
+            el.innerText = msg; el.style.visibility = 'visible'; el.style.opacity = '1';
             clearTimeout(el._hide);
             el._hide = setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.style.visibility = 'hidden', 300); }, dur);
         }
 
         function populateCapitalCityDropdown(selectId) {
-            const s = getEl(selectId); if (!s) return;
-            const cv = s.value;
+            const s = getEl(selectId); if (!s) return; const cv = s.value;
             s.innerHTML = '<option value="">Select city...</option>';
             CAPITAL_CITIES.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c; s.appendChild(o); });
             if (cv) s.value = cv;
         }
         function populateCountryDropdown(selectId) {
-            const s = getEl(selectId); if (!s) return;
-            const cv = s.value; s.innerHTML = '';
+            const s = getEl(selectId); if (!s) return; const cv = s.value; s.innerHTML = '';
             ALL_COUNTRIES.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c; s.appendChild(o); });
             if (cv && Array.from(s.options).some(o => o.value === cv)) s.value = cv;
         }
@@ -926,10 +1107,7 @@
             ['regCountry','editAccountCountry','newClientCountrySelect','bizCountrySelect'].forEach(populateCountryDropdown);
         }
         function populateCollateralDropdowns() {
-            ['agentCollateralLimit','editCollateralLimit'].forEach(id => {
-                const s = getEl(id); if (!s) return; s.innerHTML = '';
-                COLLATERAL_OPTIONS.forEach(v => { const o = document.createElement('option'); o.value = v; o.textContent = v.toLocaleString(); s.appendChild(o); });
-            });
+            ['agentCollateralLimit','editCollateralLimit'].forEach(id => { const s = getEl(id); if (!s) return; s.innerHTML = ''; COLLATERAL_OPTIONS.forEach(v => { const o = document.createElement('option'); o.value = v; o.textContent = v.toLocaleString(); s.appendChild(o); }); });
         }
         function populateCountryCodeSelect() {
             const s = getEl('countryCodeSelect'); if (!s) return; s.innerHTML = '';
@@ -1006,11 +1184,7 @@
             selItem.innerHTML = `<div class="agent-info"><span style="color:#FFD966;">👤</span> <span class="agent-name">${dict.selectAgent || 'Select Agent'}</span></div>`;
             selItem.addEventListener('click', e => { e.stopPropagation(); selectedAgentId = null; _selectedAgentId = null; clearAgentSelection(); list.classList.remove('open'); });
             list.appendChild(selItem);
-            if (agents.length === 0) {
-                const em = document.createElement('div'); em.className = 'agent-dropdown-item'; em.style.justifyContent = 'center';
-                em.innerHTML = `<span style="color:#ccc;">${dict.noAgents || 'No agents'}</span>`;
-                list.appendChild(em); return;
-            }
+            if (agents.length === 0) { const em = document.createElement('div'); em.className = 'agent-dropdown-item'; em.style.justifyContent = 'center'; em.innerHTML = `<span style="color:#ccc;">${dict.noAgents || 'No agents'}</span>`; list.appendChild(em); return; }
             agents.forEach(agent => {
                 const item = document.createElement('div'); item.className = 'agent-dropdown-item';
                 const data = agent.agentData || agent;
@@ -1389,26 +1563,49 @@
         window.removeProductEntry = removeProductEntry;
 
         // ============================================================
-        // POP-UP ADVERT
+        // POP-UP ADVERT (with translation support)
         // ============================================================
-        let popupAdInterval = null, popupAdTimeout = null, lastPopupAdShownAt = 0;
+        let popupAdInterval = null, popupAdTimeout = null, popupAdCountdownInterval = null;
+        let popupAdCountdownSeconds = 15, lastPopupAdShownAt = 0;
+
         function pickRandomProductForAdvert() {
             const all = getAllBusinesses(); const cands = [];
             all.forEach(biz => { if (biz.goods && biz.goods.length > 0) { biz.goods.forEach(g => { cands.push({ businessId:biz.id, businessName:biz.name, businessIcon:biz.icon || '🏪', businessPhone:biz.mobileMoney || biz.contact || '', name:g.name, price:parseFloat(g.price) || 0, quantity:g.quantity || 1, quality:g.quality || 'Brand new', icon:g.icon || biz.icon || '📱' }); }); } });
             if (cands.length === 0) return null;
             return cands[Math.floor(Math.random() * cands.length)];
         }
+
+        function refreshPopupAdText() {
+            if (!currentPopupProduct) return;
+            const dict = TRANSLATIONS[currentLang] || TRANSLATIONS.en;
+            const p = currentPopupProduct;
+            // Translate the business/quality description line
+            if (getEl('popupAdDescription')) {
+                const qualityLabel = dict.popupAdQualityPrefix || 'Quality';
+                getEl('popupAdDescription').textContent = `${qualityLabel}: ${p.quality} · ${p.quantity}`;
+            }
+            // If the timer is running, refresh the label
+            if (getEl('popupAdTimerSeconds') && popupAdCountdownInterval) {
+                getEl('popupAdTimerSeconds').textContent = popupAdCountdownSeconds + 's';
+            }
+        }
+
         function showPopupAdvert() {
             if (!currentUser) return;
             const now = Date.now();
             if (now - lastPopupAdShownAt < 8000) return;
             const p = pickRandomProductForAdvert(); if (!p) return;
             lastPopupAdShownAt = now;
+            currentPopupProduct = p;
+            const dict = TRANSLATIONS[currentLang] || TRANSLATIONS.en;
             const overlay = getEl('popupAdOverlay'); if (!overlay) return;
             if (getEl('popupAdIcon')) getEl('popupAdIcon').textContent = p.icon;
             if (getEl('popupAdName')) getEl('popupAdName').textContent = p.name;
             if (getEl('popupAdBusiness')) getEl('popupAdBusiness').textContent = `${p.businessIcon} ${p.businessName}`;
-            if (getEl('popupAdDescription')) getEl('popupAdDescription').textContent = `Quality: ${p.quality} · ${p.quantity} in stock`;
+            if (getEl('popupAdDescription')) {
+                const qualityLabel = dict.popupAdQualityPrefix || 'Quality';
+                getEl('popupAdDescription').textContent = `${qualityLabel}: ${p.quality} · ${p.quantity}`;
+            }
             if (getEl('popupAdPrice')) getEl('popupAdPrice').textContent = p.price.toFixed(2);
             if (getEl('popupAdCurrency')) getEl('popupAdCurrency').textContent = isLocalMode ? getUserCurrency() : currentCountryData.currency;
             const sb = getEl('popupAdSelectBtn');
@@ -1416,8 +1613,23 @@
             const db = getEl('popupAdDismissBtn'); if (db) db.onclick = e => { e.preventDefault(); e.stopPropagation(); hidePopupAdvert(); };
             const cb = getEl('popupAdCloseBtn'); if (cb) cb.onclick = e => { e.preventDefault(); e.stopPropagation(); hidePopupAdvert(); };
             overlay.style.display = 'flex';
+            startPopupAdCountdown(15);
         }
-        function hidePopupAdvert() { const o = getEl('popupAdOverlay'); if (o) o.style.display = 'none'; }
+        function hidePopupAdvert() {
+            const o = getEl('popupAdOverlay'); if (o) o.style.display = 'none';
+            clearInterval(popupAdCountdownInterval); popupAdCountdownInterval = null;
+            currentPopupProduct = null;
+        }
+        function startPopupAdCountdown(s) {
+            clearInterval(popupAdCountdownInterval);
+            popupAdCountdownSeconds = s;
+            if (getEl('popupAdTimerSeconds')) getEl('popupAdTimerSeconds').textContent = s + 's';
+            popupAdCountdownInterval = setInterval(() => {
+                popupAdCountdownSeconds--;
+                if (getEl('popupAdTimerSeconds')) getEl('popupAdTimerSeconds').textContent = popupAdCountdownSeconds + 's';
+                if (popupAdCountdownSeconds <= 0) { clearInterval(popupAdCountdownInterval); hidePopupAdvert(); }
+            }, 1000);
+        }
         function startPopupAdTimer() {
             stopPopupAdTimer();
             popupAdTimeout = setTimeout(() => { showPopupAdvert(); popupAdInterval = setInterval(showPopupAdvert, 90000); }, 4000);
@@ -1633,7 +1845,6 @@
             const cs = getEl('editCollateralLimit');
             if (cs) { for (let i = 0; i < cs.options.length; i++) { if (parseInt(cs.options[i].value) === (data.collateralLimit || 0)) { cs.selectedIndex = i; break; } } }
             if (getEl('editCollateralValueDisplay')) getEl('editCollateralValueDisplay').textContent = data.collateralLimit || 0;
-            const rf = getEl('reportAgentForm'); if (rf) rf.style.display = 'none';
             getEl('editAgentModal').style.display = 'flex';
             const pwI = getEl('editPassword'), pinI = getEl('editPin');
             const checkAuth = () => {
@@ -1673,35 +1884,19 @@
             getEl('paybackBusinessName').value = data.businessName || data.name || '';
             getEl('paybackAgentName').value = data.ownerName || data.name || '';
             const countryCode = data.countryCode || '';
-            const nationality = COUNTRY_CODE_TO_NAME[countryCode] || data.city || '—';
-            getEl('paybackNationality').value = nationality;
+            getEl('paybackNationality').value = COUNTRY_CODE_TO_NAME[countryCode] || data.city || '—';
             getEl('paybackCashedOut').value = '';
             getEl('paybackProviderTxId').value = '';
             getEl('paybackTransferCode').value = '';
             getEl('paybackError').textContent = '';
             if (getEl('paybackUssdPreview')) { getEl('paybackUssdPreview').style.display = 'none'; getEl('paybackUssdPreview').textContent = ''; }
             updatePaybackCalculations();
-            // Clear signature
-            const canvas = getEl('paybackSignatureCanvas');
-            if (canvas) { const ctx = canvas.getContext('2d'); ctx.fillStyle = 'white'; ctx.fillRect(0, 0, canvas.width, canvas.height); }
             setupPaybackSignatureCanvas();
             getEl('payBackModal').style.display = 'flex';
         }
 
         function setupPaybackSignatureCanvas() {
-            const canvas = getEl('paybackSignatureCanvas');
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
-            ctx.fillStyle = 'white'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.strokeStyle = '#0a2b3c'; ctx.lineWidth = 2; ctx.lineCap = 'round';
-            let drawing = false, lx = 0, ly = 0;
-            const getPos = e => {
-                const r = canvas.getBoundingClientRect();
-                const x = (e.clientX || e.touches?.[0]?.clientX || 0) - r.left;
-                const y = (e.clientY || e.touches?.[0]?.clientY || 0) - r.top;
-                return { x: x * (canvas.width / r.width), y: y * (canvas.height / r.height) };
-            };
-            // Remove old listeners by cloning
+            const canvas = getEl('paybackSignatureCanvas'); if (!canvas) return;
             const newCanvas = canvas.cloneNode(true);
             canvas.parentNode.replaceChild(newCanvas, canvas);
             const c = getEl('paybackSignatureCanvas');
@@ -1709,12 +1904,7 @@
             cx.fillStyle = 'white'; cx.fillRect(0, 0, c.width, c.height);
             cx.strokeStyle = '#0a2b3c'; cx.lineWidth = 2; cx.lineCap = 'round';
             let d = false, lastX = 0, lastY = 0;
-            const pos = e => {
-                const r = c.getBoundingClientRect();
-                const x = (e.clientX || e.touches?.[0]?.clientX || 0) - r.left;
-                const y = (e.clientY || e.touches?.[0]?.clientY || 0) - r.top;
-                return { x: x * (c.width / r.width), y: y * (c.height / r.height) };
-            };
+            const pos = e => { const r = c.getBoundingClientRect(); const x = (e.clientX || e.touches?.[0]?.clientX || 0) - r.left; const y = (e.clientY || e.touches?.[0]?.clientY || 0) - r.top; return { x: x * (c.width / r.width), y: y * (c.height / r.height) }; };
             c.addEventListener('mousedown', e => { e.preventDefault(); d = true; const p = pos(e); lastX = p.x; lastY = p.y; });
             c.addEventListener('mousemove', e => { e.preventDefault(); if (!d) return; const p = pos(e); cx.beginPath(); cx.moveTo(lastX, lastY); cx.lineTo(p.x, p.y); cx.stroke(); lastX = p.x; lastY = p.y; });
             c.addEventListener('mouseup', () => d = false);
@@ -1724,8 +1914,10 @@
             c.addEventListener('touchend', () => d = false);
         }
 
+        // USSD uses the 88% platform share (not the total cashed out amount)
         function getPaybackUssd() {
-            const amount = parseFloat(getEl('paybackCashedOut')?.value) || 0;
+            const calc = updatePaybackCalculations();
+            const sendAmount = Math.round(calc.platformShare); // 88% of the 1%
             const agent = getAgents().find(a => a.id === paybackTargetAgentId);
             const data = agent ? (agent.agentData || agent) : null;
             const countryCode = data?.countryCode || '';
@@ -1736,14 +1928,16 @@
             return template
                 .replace('{RECIPIENT_NAME}', recipientName)
                 .replace('{RECIPIENT_PHONE}', recipientPhone)
-                .replace('{AMOUNT}', Math.round(amount));
+                .replace('{AMOUNT}', sendAmount);
         }
 
         function dialPaybackUssd() {
+            const calc = updatePaybackCalculations();
+            if (calc.amount <= 0) { getEl('paybackError').textContent = '❌ Enter cashed out amount first.'; return; }
             const ussd = getPaybackUssd();
             if (getEl('paybackUssdPreview')) { getEl('paybackUssdPreview').textContent = ussd; getEl('paybackUssdPreview').style.display = 'block'; }
             const link = document.createElement('a'); link.href = `tel:${ussd}`; link.click();
-            showToast('📞 Dialing USSD...', 3000);
+            showToast(`📞 Dialing (88% share: ${Math.round(calc.platformShare)})...`, 3000);
         }
 
         function submitPayback() {
@@ -1794,56 +1988,45 @@
         }
 
         // ============================================================
-        // REPORT
+        // USER COMPLAINT (Footer Report)
         // ============================================================
-        function openReportForm(agentId) {
-            reportTargetAgentId = agentId;
-            if (getEl('reportName')) getEl('reportName').value = currentUser?.name || '';
-            if (getEl('reportPhone')) getEl('reportPhone').value = currentUser?.phone || '';
-            if (getEl('reportReason')) getEl('reportReason').value = '';
-            if (getEl('reportDetails')) getEl('reportDetails').value = '';
-            if (getEl('reportAgentError')) getEl('reportAgentError').textContent = '';
-            const form = getEl('reportAgentForm');
-            if (form) { form.style.display = 'block'; form.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+        function openUserComplaintModal() {
+            if (getEl('complaintName')) getEl('complaintName').value = currentUser?.name || '';
+            if (getEl('complaintPhone')) getEl('complaintPhone').value = currentUser?.phone || '';
+            if (getEl('complaintCategory')) getEl('complaintCategory').value = '';
+            if (getEl('complaintDetails')) getEl('complaintDetails').value = '';
+            if (getEl('userComplaintError')) getEl('userComplaintError').textContent = '';
+            getEl('userComplaintModal').style.display = 'flex';
         }
-        function closeReportForm() { const form = getEl('reportAgentForm'); if (form) form.style.display = 'none'; reportTargetAgentId = null; }
-        function submitReport() {
-            const err = getEl('reportAgentError');
-            const name = getEl('reportName')?.value?.trim() || '';
-            const phone = getEl('reportPhone')?.value?.trim() || '';
-            const reason = getEl('reportReason')?.value || '';
-            const details = getEl('reportDetails')?.value?.trim() || '';
+
+        function submitUserComplaint() {
+            const err = getEl('userComplaintError');
+            const name = getEl('complaintName')?.value?.trim() || '';
+            const phone = getEl('complaintPhone')?.value?.trim() || '';
+            const category = getEl('complaintCategory')?.value || '';
+            const details = getEl('complaintDetails')?.value?.trim() || '';
             err.textContent = '';
             if (!name) { err.textContent = '❌ Your name is required.'; return; }
             if (!phone) { err.textContent = '❌ Your phone is required.'; return; }
-            if (!reason) { err.textContent = '❌ Please select a reason.'; return; }
-            if (!details) { err.textContent = '❌ Please provide details.'; return; }
-            if (!reportTargetAgentId) { err.textContent = '❌ No agent selected.'; return; }
-            const agent = getAgents().find(a => a.id === reportTargetAgentId);
-            const agentData = agent ? (agent.agentData || agent) : null;
-            const agentName = agentData ? (agentData.businessName || agentData.name || 'Agent') : 'Unknown';
-            const report = { id: 'report_' + Date.now(), agentId: reportTargetAgentId, agentName, reporterName: name, reporterPhone: phone, reason, details, submittedAt: new Date().toISOString(), status: 'pending' };
-            let reports = [];
-            try { reports = JSON.parse(localStorage.getItem('afripay_reports') || '[]'); } catch (e) { reports = []; }
-            reports.push(report);
-            try { localStorage.setItem('afripay_reports', JSON.stringify(reports)); } catch (e) {}
-            showToast(`✅ Report submitted against "${agentName}"`, 3000);
-            closeReportForm();
-            setTimeout(() => { getEl('editAgentModal').style.display = 'none'; }, 800);
+            if (!category) { err.textContent = '❌ Please select a category.'; return; }
+            if (!details) { err.textContent = '❌ Please describe your grievance.'; return; }
+            const complaint = { id: 'complaint_' + Date.now(), name, phone, category, details, submittedAt: new Date().toISOString(), status: 'pending' };
+            let complaints = [];
+            try { complaints = JSON.parse(localStorage.getItem('afripay_complaints') || '[]'); } catch (e) { complaints = []; }
+            complaints.push(complaint);
+            try { localStorage.setItem('afripay_complaints', JSON.stringify(complaints)); } catch (e) {}
+            showToast(`✅ Complaint submitted (${category})`, 3000);
+            getEl('userComplaintModal').style.display = 'none';
         }
 
         // ============================================================
         // OTHERS DROPDOWN
         // ============================================================
         function toggleOthersDropdown() {
-            const menu = getEl('othersDropdownMenu');
-            if (!menu) return;
+            const menu = getEl('othersDropdownMenu'); if (!menu) return;
             menu.classList.toggle('open');
         }
-        function closeOthersDropdown() {
-            const menu = getEl('othersDropdownMenu');
-            if (menu) menu.classList.remove('open');
-        }
+        function closeOthersDropdown() { const menu = getEl('othersDropdownMenu'); if (menu) menu.classList.remove('open'); }
 
         // ============================================================
         // EVENT LISTENERS
@@ -1864,6 +2047,12 @@
             if (wpb) wpb.addEventListener('click', e => { e.preventDefault(); closeOthersDropdown(); window.open('https://watupay.example.com', '_blank'); showToast('🌍 Opening WatuPay...', 2000); });
             const wbb = getEl('weBineBtn');
             if (wbb) wbb.addEventListener('click', e => { e.preventDefault(); closeOthersDropdown(); window.open('https://webine.example.com', '_blank'); showToast('🏦 Opening WeBine...', 2000); });
+
+            // Footer Report button → User Complaint modal
+            const repBtn = getEl('reportAppBtn');
+            if (repBtn) repBtn.addEventListener('click', e => { e.preventDefault(); openUserComplaintModal(); });
+            const submitComp = getEl('submitComplaintBtn');
+            if (submitComp) submitComp.addEventListener('click', e => { e.preventDefault(); submitUserComplaint(); });
 
             const lb = getEl('loginBtn'); if (lb) lb.addEventListener('click', e => { e.preventDefault(); getEl('loginError').innerHTML = ''; getEl('loginModal').style.display = 'flex'; });
             const rb = getEl('registerBtn'); if (rb) rb.addEventListener('click', e => { e.preventDefault(); regAvatarDataURL = null; regEmoji = '👤'; updateRegAvatarPreview(); getEl('registerModal').style.display = 'flex'; });
@@ -2118,18 +2307,6 @@
                 setTimeout(() => getEl('editAgentModal').style.display = 'none', 1000);
             });
 
-            const reportBtn = getEl('reportAgentBtn');
-            if (reportBtn) reportBtn.addEventListener('click', e => {
-                e.preventDefault();
-                const aid = getEl('editAgentId').value;
-                if (!aid) { showToast('⚠️ No agent selected.', 2000); return; }
-                openReportForm(aid);
-            });
-            const submitReportBtn = getEl('submitReportBtn');
-            if (submitReportBtn) submitReportBtn.addEventListener('click', e => { e.preventDefault(); submitReport(); });
-            const cancelReportBtn = getEl('cancelReportBtn');
-            if (cancelReportBtn) cancelReportBtn.addEventListener('click', e => { e.preventDefault(); closeReportForm(); });
-
             // PayBack
             const paybackBtn = getEl('payBackBtn');
             if (paybackBtn) paybackBtn.addEventListener('click', e => {
@@ -2145,8 +2322,7 @@
             const paybackSigClear = getEl('paybackSigClear');
             if (paybackSigClear) paybackSigClear.addEventListener('click', e => {
                 e.preventDefault();
-                const canvas = getEl('paybackSignatureCanvas');
-                if (!canvas) return;
+                const canvas = getEl('paybackSignatureCanvas'); if (!canvas) return;
                 const ctx = canvas.getContext('2d');
                 ctx.fillStyle = 'white'; ctx.fillRect(0, 0, canvas.width, canvas.height);
                 paybackSignatureDataURL = null;
@@ -2154,8 +2330,7 @@
             const paybackSigConfirm = getEl('paybackSigConfirm');
             if (paybackSigConfirm) paybackSigConfirm.addEventListener('click', e => {
                 e.preventDefault();
-                const canvas = getEl('paybackSignatureCanvas');
-                if (!canvas) return;
+                const canvas = getEl('paybackSignatureCanvas'); if (!canvas) return;
                 const d = canvas.toDataURL('image/png');
                 if (d === 'data:,') { showToast('⚠️ Draw first.', 2000); return; }
                 paybackSignatureDataURL = d;
