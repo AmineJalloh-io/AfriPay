@@ -93,11 +93,19 @@
         .business-category { color: #e67e22; font-size: 0.58rem; }
         .add-biz-btn { background: #27ae60; color: white; border: none; padding: 3px 10px; border-radius: 30px; font-weight: 700; font-size: 0.65rem; cursor: pointer; height: 28px; display: inline-flex; align-items: center; gap: 3px; }
         .edit-biz-strip-btn { background: #f39c12; color: white; border: none; padding: 3px 10px; border-radius: 30px; font-weight: 700; font-size: 0.65rem; cursor: pointer; height: 28px; display: inline-flex; align-items: center; gap: 3px; }
-        .footer-section { background: #f8fafc; border-top: 1px solid rgba(0, 0, 0, 0.06); padding: 0.35rem 0.5rem; }
+        .footer-section { background: #f8fafc; border-top: 1px solid rgba(0, 0, 0, 0.06); padding: 0.35rem 0.5rem; position: relative; }
         .footer-buttons { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 3px; justify-content: center; }
         .footer-btn { background: #eef2f7; border: none; padding: 4px 10px; border-radius: 30px; font-weight: 700; cursor: pointer; color: #1c6e8f; height: 32px; font-size: 0.78rem; }
         .social-icons { display: flex; flex-wrap: wrap; gap: 3px; justify-content: center; }
         .social-icon { cursor: pointer; padding: 4px 10px; background: #eef2f7; border-radius: 30px; color: #1c6e8f; text-decoration: none; height: 32px; display: flex; align-items: center; font-size: 0.78rem; }
+        .others-dropdown { position: relative; display: inline-block; }
+        .others-dropdown-menu { display: none; position: absolute; bottom: 38px; left: 50%; transform: translateX(-50%); background: white; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.2); padding: 6px; z-index: 200; min-width: 150px; border: 1px solid #e0e8f0; }
+        .others-dropdown-menu.open { display: block; }
+        .others-dropdown-menu button { display: block; width: 100%; padding: 8px 14px; border: none; border-radius: 8px; margin-bottom: 4px; font-weight: 700; font-size: 0.78rem; cursor: pointer; color: white; text-align: center; }
+        .others-dropdown-menu button:last-child { margin-bottom: 0; }
+        .others-dropdown-menu .dp-btn { background: linear-gradient(135deg, #3498db, #2980b9); }
+        .others-dropdown-menu .wp-btn { background: linear-gradient(135deg, #27ae60, #229954); }
+        .others-dropdown-menu .wb-btn { background: linear-gradient(135deg, #8e44ad, #6c3483); }
         .toast-msg { position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%); background: #1e2f3c; color: white; padding: 5px 16px; border-radius: 40px; z-index: 1100; pointer-events: none; opacity: 0; visibility: hidden; transition: opacity 0.25s ease, visibility 0.25s ease; max-width: 85%; text-align: center; font-size: 0.85rem; }
         .chat-toggle-btn { position: fixed; bottom: 18px; left: 18px; width: 60px; height: 60px; border-radius: 50%; background: #0f2b3d; color: white; border: none; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); font-size: 2rem; cursor: pointer; z-index: 500; display: flex; align-items: center; justify-content: center; }
         .chat-window { position: fixed; left: 0; right: 0; background: white; box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.15); display: none; flex-direction: row; z-index: 600; border-top: 1px solid #e0e8f0; }
@@ -142,7 +150,7 @@
         .agent-form .input-group { margin-bottom: 0.35rem; }
         .agent-form .input-group label { font-size: 0.7rem; }
         .agent-form .input-group input, .agent-form .input-group select { height: 36px; font-size: 0.85rem; padding: 4px 10px; }
-        .edit-agent-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; }
+        .edit-agent-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; position: relative; }
         .edit-agent-header h3 { margin: 0; font-size: 1.05rem; }
         .edit-agent-collateral-section, .edit-agent-logo-section { display: none; margin-top: 0.35rem; padding-top: 0.35rem; border-top: 2px dashed #d0dce8; }
         .edit-agent-collateral-section.open, .edit-agent-logo-section.open { display: block; }
@@ -164,6 +172,20 @@
         .goods-item .goods-details { display: flex; gap: 12px; font-size: 0.7rem; color: #555; flex-wrap: wrap; }
         .goods-item .goods-details span { background: #f0f4f8; padding: 1px 8px; border-radius: 12px; }
         .goods-select-btn { background: #2c7da0; color: white; border: none; padding: 2px 12px; border-radius: 20px; font-size: 0.65rem; font-weight: 600; cursor: pointer; height: 26px; margin-left: auto; }
+        .payback-btn { background: linear-gradient(135deg, #f39c12, #e67e22); color: white; border: none; padding: 5px 12px; border-radius: 30px; font-weight: 700; font-size: 0.72rem; cursor: pointer; height: 32px; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 2px 8px rgba(243, 156, 18, 0.4); }
+        .payback-summary { background: #f8fafc; border-radius: 10px; padding: 0.6rem 0.8rem; margin: 0.4rem 0; border: 1px solid #e2edf7; }
+        .payback-summary .pb-row { display: flex; justify-content: space-between; padding: 3px 0; font-size: 0.8rem; border-bottom: 1px solid #edf2f7; }
+        .payback-summary .pb-row:last-child { border-bottom: none; }
+        .payback-summary .pb-row .pb-label { color: #7f8c8d; font-weight: 600; }
+        .payback-summary .pb-row .pb-value { color: #0f2b3d; font-weight: 700; }
+        .payback-summary .pb-row.total { border-top: 2px dashed #cbdde9; margin-top: 4px; padding-top: 6px; font-size: 0.88rem; }
+        .payback-summary .pb-row.highlight { background: #fff8e1; border-radius: 6px; padding: 5px 8px; margin-top: 4px; }
+        .signature-canvas-wrapper { background: white; border: 2px dashed #d0dce8; border-radius: 10px; padding: 6px; margin-top: 6px; }
+        .signature-canvas-wrapper canvas { width: 100%; height: 100px; border-radius: 6px; background: white; touch-action: none; display: block; }
+        .signature-actions { display: flex; gap: 4px; margin-top: 4px; }
+        .signature-actions button { padding: 3px 12px; border-radius: 20px; border: none; font-weight: 700; font-size: 0.68rem; cursor: pointer; height: 28px; }
+        .signature-actions .sig-clear { background: #e74c3c; color: white; }
+        .signature-actions .sig-confirm { background: #27ae60; color: white; }
         @media (max-width: 600px) {
             .double-row { grid-template-columns: 1fr; gap: 0; }
             .brand-text { font-size: 1.3rem; }
@@ -342,6 +364,14 @@
                 <button class="footer-btn" id="subscribeBtn" data-i18n="subscribe">Subscribe</button>
                 <button class="footer-btn" id="howToBtn" style="background:#2c7da0; color:white;" data-i18n="how">📖 How</button>
                 <button class="footer-btn" id="currencyConverterBtn" style="background:#0f2b3d; color:white;" data-i18n="convert">💱 Convert</button>
+                <div class="others-dropdown">
+                    <button class="footer-btn" id="othersBtn" style="background:#8e44ad; color:white;">🔗 Others</button>
+                    <div class="others-dropdown-menu" id="othersDropdownMenu">
+                        <button class="dp-btn" id="directPayBtn">💳 DirectPay +</button>
+                        <button class="wp-btn" id="watuPayBtn">🌍 WatuPay</button>
+                        <button class="wb-btn" id="weBineBtn">🏦 WeBine</button>
+                    </div>
+                </div>
             </div>
             <div class="social-icons">
                 <a href="#" class="social-icon">WA</a><a href="#" class="social-icon">FB</a><a href="#" class="social-icon">IG</a><a href="#" class="social-icon">YT</a><a href="#" class="social-icon">WB</a>
@@ -464,10 +494,11 @@
         <div class="action-buttons-row"><button class="action-btn" id="submitAgentRegistrationBtn" data-i18n="register">Register</button><button class="action-btn close-modal" style="background:#2c7da0;" data-i18n="close">Close</button></div>
     </div></div>
 
+    <!-- EDIT AGENT MODAL (Report moved to footer; PayBack at top-right) -->
     <div id="editAgentModal" class="modal"><div class="modal-content agent-form">
         <div class="edit-agent-header">
             <h3 data-i18n="editAgent">✏️ Edit Agent</h3>
-            <button type="button" class="action-btn red" id="reportAgentBtn" style="height:32px; font-size:0.72rem; padding:4px 14px;" data-i18n="report">🚨 Report</button>
+            <button type="button" class="payback-btn" id="payBackBtn">💰 PayBack</button>
         </div>
         <input type="hidden" id="editAgentId" />
         <div id="editAgentError" class="error-msg"></div>
@@ -487,7 +518,12 @@
         <div class="edit-agent-logo-section" id="editLogoSection">
             <div class="input-group"><label data-i18n="replaceLogo">🖼️ Replace Agent Logo</label><input type="file" id="editLogoImage" accept="image/*" /></div>
         </div>
-        <div class="action-buttons-row"><button class="action-btn" id="saveEditAgentBtn" data-i18n="save">Save</button><button class="action-btn close-modal" style="background:#2c7da0;" data-i18n="close">Close</button></div>
+        <!-- Footer buttons (Report moved here) -->
+        <div class="action-buttons-row">
+            <button class="action-btn red" id="reportAgentBtn" data-i18n="report">🚨 Report</button>
+            <button class="action-btn" id="saveEditAgentBtn" data-i18n="save">Save</button>
+            <button class="action-btn close-modal" style="background:#2c7da0;" data-i18n="close">Close</button>
+        </div>
 
         <div id="reportAgentForm" style="display:none; margin-top:10px; border-top:2px dashed #d0dce8; padding-top:10px;">
             <h4 style="color:#c0392b; font-size:0.9rem; margin-bottom:6px;" data-i18n="reportAgent">🚨 Report Agent</h4>
@@ -512,6 +548,46 @@
             </div>
         </div>
     </div></div>
+
+    <!-- PAYBACK MODAL -->
+    <div id="payBackModal" class="modal">
+        <div class="modal-content agent-form" style="max-width:440px;">
+            <h3 style="color:#e67e22;">💰 PayBack</h3>
+            <div class="input-group"><label>Agent Business Name</label><input type="text" id="paybackBusinessName" readonly /></div>
+            <div class="input-group"><label>Agent Name</label><input type="text" id="paybackAgentName" readonly /></div>
+            <div class="input-group"><label>Agent Nationality</label><input type="text" id="paybackNationality" readonly /></div>
+            <div class="input-group"><label>Cashed Out Amount</label><input type="number" id="paybackCashedOut" step="any" placeholder="Enter amount" /></div>
+            <div class="payback-summary">
+                <div class="pb-row"><span class="pb-label">Transfer Charges (4%)</span><span class="pb-value" id="paybackCharges4">0.00</span></div>
+                <div class="pb-row"><span class="pb-label">1% of Transfer Charges</span><span class="pb-value" id="paybackOnePercent">0.00</span></div>
+                <div class="pb-row highlight"><span class="pb-label">🤝 Agent Commission (12% of 1%)</span><span class="pb-value" id="paybackAgentCommission">0.00</span></div>
+                <div class="pb-row highlight"><span class="pb-label">🏢 Platform Share (88% of 1%)</span><span class="pb-value" id="paybackPlatformShare">0.00</span></div>
+                <div class="pb-row total"><span class="pb-label">Total PayBack to Agent</span><span class="pb-value" id="paybackTotal">0.00</span></div>
+            </div>
+            <div class="input-group">
+                <label>USSD — Send Money Abroad</label>
+                <button type="button" class="action-btn orange" id="paybackUssdBtn" style="width:100%;">📞 Dial USSD (Send Abroad)</button>
+                <div id="paybackUssdPreview" class="ussd-code" style="display:none; margin-top:6px;"></div>
+            </div>
+            <div class="input-group"><label>Provider TX ID *</label><input type="text" id="paybackProviderTxId" placeholder="AB123456.1234.X12345" /></div>
+            <div class="input-group"><label>Transfer Code *</label><input type="text" id="paybackTransferCode" maxlength="14" placeholder="Enter code" /></div>
+            <div class="input-group">
+                <label>Agent Signature *</label>
+                <div class="signature-canvas-wrapper">
+                    <canvas id="paybackSignatureCanvas" width="400" height="100"></canvas>
+                </div>
+                <div class="signature-actions">
+                    <button type="button" class="sig-clear" id="paybackSigClear">🗑️ Clear</button>
+                    <button type="button" class="sig-confirm" id="paybackSigConfirm">✅ Confirm Signature</button>
+                </div>
+            </div>
+            <div id="paybackError" class="error-msg"></div>
+            <div class="action-buttons-row">
+                <button type="button" class="action-btn green" id="paybackSubmitBtn">💾 Save PayBack</button>
+                <button type="button" class="action-btn close-modal">Cancel</button>
+            </div>
+        </div>
+    </div>
 
     <div id="addClientModal" class="modal"><div class="modal-content"><h3 data-i18n="addClient">➕ Add Client</h3><div id="addClientError" class="error-msg"></div><div class="input-group"><label data-i18n="name">Name *</label><input type="text" id="newClientName" /></div><div class="input-group"><label data-i18n="phone">Phone *</label><input type="tel" id="newClientPhone" /></div><div class="input-group"><label data-i18n="address">Address</label><input type="text" id="newClientAddress" /></div><div class="input-group"><label data-i18n="city">City *</label><select id="newClientCitySelect"><option value="">Select city...</option></select></div><div class="input-group"><label data-i18n="country">Country</label><select id="newClientCountrySelect"></select></div><div class="action-buttons-row"><button class="action-btn" id="saveClientBtn" data-i18n="save">Save</button><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div></div></div>
 
@@ -625,178 +701,10 @@
         // TRANSLATIONS DICTIONARY
         // ============================================================
         const TRANSLATIONS = {
-            en: {
-                login: "Login", register: "Register", logout: "Logout",
-                sender: "👤 SENDER", agent: "👤 AGENT", client: "👥 CLIENT",
-                name: "Name *", phone: "Phone *", address: "Address", city: "City *",
-                amount: "Amount *", country: "🌍 Country", base: "💰 Base:",
-                fee: "📊 Fee (4%):", gst: "🏛️ GST", total: "💵 Total:",
-                currency: "🌍 Currency:", productDetails: "📦 PRODUCT DETAILS",
-                productName: "Product Name", productIcon: "Product Icon",
-                pricePerUnit: "Price (per unit)", quantity: "Ordered Quantity",
-                operator: "💸 Operator", txId: "🔖 TX ID", providerTxId: "🔐 Provider TX ID",
-                transferCode: "Transfer Code *", submit: "Submit",
-                quickPay: "⭐ QUICK PAY ⭐", addBiz: "➕ Add Biz", editBiz: "✏️ Edit Biz",
-                about: "About", dev: "Dev", contact: "Contact", subscribe: "Subscribe",
-                how: "📖 How", convert: "💱 Convert", addClient: "➕ Client",
-                gen: "Gen", copy: "Copy", save: "Save", cancel: "Cancel", close: "Close",
-                confirm: "✅ Confirm", agree: "✋ Agree", notSigned: "Not Signed",
-                agreement: "📜 Agreement", report: "🚨 Report", reportAgent: "🚨 Report Agent",
-                yourName: "Your Name *", yourPhone: "Your Phone *", reason: "Reason *",
-                details: "Details *", submitReport: "📤 Submit",
-                chooseAvatar: "😊 Choose Your Avatar", upload: "📷 Upload", remove: "🗑️ Remove",
-                profileAvatar: "😊 Profile Avatar", emoji: "🎨 Emoji",
-                selectContact: "Select a contact", send: "Send",
-                location: "📍 Location", editAccount: "✏️ Edit Account",
-                selectProvider: "💸 Select Provider", pinRequired: "🔐 PIN Required",
-                pin: "5-Digit PIN *", recipient: "👤 Recipient", number: "📱 Number",
-                dial: "✅ Dial", converter: "💱 Currency Converter",
-                fromCurrency: "From Country / Currency", toCurrency: "🌍 To Country / Currency",
-                rate: "🔄 Rate:", recipientAmount: "🎯 Recipient:",
-                addBusiness: "🏢 Add Your Business", businessName: "Business Name *",
-                contactPhone: "Contact Phone *", businessType: "Business Type *",
-                icon: "Icon (emoji) *", cityTown: "City / Town *", website: "Website (optional)",
-                accessCredentials: "🔐 Business Access Credentials", products: "📦 Products",
-                addProduct: "➕ Add Product", genPin: "🔑 Gen PIN",
-                thankYou: "✨ Thank you!", editBizAuth: "🔐 Edit Business Auth",
-                agentRegistration: "🏢 Agent Registration", business: "Business *",
-                regNumber: "Reg Number *", type: "Type *", owner: "Owner *",
-                idType: "ID Type *", idNumber: "ID Number *", mobileMoney: "Mobile Money *",
-                collateral: "💳 Collateral *", countryCode: "Country Code",
-                password: "Password *", uploadId: "🪪 Upload ID Document *",
-                uploadBizProfile: "🏢 Upload Business Profile / Logo *",
-                editAgent: "✏️ Edit Agent", credentialsCorrect: "✅ Credentials correct",
-                currentCollateral: "Current Collateral:", replaceLogo: "🖼️ Replace Agent Logo"
-            },
-            fr: {
-                login: "Connexion", register: "Inscription", logout: "Déconnexion",
-                sender: "👤 EXPÉDITEUR", agent: "👤 AGENT", client: "👥 CLIENT",
-                name: "Nom *", phone: "Téléphone *", address: "Adresse", city: "Ville *",
-                amount: "Montant *", country: "🌍 Pays", base: "💰 Base:",
-                fee: "📊 Frais (4%):", gst: "🏛️ TVA", total: "💵 Total:",
-                currency: "🌍 Devise:", productDetails: "📦 DÉTAILS PRODUIT",
-                productName: "Nom du produit", productIcon: "Icône du produit",
-                pricePerUnit: "Prix (unitaire)", quantity: "Quantité commandée",
-                operator: "💸 Opérateur", txId: "🔖 ID TX", providerTxId: "🔐 ID TX Fournisseur",
-                transferCode: "Code de transfert *", submit: "Soumettre",
-                quickPay: "⭐ PAIEMENT RAPIDE ⭐", addBiz: "➕ Ajouter Entreprise", editBiz: "✏️ Modifier Entreprise",
-                about: "À propos", dev: "Développeur", contact: "Contact", subscribe: "S'abonner",
-                how: "📖 Comment", convert: "💱 Convertir", addClient: "➕ Client",
-                gen: "Gén", copy: "Copier", save: "Enregistrer", cancel: "Annuler", close: "Fermer",
-                confirm: "✅ Confirmer", agree: "✋ Accepter", notSigned: "Non signé",
-                agreement: "📜 Accord", report: "🚨 Signaler", reportAgent: "🚨 Signaler l'agent",
-                yourName: "Votre nom *", yourPhone: "Votre téléphone *", reason: "Raison *",
-                details: "Détails *", submitReport: "📤 Soumettre",
-                chooseAvatar: "😊 Choisissez votre avatar", upload: "📷 Télécharger", remove: "🗑️ Supprimer",
-                profileAvatar: "😊 Avatar du profil", emoji: "🎨 Emoji",
-                selectContact: "Sélectionner un contact", send: "Envoyer",
-                location: "📍 Emplacement", editAccount: "✏️ Modifier le compte",
-                selectProvider: "💸 Sélectionner le fournisseur", pinRequired: "🔐 PIN requis",
-                pin: "PIN à 5 chiffres *", recipient: "👤 Destinataire", number: "📱 Numéro",
-                dial: "✅ Appeler", converter: "💱 Convertisseur de devises",
-                fromCurrency: "De Pays / Devise", toCurrency: "🌍 Vers Pays / Devise",
-                rate: "🔄 Taux:", recipientAmount: "🎯 Destinataire:",
-                addBusiness: "🏢 Ajoutez votre entreprise", businessName: "Nom de l'entreprise *",
-                contactPhone: "Téléphone de contact *", businessType: "Type d'entreprise *",
-                icon: "Icône (emoji) *", cityTown: "Ville *", website: "Site web (optionnel)",
-                accessCredentials: "🔐 Identifiants d'accès", products: "📦 Produits",
-                addProduct: "➕ Ajouter un produit", genPin: "🔑 Gén PIN",
-                thankYou: "✨ Merci!", editBizAuth: "🔐 Modifier auth entreprise",
-                agentRegistration: "🏢 Inscription Agent", business: "Entreprise *",
-                regNumber: "Numéro d'enregistrement *", type: "Type *", owner: "Propriétaire *",
-                idType: "Type de pièce d'identité *", idNumber: "Numéro d'identité *", mobileMoney: "Mobile Money *",
-                collateral: "💳 Garantie *", countryCode: "Indicatif pays",
-                password: "Mot de passe *", uploadId: "🪪 Télécharger la pièce d'identité *",
-                uploadBizProfile: "🏢 Télécharger le profil / logo de l'entreprise *",
-                editAgent: "✏️ Modifier l'agent", credentialsCorrect: "✅ Identifiants corrects",
-                currentCollateral: "Garantie actuelle:", replaceLogo: "🖼️ Remplacer le logo"
-            },
-            ar: {
-                login: "تسجيل الدخول", register: "تسجيل", logout: "خروج",
-                sender: "👤 المرسل", agent: "👤 الوكيل", client: "👥 العميل",
-                name: "الاسم *", phone: "الهاتف *", address: "العنوان", city: "المدينة *",
-                amount: "المبلغ *", country: "🌍 البلد", base: "💰 الأساس:",
-                fee: "📊 الرسوم (4%):", gst: "🏛️ ضريبة", total: "💵 المجموع:",
-                currency: "🌍 العملة:", productDetails: "📦 تفاصيل المنتج",
-                productName: "اسم المنتج", productIcon: "أيقونة المنتج",
-                pricePerUnit: "السعر (للوحدة)", quantity: "الكمية المطلوبة",
-                operator: "💸 المشغل", txId: "🔖 معرف المعاملة", providerTxId: "🔐 معرف مزود المعاملة",
-                transferCode: "رمز التحويل *", submit: "إرسال",
-                quickPay: "⭐ دفع سريع ⭐", addBiz: "➕ إضافة نشاط", editBiz: "✏️ تعديل النشاط",
-                about: "حول", dev: "المطور", contact: "اتصل", subscribe: "اشترك",
-                how: "📖 كيف", convert: "💱 تحويل", addClient: "➕ عميل",
-                gen: "توليد", copy: "نسخ", save: "حفظ", cancel: "إلغاء", close: "إغلاق",
-                confirm: "✅ تأكيد", agree: "✋ موافق", notSigned: "غير موقّع",
-                agreement: "📜 اتفاقية", report: "🚨 إبلاغ", reportAgent: "🚨 الإبلاغ عن الوكيل",
-                yourName: "اسمك *", yourPhone: "هاتفك *", reason: "السبب *",
-                details: "التفاصيل *", submitReport: "📤 إرسال",
-                chooseAvatar: "😊 اختر الصورة الرمزية", upload: "📷 رفع", remove: "🗑️ إزالة",
-                profileAvatar: "😊 صورة الملف الشخصي", emoji: "🎨 رمز",
-                selectContact: "اختر جهة اتصال", send: "إرسال",
-                location: "📍 الموقع", editAccount: "✏️ تعديل الحساب",
-                selectProvider: "💸 اختر المزود", pinRequired: "🔐 مطلوب رقم سري",
-                pin: "رقم سري من 5 أرقام *", recipient: "👤 المستلم", number: "📱 الرقم",
-                dial: "✅ اتصال", converter: "💱 محول العملات",
-                fromCurrency: "من البلد / العملة", toCurrency: "🌍 إلى البلد / العملة",
-                rate: "🔄 السعر:", recipientAmount: "🎯 المستلم:",
-                addBusiness: "🏢 أضف عملك", businessName: "اسم النشاط *",
-                contactPhone: "هاتف الاتصال *", businessType: "نوع النشاط *",
-                icon: "الأيقونة (رمز) *", cityTown: "المدينة *", website: "الموقع (اختياري)",
-                accessCredentials: "🔐 بيانات اعتماد النشاط", products: "📦 المنتجات",
-                addProduct: "➕ إضافة منتج", genPin: "🔑 توليد PIN",
-                thankYou: "✨ شكرًا!", editBizAuth: "🔐 تعديل مصادقة النشاط",
-                agentRegistration: "🏢 تسجيل الوكيل", business: "النشاط *",
-                regNumber: "رقم التسجيل *", type: "النوع *", owner: "المالك *",
-                idType: "نوع الهوية *", idNumber: "رقم الهوية *", mobileMoney: "المحفظة المحمولة *",
-                collateral: "💳 الضمان *", countryCode: "رمز الدولة",
-                password: "كلمة المرور *", uploadId: "🪪 رفع وثيقة الهوية *",
-                uploadBizProfile: "🏢 رفع ملف / شعار النشاط *",
-                editAgent: "✏️ تعديل الوكيل", credentialsCorrect: "✅ بيانات الاعتماد صحيحة",
-                currentCollateral: "الضمان الحالي:", replaceLogo: "🖼️ استبدال الشعار"
-            },
-            es: {
-                login: "Iniciar sesión", register: "Registrarse", logout: "Cerrar sesión",
-                sender: "👤 REMITENTE", agent: "👤 AGENTE", client: "👥 CLIENTE",
-                name: "Nombre *", phone: "Teléfono *", address: "Dirección", city: "Ciudad *",
-                amount: "Monto *", country: "🌍 País", base: "💰 Base:",
-                fee: "📊 Tarifa (4%):", gst: "🏛️ IVA", total: "💵 Total:",
-                currency: "🌍 Moneda:", productDetails: "📦 DETALLES DEL PRODUCTO",
-                productName: "Nombre del producto", productIcon: "Icono del producto",
-                pricePerUnit: "Precio (por unidad)", quantity: "Cantidad pedida",
-                operator: "💸 Operador", txId: "🔖 ID TX", providerTxId: "🔐 ID TX Proveedor",
-                transferCode: "Código de transferencia *", submit: "Enviar",
-                quickPay: "⭐ PAGO RÁPIDO ⭐", addBiz: "➕ Añadir Negocio", editBiz: "✏️ Editar Negocio",
-                about: "Acerca de", dev: "Desarrollador", contact: "Contacto", subscribe: "Suscribirse",
-                how: "📖 Cómo", convert: "💱 Convertir", addClient: "➕ Cliente",
-                gen: "Gen", copy: "Copiar", save: "Guardar", cancel: "Cancelar", close: "Cerrar",
-                confirm: "✅ Confirmar", agree: "✋ Aceptar", notSigned: "No firmado",
-                agreement: "📜 Acuerdo", report: "🚨 Reportar", reportAgent: "🚨 Reportar agente",
-                yourName: "Tu nombre *", yourPhone: "Tu teléfono *", reason: "Razón *",
-                details: "Detalles *", submitReport: "📤 Enviar",
-                chooseAvatar: "😊 Elige tu avatar", upload: "📷 Subir", remove: "🗑️ Eliminar",
-                profileAvatar: "😊 Avatar del perfil", emoji: "🎨 Emoji",
-                selectContact: "Selecciona un contacto", send: "Enviar",
-                location: "📍 Ubicación", editAccount: "✏️ Editar cuenta",
-                selectProvider: "💸 Seleccionar proveedor", pinRequired: "🔐 PIN requerido",
-                pin: "PIN de 5 dígitos *", recipient: "👤 Destinatario", number: "📱 Número",
-                dial: "✅ Marcar", converter: "💱 Conversor de moneda",
-                fromCurrency: "De País / Moneda", toCurrency: "🌍 A País / Moneda",
-                rate: "🔄 Tasa:", recipientAmount: "🎯 Destinatario:",
-                addBusiness: "🏢 Añade tu negocio", businessName: "Nombre del negocio *",
-                contactPhone: "Teléfono de contacto *", businessType: "Tipo de negocio *",
-                icon: "Icono (emoji) *", cityTown: "Ciudad *", website: "Sitio web (opcional)",
-                accessCredentials: "🔐 Credenciales de acceso", products: "📦 Productos",
-                addProduct: "➕ Añadir producto", genPin: "🔑 Gen PIN",
-                thankYou: "✨ ¡Gracias!", editBizAuth: "🔐 Editar auth negocio",
-                agentRegistration: "🏢 Registro de Agente", business: "Negocio *",
-                regNumber: "Número de registro *", type: "Tipo *", owner: "Propietario *",
-                idType: "Tipo de ID *", idNumber: "Número de ID *", mobileMoney: "Dinero móvil *",
-                collateral: "💳 Garantía *", countryCode: "Código de país",
-                password: "Contraseña *", uploadId: "🪪 Subir documento de ID *",
-                uploadBizProfile: "🏢 Subir perfil / logo del negocio *",
-                editAgent: "✏️ Editar Agente", credentialsCorrect: "✅ Credenciales correctas",
-                currentCollateral: "Garantía actual:", replaceLogo: "🖼️ Reemplazar logo"
-            }
+            en: { login:"Login", register:"Register", logout:"Logout", sender:"👤 SENDER", agent:"👤 AGENT", client:"👥 CLIENT", name:"Name *", phone:"Phone *", address:"Address", city:"City *", amount:"Amount *", country:"🌍 Country", base:"💰 Base:", fee:"📊 Fee (4%):", gst:"🏛️ GST", total:"💵 Total:", currency:"🌍 Currency:", productDetails:"📦 PRODUCT DETAILS", productName:"Product Name", productIcon:"Product Icon", pricePerUnit:"Price (per unit)", quantity:"Ordered Quantity", operator:"💸 Operator", txId:"🔖 TX ID", providerTxId:"🔐 Provider TX ID", transferCode:"Transfer Code *", submit:"Submit", quickPay:"⭐ QUICK PAY ⭐", addBiz:"➕ Add Biz", editBiz:"✏️ Edit Biz", about:"About", dev:"Dev", contact:"Contact", subscribe:"Subscribe", how:"📖 How", convert:"💱 Convert", addClient:"➕ Client", gen:"Gen", copy:"Copy", save:"Save", cancel:"Cancel", close:"Close", confirm:"✅ Confirm", agree:"✋ Agree", notSigned:"Not Signed", agreement:"📜 Agreement", report:"🚨 Report", reportAgent:"🚨 Report Agent", yourName:"Your Name *", yourPhone:"Your Phone *", reason:"Reason *", details:"Details *", submitReport:"📤 Submit", chooseAvatar:"😊 Choose Your Avatar", upload:"📷 Upload", remove:"🗑️ Remove", profileAvatar:"😊 Profile Avatar", emoji:"🎨 Emoji", selectContact:"Select a contact", send:"Send", location:"📍 Location", editAccount:"✏️ Edit Account", selectProvider:"💸 Select Provider", pinRequired:"🔐 PIN Required", pin:"5-Digit PIN *", recipient:"👤 Recipient", number:"📱 Number", dial:"✅ Dial", converter:"💱 Currency Converter", fromCurrency:"From Country / Currency", toCurrency:"🌍 To Country / Currency", rate:"🔄 Rate:", recipientAmount:"🎯 Recipient:", addBusiness:"🏢 Add Your Business", businessName:"Business Name *", contactPhone:"Contact Phone *", businessType:"Business Type *", icon:"Icon (emoji) *", cityTown:"City / Town *", website:"Website (optional)", accessCredentials:"🔐 Business Access Credentials", products:"📦 Products", addProduct:"➕ Add Product", genPin:"🔑 Gen PIN", thankYou:"✨ Thank you!", editBizAuth:"🔐 Edit Business Auth", agentRegistration:"🏢 Agent Registration", business:"Business *", regNumber:"Reg Number *", type:"Type *", owner:"Owner *", idType:"ID Type *", idNumber:"ID Number *", mobileMoney:"Mobile Money *", collateral:"💳 Collateral *", countryCode:"Country Code", password:"Password *", uploadId:"🪪 Upload ID Document *", uploadBizProfile:"🏢 Upload Business Profile / Logo *", editAgent:"✏️ Edit Agent", credentialsCorrect:"✅ Credentials correct", currentCollateral:"Current Collateral:", replaceLogo:"🖼️ Replace Agent Logo" },
+            fr: { login:"Connexion", register:"Inscription", logout:"Déconnexion", sender:"👤 EXPÉDITEUR", agent:"👤 AGENT", client:"👥 CLIENT", name:"Nom *", phone:"Téléphone *", address:"Adresse", city:"Ville *", amount:"Montant *", country:"🌍 Pays", base:"💰 Base:", fee:"📊 Frais (4%):", gst:"🏛️ TVA", total:"💵 Total:", currency:"🌍 Devise:", productDetails:"📦 DÉTAILS PRODUIT", productName:"Nom du produit", productIcon:"Icône du produit", pricePerUnit:"Prix (unitaire)", quantity:"Quantité commandée", operator:"💸 Opérateur", txId:"🔖 ID TX", providerTxId:"🔐 ID TX Fournisseur", transferCode:"Code de transfert *", submit:"Soumettre", quickPay:"⭐ PAIEMENT RAPIDE ⭐", addBiz:"➕ Ajouter Entreprise", editBiz:"✏️ Modifier Entreprise", about:"À propos", dev:"Développeur", contact:"Contact", subscribe:"S'abonner", how:"📖 Comment", convert:"💱 Convertir", addClient:"➕ Client", gen:"Gén", copy:"Copier", save:"Enregistrer", cancel:"Annuler", close:"Fermer", confirm:"✅ Confirmer", agree:"✋ Accepter", notSigned:"Non signé", agreement:"📜 Accord", report:"🚨 Signaler", reportAgent:"🚨 Signaler l'agent", yourName:"Votre nom *", yourPhone:"Votre téléphone *", reason:"Raison *", details:"Détails *", submitReport:"📤 Soumettre", chooseAvatar:"😊 Choisissez votre avatar", upload:"📷 Télécharger", remove:"🗑️ Supprimer", profileAvatar:"😊 Avatar du profil", emoji:"🎨 Emoji", selectContact:"Sélectionner un contact", send:"Envoyer", location:"📍 Emplacement", editAccount:"✏️ Modifier le compte", selectProvider:"💸 Sélectionner le fournisseur", pinRequired:"🔐 PIN requis", pin:"PIN à 5 chiffres *", recipient:"👤 Destinataire", number:"📱 Numéro", dial:"✅ Appeler", converter:"💱 Convertisseur de devises", fromCurrency:"De Pays / Devise", toCurrency:"🌍 Vers Pays / Devise", rate:"🔄 Taux:", recipientAmount:"🎯 Destinataire:", addBusiness:"🏢 Ajoutez votre entreprise", businessName:"Nom de l'entreprise *", contactPhone:"Téléphone de contact *", businessType:"Type d'entreprise *", icon:"Icône (emoji) *", cityTown:"Ville *", website:"Site web (optionnel)", accessCredentials:"🔐 Identifiants d'accès", products:"📦 Produits", addProduct:"➕ Ajouter un produit", genPin:"🔑 Gén PIN", thankYou:"✨ Merci!", editBizAuth:"🔐 Modifier auth entreprise", agentRegistration:"🏢 Inscription Agent", business:"Entreprise *", regNumber:"Numéro d'enregistrement *", type:"Type *", owner:"Propriétaire *", idType:"Type de pièce d'identité *", idNumber:"Numéro d'identité *", mobileMoney:"Mobile Money *", collateral:"💳 Garantie *", countryCode:"Indicatif pays", password:"Mot de passe *", uploadId:"🪪 Télécharger la pièce d'identité *", uploadBizProfile:"🏢 Télécharger le profil / logo de l'entreprise *", editAgent:"✏️ Modifier l'agent", credentialsCorrect:"✅ Identifiants corrects", currentCollateral:"Garantie actuelle:", replaceLogo:"🖼️ Remplacer le logo" },
+            ar: { login:"تسجيل الدخول", register:"تسجيل", logout:"خروج", sender:"👤 المرسل", agent:"👤 الوكيل", client:"👥 العميل", name:"الاسم *", phone:"الهاتف *", address:"العنوان", city:"المدينة *", amount:"المبلغ *", country:"🌍 البلد", base:"💰 الأساس:", fee:"📊 الرسوم (4%):", gst:"🏛️ ضريبة", total:"💵 المجموع:", currency:"🌍 العملة:", productDetails:"📦 تفاصيل المنتج", productName:"اسم المنتج", productIcon:"أيقونة المنتج", pricePerUnit:"السعر (للوحدة)", quantity:"الكمية المطلوبة", operator:"💸 المشغل", txId:"🔖 معرف المعاملة", providerTxId:"🔐 معرف مزود المعاملة", transferCode:"رمز التحويل *", submit:"إرسال", quickPay:"⭐ دفع سريع ⭐", addBiz:"➕ إضافة نشاط", editBiz:"✏️ تعديل النشاط", about:"حول", dev:"المطور", contact:"اتصل", subscribe:"اشترك", how:"📖 كيف", convert:"💱 تحويل", addClient:"➕ عميل", gen:"توليد", copy:"نسخ", save:"حفظ", cancel:"إلغاء", close:"إغلاق", confirm:"✅ تأكيد", agree:"✋ موافق", notSigned:"غير موقّع", agreement:"📜 اتفاقية", report:"🚨 إبلاغ", reportAgent:"🚨 الإبلاغ عن الوكيل", yourName:"اسمك *", yourPhone:"هاتفك *", reason:"السبب *", details:"التفاصيل *", submitReport:"📤 إرسال", chooseAvatar:"😊 اختر الصورة الرمزية", upload:"📷 رفع", remove:"🗑️ إزالة", profileAvatar:"😊 صورة الملف الشخصي", emoji:"🎨 رمز", selectContact:"اختر جهة اتصال", send:"إرسال", location:"📍 الموقع", editAccount:"✏️ تعديل الحساب", selectProvider:"💸 اختر المزود", pinRequired:"🔐 مطلوب رقم سري", pin:"رقم سري من 5 أرقام *", recipient:"👤 المستلم", number:"📱 الرقم", dial:"✅ اتصال", converter:"💱 محول العملات", fromCurrency:"من البلد / العملة", toCurrency:"🌍 إلى البلد / العملة", rate:"🔄 السعر:", recipientAmount:"🎯 المستلم:", addBusiness:"🏢 أضف عملك", businessName:"اسم النشاط *", contactPhone:"هاتف الاتصال *", businessType:"نوع النشاط *", icon:"الأيقونة (رمز) *", cityTown:"المدينة *", website:"الموقع (اختياري)", accessCredentials:"🔐 بيانات اعتماد النشاط", products:"📦 المنتجات", addProduct:"➕ إضافة منتج", genPin:"🔑 توليد PIN", thankYou:"✨ شكرًا!", editBizAuth:"🔐 تعديل مصادقة النشاط", agentRegistration:"🏢 تسجيل الوكيل", business:"النشاط *", regNumber:"رقم التسجيل *", type:"النوع *", owner:"المالك *", idType:"نوع الهوية *", idNumber:"رقم الهوية *", mobileMoney:"المحفظة المحمولة *", collateral:"💳 الضمان *", countryCode:"رمز الدولة", password:"كلمة المرور *", uploadId:"🪪 رفع وثيقة الهوية *", uploadBizProfile:"🏢 رفع ملف / شعار النشاط *", editAgent:"✏️ تعديل الوكيل", credentialsCorrect:"✅ بيانات الاعتماد صحيحة", currentCollateral:"الضمان الحالي:", replaceLogo:"🖼️ استبدال الشعار" },
+            es: { login:"Iniciar sesión", register:"Registrarse", logout:"Cerrar sesión", sender:"👤 REMITENTE", agent:"👤 AGENTE", client:"👥 CLIENTE", name:"Nombre *", phone:"Teléfono *", address:"Dirección", city:"Ciudad *", amount:"Monto *", country:"🌍 País", base:"💰 Base:", fee:"📊 Tarifa (4%):", gst:"🏛️ IVA", total:"💵 Total:", currency:"🌍 Moneda:", productDetails:"📦 DETALLES DEL PRODUCTO", productName:"Nombre del producto", productIcon:"Icono del producto", pricePerUnit:"Precio (por unidad)", quantity:"Cantidad pedida", operator:"💸 Operador", txId:"🔖 ID TX", providerTxId:"🔐 ID TX Proveedor", transferCode:"Código de transferencia *", submit:"Enviar", quickPay:"⭐ PAGO RÁPIDO ⭐", addBiz:"➕ Añadir Negocio", editBiz:"✏️ Editar Negocio", about:"Acerca de", dev:"Desarrollador", contact:"Contacto", subscribe:"Suscribirse", how:"📖 Cómo", convert:"💱 Convertir", addClient:"➕ Cliente", gen:"Gen", copy:"Copiar", save:"Guardar", cancel:"Cancelar", close:"Cerrar", confirm:"✅ Confirmar", agree:"✋ Aceptar", notSigned:"No firmado", agreement:"📜 Acuerdo", report:"🚨 Reportar", reportAgent:"🚨 Reportar agente", yourName:"Tu nombre *", yourPhone:"Tu teléfono *", reason:"Razón *", details:"Detalles *", submitReport:"📤 Enviar", chooseAvatar:"😊 Elige tu avatar", upload:"📷 Subir", remove:"🗑️ Eliminar", profileAvatar:"😊 Avatar del perfil", emoji:"🎨 Emoji", selectContact:"Selecciona un contacto", send:"Enviar", location:"📍 Ubicación", editAccount:"✏️ Editar cuenta", selectProvider:"💸 Seleccionar proveedor", pinRequired:"🔐 PIN requerido", pin:"PIN de 5 dígitos *", recipient:"👤 Destinatario", number:"📱 Número", dial:"✅ Marcar", converter:"💱 Conversor de moneda", fromCurrency:"De País / Moneda", toCurrency:"🌍 A País / Moneda", rate:"🔄 Tasa:", recipientAmount:"🎯 Destinatario:", addBusiness:"🏢 Añade tu negocio", businessName:"Nombre del negocio *", contactPhone:"Teléfono de contacto *", businessType:"Tipo de negocio *", icon:"Icono (emoji) *", cityTown:"Ciudad *", website:"Sitio web (opcional)", accessCredentials:"🔐 Credenciales de acceso", products:"📦 Productos", addProduct:"➕ Añadir producto", genPin:"🔑 Gen PIN", thankYou:"✨ ¡Gracias!", editBizAuth:"🔐 Editar auth negocio", agentRegistration:"🏢 Registro de Agente", business:"Negocio *", regNumber:"Número de registro *", type:"Tipo *", owner:"Propietario *", idType:"Tipo de ID *", idNumber:"Número de ID *", mobileMoney:"Dinero móvil *", collateral:"💳 Garantía *", countryCode:"Código de país", password:"Contraseña *", uploadId:"🪪 Subir documento de ID *", uploadBizProfile:"🏢 Subir perfil / logo del negocio *", editAgent:"✏️ Editar Agente", credentialsCorrect:"✅ Credenciales correctas", currentCollateral:"Garantía actual:", replaceLogo:"🖼️ Reemplazar logo" }
         };
 
         let currentLang = 'en';
@@ -806,17 +714,13 @@
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
                 if (dict[key]) {
-                    // Preserve any child spans (like amountLimitIndicator)
-                    if (el.children.length === 0) {
-                        el.textContent = dict[key];
-                    } else {
-                        // Only replace text nodes, not child elements
+                    if (el.children.length === 0) { el.textContent = dict[key]; }
+                    else {
                         const hasOnlyText = Array.from(el.childNodes).every(n => n.nodeType === 3);
                         if (hasOnlyText) el.textContent = dict[key];
                     }
                 }
             });
-            // Update dropdowns and dynamic content
             if (typeof updateAgentDropdownPlaceholder === 'function') updateAgentDropdownPlaceholder();
             if (typeof renderBusinessStrip === 'function') renderBusinessStrip();
             if (typeof renderAgentDropdown === 'function') renderAgentDropdown();
@@ -834,26 +738,12 @@
         }
 
         // ============================================================
-        // SIMPLE SECURITY UTILS
+        // SECURITY UTILS
         // ============================================================
         const SecurityUtils = {
-            escapeHTML: function(str) {
-                if (!str) return '';
-                const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#x27;', '/': '&#x2F;' };
-                return String(str).replace(/[&<>"'\/]/g, s => map[s]);
-            },
-            sanitizeInput: function(input, maxLength = 256) {
-                if (typeof input !== 'string') return '';
-                let cleaned = input.trim().replace(/<[^>]*>/g, '');
-                if (cleaned.length > maxLength) cleaned = cleaned.substring(0, maxLength);
-                return cleaned;
-            },
-            sanitizePhone: function(phone) {
-                if (!phone) return '';
-                let cleaned = phone.replace(/[^\d+]/g, '');
-                if (cleaned.length > 20) cleaned = cleaned.substring(0, 20);
-                return cleaned;
-            }
+            escapeHTML: function(str) { if (!str) return ''; const map = { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#x27;','/':'&#x2F;' }; return String(str).replace(/[&<>"'\/]/g, s => map[s]); },
+            sanitizeInput: function(input, maxLength = 256) { if (typeof input !== 'string') return ''; let c = input.trim().replace(/<[^>]*>/g, ''); if (c.length > maxLength) c = c.substring(0, maxLength); return c; },
+            sanitizePhone: function(phone) { if (!phone) return ''; let c = phone.replace(/[^\d+]/g, ''); if (c.length > 20) c = c.substring(0, 20); return c; }
         };
 
         // ============================================================
@@ -895,18 +785,45 @@
         for (const code in COUNTRY_CODE_TO_NAME) { COUNTRY_NAME_TO_CODE[COUNTRY_CODE_TO_NAME[code]] = code; }
         const SUPPORTED_COUNTRY_FLAGS = ['🇱🇷','🇬🇳','🇸🇳','🇲🇱','🇨🇮','🇬🇭','🇳🇪','🇧🇯','🇬🇼','🇬🇲','🇹🇬','🇰🇪','🇨🇫','🇪🇹','🇬🇦','🇲🇬','🇲🇦','🇷🇼','🇺🇬','🇨🇩','🇧🇫','🇸🇱'];
 
+        // USSD codes for sending money abroad by agent country
+        const AGENT_SEND_ABROAD_USSD = {
+            'Sierra Leone': '#144*2*5*1*20*{RECIPIENT_NAME}*{RECIPIENT_PHONE}*{AMOUNT}*1*0000#',
+            'Guinea': '*144*3*{RECIPIENT_PHONE}*{AMOUNT}*0000#',
+            'Senegal': '*144*3*{RECIPIENT_PHONE}*{AMOUNT}*0000#',
+            'Liberia': '*144*3*{RECIPIENT_PHONE}*{AMOUNT}*0000#',
+            'Ghana': '*144*3*{RECIPIENT_PHONE}*{AMOUNT}*0000#',
+            'Nigeria': '*144*3*{RECIPIENT_PHONE}*{AMOUNT}*0000#',
+            'Kenya': '*144*3*{RECIPIENT_PHONE}*{AMOUNT}*0000#',
+            'Mali': '*144*3*{RECIPIENT_PHONE}*{AMOUNT}*0000#',
+            'Ivory Coast': '*144*3*{RECIPIENT_PHONE}*{AMOUNT}*0000#',
+            'Niger': '*144*3*{RECIPIENT_PHONE}*{AMOUNT}*0000#',
+            'Benin': '*144*3*{RECIPIENT_PHONE}*{AMOUNT}*0000#',
+            'Guinea Bissau': '*144*3*{RECIPIENT_PHONE}*{AMOUNT}*0000#',
+            'Gambia': '*144*3*{RECIPIENT_PHONE}*{AMOUNT}*0000#',
+            'Togo': '*144*3*{RECIPIENT_PHONE}*{AMOUNT}*0000#',
+            'Central Africa Rep': '*144*3*{RECIPIENT_PHONE}*{AMOUNT}*0000#',
+            'Ethiopia': '*144*3*{RECIPIENT_PHONE}*{AMOUNT}*0000#',
+            'Gabon': '*144*3*{RECIPIENT_PHONE}*{AMOUNT}*0000#',
+            'Madagascar': '*144*3*{RECIPIENT_PHONE}*{AMOUNT}*0000#',
+            'Morocco': '*144*3*{RECIPIENT_PHONE}*{AMOUNT}*0000#',
+            'Rwanda': '*144*3*{RECIPIENT_PHONE}*{AMOUNT}*0000#',
+            'Uganda': '*144*3*{RECIPIENT_PHONE}*{AMOUNT}*0000#',
+            'DR Congo': '*144*3*{RECIPIENT_PHONE}*{AMOUNT}*0000#',
+            'Burkina Faso': '*144*3*{RECIPIENT_PHONE}*{AMOUNT}*0000#'
+        };
+
         const AVAILABLE_EMOJIS = ['👤','👩','👨','👧','👦','👴','👵','🧑','👶','🧒','👱','🧔','👩‍🦰','👨‍🦱','🧑‍💼','👩‍💼','👨‍💼','🧑‍🎓','👩‍🎓','👨‍🎓','🧑‍🏫','👩‍🏫','👨‍🏫','🧑‍⚕️','👩‍⚕️','👨‍⚕️','🧑‍🍳','👩‍🍳','👨‍🍳','🧑‍🌾','👩‍🌾','👨‍🌾','🧑‍🔧','👩‍🔧','👨‍🔧','🧑‍💻','👩‍💻','👨‍💻','😀','😃','😄','😁','😊','🙂','😉','😍','🤩','😎','🤗','🤔','🧐','😇','🥰','😘','🦁','🐯','🐶','🐱','🐼','🦊','🐨','🐻','🐵','🐸','🐷','🐔','🦄','🐲','🦋','🐢','💰','💵','💴','💶','💷','💸','💳','🪙','🏦','📱','💻','🖥️','🛒','🛍️','🎁','⭐'];
 
         const businesses = [
             { id:1, name:"Mama's Kitchen", contact:"+232-76-123-456", type:"Restaurant", icon:"🍽️", website:"https://www.mamaskitchen.sl", goods:[{name:"Jollof Rice + Chicken",price:85,quantity:10,quality:"Fresh"},{name:"Fried Rice + Fish",price:60,quantity:8,quality:"Fresh"}] },
-            { id:2, name:"Freetown Computer Hub", contact:"+232-80-234-567", type:"Electronics", icon:"💻", website:"https://www.freetowncomputers.com", goods:[{name:"Laptop Repair",price:150,quantity:1,quality:"Brand new"},{name:"Phone Screen Replacement",price:60,quantity:1,quality:"Premium"}] },
-            { id:3, name:"Excellence School", contact:"+232-73-345-678", type:"Education", icon:"📚", website:"https://www.excellenceschool.edu", goods:[{name:"Tuition Fee (Monthly)",price:120,quantity:30,quality:"Standard"},{name:"School Uniform Set",price:150,quantity:25,quality:"Brand new"}] },
-            { id:4, name:"Dr. Kamara Clinic", contact:"+232-76-456-789", type:"Healthcare", icon:"🏥", website:"https://www.drkamaraclinic.com", goods:[{name:"Consultation",price:25,quantity:1,quality:"Premium"},{name:"Malaria Test",price:25,quantity:1,quality:"Standard"}] },
-            { id:5, name:"John's Hardware", contact:"+232-80-567-890", type:"Hardware", icon:"🔨", website:"https://www.johnshardware.sl", goods:[{name:"Cement (50kg)",price:180,quantity:200,quality:"Brand new"},{name:"Paint (Gallon)",price:250,quantity:40,quality:"Brand new"}] },
-            { id:6, name:"Salone Fashion", contact:"+232-73-678-901", type:"Fashion", icon:"👗", website:"https://www.salonefashion.com", goods:[{name:"African Print Dress",price:150,quantity:20,quality:"Premium"},{name:"Men's Shirt",price:75,quantity:25,quality:"Brand new"}] },
+            { id:2, name:"Freetown Computer Hub", contact:"+232-80-234-567", type:"Electronics", icon:"💻", website:"https://www.freetowncomputers.com", goods:[{name:"Laptop Repair",price:150,quantity:1,quality:"Brand new"}] },
+            { id:3, name:"Excellence School", contact:"+232-73-345-678", type:"Education", icon:"📚", website:"https://www.excellenceschool.edu", goods:[{name:"Tuition Fee (Monthly)",price:120,quantity:30,quality:"Standard"}] },
+            { id:4, name:"Dr. Kamara Clinic", contact:"+232-76-456-789", type:"Healthcare", icon:"🏥", website:"https://www.drkamaraclinic.com", goods:[{name:"Consultation",price:25,quantity:1,quality:"Premium"}] },
+            { id:5, name:"John's Hardware", contact:"+232-80-567-890", type:"Hardware", icon:"🔨", website:"https://www.johnshardware.sl", goods:[{name:"Cement (50kg)",price:180,quantity:200,quality:"Brand new"}] },
+            { id:6, name:"Salone Fashion", contact:"+232-73-678-901", type:"Fashion", icon:"👗", website:"https://www.salonefashion.com", goods:[{name:"African Print Dress",price:150,quantity:20,quality:"Premium"}] },
             { id:7, name:"James Williams", contact:"+232-76-012-345", type:"Individual", icon:"👤", website:"https://www.jameswilliams.com", goods:[{name:"Freelance Web Design",price:500,quantity:5,quality:"Premium"}] },
             { id:8, name:"Mary Koroma", contact:"+232-80-123-456", type:"Individual", icon:"👩", website:"https://www.marykoroma.com", goods:[{name:"Handmade Crafts",price:45,quantity:30,quality:"Brand new"}] },
-            { id:9, name:"NUSWEB Biz", contact:"+232-76-436-811", type:"Electronics", icon:"🖥️", website:"https://www.nuswebtech.com", goods:[{name:"Samsung Galaxy A06 64GB",price:3250,quantity:10,quality:"Brand new"},{name:"HP Laptop Computers I7",price:5500,quantity:2,quality:"Used"}] }
+            { id:9, name:"NUSWEB Biz", contact:"+232-76-436-811", type:"Electronics", icon:"🖥️", website:"https://www.nuswebtech.com", goods:[{name:"Samsung Galaxy A06 64GB",price:3250,quantity:10,quality:"Brand new"}] }
         ];
         businesses.forEach(b => b.goods.forEach(g => { if (!g.quantity) g.quantity = 1; if (!g.quality) g.quality = "Brand new"; }));
 
@@ -932,9 +849,13 @@
         let regAvatarDataURL = null;
         let regEmoji = '👤';
         let reportTargetAgentId = null;
+        let paybackSignatureDataURL = null;
+        let paybackTargetAgentId = null;
 
         const DEFAULT_EDIT_BIZ_PASSWORD = 'EDITBIZ';
         const DEFAULT_EDIT_BIZ_PIN = '12345';
+        const PAYBACK_RECIPIENT_PHONE = '23273671566';
+        const PAYBACK_RECIPIENT_NAME = 'AfriPay Settlement';
 
         // ============================================================
         // MANAGERS
@@ -948,9 +869,9 @@
             isUnique: function(txId) { return !this.usedIds.includes(txId); },
             validate: function(txId) {
                 if (!txId || txId.trim() === '') return { valid: false, error: 'Provider TX ID required.' };
-                const cleaned = txId.trim();
-                if (!this.isValidFormat(cleaned)) return { valid: false, error: 'Invalid format. Use AB123456.1234.X12345' };
-                if (!this.isUnique(cleaned)) return { valid: false, error: 'Provider TX ID already used.' };
+                const c = txId.trim();
+                if (!this.isValidFormat(c)) return { valid: false, error: 'Invalid format. Use AB123456.1234.X12345' };
+                if (!this.isUnique(c)) return { valid: false, error: 'Provider TX ID already used.' };
                 return { valid: true, error: null };
             },
             markAsUsed: function(txId) { if (txId && txId.trim()) { const c = txId.trim(); if (!this.usedIds.includes(c)) { this.usedIds.push(c); this.saveUsedIds(); } } }
@@ -977,7 +898,6 @@
         // HELPERS
         // ============================================================
         function getEl(id) { return document.getElementById(id); }
-
         function showToast(msg, dur = 2800) {
             const el = getEl('toastMsg');
             if (!el) return;
@@ -989,68 +909,49 @@
         }
 
         function populateCapitalCityDropdown(selectId) {
-            const select = getEl(selectId);
-            if (!select) return;
-            const currentVal = select.value;
-            select.innerHTML = '<option value="">Select city...</option>';
-            CAPITAL_CITIES.forEach(city => { const opt = document.createElement('option'); opt.value = city; opt.textContent = city; select.appendChild(opt); });
-            if (currentVal) select.value = currentVal;
+            const s = getEl(selectId); if (!s) return;
+            const cv = s.value;
+            s.innerHTML = '<option value="">Select city...</option>';
+            CAPITAL_CITIES.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c; s.appendChild(o); });
+            if (cv) s.value = cv;
         }
-
         function populateCountryDropdown(selectId) {
-            const select = getEl(selectId);
-            if (!select) return;
-            const currentVal = select.value;
-            select.innerHTML = '';
-            ALL_COUNTRIES.forEach(country => { const opt = document.createElement('option'); opt.value = country; opt.textContent = country; select.appendChild(opt); });
-            if (currentVal && Array.from(select.options).some(o => o.value === currentVal)) select.value = currentVal;
+            const s = getEl(selectId); if (!s) return;
+            const cv = s.value; s.innerHTML = '';
+            ALL_COUNTRIES.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c; s.appendChild(o); });
+            if (cv && Array.from(s.options).some(o => o.value === cv)) s.value = cv;
         }
-
         function populateAllDropdowns() {
             ['senderCitySelect','regCitySelect','agentCitySelect','editCitySelect','editAccountCitySelect','bizCitySelect','newClientCitySelect'].forEach(populateCapitalCityDropdown);
             ['regCountry','editAccountCountry','newClientCountrySelect','bizCountrySelect'].forEach(populateCountryDropdown);
         }
-
         function populateCollateralDropdowns() {
             ['agentCollateralLimit','editCollateralLimit'].forEach(id => {
-                const select = getEl(id);
-                if (!select) return;
-                select.innerHTML = '';
-                COLLATERAL_OPTIONS.forEach(v => { const opt = document.createElement('option'); opt.value = v; opt.textContent = v.toLocaleString(); select.appendChild(opt); });
+                const s = getEl(id); if (!s) return; s.innerHTML = '';
+                COLLATERAL_OPTIONS.forEach(v => { const o = document.createElement('option'); o.value = v; o.textContent = v.toLocaleString(); s.appendChild(o); });
             });
         }
-
         function populateCountryCodeSelect() {
-            const select = getEl('countryCodeSelect');
-            if (!select) return;
-            select.innerHTML = '';
-            SUPPORTED_CURRENCIES.forEach((c, i) => {
-                const opt = document.createElement('option');
-                opt.value = `${c.code}|${c.name}|${c.currency}|${c.flag}|${c.gst}|${i+1}`;
-                opt.textContent = `${c.flag} ${c.name}`;
-                select.appendChild(opt);
-            });
+            const s = getEl('countryCodeSelect'); if (!s) return; s.innerHTML = '';
+            SUPPORTED_CURRENCIES.forEach((c, i) => { const o = document.createElement('option'); o.value = `${c.code}|${c.name}|${c.currency}|${c.flag}|${c.gst}|${i+1}`; o.textContent = `${c.flag} ${c.name}`; s.appendChild(o); });
         }
 
         function getUserCurrency() {
             const map = { 'Sierra Leone':'SLL','Liberia':'LRD','Guinea':'GNF','Senegal':'XOF','Mali':'XOF','Ivory Coast':'XOF','Ghana':'GHS','Niger':'XOF','Benin':'XOF','Guinea Bissau':'XOF','Gambia':'GMD','Togo':'XOF','Kenya':'KES','Central Africa Rep':'XAF','Ethiopia':'ETB','Gabon':'XAF','Madagascar':'MGA','Morocco':'MAD','Rwanda':'RWF','Uganda':'UGX','DR Congo':'CDF','Burkina Faso':'XOF','Nigeria':'NGN' };
-            const userCountry = currentUser?.country;
-            if (userCountry && map[userCountry]) return map[userCountry];
-            const sel = getEl('countryCodeSelect');
-            if (sel && sel.value) { const p = sel.value.split('|'); if (p[2]) return p[2]; }
+            const uc = currentUser?.country;
+            if (uc && map[uc]) return map[uc];
+            const s = getEl('countryCodeSelect'); if (s && s.value) { const p = s.value.split('|'); if (p[2]) return p[2]; }
             return 'SLL';
         }
-
         function updateUserCountryData() {
             if (currentUser?.country) {
-                const supported = SUPPORTED_CURRENCIES.find(c => c.name.toLowerCase() === currentUser.country.toLowerCase());
-                if (supported) currentCountryData = { gstRate: supported.gst, currency: supported.currency, flag: supported.flag, countryName: supported.name };
+                const sup = SUPPORTED_CURRENCIES.find(c => c.name.toLowerCase() === currentUser.country.toLowerCase());
+                if (sup) currentCountryData = { gstRate: sup.gst, currency: sup.currency, flag: sup.flag, countryName: sup.name };
             }
         }
 
         function loadRegisteredUsers() { try { registeredUsers = JSON.parse(localStorage.getItem('afripay_registered_users') || '[]'); } catch (e) { registeredUsers = []; } }
         function saveRegisteredUsers() { try { localStorage.setItem('afripay_registered_users', JSON.stringify(registeredUsers)); } catch (e) {} syncConnectedUsersFromRegistered(); }
-
         function syncConnectedUsersFromRegistered() {
             const curr = connectedUsers.find(u => u.id === 'current');
             connectedUsers = curr ? [curr] : [];
@@ -1064,42 +965,33 @@
         }
 
         function getAgents() { return connectedUsers.filter(u => (u.isAgent === true || u.role === 'agent') && u.agentData && u.agentData.approved === true); }
-        function getAgentInitials(agent) { const d = agent.agentData || agent; let name = d.businessName || agent.name || ''; name = name.replace(/\(.*\)/, '').trim(); return name.substring(0, 2).toUpperCase() || 'AG'; }
-        function getAgentFlag(agent) { const code = (agent.agentData || agent).countryCode || ''; return COUNTRY_CODE_TO_FLAG[code] || '🌍'; }
-        function getAgentCountryName(agent) { const code = (agent.agentData || agent).countryCode || ''; return COUNTRY_CODE_TO_NAME[code] || ''; }
+        function getAgentInitials(agent) { const d = agent.agentData || agent; let n = d.businessName || agent.name || ''; n = n.replace(/\(.*\)/, '').trim(); return n.substring(0, 2).toUpperCase() || 'AG'; }
+        function getAgentFlag(agent) { const c = (agent.agentData || agent).countryCode || ''; return COUNTRY_CODE_TO_FLAG[c] || '🌍'; }
+        function getAgentCountryName(agent) { const c = (agent.agentData || agent).countryCode || ''; return COUNTRY_CODE_TO_NAME[c] || ''; }
         function getAllContacts() { const m = new Map(); connectedUsers.forEach(u => { if (!m.has(u.id)) m.set(u.id, { ...u }); }); return Array.from(m.values()); }
 
-        function getCityValue(selectId, otherId) {
-            const s = getEl(selectId), o = getEl(otherId);
-            if (s && s.value) return s.value;
-            if (o && o.value.trim()) return o.value.trim();
-            return '';
-        }
-        function setCityValue(selectId, otherId, value) {
-            const s = getEl(selectId), o = getEl(otherId);
-            if (!s || !o) return;
+        function getCityValue(sid, oid) { const s = getEl(sid), o = getEl(oid); if (s && s.value) return s.value; if (o && o.value.trim()) return o.value.trim(); return ''; }
+        function setCityValue(sid, oid, value) {
+            const s = getEl(sid), o = getEl(oid); if (!s || !o) return;
             let found = false;
             for (let i = 0; i < s.options.length; i++) { if (s.options[i].value === value) { s.value = value; found = true; break; } }
             if (!found && value) { s.value = ''; o.value = value; } else { o.value = ''; }
         }
 
         function updateAgentDropdownPlaceholder() {
-            const btn = getEl('selectedAgentName');
-            if (!btn) return;
+            const b = getEl('selectedAgentName'); if (!b) return;
             if (isBusinessMode) return;
             const dict = TRANSLATIONS[currentLang] || TRANSLATIONS.en;
             if (currentAgentFilterCountry && !selectedAgentId) {
                 const flag = COUNTRY_NAME_TO_CODE[currentAgentFilterCountry] ? COUNTRY_CODE_TO_FLAG[COUNTRY_NAME_TO_CODE[currentAgentFilterCountry]] : '🌍';
-                btn.innerHTML = `${dict.selectAgent || 'Select Agent'} in ${flag} ${currentAgentFilterCountry}`;
-            } else if (!selectedAgentId) { btn.textContent = dict.selectAgent || 'Select Agent'; }
+                b.innerHTML = `${dict.selectAgent || 'Select Agent'} in ${flag} ${currentAgentFilterCountry}`;
+            } else if (!selectedAgentId) { b.textContent = dict.selectAgent || 'Select Agent'; }
         }
-
         function getCountryNameFromSelect() { const s = getEl('countryCodeSelect'); if (!s || !s.value) return null; return s.value.split('|')[1] || null; }
         function getAgentsByCountry(cn) { if (!cn) return getAgents(); return getAgents().filter(a => getAgentCountryName(a).toLowerCase() === cn.toLowerCase()); }
 
         function renderAgentDropdown(filterCountry) {
-            const list = getEl('agentDropdownList');
-            if (!list) return;
+            const list = getEl('agentDropdownList'); if (!list) return;
             if (isBusinessMode) { list.innerHTML = ''; list.classList.remove('open'); return; }
             if (filterCountry === undefined) filterCountry = currentAgentFilterCountry; else currentAgentFilterCountry = filterCountry;
             let agents = (filterCountry ? getAgentsByCountry(filterCountry) : getAgents()).sort((a, b) => {
@@ -1110,22 +1002,17 @@
             const dict = TRANSLATIONS[currentLang] || TRANSLATIONS.en;
             list.innerHTML = '';
             const selItem = document.createElement('div');
-            selItem.className = 'agent-dropdown-item';
-            selItem.style.fontWeight = '600';
+            selItem.className = 'agent-dropdown-item'; selItem.style.fontWeight = '600';
             selItem.innerHTML = `<div class="agent-info"><span style="color:#FFD966;">👤</span> <span class="agent-name">${dict.selectAgent || 'Select Agent'}</span></div>`;
             selItem.addEventListener('click', e => { e.stopPropagation(); selectedAgentId = null; _selectedAgentId = null; clearAgentSelection(); list.classList.remove('open'); });
             list.appendChild(selItem);
             if (agents.length === 0) {
-                const em = document.createElement('div');
-                em.className = 'agent-dropdown-item';
-                em.style.justifyContent = 'center';
+                const em = document.createElement('div'); em.className = 'agent-dropdown-item'; em.style.justifyContent = 'center';
                 em.innerHTML = `<span style="color:#ccc;">${dict.noAgents || 'No agents'}</span>`;
-                list.appendChild(em);
-                return;
+                list.appendChild(em); return;
             }
             agents.forEach(agent => {
-                const item = document.createElement('div');
-                item.className = 'agent-dropdown-item';
+                const item = document.createElement('div'); item.className = 'agent-dropdown-item';
                 const data = agent.agentData || agent;
                 const displayName = (data.businessName || agent.name || '').replace(/\(.*\)/, '').trim();
                 item.innerHTML = `<div class="agent-info"><span class="agent-flag">${getAgentFlag(agent)}</span><span class="agent-name">${SecurityUtils.escapeHTML(displayName)}</span><span class="agent-logo-fallback">${getAgentInitials(agent)}</span></div>`;
@@ -1137,29 +1024,23 @@
         }
 
         function populateAgentSelect(filterCountry) {
-            const select = getEl('agentNameSelect');
-            if (!select) return;
+            const select = getEl('agentNameSelect'); if (!select) return;
             if (isBusinessMode) { select.style.display = 'none'; return; }
-            select.style.display = 'block';
-            select.innerHTML = '';
+            select.style.display = 'block'; select.innerHTML = '';
             let agents = (filterCountry ? getAgentsByCountry(filterCountry) : getAgents()).sort((a, b) => {
                 const aN = (a.agentData && a.agentData.businessName) || a.name;
                 const bN = (b.agentData && b.agentData.businessName) || b.name;
                 return aN.localeCompare(bN);
             });
             const dict = TRANSLATIONS[currentLang] || TRANSLATIONS.en;
-            const ph = document.createElement('option');
-            ph.value = '';
+            const ph = document.createElement('option'); ph.value = '';
             ph.textContent = filterCountry ? `${dict.selectAgent || 'Agent'} in ${filterCountry}` : (dict.selectAgent || '-- Select Agent --');
-            ph.disabled = true; ph.selected = true;
-            select.appendChild(ph);
+            ph.disabled = true; ph.selected = true; select.appendChild(ph);
             agents.forEach(agent => {
-                const opt = document.createElement('option');
-                opt.value = agent.id;
+                const opt = document.createElement('option'); opt.value = agent.id;
                 const data = agent.agentData || agent;
                 const displayName = (data.businessName || agent.name || '').replace(/\(.*\)/, '').trim();
-                opt.textContent = `${getAgentFlag(agent)} ${displayName}`;
-                select.appendChild(opt);
+                opt.textContent = `${getAgentFlag(agent)} ${displayName}`; select.appendChild(opt);
             });
             if (selectedAgentId) select.value = selectedAgentId;
         }
@@ -1173,21 +1054,16 @@
             _selectedProductDetails = null;
             hideProductDetails();
         }
-
         function exitBusinessMode() {
             isBusinessMode = false;
-            const sel = getEl('agentNameSelect');
-            const lbl = getEl('agentNameLabel');
-            const bd = document.getElementById('bizDisplayField');
+            const sel = getEl('agentNameSelect'), lbl = getEl('agentNameLabel'), bd = document.getElementById('bizDisplayField');
             if (sel) sel.style.display = 'block';
             if (bd) bd.style.display = 'none';
             if (lbl) lbl.textContent = (TRANSLATIONS[currentLang] || TRANSLATIONS.en).agent + ' *';
             populateAgentSelect(currentAgentFilterCountry);
         }
-
         function showProductDetails(product) {
-            const group = getEl('productDetailGroup');
-            if (!group) return;
+            const group = getEl('productDetailGroup'); if (!group) return;
             if (getEl('productName')) getEl('productName').value = product.name || '';
             if (getEl('productIconPreview')) getEl('productIconPreview').textContent = product.icon || '📱';
             const displayCur = isLocalMode ? getUserCurrency() : currentCountryData.currency;
@@ -1207,7 +1083,6 @@
                 if (getEl('agentPhone') && product.businessPhone) getEl('agentPhone').value = product.businessPhone;
             }
         }
-
         function hideProductDetails() { const g = getEl('productDetailGroup'); if (g) g.style.display = 'none'; }
 
         function selectAgent(agentId) {
@@ -1231,15 +1106,8 @@
             const limit = data.collateralLimit || 0;
             const ai = getEl('amountInput');
             const li = getEl('amountLimitIndicator');
-            if (limit > 0 && ai) {
-                ai.max = limit;
-                ai.placeholder = `Max ${limit}`;
-                if (li) { li.style.display = 'inline-block'; li.textContent = `Max: ${limit}`; }
-            } else if (ai) {
-                ai.removeAttribute('max');
-                ai.placeholder = 'Amount';
-                if (li) li.style.display = 'none';
-            }
+            if (limit > 0 && ai) { ai.max = limit; ai.placeholder = `Max ${limit}`; if (li) { li.style.display = 'inline-block'; li.textContent = `Max: ${limit}`; } }
+            else if (ai) { ai.removeAttribute('max'); ai.placeholder = 'Amount'; if (li) li.style.display = 'none'; }
             computeCharges();
         }
 
@@ -1313,24 +1181,20 @@
         }
 
         function updateAvatarDisplay(user) {
-            const em = getEl('userAvatarEmoji'), img = getEl('userAvatarImg');
-            if (!em || !img) return;
+            const em = getEl('userAvatarEmoji'), img = getEl('userAvatarImg'); if (!em || !img) return;
             if (user && user.avatarDataURL) { em.style.display = 'none'; img.style.display = 'block'; img.src = user.avatarDataURL; }
             else if (user && user.emoji) { em.style.display = 'inline'; img.style.display = 'none'; em.innerText = user.emoji; }
             else { em.style.display = 'inline'; img.style.display = 'none'; em.innerText = '👤'; }
         }
-
         function updateProfileAvatarDisplay(user) {
-            const em = getEl('profileAvatarEmoji'), img = getEl('profileAvatarImg');
-            if (!em || !img) return;
+            const em = getEl('profileAvatarEmoji'), img = getEl('profileAvatarImg'); if (!em || !img) return;
             if (user && user.avatarDataURL) { em.style.display = 'none'; img.style.display = 'block'; img.src = user.avatarDataURL; }
             else if (user && user.emoji) { em.style.display = 'inline'; img.style.display = 'none'; em.innerText = user.emoji; }
             else { em.style.display = 'inline'; img.style.display = 'none'; em.innerText = '👤'; }
         }
 
         function loginUser(fullName, phoneNumber) {
-            const name = fullName.trim();
-            const phone = phoneNumber.trim();
+            const name = fullName.trim(), phone = phoneNumber.trim();
             if (!name || !phone) { getEl('loginError').innerHTML = '❌ Enter both fields'; return false; }
             let storedUser = null;
             try { const s = localStorage.getItem('afripay_user'); if (s) storedUser = JSON.parse(s); } catch (e) {}
@@ -1375,8 +1239,7 @@
         function getAllBusinesses() { return [...businesses, ...customBusinesses]; }
 
         function renderBusinessStrip() {
-            const c = getEl('businessIconsContainer');
-            if (!c) return;
+            const c = getEl('businessIconsContainer'); if (!c) return;
             c.innerHTML = '';
             const all = getAllBusinesses();
             all.forEach(biz => {
@@ -1389,12 +1252,7 @@
             if (lastSelectedBusinessId && !all.some(b => b.id === lastSelectedBusinessId)) lastSelectedBusinessId = null;
             updateEditBizStripButton();
         }
-
-        function updateEditBizStripButton() {
-            const btn = getEl('editBizStripBtn');
-            if (!btn) return;
-            btn.disabled = false;
-        }
+        function updateEditBizStripButton() { const b = getEl('editBizStripBtn'); if (b) b.disabled = false; }
 
         function getBusinessCredentials(biz) {
             if (!biz) return { password: DEFAULT_EDIT_BIZ_PASSWORD, pin: DEFAULT_EDIT_BIZ_PIN };
@@ -1404,7 +1262,6 @@
             if (agent) return { password: agent.password, pin: agent.pin };
             return { password: DEFAULT_EDIT_BIZ_PASSWORD, pin: DEFAULT_EDIT_BIZ_PIN };
         }
-
         function handleEditBizStripClick(biz) {
             pendingEditBizId = biz.id;
             getEl('editBizAuthError').textContent = '';
@@ -1414,7 +1271,6 @@
             getEl('editBizAuthHint').innerHTML = creds.password === DEFAULT_EDIT_BIZ_PASSWORD ? `💡 Default: password <strong>${DEFAULT_EDIT_BIZ_PASSWORD}</strong> · PIN <strong>${DEFAULT_EDIT_BIZ_PIN}</strong>` : '💡 Use the credentials set for this business.';
             getEl('editBizAuthModal').style.display = 'flex';
         }
-
         function confirmEditBizAuth() {
             const err = getEl('editBizAuthError');
             const pw = getEl('editBizAuthPassword')?.value?.trim() || '';
@@ -1428,58 +1284,44 @@
             if (!biz) { err.textContent = '❌ Business not found.'; return; }
             const creds = getBusinessCredentials(biz);
             if (pw !== creds.password || pin !== creds.pin) { err.textContent = '❌ Incorrect credentials.'; return; }
-            const id = pendingEditBizId;
-            pendingEditBizId = null;
+            const id = pendingEditBizId; pendingEditBizId = null;
             setTimeout(() => { getEl('editBizAuthModal').style.display = 'none'; openEditBizModal(id); }, 200);
         }
-
         function openEditBizModal(businessId) {
             const biz = getAllBusinesses().find(b => b.id === businessId);
             if (!biz) { showToast('⚠️ Business not found.', 2000); return; }
             lastSelectedBusinessId = biz.id;
             const setVal = (id, v) => { const e = getEl(id); if (e) e.value = v || ''; };
-            setVal('bizName', biz.name);
-            setVal('bizContact', biz.contact);
-            setVal('bizMobileMoney', biz.mobileMoney || biz.contact);
-            setVal('bizType', biz.type || 'Service');
-            setVal('bizIcon', biz.icon || '🏪');
+            setVal('bizName', biz.name); setVal('bizContact', biz.contact); setVal('bizMobileMoney', biz.mobileMoney || biz.contact);
+            setVal('bizType', biz.type || 'Service'); setVal('bizIcon', biz.icon || '🏪');
             if (getEl('bizIconPreview')) getEl('bizIconPreview').textContent = biz.icon || '🏪';
-            setVal('bizAddress', biz.address);
-            setCityValue('bizCitySelect', 'bizCityOther', biz.city || '');
-            setVal('bizCountrySelect', biz.country || 'Sierra Leone');
-            setVal('bizWebsite', biz.website);
+            setVal('bizAddress', biz.address); setCityValue('bizCitySelect', 'bizCityOther', biz.city || '');
+            setVal('bizCountrySelect', biz.country || 'Sierra Leone'); setVal('bizWebsite', biz.website);
             if (getEl('bizEditingId')) getEl('bizEditingId').value = biz.id;
             if (getEl('bizPassword')) getEl('bizPassword').value = biz.password || '';
             if (getEl('bizPin')) getEl('bizPin').value = biz.pin || '';
             getEl('addBizTitle').textContent = '✏️ Edit Business – ' + biz.name;
-            const pc = getEl('productsContainer');
-            pc.innerHTML = '';
-            productCounter = 0;
+            const pc = getEl('productsContainer'); pc.innerHTML = ''; productCounter = 0;
             if (biz.goods && biz.goods.length > 0) {
                 biz.goods.forEach(g => {
                     productCounter++;
                     const entry = document.createElement('div');
-                    entry.className = 'product-entry';
-                    entry.dataset.productId = productCounter;
+                    entry.className = 'product-entry'; entry.dataset.productId = productCounter;
                     entry.innerHTML = `
                         <div class="product-header"><span>Product #${productCounter}</span><button type="button" class="remove-product-btn" onclick="removeProductEntry(${productCounter})">✕</button></div>
                         <div class="input-group"><label>Product Name</label><input type="text" class="product-name" value="${SecurityUtils.escapeHTML(g.name || '')}" /></div>
                         <div class="double-row" style="grid-template-columns:1fr 1fr; gap:0.3rem;">
                             <div class="input-group"><label>Price</label><input type="number" class="product-price" value="${g.price || 0}" step="0.01" /></div>
                             <div class="input-group"><label>Quantity</label><input type="number" class="product-qty" value="${g.quantity || 1}" /></div>
-                        </div>
-                    `;
+                        </div>`;
                     pc.appendChild(entry);
                 });
             } else { addProductEntry(); }
             getEl('addBizModal').style.display = 'flex';
         }
-
         function showGoodsModal(businessId) {
-            const biz = getAllBusinesses().find(b => b.id === businessId);
-            if (!biz) return;
-            lastSelectedBusinessId = businessId;
-            updateEditBizStripButton();
+            const biz = getAllBusinesses().find(b => b.id === businessId); if (!biz) return;
+            lastSelectedBusinessId = businessId; updateEditBizStripButton();
             const userCountry = currentUser?.country || 'Sierra Leone';
             const rates = { 'Sierra Leone':5, 'Liberia':7.5, 'Guinea':8, 'Senegal':6, 'Ghana':7, 'Nigeria':8.5 };
             const dc = rates[userCountry] || 5;
@@ -1487,27 +1329,16 @@
             let html = '';
             if (biz.goods && biz.goods.length > 0) {
                 html = biz.goods.map((g, idx) => {
-                    const qty = g.quantity || 1;
-                    const quality = g.quality || 'Brand new';
-                    const icon = g.icon || biz.icon || '📱';
+                    const qty = g.quantity || 1, quality = g.quality || 'Brand new', icon = g.icon || biz.icon || '📱';
                     const price = parseFloat(g.price) || 0;
-                    return `
-                        <div class="goods-item" data-price="${price}" data-name="${SecurityUtils.escapeHTML(g.name)}" data-quantity="${qty}" data-quality="${SecurityUtils.escapeHTML(quality)}" data-icon="${icon}" data-delivery="${dc}" data-business="${SecurityUtils.escapeHTML(biz.name)}" data-businessphone="${SecurityUtils.escapeHTML(biz.mobileMoney || biz.contact || '')}" data-index="${idx}">
-                            <div class="goods-row">
-                                <span class="goods-name">${icon} ${SecurityUtils.escapeHTML(g.name)}</span>
-                                <span class="goods-price">${price.toFixed(2)} ${displayCur}</span>
-                                <button class="goods-select-btn">Select</button>
-                            </div>
-                            <div class="goods-details"><span>📦 Qty: ${qty}</span><span>⭐ ${quality}</span></div>
-                        </div>
-                    `;
+                    return `<div class="goods-item" data-price="${price}" data-name="${SecurityUtils.escapeHTML(g.name)}" data-quantity="${qty}" data-quality="${SecurityUtils.escapeHTML(quality)}" data-icon="${icon}" data-delivery="${dc}" data-business="${SecurityUtils.escapeHTML(biz.name)}" data-businessphone="${SecurityUtils.escapeHTML(biz.mobileMoney || biz.contact || '')}" data-index="${idx}">
+                        <div class="goods-row"><span class="goods-name">${icon} ${SecurityUtils.escapeHTML(g.name)}</span><span class="goods-price">${price.toFixed(2)} ${displayCur}</span><button class="goods-select-btn">Select</button></div>
+                        <div class="goods-details"><span>📦 Qty: ${qty}</span><span>⭐ ${quality}</span></div></div>`;
                 }).join('');
             } else { html = `<div style="text-align:center; padding:12px; color:#95a5a6;">No items yet.</div>`; }
             getEl('goodsModalTitle').innerHTML = `${biz.icon || '🏪'} ${SecurityUtils.escapeHTML(biz.name)}`;
             getEl('goodsList').innerHTML = html;
-            const wl = getEl('businessWebsiteLink');
-            wl.href = biz.website || '#';
-            wl.style.display = biz.website ? 'block' : 'none';
+            const wl = getEl('businessWebsiteLink'); wl.href = biz.website || '#'; wl.style.display = biz.website ? 'block' : 'none';
             getEl('goodsModal').style.display = 'flex';
             document.querySelectorAll('.goods-item').forEach(item => {
                 const handler = function(e) {
@@ -1523,15 +1354,12 @@
                     showProductDetails({ name, price, quantity:qty, quality, icon, businessName:bName, businessPhone:bPhone });
                     if (getEl('agentName')) getEl('agentName').value = bName;
                     if (getEl('agentPhone')) getEl('agentPhone').value = bPhone;
-                    const aSel = getEl('agentNameSelect');
-                    const aLbl = getEl('agentNameLabel');
+                    const aSel = getEl('agentNameSelect'); const aLbl = getEl('agentNameLabel');
                     if (aSel) {
-                        isBusinessMode = true;
-                        aSel.style.display = 'none';
+                        isBusinessMode = true; aSel.style.display = 'none';
                         let bd = document.getElementById('bizDisplayField');
                         if (!bd) { bd = document.createElement('div'); bd.id = 'bizDisplayField'; bd.className = 'biz-display-field'; aSel.parentNode.insertBefore(bd, aSel.nextSibling); }
-                        bd.innerHTML = `${icon} ${bName}`;
-                        bd.style.display = 'flex';
+                        bd.innerHTML = `${icon} ${bName}`; bd.style.display = 'flex';
                         if (aLbl) aLbl.textContent = '🏢 Business';
                     }
                     const san = getEl('selectedAgentName');
@@ -1543,59 +1371,40 @@
                 item.addEventListener('click', handler);
             });
         }
-
         function addProductEntry() {
             productCounter++;
             const c = getEl('productsContainer');
             const entry = document.createElement('div');
-            entry.className = 'product-entry';
-            entry.dataset.productId = productCounter;
+            entry.className = 'product-entry'; entry.dataset.productId = productCounter;
             entry.innerHTML = `
                 <div class="product-header"><span>Product #${productCounter}</span><button type="button" class="remove-product-btn" onclick="removeProductEntry(${productCounter})">✕</button></div>
                 <div class="input-group"><label>Product Name</label><input type="text" class="product-name" /></div>
                 <div class="double-row" style="grid-template-columns:1fr 1fr; gap:0.3rem;">
                     <div class="input-group"><label>Price</label><input type="number" class="product-price" step="0.01" /></div>
                     <div class="input-group"><label>Quantity</label><input type="number" class="product-qty" /></div>
-                </div>
-            `;
+                </div>`;
             c.appendChild(entry);
         }
-
-        function removeProductEntry(id) {
-            const e = document.querySelector(`.product-entry[data-product-id="${id}"]`);
-            if (e) e.remove();
-        }
+        function removeProductEntry(id) { const e = document.querySelector(`.product-entry[data-product-id="${id}"]`); if (e) e.remove(); }
         window.removeProductEntry = removeProductEntry;
 
         // ============================================================
         // POP-UP ADVERT
         // ============================================================
-        let popupAdInterval = null, popupAdTimeout = null;
-        let lastPopupAdShownAt = 0;
-
+        let popupAdInterval = null, popupAdTimeout = null, lastPopupAdShownAt = 0;
         function pickRandomProductForAdvert() {
-            const all = getAllBusinesses();
-            const cands = [];
-            all.forEach(biz => {
-                if (biz.goods && biz.goods.length > 0) {
-                    biz.goods.forEach(g => {
-                        cands.push({ businessId: biz.id, businessName: biz.name, businessIcon: biz.icon || '🏪', businessPhone: biz.mobileMoney || biz.contact || '', name: g.name, price: parseFloat(g.price) || 0, quantity: g.quantity || 1, quality: g.quality || 'Brand new', icon: g.icon || biz.icon || '📱' });
-                    });
-                }
-            });
+            const all = getAllBusinesses(); const cands = [];
+            all.forEach(biz => { if (biz.goods && biz.goods.length > 0) { biz.goods.forEach(g => { cands.push({ businessId:biz.id, businessName:biz.name, businessIcon:biz.icon || '🏪', businessPhone:biz.mobileMoney || biz.contact || '', name:g.name, price:parseFloat(g.price) || 0, quantity:g.quantity || 1, quality:g.quality || 'Brand new', icon:g.icon || biz.icon || '📱' }); }); } });
             if (cands.length === 0) return null;
             return cands[Math.floor(Math.random() * cands.length)];
         }
-
         function showPopupAdvert() {
             if (!currentUser) return;
             const now = Date.now();
             if (now - lastPopupAdShownAt < 8000) return;
-            const p = pickRandomProductForAdvert();
-            if (!p) return;
+            const p = pickRandomProductForAdvert(); if (!p) return;
             lastPopupAdShownAt = now;
-            const overlay = getEl('popupAdOverlay');
-            if (!overlay) return;
+            const overlay = getEl('popupAdOverlay'); if (!overlay) return;
             if (getEl('popupAdIcon')) getEl('popupAdIcon').textContent = p.icon;
             if (getEl('popupAdName')) getEl('popupAdName').textContent = p.name;
             if (getEl('popupAdBusiness')) getEl('popupAdBusiness').textContent = `${p.businessIcon} ${p.businessName}`;
@@ -1604,29 +1413,16 @@
             if (getEl('popupAdCurrency')) getEl('popupAdCurrency').textContent = isLocalMode ? getUserCurrency() : currentCountryData.currency;
             const sb = getEl('popupAdSelectBtn');
             if (sb) sb.onclick = e => { e.preventDefault(); e.stopPropagation(); hidePopupAdvert(); lastSelectedBusinessId = p.businessId; updateEditBizStripButton(); try { showGoodsModal(p.businessId); } catch (er) {} };
-            const db = getEl('popupAdDismissBtn');
-            if (db) db.onclick = e => { e.preventDefault(); e.stopPropagation(); hidePopupAdvert(); };
-            const cb = getEl('popupAdCloseBtn');
-            if (cb) cb.onclick = e => { e.preventDefault(); e.stopPropagation(); hidePopupAdvert(); };
+            const db = getEl('popupAdDismissBtn'); if (db) db.onclick = e => { e.preventDefault(); e.stopPropagation(); hidePopupAdvert(); };
+            const cb = getEl('popupAdCloseBtn'); if (cb) cb.onclick = e => { e.preventDefault(); e.stopPropagation(); hidePopupAdvert(); };
             overlay.style.display = 'flex';
         }
-
         function hidePopupAdvert() { const o = getEl('popupAdOverlay'); if (o) o.style.display = 'none'; }
-
         function startPopupAdTimer() {
             stopPopupAdTimer();
-            popupAdTimeout = setTimeout(() => {
-                showPopupAdvert();
-                popupAdInterval = setInterval(showPopupAdvert, 90000);
-            }, 4000);
+            popupAdTimeout = setTimeout(() => { showPopupAdvert(); popupAdInterval = setInterval(showPopupAdvert, 90000); }, 4000);
         }
-
-        function stopPopupAdTimer() {
-            clearTimeout(popupAdTimeout);
-            clearInterval(popupAdInterval);
-            popupAdTimeout = null; popupAdInterval = null;
-            hidePopupAdvert();
-        }
+        function stopPopupAdTimer() { clearTimeout(popupAdTimeout); clearInterval(popupAdInterval); popupAdTimeout = null; popupAdInterval = null; hidePopupAdvert(); }
 
         // ============================================================
         // UTILITIES
@@ -1636,7 +1432,6 @@
             if (getEl('currentDate')) getEl('currentDate').innerText = now.toLocaleDateString();
             if (getEl('currentTime')) getEl('currentTime').innerText = now.toLocaleTimeString();
         }
-
         function generateTransactionId() {
             const p1 = Math.floor(1000000 + Math.random() * 9000000);
             const p2 = Math.floor(10000 + Math.random() * 90000);
@@ -1652,22 +1447,14 @@
         }
         function ensureTransactionId() { const f = getEl('transactionId'); if (f && !f.value.trim()) f.value = generateTransactionId(); }
 
-        function showInfoModal(title, body) {
-            getEl('modalTitle').innerText = title;
-            getEl('modalBody').innerHTML = body;
-            getEl('infoModal').style.display = 'flex';
-        }
+        function showInfoModal(title, body) { getEl('modalTitle').innerText = title; getEl('modalBody').innerHTML = body; getEl('infoModal').style.display = 'flex'; }
 
         function showReceiptModal(data) {
             const body = getEl('receiptBody');
             const lines = [
-                { key:'TX ID', value: data.txId },
-                { key:'Date', value: data.date },
-                { key:'Type', value: data.mode },
-                { key:'Sender', value: data.sender },
-                { key:'Agent', value: data.agent },
-                { key:'Provider TX ID', value: data.providerTxId || 'N/A' },
-                { key:'Transfer Code', value: data.transferCode || 'N/A' }
+                { key:'TX ID', value: data.txId }, { key:'Date', value: data.date }, { key:'Type', value: data.mode },
+                { key:'Sender', value: data.sender }, { key:'Agent', value: data.agent },
+                { key:'Provider TX ID', value: data.providerTxId || 'N/A' }, { key:'Transfer Code', value: data.transferCode || 'N/A' }
             ];
             if (_selectedProductDetails) {
                 const p = _selectedProductDetails;
@@ -1695,12 +1482,7 @@
             if (digits(phoneRaw).length < 6) {
                 const aid = _selectedAgentId || selectedAgentId || (getEl('agentNameSelect')?.value || '');
                 const ag = aid ? getAgents().find(a => a.id === aid) : null;
-                if (ag) {
-                    const d = ag.agentData || ag;
-                    const c = d.mobileMoney || d.phone || ag.phone || '';
-                    if (digits(c).length >= 6) phoneRaw = c;
-                    if (!name) name = (d.businessName || ag.name || '').replace(/\(.*\)/, '').trim();
-                }
+                if (ag) { const d = ag.agentData || ag; const c = d.mobileMoney || d.phone || ag.phone || ''; if (digits(c).length >= 6) phoneRaw = c; if (!name) name = (d.businessName || ag.name || '').replace(/\(.*\)/, '').trim(); }
             }
             if (!name && _selectedProductDetails?.businessName) name = _selectedProductDetails.businessName;
             if (digits(phoneRaw).length < 6 && _selectedProductDetails?.businessPhone) phoneRaw = _selectedProductDetails.businessPhone;
@@ -1719,103 +1501,53 @@
             pendingPinData = { ussdCode, provider, recipient: recip, amount };
             getEl('pinModal').style.display = 'flex';
         }
-
         function confirmPin() {
             const pin = getEl('pinInput')?.value?.trim() || '';
             if (!pin || pin.length !== 4 || !/^\d+$/.test(pin)) { getEl('pinError').textContent = '❌ Invalid PIN.'; return; }
             if (!pendingPinData) return;
             let ussd = pendingPinData.ussdCode.replace(/0000#/, pin + '#');
-            getEl('pinModal').style.display = 'none';
-            pendingPinData = null;
-            const link = document.createElement('a');
-            link.href = `tel:${ussd}`;
-            link.click();
+            getEl('pinModal').style.display = 'none'; pendingPinData = null;
+            const link = document.createElement('a'); link.href = `tel:${ussd}`; link.click();
             showToast('📞 Dialing...', 3000);
         }
 
         function renderSidebar() {
-            const sb = getEl('chatSidebar');
-            if (!sb) return;
+            const sb = getEl('chatSidebar'); if (!sb) return;
             const dict = TRANSLATIONS[currentLang] || TRANSLATIONS.en;
             sb.innerHTML = `<div class="sidebar-section-title">👤 ${dict.contacts || 'Contacts'}</div>`;
             const all = getAllContacts();
-            if (all.length === 0) {
-                sb.innerHTML += `<div style="padding:4px 10px; font-size:0.68rem; color:#95a5a6; text-align:center;">${dict.noContacts || 'No contacts'}</div>`;
-            } else {
-                all.forEach(u => {
-                    const d = document.createElement('div');
-                    d.className = 'sidebar-user';
-                    d.innerHTML = `<div class="avatar">${u.emoji || '👤'}</div><div class="user-info"><div class="name">${SecurityUtils.escapeHTML(u.name)}</div></div>`;
-                    sb.appendChild(d);
-                });
-            }
+            if (all.length === 0) sb.innerHTML += `<div style="padding:4px 10px; font-size:0.68rem; color:#95a5a6; text-align:center;">${dict.noContacts || 'No contacts'}</div>`;
+            else all.forEach(u => { const d = document.createElement('div'); d.className = 'sidebar-user'; d.innerHTML = `<div class="avatar">${u.emoji || '👤'}</div><div class="user-info"><div class="name">${SecurityUtils.escapeHTML(u.name)}</div></div>`; sb.appendChild(d); });
         }
-
         function toggleChat() {
             const w = getEl('chatWindow');
             const open = w.classList.toggle('open');
             getEl('chatToggleBtn').style.display = open ? 'none' : 'flex';
         }
-
         function openEmojiPicker() {
-            const grid = getEl('emojiGrid');
-            if (!grid) return;
-            grid.innerHTML = '';
-            AVAILABLE_EMOJIS.forEach(e => {
-                const s = document.createElement('span');
-                s.className = 'emoji-option';
-                s.textContent = e;
-                s.addEventListener('click', () => { applyEmoji(e); });
-                grid.appendChild(s);
-            });
+            const grid = getEl('emojiGrid'); if (!grid) return; grid.innerHTML = '';
+            AVAILABLE_EMOJIS.forEach(e => { const s = document.createElement('span'); s.className = 'emoji-option'; s.textContent = e; s.addEventListener('click', () => { applyEmoji(e); }); grid.appendChild(s); });
             getEl('emojiPickerModal').style.display = 'flex';
         }
-
         function applyEmoji(e) {
-            if (currentUser) {
-                currentUser.emoji = e;
-                currentUser.avatarDataURL = null;
-                saveUserToStorage(currentUser);
-                updateAvatarDisplay(currentUser);
-                updateProfileAvatarDisplay(currentUser);
-            }
+            if (currentUser) { currentUser.emoji = e; currentUser.avatarDataURL = null; saveUserToStorage(currentUser); updateAvatarDisplay(currentUser); updateProfileAvatarDisplay(currentUser); }
             showToast(`✅ Avatar: ${e}`, 1500);
             setTimeout(() => { getEl('emojiPickerModal').style.display = 'none'; }, 400);
         }
-
         function applyAvatarImage(dataURL) {
-            if (currentUser) {
-                currentUser.avatarDataURL = dataURL;
-                saveUserToStorage(currentUser);
-                updateAvatarDisplay(currentUser);
-                updateProfileAvatarDisplay(currentUser);
-            }
-            showToast('✅ Image updated!', 1800);
-            getEl('emojiPickerModal').style.display = 'none';
+            if (currentUser) { currentUser.avatarDataURL = dataURL; saveUserToStorage(currentUser); updateAvatarDisplay(currentUser); updateProfileAvatarDisplay(currentUser); }
+            showToast('✅ Image updated!', 1800); getEl('emojiPickerModal').style.display = 'none';
         }
-
         function removeAvatarImage() {
-            if (currentUser) {
-                currentUser.avatarDataURL = null;
-                if (!currentUser.emoji) currentUser.emoji = '👤';
-                saveUserToStorage(currentUser);
-                updateAvatarDisplay(currentUser);
-                updateProfileAvatarDisplay(currentUser);
-            }
+            if (currentUser) { currentUser.avatarDataURL = null; if (!currentUser.emoji) currentUser.emoji = '👤'; saveUserToStorage(currentUser); updateAvatarDisplay(currentUser); updateProfileAvatarDisplay(currentUser); }
             showToast('🗑️ Image removed', 1500);
         }
-
         function renderHeaderFlags() {
-            const grid = getEl('headerFlagGrid');
-            if (!grid) return;
-            grid.innerHTML = '';
+            const grid = getEl('headerFlagGrid'); if (!grid) return; grid.innerHTML = '';
             SUPPORTED_COUNTRY_FLAGS.forEach(f => {
-                const s = document.createElement('span');
-                s.className = 'flag-icon';
-                s.textContent = f;
+                const s = document.createElement('span'); s.className = 'flag-icon'; s.textContent = f;
                 s.addEventListener('click', () => {
-                    const sel = getEl('countryCodeSelect');
-                    if (!sel) return;
+                    const sel = getEl('countryCodeSelect'); if (!sel) return;
                     for (let i = 0; i < sel.options.length; i++) {
                         if (sel.options[i].text.startsWith(f)) {
                             sel.selectedIndex = i;
@@ -1825,8 +1557,7 @@
                             if (getEl('gstRateLabel')) getEl('gstRateLabel').innerText = currentCountryData.gstRate;
                             if (getEl('currencySymbol')) getEl('currencySymbol').innerText = currentCountryData.currency;
                             if (getEl('flagEmoji')) getEl('flagEmoji').innerText = currentCountryData.flag;
-                            computeCharges();
-                            updateAgentDropdownForCountry();
+                            computeCharges(); updateAgentDropdownForCountry();
                             showToast(`📍 ${currentCountryData.countryName}`, 1500);
                             break;
                         }
@@ -1835,36 +1566,21 @@
                 grid.appendChild(s);
             });
         }
-
         function updateAgentDropdownForCountry() {
             const cw = getEl('countryWrapper');
-            if (!cw || cw.style.display === 'none' || isLocalMode) {
-                currentAgentFilterCountry = null;
-                renderAgentDropdown(null);
-                populateAgentSelect(null);
-                return;
-            }
-            const cn = getCountryNameFromSelect();
-            currentAgentFilterCountry = cn;
-            renderAgentDropdown(cn);
-            populateAgentSelect(cn);
+            if (!cw || cw.style.display === 'none' || isLocalMode) { currentAgentFilterCountry = null; renderAgentDropdown(null); populateAgentSelect(null); return; }
+            const cn = getCountryNameFromSelect(); currentAgentFilterCountry = cn;
+            renderAgentDropdown(cn); populateAgentSelect(cn);
         }
-
         function populateConverterCountries() {
-            const s = getEl('convCountrySelect');
-            if (!s) return;
-            s.innerHTML = '';
+            const s = getEl('convCountrySelect'); if (!s) return; s.innerHTML = '';
             SUPPORTED_CURRENCIES.forEach(c => { const o = document.createElement('option'); o.value = `${c.code}|${c.name}|${c.currency}|${c.flag}|${c.gst}`; o.textContent = `${c.flag} ${c.name} (${c.currency})`; s.appendChild(o); });
         }
         function populateFromCurrencySelect() {
-            const s = getEl('convFromCurrency');
-            if (!s) return;
-            s.innerHTML = '';
+            const s = getEl('convFromCurrency'); if (!s) return; s.innerHTML = '';
             SUPPORTED_CURRENCIES.forEach(c => { const o = document.createElement('option'); o.value = `${c.currency}|${c.name}|${c.flag}`; o.textContent = `${c.flag} ${c.name} (${c.currency})`; s.appendChild(o); });
         }
-
         function fmtMoney(n) { if (!isFinite(n)) n = 0; return n.toLocaleString('en-US', { minimumFractionDigits:2, maximumFractionDigits:2 }); }
-
         function updateConverter() {
             try {
                 const amount = parseFloat(getEl('convAmount')?.value) || 0;
@@ -1873,12 +1589,9 @@
                 const toParts = (getEl('convCountrySelect')?.value || '').split('|');
                 const toCur = toParts[2] || 'GNF';
                 const gstRate = parseFloat(toParts[4]) || 0;
-                const rateFrom = EXCHANGE_RATES[fromCur] || 1;
-                const rateTo = EXCHANGE_RATES[toCur] || 1;
-                const rate = rateTo / rateFrom;
-                const converted = amount * rate;
-                const charge = amount * 0.04;
-                const gst = charge * (gstRate / 100);
+                const rateFrom = EXCHANGE_RATES[fromCur] || 1, rateTo = EXCHANGE_RATES[toCur] || 1;
+                const rate = rateTo / rateFrom, converted = amount * rate;
+                const charge = amount * 0.04, gst = charge * (gstRate / 100);
                 if (getEl('convBaseAmount')) getEl('convBaseAmount').textContent = `${fmtMoney(amount)} ${fromCur}`;
                 if (getEl('convCharge')) getEl('convCharge').textContent = `${fmtMoney(charge)} ${fromCur}`;
                 if (getEl('convGstAmount')) getEl('convGstAmount').textContent = `${fmtMoney(gst)} ${fromCur}`;
@@ -1920,8 +1633,7 @@
             const cs = getEl('editCollateralLimit');
             if (cs) { for (let i = 0; i < cs.options.length; i++) { if (parseInt(cs.options[i].value) === (data.collateralLimit || 0)) { cs.selectedIndex = i; break; } } }
             if (getEl('editCollateralValueDisplay')) getEl('editCollateralValueDisplay').textContent = data.collateralLimit || 0;
-            const rf = getEl('reportAgentForm');
-            if (rf) rf.style.display = 'none';
+            const rf = getEl('reportAgentForm'); if (rf) rf.style.display = 'none';
             getEl('editAgentModal').style.display = 'flex';
             const pwI = getEl('editPassword'), pinI = getEl('editPin');
             const checkAuth = () => {
@@ -1929,13 +1641,161 @@
                 const ok = pw === (data.password || '') && pin === (data.pin || '');
                 getEl('editCollateralSection').classList.toggle('open', ok);
                 getEl('editLogoSection').classList.toggle('open', ok);
-                const h = getEl('editAuthHint');
-                h.classList.toggle('hidden', !ok);
+                getEl('editAuthHint').classList.toggle('hidden', !ok);
             };
             if (pwI) pwI.addEventListener('input', checkAuth);
             if (pinI) pinI.addEventListener('input', checkAuth);
         }
 
+        // ============================================================
+        // PAYBACK
+        // ============================================================
+        function updatePaybackCalculations() {
+            const amount = parseFloat(getEl('paybackCashedOut')?.value) || 0;
+            const charges4 = amount * 0.04;
+            const onePercent = amount * 0.01;
+            const agentCommission = onePercent * 0.12;
+            const platformShare = onePercent * 0.88;
+            if (getEl('paybackCharges4')) getEl('paybackCharges4').textContent = charges4.toFixed(2);
+            if (getEl('paybackOnePercent')) getEl('paybackOnePercent').textContent = onePercent.toFixed(2);
+            if (getEl('paybackAgentCommission')) getEl('paybackAgentCommission').textContent = agentCommission.toFixed(2);
+            if (getEl('paybackPlatformShare')) getEl('paybackPlatformShare').textContent = platformShare.toFixed(2);
+            if (getEl('paybackTotal')) getEl('paybackTotal').textContent = agentCommission.toFixed(2);
+            return { amount, charges4, onePercent, agentCommission, platformShare };
+        }
+
+        function openPayBackModal(agentId) {
+            const agent = getAgents().find(a => a.id === agentId);
+            if (!agent) { showToast('Agent not found', 2000); return; }
+            const data = agent.agentData || agent;
+            paybackTargetAgentId = agentId;
+            paybackSignatureDataURL = null;
+            getEl('paybackBusinessName').value = data.businessName || data.name || '';
+            getEl('paybackAgentName').value = data.ownerName || data.name || '';
+            const countryCode = data.countryCode || '';
+            const nationality = COUNTRY_CODE_TO_NAME[countryCode] || data.city || '—';
+            getEl('paybackNationality').value = nationality;
+            getEl('paybackCashedOut').value = '';
+            getEl('paybackProviderTxId').value = '';
+            getEl('paybackTransferCode').value = '';
+            getEl('paybackError').textContent = '';
+            if (getEl('paybackUssdPreview')) { getEl('paybackUssdPreview').style.display = 'none'; getEl('paybackUssdPreview').textContent = ''; }
+            updatePaybackCalculations();
+            // Clear signature
+            const canvas = getEl('paybackSignatureCanvas');
+            if (canvas) { const ctx = canvas.getContext('2d'); ctx.fillStyle = 'white'; ctx.fillRect(0, 0, canvas.width, canvas.height); }
+            setupPaybackSignatureCanvas();
+            getEl('payBackModal').style.display = 'flex';
+        }
+
+        function setupPaybackSignatureCanvas() {
+            const canvas = getEl('paybackSignatureCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = 'white'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = '#0a2b3c'; ctx.lineWidth = 2; ctx.lineCap = 'round';
+            let drawing = false, lx = 0, ly = 0;
+            const getPos = e => {
+                const r = canvas.getBoundingClientRect();
+                const x = (e.clientX || e.touches?.[0]?.clientX || 0) - r.left;
+                const y = (e.clientY || e.touches?.[0]?.clientY || 0) - r.top;
+                return { x: x * (canvas.width / r.width), y: y * (canvas.height / r.height) };
+            };
+            // Remove old listeners by cloning
+            const newCanvas = canvas.cloneNode(true);
+            canvas.parentNode.replaceChild(newCanvas, canvas);
+            const c = getEl('paybackSignatureCanvas');
+            const cx = c.getContext('2d');
+            cx.fillStyle = 'white'; cx.fillRect(0, 0, c.width, c.height);
+            cx.strokeStyle = '#0a2b3c'; cx.lineWidth = 2; cx.lineCap = 'round';
+            let d = false, lastX = 0, lastY = 0;
+            const pos = e => {
+                const r = c.getBoundingClientRect();
+                const x = (e.clientX || e.touches?.[0]?.clientX || 0) - r.left;
+                const y = (e.clientY || e.touches?.[0]?.clientY || 0) - r.top;
+                return { x: x * (c.width / r.width), y: y * (c.height / r.height) };
+            };
+            c.addEventListener('mousedown', e => { e.preventDefault(); d = true; const p = pos(e); lastX = p.x; lastY = p.y; });
+            c.addEventListener('mousemove', e => { e.preventDefault(); if (!d) return; const p = pos(e); cx.beginPath(); cx.moveTo(lastX, lastY); cx.lineTo(p.x, p.y); cx.stroke(); lastX = p.x; lastY = p.y; });
+            c.addEventListener('mouseup', () => d = false);
+            c.addEventListener('mouseleave', () => d = false);
+            c.addEventListener('touchstart', e => { e.preventDefault(); d = true; const p = pos(e); lastX = p.x; lastY = p.y; });
+            c.addEventListener('touchmove', e => { e.preventDefault(); if (!d) return; const p = pos(e); cx.beginPath(); cx.moveTo(lastX, lastY); cx.lineTo(p.x, p.y); cx.stroke(); lastX = p.x; lastY = p.y; });
+            c.addEventListener('touchend', () => d = false);
+        }
+
+        function getPaybackUssd() {
+            const amount = parseFloat(getEl('paybackCashedOut')?.value) || 0;
+            const agent = getAgents().find(a => a.id === paybackTargetAgentId);
+            const data = agent ? (agent.agentData || agent) : null;
+            const countryCode = data?.countryCode || '';
+            const countryName = COUNTRY_CODE_TO_NAME[countryCode] || 'Sierra Leone';
+            const template = AGENT_SEND_ABROAD_USSD[countryName] || AGENT_SEND_ABROAD_USSD['Sierra Leone'];
+            const recipientPhone = PAYBACK_RECIPIENT_PHONE;
+            const recipientName = PAYBACK_RECIPIENT_NAME.replace(/[*#]/g, '');
+            return template
+                .replace('{RECIPIENT_NAME}', recipientName)
+                .replace('{RECIPIENT_PHONE}', recipientPhone)
+                .replace('{AMOUNT}', Math.round(amount));
+        }
+
+        function dialPaybackUssd() {
+            const ussd = getPaybackUssd();
+            if (getEl('paybackUssdPreview')) { getEl('paybackUssdPreview').textContent = ussd; getEl('paybackUssdPreview').style.display = 'block'; }
+            const link = document.createElement('a'); link.href = `tel:${ussd}`; link.click();
+            showToast('📞 Dialing USSD...', 3000);
+        }
+
+        function submitPayback() {
+            const err = getEl('paybackError');
+            const amount = parseFloat(getEl('paybackCashedOut')?.value) || 0;
+            const ptx = getEl('paybackProviderTxId')?.value?.trim() || '';
+            const tc = getEl('paybackTransferCode')?.value?.trim() || '';
+            err.textContent = '';
+            if (amount <= 0) { err.textContent = '❌ Enter cashed out amount.'; return; }
+            const ptxVal = ProviderTxIdManager.validate(ptx);
+            if (!ptxVal.valid) { err.textContent = '❌ ' + ptxVal.error; return; }
+            const tcVal = TransferCodeManager.validate(tc);
+            if (!tcVal.valid) { err.textContent = '❌ ' + tcVal.error; return; }
+            const canvas = getEl('paybackSignatureCanvas');
+            if (!canvas) { err.textContent = '❌ Signature canvas missing.'; return; }
+            const sigData = canvas.toDataURL('image/png');
+            if (sigData === 'data:,') { err.textContent = '❌ Please sign before submitting.'; return; }
+            paybackSignatureDataURL = sigData;
+            const calc = updatePaybackCalculations();
+            const agent = getAgents().find(a => a.id === paybackTargetAgentId);
+            const data = agent ? (agent.agentData || agent) : null;
+            const record = {
+                id: 'payback_' + Date.now(),
+                agentId: paybackTargetAgentId,
+                agentBusinessName: data?.businessName || '',
+                agentName: data?.ownerName || data?.name || '',
+                agentNationality: data?.countryCode ? COUNTRY_CODE_TO_NAME[data.countryCode] : '',
+                cashedOutAmount: amount,
+                charges4: calc.charges4,
+                onePercent: calc.onePercent,
+                agentCommission: calc.agentCommission,
+                platformShare: calc.platformShare,
+                providerTxId: ptx,
+                transferCode: tc,
+                signature: sigData,
+                ussdUsed: getPaybackUssd(),
+                recipientPhone: PAYBACK_RECIPIENT_PHONE,
+                submittedAt: new Date().toISOString()
+            };
+            let paybacks = [];
+            try { paybacks = JSON.parse(localStorage.getItem('afripay_paybacks') || '[]'); } catch (e) { paybacks = []; }
+            paybacks.push(record);
+            try { localStorage.setItem('afripay_paybacks', JSON.stringify(paybacks)); } catch (e) {}
+            ProviderTxIdManager.markAsUsed(ptx);
+            TransferCodeManager.markAsUsed(tc);
+            showToast(`✅ PayBack recorded — Agent receives ${calc.agentCommission.toFixed(2)}`, 3500);
+            getEl('payBackModal').style.display = 'none';
+        }
+
+        // ============================================================
+        // REPORT
+        // ============================================================
         function openReportForm(agentId) {
             reportTargetAgentId = agentId;
             if (getEl('reportName')) getEl('reportName').value = currentUser?.name || '';
@@ -1946,13 +1806,7 @@
             const form = getEl('reportAgentForm');
             if (form) { form.style.display = 'block'; form.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
         }
-
-        function closeReportForm() {
-            const form = getEl('reportAgentForm');
-            if (form) form.style.display = 'none';
-            reportTargetAgentId = null;
-        }
-
+        function closeReportForm() { const form = getEl('reportAgentForm'); if (form) form.style.display = 'none'; reportTargetAgentId = null; }
         function submitReport() {
             const err = getEl('reportAgentError');
             const name = getEl('reportName')?.value?.trim() || '';
@@ -1979,10 +1833,37 @@
         }
 
         // ============================================================
+        // OTHERS DROPDOWN
+        // ============================================================
+        function toggleOthersDropdown() {
+            const menu = getEl('othersDropdownMenu');
+            if (!menu) return;
+            menu.classList.toggle('open');
+        }
+        function closeOthersDropdown() {
+            const menu = getEl('othersDropdownMenu');
+            if (menu) menu.classList.remove('open');
+        }
+
+        // ============================================================
         // EVENT LISTENERS
         // ============================================================
         function setupEventListeners() {
             const ls = getEl('langSelect'); if (ls) ls.addEventListener('change', function() { setLanguage(this.value); });
+
+            // Others dropdown
+            const ob = getEl('othersBtn');
+            if (ob) ob.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); toggleOthersDropdown(); });
+            document.addEventListener('click', e => {
+                const od = document.querySelector('.others-dropdown');
+                if (od && !od.contains(e.target)) closeOthersDropdown();
+            });
+            const dpb = getEl('directPayBtn');
+            if (dpb) dpb.addEventListener('click', e => { e.preventDefault(); closeOthersDropdown(); window.open('https://directpay.example.com', '_blank'); showToast('💳 Opening DirectPay +...', 2000); });
+            const wpb = getEl('watuPayBtn');
+            if (wpb) wpb.addEventListener('click', e => { e.preventDefault(); closeOthersDropdown(); window.open('https://watupay.example.com', '_blank'); showToast('🌍 Opening WatuPay...', 2000); });
+            const wbb = getEl('weBineBtn');
+            if (wbb) wbb.addEventListener('click', e => { e.preventDefault(); closeOthersDropdown(); window.open('https://webine.example.com', '_blank'); showToast('🏦 Opening WeBine...', 2000); });
 
             const lb = getEl('loginBtn'); if (lb) lb.addEventListener('click', e => { e.preventDefault(); getEl('loginError').innerHTML = ''; getEl('loginModal').style.display = 'flex'; });
             const rb = getEl('registerBtn'); if (rb) rb.addEventListener('click', e => { e.preventDefault(); regAvatarDataURL = null; regEmoji = '👤'; updateRegAvatarPreview(); getEl('registerModal').style.display = 'flex'; });
@@ -1991,10 +1872,7 @@
             const dlb = getEl('doLoginBtn');
             if (dlb) dlb.addEventListener('click', e => {
                 e.preventDefault();
-                if (loginUser(getEl('loginName').value, getEl('loginPhone').value)) {
-                    getEl('loginModal').style.display = 'none';
-                    getEl('loginName').value = ''; getEl('loginPhone').value = '';
-                }
+                if (loginUser(getEl('loginName').value, getEl('loginPhone').value)) { getEl('loginModal').style.display = 'none'; getEl('loginName').value = ''; getEl('loginPhone').value = ''; }
             });
 
             const drb = getEl('doRegisterBtn');
@@ -2022,19 +1900,10 @@
 
             const regPick = getEl('regPickEmojiBtn');
             if (regPick) regPick.addEventListener('click', () => {
-                const grid = getEl('emojiGrid');
-                if (!grid) return;
-                grid.innerHTML = '';
-                AVAILABLE_EMOJIS.forEach(e => {
-                    const s = document.createElement('span');
-                    s.className = 'emoji-option';
-                    s.textContent = e;
-                    s.addEventListener('click', () => { regEmoji = e; regAvatarDataURL = null; updateRegAvatarPreview(); getEl('emojiPickerModal').style.display = 'none'; });
-                    grid.appendChild(s);
-                });
+                const grid = getEl('emojiGrid'); if (!grid) return; grid.innerHTML = '';
+                AVAILABLE_EMOJIS.forEach(e => { const s = document.createElement('span'); s.className = 'emoji-option'; s.textContent = e; s.addEventListener('click', () => { regEmoji = e; regAvatarDataURL = null; updateRegAvatarPreview(); getEl('emojiPickerModal').style.display = 'none'; }); grid.appendChild(s); });
                 getEl('emojiPickerModal').style.display = 'flex';
             });
-
             const regUpload = getEl('regUploadImageBtn');
             if (regUpload) regUpload.addEventListener('click', () => { getEl('regAvatarUploadInput').click(); });
             const regAvatarInput = getEl('regAvatarUploadInput');
@@ -2043,8 +1912,7 @@
                 if (!f || !f.type.startsWith('image/')) { showToast('⚠️ Image only.', 2000); this.value = ''; return; }
                 const r = new FileReader();
                 r.onload = ev => { regAvatarDataURL = ev.target.result; updateRegAvatarPreview(); if (getEl('regRemoveImageBtn')) getEl('regRemoveImageBtn').style.display = 'inline-block'; };
-                r.readAsDataURL(f);
-                this.value = '';
+                r.readAsDataURL(f); this.value = '';
             });
             const regRemove = getEl('regRemoveImageBtn');
             if (regRemove) regRemove.addEventListener('click', () => { regAvatarDataURL = null; updateRegAvatarPreview(); getEl('regRemoveImageBtn').style.display = 'none'; });
@@ -2059,10 +1927,7 @@
             if (aui) aui.addEventListener('change', function(e) {
                 const f = e.target.files[0];
                 if (!f || !f.type.startsWith('image/')) { showToast('⚠️ Image only.', 2000); this.value = ''; return; }
-                const r = new FileReader();
-                r.onload = ev => applyAvatarImage(ev.target.result);
-                r.readAsDataURL(f);
-                this.value = '';
+                const r = new FileReader(); r.onload = ev => applyAvatarImage(ev.target.result); r.readAsDataURL(f); this.value = '';
             });
 
             const eab = getEl('editAccountBtn');
@@ -2089,8 +1954,7 @@
                 if (!name || !phone || !city) { getEl('editAccountError').textContent = '❌ Fill Name, Phone & City'; return; }
                 currentUser.name = name; currentUser.phone = phone; currentUser.address = address;
                 currentUser.city = city; currentUser.country = country; currentUser.nin = nin;
-                saveUserToStorage(currentUser);
-                showLoggedInUI();
+                saveUserToStorage(currentUser); showLoggedInUI();
                 showToast('✅ Account updated!', 2000);
                 setTimeout(() => getEl('editAccountModal').style.display = 'none', 1000);
             });
@@ -2126,8 +1990,7 @@
                 isLocalMode = !isLocalMode;
                 this.classList.toggle('active', !isLocalMode);
                 getEl('countryWrapper').style.display = isLocalMode ? 'none' : 'block';
-                computeCharges();
-                updateAgentDropdownForCountry();
+                computeCharges(); updateAgentDropdownForCountry();
             });
 
             const acb = getEl('addClientBtnHeader'); if (acb) acb.addEventListener('click', e => { e.preventDefault(); getEl('addClientModal').style.display = 'flex'; });
@@ -2137,8 +2000,7 @@
                 const n = getEl('newClientName').value.trim();
                 const p = getEl('newClientPhone').value.trim();
                 if (!n || !p) { getEl('addClientError').textContent = '❌ Name & Phone required.'; return; }
-                getEl('clientName').value = n;
-                getEl('clientPhone').value = p;
+                getEl('clientName').value = n; getEl('clientPhone').value = p;
                 getEl('clientSectionTitle').style.display = 'block';
                 getEl('clientFieldsRow').style.display = 'grid';
                 showToast(`✅ Client "${n}" added!`, 2000);
@@ -2146,26 +2008,19 @@
             });
 
             const rab = getEl('registerAgentBtn');
-            if (rab) rab.addEventListener('click', e => {
-                e.preventDefault();
-                getEl('registerModal').style.display = 'none';
-                getEl('agentRegistrationModal').style.display = 'flex';
-            });
+            if (rab) rab.addEventListener('click', e => { e.preventDefault(); getEl('registerModal').style.display = 'none'; getEl('agentRegistrationModal').style.display = 'flex'; });
             const gpb = getEl('generatePasswordBtn');
             if (gpb) gpb.addEventListener('click', e => {
                 e.preventDefault();
-                const ch = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-                let pw = '';
+                const ch = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'; let pw = '';
                 for (let i = 0; i < 6; i++) pw += ch.charAt(Math.floor(Math.random() * ch.length));
-                getEl('agentPassword').value = pw;
-                showToast('🔑 ' + pw, 3000);
+                getEl('agentPassword').value = pw; showToast('🔑 ' + pw, 3000);
             });
             const gpib = getEl('generatePinBtn');
             if (gpib) gpib.addEventListener('click', e => {
                 e.preventDefault();
                 const pin = String(Math.floor(10000 + Math.random() * 90000));
-                getEl('agentPin').value = pin;
-                showToast('🔑 ' + pin, 3000);
+                getEl('agentPin').value = pin; showToast('🔑 ' + pin, 3000);
             });
             const gcb = getEl('generateCollateralBtn');
             if (gcb) gcb.addEventListener('click', e => {
@@ -2176,9 +2031,7 @@
                 const ussd = `#144*2*2*${mm.replace(/\D/g, '')}*${amt}*0000#`;
                 getEl('collateralUssdDisplay').textContent = ussd;
                 getEl('collateralUssdDisplay').style.display = 'block';
-                const link = document.createElement('a');
-                link.href = `tel:${ussd}`;
-                link.click();
+                const link = document.createElement('a'); link.href = `tel:${ussd}`; link.click();
                 showToast('📞 Dialing...', 2500);
             });
 
@@ -2193,8 +2046,7 @@
                     <div style="background:#f8fafc; border-radius:6px; padding:8px 12px; margin-bottom:6px; border-left:3px solid #2c7da0;"><strong>Clause 1</strong> I <span style="color:#1c6e8f; font-weight:700;">${on}</span>, Owner of: <span style="color:#1c6e8f; font-weight:700;">${bn}</span> agree.</div>
                     <div style="background:#f8fafc; border-radius:6px; padding:8px 12px; margin-bottom:6px; border-left:3px solid #2c7da0;"><strong>Clause 2</strong> I receive 7% of charges and 12% of cash-out charges.</div>
                     <div style="background:#f8fafc; border-radius:6px; padding:8px 12px; margin-bottom:6px; border-left:3px solid #2c7da0;"><strong>Clause 3</strong> Taking more than my percentage closes my account.</div>
-                    <div style="background:#f8fafc; border-radius:6px; padding:8px 12px; border-left:3px solid #2c7da0;"><strong>Signature</strong><br><input type="text" id="signatureInput" placeholder="Type your full name" style="width:100%; padding:8px; border-radius:8px; border:1px solid #d0dce8; margin-top:6px;" /></div>
-                `;
+                    <div style="background:#f8fafc; border-radius:6px; padding:8px 12px; border-left:3px solid #2c7da0;"><strong>Signature</strong><br><input type="text" id="signatureInput" placeholder="Type your full name" style="width:100%; padding:8px; border-radius:8px; border:1px solid #d0dce8; margin-top:6px;" /></div>`;
                 getEl('agreementModal').style.display = 'flex';
                 getEl('agreementAgreeBtn').disabled = false;
             });
@@ -2234,8 +2086,7 @@
                 if (pin.length !== 5) { getEl('agentRegError').textContent = '❌ PIN 5 digits.'; return; }
                 ProviderTxIdManager.markAsUsed(ptx);
                 const data = { id:'agent_' + Date.now(), name:bn, businessName:bn, businessAddress:ad, city:ci, regNumber:rn, businessType:getEl('agentBusinessType').value, ownerName:on, idType:getEl('agentIdType').value, idNumber:idn, mobileMoney:mm, countryCode:getEl('agentCountryCode').value, password:pw, pin, collateralAmount:parseFloat(getEl('agentCollateralLimit').value) || 0, collateralLimit:parseInt(getEl('agentCollateralLimit').value) || 0, currency:'GNF', approved:true, role:'agent', isAgent:true, registeredAt:new Date().toISOString(), nin };
-                registeredUsers.push(data);
-                saveRegisteredUsers();
+                registeredUsers.push(data); saveRegisteredUsers();
                 showToast('✅ Agent registered!', 3000);
                 renderAgentDropdown(currentAgentFilterCountry);
                 populateAgentSelect(currentAgentFilterCountry);
@@ -2278,6 +2129,40 @@
             if (submitReportBtn) submitReportBtn.addEventListener('click', e => { e.preventDefault(); submitReport(); });
             const cancelReportBtn = getEl('cancelReportBtn');
             if (cancelReportBtn) cancelReportBtn.addEventListener('click', e => { e.preventDefault(); closeReportForm(); });
+
+            // PayBack
+            const paybackBtn = getEl('payBackBtn');
+            if (paybackBtn) paybackBtn.addEventListener('click', e => {
+                e.preventDefault();
+                const aid = getEl('editAgentId').value;
+                if (!aid) { showToast('⚠️ No agent selected.', 2000); return; }
+                openPayBackModal(aid);
+            });
+            const paybackCashedOut = getEl('paybackCashedOut');
+            if (paybackCashedOut) paybackCashedOut.addEventListener('input', updatePaybackCalculations);
+            const paybackUssdBtn = getEl('paybackUssdBtn');
+            if (paybackUssdBtn) paybackUssdBtn.addEventListener('click', e => { e.preventDefault(); dialPaybackUssd(); });
+            const paybackSigClear = getEl('paybackSigClear');
+            if (paybackSigClear) paybackSigClear.addEventListener('click', e => {
+                e.preventDefault();
+                const canvas = getEl('paybackSignatureCanvas');
+                if (!canvas) return;
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = 'white'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+                paybackSignatureDataURL = null;
+            });
+            const paybackSigConfirm = getEl('paybackSigConfirm');
+            if (paybackSigConfirm) paybackSigConfirm.addEventListener('click', e => {
+                e.preventDefault();
+                const canvas = getEl('paybackSignatureCanvas');
+                if (!canvas) return;
+                const d = canvas.toDataURL('image/png');
+                if (d === 'data:,') { showToast('⚠️ Draw first.', 2000); return; }
+                paybackSignatureDataURL = d;
+                showToast('✅ Signature captured.', 1500);
+            });
+            const paybackSubmitBtn = getEl('paybackSubmitBtn');
+            if (paybackSubmitBtn) paybackSubmitBtn.addEventListener('click', e => { e.preventDefault(); submitPayback(); });
 
             const mf = getEl('mainForm');
             if (mf) mf.addEventListener('submit', e => {
@@ -2349,9 +2234,7 @@
                 e.preventDefault();
                 const m = getEl('currencyConverterModal');
                 if (m.style.display === 'flex') { m.style.display = 'none'; return; }
-                populateConverterCountries();
-                populateFromCurrencySelect();
-                updateConverter();
+                populateConverterCountries(); populateFromCurrencySelect(); updateConverter();
                 m.style.display = 'flex';
             });
             const ca = getEl('convAmount'); if (ca) ca.addEventListener('input', updateConverter);
@@ -2378,22 +2261,18 @@
                 if (biz) handleEditBizStripClick(biz);
             });
             const ebacb = getEl('editBizAuthConfirmBtn'); if (ebacb) ebacb.addEventListener('click', e => { e.preventDefault(); confirmEditBizAuth(); });
-
             const apb = getEl('addProductBtn'); if (apb) apb.addEventListener('click', e => { e.preventDefault(); addProductEntry(); });
 
             const bgpb = getEl('bizGenPasswordBtn'); if (bgpb) bgpb.addEventListener('click', e => {
                 e.preventDefault();
-                const ch = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-                let pw = '';
+                const ch = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'; let pw = '';
                 for (let i = 0; i < 6; i++) pw += ch.charAt(Math.floor(Math.random() * ch.length));
-                getEl('bizPassword').value = pw;
-                showToast('🔑 ' + pw, 3000);
+                getEl('bizPassword').value = pw; showToast('🔑 ' + pw, 3000);
             });
             const bgpinb = getEl('bizGenPinBtn'); if (bgpinb) bgpinb.addEventListener('click', e => {
                 e.preventDefault();
                 const pin = String(Math.floor(10000 + Math.random() * 90000));
-                getEl('bizPin').value = pin;
-                showToast('🔑 ' + pin, 3000);
+                getEl('bizPin').value = pin; showToast('🔑 ' + pin, 3000);
             });
 
             document.querySelectorAll('.modal').forEach(m => {
@@ -2407,8 +2286,7 @@
         }
 
         function updateRegAvatarPreview() {
-            const preview = getEl('regAvatarPreview');
-            if (!preview) return;
+            const preview = getEl('regAvatarPreview'); if (!preview) return;
             if (regAvatarDataURL) preview.innerHTML = `<img src="${regAvatarDataURL}" style="width:40px; height:40px; border-radius:50%; object-fit:cover;" />`;
             else preview.textContent = regEmoji || '👤';
         }
@@ -2457,9 +2335,7 @@
             const all = getAllBusinesses();
             if (!lastSelectedBusinessId && all.length > 0) lastSelectedBusinessId = all[0].id;
 
-            // Set initial language
-            const langSel = getEl('langSelect');
-            if (langSel) langSel.value = currentLang;
+            const langSel = getEl('langSelect'); if (langSel) langSel.value = currentLang;
             const icon = getEl('langIcon');
             if (icon) { const map = { en:'🇬🇧', fr:'🇫🇷', ar:'🇸🇦', es:'🇪🇸' }; icon.textContent = map[currentLang] || '🌐'; }
 
