@@ -52,7 +52,6 @@
         .flag-grid-wrapper::-webkit-scrollbar { display: none; }
         .flag-grid { display: flex; gap: 3px; }
         .flag-icon { font-size: 1.1rem; cursor: pointer; padding: 1px 2px; flex-shrink: 0; }
-        .flag-scroll-btn { background: rgba(0, 0, 0, 0.15); border: none; color: #1e3b4a; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; font-weight: bold; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; }
         .form-container { padding: 0.7rem 0.8rem 0.5rem 0.8rem; }
         .profile-section { background: #f0f6fb; border-radius: 12px; padding: 0.5rem 0.7rem; margin-bottom: 0.5rem; border: 1px solid #dce8f0; display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0.6rem; }
         .profile-avatar-large { width: 46px; height: 46px; border-radius: 50%; background: linear-gradient(135deg, #2c7da0, #1c4e6c); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; border: 3px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.15); flex-shrink: 0; overflow: hidden; position: relative; }
@@ -158,6 +157,13 @@
         .product-entry .product-header .remove-product-btn { background: #e74c3c; color: white; border: none; padding: 2px 8px; border-radius: 20px; font-size: 0.6rem; cursor: pointer; }
         .add-product-btn { background: #2c7da0; color: white; border: none; padding: 4px 12px; border-radius: 30px; font-weight: 700; font-size: 0.7rem; cursor: pointer; height: 30px; }
         .auth-btn-green { background: #27ae60; color: white; border: none; padding: 4px 14px; border-radius: 30px; font-weight: 700; font-size: 0.7rem; cursor: pointer; height: 30px; }
+        .goods-item { display: flex; flex-direction: column; padding: 6px 8px; border-bottom: 1px solid #eee; cursor: pointer; font-size: 0.8rem; gap: 4px; }
+        .goods-item .goods-row { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        .goods-item .goods-name { font-weight: 600; font-size: 0.8rem; }
+        .goods-item .goods-price { color: #f4a261; font-weight: 700; font-size: 0.8rem; }
+        .goods-item .goods-details { display: flex; gap: 12px; font-size: 0.7rem; color: #555; flex-wrap: wrap; }
+        .goods-item .goods-details span { background: #f0f4f8; padding: 1px 8px; border-radius: 12px; }
+        .goods-select-btn { background: #2c7da0; color: white; border: none; padding: 2px 12px; border-radius: 20px; font-size: 0.65rem; font-weight: 600; cursor: pointer; height: 26px; margin-left: auto; }
         @media (max-width: 600px) {
             .double-row { grid-template-columns: 1fr; gap: 0; }
             .brand-text { font-size: 1.3rem; }
@@ -200,8 +206,8 @@
                     </div>
                     <div class="auth-section" id="authSection">
                         <div class="auth-buttons" id="authButtons">
-                            <button class="auth-btn" id="loginBtn">Login</button>
-                            <button class="auth-btn" id="registerBtn">Register</button>
+                            <button class="auth-btn" id="loginBtn" data-i18n="login">Login</button>
+                            <button class="auth-btn" id="registerBtn" data-i18n="register">Register</button>
                         </div>
                         <div id="welcomeSection" style="display:none;">
                             <div class="user-welcome">
@@ -211,7 +217,7 @@
                                 </span>
                                 <span class="user-name-display" id="loggedUserName">User</span>
                                 <button class="edit-account-btn" id="editAccountBtn">✏️</button>
-                                <button class="logout-btn" id="logoutBtn">Logout</button>
+                                <button class="logout-btn" id="logoutBtn" data-i18n="logout">Logout</button>
                                 <span class="connection-indicator"><span class="connection-dot"></span></span>
                             </div>
                         </div>
@@ -239,28 +245,28 @@
                 <button class="map-btn" id="mapButton">🗺️</button>
             </div>
             <form id="mainForm">
-                <div class="section-title">👤 SENDER</div>
+                <div class="section-title" data-i18n="sender">👤 SENDER</div>
                 <div class="double-row">
-                    <div class="input-group"><label>Name *</label><input type="text" id="senderName" required /></div>
-                    <div class="input-group"><label>Phone *</label><input type="tel" id="senderPhone" required /></div>
+                    <div class="input-group"><label data-i18n="name">Name *</label><input type="text" id="senderName" required /></div>
+                    <div class="input-group"><label data-i18n="phone">Phone *</label><input type="tel" id="senderPhone" required /></div>
                 </div>
-                <div class="input-group"><label>Address</label><input type="text" id="senderAddress" placeholder="Street" /></div>
+                <div class="input-group"><label data-i18n="address">Address</label><input type="text" id="senderAddress" placeholder="Street" /></div>
                 <div class="input-group">
-                    <label>City *</label>
+                    <label data-i18n="city">City *</label>
                     <div class="city-input-row">
                         <select id="senderCitySelect"><option value="">Select city...</option></select>
                         <span class="or-text">OR</span>
                         <input type="text" id="senderCityOther" placeholder="Other city" />
                     </div>
                 </div>
-                <div class="input-group"><label>Amount * <span id="amountLimitIndicator" class="collateral-limit-indicator" style="display:none;"></span></label><input type="number" id="amountInput" step="any" required /></div>
-                <div class="section-title">👤 AGENT</div>
+                <div class="input-group"><label data-i18n="amount">Amount * <span id="amountLimitIndicator" class="collateral-limit-indicator" style="display:none;"></span></label><input type="number" id="amountInput" step="any" required /></div>
+                <div class="section-title" data-i18n="agent">👤 AGENT</div>
                 <div class="input-group">
-                    <label id="agentNameLabel">Agent *</label>
+                    <label id="agentNameLabel" data-i18n="agent">Agent *</label>
                     <select id="agentNameSelect" class="agent-select" required><option value="">-- Select Agent --</option></select>
                     <input type="hidden" id="agentName" />
                 </div>
-                <div class="input-group"><label>Phone *</label><input type="tel" id="agentPhone" required readonly /></div>
+                <div class="input-group"><label data-i18n="phone">Phone *</label><input type="tel" id="agentPhone" required readonly /></div>
                 <div class="section-title" id="clientSectionTitle" style="display:none;">👥 CLIENT</div>
                 <div class="double-row" id="clientFieldsRow" style="display:none;">
                     <div class="input-group"><label>Client *</label><input type="text" id="clientName" readonly /></div>
@@ -268,11 +274,11 @@
                 </div>
                 <div class="mode-row">
                     <button type="button" class="btn" id="intlToggleBtn">Intl</button>
-                    <button type="button" class="btn add-client-btn-header" id="addClientBtnHeader">➕ Client</button>
+                    <button type="button" class="btn add-client-btn-header" id="addClientBtnHeader" data-i18n="addClient">➕ Client</button>
                 </div>
                 <div class="country-selector-wrapper" id="countryWrapper" style="display:none;">
                     <div class="input-group">
-                        <label>🌍 Country</label>
+                        <label data-i18n="country">🌍 Country</label>
                         <div class="country-selector">
                             <span class="country-flag" id="flagEmoji">🇱🇷</span>
                             <select id="countryCodeSelect"></select>
@@ -280,48 +286,48 @@
                     </div>
                 </div>
                 <div class="charges-panel">
-                    <div class="charges-row"><span>💰 Base:</span><span id="displayAmount">0.00</span></div>
-                    <div class="charges-row"><span>📊 Fee (4%):</span><span id="chargeAmount">0.00</span></div>
-                    <div class="charges-row"><span>🏛️ GST (<span id="gstRateLabel">15</span>%):</span><span id="gstAmount">0.00</span></div>
-                    <div class="charges-row total-row"><span>💵 Total:</span><span id="totalAmount">0.00</span></div>
-                    <div class="charges-row"><span>🌍 Currency:</span><span id="currencySymbol">SLL</span></div>
+                    <div class="charges-row"><span data-i18n="base">💰 Base:</span><span id="displayAmount">0.00</span></div>
+                    <div class="charges-row"><span data-i18n="fee">📊 Fee (4%):</span><span id="chargeAmount">0.00</span></div>
+                    <div class="charges-row"><span><span data-i18n="gst">🏛️ GST</span> (<span id="gstRateLabel">15</span>%):</span><span id="gstAmount">0.00</span></div>
+                    <div class="charges-row total-row"><span data-i18n="total">💵 Total:</span><span id="totalAmount">0.00</span></div>
+                    <div class="charges-row"><span data-i18n="currency">🌍 Currency:</span><span id="currencySymbol">SLL</span></div>
                 </div>
                 <div class="product-detail-group" id="productDetailGroup" style="display:none;">
-                    <div class="section-title" style="font-size:0.75rem;">📦 PRODUCT DETAILS</div>
+                    <div class="section-title" style="font-size:0.75rem;" data-i18n="productDetails">📦 PRODUCT DETAILS</div>
                     <div class="double-row">
-                        <div class="input-group"><label>Product Name</label><input type="text" id="productName" readonly /></div>
-                        <div class="input-group"><label>Product Icon</label><div style="font-size:1.5rem; text-align:center;" id="productIconPreview">📱</div></div>
+                        <div class="input-group"><label data-i18n="productName">Product Name</label><input type="text" id="productName" readonly /></div>
+                        <div class="input-group"><label data-i18n="productIcon">Product Icon</label><div style="font-size:1.5rem; text-align:center;" id="productIconPreview">📱</div></div>
                     </div>
                     <div class="double-row">
-                        <div class="input-group"><label>Price (per unit)</label><input type="text" id="productPrice" readonly /></div>
-                        <div class="input-group"><label>Ordered Quantity</label><input type="number" id="productQuantity" min="1" value="1" /></div>
+                        <div class="input-group"><label data-i18n="pricePerUnit">Price (per unit)</label><input type="text" id="productPrice" readonly /></div>
+                        <div class="input-group"><label data-i18n="quantity">Ordered Quantity</label><input type="number" id="productQuantity" min="1" value="1" /></div>
                     </div>
                 </div>
-                <div class="section-title">💸 Operator</div>
+                <div class="section-title" data-i18n="operator">💸 Operator</div>
                 <div class="mm-button-container"><button type="button" class="single-mm-btn" id="mainMmBtn">MB-FOUR</button></div>
-                <div class="section-title">🔖 TX ID</div>
+                <div class="section-title" data-i18n="txId">🔖 TX ID</div>
                 <div class="tx-row">
-                    <div class="input-group"><label>TX ID</label><input type="text" id="transactionId" placeholder="Generate" /></div>
-                    <button type="button" class="tx-btn" id="generateTxBtn">Gen</button>
-                    <button type="button" class="tx-btn copy" id="copyTxBtn">Copy</button>
+                    <div class="input-group"><label data-i18n="txId">TX ID</label><input type="text" id="transactionId" placeholder="Generate" /></div>
+                    <button type="button" class="tx-btn" id="generateTxBtn" data-i18n="gen">Gen</button>
+                    <button type="button" class="tx-btn copy" id="copyTxBtn" data-i18n="copy">Copy</button>
                 </div>
-                <div class="section-title">🔐 Provider TX ID</div>
+                <div class="section-title" data-i18n="providerTxId">🔐 Provider TX ID</div>
                 <div class="input-group">
-                    <label for="providerTxId">Provider TX ID *</label>
+                    <label for="providerTxId" data-i18n="providerTxId">Provider TX ID *</label>
                     <input type="text" id="providerTxId" placeholder="AB123456.1234.X12345" />
                     <div id="providerTxIdError" class="error-msg" style="display:none;"></div>
                 </div>
                 <div class="input-group" id="mainTransferCodeGroup" style="display:none;">
-                    <label for="mainTransferCode">Transfer Code *</label>
+                    <label for="mainTransferCode" data-i18n="transferCode">Transfer Code *</label>
                     <input type="text" id="mainTransferCode" placeholder="Enter code" maxlength="14" />
                     <div id="mainTransferCodeError" class="error-msg" style="display:none;"></div>
                 </div>
-                <button type="submit" class="btn-submit" id="submitBtn">Submit</button>
+                <button type="submit" class="btn-submit" id="submitBtn" data-i18n="submit">Submit</button>
                 <div class="business-strip">
                     <div class="business-title">
-                        <span>⭐ QUICK PAY ⭐</span>
-                        <button class="add-biz-btn" id="addBizBtn" type="button">➕ Add Biz</button>
-                        <button class="edit-biz-strip-btn" id="editBizStripBtn" type="button">✏️ Edit Biz</button>
+                        <span data-i18n="quickPay">⭐ QUICK PAY ⭐</span>
+                        <button class="add-biz-btn" id="addBizBtn" type="button" data-i18n="addBiz">➕ Add Biz</button>
+                        <button class="edit-biz-strip-btn" id="editBizStripBtn" type="button" data-i18n="editBiz">✏️ Edit Biz</button>
                     </div>
                     <div class="business-icons" id="businessIconsContainer"></div>
                 </div>
@@ -330,12 +336,12 @@
 
         <div class="footer-section">
             <div class="footer-buttons">
-                <button class="footer-btn" id="aboutAppBtn">About</button>
-                <button class="footer-btn" id="aboutDevBtn">Dev</button>
-                <button class="footer-btn" id="contactBtn">Contact</button>
-                <button class="footer-btn" id="subscribeBtn">Subscribe</button>
-                <button class="footer-btn" id="howToBtn" style="background:#2c7da0; color:white;">📖 How</button>
-                <button class="footer-btn" id="currencyConverterBtn" style="background:#0f2b3d; color:white;">💱 Convert</button>
+                <button class="footer-btn" id="aboutAppBtn" data-i18n="about">About</button>
+                <button class="footer-btn" id="aboutDevBtn" data-i18n="dev">Dev</button>
+                <button class="footer-btn" id="contactBtn" data-i18n="contact">Contact</button>
+                <button class="footer-btn" id="subscribeBtn" data-i18n="subscribe">Subscribe</button>
+                <button class="footer-btn" id="howToBtn" style="background:#2c7da0; color:white;" data-i18n="how">📖 How</button>
+                <button class="footer-btn" id="currencyConverterBtn" style="background:#0f2b3d; color:white;" data-i18n="convert">💱 Convert</button>
             </div>
             <div class="social-icons">
                 <a href="#" class="social-icon">WA</a><a href="#" class="social-icon">FB</a><a href="#" class="social-icon">IG</a><a href="#" class="social-icon">YT</a><a href="#" class="social-icon">WB</a>
@@ -371,13 +377,13 @@
     <!-- Emoji Picker -->
     <div id="emojiPickerModal" class="modal">
         <div class="modal-content" style="max-width:380px;">
-            <h3>😊 Choose Your Avatar</h3>
+            <h3 data-i18n="chooseAvatar">😊 Choose Your Avatar</h3>
             <div style="display:flex; gap:6px; margin-bottom:8px;">
-                <button type="button" class="action-btn" id="emojiUploadImageBtn" style="flex:1; background:#2c7da0; height:36px;">📷 Upload</button>
-                <button type="button" class="action-btn" id="emojiRemoveImageBtn" style="flex:1; background:#e74c3c; height:36px;">🗑️ Remove</button>
+                <button type="button" class="action-btn" id="emojiUploadImageBtn" style="flex:1; background:#2c7da0; height:36px;" data-i18n="upload">📷 Upload</button>
+                <button type="button" class="action-btn" id="emojiRemoveImageBtn" style="flex:1; background:#e74c3c; height:36px;" data-i18n="remove">🗑️ Remove</button>
             </div>
             <div class="emoji-grid" id="emojiGrid"></div>
-            <div class="action-buttons-row"><button class="action-btn close-modal" style="width:100%;">Cancel</button></div>
+            <div class="action-buttons-row"><button class="action-btn close-modal" style="width:100%;" data-i18n="cancel">Cancel</button></div>
         </div>
     </div>
 
@@ -387,110 +393,108 @@
         <div class="chat-sidebar" id="chatSidebar"></div>
         <div class="chat-main">
             <div class="chat-nav">
-                <span class="chat-contact" id="chatContact">Select a contact</span>
+                <span class="chat-contact" id="chatContact" data-i18n="selectContact">Select a contact</span>
                 <button class="chat-close" id="chatCloseBtn">✕</button>
             </div>
             <div class="chat-messages" id="chatMessages"></div>
-            <div class="chat-input-area"><input type="text" id="chatInput" placeholder="Type a message..." /><button id="chatSendBtn">Send</button></div>
+            <div class="chat-input-area"><input type="text" id="chatInput" placeholder="Type a message..." /><button id="chatSendBtn" data-i18n="send">Send</button></div>
         </div>
     </div>
 
     <!-- MODALS -->
-    <div id="mapModal" class="modal"><div class="modal-content"><h3>📍 Location</h3><iframe id="mapIframe" style="width:100%; height:300px; border:none; border-radius:8px;"></iframe><button class="action-btn close-modal">Close</button></div></div>
-    <div id="infoModal" class="modal"><div class="modal-content"><h3 id="modalTitle"></h3><div id="modalBody"></div><button class="action-btn close-modal">Close</button></div></div>
-    <div id="subscribeModal" class="modal"><div class="modal-content"><h3>📧 Subscribe</h3><input type="email" id="subEmail" placeholder="Email" style="width:100%; padding:5px 10px; border-radius:30px; border:1px solid #ddd; height:38px;" /><div class="action-buttons-row"><button id="submitSubscribeBtn" class="action-btn">Subscribe</button><button class="action-btn close-modal">Cancel</button></div></div></div>
-    <div id="loginModal" class="modal"><div class="modal-content"><h3>🔐 Login</h3><input type="text" id="loginName" placeholder="Full Name" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; height:38px;" /><input type="tel" id="loginPhone" placeholder="Phone" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; height:38px;" /><div id="loginError" class="error-msg"></div><div class="action-buttons-row"><button id="doLoginBtn" class="action-btn">Login</button><button class="action-btn close-modal">Cancel</button></div></div></div>
+    <div id="mapModal" class="modal"><div class="modal-content"><h3 data-i18n="location">📍 Location</h3><iframe id="mapIframe" style="width:100%; height:300px; border:none; border-radius:8px;"></iframe><button class="action-btn close-modal" data-i18n="close">Close</button></div></div>
+    <div id="infoModal" class="modal"><div class="modal-content"><h3 id="modalTitle"></h3><div id="modalBody"></div><button class="action-btn close-modal" data-i18n="close">Close</button></div></div>
+    <div id="subscribeModal" class="modal"><div class="modal-content"><h3 data-i18n="subscribe">📧 Subscribe</h3><input type="email" id="subEmail" placeholder="Email" style="width:100%; padding:5px 10px; border-radius:30px; border:1px solid #ddd; height:38px;" /><div class="action-buttons-row"><button id="submitSubscribeBtn" class="action-btn" data-i18n="subscribe">Subscribe</button><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div></div></div>
+    <div id="loginModal" class="modal"><div class="modal-content"><h3 data-i18n="login">🔐 Login</h3><input type="text" id="loginName" placeholder="Full Name" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; height:38px;" /><input type="tel" id="loginPhone" placeholder="Phone" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; height:38px;" /><div id="loginError" class="error-msg"></div><div class="action-buttons-row"><button id="doLoginBtn" class="action-btn" data-i18n="login">Login</button><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div></div></div>
 
     <div id="registerModal" class="modal"><div class="modal-content">
-        <h3>📝 Register</h3>
+        <h3 data-i18n="register">📝 Register</h3>
         <input type="text" id="regName" placeholder="Full Name *" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; height:38px;" />
         <input type="tel" id="regPhone" placeholder="Phone *" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; height:38px;" />
         <input type="text" id="regAddress" placeholder="Address" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; height:38px;" />
-        <div class="input-group"><label>City *</label><div class="city-input-row"><select id="regCitySelect"><option value="">Select city...</option></select><span class="or-text">OR</span><input type="text" id="regCityOther" placeholder="Other city" /></div></div>
+        <div class="input-group"><label data-i18n="city">City *</label><div class="city-input-row"><select id="regCitySelect"><option value="">Select city...</option></select><span class="or-text">OR</span><input type="text" id="regCityOther" placeholder="Other city" /></div></div>
         <select id="regCountry" style="width:100%; padding:5px 10px; margin:2px 0; border-radius:30px; border:1px solid #ddd; height:38px;"></select>
         <div class="input-group"><label>🪪 NIN *</label><input type="text" id="regNin" /></div>
         <div class="input-group"><label>📄 ID Number *</label><input type="text" id="regIdNumber" /></div>
         <div class="input-group">
-            <label>😊 Profile Avatar</label>
+            <label data-i18n="profileAvatar">😊 Profile Avatar</label>
             <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
                 <span id="regAvatarPreview" style="font-size:2rem;">👤</span>
-                <button type="button" class="action-btn" id="regPickEmojiBtn" style="background:#2c7da0; height:36px;">🎨 Emoji</button>
-                <button type="button" class="action-btn" id="regUploadImageBtn" style="background:#2c7da0; height:36px;">📷 Upload</button>
-                <button type="button" class="action-btn" id="regRemoveImageBtn" style="background:#e74c3c; height:36px; display:none;">🗑️</button>
+                <button type="button" class="action-btn" id="regPickEmojiBtn" style="background:#2c7da0; height:36px;" data-i18n="emoji">🎨 Emoji</button>
+                <button type="button" class="action-btn" id="regUploadImageBtn" style="background:#2c7da0; height:36px;" data-i18n="upload">📷 Upload</button>
+                <button type="button" class="action-btn" id="regRemoveImageBtn" style="background:#e74c3c; height:36px; display:none;" data-i18n="remove">🗑️</button>
             </div>
             <input type="file" id="regAvatarUploadInput" accept="image/*" class="hidden-input" />
         </div>
         <div id="regError" class="error-msg"></div><div id="regSuccess" class="success-msg"></div>
-        <div class="action-buttons-row"><button id="doRegisterBtn" class="action-btn">Register</button><button id="registerAgentBtn" class="action-btn orange">🏢 Agent</button><button class="action-btn close-modal">Cancel</button></div>
+        <div class="action-buttons-row"><button id="doRegisterBtn" class="action-btn" data-i18n="register">Register</button><button id="registerAgentBtn" class="action-btn orange" data-i18n="agent">🏢 Agent</button><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div>
     </div></div>
 
     <div id="agentRegistrationModal" class="modal"><div class="modal-content agent-form">
-        <h3>🏢 Agent Registration</h3>
+        <h3 data-i18n="agentRegistration">🏢 Agent Registration</h3>
         <div id="agentRegError" class="error-msg"></div>
-        <div class="input-group"><label>Business *</label><input type="text" id="agentBusinessName" /></div>
-        <div class="input-group"><label>Address *</label><input type="text" id="agentAddress" /></div>
-        <div class="input-group"><label>City *</label><div class="city-input-row"><select id="agentCitySelect"><option value="">Select city...</option></select><span class="or-text">OR</span><input type="text" id="agentCityOther" /></div></div>
-        <div class="input-group"><label>Reg Number *</label><input type="text" id="agentRegNumber" /></div>
-        <div class="input-group"><label>Type *</label><select id="agentBusinessType"><option>Retail</option><option>Service</option><option>Other</option></select></div>
-        <div class="double-row"><div class="input-group"><label>Owner *</label><input type="text" id="agentOwnerName" /></div><div class="input-group"><label>ID Type *</label><select id="agentIdType"><option>National ID</option><option>Passport</option></select></div></div>
-        <div class="input-group"><label>ID Number *</label><input type="text" id="agentIdNumber" /></div>
+        <div class="input-group"><label data-i18n="business">Business *</label><input type="text" id="agentBusinessName" /></div>
+        <div class="input-group"><label data-i18n="address">Address *</label><input type="text" id="agentAddress" /></div>
+        <div class="input-group"><label data-i18n="city">City *</label><div class="city-input-row"><select id="agentCitySelect"><option value="">Select city...</option></select><span class="or-text">OR</span><input type="text" id="agentCityOther" /></div></div>
+        <div class="input-group"><label data-i18n="regNumber">Reg Number *</label><input type="text" id="agentRegNumber" /></div>
+        <div class="input-group"><label data-i18n="type">Type *</label><select id="agentBusinessType"><option>Retail</option><option>Service</option><option>Other</option></select></div>
+        <div class="double-row"><div class="input-group"><label data-i18n="owner">Owner *</label><input type="text" id="agentOwnerName" /></div><div class="input-group"><label data-i18n="idType">ID Type *</label><select id="agentIdType"><option>National ID</option><option>Passport</option></select></div></div>
+        <div class="input-group"><label data-i18n="idNumber">ID Number *</label><input type="text" id="agentIdNumber" /></div>
         <div class="input-group"><label>🪪 NIN *</label><input type="text" id="agentNin" /></div>
-        <div class="input-group"><label>Mobile Money *</label><input type="tel" id="agentMobileMoney" /></div>
-        <div class="input-group"><label>💳 Collateral *</label><select id="agentCollateralLimit"></select></div>
-        <div class="input-group"><label>Country Code</label><select id="agentCountryCode"><option value="+232">🇸🇱 +232</option><option value="+224" selected>🇬🇳 +224</option><option value="+221">🇸🇳 +221</option><option value="+220">🇬🇲 +220</option><option value="+226">🇧🇫 +226</option></select></div>
-        <div class="input-group"><label>Password *</label><div style="display:flex; gap:4px;"><input type="text" id="agentPassword" readonly style="flex:1;" /><button type="button" class="action-btn green" id="generatePasswordBtn">🔑 Gen</button></div></div>
-        <div class="input-group"><label>5-Digit PIN *</label><div style="display:flex; gap:4px;"><input type="text" id="agentPin" readonly style="flex:1;" /><button type="button" class="action-btn green" id="generatePinBtn">🔑 Gen PIN</button></div></div>
+        <div class="input-group"><label data-i18n="mobileMoney">Mobile Money *</label><input type="tel" id="agentMobileMoney" /></div>
+        <div class="input-group"><label data-i18n="collateral">💳 Collateral *</label><select id="agentCollateralLimit"></select></div>
+        <div class="input-group"><label data-i18n="countryCode">Country Code</label><select id="agentCountryCode"><option value="+232">🇸🇱 +232</option><option value="+224" selected>🇬🇳 +224</option><option value="+221">🇸🇳 +221</option><option value="+220">🇬🇲 +220</option><option value="+226">🇧🇫 +226</option></select></div>
+        <div class="input-group"><label data-i18n="password">Password *</label><div style="display:flex; gap:4px;"><input type="text" id="agentPassword" readonly style="flex:1;" /><button type="button" class="action-btn green" id="generatePasswordBtn" data-i18n="gen">🔑 Gen</button></div></div>
+        <div class="input-group"><label data-i18n="pin">5-Digit PIN *</label><div style="display:flex; gap:4px;"><input type="text" id="agentPin" readonly style="flex:1;" /><button type="button" class="action-btn green" id="generatePinBtn" data-i18n="genPin">🔑 Gen PIN</button></div></div>
         
         <div class="input-group">
-            <label>🪪 Upload ID Document *</label>
+            <label data-i18n="uploadId">🪪 Upload ID Document *</label>
             <input type="file" id="agentIdUpload" accept="image/*,application/pdf" />
             <img id="agentIdPreview" class="id-preview" alt="ID Preview" />
         </div>
         <div class="input-group">
-            <label>🏢 Upload Business Profile / Logo *</label>
+            <label data-i18n="uploadBizProfile">🏢 Upload Business Profile / Logo *</label>
             <input type="file" id="agentBizProfileUpload" accept="image/*" />
             <img id="agentBizProfilePreview" class="id-preview" alt="Business Profile Preview" />
         </div>
 
         <div class="collateral-box"><button class="action-btn orange" id="generateCollateralBtn">USSD</button><div id="collateralUssdDisplay" class="ussd-code" style="display:none;"></div><div id="collateralError" class="error-msg"></div><input type="hidden" id="collateralAmount" value="0" /></div>
-        <div style="text-align:center; margin:6px 0;"><button class="action-btn orange" id="viewAgreementBtn" style="width:100%;">📜 Agreement</button><div style="font-size:0.68rem;"><span id="agreementStatusText" style="color:#e74c3c;">Not Signed</span></div></div>
-        <div class="input-group"><label>🔐 Provider TX ID *</label><input type="text" id="agentProviderTxId" /><div id="agentProviderTxIdError" class="error-msg"></div></div>
-        <div class="action-buttons-row"><button class="action-btn" id="submitAgentRegistrationBtn">Register</button><button class="action-btn close-modal" style="background:#2c7da0;">Close</button></div>
+        <div style="text-align:center; margin:6px 0;"><button class="action-btn orange" id="viewAgreementBtn" style="width:100%;" data-i18n="agreement">📜 Agreement</button><div style="font-size:0.68rem;"><span id="agreementStatusText" style="color:#e74c3c;" data-i18n="notSigned">Not Signed</span></div></div>
+        <div class="input-group"><label data-i18n="providerTxId">🔐 Provider TX ID *</label><input type="text" id="agentProviderTxId" /><div id="agentProviderTxIdError" class="error-msg"></div></div>
+        <div class="action-buttons-row"><button class="action-btn" id="submitAgentRegistrationBtn" data-i18n="register">Register</button><button class="action-btn close-modal" style="background:#2c7da0;" data-i18n="close">Close</button></div>
     </div></div>
 
-    <!-- EDIT AGENT MODAL -->
     <div id="editAgentModal" class="modal"><div class="modal-content agent-form">
         <div class="edit-agent-header">
-            <h3>✏️ Edit Agent</h3>
-            <button type="button" class="action-btn red" id="reportAgentBtn" style="height:32px; font-size:0.72rem; padding:4px 14px;">🚨 Report</button>
+            <h3 data-i18n="editAgent">✏️ Edit Agent</h3>
+            <button type="button" class="action-btn red" id="reportAgentBtn" style="height:32px; font-size:0.72rem; padding:4px 14px;" data-i18n="report">🚨 Report</button>
         </div>
         <input type="hidden" id="editAgentId" />
         <div id="editAgentError" class="error-msg"></div>
-        <div class="input-group"><label>Business *</label><input type="text" id="editBusinessName" /></div>
-        <div class="input-group"><label>Address *</label><input type="text" id="editAddress" /></div>
-        <div class="input-group"><label>City *</label><div class="city-input-row"><select id="editCitySelect"><option value="">Select city...</option></select><span class="or-text">OR</span><input type="text" id="editCityOther" /></div></div>
-        <div class="input-group"><label>Reg Number *</label><input type="text" id="editRegNumber" /></div>
-        <div class="input-group"><label>Mobile Money *</label><input type="tel" id="editMobileMoney" /></div>
+        <div class="input-group"><label data-i18n="business">Business *</label><input type="text" id="editBusinessName" /></div>
+        <div class="input-group"><label data-i18n="address">Address *</label><input type="text" id="editAddress" /></div>
+        <div class="input-group"><label data-i18n="city">City *</label><div class="city-input-row"><select id="editCitySelect"><option value="">Select city...</option></select><span class="or-text">OR</span><input type="text" id="editCityOther" /></div></div>
+        <div class="input-group"><label data-i18n="regNumber">Reg Number *</label><input type="text" id="editRegNumber" /></div>
+        <div class="input-group"><label data-i18n="mobileMoney">Mobile Money *</label><input type="tel" id="editMobileMoney" /></div>
         <div class="input-group"><label>🪪 NIN</label><input type="text" id="editAgentNin" /></div>
-        <div class="input-group"><label>Password *</label><div style="display:flex; gap:4px;"><input type="text" id="editPassword" maxlength="6" style="flex:1;" /><button type="button" class="gen-btn-small" id="editGenBtn">🔑 Gen</button></div></div>
-        <div class="input-group"><label>5-Digit PIN *</label><div style="display:flex; gap:4px;"><input type="password" id="editPin" maxlength="5" style="flex:1; text-align:center;" /><button type="button" class="gen-btn-small orange" id="editPinGenBtn">🔑 Gen PIN</button></div></div>
-        <div id="editAuthHint" class="edit-agent-auth-hint hidden">✅ Credentials correct</div>
+        <div class="input-group"><label data-i18n="password">Password *</label><div style="display:flex; gap:4px;"><input type="text" id="editPassword" maxlength="6" style="flex:1;" /><button type="button" class="gen-btn-small" id="editGenBtn" data-i18n="gen">🔑 Gen</button></div></div>
+        <div class="input-group"><label data-i18n="pin">5-Digit PIN *</label><div style="display:flex; gap:4px;"><input type="password" id="editPin" maxlength="5" style="flex:1; text-align:center;" /><button type="button" class="gen-btn-small orange" id="editPinGenBtn" data-i18n="genPin">🔑 Gen PIN</button></div></div>
+        <div id="editAuthHint" class="edit-agent-auth-hint hidden" data-i18n="credentialsCorrect">✅ Credentials correct</div>
         <div class="edit-agent-collateral-section" id="editCollateralSection">
-            <div class="input-group"><label>💳 Collateral *</label><select id="editCollateralLimit"></select></div>
-            <div style="margin-top:6px; background:#f0f6fb; border-radius:6px; padding:4px 10px;"><span style="font-size:0.7rem; color:#1c6e8f;">Current Collateral:</span> <span id="editCollateralValueDisplay" style="font-weight:700;">0</span></div>
+            <div class="input-group"><label data-i18n="collateral">💳 Collateral *</label><select id="editCollateralLimit"></select></div>
+            <div style="margin-top:6px; background:#f0f6fb; border-radius:6px; padding:4px 10px;"><span style="font-size:0.7rem; color:#1c6e8f;" data-i18n="currentCollateral">Current Collateral:</span> <span id="editCollateralValueDisplay" style="font-weight:700;">0</span></div>
         </div>
         <div class="edit-agent-logo-section" id="editLogoSection">
-            <div class="input-group"><label>🖼️ Replace Agent Logo</label><input type="file" id="editLogoImage" accept="image/*" /></div>
+            <div class="input-group"><label data-i18n="replaceLogo">🖼️ Replace Agent Logo</label><input type="file" id="editLogoImage" accept="image/*" /></div>
         </div>
-        <div class="action-buttons-row"><button class="action-btn" id="saveEditAgentBtn">Save</button><button class="action-btn close-modal" style="background:#2c7da0;">Close</button></div>
+        <div class="action-buttons-row"><button class="action-btn" id="saveEditAgentBtn" data-i18n="save">Save</button><button class="action-btn close-modal" style="background:#2c7da0;" data-i18n="close">Close</button></div>
 
-        <!-- REPORT FORM -->
         <div id="reportAgentForm" style="display:none; margin-top:10px; border-top:2px dashed #d0dce8; padding-top:10px;">
-            <h4 style="color:#c0392b; font-size:0.9rem; margin-bottom:6px;">🚨 Report Agent</h4>
+            <h4 style="color:#c0392b; font-size:0.9rem; margin-bottom:6px;" data-i18n="reportAgent">🚨 Report Agent</h4>
             <div id="reportAgentError" class="error-msg"></div>
-            <div class="input-group"><label>Your Name *</label><input type="text" id="reportName" /></div>
-            <div class="input-group"><label>Your Phone *</label><input type="tel" id="reportPhone" /></div>
-            <div class="input-group"><label>Reason *</label>
+            <div class="input-group"><label data-i18n="yourName">Your Name *</label><input type="text" id="reportName" /></div>
+            <div class="input-group"><label data-i18n="yourPhone">Your Phone *</label><input type="tel" id="reportPhone" /></div>
+            <div class="input-group"><label data-i18n="reason">Reason *</label>
                 <select id="reportReason">
                     <option value="">Select reason...</option>
                     <option>Overcharging / Extra fees</option>
@@ -501,35 +505,35 @@
                     <option>Other</option>
                 </select>
             </div>
-            <div class="input-group"><label>Details *</label><textarea id="reportDetails" style="width:100%; padding:6px 10px; border-radius:18px; border:1.5px solid #e0e8f0; min-height:60px;" placeholder="Describe what happened..."></textarea></div>
+            <div class="input-group"><label data-i18n="details">Details *</label><textarea id="reportDetails" style="width:100%; padding:6px 10px; border-radius:18px; border:1.5px solid #e0e8f0; min-height:60px;" placeholder="Describe what happened..."></textarea></div>
             <div class="action-buttons-row">
-                <button type="button" class="action-btn red" id="submitReportBtn">📤 Submit</button>
-                <button type="button" class="action-btn close-modal" id="cancelReportBtn">Cancel</button>
+                <button type="button" class="action-btn red" id="submitReportBtn" data-i18n="submitReport">📤 Submit</button>
+                <button type="button" class="action-btn close-modal" id="cancelReportBtn" data-i18n="cancel">Cancel</button>
             </div>
         </div>
     </div></div>
 
-    <div id="addClientModal" class="modal"><div class="modal-content"><h3>➕ Add Client</h3><div id="addClientError" class="error-msg"></div><div class="input-group"><label>Name *</label><input type="text" id="newClientName" /></div><div class="input-group"><label>Phone *</label><input type="tel" id="newClientPhone" /></div><div class="input-group"><label>Address</label><input type="text" id="newClientAddress" /></div><div class="input-group"><label>City *</label><select id="newClientCitySelect"><option value="">Select city...</option></select></div><div class="input-group"><label>Country</label><select id="newClientCountrySelect"></select></div><div class="action-buttons-row"><button class="action-btn" id="saveClientBtn">Save</button><button class="action-btn close-modal">Cancel</button></div></div></div>
+    <div id="addClientModal" class="modal"><div class="modal-content"><h3 data-i18n="addClient">➕ Add Client</h3><div id="addClientError" class="error-msg"></div><div class="input-group"><label data-i18n="name">Name *</label><input type="text" id="newClientName" /></div><div class="input-group"><label data-i18n="phone">Phone *</label><input type="tel" id="newClientPhone" /></div><div class="input-group"><label data-i18n="address">Address</label><input type="text" id="newClientAddress" /></div><div class="input-group"><label data-i18n="city">City *</label><select id="newClientCitySelect"><option value="">Select city...</option></select></div><div class="input-group"><label data-i18n="country">Country</label><select id="newClientCountrySelect"></select></div><div class="action-buttons-row"><button class="action-btn" id="saveClientBtn" data-i18n="save">Save</button><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div></div></div>
 
     <div id="editAccountModal" class="modal"><div class="modal-content">
-        <h3>✏️ Edit Account</h3>
+        <h3 data-i18n="editAccount">✏️ Edit Account</h3>
         <div id="editAccountError" class="error-msg"></div>
-        <div class="input-group"><label>Name *</label><input type="text" id="editAccountName" /></div>
-        <div class="input-group"><label>Phone *</label><input type="tel" id="editAccountPhone" /></div>
-        <div class="input-group"><label>Address</label><input type="text" id="editAccountAddress" /></div>
-        <div class="input-group"><label>City *</label><div class="city-input-row"><select id="editAccountCitySelect"><option value="">Select city...</option></select><span class="or-text">OR</span><input type="text" id="editAccountCityOther" /></div></div>
-        <div class="input-group"><label>Country</label><select id="editAccountCountry"></select></div>
+        <div class="input-group"><label data-i18n="name">Name *</label><input type="text" id="editAccountName" /></div>
+        <div class="input-group"><label data-i18n="phone">Phone *</label><input type="tel" id="editAccountPhone" /></div>
+        <div class="input-group"><label data-i18n="address">Address</label><input type="text" id="editAccountAddress" /></div>
+        <div class="input-group"><label data-i18n="city">City *</label><div class="city-input-row"><select id="editAccountCitySelect"><option value="">Select city...</option></select><span class="or-text">OR</span><input type="text" id="editAccountCityOther" /></div></div>
+        <div class="input-group"><label data-i18n="country">Country</label><select id="editAccountCountry"></select></div>
         <div class="input-group"><label>🪪 NIN</label><input type="text" id="editAccountNin" /></div>
-        <div class="action-buttons-row"><button class="action-btn" id="saveEditAccountBtn">Save</button><button class="action-btn close-modal">Cancel</button></div>
+        <div class="action-buttons-row"><button class="action-btn" id="saveEditAccountBtn" data-i18n="save">Save</button><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div>
     </div></div>
 
-    <div id="providerModal" class="modal"><div class="modal-content"><h3>💸 Select Provider</h3><div class="action-buttons-row"><button class="action-btn" data-provider="MB-ONE" style="background:#ff6600;">MB-ONE</button><button class="action-btn" data-provider="MB-TWO" style="background:#00a651;">MB-TWO</button><button class="action-btn" data-provider="MB-THREE" style="background:#1a3a5c;">MB-THREE</button><button class="action-btn" data-provider="MB-FOUR" style="background:#0f2b3d;">MB-FOUR</button></div><button class="action-btn close-modal">Cancel</button></div></div>
+    <div id="providerModal" class="modal"><div class="modal-content"><h3 data-i18n="selectProvider">💸 Select Provider</h3><div class="action-buttons-row"><button class="action-btn" data-provider="MB-ONE" style="background:#ff6600;">MB-ONE</button><button class="action-btn" data-provider="MB-TWO" style="background:#00a651;">MB-TWO</button><button class="action-btn" data-provider="MB-THREE" style="background:#1a3a5c;">MB-THREE</button><button class="action-btn" data-provider="MB-FOUR" style="background:#0f2b3d;">MB-FOUR</button></div><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div></div>
 
     <div id="goodsModal" class="modal"><div class="modal-content">
         <h3 id="goodsModalTitle">📦 Select Item</h3>
         <div id="goodsList"></div>
         <a id="businessWebsiteLink" href="#" target="_blank" style="display:block; margin:4px 0; color:#2c7da0; font-size:0.75rem;">🌐 Website</a>
-        <button class="action-btn close-modal" style="width:100%;">Close</button>
+        <button class="action-btn close-modal" style="width:100%;" data-i18n="close">Close</button>
     </div></div>
 
     <div id="receiptModal" class="modal">
@@ -542,81 +546,293 @@
             </div>
             <div id="receiptBody" style="padding:12px 16px;"></div>
             <div style="padding:10px 16px; border-top:1px solid #e8edf2; text-align:center;">
-                <div style="font-weight:700; color:#1c6e8f; font-size:0.85rem;">✨ Thank you!</div>
+                <div style="font-weight:700; color:#1c6e8f; font-size:0.85rem;" data-i18n="thankYou">✨ Thank you!</div>
                 <div style="font-size:0.62rem; color:#95a5a6;">WeBine Financial</div>
-                <button class="action-btn close-modal" id="receiptCloseBtn" style="margin-top:8px;">Close</button>
+                <button class="action-btn close-modal" id="receiptCloseBtn" style="margin-top:8px;" data-i18n="close">Close</button>
             </div>
         </div>
     </div>
 
-    <div id="agreementModal" class="modal"><div class="modal-content" style="padding:0;"><div style="background:linear-gradient(135deg,#0a2b3c,#1c4e6c); padding:12px 18px; color:white; text-align:center; position:relative;"><button id="agreementCloseXBtn" style="position:absolute; top:5px; right:12px; background:rgba(255,255,255,0.15); border:none; color:white; font-size:1.3rem; cursor:pointer; width:28px; height:28px; border-radius:50%;">✕</button><h3>📜 AGREEMENT</h3></div><div id="agreementBody" style="padding:14px 18px; max-height:55vh; overflow-y:auto; font-size:0.8rem;"></div><div style="background:#f5f8fa; padding:10px 18px; border-top:1px solid #e8edf2; display:flex; gap:6px; justify-content:center;"><button class="action-btn green" id="agreementAgreeBtn" disabled>✋ Agree</button><button class="action-btn close-modal" id="agreementCloseBtn">Close</button></div></div></div>
+    <div id="agreementModal" class="modal"><div class="modal-content" style="padding:0;"><div style="background:linear-gradient(135deg,#0a2b3c,#1c4e6c); padding:12px 18px; color:white; text-align:center; position:relative;"><button id="agreementCloseXBtn" style="position:absolute; top:5px; right:12px; background:rgba(255,255,255,0.15); border:none; color:white; font-size:1.3rem; cursor:pointer; width:28px; height:28px; border-radius:50%;">✕</button><h3 data-i18n="agreement">📜 AGREEMENT</h3></div><div id="agreementBody" style="padding:14px 18px; max-height:55vh; overflow-y:auto; font-size:0.8rem;"></div><div style="background:#f5f8fa; padding:10px 18px; border-top:1px solid #e8edf2; display:flex; gap:6px; justify-content:center;"><button class="action-btn green" id="agreementAgreeBtn" disabled data-i18n="agree">✋ Agree</button><button class="action-btn close-modal" id="agreementCloseBtn" data-i18n="close">Close</button></div></div></div>
 
     <div id="editBizAuthModal" class="modal">
         <div class="modal-content" style="max-width:380px;">
-            <h3>🔐 Edit Business Auth</h3>
+            <h3 data-i18n="editBizAuth">🔐 Edit Business Auth</h3>
             <div id="editBizAuthError" class="error-msg"></div>
-            <div class="input-group"><label>Password *</label><input type="password" id="editBizAuthPassword" maxlength="6" /></div>
-            <div class="input-group"><label>5-Digit PIN *</label><input type="password" id="editBizAuthPin" maxlength="5" /></div>
+            <div class="input-group"><label data-i18n="password">Password *</label><input type="password" id="editBizAuthPassword" maxlength="6" /></div>
+            <div class="input-group"><label data-i18n="pin">5-Digit PIN *</label><input type="password" id="editBizAuthPin" maxlength="5" /></div>
             <div id="editBizAuthHint" style="font-size:0.65rem; color:#1c6e8f; background:#f0f6fb; padding:6px 10px; border-radius:8px;"></div>
-            <div class="action-buttons-row"><button class="action-btn" id="editBizAuthConfirmBtn" style="background:#f39c12;">✅ Confirm</button><button class="action-btn close-modal">Cancel</button></div>
+            <div class="action-buttons-row"><button class="action-btn" id="editBizAuthConfirmBtn" style="background:#f39c12;" data-i18n="confirm">✅ Confirm</button><button class="action-btn close-modal" data-i18n="cancel">Cancel</button></div>
         </div>
     </div>
 
-    <div id="pinModal" class="modal"><div class="modal-content"><h3>🔐 PIN Required</h3><div id="pinProviderBadge" style="display:inline-block; padding:2px 12px; border-radius:30px; font-weight:700; font-size:0.75rem; background:#ff6600; color:white;">MB-ONE</div><div style="background:#f8fafc; border:1px solid #e2edf7; border-radius:10px; padding:6px 10px; margin:4px 0; text-align:left;"><div style="display:flex; justify-content:space-between; font-size:0.78rem; padding:2px 0;"><span>👤 Recipient</span><span id="pinRecipientName">—</span></div><div style="display:flex; justify-content:space-between; font-size:0.78rem; padding:2px 0;"><span>📱 Number</span><span id="pinRecipientPhone">—</span></div><div style="display:flex; justify-content:space-between; font-size:0.78rem; padding:2px 0;"><span>💵 Amount</span><span id="pinRecipientAmount">—</span></div></div><div id="pinUssdPreview" style="background:#f0f6fb; border-radius:8px; padding:8px 12px; margin:6px 0; border:1px dashed #2c7da0; word-break:break-all; font-family:monospace; font-size:0.85rem; text-align:center;"></div><div id="pinError" style="color:#c0392b; text-align:center; font-size:0.75rem;"></div><div class="input-group"><label>4-Digit PIN *</label><input type="password" id="pinInput" maxlength="4" style="text-align:center; letter-spacing:4px;" /></div><div class="action-buttons-row"><button class="action-btn" id="pinConfirmBtn">✅ Dial</button><button class="action-btn close-modal" id="pinCancelBtn">Cancel</button></div></div></div>
+    <div id="pinModal" class="modal"><div class="modal-content"><h3 data-i18n="pinRequired">🔐 PIN Required</h3><div id="pinProviderBadge" style="display:inline-block; padding:2px 12px; border-radius:30px; font-weight:700; font-size:0.75rem; background:#ff6600; color:white;">MB-ONE</div><div style="background:#f8fafc; border:1px solid #e2edf7; border-radius:10px; padding:6px 10px; margin:4px 0; text-align:left;"><div style="display:flex; justify-content:space-between; font-size:0.78rem; padding:2px 0;"><span data-i18n="recipient">👤 Recipient</span><span id="pinRecipientName">—</span></div><div style="display:flex; justify-content:space-between; font-size:0.78rem; padding:2px 0;"><span data-i18n="number">📱 Number</span><span id="pinRecipientPhone">—</span></div><div style="display:flex; justify-content:space-between; font-size:0.78rem; padding:2px 0;"><span data-i18n="amount">💵 Amount</span><span id="pinRecipientAmount">—</span></div></div><div id="pinUssdPreview" style="background:#f0f6fb; border-radius:8px; padding:8px 12px; margin:6px 0; border:1px dashed #2c7da0; word-break:break-all; font-family:monospace; font-size:0.85rem; text-align:center;"></div><div id="pinError" style="color:#c0392b; text-align:center; font-size:0.75rem;"></div><div class="input-group"><label data-i18n="pin">4-Digit PIN *</label><input type="password" id="pinInput" maxlength="4" style="text-align:center; letter-spacing:4px;" /></div><div class="action-buttons-row"><button class="action-btn" id="pinConfirmBtn" data-i18n="dial">✅ Dial</button><button class="action-btn close-modal" id="pinCancelBtn" data-i18n="cancel">Cancel</button></div></div></div>
 
     <div id="currencyConverterModal" class="modal"><div class="modal-content" style="padding:0; max-width:500px;">
-        <div style="background:linear-gradient(135deg,#0a2b3c,#1c4e6c); padding:12px 18px; color:white; text-align:center; position:relative;"><button id="converterCloseXBtn" style="position:absolute; top:5px; right:12px; background:rgba(255,255,255,0.15); border:none; color:white; font-size:1.3rem; cursor:pointer; width:28px; height:28px; border-radius:50%;">✕</button><h3>💱 Currency Converter</h3></div>
+        <div style="background:linear-gradient(135deg,#0a2b3c,#1c4e6c); padding:12px 18px; color:white; text-align:center; position:relative;"><button id="converterCloseXBtn" style="position:absolute; top:5px; right:12px; background:rgba(255,255,255,0.15); border:none; color:white; font-size:1.3rem; cursor:pointer; width:28px; height:28px; border-radius:50%;">✕</button><h3 data-i18n="converter">💱 Currency Converter</h3></div>
         <div style="padding:14px 18px;">
-            <div class="input-group"><label>From Country / Currency</label><select id="convFromCurrency" style="width:100%; padding:5px 10px; border-radius:18px; border:1.5px solid #e0e8f0; height:38px;"></select></div>
-            <div class="input-group"><label>💰 Amount *</label><input type="number" id="convAmount" step="any" value="100" style="width:100%; padding:5px 10px; border-radius:18px; border:1.5px solid #e0e8f0; height:38px;" /></div>
-            <div class="input-group"><label>🌍 To Country / Currency</label><select id="convCountrySelect" style="width:100%; padding:5px 10px; border-radius:18px; border:1.5px solid #e0e8f0; height:38px;"></select></div>
+            <div class="input-group"><label data-i18n="fromCurrency">From Country / Currency</label><select id="convFromCurrency" style="width:100%; padding:5px 10px; border-radius:18px; border:1.5px solid #e0e8f0; height:38px;"></select></div>
+            <div class="input-group"><label data-i18n="amount">💰 Amount *</label><input type="number" id="convAmount" step="any" value="100" style="width:100%; padding:5px 10px; border-radius:18px; border:1.5px solid #e0e8f0; height:38px;" /></div>
+            <div class="input-group"><label data-i18n="toCurrency">🌍 To Country / Currency</label><select id="convCountrySelect" style="width:100%; padding:5px 10px; border-radius:18px; border:1.5px solid #e0e8f0; height:38px;"></select></div>
             <div style="background:#f8fafc; border-radius:12px; padding:0.6rem; margin:0.4rem 0; border:1px solid #e2edf7;">
-                <div style="display:flex; justify-content:space-between; padding:3px 0; font-size:0.8rem;"><span>💰 Base:</span><span id="convBaseAmount">0.00</span></div>
-                <div style="display:flex; justify-content:space-between; padding:3px 0; font-size:0.8rem;"><span>📊 Fee (4%):</span><span id="convCharge">0.00</span></div>
-                <div style="display:flex; justify-content:space-between; padding:3px 0; font-size:0.8rem;"><span>🏛️ GST:</span><span id="convGstAmount">0.00</span></div>
-                <div style="display:flex; justify-content:space-between; padding:3px 0; font-size:0.8rem; font-weight:800; border-top:2px dashed #cbdde9;"><span>💵 Total:</span><span id="convTotalDebit">0.00</span></div>
-                <div style="display:flex; justify-content:space-between; padding:3px 0; font-size:0.8rem;"><span>🔄 Rate:</span><span id="convExchangeRate">1 = 0.00</span></div>
-                <div style="display:flex; justify-content:space-between; padding:5px 10px; font-size:0.8rem; background:#e8f8f0; border-radius:6px; margin-top:4px;"><span>🎯 Recipient:</span><span id="convRecipientAmount">0.00</span></div>
+                <div style="display:flex; justify-content:space-between; padding:3px 0; font-size:0.8rem;"><span data-i18n="base">💰 Base:</span><span id="convBaseAmount">0.00</span></div>
+                <div style="display:flex; justify-content:space-between; padding:3px 0; font-size:0.8rem;"><span data-i18n="fee">📊 Fee (4%):</span><span id="convCharge">0.00</span></div>
+                <div style="display:flex; justify-content:space-between; padding:3px 0; font-size:0.8rem;"><span data-i18n="gst">🏛️ GST:</span><span id="convGstAmount">0.00</span></div>
+                <div style="display:flex; justify-content:space-between; padding:3px 0; font-size:0.8rem; font-weight:800; border-top:2px dashed #cbdde9;"><span data-i18n="total">💵 Total:</span><span id="convTotalDebit">0.00</span></div>
+                <div style="display:flex; justify-content:space-between; padding:3px 0; font-size:0.8rem;"><span data-i18n="rate">🔄 Rate:</span><span id="convExchangeRate">1 = 0.00</span></div>
+                <div style="display:flex; justify-content:space-between; padding:5px 10px; font-size:0.8rem; background:#e8f8f0; border-radius:6px; margin-top:4px;"><span data-i18n="recipientAmount">🎯 Recipient:</span><span id="convRecipientAmount">0.00</span></div>
             </div>
         </div>
-        <div style="background:#f5f8fa; padding:10px 18px; border-top:1px solid #e8edf2; display:flex; gap:6px; justify-content:center;"><button class="action-btn" id="convCloseBtn">Close</button></div>
+        <div style="background:#f5f8fa; padding:10px 18px; border-top:1px solid #e8edf2; display:flex; gap:6px; justify-content:center;"><button class="action-btn" id="convCloseBtn" data-i18n="close">Close</button></div>
     </div></div>
 
     <div id="addBizModal" class="modal"><div class="modal-content" style="max-width:460px;">
-        <h3 id="addBizTitle">🏢 Add Your Business</h3>
+        <h3 id="addBizTitle" data-i18n="addBusiness">🏢 Add Your Business</h3>
         <div id="addBizError" class="error-msg"></div>
         <div id="addBizSuccess" class="success-msg"></div>
         <input type="hidden" id="bizEditingId" value="" />
-        <div class="input-group"><label>Business Name *</label><input type="text" id="bizName" /></div>
-        <div class="input-group"><label>Contact Phone *</label><input type="tel" id="bizContact" /></div>
-        <div class="input-group"><label>Mobile Money Phone *</label><input type="tel" id="bizMobileMoney" /></div>
-        <div class="input-group"><label>Business Type *</label><select id="bizType"><option>Restaurant</option><option>Electronics</option><option>Service</option><option>Retail</option><option>Other</option></select></div>
+        <div class="input-group"><label data-i18n="businessName">Business Name *</label><input type="text" id="bizName" /></div>
+        <div class="input-group"><label data-i18n="contactPhone">Contact Phone *</label><input type="tel" id="bizContact" /></div>
+        <div class="input-group"><label data-i18n="mobileMoney">Mobile Money Phone *</label><input type="tel" id="bizMobileMoney" /></div>
+        <div class="input-group"><label data-i18n="businessType">Business Type *</label><select id="bizType"><option>Restaurant</option><option>Electronics</option><option>Service</option><option>Retail</option><option>Other</option></select></div>
         <div class="input-group">
-            <label>Icon (emoji) *</label>
+            <label data-i18n="icon">Icon (emoji) *</label>
             <div style="display:flex; gap:8px; align-items:center;">
                 <span style="font-size:1.5rem;" id="bizIconPreview">🏪</span>
                 <input type="text" id="bizIcon" maxlength="2" style="flex:1;" value="🏪" />
             </div>
         </div>
-        <div class="input-group"><label>Street Address</label><input type="text" id="bizAddress" /></div>
-        <div class="input-group"><label>City / Town *</label><div class="city-input-row"><select id="bizCitySelect"><option value="">Select city...</option></select><span class="or-text">OR</span><input type="text" id="bizCityOther" /></div></div>
-        <div class="input-group"><label>Country *</label><select id="bizCountrySelect"></select></div>
-        <div class="input-group"><label>Website (optional)</label><input type="url" id="bizWebsite" /></div>
+        <div class="input-group"><label data-i18n="address">Street Address</label><input type="text" id="bizAddress" /></div>
+        <div class="input-group"><label data-i18n="cityTown">City / Town *</label><div class="city-input-row"><select id="bizCitySelect"><option value="">Select city...</option></select><span class="or-text">OR</span><input type="text" id="bizCityOther" /></div></div>
+        <div class="input-group"><label data-i18n="country">Country *</label><select id="bizCountrySelect"></select></div>
+        <div class="input-group"><label data-i18n="website">Website (optional)</label><input type="url" id="bizWebsite" /></div>
         <div style="margin-top:0.6rem; padding:0.55rem 0.7rem; background:#f0f6fb; border:1px solid #c0d8e8; border-radius:10px;">
-            <div style="font-weight:700; color:#1c6e8f; font-size:0.8rem;">🔐 Business Access Credentials</div>
-            <div class="input-group"><label>Password *</label><div style="display:flex; gap:4px;"><input type="text" id="bizPassword" readonly style="flex:1;" maxlength="6" /><button type="button" class="auth-btn-green" id="bizGenPasswordBtn">🔑 Gen</button></div></div>
-            <div class="input-group"><label>5-Digit PIN *</label><div style="display:flex; gap:4px;"><input type="text" id="bizPin" readonly style="flex:1;" maxlength="5" /><button type="button" class="auth-btn-green" id="bizGenPinBtn">🔑 Gen PIN</button></div></div>
+            <div style="font-weight:700; color:#1c6e8f; font-size:0.8rem;" data-i18n="accessCredentials">🔐 Business Access Credentials</div>
+            <div class="input-group"><label data-i18n="password">Password *</label><div style="display:flex; gap:4px;"><input type="text" id="bizPassword" readonly style="flex:1;" maxlength="6" /><button type="button" class="auth-btn-green" id="bizGenPasswordBtn" data-i18n="gen">🔑 Gen</button></div></div>
+            <div class="input-group"><label data-i18n="pin">5-Digit PIN *</label><div style="display:flex; gap:4px;"><input type="text" id="bizPin" readonly style="flex:1;" maxlength="5" /><button type="button" class="auth-btn-green" id="bizGenPinBtn" data-i18n="genPin">🔑 Gen PIN</button></div></div>
         </div>
         <div style="margin-top:0.8rem; border-top:2px solid #e0e8f0; padding-top:0.5rem;">
-            <div style="display:flex; justify-content:space-between; align-items:center;"><label style="font-weight:700; color:#1c6e8f;">📦 Products</label><button type="button" class="add-product-btn" id="addProductBtn">➕ Add Product</button></div>
+            <div style="display:flex; justify-content:space-between; align-items:center;"><label style="font-weight:700; color:#1c6e8f;" data-i18n="products">📦 Products</label><button type="button" class="add-product-btn" id="addProductBtn" data-i18n="addProduct">➕ Add Product</button></div>
             <div id="productsContainer"></div>
         </div>
-        <div class="action-buttons-row" style="margin-top:8px;"><button class="action-btn close-modal" style="background:#2c7da0;">Close</button></div>
+        <div class="action-buttons-row" style="margin-top:8px;"><button class="action-btn close-modal" style="background:#2c7da0;" data-i18n="close">Close</button></div>
     </div></div>
 
     <input type="file" id="avatarUploadInput" accept="image/*" class="hidden-input" />
 
     <script>
+        // ============================================================
+        // TRANSLATIONS DICTIONARY
+        // ============================================================
+        const TRANSLATIONS = {
+            en: {
+                login: "Login", register: "Register", logout: "Logout",
+                sender: "👤 SENDER", agent: "👤 AGENT", client: "👥 CLIENT",
+                name: "Name *", phone: "Phone *", address: "Address", city: "City *",
+                amount: "Amount *", country: "🌍 Country", base: "💰 Base:",
+                fee: "📊 Fee (4%):", gst: "🏛️ GST", total: "💵 Total:",
+                currency: "🌍 Currency:", productDetails: "📦 PRODUCT DETAILS",
+                productName: "Product Name", productIcon: "Product Icon",
+                pricePerUnit: "Price (per unit)", quantity: "Ordered Quantity",
+                operator: "💸 Operator", txId: "🔖 TX ID", providerTxId: "🔐 Provider TX ID",
+                transferCode: "Transfer Code *", submit: "Submit",
+                quickPay: "⭐ QUICK PAY ⭐", addBiz: "➕ Add Biz", editBiz: "✏️ Edit Biz",
+                about: "About", dev: "Dev", contact: "Contact", subscribe: "Subscribe",
+                how: "📖 How", convert: "💱 Convert", addClient: "➕ Client",
+                gen: "Gen", copy: "Copy", save: "Save", cancel: "Cancel", close: "Close",
+                confirm: "✅ Confirm", agree: "✋ Agree", notSigned: "Not Signed",
+                agreement: "📜 Agreement", report: "🚨 Report", reportAgent: "🚨 Report Agent",
+                yourName: "Your Name *", yourPhone: "Your Phone *", reason: "Reason *",
+                details: "Details *", submitReport: "📤 Submit",
+                chooseAvatar: "😊 Choose Your Avatar", upload: "📷 Upload", remove: "🗑️ Remove",
+                profileAvatar: "😊 Profile Avatar", emoji: "🎨 Emoji",
+                selectContact: "Select a contact", send: "Send",
+                location: "📍 Location", editAccount: "✏️ Edit Account",
+                selectProvider: "💸 Select Provider", pinRequired: "🔐 PIN Required",
+                pin: "5-Digit PIN *", recipient: "👤 Recipient", number: "📱 Number",
+                dial: "✅ Dial", converter: "💱 Currency Converter",
+                fromCurrency: "From Country / Currency", toCurrency: "🌍 To Country / Currency",
+                rate: "🔄 Rate:", recipientAmount: "🎯 Recipient:",
+                addBusiness: "🏢 Add Your Business", businessName: "Business Name *",
+                contactPhone: "Contact Phone *", businessType: "Business Type *",
+                icon: "Icon (emoji) *", cityTown: "City / Town *", website: "Website (optional)",
+                accessCredentials: "🔐 Business Access Credentials", products: "📦 Products",
+                addProduct: "➕ Add Product", genPin: "🔑 Gen PIN",
+                thankYou: "✨ Thank you!", editBizAuth: "🔐 Edit Business Auth",
+                agentRegistration: "🏢 Agent Registration", business: "Business *",
+                regNumber: "Reg Number *", type: "Type *", owner: "Owner *",
+                idType: "ID Type *", idNumber: "ID Number *", mobileMoney: "Mobile Money *",
+                collateral: "💳 Collateral *", countryCode: "Country Code",
+                password: "Password *", uploadId: "🪪 Upload ID Document *",
+                uploadBizProfile: "🏢 Upload Business Profile / Logo *",
+                editAgent: "✏️ Edit Agent", credentialsCorrect: "✅ Credentials correct",
+                currentCollateral: "Current Collateral:", replaceLogo: "🖼️ Replace Agent Logo"
+            },
+            fr: {
+                login: "Connexion", register: "Inscription", logout: "Déconnexion",
+                sender: "👤 EXPÉDITEUR", agent: "👤 AGENT", client: "👥 CLIENT",
+                name: "Nom *", phone: "Téléphone *", address: "Adresse", city: "Ville *",
+                amount: "Montant *", country: "🌍 Pays", base: "💰 Base:",
+                fee: "📊 Frais (4%):", gst: "🏛️ TVA", total: "💵 Total:",
+                currency: "🌍 Devise:", productDetails: "📦 DÉTAILS PRODUIT",
+                productName: "Nom du produit", productIcon: "Icône du produit",
+                pricePerUnit: "Prix (unitaire)", quantity: "Quantité commandée",
+                operator: "💸 Opérateur", txId: "🔖 ID TX", providerTxId: "🔐 ID TX Fournisseur",
+                transferCode: "Code de transfert *", submit: "Soumettre",
+                quickPay: "⭐ PAIEMENT RAPIDE ⭐", addBiz: "➕ Ajouter Entreprise", editBiz: "✏️ Modifier Entreprise",
+                about: "À propos", dev: "Développeur", contact: "Contact", subscribe: "S'abonner",
+                how: "📖 Comment", convert: "💱 Convertir", addClient: "➕ Client",
+                gen: "Gén", copy: "Copier", save: "Enregistrer", cancel: "Annuler", close: "Fermer",
+                confirm: "✅ Confirmer", agree: "✋ Accepter", notSigned: "Non signé",
+                agreement: "📜 Accord", report: "🚨 Signaler", reportAgent: "🚨 Signaler l'agent",
+                yourName: "Votre nom *", yourPhone: "Votre téléphone *", reason: "Raison *",
+                details: "Détails *", submitReport: "📤 Soumettre",
+                chooseAvatar: "😊 Choisissez votre avatar", upload: "📷 Télécharger", remove: "🗑️ Supprimer",
+                profileAvatar: "😊 Avatar du profil", emoji: "🎨 Emoji",
+                selectContact: "Sélectionner un contact", send: "Envoyer",
+                location: "📍 Emplacement", editAccount: "✏️ Modifier le compte",
+                selectProvider: "💸 Sélectionner le fournisseur", pinRequired: "🔐 PIN requis",
+                pin: "PIN à 5 chiffres *", recipient: "👤 Destinataire", number: "📱 Numéro",
+                dial: "✅ Appeler", converter: "💱 Convertisseur de devises",
+                fromCurrency: "De Pays / Devise", toCurrency: "🌍 Vers Pays / Devise",
+                rate: "🔄 Taux:", recipientAmount: "🎯 Destinataire:",
+                addBusiness: "🏢 Ajoutez votre entreprise", businessName: "Nom de l'entreprise *",
+                contactPhone: "Téléphone de contact *", businessType: "Type d'entreprise *",
+                icon: "Icône (emoji) *", cityTown: "Ville *", website: "Site web (optionnel)",
+                accessCredentials: "🔐 Identifiants d'accès", products: "📦 Produits",
+                addProduct: "➕ Ajouter un produit", genPin: "🔑 Gén PIN",
+                thankYou: "✨ Merci!", editBizAuth: "🔐 Modifier auth entreprise",
+                agentRegistration: "🏢 Inscription Agent", business: "Entreprise *",
+                regNumber: "Numéro d'enregistrement *", type: "Type *", owner: "Propriétaire *",
+                idType: "Type de pièce d'identité *", idNumber: "Numéro d'identité *", mobileMoney: "Mobile Money *",
+                collateral: "💳 Garantie *", countryCode: "Indicatif pays",
+                password: "Mot de passe *", uploadId: "🪪 Télécharger la pièce d'identité *",
+                uploadBizProfile: "🏢 Télécharger le profil / logo de l'entreprise *",
+                editAgent: "✏️ Modifier l'agent", credentialsCorrect: "✅ Identifiants corrects",
+                currentCollateral: "Garantie actuelle:", replaceLogo: "🖼️ Remplacer le logo"
+            },
+            ar: {
+                login: "تسجيل الدخول", register: "تسجيل", logout: "خروج",
+                sender: "👤 المرسل", agent: "👤 الوكيل", client: "👥 العميل",
+                name: "الاسم *", phone: "الهاتف *", address: "العنوان", city: "المدينة *",
+                amount: "المبلغ *", country: "🌍 البلد", base: "💰 الأساس:",
+                fee: "📊 الرسوم (4%):", gst: "🏛️ ضريبة", total: "💵 المجموع:",
+                currency: "🌍 العملة:", productDetails: "📦 تفاصيل المنتج",
+                productName: "اسم المنتج", productIcon: "أيقونة المنتج",
+                pricePerUnit: "السعر (للوحدة)", quantity: "الكمية المطلوبة",
+                operator: "💸 المشغل", txId: "🔖 معرف المعاملة", providerTxId: "🔐 معرف مزود المعاملة",
+                transferCode: "رمز التحويل *", submit: "إرسال",
+                quickPay: "⭐ دفع سريع ⭐", addBiz: "➕ إضافة نشاط", editBiz: "✏️ تعديل النشاط",
+                about: "حول", dev: "المطور", contact: "اتصل", subscribe: "اشترك",
+                how: "📖 كيف", convert: "💱 تحويل", addClient: "➕ عميل",
+                gen: "توليد", copy: "نسخ", save: "حفظ", cancel: "إلغاء", close: "إغلاق",
+                confirm: "✅ تأكيد", agree: "✋ موافق", notSigned: "غير موقّع",
+                agreement: "📜 اتفاقية", report: "🚨 إبلاغ", reportAgent: "🚨 الإبلاغ عن الوكيل",
+                yourName: "اسمك *", yourPhone: "هاتفك *", reason: "السبب *",
+                details: "التفاصيل *", submitReport: "📤 إرسال",
+                chooseAvatar: "😊 اختر الصورة الرمزية", upload: "📷 رفع", remove: "🗑️ إزالة",
+                profileAvatar: "😊 صورة الملف الشخصي", emoji: "🎨 رمز",
+                selectContact: "اختر جهة اتصال", send: "إرسال",
+                location: "📍 الموقع", editAccount: "✏️ تعديل الحساب",
+                selectProvider: "💸 اختر المزود", pinRequired: "🔐 مطلوب رقم سري",
+                pin: "رقم سري من 5 أرقام *", recipient: "👤 المستلم", number: "📱 الرقم",
+                dial: "✅ اتصال", converter: "💱 محول العملات",
+                fromCurrency: "من البلد / العملة", toCurrency: "🌍 إلى البلد / العملة",
+                rate: "🔄 السعر:", recipientAmount: "🎯 المستلم:",
+                addBusiness: "🏢 أضف عملك", businessName: "اسم النشاط *",
+                contactPhone: "هاتف الاتصال *", businessType: "نوع النشاط *",
+                icon: "الأيقونة (رمز) *", cityTown: "المدينة *", website: "الموقع (اختياري)",
+                accessCredentials: "🔐 بيانات اعتماد النشاط", products: "📦 المنتجات",
+                addProduct: "➕ إضافة منتج", genPin: "🔑 توليد PIN",
+                thankYou: "✨ شكرًا!", editBizAuth: "🔐 تعديل مصادقة النشاط",
+                agentRegistration: "🏢 تسجيل الوكيل", business: "النشاط *",
+                regNumber: "رقم التسجيل *", type: "النوع *", owner: "المالك *",
+                idType: "نوع الهوية *", idNumber: "رقم الهوية *", mobileMoney: "المحفظة المحمولة *",
+                collateral: "💳 الضمان *", countryCode: "رمز الدولة",
+                password: "كلمة المرور *", uploadId: "🪪 رفع وثيقة الهوية *",
+                uploadBizProfile: "🏢 رفع ملف / شعار النشاط *",
+                editAgent: "✏️ تعديل الوكيل", credentialsCorrect: "✅ بيانات الاعتماد صحيحة",
+                currentCollateral: "الضمان الحالي:", replaceLogo: "🖼️ استبدال الشعار"
+            },
+            es: {
+                login: "Iniciar sesión", register: "Registrarse", logout: "Cerrar sesión",
+                sender: "👤 REMITENTE", agent: "👤 AGENTE", client: "👥 CLIENTE",
+                name: "Nombre *", phone: "Teléfono *", address: "Dirección", city: "Ciudad *",
+                amount: "Monto *", country: "🌍 País", base: "💰 Base:",
+                fee: "📊 Tarifa (4%):", gst: "🏛️ IVA", total: "💵 Total:",
+                currency: "🌍 Moneda:", productDetails: "📦 DETALLES DEL PRODUCTO",
+                productName: "Nombre del producto", productIcon: "Icono del producto",
+                pricePerUnit: "Precio (por unidad)", quantity: "Cantidad pedida",
+                operator: "💸 Operador", txId: "🔖 ID TX", providerTxId: "🔐 ID TX Proveedor",
+                transferCode: "Código de transferencia *", submit: "Enviar",
+                quickPay: "⭐ PAGO RÁPIDO ⭐", addBiz: "➕ Añadir Negocio", editBiz: "✏️ Editar Negocio",
+                about: "Acerca de", dev: "Desarrollador", contact: "Contacto", subscribe: "Suscribirse",
+                how: "📖 Cómo", convert: "💱 Convertir", addClient: "➕ Cliente",
+                gen: "Gen", copy: "Copiar", save: "Guardar", cancel: "Cancelar", close: "Cerrar",
+                confirm: "✅ Confirmar", agree: "✋ Aceptar", notSigned: "No firmado",
+                agreement: "📜 Acuerdo", report: "🚨 Reportar", reportAgent: "🚨 Reportar agente",
+                yourName: "Tu nombre *", yourPhone: "Tu teléfono *", reason: "Razón *",
+                details: "Detalles *", submitReport: "📤 Enviar",
+                chooseAvatar: "😊 Elige tu avatar", upload: "📷 Subir", remove: "🗑️ Eliminar",
+                profileAvatar: "😊 Avatar del perfil", emoji: "🎨 Emoji",
+                selectContact: "Selecciona un contacto", send: "Enviar",
+                location: "📍 Ubicación", editAccount: "✏️ Editar cuenta",
+                selectProvider: "💸 Seleccionar proveedor", pinRequired: "🔐 PIN requerido",
+                pin: "PIN de 5 dígitos *", recipient: "👤 Destinatario", number: "📱 Número",
+                dial: "✅ Marcar", converter: "💱 Conversor de moneda",
+                fromCurrency: "De País / Moneda", toCurrency: "🌍 A País / Moneda",
+                rate: "🔄 Tasa:", recipientAmount: "🎯 Destinatario:",
+                addBusiness: "🏢 Añade tu negocio", businessName: "Nombre del negocio *",
+                contactPhone: "Teléfono de contacto *", businessType: "Tipo de negocio *",
+                icon: "Icono (emoji) *", cityTown: "Ciudad *", website: "Sitio web (opcional)",
+                accessCredentials: "🔐 Credenciales de acceso", products: "📦 Productos",
+                addProduct: "➕ Añadir producto", genPin: "🔑 Gen PIN",
+                thankYou: "✨ ¡Gracias!", editBizAuth: "🔐 Editar auth negocio",
+                agentRegistration: "🏢 Registro de Agente", business: "Negocio *",
+                regNumber: "Número de registro *", type: "Tipo *", owner: "Propietario *",
+                idType: "Tipo de ID *", idNumber: "Número de ID *", mobileMoney: "Dinero móvil *",
+                collateral: "💳 Garantía *", countryCode: "Código de país",
+                password: "Contraseña *", uploadId: "🪪 Subir documento de ID *",
+                uploadBizProfile: "🏢 Subir perfil / logo del negocio *",
+                editAgent: "✏️ Editar Agente", credentialsCorrect: "✅ Credenciales correctas",
+                currentCollateral: "Garantía actual:", replaceLogo: "🖼️ Reemplazar logo"
+            }
+        };
+
+        let currentLang = 'en';
+
+        function translatePage() {
+            const dict = TRANSLATIONS[currentLang] || TRANSLATIONS.en;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (dict[key]) {
+                    // Preserve any child spans (like amountLimitIndicator)
+                    if (el.children.length === 0) {
+                        el.textContent = dict[key];
+                    } else {
+                        // Only replace text nodes, not child elements
+                        const hasOnlyText = Array.from(el.childNodes).every(n => n.nodeType === 3);
+                        if (hasOnlyText) el.textContent = dict[key];
+                    }
+                }
+            });
+            // Update dropdowns and dynamic content
+            if (typeof updateAgentDropdownPlaceholder === 'function') updateAgentDropdownPlaceholder();
+            if (typeof renderBusinessStrip === 'function') renderBusinessStrip();
+            if (typeof renderAgentDropdown === 'function') renderAgentDropdown();
+            if (typeof populateAgentSelect === 'function') populateAgentSelect(currentAgentFilterCountry);
+        }
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            try { localStorage.setItem('afripay_lang', lang); } catch (e) {}
+            const sel = document.getElementById('langSelect'); if (sel) sel.value = lang;
+            const icon = document.getElementById('langIcon');
+            if (icon) { const map = { en:'🇬🇧', fr:'🇫🇷', ar:'🇸🇦', es:'🇪🇸' }; icon.textContent = map[lang] || '🌐'; }
+            translatePage();
+            showToast(`🌐 ${lang.toUpperCase()}`, 1500);
+        }
+
         // ============================================================
         // SIMPLE SECURITY UTILS
         // ============================================================
@@ -703,7 +919,6 @@
         let registeredUsers = [];
         let connectedUsers = [];
         let agreementSigned = false;
-        let agreementSignatureDataURL = null;
         let pendingPinData = null;
         let isLocalMode = true;
         let currentCountryData = { gstRate: 10, currency: 'LRD', flag: '🇱🇷', countryName: 'Liberia' };
@@ -716,8 +931,6 @@
         let pendingEditBizId = null;
         let regAvatarDataURL = null;
         let regEmoji = '👤';
-        let agentIdDataURL = null;
-        let agentBizProfileDataURL = null;
         let reportTargetAgentId = null;
 
         const DEFAULT_EDIT_BIZ_PASSWORD = 'EDITBIZ';
@@ -874,10 +1087,11 @@
             const btn = getEl('selectedAgentName');
             if (!btn) return;
             if (isBusinessMode) return;
+            const dict = TRANSLATIONS[currentLang] || TRANSLATIONS.en;
             if (currentAgentFilterCountry && !selectedAgentId) {
                 const flag = COUNTRY_NAME_TO_CODE[currentAgentFilterCountry] ? COUNTRY_CODE_TO_FLAG[COUNTRY_NAME_TO_CODE[currentAgentFilterCountry]] : '🌍';
-                btn.innerHTML = `Select Agent in ${flag} ${currentAgentFilterCountry}`;
-            } else if (!selectedAgentId) { btn.textContent = 'Select Agent'; }
+                btn.innerHTML = `${dict.selectAgent || 'Select Agent'} in ${flag} ${currentAgentFilterCountry}`;
+            } else if (!selectedAgentId) { btn.textContent = dict.selectAgent || 'Select Agent'; }
         }
 
         function getCountryNameFromSelect() { const s = getEl('countryCodeSelect'); if (!s || !s.value) return null; return s.value.split('|')[1] || null; }
@@ -893,18 +1107,19 @@
                 const bN = (b.agentData && b.agentData.businessName) || b.name;
                 return aN.localeCompare(bN);
             });
+            const dict = TRANSLATIONS[currentLang] || TRANSLATIONS.en;
             list.innerHTML = '';
             const selItem = document.createElement('div');
             selItem.className = 'agent-dropdown-item';
             selItem.style.fontWeight = '600';
-            selItem.innerHTML = `<div class="agent-info"><span style="color:#FFD966;">👤</span> <span class="agent-name">Select Agent</span></div>`;
+            selItem.innerHTML = `<div class="agent-info"><span style="color:#FFD966;">👤</span> <span class="agent-name">${dict.selectAgent || 'Select Agent'}</span></div>`;
             selItem.addEventListener('click', e => { e.stopPropagation(); selectedAgentId = null; _selectedAgentId = null; clearAgentSelection(); list.classList.remove('open'); });
             list.appendChild(selItem);
             if (agents.length === 0) {
                 const em = document.createElement('div');
                 em.className = 'agent-dropdown-item';
                 em.style.justifyContent = 'center';
-                em.innerHTML = `<span style="color:#ccc;">No agents</span>`;
+                em.innerHTML = `<span style="color:#ccc;">${dict.noAgents || 'No agents'}</span>`;
                 list.appendChild(em);
                 return;
             }
@@ -932,9 +1147,10 @@
                 const bN = (b.agentData && b.agentData.businessName) || b.name;
                 return aN.localeCompare(bN);
             });
+            const dict = TRANSLATIONS[currentLang] || TRANSLATIONS.en;
             const ph = document.createElement('option');
             ph.value = '';
-            ph.textContent = filterCountry ? `-- Agent in ${filterCountry} --` : '-- Select Agent --';
+            ph.textContent = filterCountry ? `${dict.selectAgent || 'Agent'} in ${filterCountry}` : (dict.selectAgent || '-- Select Agent --');
             ph.disabled = true; ph.selected = true;
             select.appendChild(ph);
             agents.forEach(agent => {
@@ -965,7 +1181,7 @@
             const bd = document.getElementById('bizDisplayField');
             if (sel) sel.style.display = 'block';
             if (bd) bd.style.display = 'none';
-            if (lbl) lbl.textContent = 'Agent *';
+            if (lbl) lbl.textContent = (TRANSLATIONS[currentLang] || TRANSLATIONS.en).agent + ' *';
             populateAgentSelect(currentAgentFilterCountry);
         }
 
@@ -1082,6 +1298,7 @@
             renderBusinessStrip();
             updateAgentDropdownForCountry();
             computeCharges();
+            translatePage();
             startPopupAdTimer();
         }
 
@@ -1177,12 +1394,6 @@
             const btn = getEl('editBizStripBtn');
             if (!btn) return;
             btn.disabled = false;
-            let hasSelection = false;
-            if (lastSelectedBusinessId) {
-                const biz = getAllBusinesses().find(b => b.id === lastSelectedBusinessId);
-                if (biz) { hasSelection = true; btn.title = `Edit "${biz.name}"`; }
-            }
-            btn.classList.toggle('has-selection', hasSelection);
         }
 
         function getBusinessCredentials(biz) {
@@ -1354,12 +1565,13 @@
             const e = document.querySelector(`.product-entry[data-product-id="${id}"]`);
             if (e) e.remove();
         }
+        window.removeProductEntry = removeProductEntry;
 
         // ============================================================
         // POP-UP ADVERT
         // ============================================================
-        let popupAdInterval = null, popupAdTimeout = null, popupAdCountdownInterval = null;
-        let popupAdCountdownSeconds = 15, lastPopupAdShownAt = 0;
+        let popupAdInterval = null, popupAdTimeout = null;
+        let lastPopupAdShownAt = 0;
 
         function pickRandomProductForAdvert() {
             const all = getAllBusinesses();
@@ -1397,24 +1609,9 @@
             const cb = getEl('popupAdCloseBtn');
             if (cb) cb.onclick = e => { e.preventDefault(); e.stopPropagation(); hidePopupAdvert(); };
             overlay.style.display = 'flex';
-            startPopupAdCountdown(15);
         }
 
-        function hidePopupAdvert() {
-            const o = getEl('popupAdOverlay');
-            if (o) o.style.display = 'none';
-            clearInterval(popupAdCountdownInterval);
-            popupAdCountdownInterval = null;
-        }
-
-        function startPopupAdCountdown(s) {
-            clearInterval(popupAdCountdownInterval);
-            popupAdCountdownSeconds = s;
-            popupAdCountdownInterval = setInterval(() => {
-                popupAdCountdownSeconds--;
-                if (popupAdCountdownSeconds <= 0) { clearInterval(popupAdCountdownInterval); hidePopupAdvert(); }
-            }, 1000);
-        }
+        function hidePopupAdvert() { const o = getEl('popupAdOverlay'); if (o) o.style.display = 'none'; }
 
         function startPopupAdTimer() {
             stopPopupAdTimer();
@@ -1480,7 +1677,6 @@
             }
             lines.push({ key:'Base', value: data.currency + ' ' + data.baseAmount });
             lines.push({ key:'Fee', value: data.currency + ' ' + data.charge });
-            lines.push({ key:'GST', value: data.currency + ' ' + data.gst });
             lines.push({ key:'Total', value: data.currency + ' ' + data.total, total: true });
             let html = '';
             lines.forEach(l => {
@@ -1540,10 +1736,11 @@
         function renderSidebar() {
             const sb = getEl('chatSidebar');
             if (!sb) return;
-            sb.innerHTML = '<div class="sidebar-section-title">👤 Contacts</div>';
+            const dict = TRANSLATIONS[currentLang] || TRANSLATIONS.en;
+            sb.innerHTML = `<div class="sidebar-section-title">👤 ${dict.contacts || 'Contacts'}</div>`;
             const all = getAllContacts();
             if (all.length === 0) {
-                sb.innerHTML += '<div style="padding:4px 10px; font-size:0.68rem; color:#95a5a6; text-align:center;">No contacts</div>';
+                sb.innerHTML += `<div style="padding:4px 10px; font-size:0.68rem; color:#95a5a6; text-align:center;">${dict.noContacts || 'No contacts'}</div>`;
             } else {
                 all.forEach(u => {
                     const d = document.createElement('div');
@@ -1707,9 +1904,6 @@
             } catch (e) {}
         }
 
-        // ============================================================
-        // OPEN EDIT AGENT MODAL
-        // ============================================================
         function openEditAgentModal(agentId) {
             const agent = getAgents().find(a => a.id === agentId);
             if (!agent) { showToast('Agent not found', 2000); return; }
@@ -1742,14 +1936,8 @@
             if (pinI) pinI.addEventListener('input', checkAuth);
         }
 
-        // ============================================================
-        // REPORT FORM
-        // ============================================================
         function openReportForm(agentId) {
             reportTargetAgentId = agentId;
-            const agent = getAgents().find(a => a.id === agentId);
-            const data = agent ? (agent.agentData || agent) : null;
-            const agentName = data ? (data.businessName || data.name || 'Agent') : 'Agent';
             if (getEl('reportName')) getEl('reportName').value = currentUser?.name || '';
             if (getEl('reportPhone')) getEl('reportPhone').value = currentUser?.phone || '';
             if (getEl('reportReason')) getEl('reportReason').value = '';
@@ -1794,7 +1982,7 @@
         // EVENT LISTENERS
         // ============================================================
         function setupEventListeners() {
-            const ls = getEl('langSelect'); if (ls) ls.addEventListener('change', function() { showToast(`🌐 ${this.value.toUpperCase()}`, 1500); });
+            const ls = getEl('langSelect'); if (ls) ls.addEventListener('change', function() { setLanguage(this.value); });
 
             const lb = getEl('loginBtn'); if (lb) lb.addEventListener('click', e => { e.preventDefault(); getEl('loginError').innerHTML = ''; getEl('loginModal').style.display = 'flex'; });
             const rb = getEl('registerBtn'); if (rb) rb.addEventListener('click', e => { e.preventDefault(); regAvatarDataURL = null; regEmoji = '👤'; updateRegAvatarPreview(); getEl('registerModal').style.display = 'flex'; });
@@ -2234,7 +2422,8 @@
             resetVal('bizCountrySelect', 'Sierra Leone'); resetVal('bizWebsite', '');
             resetVal('bizPassword', ''); resetVal('bizPin', '');
             if (getEl('bizEditingId')) getEl('bizEditingId').value = '';
-            if (getEl('addBizTitle')) getEl('addBizTitle').textContent = '🏢 Add Your Business';
+            const dict = TRANSLATIONS[currentLang] || TRANSLATIONS.en;
+            if (getEl('addBizTitle')) getEl('addBizTitle').textContent = dict.addBusiness;
             if (getEl('productsContainer')) getEl('productsContainer').innerHTML = '';
             productCounter = 0;
             getEl('addBizModal').style.display = 'flex';
@@ -2246,6 +2435,7 @@
         function initApp() {
             try { ProviderTxIdManager.loadUsedIds(); } catch (e) {}
             try { TransferCodeManager.loadUsedCodes(); } catch (e) {}
+            try { const s = localStorage.getItem('afripay_lang'); if (s) currentLang = s; } catch (e) {}
             try { loadRegisteredUsers(); } catch (e) {}
             try { initializePermanentAgents(); } catch (e) {}
             try { loadCustomBusinesses(); } catch (e) {}
@@ -2266,16 +2456,19 @@
             try { populateFromCurrencySelect(); } catch (e) {}
             const all = getAllBusinesses();
             if (!lastSelectedBusinessId && all.length > 0) lastSelectedBusinessId = all[0].id;
+
+            // Set initial language
+            const langSel = getEl('langSelect');
+            if (langSel) langSel.value = currentLang;
+            const icon = getEl('langIcon');
+            if (icon) { const map = { en:'🇬🇧', fr:'🇫🇷', ar:'🇸🇦', es:'🇪🇸' }; icon.textContent = map[currentLang] || '🌐'; }
+
             if (currentUser) { updateUserCountryData(); updateAgentDropdownForCountry(); }
+            translatePage();
             showToast('✅ AfriPay ready!', 1500);
             if (currentUser) startPopupAdTimer();
             updateRegAvatarPreview();
         }
-
-        window.removeProductEntry = function(id) {
-            const e = document.querySelector(`.product-entry[data-product-id="${id}"]`);
-            if (e) e.remove();
-        };
 
         if (document.readyState === 'complete' || document.readyState === 'interactive') {
             setTimeout(initApp, 50);
