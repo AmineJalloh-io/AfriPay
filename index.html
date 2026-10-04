@@ -631,7 +631,11 @@
             <div style="padding:10px 16px; border-top:1px solid #e8edf2; text-align:center;">
                 <div style="font-weight:700; color:#1c6e8f; font-size:0.85rem;" data-i18n="thankYou">✨ Thank you!</div>
                 <div style="font-size:0.62rem; color:#95a5a6;">WeBine Financial</div>
-                <button class="action-btn close-modal" id="receiptCloseBtn" style="margin-top:8px;" data-i18n="close">Close</button>
+                <div style="display:flex; gap:6px; margin-top:8px; justify-content:center; flex-wrap:wrap;">
+                    <button type="button" class="action-btn" id="receiptSmsBtn" style="background:#27ae60; flex:1; min-width:110px; height:36px; font-size:0.8rem; gap:4px;" data-i18n="shareSMS">📱 SMS</button>
+                    <button type="button" class="action-btn" id="receiptWhatsAppBtn" style="background:#25D366; flex:1; min-width:110px; height:36px; font-size:0.8rem; gap:4px;" data-i18n="shareWhatsApp">💬 WhatsApp</button>
+                </div>
+                <button class="action-btn close-modal" id="receiptCloseBtn" style="margin-top:6px; width:100%;" data-i18n="close">Close</button>
             </div>
         </div>
     </div>
@@ -744,7 +748,9 @@
                 complaintCategory:"Category *", submitComplaint:"📤 Submit Complaint",
                 popupAdBrand:"⭐ AfriPay Quick Pay", popupAdSubtitle:"Sponsored Product",
                 popupAdSelect:"🛒 Select", popupAdDismiss:"Dismiss", popupAdAutoClose:"Auto-closes in",
-                popupAdQualityPrefix:"Quality"
+                popupAdQualityPrefix:"Quality",
+                shareSMS:"📱 SMS", shareWhatsApp:"💬 WhatsApp",
+                receiptShareText:"AfriPay Receipt"
             },
             fr: {
                 login:"Connexion", register:"Inscription", logout:"Déconnexion", sender:"👤 EXPÉDITEUR", agent:"👤 AGENT", client:"👥 CLIENT",
@@ -782,7 +788,9 @@
                 complaintCategory:"Catégorie *", submitComplaint:"📤 Soumettre la réclamation",
                 popupAdBrand:"⭐ Paiement Rapide AfriPay", popupAdSubtitle:"Produit Sponsorise",
                 popupAdSelect:"🛒 Sélectionner", popupAdDismiss:"Ignorer", popupAdAutoClose:"Fermeture auto dans",
-                popupAdQualityPrefix:"Qualité"
+                popupAdQualityPrefix:"Qualité",
+                shareSMS:"📱 SMS", shareWhatsApp:"💬 WhatsApp",
+                receiptShareText:"Reçu AfriPay"
             },
             ar: {
                 login:"تسجيل الدخول", register:"تسجيل", logout:"خروج", sender:"👤 المرسل", agent:"👤 الوكيل", client:"👥 العميل",
@@ -820,7 +828,9 @@
                 complaintCategory:"الفئة *", submitComplaint:"📤 إرسال الشكوى",
                 popupAdBrand:"⭐ الدفع السريع AfriPay", popupAdSubtitle:"منتج مُموَّل",
                 popupAdSelect:"🛒 اختيار", popupAdDismiss:"تجاهل", popupAdAutoClose:"إغلاق تلقائي في",
-                popupAdQualityPrefix:"الجودة"
+                popupAdQualityPrefix:"الجودة",
+                shareSMS:"📱 SMS", shareWhatsApp:"💬 واتساب",
+                receiptShareText:"إيصال AfriPay"
             },
             es: {
                 login:"Iniciar sesión", register:"Registrarse", logout:"Cerrar sesión", sender:"👤 REMITENTE", agent:"👤 AGENTE", client:"👥 CLIENTE",
@@ -858,7 +868,9 @@
                 complaintCategory:"Categoría *", submitComplaint:"📤 Enviar Queja",
                 popupAdBrand:"⭐ Pago Rápido AfriPay", popupAdSubtitle:"Producto Patrocinado",
                 popupAdSelect:"🛒 Seleccionar", popupAdDismiss:"Descartar", popupAdAutoClose:"Se cierra en",
-                popupAdQualityPrefix:"Calidad"
+                popupAdQualityPrefix:"Calidad",
+                shareSMS:"📱 SMS", shareWhatsApp:"💬 WhatsApp",
+                receiptShareText:"Recibo AfriPay"
             }
         };
 
@@ -1006,6 +1018,7 @@
         let paybackSignatureDataURL = null;
         let paybackTargetAgentId = null;
         let currentPopupProduct = null;
+        let lastReceiptData = null;
 
         const DEFAULT_EDIT_BIZ_PASSWORD = 'EDITBIZ';
         const DEFAULT_EDIT_BIZ_PIN = '12345';
@@ -1636,6 +1649,7 @@
         function showInfoModal(title, body) { getEl('modalTitle').innerText = title; getEl('modalBody').innerHTML = body; getEl('infoModal').style.display = 'flex'; }
 
         function showReceiptModal(data) {
+            lastReceiptData = data;   // ← keeps data for SMS / WhatsApp sharing
             const body = getEl('receiptBody');
             const lines = [
                 { key:'TX ID', value: data.txId }, { key:'Date', value: data.date }, { key:'Type', value: data.mode },
@@ -1659,6 +1673,65 @@
             });
             body.innerHTML = html;
             getEl('receiptModal').style.display = 'flex';
+        }
+
+        // ============================================================
+        // RECEIPT SHARE (SMS + WhatsApp)
+        // ============================================================
+        function buildReceiptShareText() {
+            if (!lastReceiptData) return 'AfriPay Receipt';
+            const d = lastReceiptData;
+            const dict = TRANSLATIONS[currentLang] || TRANSLATIONS.en;
+            const lines = [
+                `🧾 ${dict.receiptShareText || 'AfriPay Receipt'}`,
+                `TX ID: ${d.txId}`,
+                `Date: ${d.date}`,
+                `Sender: ${d.sender}`,
+                `Agent: ${d.agent}`
+            ];
+            if (_selectedProductDetails) {
+                const p = _selectedProductDetails;
+                lines.push(`Product: ${p.name} × ${p.quantity}`);
+            }
+            lines.push(`Base: ${d.currency} ${d.baseAmount}`);
+            lines.push(`Fee:  ${d.currency} ${d.charge}`);
+            lines.push(`Total: ${d.currency} ${d.total}`);
+            lines.push(`Provider TX: ${d.providerTxId || 'N/A'}`);
+            lines.push(`Transfer Code: ${d.transferCode || 'N/A'}`);
+            lines.push('');
+            lines.push('— Sent from AfriPay');
+            return lines.join('\n');
+        }
+
+        function getRecipientPhoneForShare() {
+            // agent string looks like: "Name (+232-76-...)"
+            const agentStr = lastReceiptData?.agent || '';
+            const m = agentStr.match(/\(([^)]+)\)/);
+            if (m) {
+                const digits = String(m[1]).replace(/\D/g, '');
+                if (digits.length >= 6) return digits;
+            }
+            return '';
+        }
+
+        function shareReceiptViaSMS() {
+            const text = buildReceiptShareText();
+            const phone = getRecipientPhoneForShare();
+            const url = phone
+                ? `sms:${phone}?body=${encodeURIComponent(text)}`
+                : `sms:?body=${encodeURIComponent(text)}`;
+            try { window.location.href = url; } catch (e) {}
+            showToast('📱 Opening SMS…', 2000);
+        }
+
+        function shareReceiptViaWhatsApp() {
+            const text = buildReceiptShareText();
+            const phone = getRecipientPhoneForShare();
+            const url = phone
+                ? `https://wa.me/${phone}?text=${encodeURIComponent(text)}`
+                : `https://wa.me/?text=${encodeURIComponent(text)}`;
+            try { window.open(url, '_blank'); } catch (e) {}
+            showToast('💬 Opening WhatsApp…', 2000);
         }
 
         function resolveRecipientInfo() {
@@ -2412,6 +2485,12 @@
 
             const rcx = getEl('receiptCloseXBtn'); if (rcx) rcx.addEventListener('click', e => { e.preventDefault(); getEl('receiptModal').style.display = 'none'; });
             const rcb = getEl('receiptCloseBtn'); if (rcb) rcb.addEventListener('click', e => { e.preventDefault(); getEl('receiptModal').style.display = 'none'; });
+
+            // SMS + WhatsApp share buttons on the receipt footer (recipient side)
+            const rsms = getEl('receiptSmsBtn');
+            if (rsms) rsms.addEventListener('click', e => { e.preventDefault(); shareReceiptViaSMS(); });
+            const rwa = getEl('receiptWhatsAppBtn');
+            if (rwa) rwa.addEventListener('click', e => { e.preventDefault(); shareReceiptViaWhatsApp(); });
 
             const ctb2 = getEl('chatToggleBtn'); if (ctb2) ctb2.addEventListener('click', e => { e.preventDefault(); toggleChat(); });
             const ccb = getEl('chatCloseBtn'); if (ccb) ccb.addEventListener('click', e => { e.preventDefault(); getEl('chatWindow').classList.remove('open'); getEl('chatToggleBtn').style.display = 'flex'; });
