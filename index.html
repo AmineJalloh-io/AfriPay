@@ -289,11 +289,13 @@
                     <input type="hidden" id="agentName" />
                 </div>
                 <div class="input-group"><label data-i18n="phone">Phone *</label><input type="tel" id="agentPhone" readonly /></div>
+
                 <div class="section-title" id="clientSectionTitle" style="display:none;">👥 CLIENT</div>
                 <div class="double-row" id="clientFieldsRow" style="display:none;">
                     <div class="input-group"><label>Client *</label><input type="text" id="clientName" readonly /></div>
                     <div class="input-group"><label>Client Phone *</label><input type="tel" id="clientPhone" readonly /></div>
                 </div>
+
                 <div class="mode-row">
                     <button type="button" class="btn" id="intlToggleBtn">Intl</button>
                     <button type="button" class="btn add-client-btn-header" id="addClientBtnHeader" data-i18n="addClient">➕ Client</button>
@@ -526,7 +528,7 @@
         <div class="action-buttons-row"><button class="action-btn" id="submitAgentRegistrationBtn" data-i18n="register">Register</button><button class="action-btn close-modal" style="background:#2c7da0;" data-i18n="close">Close</button></div>
     </div></div>
 
-    <!-- EDIT AGENT MODAL (Report moved to main footer; only PayBack at top) -->
+    <!-- EDIT AGENT MODAL -->
     <div id="editAgentModal" class="modal"><div class="modal-content agent-form">
         <div class="edit-agent-header">
             <h3 data-i18n="editAgent">✏️ Edit Agent</h3>
@@ -620,7 +622,7 @@
     </div></div>
 
     <div id="receiptModal" class="modal">
-        <div class="modal-content" style="padding:0; max-width:420px;">
+        <div class="modal-content" style="padding:0; max-width:440px;">
             <div style="background:linear-gradient(135deg,#0a2b3c,#1c4e6c); padding:16px; color:white; text-align:center; position:relative;">
                 <button id="receiptCloseXBtn" style="position:absolute; top:6px; right:12px; background:rgba(255,255,255,0.15); border:none; color:white; font-size:1.4rem; cursor:pointer; width:30px; height:30px; border-radius:50%;">✕</button>
                 <div style="font-size:1.3rem; font-weight:800;">Afri·Pay</div>
@@ -631,10 +633,19 @@
             <div style="padding:10px 16px; border-top:1px solid #e8edf2; text-align:center;">
                 <div style="font-weight:700; color:#1c6e8f; font-size:0.85rem;" data-i18n="thankYou">✨ Thank you!</div>
                 <div style="font-size:0.62rem; color:#95a5a6;">WeBine Financial</div>
+
+                <!-- AGENT share buttons -->
                 <div style="display:flex; gap:6px; margin-top:8px; justify-content:center; flex-wrap:wrap;">
-                    <button type="button" class="action-btn" id="receiptSmsBtn" style="background:#27ae60; flex:1; min-width:110px; height:36px; font-size:0.8rem; gap:4px;" data-i18n="shareSMS">📱 SMS</button>
-                    <button type="button" class="action-btn" id="receiptWhatsAppBtn" style="background:#25D366; flex:1; min-width:110px; height:36px; font-size:0.8rem; gap:4px;" data-i18n="shareWhatsApp">💬 WhatsApp</button>
+                    <button type="button" class="action-btn" id="receiptSmsBtn" style="background:#27ae60; flex:1; min-width:120px; height:36px; font-size:0.78rem; gap:4px;" data-i18n="shareSMS">📱 SMS Agent</button>
+                    <button type="button" class="action-btn" id="receiptWhatsAppBtn" style="background:#25D366; flex:1; min-width:120px; height:36px; font-size:0.78rem; gap:4px;" data-i18n="shareWhatsApp">💬 WA Agent</button>
                 </div>
+
+                <!-- CLIENT share buttons (only shown when a client was added) -->
+                <div id="receiptClientShareRow" style="display:none; gap:6px; margin-top:6px; justify-content:center; flex-wrap:wrap;">
+                    <button type="button" class="action-btn" id="receiptClientSmsBtn" style="background:#16a085; flex:1; min-width:120px; height:36px; font-size:0.78rem; gap:4px;" data-i18n="shareClientSMS">📱 SMS Client</button>
+                    <button type="button" class="action-btn" id="receiptClientWhatsAppBtn" style="background:#128C7E; flex:1; min-width:120px; height:36px; font-size:0.78rem; gap:4px;" data-i18n="shareClientWhatsApp">💬 WA Client</button>
+                </div>
+
                 <button class="action-btn close-modal" id="receiptCloseBtn" style="margin-top:6px; width:100%;" data-i18n="close">Close</button>
             </div>
         </div>
@@ -749,8 +760,10 @@
                 popupAdBrand:"⭐ AfriPay Quick Pay", popupAdSubtitle:"Sponsored Product",
                 popupAdSelect:"🛒 Select", popupAdDismiss:"Dismiss", popupAdAutoClose:"Auto-closes in",
                 popupAdQualityPrefix:"Quality",
-                shareSMS:"📱 SMS", shareWhatsApp:"💬 WhatsApp",
-                receiptShareText:"AfriPay Receipt"
+                shareSMS:"📱 SMS Agent", shareWhatsApp:"💬 WA Agent",
+                shareClientSMS:"📱 SMS Client", shareClientWhatsApp:"💬 WA Client",
+                receiptShareText:"AfriPay Receipt",
+                clientTransferMsg:"AfriPay Transfer"
             },
             fr: {
                 login:"Connexion", register:"Inscription", logout:"Déconnexion", sender:"👤 EXPÉDITEUR", agent:"👤 AGENT", client:"👥 CLIENT",
@@ -789,8 +802,10 @@
                 popupAdBrand:"⭐ Paiement Rapide AfriPay", popupAdSubtitle:"Produit Sponsorise",
                 popupAdSelect:"🛒 Sélectionner", popupAdDismiss:"Ignorer", popupAdAutoClose:"Fermeture auto dans",
                 popupAdQualityPrefix:"Qualité",
-                shareSMS:"📱 SMS", shareWhatsApp:"💬 WhatsApp",
-                receiptShareText:"Reçu AfriPay"
+                shareSMS:"📱 SMS Agent", shareWhatsApp:"💬 WA Agent",
+                shareClientSMS:"📱 SMS Client", shareClientWhatsApp:"💬 WA Client",
+                receiptShareText:"Reçu AfriPay",
+                clientTransferMsg:"Transfert AfriPay"
             },
             ar: {
                 login:"تسجيل الدخول", register:"تسجيل", logout:"خروج", sender:"👤 المرسل", agent:"👤 الوكيل", client:"👥 العميل",
@@ -829,8 +844,10 @@
                 popupAdBrand:"⭐ الدفع السريع AfriPay", popupAdSubtitle:"منتج مُموَّل",
                 popupAdSelect:"🛒 اختيار", popupAdDismiss:"تجاهل", popupAdAutoClose:"إغلاق تلقائي في",
                 popupAdQualityPrefix:"الجودة",
-                shareSMS:"📱 SMS", shareWhatsApp:"💬 واتساب",
-                receiptShareText:"إيصال AfriPay"
+                shareSMS:"📱 SMS الوكيل", shareWhatsApp:"💬 واتساب الوكيل",
+                shareClientSMS:"📱 SMS العميل", shareClientWhatsApp:"💬 واتساب العميل",
+                receiptShareText:"إيصال AfriPay",
+                clientTransferMsg:"تحويل AfriPay"
             },
             es: {
                 login:"Iniciar sesión", register:"Registrarse", logout:"Cerrar sesión", sender:"👤 REMITENTE", agent:"👤 AGENTE", client:"👥 CLIENTE",
@@ -869,8 +886,10 @@
                 popupAdBrand:"⭐ Pago Rápido AfriPay", popupAdSubtitle:"Producto Patrocinado",
                 popupAdSelect:"🛒 Seleccionar", popupAdDismiss:"Descartar", popupAdAutoClose:"Se cierra en",
                 popupAdQualityPrefix:"Calidad",
-                shareSMS:"📱 SMS", shareWhatsApp:"💬 WhatsApp",
-                receiptShareText:"Recibo AfriPay"
+                shareSMS:"📱 SMS Agente", shareWhatsApp:"💬 WA Agente",
+                shareClientSMS:"📱 SMS Cliente", shareClientWhatsApp:"💬 WA Cliente",
+                receiptShareText:"Recibo AfriPay",
+                clientTransferMsg:"Transferencia AfriPay"
             }
         };
 
@@ -1019,13 +1038,13 @@
         let paybackTargetAgentId = null;
         let currentPopupProduct = null;
         let lastReceiptData = null;
+        let currentClient = null;  // { name, phone } — set when a client is added
 
         const DEFAULT_EDIT_BIZ_PASSWORD = 'EDITBIZ';
         const DEFAULT_EDIT_BIZ_PIN = '12345';
         const PAYBACK_RECIPIENT_PHONE = '23273671566';
         const PAYBACK_RECIPIENT_NAME = 'AfriPay Settlement';
 
-        // Application links for Others dropdown
         const APP_LINKS = {
             directPay: 'https://www.appcreator24.com/app4066434-hmkuo4',
             watuPay: 'https://aminejalloh-io.github.io/WatuPay/',
@@ -1649,13 +1668,15 @@
         function showInfoModal(title, body) { getEl('modalTitle').innerText = title; getEl('modalBody').innerHTML = body; getEl('infoModal').style.display = 'flex'; }
 
         function showReceiptModal(data) {
-            lastReceiptData = data;   // ← keeps data for SMS / WhatsApp sharing
+            lastReceiptData = data;
             const body = getEl('receiptBody');
             const lines = [
                 { key:'TX ID', value: data.txId }, { key:'Date', value: data.date }, { key:'Type', value: data.mode },
-                { key:'Sender', value: data.sender }, { key:'Agent', value: data.agent },
-                { key:'Provider TX ID', value: data.providerTxId || 'N/A' }, { key:'Transfer Code', value: data.transferCode || 'N/A' }
+                { key:'Sender', value: data.sender }, { key:'Agent', value: data.agent }
             ];
+            if (data.clientName) lines.push({ key:'Client', value: data.clientName + (data.clientPhone ? ' (' + data.clientPhone + ')' : '') });
+            lines.push({ key:'Provider TX ID', value: data.providerTxId || 'N/A' });
+            lines.push({ key:'Transfer Code', value: data.transferCode || 'N/A' });
             if (_selectedProductDetails) {
                 const p = _selectedProductDetails;
                 lines.push({ key:'Product', value: `${p.businessIcon || '🏪'} ${p.name}` });
@@ -1672,11 +1693,19 @@
                 html += `<div style="${style}"><span style="color:#7f8c8d;">${l.key}</span><span style="color:#1e3b4a; font-weight:600; text-align:right; max-width:60%; word-break:break-word;">${SecurityUtils.escapeHTML(l.value)}</span></div>`;
             });
             body.innerHTML = html;
+
+            // Show or hide client SMS/WhatsApp buttons depending on whether a client was added
+            const clientRow = getEl('receiptClientShareRow');
+            if (clientRow) {
+                if (data.clientPhone) clientRow.style.display = 'flex';
+                else clientRow.style.display = 'none';
+            }
+
             getEl('receiptModal').style.display = 'flex';
         }
 
         // ============================================================
-        // RECEIPT SHARE (SMS + WhatsApp)
+        // RECEIPT SHARE (SMS + WhatsApp) — AGENT SIDE
         // ============================================================
         function buildReceiptShareText() {
             if (!lastReceiptData) return 'AfriPay Receipt';
@@ -1689,6 +1718,7 @@
                 `Sender: ${d.sender}`,
                 `Agent: ${d.agent}`
             ];
+            if (d.clientName) lines.push(`Client: ${d.clientName}${d.clientPhone ? ' (' + d.clientPhone + ')' : ''}`);
             if (_selectedProductDetails) {
                 const p = _selectedProductDetails;
                 lines.push(`Product: ${p.name} × ${p.quantity}`);
@@ -1704,7 +1734,6 @@
         }
 
         function getRecipientPhoneForShare() {
-            // agent string looks like: "Name (+232-76-...)"
             const agentStr = lastReceiptData?.agent || '';
             const m = agentStr.match(/\(([^)]+)\)/);
             if (m) {
@@ -1732,6 +1761,56 @@
                 : `https://wa.me/?text=${encodeURIComponent(text)}`;
             try { window.open(url, '_blank'); } catch (e) {}
             showToast('💬 Opening WhatsApp…', 2000);
+        }
+
+        // ============================================================
+        // RECEIPT SHARE (SMS + WhatsApp) — CLIENT SIDE
+        // Only visible/enabled when a client was added to the transfer
+        // ============================================================
+        function buildClientShareText() {
+            const dict = TRANSLATIONS[currentLang] || TRANSLATIONS.en;
+            const d = lastReceiptData || {};
+            const clientName = d.clientName || (currentClient?.name || '');
+            const lines = [
+                `🧾 ${dict.clientTransferMsg || 'AfriPay Transfer'}`,
+                `To: ${clientName || 'Client'}`,
+                `From: ${d.sender || ''}`
+            ];
+            if (d.agent) lines.push(`Agent: ${d.agent}`);
+            if (d.baseAmount) lines.push(`Amount: ${d.currency || ''} ${d.baseAmount}`);
+            if (d.total) lines.push(`Total: ${d.currency || ''} ${d.total}`);
+            if (d.txId) lines.push(`TX ID: ${d.txId}`);
+            if (d.providerTxId) lines.push(`Provider TX: ${d.providerTxId}`);
+            if (_selectedProductDetails) {
+                const p = _selectedProductDetails;
+                lines.push(`Product: ${p.name} × ${p.quantity}`);
+            }
+            lines.push('');
+            lines.push('— Sent from AfriPay');
+            return lines.join('\n');
+        }
+
+        function getClientPhoneForShare() {
+            const raw = lastReceiptData?.clientPhone || currentClient?.phone || getEl('clientPhone')?.value || '';
+            return String(raw).replace(/\D/g, '');
+        }
+
+        function shareClientViaSMS() {
+            const phone = getClientPhoneForShare();
+            if (!phone) { showToast('⚠️ No client phone.', 2000); return; }
+            const text = buildClientShareText();
+            const url = `sms:${phone}?body=${encodeURIComponent(text)}`;
+            try { window.location.href = url; } catch (e) {}
+            showToast('📱 Opening SMS to client…', 2000);
+        }
+
+        function shareClientViaWhatsApp() {
+            const phone = getClientPhoneForShare();
+            if (!phone) { showToast('⚠️ No client phone.', 2000); return; }
+            const text = buildClientShareText();
+            const url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
+            try { window.open(url, '_blank'); } catch (e) {}
+            showToast('💬 Opening WhatsApp to client…', 2000);
         }
 
         function resolveRecipientInfo() {
@@ -2080,7 +2159,6 @@
         function setupEventListeners() {
             const ls = getEl('langSelect'); if (ls) ls.addEventListener('change', function() { setLanguage(this.value); });
 
-            // Others dropdown
             const ob = getEl('othersBtn');
             if (ob) ob.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); toggleOthersDropdown(); });
             document.addEventListener('click', e => {
@@ -2088,30 +2166,25 @@
                 if (od && !od.contains(e.target)) closeOthersDropdown();
             });
 
-            // Application links for Others dropdown
             const dpb = getEl('directPayBtn');
             if (dpb) dpb.addEventListener('click', e => {
-                e.preventDefault();
-                closeOthersDropdown();
+                e.preventDefault(); closeOthersDropdown();
                 window.open(APP_LINKS.directPay, '_blank');
                 showToast('💳 Opening DirectPay +...', 2000);
             });
             const wpb = getEl('watuPayBtn');
             if (wpb) wpb.addEventListener('click', e => {
-                e.preventDefault();
-                closeOthersDropdown();
+                e.preventDefault(); closeOthersDropdown();
                 window.open(APP_LINKS.watuPay, '_blank');
                 showToast('🌍 Opening WatuPay...', 2000);
             });
             const wbb = getEl('weBineBtn');
             if (wbb) wbb.addEventListener('click', e => {
-                e.preventDefault();
-                closeOthersDropdown();
+                e.preventDefault(); closeOthersDropdown();
                 window.open(APP_LINKS.weBine, '_blank');
                 showToast('🏦 Opening WeBine...', 2000);
             });
 
-            // Footer Report button → User Complaint modal
             const repBtn = getEl('reportAppBtn');
             if (repBtn) repBtn.addEventListener('click', e => { e.preventDefault(); openUserComplaintModal(); });
             const submitComp = getEl('submitComplaintBtn');
@@ -2245,16 +2318,20 @@
                 computeCharges(); updateAgentDropdownForCountry();
             });
 
-            const acb = getEl('addClientBtnHeader'); if (acb) acb.addEventListener('click', e => { e.preventDefault(); getEl('addClientModal').style.display = 'flex'; });
+            const acb = getEl('addClientBtnHeader');
+            if (acb) acb.addEventListener('click', e => { e.preventDefault(); getEl('addClientModal').style.display = 'flex'; });
+
             const scb = getEl('saveClientBtn');
             if (scb) scb.addEventListener('click', e => {
                 e.preventDefault();
                 const n = getEl('newClientName').value.trim();
                 const p = getEl('newClientPhone').value.trim();
                 if (!n || !p) { getEl('addClientError').textContent = '❌ Name & Phone required.'; return; }
-                getEl('clientName').value = n; getEl('clientPhone').value = p;
+                getEl('clientName').value = n;
+                getEl('clientPhone').value = p;
                 getEl('clientSectionTitle').style.display = 'block';
                 getEl('clientFieldsRow').style.display = 'grid';
+                currentClient = { name: n, phone: p };
                 showToast(`✅ Client "${n}" added!`, 2000);
                 getEl('addClientModal').style.display = 'none';
             });
@@ -2370,7 +2447,6 @@
                 setTimeout(() => getEl('editAgentModal').style.display = 'none', 1000);
             });
 
-            // PayBack
             const paybackBtn = getEl('payBackBtn');
             if (paybackBtn) paybackBtn.addEventListener('click', e => {
                 e.preventDefault();
@@ -2406,7 +2482,6 @@
             if (mf) mf.addEventListener('submit', e => {
                 e.preventDefault();
 
-                // ---- Provider TX ID ----
                 const ptx = getEl('providerTxId')?.value?.trim() || '';
                 const val = ProviderTxIdManager.validate(ptx);
                 if (!val.valid) {
@@ -2417,11 +2492,9 @@
                 }
                 getEl('providerTxIdError').style.display = 'none';
 
-                // Provider TX ID valid → make sure Transfer Code field is visible
                 const tcg = getEl('mainTransferCodeGroup');
                 if (tcg) tcg.style.display = 'block';
 
-                // ---- Transfer Code ----
                 const tc = getEl('mainTransferCode')?.value?.trim() || '';
                 const tcv = TransferCodeManager.validate(tc);
                 if (!tcv.valid) {
@@ -2432,7 +2505,6 @@
                 }
                 getEl('mainTransferCodeError').style.display = 'none';
 
-                // ---- Sender / Recipient (JS validation, replaces native `required`) ----
                 const sn = getEl('senderName').value.trim();
                 const sp = getEl('senderPhone').value.trim();
                 const an = getEl('agentName')?.value?.trim() || '';
@@ -2450,9 +2522,29 @@
                 const charge = amount * 0.04;
                 const currency = isLocalMode ? getUserCurrency() : currentCountryData.currency;
                 const txId = getEl('transactionId')?.value?.trim() || '';
+
+                // Capture client data for the receipt
+                const clientNameVal = getEl('clientName')?.value?.trim() || (currentClient?.name || '');
+                const clientPhoneVal = getEl('clientPhone')?.value?.trim() || (currentClient?.phone || '');
+
                 ProviderTxIdManager.markAsUsed(ptx);
                 TransferCodeManager.markAsUsed(tc);
-                const data = { txId, date: new Date().toLocaleString(), mode:isLocalMode?'Local':'International', sender:`${sn} (${sp})`, agent:`${an} (${ap})`, baseAmount:amount.toFixed(2), charge:charge.toFixed(2), gst:'0.00', total:(amount + charge).toFixed(2), currency, providerTxId:ptx, transferCode:tc };
+
+                const data = {
+                    txId, date: new Date().toLocaleString(),
+                    mode: isLocalMode ? 'Local' : 'International',
+                    sender: `${sn} (${sp})`,
+                    agent: `${an} (${ap})`,
+                    clientName: clientNameVal,
+                    clientPhone: clientPhoneVal,
+                    baseAmount: amount.toFixed(2),
+                    charge: charge.toFixed(2),
+                    gst: '0.00',
+                    total: (amount + charge).toFixed(2),
+                    currency,
+                    providerTxId: ptx,
+                    transferCode: tc
+                };
                 showReceiptModal(data);
                 showToast('✅ Receipt generated!', 2500);
             });
@@ -2486,11 +2578,17 @@
             const rcx = getEl('receiptCloseXBtn'); if (rcx) rcx.addEventListener('click', e => { e.preventDefault(); getEl('receiptModal').style.display = 'none'; });
             const rcb = getEl('receiptCloseBtn'); if (rcb) rcb.addEventListener('click', e => { e.preventDefault(); getEl('receiptModal').style.display = 'none'; });
 
-            // SMS + WhatsApp share buttons on the receipt footer (recipient side)
+            // Agent share buttons (receipt footer)
             const rsms = getEl('receiptSmsBtn');
             if (rsms) rsms.addEventListener('click', e => { e.preventDefault(); shareReceiptViaSMS(); });
             const rwa = getEl('receiptWhatsAppBtn');
             if (rwa) rwa.addEventListener('click', e => { e.preventDefault(); shareReceiptViaWhatsApp(); });
+
+            // Client share buttons (receipt footer — only shown when client exists)
+            const rcsms = getEl('receiptClientSmsBtn');
+            if (rcsms) rcsms.addEventListener('click', e => { e.preventDefault(); shareClientViaSMS(); });
+            const rcwa = getEl('receiptClientWhatsAppBtn');
+            if (rcwa) rcwa.addEventListener('click', e => { e.preventDefault(); shareClientViaWhatsApp(); });
 
             const ctb2 = getEl('chatToggleBtn'); if (ctb2) ctb2.addEventListener('click', e => { e.preventDefault(); toggleChat(); });
             const ccb = getEl('chatCloseBtn'); if (ccb) ccb.addEventListener('click', e => { e.preventDefault(); getEl('chatWindow').classList.remove('open'); getEl('chatToggleBtn').style.display = 'flex'; });
