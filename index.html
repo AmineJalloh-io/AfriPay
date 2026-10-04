@@ -266,7 +266,7 @@
                 </div>
                 <button class="map-btn" id="mapButton">🗺️</button>
             </div>
-            <form id="mainForm">
+            <form id="mainForm" novalidate>
                 <div class="section-title" data-i18n="sender">👤 SENDER</div>
                 <div class="double-row">
                     <div class="input-group"><label data-i18n="name">Name *</label><input type="text" id="senderName" required /></div>
@@ -285,10 +285,10 @@
                 <div class="section-title" data-i18n="agent">👤 AGENT</div>
                 <div class="input-group">
                     <label id="agentNameLabel" data-i18n="agent">Agent *</label>
-                    <select id="agentNameSelect" class="agent-select" required><option value="">-- Select Agent --</option></select>
+                    <select id="agentNameSelect" class="agent-select"><option value="">-- Select Agent --</option></select>
                     <input type="hidden" id="agentName" />
                 </div>
-                <div class="input-group"><label data-i18n="phone">Phone *</label><input type="tel" id="agentPhone" required readonly /></div>
+                <div class="input-group"><label data-i18n="phone">Phone *</label><input type="tel" id="agentPhone" readonly /></div>
                 <div class="section-title" id="clientSectionTitle" style="display:none;">👥 CLIENT</div>
                 <div class="double-row" id="clientFieldsRow" style="display:none;">
                     <div class="input-group"><label>Client *</label><input type="text" id="clientName" readonly /></div>
@@ -2332,19 +2332,48 @@
             const mf = getEl('mainForm');
             if (mf) mf.addEventListener('submit', e => {
                 e.preventDefault();
+
+                // ---- Provider TX ID ----
                 const ptx = getEl('providerTxId')?.value?.trim() || '';
                 const val = ProviderTxIdManager.validate(ptx);
-                if (!val.valid) { getEl('providerTxIdError').textContent = val.error; getEl('providerTxIdError').style.display = 'block'; return; }
+                if (!val.valid) {
+                    const eg = getEl('providerTxIdError');
+                    eg.textContent = val.error; eg.style.display = 'block';
+                    getEl('providerTxId')?.focus();
+                    return;
+                }
+                getEl('providerTxIdError').style.display = 'none';
+
+                // Provider TX ID valid → make sure Transfer Code field is visible
+                const tcg = getEl('mainTransferCodeGroup');
+                if (tcg) tcg.style.display = 'block';
+
+                // ---- Transfer Code ----
                 const tc = getEl('mainTransferCode')?.value?.trim() || '';
                 const tcv = TransferCodeManager.validate(tc);
-                if (!tcv.valid) { getEl('mainTransferCodeError').textContent = tcv.error; getEl('mainTransferCodeError').style.display = 'block'; return; }
+                if (!tcv.valid) {
+                    const eg = getEl('mainTransferCodeError');
+                    eg.textContent = tcv.error; eg.style.display = 'block';
+                    getEl('mainTransferCode')?.focus();
+                    return;
+                }
+                getEl('mainTransferCodeError').style.display = 'none';
+
+                // ---- Sender / Recipient (JS validation, replaces native `required`) ----
                 const sn = getEl('senderName').value.trim();
                 const sp = getEl('senderPhone').value.trim();
                 const an = getEl('agentName')?.value?.trim() || '';
                 const ap = getEl('agentPhone')?.value?.trim() || '';
-                if (!sn || !sp || !an) { showToast('❌ Fill required.'); return; }
-                ensureTransactionId();
+                if (!sn) { showToast('❌ Enter sender name.'); getEl('senderName').focus(); return; }
+                if (!sp) { showToast('❌ Enter sender phone.'); getEl('senderPhone').focus(); return; }
+                if (!an) { showToast('❌ Select an agent or a business.'); return; }
+
                 const amount = parseFloat(getEl('amountInput')?.value) || 0;
+                if (amount <= 0) { showToast('❌ Enter a valid amount.'); getEl('amountInput').focus(); return; }
+                const maxAmt = parseFloat(getEl('amountInput')?.max);
+                if (maxAmt > 0 && amount > maxAmt) { showToast(`❌ Amount exceeds the agent limit of ${maxAmt}.`); getEl('amountInput').focus(); return; }
+
+                ensureTransactionId();
                 const charge = amount * 0.04;
                 const currency = isLocalMode ? getUserCurrency() : currentCountryData.currency;
                 const txId = getEl('transactionId')?.value?.trim() || '';
