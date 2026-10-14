@@ -218,7 +218,17 @@ body{background:linear-gradient(145deg,#eef2f7 0%,#d9e2ec 100%);min-height:100vh
 .agent-auth-badge .aab-name{font-weight:800;color:#0f2b3d;font-size:.92rem;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .agent-auth-badge .aab-initials{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#0f2b3d,#2c7da0);color:#FFD966;font-weight:900;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 3px 8px rgba(0,0,0,.2)}
 .agent-auth-subtitle{font-size:.72rem;color:#7f8c8d;line-height:1.35;margin-bottom:8px}
-@media(max-width:600px){.double-row{grid-template-columns:1fr;gap:0}.brand-text{font-size:1.3rem}.afripay-logo-img{width:36px;height:36px}.modal-content{padding:.7rem;max-width:320px}.action-btn{padding:5px 12px;height:36px;font-size:.75rem}.form-container{padding:.5rem .6rem .35rem .6rem}.chat-window{left:0;right:0;width:100%;bottom:0;height:100vh}.chat-sidebar{display:none}.dash-tab{font-size:.6rem;padding:4px 5px}}
+
+/* ===== NEW: Business mechanism sections ===== */
+.mech-section{background:#f7fbff;border:1px solid #dbe9f5;border-radius:10px;padding:.5rem .6rem;margin-top:.55rem}
+.mech-title{font-weight:800;color:#1c6e8f;font-size:.76rem;margin-bottom:.35rem;display:flex;align-items:center;gap:5px;text-transform:uppercase;letter-spacing:.3px;border-left:3px solid #2c7da0;padding-left:7px}
+.check-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.chk{display:flex;align-items:center;gap:5px;font-size:.72rem;color:#1e3b4a;font-weight:600;background:#fff;border:1px solid #e0e8f0;border-radius:20px;padding:4px 9px;cursor:pointer}
+.chk input{accent-color:#2c7da0;width:14px;height:14px;cursor:pointer;flex-shrink:0}
+.mech-hint{font-size:.64rem;color:#7f8c8d;margin-top:2px;line-height:1.3}
+.mech-summary{background:#eef7ff;border:1px dashed #a9cfe8;border-radius:8px;padding:4px 8px;font-size:.68rem;color:#1c6e8f;margin-top:3px;font-weight:600}
+
+@media(max-width:600px){.double-row{grid-template-columns:1fr;gap:0}.brand-text{font-size:1.3rem}.afripay-logo-img{width:36px;height:36px}.modal-content{padding:.7rem;max-width:320px}.action-btn{padding:5px 12px;height:36px;font-size:.75rem}.form-container{padding:.5rem .6rem .35rem .6rem}.chat-window{left:0;right:0;width:100%;bottom:0;height:100vh}.chat-sidebar{display:none}.dash-tab{font-size:.6rem;padding:4px 5px}.check-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -659,6 +669,7 @@ body{background:linear-gradient(145deg,#eef2f7 0%,#d9e2ec 100%);min-height:100vh
 </div>
 </div>
 
+<!-- ================= BUSINESSES PANE (with full mechanisms) ================= -->
 <div class="dash-pane" id="dash-pane-businesses">
 <div class="dash-section">
 <div class="dash-section-title">➕ Add Business</div>
@@ -675,6 +686,86 @@ body{background:linear-gradient(145deg,#eef2f7 0%,#d9e2ec 100%);min-height:100vh
 <div class="input-group"><label>City *</label><input type="text" id="dbCity" /></div>
 </div>
 <div class="input-group"><label>Country *</label><select id="dbCountry"></select></div>
+
+<!-- ===== PAYMENT MECHANISM (Dashboard) ===== -->
+<div class="mech-section">
+<div class="mech-title">💳 Payment Mechanism</div>
+<div class="input-group"><label>Accepted Payment Methods *</label>
+<div class="check-grid">
+<label class="chk"><input type="checkbox" class="dbPayMethod" value="Mobile Money" checked /> Mobile Money</label>
+<label class="chk"><input type="checkbox" class="dbPayMethod" value="Cash on Delivery" /> Cash on Delivery</label>
+<label class="chk"><input type="checkbox" class="dbPayMethod" value="Bank Transfer" /> Bank Transfer</label>
+<label class="chk"><input type="checkbox" class="dbPayMethod" value="Card" /> Card</label>
+</div>
+</div>
+<div class="input-group"><label>Mobile Money Providers Accepted</label>
+<div class="check-grid">
+<label class="chk"><input type="checkbox" class="dbProvider" value="MB-ONE" /> MB-ONE</label>
+<label class="chk"><input type="checkbox" class="dbProvider" value="MB-TWO" /> MB-TWO</label>
+<label class="chk"><input type="checkbox" class="dbProvider" value="MB-THREE" /> MB-THREE</label>
+<label class="chk"><input type="checkbox" class="dbProvider" value="MB-FOUR" /> MB-FOUR</label>
+</div>
+</div>
+<div class="double-row">
+<div class="input-group"><label>Settlement / Payout Number *</label><input type="tel" id="dbSettlementNumber" /></div>
+<div class="input-group"><label>Settlement Currency</label><select id="dbSettlementCurrency"></select></div>
+</div>
+<div class="double-row">
+<div class="input-group"><label>Deposit Required (%)</label><input type="number" id="dbDepositPercent" min="0" max="100" value="0" /></div>
+<div class="input-group"><label>Payment Terms</label><select id="dbPaymentTerms">
+<option>Pay on delivery</option><option>Pay before delivery</option><option>Pay after service</option><option>Installments</option>
+</select></div>
+</div>
+</div>
+
+<!-- ===== PAYMENT AUTHENTICATION MECHANISM (Dashboard) ===== -->
+<div class="mech-section">
+<div class="mech-title">🔐 Payment Authentication Mechanism</div>
+<div class="double-row">
+<div class="input-group"><label>Authentication Method *</label><select id="dbAuthMethod">
+<option value="pin">PIN only</option>
+<option value="password_pin">Password + PIN</option>
+<option value="otp">SMS OTP</option>
+<option value="password_pin_otp">Password + PIN + OTP</option>
+</select></div>
+<div class="input-group"><label>Authorisation Threshold</label><input type="number" id="dbAuthThreshold" step="any" value="0" /></div>
+</div>
+<div class="double-row">
+<div class="input-group"><label>Authoriser Name *</label><input type="text" id="dbAuthName" /></div>
+<div class="input-group"><label>Authoriser Phone *</label><input type="tel" id="dbAuthPhone" /></div>
+</div>
+<div class="check-grid">
+<label class="chk"><input type="checkbox" id="dbRequirePinPerTx" checked /> PIN per transaction</label>
+<label class="chk"><input type="checkbox" id="dbTwoManRule" /> Two-person rule</label>
+<label class="chk"><input type="checkbox" id="dbRefundAllowed" checked /> Refunds with auth</label>
+</div>
+<div class="mech-hint">Threshold 0 = authorisation required on every payment.</div>
+</div>
+
+<!-- ===== DELIVERY (Dashboard) ===== -->
+<div class="mech-section">
+<div class="mech-title">🚚 Delivery</div>
+<div class="input-group"><label>Delivery Mode *</label>
+<div class="check-grid">
+<label class="chk"><input type="radio" name="dbDeliveryMode" value="Pickup" /> Pickup only</label>
+<label class="chk"><input type="radio" name="dbDeliveryMode" value="Delivery" /> Delivery only</label>
+<label class="chk"><input type="radio" name="dbDeliveryMode" value="Both" checked /> Both</label>
+</div>
+</div>
+<div class="double-row">
+<div class="input-group"><label>Delivery Fee</label><input type="number" id="dbDeliveryFee" step="any" value="0" /></div>
+<div class="input-group"><label>Free Delivery Above</label><input type="number" id="dbFreeDeliveryAbove" step="any" value="0" /></div>
+</div>
+<div class="double-row">
+<div class="input-group"><label>Est. Delivery Time</label><select id="dbDeliveryTime">
+<option>Under 30 minutes</option><option>30-60 minutes</option><option>1-3 hours</option>
+<option>Same day</option><option>1-2 days</option><option>3-7 days</option>
+</select></div>
+<div class="input-group"><label>Delivery Radius (km)</label><input type="number" id="dbDeliveryRadius" step="any" value="5" /></div>
+</div>
+<div class="input-group"><label>Delivery Zones / Areas</label><input type="text" id="dbDeliveryZones" placeholder="e.g. Freetown Central, Lumley, Aberdeen" /></div>
+</div>
+
 <div class="dash-actions">
 <button type="button" class="mini-btn approve" id="dbSubmitBiz">📤 Submit Business</button>
 </div>
@@ -837,11 +928,14 @@ body{background:linear-gradient(145deg,#eef2f7 0%,#d9e2ec 100%);min-height:100vh
 <div style="background:#f5f8fa;padding:10px 18px;border-top:1px solid #e8edf2;display:flex;gap:6px;justify-content:center;"><button class="action-btn" id="convCloseBtn" data-i18n="close">Close</button></div>
 </div></div>
 
-<div id="addBizModal" class="modal"><div class="modal-content" style="max-width:460px;">
+<!-- ================= RESTORED FULL ADD BIZ MODAL ================= -->
+<div id="addBizModal" class="modal"><div class="modal-content" style="max-width:540px;">
 <h3 id="addBizTitle" data-i18n="addBusiness">🏢 Add Your Business</h3>
 <div id="addBizError" class="error-msg"></div>
 <div id="addBizSuccess" class="success-msg"></div>
 <input type="hidden" id="bizEditingId" value="" />
+
+<!-- ---- Identity ---- -->
 <div class="input-group"><label data-i18n="businessName">Business Name *</label><input type="text" id="bizName" /></div>
 <div class="input-group"><label data-i18n="contactPhone">Contact Phone *</label><input type="tel" id="bizContact" /></div>
 <div class="input-group"><label data-i18n="mobileMoney">Mobile Money Phone *</label><input type="tel" id="bizMobileMoney" /></div>
@@ -851,16 +945,104 @@ body{background:linear-gradient(145deg,#eef2f7 0%,#d9e2ec 100%);min-height:100vh
 <div class="input-group"><label data-i18n="cityTown">City / Town *</label><div class="city-input-row"><select id="bizCitySelect"><option value="">Select city...</option></select><span class="or-text">OR</span><input type="text" id="bizCityOther" /></div></div>
 <div class="input-group"><label data-i18n="country">Country *</label><select id="bizCountrySelect"></select></div>
 <div class="input-group"><label data-i18n="website">Website (optional)</label><input type="url" id="bizWebsite" /></div>
+
+<!-- ===== PAYMENT MECHANISM ===== -->
+<div class="mech-section">
+<div class="mech-title">💳 Payment Mechanism</div>
+<div class="input-group"><label>Accepted Payment Methods *</label>
+<div class="check-grid">
+<label class="chk"><input type="checkbox" class="bizPayMethod" value="Mobile Money" checked /> Mobile Money</label>
+<label class="chk"><input type="checkbox" class="bizPayMethod" value="Cash on Delivery" /> Cash on Delivery</label>
+<label class="chk"><input type="checkbox" class="bizPayMethod" value="Bank Transfer" /> Bank Transfer</label>
+<label class="chk"><input type="checkbox" class="bizPayMethod" value="Card" /> Card</label>
+</div>
+</div>
+<div class="input-group"><label>Mobile Money Providers Accepted</label>
+<div class="check-grid">
+<label class="chk"><input type="checkbox" class="bizProvider" value="MB-ONE" /> MB-ONE</label>
+<label class="chk"><input type="checkbox" class="bizProvider" value="MB-TWO" /> MB-TWO</label>
+<label class="chk"><input type="checkbox" class="bizProvider" value="MB-THREE" /> MB-THREE</label>
+<label class="chk"><input type="checkbox" class="bizProvider" value="MB-FOUR" /> MB-FOUR</label>
+</div>
+</div>
+<div class="double-row">
+<div class="input-group"><label>Settlement / Payout Number *</label><input type="tel" id="bizSettlementNumber" placeholder="Mobile money number" /></div>
+<div class="input-group"><label>Settlement Currency</label><select id="bizSettlementCurrency"></select></div>
+</div>
+<div class="double-row">
+<div class="input-group"><label>Deposit Required (%)</label><input type="number" id="bizDepositPercent" min="0" max="100" value="0" /></div>
+<div class="input-group"><label>Payment Terms</label><select id="bizPaymentTerms">
+<option>Pay on delivery</option><option>Pay before delivery</option><option>Pay after service</option><option>Installments</option>
+</select></div>
+</div>
+</div>
+
+<!-- ===== PAYMENT AUTHENTICATION MECHANISM ===== -->
+<div class="mech-section">
+<div class="mech-title">🔐 Payment Authentication Mechanism</div>
+<div class="double-row">
+<div class="input-group"><label>Authentication Method *</label><select id="bizAuthMethod">
+<option value="pin">PIN only</option>
+<option value="password_pin">Password + PIN</option>
+<option value="otp">SMS OTP</option>
+<option value="password_pin_otp">Password + PIN + OTP</option>
+</select></div>
+<div class="input-group"><label>Authorisation Threshold</label><input type="number" id="bizAuthThreshold" step="any" value="0" /></div>
+</div>
+<div class="double-row">
+<div class="input-group"><label>Authoriser Name *</label><input type="text" id="bizAuthName" /></div>
+<div class="input-group"><label>Authoriser Phone *</label><input type="tel" id="bizAuthPhone" /></div>
+</div>
+<div class="check-grid">
+<label class="chk"><input type="checkbox" id="bizRequirePinPerTx" checked /> PIN per transaction</label>
+<label class="chk"><input type="checkbox" id="bizTwoManRule" /> Two-person rule</label>
+<label class="chk"><input type="checkbox" id="bizRefundAllowed" checked /> Refunds with auth</label>
+</div>
+<div class="mech-hint">Threshold 0 = authorisation required on every payment.</div>
+</div>
+
+<!-- ===== DELIVERY ===== -->
+<div class="mech-section">
+<div class="mech-title">🚚 Delivery</div>
+<div class="input-group"><label>Delivery Mode *</label>
+<div class="check-grid">
+<label class="chk"><input type="radio" name="bizDeliveryMode" value="Pickup" /> Pickup only</label>
+<label class="chk"><input type="radio" name="bizDeliveryMode" value="Delivery" /> Delivery only</label>
+<label class="chk"><input type="radio" name="bizDeliveryMode" value="Both" checked /> Both</label>
+</div>
+</div>
+<div class="double-row">
+<div class="input-group"><label>Delivery Fee</label><input type="number" id="bizDeliveryFee" step="any" value="0" /></div>
+<div class="input-group"><label>Free Delivery Above</label><input type="number" id="bizFreeDeliveryAbove" step="any" value="0" /></div>
+</div>
+<div class="double-row">
+<div class="input-group"><label>Est. Delivery Time</label><select id="bizDeliveryTime">
+<option>Under 30 minutes</option><option>30-60 minutes</option><option>1-3 hours</option>
+<option>Same day</option><option>1-2 days</option><option>3-7 days</option>
+</select></div>
+<div class="input-group"><label>Delivery Radius (km)</label><input type="number" id="bizDeliveryRadius" step="any" value="5" /></div>
+</div>
+<div class="input-group"><label>Delivery Zones / Areas</label><input type="text" id="bizDeliveryZones" placeholder="e.g. Freetown Central, Lumley, Aberdeen" /></div>
+</div>
+
+<!-- ===== ACCESS CREDENTIALS ===== -->
 <div style="margin-top:.6rem;padding:.55rem .7rem;background:#f0f6fb;border:1px solid #c0d8e8;border-radius:10px;">
 <div style="font-weight:700;color:#1c6e8f;font-size:.8rem;" data-i18n="accessCredentials">🔐 Business Access Credentials</div>
 <div class="input-group"><label data-i18n="password">Password *</label><div style="display:flex;gap:4px;"><input type="text" id="bizPassword" readonly style="flex:1;" maxlength="6" /><button type="button" class="auth-btn-green" id="bizGenPasswordBtn" data-i18n="gen">🔑 Gen</button></div></div>
 <div class="input-group"><label data-i18n="pin">5-Digit PIN *</label><div style="display:flex;gap:4px;"><input type="text" id="bizPin" readonly style="flex:1;" maxlength="5" /><button type="button" class="auth-btn-green" id="bizGenPinBtn" data-i18n="genPin">🔑 Gen PIN</button></div></div>
 </div>
+
+<!-- ===== PRODUCTS ===== -->
 <div style="margin-top:.8rem;border-top:2px solid #e0e8f0;padding-top:.5rem;">
 <div style="display:flex;justify-content:space-between;align-items:center;"><label style="font-weight:700;color:#1c6e8f;" data-i18n="products">📦 Products</label><button type="button" class="add-product-btn" id="addProductBtn" data-i18n="addProduct">➕ Add Product</button></div>
 <div id="productsContainer"></div>
 </div>
-<div class="action-buttons-row" style="margin-top:8px;"><button class="action-btn close-modal" style="background:#2c7da0;" data-i18n="close">Close</button></div>
+
+<!-- ===== SUBMIT ===== -->
+<div class="action-buttons-row" style="margin-top:8px;">
+<button type="button" class="action-btn green" id="submitAddBizBtn" style="flex:1;">📤 Submit Business</button>
+<button type="button" class="action-btn close-modal" style="background:#2c7da0;">Close</button>
+</div>
 </div></div>
 
 <input type="file" id="avatarUploadInput" accept="image/*" class="hidden-input" />
@@ -1284,7 +1466,7 @@ let lastReceiptData = null;
 let currentClient = null;
 let popupAdInterval = null, popupAdTimeout = null, popupAdCountdownInterval = null;
 let popupAdCountdownSeconds = 15, lastPopupAdShownAt = 0;
-let pendingAgentAuthId = null; // tracks which agent's dashboard is being unlocked
+let pendingAgentAuthId = null;
 
 const DEFAULT_EDIT_BIZ_PASSWORD = 'EDITBIZ';
 const DEFAULT_EDIT_BIZ_PIN = '12345';
@@ -1340,6 +1522,150 @@ const TransferCodeManager = {
         }
     }
 };
+
+/* ============================================================
+   BUSINESS MECHANISM HELPERS
+   Shared by the Add-Biz modal (prefix "biz") and the Agent
+   Dashboard business form (prefix "db").
+   ============================================================ */
+function bizStr(id) { const e = getEl(id); return e ? String(e.value).trim() : ''; }
+function bizNum(id, def) {
+    const e = getEl(id);
+    if (!e) return (def === undefined ? 0 : def);
+    const n = parseFloat(e.value);
+    return isFinite(n) ? n : (def === undefined ? 0 : def);
+}
+function bizChk(id) { const e = getEl(id); return !!(e && e.checked); }
+function bizSet(id, v) { const e = getEl(id); if (e) e.value = (v === undefined || v === null) ? '' : v; }
+function bizSetChk(id, v) { const e = getEl(id); if (e) e.checked = !!v; }
+function bizCheckedValues(cls) {
+    return Array.prototype.slice.call(document.querySelectorAll('.' + cls + ':checked')).map(function(x) { return x.value; });
+}
+function bizSetCheckedValues(cls, arr) {
+    const list = arr || [];
+    document.querySelectorAll('.' + cls).forEach(function(c) { c.checked = list.indexOf(c.value) !== -1; });
+}
+function bizRadioValue(name, def) {
+    const r = document.querySelector('input[name="' + name + '"]:checked');
+    return r ? r.value : def;
+}
+function bizSetRadio(name, val) {
+    const r = document.querySelector('input[name="' + name + '"][value="' + val + '"]');
+    if (r) r.checked = true;
+}
+
+function defaultMechanisms() {
+    return {
+        payMethods: ['Mobile Money'],
+        providers: [],
+        settlementNumber: '',
+        settlementCurrency: 'SLL',
+        depositPercent: 0,
+        paymentTerms: 'Pay on delivery',
+        authMethod: 'pin',
+        authThreshold: 0,
+        authName: '',
+        authPhone: '',
+        requirePinPerTx: true,
+        twoManRule: false,
+        refundAllowed: true,
+        deliveryMode: 'Both',
+        deliveryFee: 0,
+        freeDeliveryAbove: 0,
+        deliveryTime: '30-60 minutes',
+        deliveryRadius: 5,
+        deliveryZones: ''
+    };
+}
+
+function collectBizMechanisms(prefix) {
+    prefix = prefix || 'biz';
+    const allMethods = bizCheckedValues(prefix + 'PayMethod');
+    const allProviders = bizCheckedValues(prefix + 'Provider');
+    return {
+        payMethods: allMethods,
+        providers: allProviders,
+        settlementNumber: bizStr(prefix + 'SettlementNumber'),
+        settlementCurrency: bizStr(prefix + 'SettlementCurrency') || 'SLL',
+        depositPercent: bizNum(prefix + 'DepositPercent', 0),
+        paymentTerms: bizStr(prefix + 'PaymentTerms') || 'Pay on delivery',
+        authMethod: bizStr(prefix + 'AuthMethod') || 'pin',
+        authThreshold: bizNum(prefix + 'AuthThreshold', 0),
+        authName: bizStr(prefix + 'AuthName'),
+        authPhone: bizStr(prefix + 'AuthPhone'),
+        requirePinPerTx: bizChk(prefix + 'RequirePinPerTx'),
+        twoManRule: bizChk(prefix + 'TwoManRule'),
+        refundAllowed: bizChk(prefix + 'RefundAllowed'),
+        deliveryMode: bizRadioValue(prefix + 'DeliveryMode', 'Both'),
+        deliveryFee: bizNum(prefix + 'DeliveryFee', 0),
+        freeDeliveryAbove: bizNum(prefix + 'FreeDeliveryAbove', 0),
+        deliveryTime: bizStr(prefix + 'DeliveryTime') || '30-60 minutes',
+        deliveryRadius: bizNum(prefix + 'DeliveryRadius', 5),
+        deliveryZones: bizStr(prefix + 'DeliveryZones')
+    };
+}
+
+function applyBizMechanismsToForm(m, prefix) {
+    prefix = prefix || 'biz';
+    m = m || {};
+    const d = defaultMechanisms();
+    const get = function(k) { return (m[k] === undefined || m[k] === null) ? d[k] : m[k]; };
+    bizSetCheckedValues(prefix + 'PayMethod', (m.payMethods && m.payMethods.length) ? m.payMethods : d.payMethods);
+    bizSetCheckedValues(prefix + 'Provider', m.providers || []);
+    bizSet(prefix + 'SettlementNumber', get('settlementNumber'));
+    bizSet(prefix + 'SettlementCurrency', get('settlementCurrency'));
+    bizSet(prefix + 'DepositPercent', get('depositPercent'));
+    bizSet(prefix + 'PaymentTerms', get('paymentTerms'));
+    bizSet(prefix + 'AuthMethod', get('authMethod'));
+    bizSet(prefix + 'AuthThreshold', get('authThreshold'));
+    bizSet(prefix + 'AuthName', get('authName'));
+    bizSet(prefix + 'AuthPhone', get('authPhone'));
+    bizSetChk(prefix + 'RequirePinPerTx', get('requirePinPerTx'));
+    bizSetChk(prefix + 'TwoManRule', get('twoManRule'));
+    bizSetChk(prefix + 'RefundAllowed', get('refundAllowed'));
+    bizSetRadio(prefix + 'DeliveryMode', get('deliveryMode'));
+    bizSet(prefix + 'DeliveryFee', get('deliveryFee'));
+    bizSet(prefix + 'FreeDeliveryAbove', get('freeDeliveryAbove'));
+    bizSet(prefix + 'DeliveryTime', get('deliveryTime'));
+    bizSet(prefix + 'DeliveryRadius', get('deliveryRadius'));
+    bizSet(prefix + 'DeliveryZones', get('deliveryZones'));
+}
+
+function resetBizMechanismsForm(prefix) { applyBizMechanismsToForm(defaultMechanisms(), prefix || 'biz'); }
+
+function validateBizMechanisms(m, fail) {
+    fail = fail || function() {};
+    if (!m.payMethods || !m.payMethods.length) { fail('❌ Select at least one payment method.'); return false; }
+    if (m.payMethods.indexOf('Mobile Money') !== -1 && (!m.providers || !m.providers.length)) { fail('❌ Select at least one mobile money provider.'); return false; }
+    if (!m.settlementNumber || m.settlementNumber.replace(/\D/g, '').length < 6) { fail('❌ Enter a valid settlement / payout number.'); return false; }
+    if (!m.authName) { fail('❌ Enter the payment authoriser name.'); return false; }
+    if (!m.authPhone || m.authPhone.replace(/\D/g, '').length < 6) { fail('❌ Enter a valid authoriser phone number.'); return false; }
+    if (m.deliveryMode !== 'Pickup' && m.deliveryRadius <= 0) { fail('❌ Delivery radius must be greater than 0.'); return false; }
+    return true;
+}
+
+function populateSettlementCurrencySelects() {
+    ['bizSettlementCurrency', 'dbSettlementCurrency'].forEach(function(id) {
+        const s = getEl(id); if (!s) return;
+        const cv = s.value; s.innerHTML = '';
+        SUPPORTED_CURRENCIES.forEach(function(c) {
+            const o = document.createElement('option');
+            o.value = c.currency;
+            o.textContent = c.flag + ' ' + c.currency + ' — ' + c.name;
+            s.appendChild(o);
+        });
+        if (cv) s.value = cv;
+    });
+}
+
+function mechanismsSummary(m) {
+    if (!m) return '';
+    const parts = [];
+    parts.push('💳 ' + ((m.payMethods || []).join(', ') || '—'));
+    parts.push('🔐 ' + (m.authMethod || '—'));
+    parts.push('🚚 ' + (m.deliveryMode || '—'));
+    return '<div class="mech-summary">' + escapeHTML(parts.join('  ·  ')) + '</div>';
+}
 
 function populateCapitalCityDropdown(selectId) {
     const s = getEl(selectId); if (!s) return;
@@ -1483,7 +1809,6 @@ function renderAgentDropdown(filterCountry) {
         const displayName = (data.businessName || agent.name || '').replace(/\(.*\)/, '').trim();
         item.innerHTML = '<div class="agent-info"><span class="agent-flag">' + getAgentFlag(agent) + '</span><span class="agent-name">' + escapeHTML(displayName) + '</span><span class="agent-logo-fallback" title="Open Dashboard">' + getAgentInitials(agent) + '</span></div>';
         item.querySelector('.agent-name').addEventListener('click', function(e) { e.stopPropagation(); selectAgent(agent.id); list.classList.remove('open'); });
-        // AGENT ICON → credentials modal → dashboard
         item.querySelector('.agent-logo-fallback').addEventListener('click', function(e) {
             e.stopPropagation();
             list.classList.remove('open');
@@ -1571,7 +1896,6 @@ function selectAgent(agentId) {
     const btn = getEl('selectedAgentName');
     if (btn) {
         btn.innerHTML = '<span class="agent-flag">' + getAgentFlag(agent) + '</span><span class="agent-name-text">' + escapeHTML(displayName) + '</span><span class="agent-initials-inline" title="Open Dashboard">' + getAgentInitials(agent) + '</span>';
-        // SELECTED AGENT ICON → credentials modal → dashboard
         btn.querySelector('.agent-initials-inline').addEventListener('click', function(e) {
             e.stopPropagation();
             promptAgentCredentials(agent.id);
@@ -1799,7 +2123,11 @@ function openEditBizModal(businessId) {
     if (getEl('bizEditingId')) getEl('bizEditingId').value = biz.id;
     if (getEl('bizPassword')) getEl('bizPassword').value = biz.password || '';
     if (getEl('bizPin')) getEl('bizPin').value = biz.pin || '';
+    /* --- restore payment / auth / delivery mechanisms --- */
+    applyBizMechanismsToForm(biz.mechanisms, 'biz');
     getEl('addBizTitle').textContent = '✏️ Edit Business – ' + biz.name;
+    if (getEl('addBizError')) getEl('addBizError').textContent = '';
+    if (getEl('addBizSuccess')) getEl('addBizSuccess').textContent = '';
     const pc = getEl('productsContainer');
     pc.innerHTML = '';
     productCounter = 0;
@@ -1843,13 +2171,20 @@ function showGoodsModal(businessId) {
     } else {
         html = '<div style="text-align:center;padding:12px;color:#95a5a6;">No items yet.</div>';
     }
+    if (biz.mechanisms) {
+        const m = biz.mechanisms;
+        html += '<div class="mech-summary" style="margin-top:6px;">💳 ' + escapeHTML((m.payMethods || []).join(', ') || '—') +
+                ' · 🔐 ' + escapeHTML(m.authMethod || '—') +
+                ' · 🚚 ' + escapeHTML(m.deliveryMode || '—') +
+                (m.deliveryFee ? ' · Fee ' + m.deliveryFee : '') + '</div>';
+    }
     getEl('goodsModalTitle').innerHTML = (biz.icon || '🏪') + ' ' + escapeHTML(biz.name);
     getEl('goodsList').innerHTML = html;
     const wl = getEl('businessWebsiteLink');
     wl.href = biz.website || '#';
     wl.style.display = biz.website ? 'block' : 'none';
     getEl('goodsModal').style.display = 'flex';
-    document.querySelectorAll('.goods-item').forEach(function(item) {
+    document.querySelectorAll('#goodsList .goods-item').forEach(function(item) {
         item.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
@@ -1905,6 +2240,126 @@ function addProductEntry() {
 }
 function removeProductEntry(id) { const e = document.querySelector('.product-entry[data-product-id="' + id + '"]'); if (e) e.remove(); }
 window.removeProductEntry = removeProductEntry;
+
+/* Collect products from the Add-Biz / Edit-Biz modal */
+function collectBizProducts() {
+    const out = [];
+    const fallbackIcon = bizStr('bizIcon') || '📦';
+    document.querySelectorAll('#productsContainer .product-entry').forEach(function(entry) {
+        const nameEl = entry.querySelector('.product-name');
+        const priceEl = entry.querySelector('.product-price');
+        const qtyEl = entry.querySelector('.product-qty');
+        const n = nameEl ? String(nameEl.value).trim() : '';
+        const p = priceEl ? (parseFloat(priceEl.value) || 0) : 0;
+        const q = qtyEl ? (parseInt(qtyEl.value) || 1) : 1;
+        if (n) out.push({ name: n, price: p, quantity: q, quality: 'Brand new', icon: fallbackIcon });
+    });
+    return out;
+}
+
+/* ============================================================
+   SUBMIT: Add / Edit Business (with mechanisms) →
+   localStorage + Supabase + Agent-dashboard approvals
+   ============================================================ */
+function submitAddBizForm() {
+    const errEl = getEl('addBizError');
+    const okEl = getEl('addBizSuccess');
+    if (errEl) errEl.textContent = '';
+    if (okEl) okEl.textContent = '';
+    const fail = function(msg) { if (errEl) errEl.textContent = msg; showToast(msg, 3000); };
+
+    const name = bizStr('bizName');
+    const contact = bizStr('bizContact');
+    const mm = bizStr('bizMobileMoney');
+    const type = bizStr('bizType') || 'Other';
+    const icon = bizStr('bizIcon') || '🏪';
+    const address = bizStr('bizAddress');
+    const city = getCityValue('bizCitySelect', 'bizCityOther');
+    const country = bizStr('bizCountrySelect');
+    const website = bizStr('bizWebsite');
+    const password = bizStr('bizPassword');
+    const pin = bizStr('bizPin');
+    const editingId = bizStr('bizEditingId');
+
+    if (!name) return fail('❌ Business name is required.');
+    if (!contact) return fail('❌ Contact phone is required.');
+    if (!mm) return fail('❌ Mobile money phone is required.');
+    if (!city) return fail('❌ City / Town is required.');
+    if (!country) return fail('❌ Country is required.');
+    if (!/^[A-Za-z0-9]{6}$/.test(password)) return fail('❌ Password must be exactly 6 letters/numbers.');
+    if (!/^[0-9]{5}$/.test(pin)) return fail('❌ PIN must be exactly 5 digits.');
+
+    const mech = collectBizMechanisms('biz');
+    if (!validateBizMechanisms(mech, fail)) return;
+
+    const goods = collectBizProducts();
+
+    let bizObj = null;
+    if (editingId) bizObj = getAllBusinesses().find(function(b) { return String(b.id) === String(editingId); });
+    const isNew = !bizObj;
+    if (isNew) {
+        bizObj = { id: 'biz_' + Date.now(), goods: [] };
+        customBusinesses.push(bizObj);
+    }
+
+    bizObj.name = name;
+    bizObj.contact = contact;
+    bizObj.mobileMoney = mm;
+    bizObj.type = type;
+    bizObj.icon = icon;
+    bizObj.website = website;
+    bizObj.address = address;
+    bizObj.city = city;
+    bizObj.country = country;
+    bizObj.password = password;
+    bizObj.pin = pin;
+    bizObj.mechanisms = mech;
+    if (goods.length) bizObj.goods = goods;
+
+    saveCustomBusinesses();
+    renderBusinessStrip();
+    lastSelectedBusinessId = bizObj.id;
+    updateEditBizStripButton();
+
+    /* ---- Cloud persistence ---- */
+    supaBackground(Supa.saveBusiness(bizObj), 'Business');
+    (bizObj.goods || []).forEach(function(g) {
+        supaBackground(Supa.saveProduct(bizObj.name, g), 'Product');
+    });
+
+    /* ---- Push to Agent dashboard approvals ---- */
+    PendingStore.add({
+        type: 'business',
+        country: country,
+        submittedBy: (currentUser && currentUser.name) || 'User',
+        data: {
+            id: bizObj.id,
+            name: name,
+            contact: contact,
+            mobileMoney: mm,
+            type: type,
+            icon: icon,
+            city: city,
+            country: country,
+            address: address,
+            website: website,
+            password: password,
+            pin: pin,
+            mechanisms: mech,
+            goods: bizObj.goods || [],
+            isNew: isNew
+        }
+    });
+
+    if (okEl) okEl.textContent = (isNew ? '✅ Business submitted for approval!' : '✅ Business updated and re-submitted!');
+    showToast(isNew ? '✅ Business submitted for approval' : '✅ Business updated', 2600);
+    if (getEl('agentDashTitle') && getEl('editAgentModal') && getEl('editAgentModal').style.display === 'flex') refreshDashPanes();
+    setTimeout(function() {
+        getEl('addBizModal').style.display = 'none';
+        if (errEl) errEl.textContent = '';
+        if (okEl) okEl.textContent = '';
+    }, 1000);
+}
 
 function pickRandomProductForAdvert() {
     const all = getAllBusinesses();
@@ -2496,6 +2951,7 @@ function openAgentDashboard(agentId, opts) {
     if (pinI) pinI.oninput = checkAuth;
     populateDashBusinessSelect();
     populateDashCountrySelects();
+    resetBizMechanismsForm('db');
     switchDashTab('profile');
     getEl('editAgentModal').style.display = 'flex';
 }
@@ -2576,8 +3032,10 @@ function renderDashBizList() {
     if (!all.length) { c.innerHTML = '<div class="dash-empty">No businesses in this area yet.</div>'; return; }
     c.innerHTML = all.map(function(b) {
         const goods = (b.goods || []).length;
+        const mechLine = b.mechanisms ? mechanismsSummary(b.mechanisms) : '';
         return '<div class="dash-list-item"><div class="dli-head"><span>' + (b.icon || '🏪') + ' ' + escapeHTML(b.name) + '</span><span style="font-size:.62rem;color:#2c7da0;">' + goods + ' item(s)</span></div>' +
             '<div class="dli-meta"><span>📞 ' + escapeHTML(b.contact || '—') + '</span><span>🏷️ ' + escapeHTML(b.type || '—') + '</span><span>📍 ' + escapeHTML(b.city || '—') + '</span></div>' +
+            mechLine +
             '<div class="dash-actions"><button type="button" class="mini-btn neutral" data-dash-edit-biz="' + escapeHTML(String(b.id)) + '">✏️ Edit</button></div></div>';
     }).join('');
 }
@@ -2589,11 +3047,24 @@ function dashPendingCard(it, actionable) {
     if (it.type === 'agent') meta = '📱 ' + escapeHTML(d.mobileMoney || '—') + ' · 📍 ' + escapeHTML(d.city || '—') + ' · 💳 ' + (d.collateralLimit || 0);
     else if (it.type === 'business') meta = '📞 ' + escapeHTML(d.contact || '—') + ' · 🏷️ ' + escapeHTML(d.type || '—') + ' · 📍 ' + escapeHTML(d.city || '—');
     else meta = '🏪 ' + escapeHTML(d.businessName || '—') + ' · 💵 ' + escapeHTML(String(d.price || 0)) + ' · 📦 ' + escapeHTML(String(d.quantity || 1));
+
+    let mechLine = '';
+    if (it.type === 'business' && d.mechanisms) {
+        const m = d.mechanisms;
+        mechLine = '<div class="dli-meta">' +
+            '<span>💳 ' + escapeHTML((m.payMethods || []).join(', ') || '—') + '</span>' +
+            '<span>🔐 ' + escapeHTML(m.authMethod || '—') + '</span>' +
+            '<span>🚚 ' + escapeHTML(m.deliveryMode || '—') + '</span>' +
+            (m.deliveryFee ? '<span>Fee ' + escapeHTML(String(m.deliveryFee)) + '</span>' : '') +
+            '</div>';
+    }
+
     const statusTag = it.status === 'approved'
         ? '<span style="color:#27ae60;font-size:.62rem;">✅ Approved</span>'
         : (it.status === 'rejected' ? '<span style="color:#e74c3c;font-size:.62rem;">❌ Rejected</span>' : '<span style="color:#e67e22;font-size:.62rem;">⏳ Pending</span>');
     return '<div class="dash-list-item"><div class="dli-head"><span>' + typeIcon + ' ' + escapeHTML(title) + '</span>' + statusTag + '</div>' +
         '<div class="dli-meta"><span>' + meta + '</span></div>' +
+        mechLine +
         '<div class="dli-meta"><span>🌍 ' + escapeHTML(it.country || '—') + '</span><span>👤 ' + escapeHTML(it.submittedBy || '—') + '</span></div>' +
         (actionable ? '<div class="dash-actions"><button type="button" class="mini-btn approve" data-dash-approve="' + it.id + '">✅ Approve</button><button type="button" class="mini-btn reject" data-dash-reject="' + it.id + '">❌ Reject</button></div>' : '') +
         '</div>';
@@ -2639,18 +3110,27 @@ async function approvePendingItem(id) {
     } else if (it.type === 'business') {
         const d = it.data;
         const bizObj = {
-            id: 'biz_' + Date.now(), name: d.name, contact: d.contact || '',
+            id: d.id || ('biz_' + Date.now()),
+            name: d.name, contact: d.contact || '',
             mobileMoney: d.mobileMoney || '', type: d.type || 'Other',
             icon: d.icon || '🏪', website: d.website || '', address: d.address || '',
             city: d.city || '', country: d.country || '',
-            password: d.password || '', pin: d.pin || '', goods: []
+            password: d.password || '', pin: d.pin || '',
+            mechanisms: d.mechanisms || null,
+            goods: d.goods || []
         };
         const ex = getAllBusinesses().find(function(b) { return b.name === bizObj.name; });
-        if (ex) Object.assign(ex, bizObj, { goods: ex.goods || [] });
-        else customBusinesses.push(bizObj);
+        if (ex) {
+            const keepGoods = (ex.goods && ex.goods.length) ? ex.goods : [];
+            Object.assign(ex, bizObj);
+            if (!bizObj.goods.length && keepGoods.length) ex.goods = keepGoods;
+        } else {
+            customBusinesses.push(bizObj);
+        }
         saveCustomBusinesses();
         renderBusinessStrip();
         supaBackground(Supa.saveBusiness(bizObj), 'Approved business');
+        (bizObj.goods || []).forEach(function(g) { supaBackground(Supa.saveProduct(bizObj.name, g), 'Approved product'); });
     } else {
         const d = it.data;
         const biz = getAllBusinesses().find(function(b) { return b.name === d.businessName; });
@@ -2787,6 +3267,10 @@ function deleteDashClient(id) {
     refreshDashPanes();
     showToast('🗑️ Client removed', 1600);
 }
+
+/* ============================================================
+   Agent-dashboard "Add Business" — now with mechanisms
+   ============================================================ */
 function submitDashBusiness() {
     const d = getDashAgent();
     const name = (getEl('dbName').value || '').trim();
@@ -2799,13 +3283,22 @@ function submitDashBusiness() {
     const msg = getEl('dbMsg');
     msg.style.color = '#c0392b';
     if (!name || !contact || !mm || !city) { msg.textContent = '❌ Name, contact, mobile money and city are required.'; return; }
+
+    const mech = collectBizMechanisms('db');
+    if (!validateBizMechanisms(mech, function(m) { msg.textContent = m; })) return;
+
     PendingStore.add({
         type: 'business', country: country, submittedBy: (d && d.businessName) || 'Agent',
-        data: { name: name, contact: contact, mobileMoney: mm, type: type, icon: icon, city: city, country: country, address: '', website: '', password: '', pin: '' }
+        data: {
+            name: name, contact: contact, mobileMoney: mm, type: type, icon: icon,
+            city: city, country: country, address: '', website: '',
+            password: '', pin: '', mechanisms: mech, goods: []
+        }
     });
     msg.style.color = '#27ae60';
-    msg.textContent = '✅ Business submitted for approval.';
+    msg.textContent = '✅ Business + payment / auth / delivery mechanisms submitted for approval.';
     ['dbName','dbContact','dbMobileMoney','dbCity'].forEach(function(id) { const e = getEl(id); if (e) e.value = ''; });
+    resetBizMechanismsForm('db');
     refreshDashPanes();
 }
 function submitDashProduct() {
@@ -3529,6 +4022,7 @@ function setupEventListeners() {
         getEl('mapModal').style.display = 'flex';
     });
     safe('addBizBtn', 'click', function(e) { e.preventDefault(); openAddBizModal(); });
+    safe('submitAddBizBtn', 'click', function(e) { e.preventDefault(); submitAddBizForm(); });
     safe('editBizStripBtn', 'click', function(e) {
         e.preventDefault();
         if (!lastSelectedBusinessId) { showToast('⚠️ Select a business first.', 2000); return; }
@@ -3574,9 +4068,14 @@ function openAddBizModal() {
     resetVal('bizType', 'Service'); resetVal('bizIcon', '🏪');
     if (getEl('bizIconPreview')) getEl('bizIconPreview').textContent = '🏪';
     resetVal('bizAddress', ''); resetVal('bizCitySelect', ''); resetVal('bizCityOther', '');
-    resetVal('bizCountrySelect', 'Sierra Leone'); resetVal('bizWebsite', '');
+    resetVal('bizCountrySelect', (currentUser && currentUser.country) || 'Sierra Leone');
+    resetVal('bizWebsite', '');
     resetVal('bizPassword', ''); resetVal('bizPin', '');
     if (getEl('bizEditingId')) getEl('bizEditingId').value = '';
+    if (getEl('addBizError')) getEl('addBizError').textContent = '';
+    if (getEl('addBizSuccess')) getEl('addBizSuccess').textContent = '';
+    /* --- reset payment / auth / delivery mechanisms --- */
+    resetBizMechanismsForm('biz');
     const dict = TRANSLATIONS[currentLang] || TRANSLATIONS.en;
     if (getEl('addBizTitle')) getEl('addBizTitle').textContent = dict.addBusiness;
     if (getEl('productsContainer')) getEl('productsContainer').innerHTML = '';
@@ -3599,6 +4098,7 @@ function initApp() {
     safeCall('populate dropdowns', function() { populateAllDropdowns(); });
     safeCall('populate collateral', function() { populateCollateralDropdowns(); });
     safeCall('populate country codes', function() { populateCountryCodeSelect(); });
+    safeCall('populate settlement currencies', function() { populateSettlementCurrencySelects(); });
     safeCall('render sidebar', function() { renderSidebar(); });
     safeCall('render business strip', function() { renderBusinessStrip(); });
     safeCall('render header flags', function() { renderHeaderFlags(); });
