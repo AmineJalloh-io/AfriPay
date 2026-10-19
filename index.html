@@ -212,14 +212,11 @@ body{background:linear-gradient(145deg,#eef2f7 0%,#d9e2ec 100%);min-height:100vh
 .stat-card{background:linear-gradient(135deg,#0f2b3d,#1c4e6c);color:#fff;border-radius:10px;padding:.55rem .7rem;text-align:center}
 .stat-card .sc-value{font-size:1.4rem;font-weight:900;background:linear-gradient(135deg,#FFD966,#6bc6ff);-webkit-background-clip:text;background-clip:text;color:transparent}
 .stat-card .sc-label{font-size:.62rem;opacity:.85;text-transform:uppercase;font-weight:700;letter-spacing:.5px}
-/* Agent auth modal specific */
 .agent-auth-badge{display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,#f0f6fb,#e8f4fd);padding:10px 14px;border-radius:12px;margin-bottom:10px;border:1px solid #c0d8e8}
 .agent-auth-badge .aab-flag{font-size:1.8rem}
 .agent-auth-badge .aab-name{font-weight:800;color:#0f2b3d;font-size:.92rem;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .agent-auth-badge .aab-initials{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#0f2b3d,#2c7da0);color:#FFD966;font-weight:900;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 3px 8px rgba(0,0,0,.2)}
 .agent-auth-subtitle{font-size:.72rem;color:#7f8c8d;line-height:1.35;margin-bottom:8px}
-
-/* ===== NEW: Business mechanism sections ===== */
 .mech-section{background:#f7fbff;border:1px solid #dbe9f5;border-radius:10px;padding:.5rem .6rem;margin-top:.55rem}
 .mech-title{font-weight:800;color:#1c6e8f;font-size:.76rem;margin-bottom:.35rem;display:flex;align-items:center;gap:5px;text-transform:uppercase;letter-spacing:.3px;border-left:3px solid #2c7da0;padding-left:7px}
 .check-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px}
@@ -227,7 +224,6 @@ body{background:linear-gradient(145deg,#eef2f7 0%,#d9e2ec 100%);min-height:100vh
 .chk input{accent-color:#2c7da0;width:14px;height:14px;cursor:pointer;flex-shrink:0}
 .mech-hint{font-size:.64rem;color:#7f8c8d;margin-top:2px;line-height:1.3}
 .mech-summary{background:#eef7ff;border:1px dashed #a9cfe8;border-radius:8px;padding:4px 8px;font-size:.68rem;color:#1c6e8f;margin-top:3px;font-weight:600}
-
 @media(max-width:600px){.double-row{grid-template-columns:1fr;gap:0}.brand-text{font-size:1.3rem}.afripay-logo-img{width:36px;height:36px}.modal-content{padding:.7rem;max-width:320px}.action-btn{padding:5px 12px;height:36px;font-size:.75rem}.form-container{padding:.5rem .6rem .35rem .6rem}.chat-window{left:0;right:0;width:100%;bottom:0;height:100vh}.chat-sidebar{display:none}.dash-tab{font-size:.6rem;padding:4px 5px}.check-grid{grid-template-columns:1fr}}
 </style>
 </head>
@@ -544,7 +540,6 @@ body{background:linear-gradient(145deg,#eef2f7 0%,#d9e2ec 100%);min-height:100vh
 <div class="action-buttons-row"><button class="action-btn" id="submitAgentRegistrationBtn" data-i18n="register">Register</button><button class="action-btn close-modal" style="background:#2c7da0;" data-i18n="close">Close</button></div>
 </div></div>
 
-<!-- ===== Agent Credentials Gate Modal ===== -->
 <div id="agentAuthModal" class="modal">
 <div class="modal-content" style="max-width:400px;">
 <h3 style="margin-bottom:8px;">🔐 Agent Authentication</h3>
@@ -669,7 +664,6 @@ body{background:linear-gradient(145deg,#eef2f7 0%,#d9e2ec 100%);min-height:100vh
 </div>
 </div>
 
-<!-- ================= BUSINESSES PANE (with full mechanisms) ================= -->
 <div class="dash-pane" id="dash-pane-businesses">
 <div class="dash-section">
 <div class="dash-section-title">➕ Add Business</div>
@@ -686,8 +680,6 @@ body{background:linear-gradient(145deg,#eef2f7 0%,#d9e2ec 100%);min-height:100vh
 <div class="input-group"><label>City *</label><input type="text" id="dbCity" /></div>
 </div>
 <div class="input-group"><label>Country *</label><select id="dbCountry"></select></div>
-
-<!-- ===== PAYMENT MECHANISM (Dashboard) ===== -->
 <div class="mech-section">
 <div class="mech-title">💳 Payment Mechanism</div>
 <div class="input-group"><label>Accepted Payment Methods *</label>
@@ -717,8 +709,6 @@ body{background:linear-gradient(145deg,#eef2f7 0%,#d9e2ec 100%);min-height:100vh
 </select></div>
 </div>
 </div>
-
-<!-- ===== PAYMENT AUTHENTICATION MECHANISM (Dashboard) ===== -->
 <div class="mech-section">
 <div class="mech-title">🔐 Payment Authentication Mechanism</div>
 <div class="double-row">
@@ -741,8 +731,6 @@ body{background:linear-gradient(145deg,#eef2f7 0%,#d9e2ec 100%);min-height:100vh
 </div>
 <div class="mech-hint">Threshold 0 = authorisation required on every payment.</div>
 </div>
-
-<!-- ===== DELIVERY (Dashboard) ===== -->
 <div class="mech-section">
 <div class="mech-title">🚚 Delivery</div>
 <div class="input-group"><label>Delivery Mode *</label>
@@ -765,7 +753,6 @@ body{background:linear-gradient(145deg,#eef2f7 0%,#d9e2ec 100%);min-height:100vh
 </div>
 <div class="input-group"><label>Delivery Zones / Areas</label><input type="text" id="dbDeliveryZones" placeholder="e.g. Freetown Central, Lumley, Aberdeen" /></div>
 </div>
-
 <div class="dash-actions">
 <button type="button" class="mini-btn approve" id="dbSubmitBiz">📤 Submit Business</button>
 </div>
@@ -928,14 +915,11 @@ body{background:linear-gradient(145deg,#eef2f7 0%,#d9e2ec 100%);min-height:100vh
 <div style="background:#f5f8fa;padding:10px 18px;border-top:1px solid #e8edf2;display:flex;gap:6px;justify-content:center;"><button class="action-btn" id="convCloseBtn" data-i18n="close">Close</button></div>
 </div></div>
 
-<!-- ================= RESTORED FULL ADD BIZ MODAL ================= -->
 <div id="addBizModal" class="modal"><div class="modal-content" style="max-width:540px;">
 <h3 id="addBizTitle" data-i18n="addBusiness">🏢 Add Your Business</h3>
 <div id="addBizError" class="error-msg"></div>
 <div id="addBizSuccess" class="success-msg"></div>
 <input type="hidden" id="bizEditingId" value="" />
-
-<!-- ---- Identity ---- -->
 <div class="input-group"><label data-i18n="businessName">Business Name *</label><input type="text" id="bizName" /></div>
 <div class="input-group"><label data-i18n="contactPhone">Contact Phone *</label><input type="tel" id="bizContact" /></div>
 <div class="input-group"><label data-i18n="mobileMoney">Mobile Money Phone *</label><input type="tel" id="bizMobileMoney" /></div>
@@ -945,8 +929,6 @@ body{background:linear-gradient(145deg,#eef2f7 0%,#d9e2ec 100%);min-height:100vh
 <div class="input-group"><label data-i18n="cityTown">City / Town *</label><div class="city-input-row"><select id="bizCitySelect"><option value="">Select city...</option></select><span class="or-text">OR</span><input type="text" id="bizCityOther" /></div></div>
 <div class="input-group"><label data-i18n="country">Country *</label><select id="bizCountrySelect"></select></div>
 <div class="input-group"><label data-i18n="website">Website (optional)</label><input type="url" id="bizWebsite" /></div>
-
-<!-- ===== PAYMENT MECHANISM ===== -->
 <div class="mech-section">
 <div class="mech-title">💳 Payment Mechanism</div>
 <div class="input-group"><label>Accepted Payment Methods *</label>
@@ -976,8 +958,6 @@ body{background:linear-gradient(145deg,#eef2f7 0%,#d9e2ec 100%);min-height:100vh
 </select></div>
 </div>
 </div>
-
-<!-- ===== PAYMENT AUTHENTICATION MECHANISM ===== -->
 <div class="mech-section">
 <div class="mech-title">🔐 Payment Authentication Mechanism</div>
 <div class="double-row">
@@ -1000,8 +980,6 @@ body{background:linear-gradient(145deg,#eef2f7 0%,#d9e2ec 100%);min-height:100vh
 </div>
 <div class="mech-hint">Threshold 0 = authorisation required on every payment.</div>
 </div>
-
-<!-- ===== DELIVERY ===== -->
 <div class="mech-section">
 <div class="mech-title">🚚 Delivery</div>
 <div class="input-group"><label>Delivery Mode *</label>
@@ -1024,21 +1002,15 @@ body{background:linear-gradient(145deg,#eef2f7 0%,#d9e2ec 100%);min-height:100vh
 </div>
 <div class="input-group"><label>Delivery Zones / Areas</label><input type="text" id="bizDeliveryZones" placeholder="e.g. Freetown Central, Lumley, Aberdeen" /></div>
 </div>
-
-<!-- ===== ACCESS CREDENTIALS ===== -->
 <div style="margin-top:.6rem;padding:.55rem .7rem;background:#f0f6fb;border:1px solid #c0d8e8;border-radius:10px;">
 <div style="font-weight:700;color:#1c6e8f;font-size:.8rem;" data-i18n="accessCredentials">🔐 Business Access Credentials</div>
 <div class="input-group"><label data-i18n="password">Password *</label><div style="display:flex;gap:4px;"><input type="text" id="bizPassword" readonly style="flex:1;" maxlength="6" /><button type="button" class="auth-btn-green" id="bizGenPasswordBtn" data-i18n="gen">🔑 Gen</button></div></div>
 <div class="input-group"><label data-i18n="pin">5-Digit PIN *</label><div style="display:flex;gap:4px;"><input type="text" id="bizPin" readonly style="flex:1;" maxlength="5" /><button type="button" class="auth-btn-green" id="bizGenPinBtn" data-i18n="genPin">🔑 Gen PIN</button></div></div>
 </div>
-
-<!-- ===== PRODUCTS ===== -->
 <div style="margin-top:.8rem;border-top:2px solid #e0e8f0;padding-top:.5rem;">
 <div style="display:flex;justify-content:space-between;align-items:center;"><label style="font-weight:700;color:#1c6e8f;" data-i18n="products">📦 Products</label><button type="button" class="add-product-btn" id="addProductBtn" data-i18n="addProduct">➕ Add Product</button></div>
 <div id="productsContainer"></div>
 </div>
-
-<!-- ===== SUBMIT ===== -->
 <div class="action-buttons-row" style="margin-top:8px;">
 <button type="button" class="action-btn green" id="submitAddBizBtn" style="flex:1;">📤 Submit Business</button>
 <button type="button" class="action-btn close-modal" style="background:#2c7da0;">Close</button>
@@ -1052,205 +1024,226 @@ body{background:linear-gradient(145deg,#eef2f7 0%,#d9e2ec 100%);min-height:100vh
    REQUIRED SUPABASE SQL (run once in Supabase SQL editor):
 
    CREATE TABLE IF NOT EXISTS pending_items (
-     id TEXT PRIMARY KEY,
-     type TEXT NOT NULL,
-     country TEXT,
-     submitted_by TEXT,
-     data JSONB,
-     status TEXT DEFAULT 'pending',
-     submitted_at TIMESTAMPTZ DEFAULT NOW(),
-     reviewed_at TIMESTAMPTZ,
-     reviewed_by TEXT
+     id TEXT PRIMARY KEY, type TEXT NOT NULL, country TEXT,
+     submitted_by TEXT, data JSONB, status TEXT DEFAULT 'pending',
+     submitted_at TIMESTAMPTZ DEFAULT NOW(), reviewed_at TIMESTAMPTZ, reviewed_by TEXT
    );
-
    CREATE TABLE IF NOT EXISTS agent_clients (
-     id TEXT PRIMARY KEY,
-     agent_id TEXT NOT NULL,
-     name TEXT NOT NULL,
-     phone TEXT NOT NULL,
-     address TEXT,
-     city TEXT,
-     country TEXT,
+     id TEXT PRIMARY KEY, agent_id TEXT NOT NULL, name TEXT NOT NULL,
+     phone TEXT NOT NULL, address TEXT, city TEXT, country TEXT,
      created_at TIMESTAMPTZ DEFAULT NOW()
    );
-
+   CREATE TABLE IF NOT EXISTS agents (
+     id BIGSERIAL PRIMARY KEY, business_name TEXT UNIQUE NOT NULL,
+     business_address TEXT, city TEXT, reg_number TEXT, business_type TEXT,
+     owner_name TEXT, id_type TEXT, id_number TEXT, mobile_money TEXT,
+     country_code TEXT, password TEXT, pin TEXT,
+     collateral_amount NUMERIC DEFAULT 0, collateral_limit NUMERIC DEFAULT 0,
+     currency TEXT DEFAULT 'GNF', approved BOOLEAN DEFAULT true,
+     provider_tx_id TEXT, transfer_code TEXT, nin TEXT,
+     emoji TEXT DEFAULT '🏢', avatar_data_url TEXT,
+     created_at TIMESTAMPTZ DEFAULT NOW()
+   );
+   CREATE TABLE IF NOT EXISTS businesses (
+     id BIGSERIAL PRIMARY KEY, local_id TEXT, name TEXT UNIQUE NOT NULL,
+     contact TEXT, mobile_money TEXT, type TEXT, icon TEXT, website TEXT,
+     address TEXT, city TEXT, country TEXT, password TEXT, pin TEXT,
+     mechanisms JSONB, created_at TIMESTAMPTZ DEFAULT NOW()
+   );
+   CREATE TABLE IF NOT EXISTS products (
+     id BIGSERIAL PRIMARY KEY, business_id BIGINT REFERENCES businesses(id) ON DELETE CASCADE,
+     name TEXT, price NUMERIC DEFAULT 0, quantity INT DEFAULT 1,
+     quality TEXT, icon TEXT, created_at TIMESTAMPTZ DEFAULT NOW()
+   );
    ALTER TABLE pending_items ENABLE ROW LEVEL SECURITY;
    ALTER TABLE agent_clients ENABLE ROW LEVEL SECURITY;
+   ALTER TABLE agents ENABLE ROW LEVEL SECURITY;
+   ALTER TABLE businesses ENABLE ROW LEVEL SECURITY;
+   ALTER TABLE products ENABLE ROW LEVEL SECURITY;
    CREATE POLICY "public_all_pending_items" ON pending_items FOR ALL USING (true) WITH CHECK (true);
    CREATE POLICY "public_all_agent_clients" ON agent_clients FOR ALL USING (true) WITH CHECK (true);
+   CREATE POLICY "public_all_agents" ON agents FOR ALL USING (true) WITH CHECK (true);
+   CREATE POLICY "public_all_businesses" ON businesses FOR ALL USING (true) WITH CHECK (true);
+   CREATE POLICY "public_all_products" ON products FOR ALL USING (true) WITH CHECK (true);
 ============================================================ */
 
 const SUPABASE_URL = 'https://adxtvefswcosnooezdha.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFkeHR2ZWZzd2Nvc25vb2V6ZGhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkwNzU1NzQsImV4cCI6MjEwNDY1MTU3NH0.zfeZdUzCHcRCcBCkgrtvp5uriqcK0FyI5xGiHNMk42A';
 
+// Use a plain variable — do NOT shadow the CDN's `window.supabase`
+var supabaseClient = null;
 try {
-    if (window.supabase && SUPABASE_URL !== 'YOUR_SUPABASE_URL_HERE' && SUPABASE_URL.startsWith('http')) {
-        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    if (typeof window.supabase !== 'undefined' && SUPABASE_URL && SUPABASE_URL.startsWith('http')) {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         console.log('✅ Supabase client initialized');
-    } else { console.warn('⚠️ Supabase not configured — localStorage fallback only'); }
-} catch (e) { console.warn('Supabase init failed:', e); }
+    } else {
+        console.warn('⚠️ Supabase not configured — localStorage fallback only');
+    }
+} catch (e) {
+    console.warn('Supabase init failed:', e);
+}
 
 const Supa = {
-    isReady: () => !!supabase,
+    isReady: function() { return !!supabaseClient; },
     async saveUser(u) {
-        if (!supabase) return null;
+        if (!supabaseClient) return null;
         try {
             const payload = { local_id: u.id || null, name: u.name, phone: u.phone, address: u.address || null, city: u.city || null, country: u.country || null, emoji: u.emoji || '👤', avatar_data_url: u.avatarDataURL || null, nin: u.nin || null, id_number: u.idNumber || null, role: u.role || 'user' };
-            const { data, error } = await supabase.from('users').upsert(payload, { onConflict: 'phone' }).select().single();
+            const { data, error } = await supabaseClient.from('users').upsert(payload, { onConflict: 'phone' }).select().single();
             if (error) throw error;
             return data;
         } catch (e) { console.error('❌ saveUser:', e.message, e.details, e.hint); return null; }
     },
     async saveAgent(a) {
-        if (!supabase) return null;
+        if (!supabaseClient) return null;
         try {
             const payload = { business_name: a.businessName, business_address: a.businessAddress || null, city: a.city || null, reg_number: a.regNumber || null, business_type: a.businessType || null, owner_name: a.ownerName || null, id_type: a.idType || null, id_number: a.idNumber || null, mobile_money: a.mobileMoney || null, country_code: a.countryCode || null, password: a.password || null, pin: a.pin || null, collateral_amount: a.collateralAmount || 0, collateral_limit: a.collateralLimit || 0, currency: a.currency || 'SLL', approved: a.approved === true, provider_tx_id: a.providerTxId || null, transfer_code: a.transferCode || null, nin: a.nin || null, emoji: a.emoji || '🏢', avatar_data_url: a.avatarDataURL || null };
-            const { data, error } = await supabase.from('agents').upsert(payload, { onConflict: 'business_name' }).select().single();
+            const { data, error } = await supabaseClient.from('agents').upsert(payload, { onConflict: 'business_name' }).select().single();
             if (error) throw error;
             return data;
         } catch (e) { console.error('❌ saveAgent:', e.message, e.details, e.hint); return null; }
     },
     async getAgents() {
-        if (!supabase) return null;
+        if (!supabaseClient) return null;
         try {
-            const { data, error } = await supabase.from('agents').select('*').eq('approved', true);
+            const { data, error } = await supabaseClient.from('agents').select('*').eq('approved', true);
             if (error) throw error;
             return data || [];
         } catch (e) { console.error('❌ getAgents:', e.message); return null; }
     },
     async saveBusiness(b) {
-        if (!supabase) return null;
+        if (!supabaseClient) return null;
         try {
-            const payload = { local_id: typeof b.id === 'number' ? String(b.id) : (b.id || null), name: b.name, contact: b.contact || null, mobile_money: b.mobileMoney || null, type: b.type || null, icon: b.icon || '🏪', website: b.website || null, address: b.address || null, city: b.city || null, country: b.country || null, password: b.password || null, pin: b.pin || null };
-            const { data, error } = await supabase.from('businesses').upsert(payload, { onConflict: 'name' }).select().single();
+            const payload = { local_id: typeof b.id === 'number' ? String(b.id) : (b.id || null), name: b.name, contact: b.contact || null, mobile_money: b.mobileMoney || null, type: b.type || null, icon: b.icon || '🏪', website: b.website || null, address: b.address || null, city: b.city || null, country: b.country || null, password: b.password || null, pin: b.pin || null, mechanisms: b.mechanisms || null };
+            const { data, error } = await supabaseClient.from('businesses').upsert(payload, { onConflict: 'name' }).select().single();
             if (error) throw error;
             return data;
         } catch (e) { console.error('❌ saveBusiness:', e.message, e.details, e.hint); return null; }
     },
     async getBusinesses() {
-        if (!supabase) return null;
+        if (!supabaseClient) return null;
         try {
-            const { data, error } = await supabase.from('businesses').select('*');
+            const { data, error } = await supabaseClient.from('businesses').select('*');
             if (error) throw error;
             return data || [];
         } catch (e) { console.error('❌ getBusinesses:', e.message); return null; }
     },
     async getProductsForBusiness(businessName) {
-        if (!supabase) return null;
+        if (!supabaseClient) return null;
         try {
-            const { data: biz, error: bizErr } = await supabase.from('businesses').select('id').eq('name', businessName).limit(1);
+            const { data: biz, error: bizErr } = await supabaseClient.from('businesses').select('id').eq('name', businessName).limit(1);
             if (bizErr) throw bizErr;
             if (!biz || !biz[0]) return null;
-            const { data, error } = await supabase.from('products').select('*').eq('business_id', biz[0].id);
+            const { data, error } = await supabaseClient.from('products').select('*').eq('business_id', biz[0].id);
             if (error) throw error;
             return data || [];
         } catch (e) { console.error('❌ getProductsForBusiness:', e.message); return null; }
     },
     async saveProduct(businessName, p) {
-        if (!supabase) return null;
+        if (!supabaseClient) return null;
         try {
-            const { data: biz, error: bizErr } = await supabase.from('businesses').select('id').eq('name', businessName).limit(1);
+            const { data: biz, error: bizErr } = await supabaseClient.from('businesses').select('id').eq('name', businessName).limit(1);
             if (bizErr) throw bizErr;
             if (!biz || !biz[0]) return null;
-            await supabase.from('products').delete().eq('business_id', biz[0].id).eq('name', p.name);
-            const { data, error } = await supabase.from('products').insert({ business_id: biz[0].id, name: p.name, price: p.price || 0, quantity: p.quantity || 1, quality: p.quality || 'Brand new', icon: p.icon || null }).select().single();
+            await supabaseClient.from('products').delete().eq('business_id', biz[0].id).eq('name', p.name);
+            const { data, error } = await supabaseClient.from('products').insert({ business_id: biz[0].id, name: p.name, price: p.price || 0, quantity: p.quantity || 1, quality: p.quality || 'Brand new', icon: p.icon || null }).select().single();
             if (error) throw error;
             return data;
         } catch (e) { console.error('❌ saveProduct:', e.message, e.details); return null; }
     },
     async saveTransaction(t) {
-        if (!supabase) return null;
+        if (!supabaseClient) return null;
         try {
             const payload = { tx_id: t.txId, provider_tx_id: t.providerTxId || null, transfer_code: t.transferCode || null, sender_name: t.senderName || null, sender_phone: t.senderPhone || null, sender_address: t.senderAddress || null, agent_name: t.agentName || null, agent_phone: t.agentPhone || null, client_name: t.clientName || null, client_phone: t.clientPhone || null, amount: parseFloat(t.amount) || 0, charge: parseFloat(t.charge) || 0, gst: parseFloat(t.gst) || 0, total: parseFloat(t.total) || 0, currency: t.currency || 'SLL', mode: t.mode || 'Local', status: 'confirmed', product_details: t.productDetails || null, metadata: t.metadata || null };
-            const { data, error } = await supabase.from('transactions').insert(payload).select().single();
+            const { data, error } = await supabaseClient.from('transactions').insert(payload).select().single();
             if (error) throw error;
             return data;
         } catch (e) { console.error('❌ saveTransaction:', e.message, e.details, e.hint); return null; }
     },
     async loadUsedProviderTxIds() {
-        if (!supabase) return null;
+        if (!supabaseClient) return null;
         try {
-            const { data, error } = await supabase.from('used_provider_tx_ids').select('tx_id');
+            const { data, error } = await supabaseClient.from('used_provider_tx_ids').select('tx_id');
             if (error) throw error;
-            return (data || []).map(r => r.tx_id);
+            return (data || []).map(function(r) { return r.tx_id; });
         } catch (e) { console.error('❌ loadUsedProviderTxIds:', e.message); return null; }
     },
     async markProviderTxIdUsed(txId) {
-        if (!supabase || !txId) return;
+        if (!supabaseClient || !txId) return;
         try {
-            const { error } = await supabase.from('used_provider_tx_ids').insert({ tx_id: txId });
+            const { error } = await supabaseClient.from('used_provider_tx_ids').insert({ tx_id: txId });
             if (error && error.code !== '23505') throw error;
         } catch (e) { console.error('❌ markProviderTxIdUsed:', e.message); }
     },
     async loadUsedTransferCodes() {
-        if (!supabase) return null;
+        if (!supabaseClient) return null;
         try {
-            const { data, error } = await supabase.from('used_transfer_codes').select('code');
+            const { data, error } = await supabaseClient.from('used_transfer_codes').select('code');
             if (error) throw error;
-            return (data || []).map(r => r.code);
+            return (data || []).map(function(r) { return r.code; });
         } catch (e) { console.error('❌ loadUsedTransferCodes:', e.message); return null; }
     },
     async markTransferCodeUsed(code) {
-        if (!supabase || !code) return;
+        if (!supabaseClient || !code) return;
         try {
-            const { error } = await supabase.from('used_transfer_codes').insert({ code });
+            const { error } = await supabaseClient.from('used_transfer_codes').insert({ code: code });
             if (error && error.code !== '23505') throw error;
         } catch (e) { console.error('❌ markTransferCodeUsed:', e.message); }
     },
     async savePayback(p) {
-        if (!supabase) return null;
+        if (!supabaseClient) return null;
         try {
             const payload = { agent_business_name: p.agentBusinessName || null, agent_name: p.agentName || null, agent_nationality: p.agentNationality || null, cashed_out_amount: parseFloat(p.cashedOutAmount) || 0, charges_4: parseFloat(p.charges4) || 0, one_percent: parseFloat(p.onePercent) || 0, agent_commission: parseFloat(p.agentCommission) || 0, platform_share: parseFloat(p.platformShare) || 0, provider_tx_id: p.providerTxId || null, transfer_code: p.transferCode || null, signature_data: p.signature || null, ussd_used: p.ussdUsed || null, recipient_phone: p.recipientPhone || null };
-            const { data, error } = await supabase.from('paybacks').upsert(payload, { onConflict: 'provider_tx_id' }).select().single();
+            const { data, error } = await supabaseClient.from('paybacks').upsert(payload, { onConflict: 'provider_tx_id' }).select().single();
             if (error) throw error;
             return data;
         } catch (e) { console.error('❌ savePayback:', e.message, e.details, e.hint); return null; }
     },
     async saveComplaint(c) {
-        if (!supabase) return null;
+        if (!supabaseClient) return null;
         try {
-            const { data, error } = await supabase.from('complaints').insert({ name: c.name, phone: c.phone, category: c.category, details: c.details }).select().single();
+            const { data, error } = await supabaseClient.from('complaints').insert({ name: c.name, phone: c.phone, category: c.category, details: c.details }).select().single();
             if (error) throw error;
             return data;
         } catch (e) { console.error('❌ saveComplaint:', e.message, e.details, e.hint); return null; }
     },
     async saveSubscriber(email) {
-        if (!supabase) return null;
+        if (!supabaseClient) return null;
         try {
-            const { data, error } = await supabase.from('subscribers').upsert({ email }, { onConflict: 'email' }).select().single();
+            const { data, error } = await supabaseClient.from('subscribers').upsert({ email: email }, { onConflict: 'email' }).select().single();
             if (error) throw error;
             return data;
         } catch (e) { console.error('❌ saveSubscriber:', e.message); return null; }
     },
     async sendChatMessage(msg) {
-        if (!supabase) return null;
+        if (!supabaseClient) return null;
         try {
-            const { data, error } = await supabase.from('chat_messages').insert(msg).select().single();
+            const { data, error } = await supabaseClient.from('chat_messages').insert(msg).select().single();
             if (error) throw error;
             return data;
         } catch (e) { console.error('❌ sendChatMessage:', e.message); return null; }
     },
-    async getChatMessages(limit = 100) {
-        if (!supabase) return null;
+    async getChatMessages(limit) {
+        if (!supabaseClient) return null;
         try {
-            const { data, error } = await supabase.from('chat_messages').select('*').order('created_at', { ascending: true }).limit(limit);
+            const { data, error } = await supabaseClient.from('chat_messages').select('*').order('created_at', { ascending: true }).limit(limit || 100);
             if (error) throw error;
             return data || [];
         } catch (e) { console.error('❌ getChatMessages:', e.message); return null; }
     },
     async savePendingItem(item) {
-        if (!supabase) return null;
+        if (!supabaseClient) return null;
         try {
             const payload = { id: item.id, type: item.type, country: item.country || null, submitted_by: item.submittedBy || null, data: item.data || null, status: item.status || 'pending', submitted_at: item.submittedAt || new Date().toISOString(), reviewed_at: item.reviewedAt || null, reviewed_by: item.reviewedBy || null };
-            const { data, error } = await supabase.from('pending_items').upsert(payload, { onConflict: 'id' }).select().single();
+            const { data, error } = await supabaseClient.from('pending_items').upsert(payload, { onConflict: 'id' }).select().single();
             if (error) throw error;
             return data;
         } catch (e) { console.error('❌ savePendingItem:', e.message, e.details); return null; }
     },
     async getPendingItems() {
-        if (!supabase) return null;
+        if (!supabaseClient) return null;
         try {
-            const { data, error } = await supabase.from('pending_items').select('*').order('submitted_at', { ascending: false }).limit(500);
+            const { data, error } = await supabaseClient.from('pending_items').select('*').order('submitted_at', { ascending: false }).limit(500);
             if (error) throw error;
             return (data || []).map(function(r) {
                 return { id: r.id, type: r.type, country: r.country, submittedBy: r.submitted_by, data: r.data, status: r.status, submittedAt: r.submitted_at, reviewedAt: r.reviewed_at, reviewedBy: r.reviewed_by };
@@ -1258,26 +1251,26 @@ const Supa = {
         } catch (e) { console.error('❌ getPendingItems:', e.message); return null; }
     },
     async updatePendingItemStatus(id, status, reviewedBy) {
-        if (!supabase) return null;
+        if (!supabaseClient) return null;
         try {
-            const { data, error } = await supabase.from('pending_items').update({ status: status, reviewed_at: new Date().toISOString(), reviewed_by: reviewedBy || null }).eq('id', id).select().single();
+            const { data, error } = await supabaseClient.from('pending_items').update({ status: status, reviewed_at: new Date().toISOString(), reviewed_by: reviewedBy || null }).eq('id', id).select().single();
             if (error) throw error;
             return data;
         } catch (e) { console.error('❌ updatePendingItemStatus:', e.message); return null; }
     },
     async saveAgentClient(client) {
-        if (!supabase) return null;
+        if (!supabaseClient) return null;
         try {
             const payload = { id: client.id, agent_id: client.agentId, name: client.name, phone: client.phone, address: client.address || null, city: client.city || null, country: client.country || null };
-            const { data, error } = await supabase.from('agent_clients').upsert(payload, { onConflict: 'id' }).select().single();
+            const { data, error } = await supabaseClient.from('agent_clients').upsert(payload, { onConflict: 'id' }).select().single();
             if (error) throw error;
             return data;
         } catch (e) { console.error('❌ saveAgentClient:', e.message, e.details); return null; }
     },
     async getAgentClients(agentId) {
-        if (!supabase) return null;
+        if (!supabaseClient) return null;
         try {
-            let q = supabase.from('agent_clients').select('*');
+            let q = supabaseClient.from('agent_clients').select('*');
             if (agentId) q = q.eq('agent_id', agentId);
             const { data, error } = await q.order('created_at', { ascending: false }).limit(500);
             if (error) throw error;
@@ -1287,18 +1280,18 @@ const Supa = {
         } catch (e) { console.error('❌ getAgentClients:', e.message); return null; }
     },
     async deleteAgentClient(id) {
-        if (!supabase) return null;
+        if (!supabaseClient) return null;
         try {
-            const { error } = await supabase.from('agent_clients').delete().eq('id', id);
+            const { error } = await supabaseClient.from('agent_clients').delete().eq('id', id);
             if (error) throw error;
             return true;
         } catch (e) { console.error('❌ deleteAgentClient:', e.message); return null; }
     },
-    subscribeAgents(cb) { if (!supabase) return null; try { return supabase.channel('agents_rt').on('postgres_changes', { event: '*', schema: 'public', table: 'agents' }, cb).subscribe(); } catch (e) { return null; } },
-    subscribeTransactions(cb) { if (!supabase) return null; try { return supabase.channel('transactions_rt').on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'transactions' }, cb).subscribe(); } catch (e) { return null; } },
-    subscribeChatMessages(cb) { if (!supabase) return null; try { return supabase.channel('chat_messages_rt').on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_messages' }, cb).subscribe(); } catch (e) { return null; } },
-    subscribePendingItems(cb) { if (!supabase) return null; try { return supabase.channel('pending_items_rt').on('postgres_changes', { event: '*', schema: 'public', table: 'pending_items' }, cb).subscribe(); } catch (e) { return null; } },
-    subscribeAgentClients(cb) { if (!supabase) return null; try { return supabase.channel('agent_clients_rt').on('postgres_changes', { event: '*', schema: 'public', table: 'agent_clients' }, cb).subscribe(); } catch (e) { return null; } }
+    subscribeAgents(cb) { if (!supabaseClient) return null; try { return supabaseClient.channel('agents_rt').on('postgres_changes', { event: '*', schema: 'public', table: 'agents' }, cb).subscribe(); } catch (e) { return null; } },
+    subscribeTransactions(cb) { if (!supabaseClient) return null; try { return supabaseClient.channel('transactions_rt').on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'transactions' }, cb).subscribe(); } catch (e) { return null; } },
+    subscribeChatMessages(cb) { if (!supabaseClient) return null; try { return supabaseClient.channel('chat_messages_rt').on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_messages' }, cb).subscribe(); } catch (e) { return null; } },
+    subscribePendingItems(cb) { if (!supabaseClient) return null; try { return supabaseClient.channel('pending_items_rt').on('postgres_changes', { event: '*', schema: 'public', table: 'pending_items' }, cb).subscribe(); } catch (e) { return null; } },
+    subscribeAgentClients(cb) { if (!supabaseClient) return null; try { return supabaseClient.channel('agent_clients_rt').on('postgres_changes', { event: '*', schema: 'public', table: 'agent_clients' }, cb).subscribe(); } catch (e) { return null; } }
 };
 
 const TRANSLATIONS = {
@@ -1311,6 +1304,7 @@ const TRANSLATIONS = {
 let currentLang = 'en';
 
 function getEl(id) { return document.getElementById(id); }
+
 function showToast(msg, dur) {
     if (!dur) dur = 2800;
     const el = getEl('toastMsg');
@@ -1324,12 +1318,14 @@ function showToast(msg, dur) {
         setTimeout(function() { el.style.visibility = 'hidden'; }, 300);
     }, dur);
 }
+
 function escapeHTML(str) {
     if (!str) return '';
     return String(str).replace(/[&<>"'\/]/g, function(s) {
         return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#x27;','/':'&#x2F;' }[s];
     });
 }
+
 function withTimeout(promise, ms) {
     return new Promise(function(resolve) {
         let settled = false;
@@ -1343,6 +1339,7 @@ function withTimeout(promise, ms) {
         });
     });
 }
+
 function supaBackground(promise, label) {
     if (!Supa.isReady()) return;
     withTimeout(promise, 5000).then(function(res) {
@@ -1352,6 +1349,7 @@ function supaBackground(promise, label) {
         else console.warn('⚠️ ' + (label || 'Sync') + ' saved locally only');
     });
 }
+
 function translatePage() {
     const dict = TRANSLATIONS[currentLang] || TRANSLATIONS.en;
     document.querySelectorAll('[data-i18n]').forEach(function(el) {
@@ -1364,11 +1362,12 @@ function translatePage() {
             }
         }
     });
-    try { if (typeof updateAgentDropdownPlaceholder === 'function') updateAgentDropdownPlaceholder(); } catch(e) {}
-    try { if (typeof renderBusinessStrip === 'function') renderBusinessStrip(); } catch(e) {}
-    try { if (typeof renderAgentDropdown === 'function') renderAgentDropdown(); } catch(e) {}
-    try { if (typeof populateAgentSelect === 'function') populateAgentSelect(currentAgentFilterCountry); } catch(e) {}
+    try { updateAgentDropdownPlaceholder(); } catch(e) {}
+    try { renderBusinessStrip(); } catch(e) {}
+    try { renderAgentDropdown(); } catch(e) {}
+    try { populateAgentSelect(currentAgentFilterCountry); } catch(e) {}
 }
+
 function setLanguage(lang) {
     currentLang = lang;
     try { localStorage.setItem('afripay_lang', lang); } catch (e) {}
@@ -1523,11 +1522,6 @@ const TransferCodeManager = {
     }
 };
 
-/* ============================================================
-   BUSINESS MECHANISM HELPERS
-   Shared by the Add-Biz modal (prefix "biz") and the Agent
-   Dashboard business form (prefix "db").
-   ============================================================ */
 function bizStr(id) { const e = getEl(id); return e ? String(e.value).trim() : ''; }
 function bizNum(id, def) {
     const e = getEl(id);
@@ -1538,9 +1532,7 @@ function bizNum(id, def) {
 function bizChk(id) { const e = getEl(id); return !!(e && e.checked); }
 function bizSet(id, v) { const e = getEl(id); if (e) e.value = (v === undefined || v === null) ? '' : v; }
 function bizSetChk(id, v) { const e = getEl(id); if (e) e.checked = !!v; }
-function bizCheckedValues(cls) {
-    return Array.prototype.slice.call(document.querySelectorAll('.' + cls + ':checked')).map(function(x) { return x.value; });
-}
+function bizCheckedValues(cls) { return Array.prototype.slice.call(document.querySelectorAll('.' + cls + ':checked')).map(function(x) { return x.value; }); }
 function bizSetCheckedValues(cls, arr) {
     const list = arr || [];
     document.querySelectorAll('.' + cls).forEach(function(c) { c.checked = list.indexOf(c.value) !== -1; });
@@ -1556,35 +1548,19 @@ function bizSetRadio(name, val) {
 
 function defaultMechanisms() {
     return {
-        payMethods: ['Mobile Money'],
-        providers: [],
-        settlementNumber: '',
-        settlementCurrency: 'SLL',
-        depositPercent: 0,
-        paymentTerms: 'Pay on delivery',
-        authMethod: 'pin',
-        authThreshold: 0,
-        authName: '',
-        authPhone: '',
-        requirePinPerTx: true,
-        twoManRule: false,
-        refundAllowed: true,
-        deliveryMode: 'Both',
-        deliveryFee: 0,
-        freeDeliveryAbove: 0,
-        deliveryTime: '30-60 minutes',
-        deliveryRadius: 5,
-        deliveryZones: ''
+        payMethods: ['Mobile Money'], providers: [], settlementNumber: '', settlementCurrency: 'SLL',
+        depositPercent: 0, paymentTerms: 'Pay on delivery', authMethod: 'pin', authThreshold: 0,
+        authName: '', authPhone: '', requirePinPerTx: true, twoManRule: false, refundAllowed: true,
+        deliveryMode: 'Both', deliveryFee: 0, freeDeliveryAbove: 0, deliveryTime: '30-60 minutes',
+        deliveryRadius: 5, deliveryZones: ''
     };
 }
 
 function collectBizMechanisms(prefix) {
     prefix = prefix || 'biz';
-    const allMethods = bizCheckedValues(prefix + 'PayMethod');
-    const allProviders = bizCheckedValues(prefix + 'Provider');
     return {
-        payMethods: allMethods,
-        providers: allProviders,
+        payMethods: bizCheckedValues(prefix + 'PayMethod'),
+        providers: bizCheckedValues(prefix + 'Provider'),
         settlementNumber: bizStr(prefix + 'SettlementNumber'),
         settlementCurrency: bizStr(prefix + 'SettlementCurrency') || 'SLL',
         depositPercent: bizNum(prefix + 'DepositPercent', 0),
@@ -1660,10 +1636,7 @@ function populateSettlementCurrencySelects() {
 
 function mechanismsSummary(m) {
     if (!m) return '';
-    const parts = [];
-    parts.push('💳 ' + ((m.payMethods || []).join(', ') || '—'));
-    parts.push('🔐 ' + (m.authMethod || '—'));
-    parts.push('🚚 ' + (m.deliveryMode || '—'));
+    const parts = ['💳 ' + ((m.payMethods || []).join(', ') || '—'), '🔐 ' + (m.authMethod || '—'), '🚚 ' + (m.deliveryMode || '—')];
     return '<div class="mech-summary">' + escapeHTML(parts.join('  ·  ')) + '</div>';
 }
 
@@ -1734,18 +1707,38 @@ function saveRegisteredUsers() {
     }
     try { syncConnectedUsersFromRegistered(); } catch (e) { console.warn('⚠️ syncConnectedUsersFromRegistered failed:', e); }
 }
+
 function syncConnectedUsersFromRegistered() {
     const curr = connectedUsers.find(function(u) { return u.id === 'current'; });
     connectedUsers = curr ? [curr] : [];
     registeredUsers.forEach(function(u) {
-        if (u.isAgent || u.role === 'agent') {
+        const isAgentRec = (u.isAgent === true || u.role === 'agent' || u.businessName);
+        if (isAgentRec) {
             if (!connectedUsers.find(function(c) { return c.id === u.id; })) {
-                connectedUsers.push({ id: u.id || 'agent_' + Date.now(), name: u.name, phone: u.mobileMoney || u.phone || '', emoji: u.emoji || '🏢', status: 'online', isAgent: true, role: 'agent', agentData: u });
+                connectedUsers.push({
+                    id: u.id || ('agent_' + Date.now() + '_' + Math.random().toString(36).slice(2,7)),
+                    name: u.businessName || u.name || '',
+                    phone: u.mobileMoney || u.phone || '',
+                    emoji: u.emoji || '🏢',
+                    status: 'online',
+                    isAgent: true,
+                    role: 'agent',
+                    agentData: u
+                });
             }
         }
     });
 }
-function getAgents() { return connectedUsers.filter(function(u) { return (u.isAgent === true || u.role === 'agent') && u.agentData && u.agentData.approved === true; }); }
+
+function getAgents() {
+    try { syncConnectedUsersFromRegistered(); } catch (e) {}
+    return connectedUsers.filter(function(u) {
+        if (!(u.isAgent === true || u.role === 'agent')) return false;
+        const d = u.agentData || u;
+        return d.approved !== false;
+    });
+}
+
 function getAgentInitials(agent) { const d = agent.agentData || agent; let n = d.businessName || agent.name || ''; n = n.replace(/\(.*\)/, '').trim(); return n.substring(0, 2).toUpperCase() || 'AG'; }
 function getAgentFlag(agent) { const c = (agent.agentData || agent).countryCode || ''; return COUNTRY_CODE_TO_FLAG[c] || '🌍'; }
 function getAgentCountryName(agent) { const c = (agent.agentData || agent).countryCode || ''; return COUNTRY_CODE_TO_NAME[c] || ''; }
@@ -1810,9 +1803,7 @@ function renderAgentDropdown(filterCountry) {
         item.innerHTML = '<div class="agent-info"><span class="agent-flag">' + getAgentFlag(agent) + '</span><span class="agent-name">' + escapeHTML(displayName) + '</span><span class="agent-logo-fallback" title="Open Dashboard">' + getAgentInitials(agent) + '</span></div>';
         item.querySelector('.agent-name').addEventListener('click', function(e) { e.stopPropagation(); selectAgent(agent.id); list.classList.remove('open'); });
         item.querySelector('.agent-logo-fallback').addEventListener('click', function(e) {
-            e.stopPropagation();
-            list.classList.remove('open');
-            promptAgentCredentials(agent.id);
+            e.stopPropagation(); list.classList.remove('open'); promptAgentCredentials(agent.id);
         });
         list.appendChild(item);
     });
@@ -1897,8 +1888,7 @@ function selectAgent(agentId) {
     if (btn) {
         btn.innerHTML = '<span class="agent-flag">' + getAgentFlag(agent) + '</span><span class="agent-name-text">' + escapeHTML(displayName) + '</span><span class="agent-initials-inline" title="Open Dashboard">' + getAgentInitials(agent) + '</span>';
         btn.querySelector('.agent-initials-inline').addEventListener('click', function(e) {
-            e.stopPropagation();
-            promptAgentCredentials(agent.id);
+            e.stopPropagation(); promptAgentCredentials(agent.id);
         });
     }
     if (getEl('agentName')) getEl('agentName').value = displayName;
@@ -1910,12 +1900,10 @@ function selectAgent(agentId) {
     const ai = getEl('amountInput');
     const li = getEl('amountLimitIndicator');
     if (limit > 0 && ai) {
-        ai.max = limit;
-        ai.placeholder = 'Max ' + limit;
+        ai.max = limit; ai.placeholder = 'Max ' + limit;
         if (li) { li.style.display = 'inline-block'; li.textContent = 'Max: ' + limit; }
     } else if (ai) {
-        ai.removeAttribute('max');
-        ai.placeholder = 'Amount';
+        ai.removeAttribute('max'); ai.placeholder = 'Amount';
         if (li) li.style.display = 'none';
     }
     computeCharges();
@@ -1937,11 +1925,8 @@ function saveUserToStorage(u) {
     catch (e) {
         console.warn('⚠️ saveUserToStorage failed:', e && e.message);
         if (u.avatarDataURL) {
-            try {
-                const light = Object.assign({}, u);
-                delete light.avatarDataURL;
-                localStorage.setItem('afripay_user', JSON.stringify(light));
-            } catch (e2) { console.error('❌ saveUserToStorage fallback failed:', e2 && e2.message); }
+            try { const light = Object.assign({}, u); delete light.avatarDataURL; localStorage.setItem('afripay_user', JSON.stringify(light)); }
+            catch (e2) { console.error('❌ saveUserToStorage fallback failed:', e2 && e2.message); }
         }
     }
 }
@@ -2123,7 +2108,6 @@ function openEditBizModal(businessId) {
     if (getEl('bizEditingId')) getEl('bizEditingId').value = biz.id;
     if (getEl('bizPassword')) getEl('bizPassword').value = biz.password || '';
     if (getEl('bizPin')) getEl('bizPin').value = biz.pin || '';
-    /* --- restore payment / auth / delivery mechanisms --- */
     applyBizMechanismsToForm(biz.mechanisms, 'biz');
     getEl('addBizTitle').textContent = '✏️ Edit Business – ' + biz.name;
     if (getEl('addBizError')) getEl('addBizError').textContent = '';
@@ -2186,8 +2170,7 @@ function showGoodsModal(businessId) {
     getEl('goodsModal').style.display = 'flex';
     document.querySelectorAll('#goodsList .goods-item').forEach(function(item) {
         item.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
+            e.preventDefault(); e.stopPropagation();
             const price = parseFloat(this.getAttribute('data-price') || 0);
             const name = this.getAttribute('data-name') || 'Product';
             const qty = parseInt(this.getAttribute('data-quantity') || 1);
@@ -2241,7 +2224,6 @@ function addProductEntry() {
 function removeProductEntry(id) { const e = document.querySelector('.product-entry[data-product-id="' + id + '"]'); if (e) e.remove(); }
 window.removeProductEntry = removeProductEntry;
 
-/* Collect products from the Add-Biz / Edit-Biz modal */
 function collectBizProducts() {
     const out = [];
     const fallbackIcon = bizStr('bizIcon') || '📦';
@@ -2257,10 +2239,6 @@ function collectBizProducts() {
     return out;
 }
 
-/* ============================================================
-   SUBMIT: Add / Edit Business (with mechanisms) →
-   localStorage + Supabase + Agent-dashboard approvals
-   ============================================================ */
 function submitAddBizForm() {
     const errEl = getEl('addBizError');
     const okEl = getEl('addBizSuccess');
@@ -2291,7 +2269,6 @@ function submitAddBizForm() {
 
     const mech = collectBizMechanisms('biz');
     if (!validateBizMechanisms(mech, fail)) return;
-
     const goods = collectBizProducts();
 
     let bizObj = null;
@@ -2299,61 +2276,40 @@ function submitAddBizForm() {
     const isNew = !bizObj;
     if (isNew) {
         bizObj = { id: 'biz_' + Date.now(), goods: [] };
-        customBusinesses.push(bizObj);
     }
 
-    bizObj.name = name;
-    bizObj.contact = contact;
-    bizObj.mobileMoney = mm;
-    bizObj.type = type;
-    bizObj.icon = icon;
-    bizObj.website = website;
-    bizObj.address = address;
-    bizObj.city = city;
-    bizObj.country = country;
-    bizObj.password = password;
-    bizObj.pin = pin;
-    bizObj.mechanisms = mech;
+    bizObj.name = name; bizObj.contact = contact; bizObj.mobileMoney = mm;
+    bizObj.type = type; bizObj.icon = icon; bizObj.website = website;
+    bizObj.address = address; bizObj.city = city; bizObj.country = country;
+    bizObj.password = password; bizObj.pin = pin; bizObj.mechanisms = mech;
     if (goods.length) bizObj.goods = goods;
 
-    saveCustomBusinesses();
-    renderBusinessStrip();
-    lastSelectedBusinessId = bizObj.id;
-    updateEditBizStripButton();
+    if (isNew) {
+        // Do NOT add to customBusinesses yet — goes to approvals only
+    } else {
+        saveCustomBusinesses();
+        renderBusinessStrip();
+        lastSelectedBusinessId = bizObj.id;
+        updateEditBizStripButton();
+        supaBackground(Supa.saveBusiness(bizObj), 'Business');
+        (bizObj.goods || []).forEach(function(g) { supaBackground(Supa.saveProduct(bizObj.name, g), 'Product'); });
+    }
 
-    /* ---- Cloud persistence ---- */
-    supaBackground(Supa.saveBusiness(bizObj), 'Business');
-    (bizObj.goods || []).forEach(function(g) {
-        supaBackground(Supa.saveProduct(bizObj.name, g), 'Product');
-    });
-
-    /* ---- Push to Agent dashboard approvals ---- */
     PendingStore.add({
-        type: 'business',
-        country: country,
+        type: 'business', country: country,
         submittedBy: (currentUser && currentUser.name) || 'User',
         data: {
-            id: bizObj.id,
-            name: name,
-            contact: contact,
-            mobileMoney: mm,
-            type: type,
-            icon: icon,
-            city: city,
-            country: country,
-            address: address,
-            website: website,
-            password: password,
-            pin: pin,
-            mechanisms: mech,
-            goods: bizObj.goods || [],
-            isNew: isNew
+            id: bizObj.id, name: name, contact: contact, mobileMoney: mm,
+            type: type, icon: icon, city: city, country: country,
+            address: address, website: website,
+            password: password, pin: pin, mechanisms: mech,
+            goods: bizObj.goods || [], isNew: isNew
         }
     });
 
     if (okEl) okEl.textContent = (isNew ? '✅ Business submitted for approval!' : '✅ Business updated and re-submitted!');
     showToast(isNew ? '✅ Business submitted for approval' : '✅ Business updated', 2600);
-    if (getEl('agentDashTitle') && getEl('editAgentModal') && getEl('editAgentModal').style.display === 'flex') refreshDashPanes();
+    if (getEl('editAgentModal') && getEl('editAgentModal').style.display === 'flex') refreshDashPanes();
     setTimeout(function() {
         getEl('addBizModal').style.display = 'none';
         if (errEl) errEl.textContent = '';
@@ -2623,8 +2579,7 @@ function openEmojiPicker() {
 }
 function applyEmoji(e) {
     if (currentUser) {
-        currentUser.emoji = e;
-        currentUser.avatarDataURL = null;
+        currentUser.emoji = e; currentUser.avatarDataURL = null;
         saveUserToStorage(currentUser);
         updateAvatarDisplay(currentUser);
         updateProfileAvatarDisplay(currentUser);
@@ -2767,9 +2722,6 @@ function initializePermanentAgents() {
     } catch (e) {}
 }
 
-// ============================================================
-// AGENT CREDENTIALS GATE
-// ============================================================
 function promptAgentCredentials(agentId) {
     const agent = getAgents().find(function(a) { return a.id === agentId; });
     if (!agent) { showToast('⚠️ Agent not found.', 2200); return; }
@@ -2805,9 +2757,7 @@ function confirmAgentAuth() {
     const agent = getAgents().find(function(a) { return a.id === pendingAgentAuthId; });
     if (!agent) { err.textContent = '❌ Agent not found.'; return; }
     const data = agent.agentData || agent;
-    const storedPw = data.password || '';
-    const storedPin = data.pin || '';
-    if (pw !== storedPw || pin !== storedPin) {
+    if (pw !== (data.password || '') || pin !== (data.pin || '')) {
         err.textContent = '❌ Incorrect credentials. Please try again.';
         if (getEl('agentAuthPassword')) getEl('agentAuthPassword').value = '';
         if (getEl('agentAuthPin')) getEl('agentAuthPin').value = '';
@@ -2823,9 +2773,6 @@ function confirmAgentAuth() {
     setTimeout(function() { openAgentDashboard(id, { fullscreen: false }); }, 250);
 }
 
-// ============================================================
-// AGENT DASHBOARD
-// ============================================================
 let dashCurrentAgentId = null;
 let dashTab = 'profile';
 let dashShowReviewed = false;
@@ -2851,9 +2798,7 @@ const PendingStore = {
     setStatus: function(id, status, byId) {
         const it = this.get(id);
         if (it) {
-            it.status = status;
-            it.reviewedAt = new Date().toISOString();
-            it.reviewedBy = byId || null;
+            it.status = status; it.reviewedAt = new Date().toISOString(); it.reviewedBy = byId || null;
             this.save();
             supaBackground(Supa.updatePendingItemStatus(id, status, byId), 'Pending status');
         }
@@ -3083,6 +3028,7 @@ function renderDashPendingList() {
     }
     c.innerHTML = html;
 }
+
 async function approvePendingItem(id) {
     const it = PendingStore.get(id);
     if (!it || it.status !== 'pending') return;
@@ -3124,11 +3070,16 @@ async function approvePendingItem(id) {
             const keepGoods = (ex.goods && ex.goods.length) ? ex.goods : [];
             Object.assign(ex, bizObj);
             if (!bizObj.goods.length && keepGoods.length) ex.goods = keepGoods;
+            if (customBusinesses.indexOf(ex) === -1) customBusinesses.push(ex);
         } else {
             customBusinesses.push(bizObj);
         }
         saveCustomBusinesses();
         renderBusinessStrip();
+        renderAgentDropdown(currentAgentFilterCountry);
+        populateAgentSelect(currentAgentFilterCountry);
+        lastSelectedBusinessId = bizObj.id;
+        updateEditBizStripButton();
         supaBackground(Supa.saveBusiness(bizObj), 'Approved business');
         (bizObj.goods || []).forEach(function(g) { supaBackground(Supa.saveProduct(bizObj.name, g), 'Approved product'); });
     } else {
@@ -3267,10 +3218,6 @@ function deleteDashClient(id) {
     refreshDashPanes();
     showToast('🗑️ Client removed', 1600);
 }
-
-/* ============================================================
-   Agent-dashboard "Add Business" — now with mechanisms
-   ============================================================ */
 function submitDashBusiness() {
     const d = getDashAgent();
     const name = (getEl('dbName').value || '').trim();
@@ -3283,10 +3230,8 @@ function submitDashBusiness() {
     const msg = getEl('dbMsg');
     msg.style.color = '#c0392b';
     if (!name || !contact || !mm || !city) { msg.textContent = '❌ Name, contact, mobile money and city are required.'; return; }
-
     const mech = collectBizMechanisms('db');
     if (!validateBizMechanisms(mech, function(m) { msg.textContent = m; })) return;
-
     PendingStore.add({
         type: 'business', country: country, submittedBy: (d && d.businessName) || 'Agent',
         data: {
@@ -3575,7 +3520,6 @@ function setupEventListeners() {
     safe('registerBtn', 'click', function(e) { e.preventDefault(); regAvatarDataURL = null; regEmoji = '👤'; updateRegAvatarPreview(); getEl('registerModal').style.display = 'flex'; });
     safe('logoutBtn', 'click', function(e) { e.preventDefault(); clearUserStorage(); stopPopupAdTimer(); showToast('Logged out'); });
 
-    // ===== Agent Auth Modal listeners =====
     safe('agentAuthConfirmBtn', 'click', function(e) { e.preventDefault(); confirmAgentAuth(); });
     safe('agentAuthPassword', 'keydown', function(e) {
         if (e.key === 'Enter') { e.preventDefault(); if (getEl('agentAuthPin')) getEl('agentAuthPin').focus(); }
@@ -3738,13 +3682,39 @@ function setupEventListeners() {
         e.preventDefault();
         const n = getEl('newClientName').value.trim();
         const p = getEl('newClientPhone').value.trim();
+        const addr = (getEl('newClientAddress') && getEl('newClientAddress').value.trim()) || '';
+        const city = (getEl('newClientCitySelect') && getEl('newClientCitySelect').value) || '';
+        const country = (getEl('newClientCountrySelect') && getEl('newClientCountrySelect').value) || '';
         if (!n || !p) { getEl('addClientError').textContent = '❌ Name & Phone required.'; return; }
-        getEl('clientName').value = n; getEl('clientPhone').value = p;
+        getEl('clientName').value = n;
+        getEl('clientPhone').value = p;
         getEl('clientSectionTitle').style.display = 'block';
         getEl('clientFieldsRow').style.display = 'grid';
         currentClient = { name: n, phone: p };
-        showToast('✅ Client "' + n + '" added!', 2000);
+        const targetAgentId = _selectedAgentId || selectedAgentId || null;
+        if (targetAgentId) {
+            loadDashClients();
+            const newClient = {
+                id: 'cl_' + Date.now() + '_' + Math.floor(Math.random()*9999),
+                agentId: targetAgentId,
+                name: n, phone: p, address: addr, city: city, country: country,
+                createdAt: new Date().toISOString()
+            };
+            dashClients.push(newClient);
+            saveDashClients();
+            supaBackground(Supa.saveAgentClient(newClient), 'Client (header form)');
+            const modal = getEl('editAgentModal');
+            if (modal && modal.style.display === 'flex') {
+                refreshDashPanes();
+                showToast('✅ Client saved to agent dashboard', 2200);
+            } else {
+                showToast('✅ Client "' + n + '" added!', 2000);
+            }
+        } else {
+            showToast('✅ Client "' + n + '" added! (no agent selected)', 2200);
+        }
         getEl('addClientModal').style.display = 'none';
+        getEl('addClientError').textContent = '';
     });
     safe('registerAgentBtn', 'click', function(e) { e.preventDefault(); getEl('registerModal').style.display = 'none'; getEl('agentRegistrationModal').style.display = 'flex'; });
     safe('generatePasswordBtn', 'click', function(e) {
@@ -3836,6 +3806,8 @@ function setupEventListeners() {
         renderAgentDropdown(currentAgentFilterCountry);
         populateAgentSelect(currentAgentFilterCountry);
         selectAgent(data.id);
+        const _dashModal = getEl('editAgentModal');
+        if (_dashModal && _dashModal.style.display === 'flex') refreshDashPanes();
         showToast('✅ Agent registered!', 3000);
         setTimeout(function() { getEl('agentRegistrationModal').style.display = 'none'; }, 1200);
         supaBackground(Supa.saveAgent(data), 'Agent');
@@ -4074,7 +4046,6 @@ function openAddBizModal() {
     if (getEl('bizEditingId')) getEl('bizEditingId').value = '';
     if (getEl('addBizError')) getEl('addBizError').textContent = '';
     if (getEl('addBizSuccess')) getEl('addBizSuccess').textContent = '';
-    /* --- reset payment / auth / delivery mechanisms --- */
     resetBizMechanismsForm('biz');
     const dict = TRANSLATIONS[currentLang] || TRANSLATIONS.en;
     if (getEl('addBizTitle')) getEl('addBizTitle').textContent = dict.addBusiness;
@@ -4123,6 +4094,13 @@ function initApp() {
     safeCall('first toast', function() { showToast('✅ AfriPay ready!', 1500); });
     safeCall('start popup timer', function() { if (currentUser) startPopupAdTimer(); });
     safeCall('update reg preview', function() { updateRegAvatarPreview(); });
+
+    setInterval(function() {
+        const modal = getEl('editAgentModal');
+        if (modal && modal.style.display === 'flex') {
+            try { refreshDashPanes(); } catch (e) {}
+        }
+    }, 5000);
 
     (async function initSupabaseSync() {
         if (!Supa.isReady()) { console.warn('⚠️ Supabase offline mode — using localStorage only'); return; }
@@ -4180,9 +4158,10 @@ function initApp() {
                         if (b.mobile_money) inBase.mobileMoney = b.mobile_money;
                         if (b.password) inBase.password = b.password;
                         if (b.pin) inBase.pin = b.pin;
+                        if (b.mechanisms) inBase.mechanisms = b.mechanisms;
                     } else {
                         const inCustom = customBusinesses.find(function(cb) { return cb.name === b.name; });
-                        const bizObj = { id: typeof b.local_id === 'number' ? b.local_id : ('cloud_' + b.id), name: b.name, contact: b.contact, mobileMoney: b.mobile_money, type: b.type, icon: b.icon, website: b.website, address: b.address, city: b.city, country: b.country, password: b.password, pin: b.pin, goods: bizGoods };
+                        const bizObj = { id: typeof b.local_id === 'number' ? b.local_id : ('cloud_' + b.id), name: b.name, contact: b.contact, mobileMoney: b.mobile_money, type: b.type, icon: b.icon, website: b.website, address: b.address, city: b.city, country: b.country, password: b.password, pin: b.pin, mechanisms: b.mechanisms || null, goods: bizGoods };
                         if (inCustom) Object.assign(inCustom, bizObj); else customBusinesses.push(bizObj);
                     }
                 }
