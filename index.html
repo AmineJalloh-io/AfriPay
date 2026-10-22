@@ -167,7 +167,7 @@ body{background:linear-gradient(145deg,#eef2f7 0%,#d9e2ec 100%);min-height:100vh
 .auth-btn-green{background:#27ae60;color:#fff;border:none;padding:4px 14px;border-radius:30px;font-weight:700;font-size:.7rem;cursor:pointer;height:30px}
 .goods-item{display:flex;flex-direction:column;padding:6px 8px;border-bottom:1px solid #eee;cursor:pointer;font-size:.8rem;gap:4px}
 .goods-item .goods-row{display:flex;justify-content:space-between;align-items:center;width:100%}
-.goods-item .goods-name{font-weight:600;font-size:.8rem}
+.goods-item .goods-name{font-weight:600;font-size:.8rem;display:flex;align-items:center;gap:4px}
 .goods-item .goods-price{color:#f4a261;font-weight:700;font-size:.8rem}
 .goods-item .goods-details{display:flex;gap:12px;font-size:.7rem;color:#555;flex-wrap:wrap}
 .goods-item .goods-details span{background:#f0f4f8;padding:1px 8px;border-radius:12px}
@@ -224,6 +224,7 @@ body{background:linear-gradient(145deg,#eef2f7 0%,#d9e2ec 100%);min-height:100vh
 .chk input{accent-color:#2c7da0;width:14px;height:14px;cursor:pointer;flex-shrink:0}
 .mech-hint{font-size:.64rem;color:#7f8c8d;margin-top:2px;line-height:1.3}
 .mech-summary{background:#eef7ff;border:1px dashed #a9cfe8;border-radius:8px;padding:4px 8px;font-size:.68rem;color:#1c6e8f;margin-top:3px;font-weight:600}
+.product-image-preview{border:1px solid #e0e8f0;background:#fafbfc;}
 @media(max-width:600px){.double-row{grid-template-columns:1fr;gap:0}.brand-text{font-size:1.3rem}.afripay-logo-img{width:36px;height:36px}.modal-content{padding:.7rem;max-width:320px}.action-btn{padding:5px 12px;height:36px;font-size:.75rem}.form-container{padding:.5rem .6rem .35rem .6rem}.chat-window{left:0;right:0;width:100%;bottom:0;height:100vh}.chat-sidebar{display:none}.dash-tab{font-size:.6rem;padding:4px 5px}.check-grid{grid-template-columns:1fr}}
 </style>
 </head>
@@ -418,7 +419,7 @@ body{background:linear-gradient(145deg,#eef2f7 0%,#d9e2ec 100%);min-height:100vh
 <div style="font-size:.7rem;opacity:.8;" data-i18n="popupAdSubtitle">Sponsored Product</div>
 </div>
 <div style="padding:20px;text-align:center;">
-<div id="popupAdIcon" style="font-size:4rem;">📱</div>
+<div id="popupAdIcon" style="font-size:4rem;display:flex;align-items:center;justify-content:center;min-height:80px;">📱</div>
 <div id="popupAdName" style="font-size:1.15rem;font-weight:800;margin:8px 0;">Product Name</div>
 <div id="popupAdBusiness" style="color:#2c7da0;font-weight:600;">🏪 Business</div>
 <div id="popupAdDescription" style="font-size:.76rem;color:#666;margin:8px 0;"></div>
@@ -791,6 +792,16 @@ Status: <span id="daAgreementStatus" style="color:#e74c3c;font-weight:700;">Not 
 <div class="double-row">
 <div class="input-group"><label>Name *</label><input type="text" id="dpName" /></div>
 <div class="input-group"><label>Icon</label><input type="text" id="dpIcon" maxlength="2" value="📱" /></div>
+</div>
+<div class="input-group">
+<label>📷 Product Image (auto-resized)</label>
+<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+<img id="dpImagePreview" alt="" style="display:none;width:40px;height:40px;object-fit:cover;border-radius:8px;border:1px solid #e0e8f0;" />
+<input type="file" id="dpImageUpload" accept="image/*" class="hidden-input" />
+<button type="button" class="mini-btn neutral" id="dpImagePickBtn">📷 Upload Image</button>
+<button type="button" class="mini-btn reject" id="dpImageClearBtn" style="display:none;">🗑️ Remove</button>
+</div>
+<div style="font-size:.62rem;color:#95a5a6;margin-top:2px;">Image is auto-resized to 200×200 and compressed. The emoji above is the fallback if no image is set.</div>
 </div>
 <div class="double-row">
 <div class="input-group"><label>Price *</label><input type="number" id="dpPrice" step="any" /></div>
@@ -1186,8 +1197,14 @@ const Supa = {
             if (bizErr) throw bizErr;
             if (!biz || !biz[0]) return null;
             await supabaseClient.from('products').delete().eq('business_id', biz[0].id).eq('name', p.name);
-            const { data, error } = await supabaseClient.from('products').insert({ business_id: biz[0].id, name: p.name, price: p.price || 0, quantity: p.quantity || 1, quality: p.quality || 'Brand new', icon: p.icon || null }).select().single();
-            if (error) throw error;
+            const basePayload = { business_id: biz[0].id, name: p.name, price: p.price || 0, quantity: p.quantity || 1, quality: p.quality || 'Brand new' };
+            const visual = p.image || p.icon || null;
+            let { data, error } = await supabaseClient.from('products').insert(Object.assign({}, basePayload, { icon: visual })).select().single();
+            if (error) {
+                const retry = await supabaseClient.from('products').insert(Object.assign({}, basePayload, { icon: p.icon || null })).select().single();
+                if (retry.error) throw retry.error;
+                data = retry.data;
+            }
             return data;
         } catch (e) { console.error('❌ saveProduct:', e.message, e.details); return null; }
     },
@@ -1366,6 +1383,117 @@ function escapeHTML(str) {
     });
 }
 
+/* ============================================================
+   Product image helpers: detect data URLs, resize uploaded images
+   to a max 200×200 JPEG, and render image-or-emoji consistently.
+   ============================================================ */
+function isImageDataURL(v) {
+    return typeof v === 'string' && v.indexOf('data:image/') === 0;
+}
+function resizeImageFile(file, maxSize, quality) {
+    return new Promise(function(resolve, reject) {
+        if (!file || !file.type || file.type.indexOf('image/') !== 0) {
+            reject(new Error('Not an image file')); return;
+        }
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+            const img = new Image();
+            img.onload = function() {
+                try {
+                    let w = img.width || maxSize, h = img.height || maxSize;
+                    if (w > maxSize || h > maxSize) {
+                        if (w > h) { h = Math.round(h * maxSize / w); w = maxSize; }
+                        else       { w = Math.round(w * maxSize / h); h = maxSize; }
+                    }
+                    const canvas = document.createElement('canvas');
+                    canvas.width = w; canvas.height = h;
+                    const ctx = canvas.getContext('2d');
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(0, 0, w, h);
+                    ctx.drawImage(img, 0, 0, w, h);
+                    resolve(canvas.toDataURL('image/jpeg', quality || 0.82));
+                } catch (e) { reject(e); }
+            };
+            img.onerror = function() { reject(new Error('Image load failed')); };
+            img.src = ev.target.result;
+        };
+        reader.onerror = function() { reject(new Error('File read failed')); };
+        reader.readAsDataURL(file);
+    });
+}
+function productVisualHTML(p, sizePx) {
+    const s = sizePx || 28;
+    const visual = (p && (p.image || p.icon)) || '📦';
+    if (isImageDataURL(visual)) {
+        return '<img src="' + visual + '" alt="" style="width:' + s +
+               'px;height:' + s + 'px;object-fit:cover;border-radius:6px;vertical-align:middle;" />';
+    }
+    return '<span style="font-size:' + Math.max(14, Math.round(s * 0.85)) +
+           'px;line-height:1;">' + escapeHTML(visual) + '</span>';
+}
+function buildProductEntryHTML(seq, g) {
+    g = g || {};
+    const emojiFallback = (!isImageDataURL(g.icon) && g.icon) ? g.icon : (g.iconEmoji || '📱');
+    const image = g.image || (isImageDataURL(g.icon) ? g.icon : '');
+    return '<div class="product-header"><span>Product #' + seq + '</span>' +
+             '<button type="button" class="remove-product-btn" onclick="removeProductEntry(' + seq + ')">✕</button></div>' +
+        '<div class="input-group"><label>Product Name</label>' +
+          '<input type="text" class="product-name" value="' + escapeHTML(g.name || '') + '" /></div>' +
+        '<div class="double-row" style="grid-template-columns:1fr 1fr;gap:.3rem;">' +
+          '<div class="input-group"><label>Price</label>' +
+            '<input type="number" class="product-price" value="' + (g.price || 0) + '" step="0.01" /></div>' +
+          '<div class="input-group"><label>Quantity</label>' +
+            '<input type="number" class="product-qty" value="' + (g.quantity || 1) + '" /></div>' +
+        '</div>' +
+        '<div class="input-group"><label>🖼️ Image / Icon</label>' +
+          '<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">' +
+            '<input type="text" class="product-icon" value="' + escapeHTML(emojiFallback) + '" maxlength="2" ' +
+                   'style="width:56px;text-align:center;" />' +
+            '<input type="file" class="product-image-input hidden-input" accept="image/*" />' +
+            '<button type="button" class="mini-btn neutral product-image-btn">📷 Upload Image</button>' +
+            '<button type="button" class="mini-btn reject product-image-clear" ' +
+                    'style="display:' + (image ? 'inline-flex' : 'none') + ';">🗑️</button>' +
+            '<img class="product-image-preview" alt="" ' +
+                 'style="display:' + (image ? 'block' : 'none') + ';width:40px;height:40px;' +
+                 'object-fit:cover;border-radius:8px;border:1px solid #e0e8f0;"' +
+                 (image ? ' src="' + image + '"' : '') + ' />' +
+          '</div>' +
+          '<div style="font-size:.6rem;color:#95a5a6;margin-top:2px;">Image auto-resized to 200×200. Emoji is fallback.</div>' +
+        '</div>';
+}
+function bindProductEntryEvents(entry) {
+    if (!entry || entry.dataset.imgBound === '1') return;
+    entry.dataset.imgBound = '1';
+    const fileInput = entry.querySelector('.product-image-input');
+    const pickBtn   = entry.querySelector('.product-image-btn');
+    const clearBtn  = entry.querySelector('.product-image-clear');
+    const preview   = entry.querySelector('.product-image-preview');
+
+    if (pickBtn && fileInput) pickBtn.addEventListener('click', function(e) {
+        e.preventDefault(); fileInput.click();
+    });
+    if (fileInput) fileInput.addEventListener('change', function() {
+        const f = this.files && this.files[0];
+        if (!f) return;
+        resizeImageFile(f, 200, 0.82).then(function(dataUrl) {
+            if (preview) { preview.src = dataUrl; preview.style.display = 'block'; }
+            if (clearBtn) clearBtn.style.display = 'inline-flex';
+            entry.dataset.image = dataUrl;
+            showToast('✅ Image ready', 1200);
+        }).catch(function(err) {
+            console.warn('image resize failed:', err);
+            showToast('⚠️ Could not process image.', 2200);
+        });
+        this.value = '';
+    });
+    if (clearBtn) clearBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (preview) { preview.src = ''; preview.style.display = 'none'; }
+        clearBtn.style.display = 'none';
+        entry.dataset.image = '';
+    });
+}
+
 function withTimeout(promise, ms) {
     return new Promise(function(resolve) {
         let settled = false;
@@ -1471,7 +1599,7 @@ const businesses = [
     { id:1, name:"Mama's Kitchen", contact:"+232-76-123-456", type:"Restaurant", icon:"🍽️", website:"https://www.mamaskitchen.sl", goods:[{name:"Jollof Rice + Chicken",price:85,quantity:10,quality:"Fresh"},{name:"Fried Rice + Fish",price:60,quantity:8,quality:"Fresh"}] },
     { id:2, name:"Freetown Computer Hub", contact:"+232-80-234-567", type:"Electronics", icon:"💻", website:"https://www.freetowncomputers.com", goods:[{name:"Laptop Repair",price:150,quantity:1,quality:"Brand new"}] },
     { id:3, name:"Excellence School", contact:"+232-73-345-678", type:"Education", icon:"📚", website:"https://www.excellenceschool.edu", goods:[{name:"Tuition Fee (Monthly)",price:120,quantity:30,quality:"Standard"}] },
-    { id:4, name:"Dr. Kamara Clinic", contact:"+232-76-456-789", type:"Healthcare", icon:"🏥", website:"https://www.drkamaraclinic.com", goods:[{name:"Consultation",price:25,quantity:1,quality:"Premium"}] },
+    { id:4, name:"Dr. Kamara Clinic", contact:"+232-76-456-789", type:"Healthcare", icon:"🏥", website:"https://www.drkimaraclinic.com", goods:[{name:"Consultation",price:25,quantity:1,quality:"Premium"}] },
     { id:5, name:"John's Hardware", contact:"+232-80-567-890", type:"Hardware", icon:"🔨", website:"https://www.johnshardware.sl", goods:[{name:"Cement (50kg)",price:180,quantity:200,quality:"Brand new"}] },
     { id:6, name:"Salone Fashion", contact:"+232-73-678-901", type:"Fashion", icon:"👗", website:"https://www.salonefashion.com", goods:[{name:"African Print Dress",price:150,quantity:20,quality:"Premium"}] },
     { id:7, name:"James Williams", contact:"+232-76-012-345", type:"Individual", icon:"👤", website:"https://www.jameswilliams.com", goods:[{name:"Freelance Web Design",price:500,quantity:5,quality:"Premium"}] },
@@ -1506,6 +1634,7 @@ let currentClient = null;
 let popupAdInterval = null, popupAdTimeout = null, popupAdCountdownInterval = null;
 let popupAdCountdownSeconds = 15, lastPopupAdShownAt = 0;
 let pendingAgentAuthId = null;
+let dpImageDataURL = null;
 
 let daAgreementSigned = false;
 let daSignatureDataURL = null;
@@ -1812,7 +1941,10 @@ function exitBusinessMode() {
 function showProductDetails(product) {
     const group = getEl('productDetailGroup'); if (!group) return;
     if (getEl('productName')) getEl('productName').value = product.name || '';
-    if (getEl('productIconPreview')) getEl('productIconPreview').textContent = product.icon || '📱';
+    if (getEl('productIconPreview')) {
+        getEl('productIconPreview').innerHTML = productVisualHTML({ image: product.image, icon: product.icon }, 44);
+        getEl('productIconPreview').style.fontSize = '';
+    }
     const displayCur = isLocalMode ? getUserCurrency() : currentCountryData.currency;
     if (getEl('productPrice')) getEl('productPrice').value = product.price ? product.price.toFixed(2) + ' ' + displayCur : '0.00';
     if (getEl('productQuantity')) getEl('productQuantity').value = product.quantity || 1;
@@ -1947,7 +2079,25 @@ function loginUser(fullName, phoneNumber) {
     getEl('loginError').innerHTML = '❌ Account not found.'; return false;
 }
 function loadCustomBusinesses() { try { customBusinesses = JSON.parse(localStorage.getItem('afripay_custom_businesses') || '[]'); } catch (e) { customBusinesses = []; } }
-function saveCustomBusinesses() { try { localStorage.setItem('afripay_custom_businesses', JSON.stringify(customBusinesses)); } catch (e) {} }
+function saveCustomBusinesses() {
+    try { localStorage.setItem('afripay_custom_businesses', JSON.stringify(customBusinesses)); }
+    catch (e) {
+        console.warn('⚠️ saveCustomBusinesses quota:', e && e.message);
+        try {
+            const light = customBusinesses.map(function(b) {
+                const copy = Object.assign({}, b);
+                if (copy.goods) copy.goods = copy.goods.map(function(g) {
+                    if (g && g.image && String(g.image).length > 60000) {
+                        const c2 = Object.assign({}, g); delete c2.image; return c2;
+                    }
+                    return g;
+                });
+                return copy;
+            });
+            localStorage.setItem('afripay_custom_businesses', JSON.stringify(light));
+        } catch (e2) { console.error('❌ saveCustomBusinesses fallback failed:', e2 && e2.message); }
+    }
+}
 function getAllBusinesses() { return businesses.concat(customBusinesses); }
 function renderBusinessStrip() {
     const c = getEl('businessIconsContainer'); if (!c) return;
@@ -2022,13 +2172,10 @@ function openEditBizModal(businessId) {
             const entry = document.createElement('div');
             entry.className = 'product-entry';
             entry.dataset.productId = productCounter;
-            entry.innerHTML = '<div class="product-header"><span>Product #' + productCounter + '</span><button type="button" class="remove-product-btn" onclick="removeProductEntry(' + productCounter + ')">✕</button></div>' +
-                '<div class="input-group"><label>Product Name</label><input type="text" class="product-name" value="' + escapeHTML(g.name || '') + '" /></div>' +
-                '<div class="double-row" style="grid-template-columns:1fr 1fr;gap:.3rem;">' +
-                '<div class="input-group"><label>Price</label><input type="number" class="product-price" value="' + (g.price || 0) + '" step="0.01" /></div>' +
-                '<div class="input-group"><label>Quantity</label><input type="number" class="product-qty" value="' + (g.quantity || 1) + '" /></div>' +
-                '</div>';
+            entry.dataset.image = g.image || (isImageDataURL(g.icon) ? g.icon : '') || '';
+            entry.innerHTML = buildProductEntryHTML(productCounter, g);
             pc.appendChild(entry);
+            bindProductEntryEvents(entry);
         });
     } else { addProductEntry(); }
     getEl('addBizModal').style.display = 'flex';
@@ -2046,10 +2193,12 @@ function showGoodsModal(businessId) {
         html = biz.goods.map(function(g, idx) {
             const qty = g.quantity || 1;
             const quality = g.quality || 'Brand new';
-            const icon = g.icon || biz.icon || '📱';
+            const emojiIcon = (!isImageDataURL(g.icon) && g.icon) ? g.icon : (biz.icon || '📱');
+            const imageData = g.image || (isImageDataURL(g.icon) ? g.icon : '');
+            const iconHTML = productVisualHTML({ image: imageData, icon: emojiIcon }, 22);
             const price = parseFloat(g.price) || 0;
-            return '<div class="goods-item" data-price="' + price + '" data-name="' + escapeHTML(g.name) + '" data-quantity="' + qty + '" data-quality="' + escapeHTML(quality) + '" data-icon="' + icon + '" data-delivery="' + dc + '" data-business="' + escapeHTML(biz.name) + '" data-businessphone="' + escapeHTML(biz.mobileMoney || biz.contact || '') + '" data-index="' + idx + '">' +
-                '<div class="goods-row"><span class="goods-name">' + icon + ' ' + escapeHTML(g.name) + '</span><span class="goods-price">' + price.toFixed(2) + ' ' + displayCur + '</span><button class="goods-select-btn">Select</button></div>' +
+            return '<div class="goods-item" data-price="' + price + '" data-name="' + escapeHTML(g.name) + '" data-quantity="' + qty + '" data-quality="' + escapeHTML(quality) + '" data-icon="' + escapeHTML(emojiIcon) + '" data-image="' + escapeHTML(imageData) + '" data-delivery="' + dc + '" data-business="' + escapeHTML(biz.name) + '" data-businessphone="' + escapeHTML(biz.mobileMoney || biz.contact || '') + '" data-index="' + idx + '">' +
+                '<div class="goods-row"><span class="goods-name">' + iconHTML + ' ' + escapeHTML(g.name) + '</span><span class="goods-price">' + price.toFixed(2) + ' ' + displayCur + '</span><button class="goods-select-btn">Select</button></div>' +
                 '<div class="goods-details"><span>📦 Qty: ' + qty + '</span><span>⭐ ' + quality + '</span></div></div>';
         }).join('');
     } else { html = '<div style="text-align:center;padding:12px;color:#95a5a6;">No items yet.</div>'; }
@@ -2066,15 +2215,16 @@ function showGoodsModal(businessId) {
             const qty = parseInt(this.getAttribute('data-quantity') || 1);
             const quality = this.getAttribute('data-quality') || 'Brand new';
             const icon = this.getAttribute('data-icon') || '📱';
+            const image = this.getAttribute('data-image') || '';
             const bName = this.getAttribute('data-business') || 'Business';
             const bPhone = this.getAttribute('data-businessphone') || '';
-            _selectedProductDetails = { name: name, quantity: qty, amount: price, quality: quality, icon: icon, businessName: bName, businessPhone: bPhone };
-            showProductDetails({ name: name, price: price, quantity: qty, quality: quality, icon: icon, businessName: bName, businessPhone: bPhone });
+            _selectedProductDetails = { name: name, quantity: qty, amount: price, quality: quality, icon: icon, image: image, businessName: bName, businessPhone: bPhone };
+            showProductDetails({ name: name, price: price, quantity: qty, quality: quality, icon: icon, image: image, businessName: bName, businessPhone: bPhone });
             if (getEl('agentName')) getEl('agentName').value = bName;
             if (getEl('agentPhone')) getEl('agentPhone').value = bPhone;
             const aSel = getEl('agentNameSelect'); const aLbl = getEl('agentNameLabel');
-            if (aSel) { isBusinessMode = true; aSel.style.display = 'none'; let bd = getEl('bizDisplayField'); if (!bd) { bd = document.createElement('div'); bd.id = 'bizDisplayField'; bd.className = 'biz-display-field'; aSel.parentNode.insertBefore(bd, aSel.nextSibling); } bd.innerHTML = icon + ' ' + bName; bd.style.display = 'flex'; if (aLbl) aLbl.textContent = '🏢 Business'; }
-            const san = getEl('selectedAgentName'); if (san) san.innerHTML = '<span class="agent-flag">' + icon + '</span><span class="agent-name-text">' + bName + '</span>';
+            if (aSel) { isBusinessMode = true; aSel.style.display = 'none'; let bd = getEl('bizDisplayField'); if (!bd) { bd = document.createElement('div'); bd.id = 'bizDisplayField'; bd.className = 'biz-display-field'; aSel.parentNode.insertBefore(bd, aSel.nextSibling); } bd.innerHTML = productVisualHTML({ image: image, icon: icon }, 22) + ' ' + bName; bd.style.display = 'flex'; if (aLbl) aLbl.textContent = '🏢 Business'; }
+            const san = getEl('selectedAgentName'); if (san) san.innerHTML = '<span class="agent-flag">' + productVisualHTML({ image: image, icon: icon }, 22) + '</span><span class="agent-name-text">' + bName + '</span>';
             selectedAgentId = null; _selectedAgentId = null;
             showToast('✅ ' + name + ' × ' + qty, 2000);
             getEl('goodsModal').style.display = 'none';
@@ -2087,13 +2237,9 @@ function addProductEntry() {
     const entry = document.createElement('div');
     entry.className = 'product-entry';
     entry.dataset.productId = productCounter;
-    entry.innerHTML = '<div class="product-header"><span>Product #' + productCounter + '</span><button type="button" class="remove-product-btn" onclick="removeProductEntry(' + productCounter + ')">✕</button></div>' +
-        '<div class="input-group"><label>Product Name</label><input type="text" class="product-name" /></div>' +
-        '<div class="double-row" style="grid-template-columns:1fr 1fr;gap:.3rem;">' +
-        '<div class="input-group"><label>Price</label><input type="number" class="product-price" step="0.01" /></div>' +
-        '<div class="input-group"><label>Quantity</label><input type="number" class="product-qty" /></div>' +
-        '</div>';
+    entry.innerHTML = buildProductEntryHTML(productCounter, null);
     c.appendChild(entry);
+    bindProductEntryEvents(entry);
 }
 function removeProductEntry(id) { const e = document.querySelector('.product-entry[data-product-id="' + id + '"]'); if (e) e.remove(); }
 window.removeProductEntry = removeProductEntry;
@@ -2104,10 +2250,13 @@ function collectBizProducts() {
         const nameEl = entry.querySelector('.product-name');
         const priceEl = entry.querySelector('.product-price');
         const qtyEl = entry.querySelector('.product-qty');
+        const iconEl = entry.querySelector('.product-icon');
         const n = nameEl ? String(nameEl.value).trim() : '';
         const p = priceEl ? (parseFloat(priceEl.value) || 0) : 0;
         const q = qtyEl ? (parseInt(qtyEl.value) || 1) : 1;
-        if (n) out.push({ name: n, price: p, quantity: q, quality: 'Brand new', icon: fallbackIcon });
+        const emojiIcon = iconEl ? String(iconEl.value).trim() : fallbackIcon;
+        const image = entry.dataset.image || '';
+        if (n) out.push({ name: n, price: p, quantity: q, quality: 'Brand new', icon: emojiIcon || fallbackIcon, image: image || null });
     });
     return out;
 }
@@ -2158,7 +2307,7 @@ function submitAddBizForm() {
 function pickRandomProductForAdvert() {
     const all = getAllBusinesses();
     const cands = [];
-    all.forEach(function(biz) { if (biz.goods && biz.goods.length > 0) { biz.goods.forEach(function(g) { cands.push({ businessId: biz.id, businessName: biz.name, businessIcon: biz.icon || '🏪', businessPhone: biz.mobileMoney || biz.contact || '', name: g.name, price: parseFloat(g.price) || 0, quantity: g.quantity || 1, quality: g.quality || 'Brand new', icon: g.icon || biz.icon || '📱' }); }); } });
+    all.forEach(function(biz) { if (biz.goods && biz.goods.length > 0) { biz.goods.forEach(function(g) { cands.push({ businessId: biz.id, businessName: biz.name, businessIcon: biz.icon || '🏪', businessPhone: biz.mobileMoney || biz.contact || '', name: g.name, price: parseFloat(g.price) || 0, quantity: g.quantity || 1, quality: g.quality || 'Brand new', icon: g.icon || biz.icon || '📱', image: g.image || (isImageDataURL(g.icon) ? g.icon : '') }); }); } });
     if (cands.length === 0) return null;
     return cands[Math.floor(Math.random() * cands.length)];
 }
@@ -2171,9 +2320,10 @@ function showPopupAdvert() {
     lastPopupAdShownAt = now; currentPopupProduct = p;
     const dict = TRANSLATIONS[currentLang] || TRANSLATIONS.en;
     const overlay = getEl('popupAdOverlay'); if (!overlay) return;
-    if (getEl('popupAdIcon')) getEl('popupAdIcon').textContent = p.icon;
+    const paIcon = getEl('popupAdIcon');
+    if (paIcon) { paIcon.innerHTML = productVisualHTML({ image: p.image, icon: p.icon }, 64); paIcon.style.fontSize = ''; }
     if (getEl('popupAdName')) getEl('popupAdName').textContent = p.name;
-    if (getEl('popupAdBusiness')) getEl('popupAdBusiness').textContent = p.businessIcon + ' ' + p.businessName;
+    if (getEl('popupAdBusiness')) getEl('popupAdBusiness').innerHTML = (p.businessIcon || '🏪') + ' ' + escapeHTML(p.businessName);
     if (getEl('popupAdDescription')) getEl('popupAdDescription').textContent = (dict.popupAdQualityPrefix || 'Quality') + ': ' + p.quality + ' · ' + p.quantity;
     if (getEl('popupAdPrice')) getEl('popupAdPrice').textContent = p.price.toFixed(2);
     if (getEl('popupAdCurrency')) getEl('popupAdCurrency').textContent = isLocalMode ? getUserCurrency() : currentCountryData.currency;
@@ -2483,6 +2633,10 @@ function openAgentDashboard(agentId, opts) {
     if (pwI) pwI.oninput = checkAuth;
     if (pinI) pinI.oninput = checkAuth;
     populateDashBusinessSelect(); populateDashCountrySelects(); resetBizMechanismsForm('db');
+    dpImageDataURL = null;
+    if (getEl('dpImagePreview')) { getEl('dpImagePreview').src = ''; getEl('dpImagePreview').style.display = 'none'; }
+    if (getEl('dpImageClearBtn')) getEl('dpImageClearBtn').style.display = 'none';
+    if (getEl('dpImageUpload')) getEl('dpImageUpload').value = '';
     switchDashTab('profile');
     getEl('editAgentModal').style.display = 'flex';
 }
@@ -2638,9 +2792,9 @@ async function approvePendingItem(id) {
         const biz = getAllBusinesses().find(function(b) { return b.name === d.businessName; });
         if (biz) {
             if (!biz.goods) biz.goods = [];
-            biz.goods.push({ name: d.name, price: parseFloat(d.price) || 0, quantity: parseInt(d.quantity) || 1, quality: d.quality || 'Brand new', icon: d.icon || biz.icon || '📦', kind: d.kind || 'product' });
+            biz.goods.push({ name: d.name, price: parseFloat(d.price) || 0, quantity: parseInt(d.quantity) || 1, quality: d.quality || 'Brand new', icon: d.icon || biz.icon || '📦', image: d.image || null, kind: d.kind || 'product' });
             saveCustomBusinesses(); renderBusinessStrip();
-            supaBackground(Supa.saveProduct(d.businessName, { name: d.name, price: parseFloat(d.price) || 0, quantity: parseInt(d.quantity) || 1, quality: d.quality || 'Brand new', icon: d.icon }), 'Approved product');
+            supaBackground(Supa.saveProduct(d.businessName, { name: d.name, price: parseFloat(d.price) || 0, quantity: parseInt(d.quantity) || 1, quality: d.quality || 'Brand new', icon: d.icon, image: d.image }), 'Approved product');
         }
     }
     PendingStore.setStatus(id, 'approved', dashCurrentAgentId);
@@ -2785,8 +2939,6 @@ function submitDashAgent() {
         data: { businessName: bn, ownerName: on, businessAddress: addr, mobileMoney: mm, city: city, idType: 'National ID', idNumber: idn, nin: nin, countryCode: cc, collateralLimit: collat, collateralAmount: collat, currency: 'GNF', password: pw, pin: pin, regNumber: '', businessType: 'Service', approved: false, agreementSigned: true, signatureDataURL: daSignatureDataURL, ussdUsed: buildDaCollateralUssd().ussd || null }
     });
 
-    // ALSO persist to the `agents` table with approved:false so the
-    // admin dashboard sees it immediately in its Agents tab.
     supaBackground(Supa.saveAgent({
         businessName: bn, ownerName: on, businessAddress: addr, city: city,
         regNumber: '', businessType: 'Service', idType: 'National ID',
@@ -2863,6 +3015,7 @@ function submitDashProduct() {
     const biz = getEl('dpBusiness').value;
     const name = (getEl('dpName').value || '').trim();
     const icon = (getEl('dpIcon').value || '📱').trim();
+    const image = dpImageDataURL || null;
     const price = parseFloat(getEl('dpPrice').value) || 0;
     const qty = parseInt(getEl('dpQty').value) || 1;
     const kind = getEl('dpKind').value;
@@ -2872,10 +3025,14 @@ function submitDashProduct() {
     if (!biz) { msg.textContent = '❌ Select a business first.'; return; }
     if (!name || price <= 0) { msg.textContent = '❌ Name and a valid price are required.'; return; }
     const bObj = getAllBusinesses().find(function(b) { return b.name === biz; });
-    PendingStore.add({ type: kind, country: (bObj && bObj.country) || getDashArea(), submittedBy: (d && d.businessName) || 'Agent', data: { businessName: biz, name: name, price: price, quantity: qty, icon: icon, kind: kind, quality: quality } });
+    PendingStore.add({ type: kind, country: (bObj && bObj.country) || getDashArea(), submittedBy: (d && d.businessName) || 'Agent', data: { businessName: biz, name: name, price: price, quantity: qty, icon: icon, image: image, kind: kind, quality: quality } });
     msg.style.color = '#27ae60'; msg.textContent = '✅ ' + (kind === 'service' ? 'Service' : 'Product') + ' submitted for approval.';
     ['dpName','dpPrice'].forEach(function(id) { const e = getEl(id); if (e) e.value = ''; });
     if (getEl('dpQty')) getEl('dpQty').value = 1;
+    dpImageDataURL = null;
+    if (getEl('dpImagePreview')) { getEl('dpImagePreview').src = ''; getEl('dpImagePreview').style.display = 'none'; }
+    if (getEl('dpImageClearBtn')) getEl('dpImageClearBtn').style.display = 'none';
+    if (getEl('dpImageUpload')) getEl('dpImageUpload').value = '';
     refreshDashPanes();
 }
 function openBizFromDash(idStr) { const biz = getAllBusinesses().find(function(b) { return String(b.id) === String(idStr); }); if (!biz) { showToast('⚠️ Business not found', 2000); return; } lastSelectedBusinessId = biz.id; handleEditBizStripClick(biz); }
@@ -2916,6 +3073,33 @@ function setupAgentDashboardEvents() {
         const r = new FileReader();
         r.onload = function(ev) { const d = getDashAgent(); if (d) { d.avatarDataURL = ev.target.result; saveRegisteredUsers(); supaBackground(Supa.saveAgent(d), 'Agent logo'); } showToast('✅ Logo updated', 1800); };
         r.readAsDataURL(f); this.value = '';
+    });
+    bind('dpImagePickBtn', 'click', function(e) {
+        e.preventDefault();
+        const fi = getEl('dpImageUpload'); if (fi) fi.click();
+    });
+    bind('dpImageUpload', 'change', function() {
+        const f = this.files && this.files[0];
+        if (!f) return;
+        resizeImageFile(f, 200, 0.82).then(function(dataUrl) {
+            dpImageDataURL = dataUrl;
+            const pv = getEl('dpImagePreview');
+            if (pv) { pv.src = dataUrl; pv.style.display = 'block'; }
+            const cb = getEl('dpImageClearBtn'); if (cb) cb.style.display = 'inline-flex';
+            showToast('✅ Image ready', 1200);
+        }).catch(function(err) {
+            console.warn('image resize failed:', err);
+            showToast('⚠️ Could not process image.', 2200);
+        });
+        this.value = '';
+    });
+    bind('dpImageClearBtn', 'click', function(e) {
+        e.preventDefault();
+        dpImageDataURL = null;
+        const pv = getEl('dpImagePreview');
+        if (pv) { pv.src = ''; pv.style.display = 'none'; }
+        this.style.display = 'none';
+        const fi = getEl('dpImageUpload'); if (fi) fi.value = '';
     });
     setTimeout(function() { if (getEl('daSignatureCanvas') && !getEl('daSignatureCanvas').dataset.bound) { try { setupDaSignatureCanvas(); getEl('daSignatureCanvas').dataset.bound = '1'; } catch (e) {} } }, 100);
 }
@@ -3394,7 +3578,17 @@ function initApp() {
                 for (let i = 0; i < cloudBiz.length; i++) {
                     const b = cloudBiz[i];
                     const prods = (await Supa.getProductsForBusiness(b.name)) || [];
-                    const bizGoods = prods.map(function(p) { return { name: p.name, price: parseFloat(p.price) || 0, quantity: p.quantity || 1, quality: p.quality || 'Brand new', icon: p.icon }; });
+                    const bizGoods = prods.map(function(p) {
+                        const isImg = isImageDataURL(p.icon);
+                        return {
+                            name: p.name,
+                            price: parseFloat(p.price) || 0,
+                            quantity: p.quantity || 1,
+                            quality: p.quality || 'Brand new',
+                            icon: isImg ? '📱' : (p.icon || '📦'),
+                            image: isImg ? p.icon : (p.image || null)
+                        };
+                    });
                     const inBase = businesses.find(function(bb) { return bb.name === b.name; });
                     if (inBase) { if (bizGoods.length) inBase.goods = bizGoods; if (b.mobile_money) inBase.mobileMoney = b.mobile_money; if (b.password) inBase.password = b.password; if (b.pin) inBase.pin = b.pin; if (b.mechanisms) inBase.mechanisms = b.mechanisms; }
                     else { const inCustom = customBusinesses.find(function(cb) { return cb.name === b.name; }); const bizObj = { id: typeof b.local_id === 'number' ? b.local_id : ('cloud_' + b.id), name: b.name, contact: b.contact, mobileMoney: b.mobile_money, type: b.type, icon: b.icon, website: b.website, address: b.address, city: b.city, country: b.country, password: b.password, pin: b.pin, mechanisms: b.mechanisms || null, goods: bizGoods }; if (inCustom) Object.assign(inCustom, bizObj); else customBusinesses.push(bizObj); }
