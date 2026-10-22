@@ -613,20 +613,46 @@ body{background:linear-gradient(145deg,#eef2f7 0%,#d9e2ec 100%);min-height:100vh
 <div class="input-group"><label>Business Name *</label><input type="text" id="daBusinessName" /></div>
 <div class="input-group"><label>Owner Name *</label><input type="text" id="daOwnerName" /></div>
 </div>
+<div class="input-group"><label>Business Address *</label><input type="text" id="daAddress" placeholder="Street / Area" /></div>
 <div class="double-row">
 <div class="input-group"><label>Mobile Money *</label><input type="tel" id="daMobileMoney" /></div>
 <div class="input-group"><label>City *</label><input type="text" id="daCity" /></div>
+</div>
+<div class="double-row">
+<div class="input-group"><label>ID Number *</label><input type="text" id="daIdNumber" placeholder="National ID / Passport" /></div>
+<div class="input-group"><label>NIN Number *</label><input type="text" id="daNin" placeholder="National Identification Number" /></div>
 </div>
 <div class="double-row">
 <div class="input-group"><label>Country Code</label><select id="daCountryCode">
 <option value="+232">🇸🇱 +232</option><option value="+224">🇬🇳 +224</option><option value="+221">🇸🇳 +221</option>
 <option value="+220">🇬🇲 +220</option><option value="+226">🇧🇫 +226</option><option value="+231">🇱🇷 +231</option>
 </select></div>
-<div class="input-group"><label>Collateral</label><select id="daCollateral"></select></div>
+<div class="input-group"><label>Collateral Amount *</label><select id="daCollateral"></select></div>
+</div>
+<div class="collateral-box" style="margin-top:4px;">
+<button type="button" class="action-btn orange" id="daCollateralUssdBtn" style="width:100%;">📞 Pay Collateral via USSD</button>
+<div id="daCollateralUssdPreview" class="ussd-code" style="display:none;margin-top:6px;"></div>
+<div id="daCollateralMsg" class="error-msg"></div>
 </div>
 <div class="double-row">
 <div class="input-group"><label>Password (6 chars)</label><input type="text" id="daPassword" maxlength="6" /></div>
 <div class="input-group"><label>PIN (5 digits)</label><input type="text" id="daPin" maxlength="5" /></div>
+</div>
+<div class="dash-section" style="background:#f7fbff;border:1px dashed #a9cfe8;margin-top:.4rem;">
+<div class="dash-section-title" style="font-size:.72rem;">📜 Agreement &amp; Signature</div>
+<button type="button" class="action-btn orange" id="daOpenAgreementBtn" style="width:100%;">View Agreement</button>
+<div style="font-size:.68rem;margin-top:4px;text-align:center;">
+Status: <span id="daAgreementStatus" style="color:#e74c3c;font-weight:700;">Not Signed</span>
+</div>
+<div style="margin-top:6px;">
+<label style="font-weight:700;color:#1e3b4a;font-size:.72rem;">Signature *</label>
+<div class="signature-canvas-wrapper"><canvas id="daSignatureCanvas" width="400" height="90"></canvas></div>
+<div class="signature-actions">
+<button type="button" class="sig-clear" id="daSigClear">🗑️ Clear</button>
+<button type="button" class="sig-confirm" id="daSigConfirm">✅ Confirm Signature</button>
+</div>
+<div id="daSigMsg" style="font-size:.66rem;color:#27ae60;margin-top:2px;"></div>
+</div>
 </div>
 <div class="dash-actions">
 <button type="button" class="mini-btn neutral" id="daGenCreds">🔑 Generate Credentials</button>
@@ -1021,56 +1047,17 @@ body{background:linear-gradient(145deg,#eef2f7 0%,#d9e2ec 100%);min-height:100vh
 
 <script>
 /* ============================================================
-   REQUIRED SUPABASE SQL (run once in Supabase SQL editor):
-
-   CREATE TABLE IF NOT EXISTS pending_items (
-     id TEXT PRIMARY KEY, type TEXT NOT NULL, country TEXT,
-     submitted_by TEXT, data JSONB, status TEXT DEFAULT 'pending',
-     submitted_at TIMESTAMPTZ DEFAULT NOW(), reviewed_at TIMESTAMPTZ, reviewed_by TEXT
-   );
-   CREATE TABLE IF NOT EXISTS agent_clients (
-     id TEXT PRIMARY KEY, agent_id TEXT NOT NULL, name TEXT NOT NULL,
-     phone TEXT NOT NULL, address TEXT, city TEXT, country TEXT,
-     created_at TIMESTAMPTZ DEFAULT NOW()
-   );
-   CREATE TABLE IF NOT EXISTS agents (
-     id BIGSERIAL PRIMARY KEY, business_name TEXT UNIQUE NOT NULL,
-     business_address TEXT, city TEXT, reg_number TEXT, business_type TEXT,
-     owner_name TEXT, id_type TEXT, id_number TEXT, mobile_money TEXT,
-     country_code TEXT, password TEXT, pin TEXT,
-     collateral_amount NUMERIC DEFAULT 0, collateral_limit NUMERIC DEFAULT 0,
-     currency TEXT DEFAULT 'GNF', approved BOOLEAN DEFAULT true,
-     provider_tx_id TEXT, transfer_code TEXT, nin TEXT,
-     emoji TEXT DEFAULT '🏢', avatar_data_url TEXT,
-     created_at TIMESTAMPTZ DEFAULT NOW()
-   );
-   CREATE TABLE IF NOT EXISTS businesses (
-     id BIGSERIAL PRIMARY KEY, local_id TEXT, name TEXT UNIQUE NOT NULL,
-     contact TEXT, mobile_money TEXT, type TEXT, icon TEXT, website TEXT,
-     address TEXT, city TEXT, country TEXT, password TEXT, pin TEXT,
-     mechanisms JSONB, created_at TIMESTAMPTZ DEFAULT NOW()
-   );
-   CREATE TABLE IF NOT EXISTS products (
-     id BIGSERIAL PRIMARY KEY, business_id BIGINT REFERENCES businesses(id) ON DELETE CASCADE,
-     name TEXT, price NUMERIC DEFAULT 0, quantity INT DEFAULT 1,
-     quality TEXT, icon TEXT, created_at TIMESTAMPTZ DEFAULT NOW()
-   );
-   ALTER TABLE pending_items ENABLE ROW LEVEL SECURITY;
-   ALTER TABLE agent_clients ENABLE ROW LEVEL SECURITY;
-   ALTER TABLE agents ENABLE ROW LEVEL SECURITY;
-   ALTER TABLE businesses ENABLE ROW LEVEL SECURITY;
-   ALTER TABLE products ENABLE ROW LEVEL SECURITY;
-   CREATE POLICY "public_all_pending_items" ON pending_items FOR ALL USING (true) WITH CHECK (true);
-   CREATE POLICY "public_all_agent_clients" ON agent_clients FOR ALL USING (true) WITH CHECK (true);
-   CREATE POLICY "public_all_agents" ON agents FOR ALL USING (true) WITH CHECK (true);
-   CREATE POLICY "public_all_businesses" ON businesses FOR ALL USING (true) WITH CHECK (true);
-   CREATE POLICY "public_all_products" ON products FOR ALL USING (true) WITH CHECK (true);
+   SUPABASE SETUP NOTES (run once in Supabase SQL editor):
+   See accompanying SQL file for full schema:
+   - users (with full_name, status, suspended, nin, id_number, etc.)
+   - agents (with all fields + suspension metadata)
+   - pending_items, agent_clients, businesses, products
+   All tables: RLS enabled, policy "public_all_<table>" allows ALL.
 ============================================================ */
 
 const SUPABASE_URL = 'https://adxtvefswcosnooezdha.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFkeHR2ZWZzd2Nvc25vb2V6ZGhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkwNzU1NzQsImV4cCI6MjEwNDY1MTU3NH0.zfeZdUzCHcRCcBCkgrtvp5uriqcK0FyI5xGiHNMk42A';
 
-// Use a plain variable — do NOT shadow the CDN's `window.supabase`
 var supabaseClient = null;
 try {
     if (typeof window.supabase !== 'undefined' && SUPABASE_URL && SUPABASE_URL.startsWith('http')) {
@@ -1088,20 +1075,73 @@ const Supa = {
     async saveUser(u) {
         if (!supabaseClient) return null;
         try {
-            const payload = { local_id: u.id || null, name: u.name, phone: u.phone, address: u.address || null, city: u.city || null, country: u.country || null, emoji: u.emoji || '👤', avatar_data_url: u.avatarDataURL || null, nin: u.nin || null, id_number: u.idNumber || null, role: u.role || 'user' };
+            const payload = {
+                local_id: u.id || null,
+                name: u.name,
+                full_name: u.name,
+                phone: u.phone,
+                address: u.address || null,
+                city: u.city || null,
+                country: u.country || null,
+                emoji: u.emoji || '👤',
+                avatar_data_url: u.avatarDataURL || null,
+                nin: u.nin || null,
+                id_number: u.idNumber || null,
+                role: u.role || 'user',
+                status: 'active',
+                is_active: true,
+                suspended: false,
+                is_suspended: false
+            };
             const { data, error } = await supabaseClient.from('users').upsert(payload, { onConflict: 'phone' }).select().single();
-            if (error) throw error;
+            if (error) { console.error('❌ saveUser DB error:', error.message, error.details, error.hint, error.code); throw error; }
+            console.log('✅ User saved to Supabase:', data);
             return data;
-        } catch (e) { console.error('❌ saveUser:', e.message, e.details, e.hint); return null; }
+        } catch (e) {
+            console.error('❌ saveUser failed:', e.message);
+            return null;
+        }
     },
     async saveAgent(a) {
         if (!supabaseClient) return null;
         try {
-            const payload = { business_name: a.businessName, business_address: a.businessAddress || null, city: a.city || null, reg_number: a.regNumber || null, business_type: a.businessType || null, owner_name: a.ownerName || null, id_type: a.idType || null, id_number: a.idNumber || null, mobile_money: a.mobileMoney || null, country_code: a.countryCode || null, password: a.password || null, pin: a.pin || null, collateral_amount: a.collateralAmount || 0, collateral_limit: a.collateralLimit || 0, currency: a.currency || 'SLL', approved: a.approved === true, provider_tx_id: a.providerTxId || null, transfer_code: a.transferCode || null, nin: a.nin || null, emoji: a.emoji || '🏢', avatar_data_url: a.avatarDataURL || null };
+            const payload = {
+                business_name: a.businessName,
+                business_address: a.businessAddress || null,
+                city: a.city || null,
+                reg_number: a.regNumber || null,
+                business_type: a.businessType || null,
+                owner_name: a.ownerName || null,
+                id_type: a.idType || null,
+                id_number: a.idNumber || null,
+                mobile_money: a.mobileMoney || null,
+                country_code: a.countryCode || null,
+                password: a.password || null,
+                pin: a.pin || null,
+                collateral_amount: a.collateralAmount || 0,
+                collateral_limit: a.collateralLimit || 0,
+                currency: a.currency || 'SLL',
+                approved: a.approved === true,
+                is_approved: a.approved === true,
+                verified: a.approved === true,
+                status: a.approved ? 'active' : 'pending',
+                is_active: true,
+                suspended: false,
+                is_suspended: false,
+                provider_tx_id: a.providerTxId || null,
+                transfer_code: a.transferCode || null,
+                nin: a.nin || null,
+                emoji: a.emoji || '🏢',
+                avatar_data_url: a.avatarDataURL || null
+            };
             const { data, error } = await supabaseClient.from('agents').upsert(payload, { onConflict: 'business_name' }).select().single();
-            if (error) throw error;
+            if (error) { console.error('❌ saveAgent DB error:', error.message, error.details, error.hint); throw error; }
+            console.log('✅ Agent saved to Supabase:', data);
             return data;
-        } catch (e) { console.error('❌ saveAgent:', e.message, e.details, e.hint); return null; }
+        } catch (e) {
+            console.error('❌ saveAgent failed:', e.message);
+            return null;
+        }
     },
     async getAgents() {
         if (!supabaseClient) return null;
@@ -1202,7 +1242,7 @@ const Supa = {
     async saveComplaint(c) {
         if (!supabaseClient) return null;
         try {
-            const { data, error } = await supabaseClient.from('complaints').insert({ name: c.name, phone: c.phone, category: c.category, details: c.details }).select().single();
+            const { data, error } = await supabaseClient.from('complaints').insert({ name: c.name, phone: c.phone, category: c.category, details: c.details, status: 'pending' }).select().single();
             if (error) throw error;
             return data;
         } catch (e) { console.error('❌ saveComplaint:', e.message, e.details, e.hint); return null; }
@@ -1261,7 +1301,7 @@ const Supa = {
     async saveAgentClient(client) {
         if (!supabaseClient) return null;
         try {
-            const payload = { id: client.id, agent_id: client.agentId, name: client.name, phone: client.phone, address: client.address || null, city: client.city || null, country: client.country || null };
+            const payload = { id: client.id, agent_id: client.agentId, name: client.name, phone: client.phone, address: client.address || null, city: client.city || null, country: client.country || null, status: 'pending' };
             const { data, error } = await supabaseClient.from('agent_clients').upsert(payload, { onConflict: 'id' }).select().single();
             if (error) throw error;
             return data;
@@ -1467,6 +1507,9 @@ let popupAdInterval = null, popupAdTimeout = null, popupAdCountdownInterval = nu
 let popupAdCountdownSeconds = 15, lastPopupAdShownAt = 0;
 let pendingAgentAuthId = null;
 
+let daAgreementSigned = false;
+let daSignatureDataURL = null;
+
 const DEFAULT_EDIT_BIZ_PASSWORD = 'EDITBIZ';
 const DEFAULT_EDIT_BIZ_PIN = '12345';
 const PAYBACK_RECIPIENT_PHONE = '23273671566';
@@ -1523,67 +1566,24 @@ const TransferCodeManager = {
 };
 
 function bizStr(id) { const e = getEl(id); return e ? String(e.value).trim() : ''; }
-function bizNum(id, def) {
-    const e = getEl(id);
-    if (!e) return (def === undefined ? 0 : def);
-    const n = parseFloat(e.value);
-    return isFinite(n) ? n : (def === undefined ? 0 : def);
-}
+function bizNum(id, def) { const e = getEl(id); if (!e) return (def === undefined ? 0 : def); const n = parseFloat(e.value); return isFinite(n) ? n : (def === undefined ? 0 : def); }
 function bizChk(id) { const e = getEl(id); return !!(e && e.checked); }
 function bizSet(id, v) { const e = getEl(id); if (e) e.value = (v === undefined || v === null) ? '' : v; }
 function bizSetChk(id, v) { const e = getEl(id); if (e) e.checked = !!v; }
 function bizCheckedValues(cls) { return Array.prototype.slice.call(document.querySelectorAll('.' + cls + ':checked')).map(function(x) { return x.value; }); }
-function bizSetCheckedValues(cls, arr) {
-    const list = arr || [];
-    document.querySelectorAll('.' + cls).forEach(function(c) { c.checked = list.indexOf(c.value) !== -1; });
-}
-function bizRadioValue(name, def) {
-    const r = document.querySelector('input[name="' + name + '"]:checked');
-    return r ? r.value : def;
-}
-function bizSetRadio(name, val) {
-    const r = document.querySelector('input[name="' + name + '"][value="' + val + '"]');
-    if (r) r.checked = true;
-}
+function bizSetCheckedValues(cls, arr) { const list = arr || []; document.querySelectorAll('.' + cls).forEach(function(c) { c.checked = list.indexOf(c.value) !== -1; }); }
+function bizRadioValue(name, def) { const r = document.querySelector('input[name="' + name + '"]:checked'); return r ? r.value : def; }
+function bizSetRadio(name, val) { const r = document.querySelector('input[name="' + name + '"][value="' + val + '"]'); if (r) r.checked = true; }
 
 function defaultMechanisms() {
-    return {
-        payMethods: ['Mobile Money'], providers: [], settlementNumber: '', settlementCurrency: 'SLL',
-        depositPercent: 0, paymentTerms: 'Pay on delivery', authMethod: 'pin', authThreshold: 0,
-        authName: '', authPhone: '', requirePinPerTx: true, twoManRule: false, refundAllowed: true,
-        deliveryMode: 'Both', deliveryFee: 0, freeDeliveryAbove: 0, deliveryTime: '30-60 minutes',
-        deliveryRadius: 5, deliveryZones: ''
-    };
+    return { payMethods: ['Mobile Money'], providers: [], settlementNumber: '', settlementCurrency: 'SLL', depositPercent: 0, paymentTerms: 'Pay on delivery', authMethod: 'pin', authThreshold: 0, authName: '', authPhone: '', requirePinPerTx: true, twoManRule: false, refundAllowed: true, deliveryMode: 'Both', deliveryFee: 0, freeDeliveryAbove: 0, deliveryTime: '30-60 minutes', deliveryRadius: 5, deliveryZones: '' };
 }
-
 function collectBizMechanisms(prefix) {
     prefix = prefix || 'biz';
-    return {
-        payMethods: bizCheckedValues(prefix + 'PayMethod'),
-        providers: bizCheckedValues(prefix + 'Provider'),
-        settlementNumber: bizStr(prefix + 'SettlementNumber'),
-        settlementCurrency: bizStr(prefix + 'SettlementCurrency') || 'SLL',
-        depositPercent: bizNum(prefix + 'DepositPercent', 0),
-        paymentTerms: bizStr(prefix + 'PaymentTerms') || 'Pay on delivery',
-        authMethod: bizStr(prefix + 'AuthMethod') || 'pin',
-        authThreshold: bizNum(prefix + 'AuthThreshold', 0),
-        authName: bizStr(prefix + 'AuthName'),
-        authPhone: bizStr(prefix + 'AuthPhone'),
-        requirePinPerTx: bizChk(prefix + 'RequirePinPerTx'),
-        twoManRule: bizChk(prefix + 'TwoManRule'),
-        refundAllowed: bizChk(prefix + 'RefundAllowed'),
-        deliveryMode: bizRadioValue(prefix + 'DeliveryMode', 'Both'),
-        deliveryFee: bizNum(prefix + 'DeliveryFee', 0),
-        freeDeliveryAbove: bizNum(prefix + 'FreeDeliveryAbove', 0),
-        deliveryTime: bizStr(prefix + 'DeliveryTime') || '30-60 minutes',
-        deliveryRadius: bizNum(prefix + 'DeliveryRadius', 5),
-        deliveryZones: bizStr(prefix + 'DeliveryZones')
-    };
+    return { payMethods: bizCheckedValues(prefix + 'PayMethod'), providers: bizCheckedValues(prefix + 'Provider'), settlementNumber: bizStr(prefix + 'SettlementNumber'), settlementCurrency: bizStr(prefix + 'SettlementCurrency') || 'SLL', depositPercent: bizNum(prefix + 'DepositPercent', 0), paymentTerms: bizStr(prefix + 'PaymentTerms') || 'Pay on delivery', authMethod: bizStr(prefix + 'AuthMethod') || 'pin', authThreshold: bizNum(prefix + 'AuthThreshold', 0), authName: bizStr(prefix + 'AuthName'), authPhone: bizStr(prefix + 'AuthPhone'), requirePinPerTx: bizChk(prefix + 'RequirePinPerTx'), twoManRule: bizChk(prefix + 'TwoManRule'), refundAllowed: bizChk(prefix + 'RefundAllowed'), deliveryMode: bizRadioValue(prefix + 'DeliveryMode', 'Both'), deliveryFee: bizNum(prefix + 'DeliveryFee', 0), freeDeliveryAbove: bizNum(prefix + 'FreeDeliveryAbove', 0), deliveryTime: bizStr(prefix + 'DeliveryTime') || '30-60 minutes', deliveryRadius: bizNum(prefix + 'DeliveryRadius', 5), deliveryZones: bizStr(prefix + 'DeliveryZones') };
 }
-
 function applyBizMechanismsToForm(m, prefix) {
-    prefix = prefix || 'biz';
-    m = m || {};
+    prefix = prefix || 'biz'; m = m || {};
     const d = defaultMechanisms();
     const get = function(k) { return (m[k] === undefined || m[k] === null) ? d[k] : m[k]; };
     bizSetCheckedValues(prefix + 'PayMethod', (m.payMethods && m.payMethods.length) ? m.payMethods : d.payMethods);
@@ -1606,9 +1606,7 @@ function applyBizMechanismsToForm(m, prefix) {
     bizSet(prefix + 'DeliveryRadius', get('deliveryRadius'));
     bizSet(prefix + 'DeliveryZones', get('deliveryZones'));
 }
-
 function resetBizMechanismsForm(prefix) { applyBizMechanismsToForm(defaultMechanisms(), prefix || 'biz'); }
-
 function validateBizMechanisms(m, fail) {
     fail = fail || function() {};
     if (!m.payMethods || !m.payMethods.length) { fail('❌ Select at least one payment method.'); return false; }
@@ -1619,27 +1617,19 @@ function validateBizMechanisms(m, fail) {
     if (m.deliveryMode !== 'Pickup' && m.deliveryRadius <= 0) { fail('❌ Delivery radius must be greater than 0.'); return false; }
     return true;
 }
-
 function populateSettlementCurrencySelects() {
     ['bizSettlementCurrency', 'dbSettlementCurrency'].forEach(function(id) {
         const s = getEl(id); if (!s) return;
         const cv = s.value; s.innerHTML = '';
-        SUPPORTED_CURRENCIES.forEach(function(c) {
-            const o = document.createElement('option');
-            o.value = c.currency;
-            o.textContent = c.flag + ' ' + c.currency + ' — ' + c.name;
-            s.appendChild(o);
-        });
+        SUPPORTED_CURRENCIES.forEach(function(c) { const o = document.createElement('option'); o.value = c.currency; o.textContent = c.flag + ' ' + c.currency + ' — ' + c.name; s.appendChild(o); });
         if (cv) s.value = cv;
     });
 }
-
 function mechanismsSummary(m) {
     if (!m) return '';
     const parts = ['💳 ' + ((m.payMethods || []).join(', ') || '—'), '🔐 ' + (m.authMethod || '—'), '🚚 ' + (m.deliveryMode || '—')];
     return '<div class="mech-summary">' + escapeHTML(parts.join('  ·  ')) + '</div>';
 }
-
 function populateCapitalCityDropdown(selectId) {
     const s = getEl(selectId); if (!s) return;
     const cv = s.value;
@@ -1660,8 +1650,7 @@ function populateAllDropdowns() {
 function populateCollateralDropdowns() {
     ['agentCollateralLimit','editCollateralLimit','daCollateral'].forEach(function(id) {
         const s = getEl(id); if (!s) return;
-        const cv = s.value;
-        s.innerHTML = '';
+        const cv = s.value; s.innerHTML = '';
         COLLATERAL_OPTIONS.forEach(function(v) { const o = document.createElement('option'); o.value = v; o.textContent = v.toLocaleString(); s.appendChild(o); });
         if (cv) s.value = cv;
     });
@@ -1695,15 +1684,8 @@ function saveRegisteredUsers() {
     try { localStorage.setItem('afripay_registered_users', JSON.stringify(registeredUsers)); }
     catch (e) {
         console.warn('⚠️ saveRegisteredUsers failed:', e && e.message);
-        try {
-            const light = registeredUsers.map(function(u) {
-                if (u && u.avatarDataURL && String(u.avatarDataURL).length > 200000) {
-                    const c = Object.assign({}, u); delete c.avatarDataURL; return c;
-                }
-                return u;
-            });
-            localStorage.setItem('afripay_registered_users', JSON.stringify(light));
-        } catch (e2) { console.error('❌ saveRegisteredUsers fallback failed:', e2 && e2.message); }
+        try { const light = registeredUsers.map(function(u) { if (u && u.avatarDataURL && String(u.avatarDataURL).length > 200000) { const c = Object.assign({}, u); delete c.avatarDataURL; return c; } return u; }); localStorage.setItem('afripay_registered_users', JSON.stringify(light)); }
+        catch (e2) { console.error('❌ saveRegisteredUsers fallback failed:', e2 && e2.message); }
     }
     try { syncConnectedUsersFromRegistered(); } catch (e) { console.warn('⚠️ syncConnectedUsersFromRegistered failed:', e); }
 }
@@ -1729,7 +1711,6 @@ function syncConnectedUsersFromRegistered() {
         }
     });
 }
-
 function getAgents() {
     try { syncConnectedUsersFromRegistered(); } catch (e) {}
     return connectedUsers.filter(function(u) {
@@ -1738,23 +1719,12 @@ function getAgents() {
         return d.approved !== false;
     });
 }
-
 function getAgentInitials(agent) { const d = agent.agentData || agent; let n = d.businessName || agent.name || ''; n = n.replace(/\(.*\)/, '').trim(); return n.substring(0, 2).toUpperCase() || 'AG'; }
 function getAgentFlag(agent) { const c = (agent.agentData || agent).countryCode || ''; return COUNTRY_CODE_TO_FLAG[c] || '🌍'; }
 function getAgentCountryName(agent) { const c = (agent.agentData || agent).countryCode || ''; return COUNTRY_CODE_TO_NAME[c] || ''; }
 function getAllContacts() { const m = new Map(); connectedUsers.forEach(function(u) { if (!m.has(u.id)) m.set(u.id, Object.assign({}, u)); }); return Array.from(m.values()); }
-function getCityValue(sid, oid) {
-    const s = getEl(sid), o = getEl(oid);
-    if (s && s.value) return s.value;
-    if (o && o.value.trim()) return o.value.trim();
-    return '';
-}
-function setCityValue(sid, oid, value) {
-    const s = getEl(sid), o = getEl(oid); if (!s || !o) return;
-    let found = false;
-    for (let i = 0; i < s.options.length; i++) { if (s.options[i].value === value) { s.value = value; found = true; break; } }
-    if (!found && value) { s.value = ''; o.value = value; } else { o.value = ''; }
-}
+function getCityValue(sid, oid) { const s = getEl(sid), o = getEl(oid); if (s && s.value) return s.value; if (o && o.value.trim()) return o.value.trim(); return ''; }
+function setCityValue(sid, oid, value) { const s = getEl(sid), o = getEl(oid); if (!s || !o) return; let found = false; for (let i = 0; i < s.options.length; i++) { if (s.options[i].value === value) { s.value = value; found = true; break; } } if (!found && value) { s.value = ''; o.value = value; } else { o.value = ''; } }
 function updateAgentDropdownPlaceholder() {
     const b = getEl('selectedAgentName'); if (!b) return;
     if (isBusinessMode) return;
@@ -1764,10 +1734,7 @@ function updateAgentDropdownPlaceholder() {
         b.innerHTML = (dict.selectAgent || 'Select Agent') + ' in ' + flag + ' ' + currentAgentFilterCountry;
     } else if (!selectedAgentId) { b.textContent = dict.selectAgent || 'Select Agent'; }
 }
-function getCountryNameFromSelect() {
-    const s = getEl('countryCodeSelect'); if (!s || !s.value) return null;
-    return s.value.split('|')[1] || null;
-}
+function getCountryNameFromSelect() { const s = getEl('countryCodeSelect'); if (!s || !s.value) return null; return s.value.split('|')[1] || null; }
 function getAgentsByCountry(cn) { if (!cn) return getAgents(); return getAgents().filter(function(a) { return getAgentCountryName(a).toLowerCase() === cn.toLowerCase(); }); }
 
 function renderAgentDropdown(filterCountry) {
@@ -1787,14 +1754,7 @@ function renderAgentDropdown(filterCountry) {
     selItem.innerHTML = '<div class="agent-info"><span style="color:#FFD966;">👤</span> <span class="agent-name">' + (dict.selectAgent || 'Select Agent') + '</span></div>';
     selItem.addEventListener('click', function(e) { e.stopPropagation(); selectedAgentId = null; _selectedAgentId = null; clearAgentSelection(); list.classList.remove('open'); });
     list.appendChild(selItem);
-    if (agents.length === 0) {
-        const em = document.createElement('div');
-        em.className = 'agent-dropdown-item';
-        em.style.justifyContent = 'center';
-        em.innerHTML = '<span style="color:#ccc;">' + (dict.noAgents || 'No agents') + '</span>';
-        list.appendChild(em);
-        return;
-    }
+    if (agents.length === 0) { const em = document.createElement('div'); em.className = 'agent-dropdown-item'; em.style.justifyContent = 'center'; em.innerHTML = '<span style="color:#ccc;">' + (dict.noAgents || 'No agents') + '</span>'; list.appendChild(em); return; }
     agents.forEach(function(agent) {
         const item = document.createElement('div');
         item.className = 'agent-dropdown-item';
@@ -1802,9 +1762,7 @@ function renderAgentDropdown(filterCountry) {
         const displayName = (data.businessName || agent.name || '').replace(/\(.*\)/, '').trim();
         item.innerHTML = '<div class="agent-info"><span class="agent-flag">' + getAgentFlag(agent) + '</span><span class="agent-name">' + escapeHTML(displayName) + '</span><span class="agent-logo-fallback" title="Open Dashboard">' + getAgentInitials(agent) + '</span></div>';
         item.querySelector('.agent-name').addEventListener('click', function(e) { e.stopPropagation(); selectAgent(agent.id); list.classList.remove('open'); });
-        item.querySelector('.agent-logo-fallback').addEventListener('click', function(e) {
-            e.stopPropagation(); list.classList.remove('open'); promptAgentCredentials(agent.id);
-        });
+        item.querySelector('.agent-logo-fallback').addEventListener('click', function(e) { e.stopPropagation(); list.classList.remove('open'); promptAgentCredentials(agent.id); });
         list.appendChild(item);
     });
     updateAgentDropdownPlaceholder();
@@ -1823,9 +1781,7 @@ function populateAgentSelect(filterCountry) {
     const ph = document.createElement('option');
     ph.value = '';
     ph.textContent = filterCountry ? ((dict.selectAgent || 'Agent') + ' in ' + filterCountry) : (dict.selectAgent || '-- Select Agent --');
-    ph.disabled = true;
-    ph.selected = true;
-    select.appendChild(ph);
+    ph.disabled = true; ph.selected = true; select.appendChild(ph);
     agents.forEach(function(agent) {
         const opt = document.createElement('option');
         opt.value = agent.id;
@@ -1862,17 +1818,8 @@ function showProductDetails(product) {
     if (getEl('productQuantity')) getEl('productQuantity').value = product.quantity || 1;
     group.style.display = 'block';
     const ai = getEl('amountInput');
-    if (ai && product.price) {
-        let fp = product.price;
-        const ml = parseFloat(ai.max);
-        if (ml > 0 && fp > ml) fp = ml;
-        ai.value = fp;
-        ai.dispatchEvent(new Event('input'));
-    }
-    if (product.businessName) {
-        if (getEl('agentName')) getEl('agentName').value = product.businessName;
-        if (getEl('agentPhone') && product.businessPhone) getEl('agentPhone').value = product.businessPhone;
-    }
+    if (ai && product.price) { let fp = product.price; const ml = parseFloat(ai.max); if (ml > 0 && fp > ml) fp = ml; ai.value = fp; ai.dispatchEvent(new Event('input')); }
+    if (product.businessName) { if (getEl('agentName')) getEl('agentName').value = product.businessName; if (getEl('agentPhone') && product.businessPhone) getEl('agentPhone').value = product.businessPhone; }
 }
 function hideProductDetails() { const g = getEl('productDetailGroup'); if (g) g.style.display = 'none'; }
 function selectAgent(agentId) {
@@ -1887,9 +1834,7 @@ function selectAgent(agentId) {
     const btn = getEl('selectedAgentName');
     if (btn) {
         btn.innerHTML = '<span class="agent-flag">' + getAgentFlag(agent) + '</span><span class="agent-name-text">' + escapeHTML(displayName) + '</span><span class="agent-initials-inline" title="Open Dashboard">' + getAgentInitials(agent) + '</span>';
-        btn.querySelector('.agent-initials-inline').addEventListener('click', function(e) {
-            e.stopPropagation(); promptAgentCredentials(agent.id);
-        });
+        btn.querySelector('.agent-initials-inline').addEventListener('click', function(e) { e.stopPropagation(); promptAgentCredentials(agent.id); });
     }
     if (getEl('agentName')) getEl('agentName').value = displayName;
     let phoneDisplay = agent.phone || '';
@@ -1899,13 +1844,8 @@ function selectAgent(agentId) {
     const limit = data.collateralLimit || 0;
     const ai = getEl('amountInput');
     const li = getEl('amountLimitIndicator');
-    if (limit > 0 && ai) {
-        ai.max = limit; ai.placeholder = 'Max ' + limit;
-        if (li) { li.style.display = 'inline-block'; li.textContent = 'Max: ' + limit; }
-    } else if (ai) {
-        ai.removeAttribute('max'); ai.placeholder = 'Amount';
-        if (li) li.style.display = 'none';
-    }
+    if (limit > 0 && ai) { ai.max = limit; ai.placeholder = 'Max ' + limit; if (li) { li.style.display = 'inline-block'; li.textContent = 'Max: ' + limit; } }
+    else if (ai) { ai.removeAttribute('max'); ai.placeholder = 'Amount'; if (li) li.style.display = 'none'; }
     computeCharges();
 }
 function computeCharges() {
@@ -1922,13 +1862,7 @@ function computeCharges() {
 function saveUserToStorage(u) {
     if (!u) return;
     try { localStorage.setItem('afripay_user', JSON.stringify(u)); }
-    catch (e) {
-        console.warn('⚠️ saveUserToStorage failed:', e && e.message);
-        if (u.avatarDataURL) {
-            try { const light = Object.assign({}, u); delete light.avatarDataURL; localStorage.setItem('afripay_user', JSON.stringify(light)); }
-            catch (e2) { console.error('❌ saveUserToStorage fallback failed:', e2 && e2.message); }
-        }
-    }
+    catch (e) { console.warn('⚠️ saveUserToStorage failed:', e && e.message); if (u.avatarDataURL) { try { const light = Object.assign({}, u); delete light.avatarDataURL; localStorage.setItem('afripay_user', JSON.stringify(light)); } catch (e2) { console.error('❌ saveUserToStorage fallback failed:', e2 && e2.message); } } }
 }
 function clearUserStorage() { try { localStorage.removeItem('afripay_user'); } catch (e) {} currentUser = null; showLoggedOutUI(); renderSidebar(); }
 function loadStoredUser() {
@@ -1942,48 +1876,33 @@ function loadStoredUser() {
                 const ex = connectedUsers.find(function(x) { return x.id === 'current'; });
                 if (ex) { ex.name = u.name; ex.emoji = u.emoji || '👤'; ex.avatarDataURL = u.avatarDataURL || null; }
                 else connectedUsers.unshift({ id:'current', name:u.name, emoji:u.emoji || '👤', avatarDataURL:u.avatarDataURL || null, status:'online' });
-                showLoggedInUI();
-                renderSidebar();
-                return true;
+                showLoggedInUI(); renderSidebar(); return true;
             }
         } catch (e) {}
     }
-    showLoggedOutUI();
-    return false;
+    showLoggedOutUI(); return false;
 }
 function showLoggedInUI() {
     getEl('authButtons').style.display = 'none';
     getEl('welcomeSection').style.display = 'flex';
     getEl('loggedUserName').innerText = (currentUser && currentUser.name) || 'User';
-    updateAvatarDisplay(currentUser);
-    updateProfileAvatarDisplay(currentUser);
+    updateAvatarDisplay(currentUser); updateProfileAvatarDisplay(currentUser);
     getEl('mainFormContainer').style.display = 'block';
     getEl('profileAddress').innerText = (currentUser && currentUser.address) || '—';
     getEl('profileCity').innerText = (currentUser && currentUser.city) || '—';
     getEl('profileCountry').innerText = (currentUser && currentUser.country) || '—';
-    if (currentUser) {
-        getEl('senderName').value = currentUser.name || '';
-        getEl('senderPhone').value = currentUser.phone || '';
-        getEl('senderAddress').value = currentUser.address || '';
-        setCityValue('senderCitySelect', 'senderCityOther', currentUser.city || '');
-    }
+    if (currentUser) { getEl('senderName').value = currentUser.name || ''; getEl('senderPhone').value = currentUser.phone || ''; getEl('senderAddress').value = currentUser.address || ''; setCityValue('senderCitySelect', 'senderCityOther', currentUser.city || ''); }
     updateUserCountryData();
     if (getEl('currencySymbol')) getEl('currencySymbol').innerText = isLocalMode ? getUserCurrency() : currentCountryData.currency;
     if (getEl('gstRateLabel')) getEl('gstRateLabel').innerText = currentCountryData.gstRate;
-    renderBusinessStrip();
-    updateAgentDropdownForCountry();
-    computeCharges();
-    translatePage();
-    startPopupAdTimer();
+    renderBusinessStrip(); updateAgentDropdownForCountry(); computeCharges(); translatePage(); startPopupAdTimer();
 }
 function showLoggedOutUI() {
     getEl('authButtons').style.display = 'flex';
     getEl('welcomeSection').style.display = 'none';
     getEl('mainFormContainer').style.display = 'none';
     connectedUsers = connectedUsers.filter(function(u) { return u.id !== 'current'; });
-    renderSidebar();
-    renderAgentDropdown(null);
-    stopPopupAdTimer();
+    renderSidebar(); renderAgentDropdown(null); stopPopupAdTimer();
 }
 function updateAvatarDisplay(user) {
     const em = getEl('userAvatarEmoji'), img = getEl('userAvatarImg'); if (!em || !img) return;
@@ -2010,32 +1929,22 @@ function loginUser(fullName, phoneNumber) {
         if (ex) { ex.name = storedUser.name; ex.avatarDataURL = storedUser.avatarDataURL || null; }
         else connectedUsers.unshift({ id:'current', name:storedUser.name, emoji:storedUser.emoji || '👤', avatarDataURL:storedUser.avatarDataURL || null, status:'online' });
         loadRegisteredUsers();
-        if (!registeredUsers.some(function(u) { return u.phone === phone || u.name === name; })) {
-            registeredUsers.push({ id:'user_' + Date.now(), name:storedUser.name, phone:storedUser.phone, emoji:storedUser.emoji || '👤' });
-            saveRegisteredUsers();
-        }
+        if (!registeredUsers.some(function(u) { return u.phone === phone || u.name === name; })) { registeredUsers.push({ id:'user_' + Date.now(), name:storedUser.name, phone:storedUser.phone, emoji:storedUser.emoji || '👤' }); saveRegisteredUsers(); }
         renderSidebar();
         showToast('✅ Welcome ' + storedUser.name + '!', 1800);
-        showLoggedInUI();
-        renderAgentDropdown(currentAgentFilterCountry);
-        getEl('loginError').innerHTML = '';
-        return true;
+        showLoggedInUI(); renderAgentDropdown(currentAgentFilterCountry);
+        getEl('loginError').innerHTML = ''; return true;
     }
     loadRegisteredUsers();
     const user = registeredUsers.find(function(u) { return u.name.toLowerCase() === name.toLowerCase() && u.phone === phone; });
     if (user) {
         currentUser = { name:user.name, phone:user.phone, address:user.address || '', city:user.city || '', country:user.country || '', emoji:user.emoji || '👤', avatarDataURL:user.avatarDataURL || null, nin:user.nin || '', idNumber:user.idNumber || '' };
-        saveUserToStorage(currentUser);
-        renderSidebar();
+        saveUserToStorage(currentUser); renderSidebar();
         showToast('✅ Welcome ' + currentUser.name + '!', 1800);
-        showLoggedInUI();
-        renderAgentDropdown(currentAgentFilterCountry);
-        populateAgentSelect(currentAgentFilterCountry);
-        getEl('loginError').innerHTML = '';
-        return true;
+        showLoggedInUI(); renderAgentDropdown(currentAgentFilterCountry); populateAgentSelect(currentAgentFilterCountry);
+        getEl('loginError').innerHTML = ''; return true;
     }
-    getEl('loginError').innerHTML = '❌ Account not found.';
-    return false;
+    getEl('loginError').innerHTML = '❌ Account not found.'; return false;
 }
 function loadCustomBusinesses() { try { customBusinesses = JSON.parse(localStorage.getItem('afripay_custom_businesses') || '[]'); } catch (e) { customBusinesses = []; } }
 function saveCustomBusinesses() { try { localStorage.setItem('afripay_custom_businesses', JSON.stringify(customBusinesses)); } catch (e) {} }
@@ -2048,11 +1957,7 @@ function renderBusinessStrip() {
         const div = document.createElement('div');
         div.className = 'business-item';
         div.innerHTML = '<div class="business-icon-img">' + (biz.icon || '🏪') + '</div><div class="business-name">' + escapeHTML(biz.name) + '</div><div class="business-category">' + escapeHTML(biz.type) + '</div>';
-        div.addEventListener('click', function() {
-            lastSelectedBusinessId = biz.id;
-            updateEditBizStripButton();
-            try { showGoodsModal(biz.id); } catch (e) {}
-        });
+        div.addEventListener('click', function() { lastSelectedBusinessId = biz.id; updateEditBizStripButton(); try { showGoodsModal(biz.id); } catch (e) {} });
         c.appendChild(div);
     });
     if (lastSelectedBusinessId && !all.some(function(b) { return b.id === lastSelectedBusinessId; })) lastSelectedBusinessId = null;
@@ -2069,9 +1974,7 @@ function getBusinessCredentials(biz) {
 }
 function handleEditBizStripClick(biz) {
     pendingEditBizId = biz.id;
-    getEl('editBizAuthError').textContent = '';
-    getEl('editBizAuthPassword').value = '';
-    getEl('editBizAuthPin').value = '';
+    getEl('editBizAuthError').textContent = ''; getEl('editBizAuthPassword').value = ''; getEl('editBizAuthPin').value = '';
     const creds = getBusinessCredentials(biz);
     getEl('editBizAuthHint').innerHTML = creds.password === DEFAULT_EDIT_BIZ_PASSWORD ? '💡 Default: password <strong>' + DEFAULT_EDIT_BIZ_PASSWORD + '</strong> · PIN <strong>' + DEFAULT_EDIT_BIZ_PIN + '</strong>' : '💡 Use the credentials set for this business.';
     getEl('editBizAuthModal').style.display = 'flex';
@@ -2112,9 +2015,7 @@ function openEditBizModal(businessId) {
     getEl('addBizTitle').textContent = '✏️ Edit Business – ' + biz.name;
     if (getEl('addBizError')) getEl('addBizError').textContent = '';
     if (getEl('addBizSuccess')) getEl('addBizSuccess').textContent = '';
-    const pc = getEl('productsContainer');
-    pc.innerHTML = '';
-    productCounter = 0;
+    const pc = getEl('productsContainer'); pc.innerHTML = ''; productCounter = 0;
     if (biz.goods && biz.goods.length > 0) {
         biz.goods.forEach(function(g) {
             productCounter++;
@@ -2135,8 +2036,7 @@ function openEditBizModal(businessId) {
 function showGoodsModal(businessId) {
     const biz = getAllBusinesses().find(function(b) { return b.id === businessId; });
     if (!biz) return;
-    lastSelectedBusinessId = businessId;
-    updateEditBizStripButton();
+    lastSelectedBusinessId = businessId; updateEditBizStripButton();
     const userCountry = (currentUser && currentUser.country) || 'Sierra Leone';
     const rates = { 'Sierra Leone':5, 'Liberia':7.5, 'Guinea':8, 'Senegal':6, 'Ghana':7, 'Nigeria':8.5 };
     const dc = rates[userCountry] || 5;
@@ -2152,21 +2052,11 @@ function showGoodsModal(businessId) {
                 '<div class="goods-row"><span class="goods-name">' + icon + ' ' + escapeHTML(g.name) + '</span><span class="goods-price">' + price.toFixed(2) + ' ' + displayCur + '</span><button class="goods-select-btn">Select</button></div>' +
                 '<div class="goods-details"><span>📦 Qty: ' + qty + '</span><span>⭐ ' + quality + '</span></div></div>';
         }).join('');
-    } else {
-        html = '<div style="text-align:center;padding:12px;color:#95a5a6;">No items yet.</div>';
-    }
-    if (biz.mechanisms) {
-        const m = biz.mechanisms;
-        html += '<div class="mech-summary" style="margin-top:6px;">💳 ' + escapeHTML((m.payMethods || []).join(', ') || '—') +
-                ' · 🔐 ' + escapeHTML(m.authMethod || '—') +
-                ' · 🚚 ' + escapeHTML(m.deliveryMode || '—') +
-                (m.deliveryFee ? ' · Fee ' + m.deliveryFee : '') + '</div>';
-    }
+    } else { html = '<div style="text-align:center;padding:12px;color:#95a5a6;">No items yet.</div>'; }
+    if (biz.mechanisms) { const m = biz.mechanisms; html += '<div class="mech-summary" style="margin-top:6px;">💳 ' + escapeHTML((m.payMethods || []).join(', ') || '—') + ' · 🔐 ' + escapeHTML(m.authMethod || '—') + ' · 🚚 ' + escapeHTML(m.deliveryMode || '—') + (m.deliveryFee ? ' · Fee ' + m.deliveryFee : '') + '</div>'; }
     getEl('goodsModalTitle').innerHTML = (biz.icon || '🏪') + ' ' + escapeHTML(biz.name);
     getEl('goodsList').innerHTML = html;
-    const wl = getEl('businessWebsiteLink');
-    wl.href = biz.website || '#';
-    wl.style.display = biz.website ? 'block' : 'none';
+    const wl = getEl('businessWebsiteLink'); wl.href = biz.website || '#'; wl.style.display = biz.website ? 'block' : 'none';
     getEl('goodsModal').style.display = 'flex';
     document.querySelectorAll('#goodsList .goods-item').forEach(function(item) {
         item.addEventListener('click', function(e) {
@@ -2182,26 +2072,10 @@ function showGoodsModal(businessId) {
             showProductDetails({ name: name, price: price, quantity: qty, quality: quality, icon: icon, businessName: bName, businessPhone: bPhone });
             if (getEl('agentName')) getEl('agentName').value = bName;
             if (getEl('agentPhone')) getEl('agentPhone').value = bPhone;
-            const aSel = getEl('agentNameSelect');
-            const aLbl = getEl('agentNameLabel');
-            if (aSel) {
-                isBusinessMode = true;
-                aSel.style.display = 'none';
-                let bd = getEl('bizDisplayField');
-                if (!bd) {
-                    bd = document.createElement('div');
-                    bd.id = 'bizDisplayField';
-                    bd.className = 'biz-display-field';
-                    aSel.parentNode.insertBefore(bd, aSel.nextSibling);
-                }
-                bd.innerHTML = icon + ' ' + bName;
-                bd.style.display = 'flex';
-                if (aLbl) aLbl.textContent = '🏢 Business';
-            }
-            const san = getEl('selectedAgentName');
-            if (san) san.innerHTML = '<span class="agent-flag">' + icon + '</span><span class="agent-name-text">' + bName + '</span>';
-            selectedAgentId = null;
-            _selectedAgentId = null;
+            const aSel = getEl('agentNameSelect'); const aLbl = getEl('agentNameLabel');
+            if (aSel) { isBusinessMode = true; aSel.style.display = 'none'; let bd = getEl('bizDisplayField'); if (!bd) { bd = document.createElement('div'); bd.id = 'bizDisplayField'; bd.className = 'biz-display-field'; aSel.parentNode.insertBefore(bd, aSel.nextSibling); } bd.innerHTML = icon + ' ' + bName; bd.style.display = 'flex'; if (aLbl) aLbl.textContent = '🏢 Business'; }
+            const san = getEl('selectedAgentName'); if (san) san.innerHTML = '<span class="agent-flag">' + icon + '</span><span class="agent-name-text">' + bName + '</span>';
+            selectedAgentId = null; _selectedAgentId = null;
             showToast('✅ ' + name + ' × ' + qty, 2000);
             getEl('goodsModal').style.display = 'none';
         });
@@ -2223,7 +2097,6 @@ function addProductEntry() {
 }
 function removeProductEntry(id) { const e = document.querySelector('.product-entry[data-product-id="' + id + '"]'); if (e) e.remove(); }
 window.removeProductEntry = removeProductEntry;
-
 function collectBizProducts() {
     const out = [];
     const fallbackIcon = bizStr('bizIcon') || '📦';
@@ -2238,14 +2111,12 @@ function collectBizProducts() {
     });
     return out;
 }
-
 function submitAddBizForm() {
     const errEl = getEl('addBizError');
     const okEl = getEl('addBizSuccess');
     if (errEl) errEl.textContent = '';
     if (okEl) okEl.textContent = '';
     const fail = function(msg) { if (errEl) errEl.textContent = msg; showToast(msg, 3000); };
-
     const name = bizStr('bizName');
     const contact = bizStr('bizContact');
     const mm = bizStr('bizMobileMoney');
@@ -2258,7 +2129,6 @@ function submitAddBizForm() {
     const password = bizStr('bizPassword');
     const pin = bizStr('bizPin');
     const editingId = bizStr('bizEditingId');
-
     if (!name) return fail('❌ Business name is required.');
     if (!contact) return fail('❌ Contact phone is required.');
     if (!mm) return fail('❌ Mobile money phone is required.');
@@ -2266,67 +2136,29 @@ function submitAddBizForm() {
     if (!country) return fail('❌ Country is required.');
     if (!/^[A-Za-z0-9]{6}$/.test(password)) return fail('❌ Password must be exactly 6 letters/numbers.');
     if (!/^[0-9]{5}$/.test(pin)) return fail('❌ PIN must be exactly 5 digits.');
-
     const mech = collectBizMechanisms('biz');
     if (!validateBizMechanisms(mech, fail)) return;
     const goods = collectBizProducts();
-
     let bizObj = null;
     if (editingId) bizObj = getAllBusinesses().find(function(b) { return String(b.id) === String(editingId); });
     const isNew = !bizObj;
-    if (isNew) {
-        bizObj = { id: 'biz_' + Date.now(), goods: [] };
-    }
-
+    if (isNew) { bizObj = { id: 'biz_' + Date.now(), goods: [] }; }
     bizObj.name = name; bizObj.contact = contact; bizObj.mobileMoney = mm;
     bizObj.type = type; bizObj.icon = icon; bizObj.website = website;
     bizObj.address = address; bizObj.city = city; bizObj.country = country;
     bizObj.password = password; bizObj.pin = pin; bizObj.mechanisms = mech;
     if (goods.length) bizObj.goods = goods;
-
-    if (isNew) {
-        // Do NOT add to customBusinesses yet — goes to approvals only
-    } else {
-        saveCustomBusinesses();
-        renderBusinessStrip();
-        lastSelectedBusinessId = bizObj.id;
-        updateEditBizStripButton();
-        supaBackground(Supa.saveBusiness(bizObj), 'Business');
-        (bizObj.goods || []).forEach(function(g) { supaBackground(Supa.saveProduct(bizObj.name, g), 'Product'); });
-    }
-
-    PendingStore.add({
-        type: 'business', country: country,
-        submittedBy: (currentUser && currentUser.name) || 'User',
-        data: {
-            id: bizObj.id, name: name, contact: contact, mobileMoney: mm,
-            type: type, icon: icon, city: city, country: country,
-            address: address, website: website,
-            password: password, pin: pin, mechanisms: mech,
-            goods: bizObj.goods || [], isNew: isNew
-        }
-    });
-
+    if (isNew) { } else { saveCustomBusinesses(); renderBusinessStrip(); lastSelectedBusinessId = bizObj.id; updateEditBizStripButton(); supaBackground(Supa.saveBusiness(bizObj), 'Business'); (bizObj.goods || []).forEach(function(g) { supaBackground(Supa.saveProduct(bizObj.name, g), 'Product'); }); }
+    PendingStore.add({ type: 'business', country: country, submittedBy: (currentUser && currentUser.name) || 'User', data: { id: bizObj.id, name: name, contact: contact, mobileMoney: mm, type: type, icon: icon, city: city, country: country, address: address, website: website, password: password, pin: pin, mechanisms: mech, goods: bizObj.goods || [], isNew: isNew } });
     if (okEl) okEl.textContent = (isNew ? '✅ Business submitted for approval!' : '✅ Business updated and re-submitted!');
     showToast(isNew ? '✅ Business submitted for approval' : '✅ Business updated', 2600);
     if (getEl('editAgentModal') && getEl('editAgentModal').style.display === 'flex') refreshDashPanes();
-    setTimeout(function() {
-        getEl('addBizModal').style.display = 'none';
-        if (errEl) errEl.textContent = '';
-        if (okEl) okEl.textContent = '';
-    }, 1000);
+    setTimeout(function() { getEl('addBizModal').style.display = 'none'; if (errEl) errEl.textContent = ''; if (okEl) okEl.textContent = ''; }, 1000);
 }
-
 function pickRandomProductForAdvert() {
     const all = getAllBusinesses();
     const cands = [];
-    all.forEach(function(biz) {
-        if (biz.goods && biz.goods.length > 0) {
-            biz.goods.forEach(function(g) {
-                cands.push({ businessId: biz.id, businessName: biz.name, businessIcon: biz.icon || '🏪', businessPhone: biz.mobileMoney || biz.contact || '', name: g.name, price: parseFloat(g.price) || 0, quantity: g.quantity || 1, quality: g.quality || 'Brand new', icon: g.icon || biz.icon || '📱' });
-            });
-        }
-    });
+    all.forEach(function(biz) { if (biz.goods && biz.goods.length > 0) { biz.goods.forEach(function(g) { cands.push({ businessId: biz.id, businessName: biz.name, businessIcon: biz.icon || '🏪', businessPhone: biz.mobileMoney || biz.contact || '', name: g.name, price: parseFloat(g.price) || 0, quantity: g.quantity || 1, quality: g.quality || 'Brand new', icon: g.icon || biz.icon || '📱' }); }); } });
     if (cands.length === 0) return null;
     return cands[Math.floor(Math.random() * cands.length)];
 }
@@ -2336,8 +2168,7 @@ function showPopupAdvert() {
     if (now - lastPopupAdShownAt < 8000) return;
     const p = pickRandomProductForAdvert();
     if (!p) return;
-    lastPopupAdShownAt = now;
-    currentPopupProduct = p;
+    lastPopupAdShownAt = now; currentPopupProduct = p;
     const dict = TRANSLATIONS[currentLang] || TRANSLATIONS.en;
     const overlay = getEl('popupAdOverlay'); if (!overlay) return;
     if (getEl('popupAdIcon')) getEl('popupAdIcon').textContent = p.icon;
@@ -2348,22 +2179,13 @@ function showPopupAdvert() {
     if (getEl('popupAdCurrency')) getEl('popupAdCurrency').textContent = isLocalMode ? getUserCurrency() : currentCountryData.currency;
     const sb = getEl('popupAdSelectBtn');
     if (sb) sb.onclick = function(e) { e.preventDefault(); e.stopPropagation(); hidePopupAdvert(); lastSelectedBusinessId = p.businessId; updateEditBizStripButton(); try { showGoodsModal(p.businessId); } catch (er) {} };
-    const db = getEl('popupAdDismissBtn');
-    if (db) db.onclick = function(e) { e.preventDefault(); e.stopPropagation(); hidePopupAdvert(); };
-    const cb = getEl('popupAdCloseBtn');
-    if (cb) cb.onclick = function(e) { e.preventDefault(); e.stopPropagation(); hidePopupAdvert(); };
-    overlay.style.display = 'flex';
-    startPopupAdCountdown(15);
+    const db = getEl('popupAdDismissBtn'); if (db) db.onclick = function(e) { e.preventDefault(); e.stopPropagation(); hidePopupAdvert(); };
+    const cb = getEl('popupAdCloseBtn'); if (cb) cb.onclick = function(e) { e.preventDefault(); e.stopPropagation(); hidePopupAdvert(); };
+    overlay.style.display = 'flex'; startPopupAdCountdown(15);
 }
-function hidePopupAdvert() {
-    const o = getEl('popupAdOverlay'); if (o) o.style.display = 'none';
-    clearInterval(popupAdCountdownInterval);
-    popupAdCountdownInterval = null;
-    currentPopupProduct = null;
-}
+function hidePopupAdvert() { const o = getEl('popupAdOverlay'); if (o) o.style.display = 'none'; clearInterval(popupAdCountdownInterval); popupAdCountdownInterval = null; currentPopupProduct = null; }
 function startPopupAdCountdown(s) {
-    clearInterval(popupAdCountdownInterval);
-    popupAdCountdownSeconds = s;
+    clearInterval(popupAdCountdownInterval); popupAdCountdownSeconds = s;
     if (getEl('popupAdTimerSeconds')) getEl('popupAdTimerSeconds').textContent = s + 's';
     popupAdCountdownInterval = setInterval(function() {
         popupAdCountdownSeconds--;
@@ -2371,69 +2193,29 @@ function startPopupAdCountdown(s) {
         if (popupAdCountdownSeconds <= 0) { clearInterval(popupAdCountdownInterval); hidePopupAdvert(); }
     }, 1000);
 }
-function startPopupAdTimer() {
-    stopPopupAdTimer();
-    popupAdTimeout = setTimeout(function() { showPopupAdvert(); popupAdInterval = setInterval(showPopupAdvert, 90000); }, 4000);
-}
-function stopPopupAdTimer() {
-    clearTimeout(popupAdTimeout);
-    clearInterval(popupAdInterval);
-    popupAdTimeout = null;
-    popupAdInterval = null;
-    hidePopupAdvert();
-}
-function updateDateTime() {
-    const now = new Date();
-    if (getEl('currentDate')) getEl('currentDate').innerText = now.toLocaleDateString();
-    if (getEl('currentTime')) getEl('currentTime').innerText = now.toLocaleTimeString();
-}
-function generateTransactionId() {
-    const p1 = Math.floor(1000000 + Math.random() * 9000000);
-    const p2 = Math.floor(10000 + Math.random() * 90000);
-    const L = String.fromCharCode(65 + Math.floor(Math.random() * 26));
-    const p3 = Math.floor(1000000 + Math.random() * 9000000);
-    return 'WB' + p1 + '.' + p2 + '.' + L + p3;
-}
+function startPopupAdTimer() { stopPopupAdTimer(); popupAdTimeout = setTimeout(function() { showPopupAdvert(); popupAdInterval = setInterval(showPopupAdvert, 90000); }, 4000); }
+function stopPopupAdTimer() { clearTimeout(popupAdTimeout); clearInterval(popupAdInterval); popupAdTimeout = null; popupAdInterval = null; hidePopupAdvert(); }
+function updateDateTime() { const now = new Date(); if (getEl('currentDate')) getEl('currentDate').innerText = now.toLocaleDateString(); if (getEl('currentTime')) getEl('currentTime').innerText = now.toLocaleTimeString(); }
+function generateTransactionId() { const p1 = Math.floor(1000000 + Math.random() * 9000000); const p2 = Math.floor(10000 + Math.random() * 90000); const L = String.fromCharCode(65 + Math.floor(Math.random() * 26)); const p3 = Math.floor(1000000 + Math.random() * 9000000); return 'WB' + p1 + '.' + p2 + '.' + L + p3; }
 function setGeneratedTransactionId() { const f = getEl('transactionId'); if (f) f.value = generateTransactionId(); }
-function copyTransactionIdToClipboard() {
-    const v = getEl('transactionId') && getEl('transactionId').value;
-    if (v) navigator.clipboard.writeText(v).then(function() { showToast('✅ Copied!', 1800); }).catch(function() { showToast('✅ Copied!', 1800); });
-    else showToast('⚠️ No ID', 1500);
-}
+function copyTransactionIdToClipboard() { const v = getEl('transactionId') && getEl('transactionId').value; if (v) navigator.clipboard.writeText(v).then(function() { showToast('✅ Copied!', 1800); }).catch(function() { showToast('✅ Copied!', 1800); }); else showToast('⚠️ No ID', 1500); }
 function ensureTransactionId() { const f = getEl('transactionId'); if (f && !f.value.trim()) f.value = generateTransactionId(); }
-function showInfoModal(title, body) {
-    getEl('modalTitle').innerText = title;
-    getEl('modalBody').innerHTML = body;
-    getEl('infoModal').style.display = 'flex';
-}
+function showInfoModal(title, body) { getEl('modalTitle').innerText = title; getEl('modalBody').innerHTML = body; getEl('infoModal').style.display = 'flex'; }
 function showReceiptModal(data) {
     lastReceiptData = data;
     const body = getEl('receiptBody');
-    const lines = [
-        { key: 'TX ID', value: data.txId }, { key: 'Date', value: data.date },
-        { key: 'Type', value: data.mode }, { key: 'Sender', value: data.sender }, { key: 'Agent', value: data.agent }
-    ];
+    const lines = [{ key: 'TX ID', value: data.txId }, { key: 'Date', value: data.date }, { key: 'Type', value: data.mode }, { key: 'Sender', value: data.sender }, { key: 'Agent', value: data.agent }];
     if (data.clientName) lines.push({ key: 'Client', value: data.clientName + (data.clientPhone ? ' (' + data.clientPhone + ')' : '') });
     lines.push({ key: 'Provider TX ID', value: data.providerTxId || 'N/A' });
     lines.push({ key: 'Transfer Code', value: data.transferCode || 'N/A' });
-    if (_selectedProductDetails) {
-        const p = _selectedProductDetails;
-        lines.push({ key: 'Product', value: (p.businessIcon || '🏪') + ' ' + p.name });
-        lines.push({ key: 'Quantity', value: String(p.quantity) });
-        lines.push({ key: 'Unit Price', value: data.currency + ' ' + p.amount.toFixed(2) });
-    }
+    if (_selectedProductDetails) { const p = _selectedProductDetails; lines.push({ key: 'Product', value: (p.businessIcon || '🏪') + ' ' + p.name }); lines.push({ key: 'Quantity', value: String(p.quantity) }); lines.push({ key: 'Unit Price', value: data.currency + ' ' + p.amount.toFixed(2) }); }
     lines.push({ key: 'Base', value: data.currency + ' ' + data.baseAmount });
     lines.push({ key: 'Fee', value: data.currency + ' ' + data.charge });
     lines.push({ key: 'Total', value: data.currency + ' ' + data.total, total: true });
     let html = '';
-    lines.forEach(function(l) {
-        let style = 'display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #f0f0f0;font-size:.82rem;';
-        if (l.total) style += 'font-weight:800;border-top:2px solid #1c4e6c;border-bottom:none;padding-top:8px;';
-        html += '<div style="' + style + '"><span style="color:#7f8c8d;">' + l.key + '</span><span style="color:#1e3b4a;font-weight:600;text-align:right;max-width:60%;word-break:break-word;">' + escapeHTML(l.value) + '</span></div>';
-    });
+    lines.forEach(function(l) { let style = 'display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #f0f0f0;font-size:.82rem;'; if (l.total) style += 'font-weight:800;border-top:2px solid #1c4e6c;border-bottom:none;padding-top:8px;'; html += '<div style="' + style + '"><span style="color:#7f8c8d;">' + l.key + '</span><span style="color:#1e3b4a;font-weight:600;text-align:right;max-width:60%;word-break:break-word;">' + escapeHTML(l.value) + '</span></div>'; });
     body.innerHTML = html;
-    const clientRow = getEl('receiptClientShareRow');
-    if (clientRow) clientRow.style.display = data.clientPhone ? 'flex' : 'none';
+    const clientRow = getEl('receiptClientShareRow'); if (clientRow) clientRow.style.display = data.clientPhone ? 'flex' : 'none';
     getEl('receiptModal').style.display = 'flex';
 }
 function buildReceiptShareText() {
@@ -2451,26 +2233,9 @@ function buildReceiptShareText() {
     lines.push(''); lines.push('— Sent from AfriPay');
     return lines.join('\n');
 }
-function getRecipientPhoneForShare() {
-    const agentStr = (lastReceiptData && lastReceiptData.agent) || '';
-    const m = agentStr.match(/\(([^)]+)\)/);
-    if (m) { const digits = String(m[1]).replace(/\D/g, ''); if (digits.length >= 6) return digits; }
-    return '';
-}
-function shareReceiptViaSMS() {
-    const text = buildReceiptShareText();
-    const phone = getRecipientPhoneForShare();
-    const url = phone ? ('sms:' + phone + '?body=' + encodeURIComponent(text)) : ('sms:?body=' + encodeURIComponent(text));
-    try { window.location.href = url; } catch (e) {}
-    showToast('📱 Opening SMS…', 2000);
-}
-function shareReceiptViaWhatsApp() {
-    const text = buildReceiptShareText();
-    const phone = getRecipientPhoneForShare();
-    const url = phone ? ('https://wa.me/' + phone + '?text=' + encodeURIComponent(text)) : ('https://wa.me/?text=' + encodeURIComponent(text));
-    try { window.open(url, '_blank'); } catch (e) {}
-    showToast('💬 Opening WhatsApp…', 2000);
-}
+function getRecipientPhoneForShare() { const agentStr = (lastReceiptData && lastReceiptData.agent) || ''; const m = agentStr.match(/\(([^)]+)\)/); if (m) { const digits = String(m[1]).replace(/\D/g, ''); if (digits.length >= 6) return digits; } return ''; }
+function shareReceiptViaSMS() { const text = buildReceiptShareText(); const phone = getRecipientPhoneForShare(); const url = phone ? ('sms:' + phone + '?body=' + encodeURIComponent(text)) : ('sms:?body=' + encodeURIComponent(text)); try { window.location.href = url; } catch (e) {} showToast('📱 Opening SMS…', 2000); }
+function shareReceiptViaWhatsApp() { const text = buildReceiptShareText(); const phone = getRecipientPhoneForShare(); const url = phone ? ('https://wa.me/' + phone + '?text=' + encodeURIComponent(text)) : ('https://wa.me/?text=' + encodeURIComponent(text)); try { window.open(url, '_blank'); } catch (e) {} showToast('💬 Opening WhatsApp…', 2000); }
 function buildClientShareText() {
     const dict = TRANSLATIONS[currentLang] || TRANSLATIONS.en;
     const d = lastReceiptData || {};
@@ -2485,40 +2250,14 @@ function buildClientShareText() {
     lines.push(''); lines.push('— Sent from AfriPay');
     return lines.join('\n');
 }
-function getClientPhoneForShare() {
-    const raw = (lastReceiptData && lastReceiptData.clientPhone) || (currentClient && currentClient.phone) || (getEl('clientPhone') && getEl('clientPhone').value) || '';
-    return String(raw).replace(/\D/g, '');
-}
-function shareClientViaSMS() {
-    const phone = getClientPhoneForShare();
-    if (!phone) { showToast('⚠️ No client phone.', 2000); return; }
-    const text = buildClientShareText();
-    const url = 'sms:' + phone + '?body=' + encodeURIComponent(text);
-    try { window.location.href = url; } catch (e) {}
-    showToast('📱 Opening SMS to client…', 2000);
-}
-function shareClientViaWhatsApp() {
-    const phone = getClientPhoneForShare();
-    if (!phone) { showToast('⚠️ No client phone.', 2000); return; }
-    const text = buildClientShareText();
-    const url = 'https://wa.me/' + phone + '?text=' + encodeURIComponent(text);
-    try { window.open(url, '_blank'); } catch (e) {}
-    showToast('💬 Opening WhatsApp to client…', 2000);
-}
+function getClientPhoneForShare() { const raw = (lastReceiptData && lastReceiptData.clientPhone) || (currentClient && currentClient.phone) || (getEl('clientPhone') && getEl('clientPhone').value) || ''; return String(raw).replace(/\D/g, ''); }
+function shareClientViaSMS() { const phone = getClientPhoneForShare(); if (!phone) { showToast('⚠️ No client phone.', 2000); return; } const text = buildClientShareText(); const url = 'sms:' + phone + '?body=' + encodeURIComponent(text); try { window.location.href = url; } catch (e) {} showToast('📱 Opening SMS to client…', 2000); }
+function shareClientViaWhatsApp() { const phone = getClientPhoneForShare(); if (!phone) { showToast('⚠️ No client phone.', 2000); return; } const text = buildClientShareText(); const url = 'https://wa.me/' + phone + '?text=' + encodeURIComponent(text); try { window.open(url, '_blank'); } catch (e) {} showToast('💬 Opening WhatsApp to client…', 2000); }
 function resolveRecipientInfo() {
     const digits = function(s) { return String(s == null ? '' : s).replace(/\D/g, ''); };
     let name = ((getEl('agentName') && getEl('agentName').value) || '').trim();
     let phoneRaw = ((getEl('agentPhone') && getEl('agentPhone').value) || '').trim();
-    if (digits(phoneRaw).length < 6) {
-        const aid = _selectedAgentId || selectedAgentId || (getEl('agentNameSelect') && getEl('agentNameSelect').value) || '';
-        const ag = aid ? getAgents().find(function(a) { return a.id === aid; }) : null;
-        if (ag) {
-            const d = ag.agentData || ag;
-            const c = d.mobileMoney || d.phone || ag.phone || '';
-            if (digits(c).length >= 6) phoneRaw = c;
-            if (!name) name = (d.businessName || ag.name || '').replace(/\(.*\)/, '').trim();
-        }
-    }
+    if (digits(phoneRaw).length < 6) { const aid = _selectedAgentId || selectedAgentId || (getEl('agentNameSelect') && getEl('agentNameSelect').value) || ''; const ag = aid ? getAgents().find(function(a) { return a.id === aid; }) : null; if (ag) { const d = ag.agentData || ag; const c = d.mobileMoney || d.phone || ag.phone || ''; if (digits(c).length >= 6) phoneRaw = c; if (!name) name = (d.businessName || ag.name || '').replace(/\(.*\)/, '').trim(); } }
     if (!name && _selectedProductDetails && _selectedProductDetails.businessName) name = _selectedProductDetails.businessName;
     if (digits(phoneRaw).length < 6 && _selectedProductDetails && _selectedProductDetails.businessPhone) phoneRaw = _selectedProductDetails.businessPhone;
     return { name: name, phone: digits(phoneRaw), phoneDisplay: phoneRaw };
@@ -2540,11 +2279,8 @@ function confirmPin() {
     if (!pin || pin.length !== 4 || !/^\d+$/.test(pin)) { getEl('pinError').textContent = '❌ Invalid PIN.'; return; }
     if (!pendingPinData) return;
     const ussd = pendingPinData.ussdCode.replace(/0000#/, pin + '#');
-    getEl('pinModal').style.display = 'none';
-    pendingPinData = null;
-    const link = document.createElement('a');
-    link.href = 'tel:' + ussd;
-    link.click();
+    getEl('pinModal').style.display = 'none'; pendingPinData = null;
+    const link = document.createElement('a'); link.href = 'tel:' + ussd; link.click();
     showToast('📞 Dialing...', 3000);
 }
 function renderSidebar() {
@@ -2553,67 +2289,23 @@ function renderSidebar() {
     sb.innerHTML = '<div class="sidebar-section-title">👤 ' + (dict.contacts || 'Contacts') + '</div>';
     const all = getAllContacts();
     if (all.length === 0) sb.innerHTML += '<div style="padding:4px 10px;font-size:.68rem;color:#95a5a6;text-align:center;">' + (dict.noContacts || 'No contacts') + '</div>';
-    else all.forEach(function(u) {
-        const d = document.createElement('div');
-        d.className = 'sidebar-user';
-        d.innerHTML = '<div class="avatar">' + (u.emoji || '👤') + '</div><div class="user-info"><div class="name">' + escapeHTML(u.name) + '</div></div>';
-        sb.appendChild(d);
-    });
+    else all.forEach(function(u) { const d = document.createElement('div'); d.className = 'sidebar-user'; d.innerHTML = '<div class="avatar">' + (u.emoji || '👤') + '</div><div class="user-info"><div class="name">' + escapeHTML(u.name) + '</div></div>'; sb.appendChild(d); });
 }
-function toggleChat() {
-    const w = getEl('chatWindow');
-    const open = w.classList.toggle('open');
-    getEl('chatToggleBtn').style.display = open ? 'none' : 'flex';
-}
+function toggleChat() { const w = getEl('chatWindow'); const open = w.classList.toggle('open'); getEl('chatToggleBtn').style.display = open ? 'none' : 'flex'; }
 function openEmojiPicker() {
     const grid = getEl('emojiGrid'); if (!grid) return;
     grid.innerHTML = '';
-    AVAILABLE_EMOJIS.forEach(function(e) {
-        const s = document.createElement('span');
-        s.className = 'emoji-option';
-        s.textContent = e;
-        s.addEventListener('click', function() { applyEmoji(e); });
-        grid.appendChild(s);
-    });
+    AVAILABLE_EMOJIS.forEach(function(e) { const s = document.createElement('span'); s.className = 'emoji-option'; s.textContent = e; s.addEventListener('click', function() { applyEmoji(e); }); grid.appendChild(s); });
     getEl('emojiPickerModal').style.display = 'flex';
 }
-function applyEmoji(e) {
-    if (currentUser) {
-        currentUser.emoji = e; currentUser.avatarDataURL = null;
-        saveUserToStorage(currentUser);
-        updateAvatarDisplay(currentUser);
-        updateProfileAvatarDisplay(currentUser);
-    }
-    showToast('✅ Avatar: ' + e, 1500);
-    setTimeout(function() { getEl('emojiPickerModal').style.display = 'none'; }, 400);
-}
-function applyAvatarImage(dataURL) {
-    if (currentUser) {
-        currentUser.avatarDataURL = dataURL;
-        saveUserToStorage(currentUser);
-        updateAvatarDisplay(currentUser);
-        updateProfileAvatarDisplay(currentUser);
-    }
-    showToast('✅ Image updated!', 1800);
-    getEl('emojiPickerModal').style.display = 'none';
-}
-function removeAvatarImage() {
-    if (currentUser) {
-        currentUser.avatarDataURL = null;
-        if (!currentUser.emoji) currentUser.emoji = '👤';
-        saveUserToStorage(currentUser);
-        updateAvatarDisplay(currentUser);
-        updateProfileAvatarDisplay(currentUser);
-    }
-    showToast('🗑️ Image removed', 1500);
-}
+function applyEmoji(e) { if (currentUser) { currentUser.emoji = e; currentUser.avatarDataURL = null; saveUserToStorage(currentUser); updateAvatarDisplay(currentUser); updateProfileAvatarDisplay(currentUser); } showToast('✅ Avatar: ' + e, 1500); setTimeout(function() { getEl('emojiPickerModal').style.display = 'none'; }, 400); }
+function applyAvatarImage(dataURL) { if (currentUser) { currentUser.avatarDataURL = dataURL; saveUserToStorage(currentUser); updateAvatarDisplay(currentUser); updateProfileAvatarDisplay(currentUser); } showToast('✅ Image updated!', 1800); getEl('emojiPickerModal').style.display = 'none'; }
+function removeAvatarImage() { if (currentUser) { currentUser.avatarDataURL = null; if (!currentUser.emoji) currentUser.emoji = '👤'; saveUserToStorage(currentUser); updateAvatarDisplay(currentUser); updateProfileAvatarDisplay(currentUser); } showToast('🗑️ Image removed', 1500); }
 function renderHeaderFlags() {
     const grid = getEl('headerFlagGrid'); if (!grid) return;
     grid.innerHTML = '';
     SUPPORTED_COUNTRY_FLAGS.forEach(function(f) {
-        const s = document.createElement('span');
-        s.className = 'flag-icon';
-        s.textContent = f;
+        const s = document.createElement('span'); s.className = 'flag-icon'; s.textContent = f;
         s.addEventListener('click', function() {
             const sel = getEl('countryCodeSelect'); if (!sel) return;
             for (let i = 0; i < sel.options.length; i++) {
@@ -2621,16 +2313,11 @@ function renderHeaderFlags() {
                     sel.selectedIndex = i;
                     const parts = sel.value.split('|');
                     currentCountryData = { gstRate: parseFloat(parts[4]) || 10, currency: parts[2] || 'USD', flag: parts[3] || '🌍', countryName: parts[1] || '' };
-                    if (isLocalMode) {
-                        isLocalMode = false;
-                        if (getEl('intlToggleBtn')) getEl('intlToggleBtn').classList.add('active');
-                        if (getEl('countryWrapper')) getEl('countryWrapper').style.display = 'block';
-                    }
+                    if (isLocalMode) { isLocalMode = false; if (getEl('intlToggleBtn')) getEl('intlToggleBtn').classList.add('active'); if (getEl('countryWrapper')) getEl('countryWrapper').style.display = 'block'; }
                     if (getEl('gstRateLabel')) getEl('gstRateLabel').innerText = currentCountryData.gstRate;
                     if (getEl('currencySymbol')) getEl('currencySymbol').innerText = currentCountryData.currency;
                     if (getEl('flagEmoji')) getEl('flagEmoji').innerText = currentCountryData.flag;
-                    computeCharges();
-                    updateAgentDropdownForCountry();
+                    computeCharges(); updateAgentDropdownForCountry();
                     showToast('📍 ' + currentCountryData.countryName, 1500);
                     break;
                 }
@@ -2641,36 +2328,20 @@ function renderHeaderFlags() {
 }
 function updateAgentDropdownForCountry() {
     const cw = getEl('countryWrapper');
-    if (!cw || cw.style.display === 'none' || isLocalMode) {
-        currentAgentFilterCountry = null;
-        renderAgentDropdown(null);
-        populateAgentSelect(null);
-        return;
-    }
+    if (!cw || cw.style.display === 'none' || isLocalMode) { currentAgentFilterCountry = null; renderAgentDropdown(null); populateAgentSelect(null); return; }
     const cn = getCountryNameFromSelect();
     currentAgentFilterCountry = cn;
-    renderAgentDropdown(cn);
-    populateAgentSelect(cn);
+    renderAgentDropdown(cn); populateAgentSelect(cn);
 }
 function populateConverterCountries() {
     const s = getEl('convCountrySelect'); if (!s) return;
     s.innerHTML = '';
-    SUPPORTED_CURRENCIES.forEach(function(c) {
-        const o = document.createElement('option');
-        o.value = c.code + '|' + c.name + '|' + c.currency + '|' + c.flag + '|' + c.gst;
-        o.textContent = c.flag + ' ' + c.name + ' (' + c.currency + ')';
-        s.appendChild(o);
-    });
+    SUPPORTED_CURRENCIES.forEach(function(c) { const o = document.createElement('option'); o.value = c.code + '|' + c.name + '|' + c.currency + '|' + c.flag + '|' + c.gst; o.textContent = c.flag + ' ' + c.name + ' (' + c.currency + ')'; s.appendChild(o); });
 }
 function populateFromCurrencySelect() {
     const s = getEl('convFromCurrency'); if (!s) return;
     s.innerHTML = '';
-    SUPPORTED_CURRENCIES.forEach(function(c) {
-        const o = document.createElement('option');
-        o.value = c.currency + '|' + c.name + '|' + c.flag;
-        o.textContent = c.flag + ' ' + c.name + ' (' + c.currency + ')';
-        s.appendChild(o);
-    });
+    SUPPORTED_CURRENCIES.forEach(function(c) { const o = document.createElement('option'); o.value = c.currency + '|' + c.name + '|' + c.flag; o.textContent = c.flag + ' ' + c.name + ' (' + c.currency + ')'; s.appendChild(o); });
 }
 function fmtMoney(n) { if (!isFinite(n)) n = 0; return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
 function updateConverter() {
@@ -2721,7 +2392,6 @@ function initializePermanentAgents() {
         saveRegisteredUsers();
     } catch (e) {}
 }
-
 function promptAgentCredentials(agentId) {
     const agent = getAgents().find(function(a) { return a.id === agentId; });
     if (!agent) { showToast('⚠️ Agent not found.', 2200); return; }
@@ -2736,13 +2406,7 @@ function promptAgentCredentials(agentId) {
     getEl('agentAuthModal').style.display = 'flex';
     setTimeout(function() { if (getEl('agentAuthPassword')) getEl('agentAuthPassword').focus(); }, 120);
 }
-function closeAgentAuthModal() {
-    pendingAgentAuthId = null;
-    const m = getEl('agentAuthModal'); if (m) m.style.display = 'none';
-    if (getEl('agentAuthPassword')) getEl('agentAuthPassword').value = '';
-    if (getEl('agentAuthPin')) getEl('agentAuthPin').value = '';
-    if (getEl('agentAuthError')) getEl('agentAuthError').textContent = '';
-}
+function closeAgentAuthModal() { pendingAgentAuthId = null; const m = getEl('agentAuthModal'); if (m) m.style.display = 'none'; if (getEl('agentAuthPassword')) getEl('agentAuthPassword').value = ''; if (getEl('agentAuthPin')) getEl('agentAuthPin').value = ''; if (getEl('agentAuthError')) getEl('agentAuthError').textContent = ''; }
 function confirmAgentAuth() {
     const err = getEl('agentAuthError');
     const pw = (getEl('agentAuthPassword') && getEl('agentAuthPassword').value.trim()) || '';
@@ -2757,13 +2421,7 @@ function confirmAgentAuth() {
     const agent = getAgents().find(function(a) { return a.id === pendingAgentAuthId; });
     if (!agent) { err.textContent = '❌ Agent not found.'; return; }
     const data = agent.agentData || agent;
-    if (pw !== (data.password || '') || pin !== (data.pin || '')) {
-        err.textContent = '❌ Incorrect credentials. Please try again.';
-        if (getEl('agentAuthPassword')) getEl('agentAuthPassword').value = '';
-        if (getEl('agentAuthPin')) getEl('agentAuthPin').value = '';
-        if (getEl('agentAuthPassword')) getEl('agentAuthPassword').focus();
-        return;
-    }
+    if (pw !== (data.password || '') || pin !== (data.pin || '')) { err.textContent = '❌ Incorrect credentials. Please try again.'; if (getEl('agentAuthPassword')) getEl('agentAuthPassword').value = ''; if (getEl('agentAuthPin')) getEl('agentAuthPin').value = ''; if (getEl('agentAuthPassword')) getEl('agentAuthPassword').focus(); return; }
     const id = pendingAgentAuthId;
     pendingAgentAuthId = null;
     getEl('agentAuthModal').style.display = 'none';
@@ -2785,79 +2443,22 @@ const PendingStore = {
     items: [],
     load: function() { try { this.items = JSON.parse(localStorage.getItem(this.key) || '[]'); } catch (e) { this.items = []; } },
     save: function() { try { localStorage.setItem(this.key, JSON.stringify(this.items)); } catch (e) {} },
-    add: function(item) {
-        item.id = 'pend_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
-        item.status = 'pending';
-        item.submittedAt = new Date().toISOString();
-        this.items.push(item);
-        this.save();
-        supaBackground(Supa.savePendingItem(item), 'Pending item');
-        return item;
-    },
+    add: function(item) { item.id = 'pend_' + Date.now() + '_' + Math.floor(Math.random() * 10000); item.status = 'pending'; item.submittedAt = new Date().toISOString(); this.items.push(item); this.save(); supaBackground(Supa.savePendingItem(item), 'Pending item'); return item; },
     get: function(id) { return this.items.find(function(i) { return i.id === id; }); },
-    setStatus: function(id, status, byId) {
-        const it = this.get(id);
-        if (it) {
-            it.status = status; it.reviewedAt = new Date().toISOString(); it.reviewedBy = byId || null;
-            this.save();
-            supaBackground(Supa.updatePendingItemStatus(id, status, byId), 'Pending status');
-        }
-        return it;
-    },
-    async loadFromCloud() {
-        if (!Supa.isReady()) return false;
-        const cloud = await Supa.getPendingItems();
-        if (!cloud) return false;
-        const byId = new Map();
-        this.items.forEach(function(it) { byId.set(it.id, it); });
-        cloud.forEach(function(it) { byId.set(it.id, it); });
-        this.items = Array.from(byId.values());
-        this.save();
-        return true;
-    },
-    pendingFor: function(country) {
-        return this.items.filter(function(i) {
-            if (i.status !== 'pending') return false;
-            if (!country || !i.country) return true;
-            return String(i.country).toLowerCase() === String(country).toLowerCase();
-        });
-    },
-    reviewedFor: function(country) {
-        return this.items.filter(function(i) {
-            if (i.status === 'pending') return false;
-            if (!country || !i.country) return true;
-            return String(i.country).toLowerCase() === String(country).toLowerCase();
-        });
-    }
+    setStatus: function(id, status, byId) { const it = this.get(id); if (it) { it.status = status; it.reviewedAt = new Date().toISOString(); it.reviewedBy = byId || null; this.save(); supaBackground(Supa.updatePendingItemStatus(id, status, byId), 'Pending status'); } return it; },
+    async loadFromCloud() { if (!Supa.isReady()) return false; const cloud = await Supa.getPendingItems(); if (!cloud) return false; const byId = new Map(); this.items.forEach(function(it) { byId.set(it.id, it); }); cloud.forEach(function(it) { byId.set(it.id, it); }); this.items = Array.from(byId.values()); this.save(); return true; },
+    pendingFor: function(country) { return this.items.filter(function(i) { if (i.status !== 'pending') return false; if (!country || !i.country) return true; return String(i.country).toLowerCase() === String(country).toLowerCase(); }); },
+    reviewedFor: function(country) { return this.items.filter(function(i) { if (i.status === 'pending') return false; if (!country || !i.country) return true; return String(i.country).toLowerCase() === String(country).toLowerCase(); }); }
 };
 function loadDashClients() { try { dashClients = JSON.parse(localStorage.getItem('afripay_agent_clients') || '[]'); } catch (e) { dashClients = []; } }
 function saveDashClients() { try { localStorage.setItem('afripay_agent_clients', JSON.stringify(dashClients)); } catch (e) {} }
-async function loadDashClientsFromCloud() {
-    if (!Supa.isReady()) return false;
-    const cloud = await Supa.getAgentClients(null);
-    if (!cloud) return false;
-    const byId = new Map();
-    dashClients.forEach(function(c) { byId.set(c.id, c); });
-    cloud.forEach(function(c) { byId.set(c.id, c); });
-    dashClients = Array.from(byId.values());
-    saveDashClients();
-    return true;
-}
-function getDashAgent() {
-    if (!dashCurrentAgentId) return null;
-    const a = getAgents().find(function(x) { return x.id === dashCurrentAgentId; });
-    return a ? (a.agentData || a) : null;
-}
-function getDashArea() {
-    const d = getDashAgent();
-    if (!d) return '';
-    return COUNTRY_CODE_TO_NAME[d.countryCode] || d.city || '';
-}
+async function loadDashClientsFromCloud() { if (!Supa.isReady()) return false; const cloud = await Supa.getAgentClients(null); if (!cloud) return false; const byId = new Map(); dashClients.forEach(function(c) { byId.set(c.id, c); }); cloud.forEach(function(c) { byId.set(c.id, c); }); dashClients = Array.from(byId.values()); saveDashClients(); return true; }
+function getDashAgent() { if (!dashCurrentAgentId) return null; const a = getAgents().find(function(x) { return x.id === dashCurrentAgentId; }); return a ? (a.agentData || a) : null; }
+function getDashArea() { const d = getDashAgent(); if (!d) return ''; return COUNTRY_CODE_TO_NAME[d.countryCode] || d.city || ''; }
 function openAgentDashboard(agentId, opts) {
     const agent = getAgents().find(function(a) { return a.id === agentId; });
     if (!agent) { showToast('Agent not found', 2000); return; }
-    dashCurrentAgentId = agentId;
-    paybackTargetAgentId = agentId;
+    dashCurrentAgentId = agentId; paybackTargetAgentId = agentId;
     dashStandaloneMode = !!(opts && opts.fullscreen);
     const content = getEl('editAgentModal').querySelector('.modal-content');
     if (content) content.classList.toggle('standalone-mode', dashStandaloneMode);
@@ -2865,15 +2466,9 @@ function openAgentDashboard(agentId, opts) {
     if (overview) overview.style.display = dashStandaloneMode ? 'grid' : 'none';
     const data = agent.agentData || agent;
     const setV = function(id, v) { const e = getEl(id); if (e) e.value = v || ''; };
-    setV('editAgentId', agentId);
-    setV('editBusinessName', data.businessName || '');
-    setV('editAddress', data.businessAddress || '');
+    setV('editAgentId', agentId); setV('editBusinessName', data.businessName || ''); setV('editAddress', data.businessAddress || '');
     setCityValue('editCitySelect', 'editCityOther', data.city || '');
-    setV('editRegNumber', data.regNumber || '');
-    setV('editMobileMoney', data.mobileMoney || agent.phone || '');
-    setV('editAgentNin', data.nin || '');
-    setV('editPassword', '');
-    setV('editPin', '');
+    setV('editRegNumber', data.regNumber || ''); setV('editMobileMoney', data.mobileMoney || agent.phone || ''); setV('editAgentNin', data.nin || ''); setV('editPassword', ''); setV('editPin', '');
     const cs = getEl('editCollateralLimit');
     if (cs) { for (let i = 0; i < cs.options.length; i++) { if (parseInt(cs.options[i].value) === (data.collateralLimit || 0)) { cs.selectedIndex = i; break; } } }
     if (getEl('editCollateralValueDisplay')) getEl('editCollateralValueDisplay').textContent = data.collateralLimit || 0;
@@ -2884,31 +2479,21 @@ function openAgentDashboard(agentId, opts) {
     if (getEl('agentDashTitle')) getEl('agentDashTitle').innerHTML = (dashStandaloneMode ? '📊 Dashboard — ' : '🏢 ') + escapeHTML((data.businessName || 'Agent').replace(/\(.*\)/, '').trim());
     if (getEl('agentDashSubtitle')) getEl('agentDashSubtitle').innerHTML = getAgentFlag(agent) + ' ' + escapeHTML(getDashArea() || '—') + ' · ID: ' + escapeHTML(agentId);
     const pwI = getEl('editPassword'), pinI = getEl('editPin');
-    const checkAuth = function() {
-        const pw = (pwI && pwI.value.trim()) || '';
-        const pin = (pinI && pinI.value.trim()) || '';
-        const ok = pw === (data.password || '') && pin === (data.pin || '');
-        if (getEl('editCollateralSection')) getEl('editCollateralSection').classList.toggle('open', ok);
-        if (getEl('editLogoSection')) getEl('editLogoSection').classList.toggle('open', ok);
-        if (getEl('editAuthHint')) getEl('editAuthHint').classList.toggle('hidden', !ok);
-    };
+    const checkAuth = function() { const pw = (pwI && pwI.value.trim()) || ''; const pin = (pinI && pinI.value.trim()) || ''; const ok = pw === (data.password || '') && pin === (data.pin || ''); if (getEl('editCollateralSection')) getEl('editCollateralSection').classList.toggle('open', ok); if (getEl('editLogoSection')) getEl('editLogoSection').classList.toggle('open', ok); if (getEl('editAuthHint')) getEl('editAuthHint').classList.toggle('hidden', !ok); };
     if (pwI) pwI.oninput = checkAuth;
     if (pinI) pinI.oninput = checkAuth;
-    populateDashBusinessSelect();
-    populateDashCountrySelects();
-    resetBizMechanismsForm('db');
+    populateDashBusinessSelect(); populateDashCountrySelects(); resetBizMechanismsForm('db');
     switchDashTab('profile');
     getEl('editAgentModal').style.display = 'flex';
 }
 function openEditAgentModal(agentId) { openAgentDashboard(agentId, { fullscreen: false }); }
 function switchDashTab(tab) {
     dashTab = tab;
-    document.querySelectorAll('#editAgentModal .dash-tab').forEach(function(b) {
-        b.classList.toggle('active', b.getAttribute('data-dash-tab') === tab);
-    });
-    document.querySelectorAll('#editAgentModal .dash-pane').forEach(function(p) {
-        p.classList.toggle('active', p.id === 'dash-pane-' + tab);
-    });
+    if (tab === 'agents' && getEl('daSignatureCanvas') && !getEl('daSignatureCanvas').dataset.bound) {
+        try { setupDaSignatureCanvas(); getEl('daSignatureCanvas').dataset.bound = '1'; } catch (e) {}
+    }
+    document.querySelectorAll('#editAgentModal .dash-tab').forEach(function(b) { b.classList.toggle('active', b.getAttribute('data-dash-tab') === tab); });
+    document.querySelectorAll('#editAgentModal .dash-pane').forEach(function(p) { p.classList.toggle('active', p.id === 'dash-pane-' + tab); });
     refreshDashPanes();
 }
 function refreshDashPanes() {
@@ -2916,15 +2501,8 @@ function refreshDashPanes() {
     const pend = PendingStore.pendingFor(area);
     const badge = getEl('dashPendingBadge');
     if (badge) { badge.textContent = pend.length; badge.style.display = pend.length ? 'inline-block' : 'none'; }
-    ['daAreaLabelAgents', 'daAreaLabelBiz', 'daAreaLabelAppr'].forEach(function(id) {
-        const e = getEl(id);
-        if (e) e.textContent = area ? ('— ' + area) : '— your area';
-    });
-    renderStandaloneOverview();
-    renderDashAgentsList();
-    renderDashClientsList();
-    renderDashBizList();
-    renderDashPendingList();
+    ['daAreaLabelAgents', 'daAreaLabelBiz', 'daAreaLabelAppr'].forEach(function(id) { const e = getEl(id); if (e) e.textContent = area ? ('— ' + area) : '— your area'; });
+    renderStandaloneOverview(); renderDashAgentsList(); renderDashClientsList(); renderDashBizList(); renderDashPendingList();
 }
 function renderStandaloneOverview() {
     const c = getEl('standaloneOverview');
@@ -2936,8 +2514,7 @@ function renderStandaloneOverview() {
     if (area) biz = biz.filter(function(b) { return !b.country || String(b.country).toLowerCase() === area.toLowerCase(); });
     const clients = dashClients.filter(function(x) { return x.agentId === dashCurrentAgentId; });
     const pend = PendingStore.pendingFor(area);
-    c.innerHTML =
-        '<div class="stat-card"><div class="sc-value">' + agents.length + '</div><div class="sc-label">Agents</div></div>' +
+    c.innerHTML = '<div class="stat-card"><div class="sc-value">' + agents.length + '</div><div class="sc-label">Agents</div></div>' +
         '<div class="stat-card"><div class="sc-value">' + biz.length + '</div><div class="sc-label">Businesses</div></div>' +
         '<div class="stat-card"><div class="sc-value">' + clients.length + '</div><div class="sc-label">Clients</div></div>' +
         '<div class="stat-card"><div class="sc-value">' + pend.length + '</div><div class="sc-label">Pending</div></div>';
@@ -2952,7 +2529,15 @@ function renderDashAgentsList() {
         const d = a.agentData || a;
         const name = escapeHTML((d.businessName || a.name || '').replace(/\(.*\)/, '').trim());
         return '<div class="dash-list-item"><div class="dli-head"><span>' + getAgentFlag(a) + ' ' + name + '</span><span style="font-size:.62rem;color:#27ae60;">✅ Active</span></div>' +
-            '<div class="dli-meta"><span>📱 ' + escapeHTML(d.mobileMoney || a.phone || '—') + '</span><span>💳 ' + (d.collateralLimit || 0) + '</span><span>📍 ' + escapeHTML(d.city || '—') + '</span></div>' +
+            '<div class="dli-meta">' +
+                '<span>📱 ' + escapeHTML(d.mobileMoney || a.phone || '—') + '</span>' +
+                '<span>💳 ' + (d.collateralLimit || 0) + '</span>' +
+                '<span>📍 ' + escapeHTML(d.city || '—') + '</span>' +
+                (d.businessAddress ? '<span>🏠 ' + escapeHTML(d.businessAddress) + '</span>' : '') +
+                (d.idNumber ? '<span>🪪 ' + escapeHTML(d.idNumber) + '</span>' : '') +
+                (d.nin ? '<span>🆔 NIN ' + escapeHTML(d.nin) + '</span>' : '') +
+                (d.agreementSigned ? '<span style="color:#27ae60;">📜 Signed</span>' : '') +
+            '</div>' +
             '<div class="dash-actions"><button type="button" class="mini-btn neutral" data-dash-edit-agent="' + escapeHTML(a.id) + '">✏️ Open</button></div></div>';
     }).join('');
 }
@@ -2963,10 +2548,7 @@ function renderDashClientsList() {
     c.innerHTML = mine.map(function(cl) {
         return '<div class="dash-list-item"><div class="dli-head"><span>👤 ' + escapeHTML(cl.name) + '</span></div>' +
             '<div class="dli-meta"><span>📱 ' + escapeHTML(cl.phone) + '</span><span>📍 ' + escapeHTML(cl.city || '—') + '</span><span>🌍 ' + escapeHTML(cl.country || '—') + '</span></div>' +
-            '<div class="dash-actions">' +
-            '<button type="button" class="mini-btn neutral" data-dash-edit-client="' + escapeHTML(cl.id) + '">✏️ Edit</button>' +
-            '<button type="button" class="mini-btn reject" data-dash-del-client="' + escapeHTML(cl.id) + '">🗑️ Delete</button>' +
-            '</div></div>';
+            '<div class="dash-actions"><button type="button" class="mini-btn neutral" data-dash-edit-client="' + escapeHTML(cl.id) + '">✏️ Edit</button><button type="button" class="mini-btn reject" data-dash-del-client="' + escapeHTML(cl.id) + '">🗑️ Delete</button></div></div>';
     }).join('');
 }
 function renderDashBizList() {
@@ -2989,30 +2571,16 @@ function dashPendingCard(it, actionable) {
     const typeIcon = { agent:'🧑‍💼', business:'🏪', product:'📦', service:'🛠️' }[it.type] || '📄';
     const title = d.businessName || d.name || 'Item';
     let meta = '';
-    if (it.type === 'agent') meta = '📱 ' + escapeHTML(d.mobileMoney || '—') + ' · 📍 ' + escapeHTML(d.city || '—') + ' · 💳 ' + (d.collateralLimit || 0);
+    if (it.type === 'agent') { meta = '📱 ' + escapeHTML(d.mobileMoney || '—') + ' · 📍 ' + escapeHTML(d.city || '—') + ' · 💳 ' + (d.collateralLimit || 0) + (d.businessAddress ? ' · 🏠 ' + escapeHTML(d.businessAddress) : '') + (d.idNumber ? ' · 🪪 ' + escapeHTML(d.idNumber) : '') + (d.nin ? ' · 🆔 ' + escapeHTML(d.nin) : ''); }
     else if (it.type === 'business') meta = '📞 ' + escapeHTML(d.contact || '—') + ' · 🏷️ ' + escapeHTML(d.type || '—') + ' · 📍 ' + escapeHTML(d.city || '—');
     else meta = '🏪 ' + escapeHTML(d.businessName || '—') + ' · 💵 ' + escapeHTML(String(d.price || 0)) + ' · 📦 ' + escapeHTML(String(d.quantity || 1));
-
     let mechLine = '';
-    if (it.type === 'business' && d.mechanisms) {
-        const m = d.mechanisms;
-        mechLine = '<div class="dli-meta">' +
-            '<span>💳 ' + escapeHTML((m.payMethods || []).join(', ') || '—') + '</span>' +
-            '<span>🔐 ' + escapeHTML(m.authMethod || '—') + '</span>' +
-            '<span>🚚 ' + escapeHTML(m.deliveryMode || '—') + '</span>' +
-            (m.deliveryFee ? '<span>Fee ' + escapeHTML(String(m.deliveryFee)) + '</span>' : '') +
-            '</div>';
-    }
-
-    const statusTag = it.status === 'approved'
-        ? '<span style="color:#27ae60;font-size:.62rem;">✅ Approved</span>'
-        : (it.status === 'rejected' ? '<span style="color:#e74c3c;font-size:.62rem;">❌ Rejected</span>' : '<span style="color:#e67e22;font-size:.62rem;">⏳ Pending</span>');
+    if (it.type === 'business' && d.mechanisms) { const m = d.mechanisms; mechLine = '<div class="dli-meta"><span>💳 ' + escapeHTML((m.payMethods || []).join(', ') || '—') + '</span><span>🔐 ' + escapeHTML(m.authMethod || '—') + '</span><span>🚚 ' + escapeHTML(m.deliveryMode || '—') + '</span>' + (m.deliveryFee ? '<span>Fee ' + escapeHTML(String(m.deliveryFee)) + '</span>' : '') + '</div>'; }
+    const statusTag = it.status === 'approved' ? '<span style="color:#27ae60;font-size:.62rem;">✅ Approved</span>' : (it.status === 'rejected' ? '<span style="color:#e74c3c;font-size:.62rem;">❌ Rejected</span>' : '<span style="color:#e67e22;font-size:.62rem;">⏳ Pending</span>');
     return '<div class="dash-list-item"><div class="dli-head"><span>' + typeIcon + ' ' + escapeHTML(title) + '</span>' + statusTag + '</div>' +
-        '<div class="dli-meta"><span>' + meta + '</span></div>' +
-        mechLine +
+        '<div class="dli-meta"><span>' + meta + '</span></div>' + mechLine +
         '<div class="dli-meta"><span>🌍 ' + escapeHTML(it.country || '—') + '</span><span>👤 ' + escapeHTML(it.submittedBy || '—') + '</span></div>' +
-        (actionable ? '<div class="dash-actions"><button type="button" class="mini-btn approve" data-dash-approve="' + it.id + '">✅ Approve</button><button type="button" class="mini-btn reject" data-dash-reject="' + it.id + '">❌ Reject</button></div>' : '') +
-        '</div>';
+        (actionable ? '<div class="dash-actions"><button type="button" class="mini-btn approve" data-dash-approve="' + it.id + '">✅ Approve</button><button type="button" class="mini-btn reject" data-dash-reject="' + it.id + '">❌ Reject</button></div>' : '') + '</div>';
 }
 function renderDashPendingList() {
     const c = getEl('dashPendingList'); if (!c) return;
@@ -3022,13 +2590,9 @@ function renderDashPendingList() {
     let html = '';
     if (!pend.length) html += '<div class="dash-empty">No pending approvals for ' + escapeHTML(area || 'your area') + '.</div>';
     else html += pend.map(function(it) { return dashPendingCard(it, true); }).join('');
-    if (dashShowReviewed) {
-        html += '<div class="dash-section-title" style="margin-top:8px;">🗂️ Reviewed</div>';
-        html += rev.length ? rev.map(function(it) { return dashPendingCard(it, false); }).join('') : '<div class="dash-empty">Nothing reviewed yet.</div>';
-    }
+    if (dashShowReviewed) { html += '<div class="dash-section-title" style="margin-top:8px;">🗂️ Reviewed</div>'; html += rev.length ? rev.map(function(it) { return dashPendingCard(it, false); }).join('') : '<div class="dash-empty">Nothing reviewed yet.</div>'; }
     c.innerHTML = html;
 }
-
 async function approvePendingItem(id) {
     const it = PendingStore.get(id);
     if (!it || it.status !== 'pending') return;
@@ -3045,41 +2609,28 @@ async function approvePendingItem(id) {
             collateralAmount: d.collateralLimit || 0, collateralLimit: d.collateralLimit || 0,
             currency: d.currency || 'GNF', approved: true, role: 'agent', isAgent: true,
             nin: d.nin || '', registeredAt: new Date().toISOString(),
+            agreementSigned: d.agreementSigned === true,
+            signatureDataURL: d.signatureDataURL || null,
+            ussdUsed: d.ussdUsed || null,
             approvedBy: dashCurrentAgentId, approvedAt: new Date().toISOString()
         };
         const ex = registeredUsers.find(function(u) { return u.businessName === rec.businessName; });
         if (ex) Object.assign(ex, rec); else registeredUsers.push(rec);
         saveRegisteredUsers();
         supaBackground(Supa.saveAgent(rec), 'Approved agent');
-        renderAgentDropdown(currentAgentFilterCountry);
-        populateAgentSelect(currentAgentFilterCountry);
+        renderAgentDropdown(currentAgentFilterCountry); populateAgentSelect(currentAgentFilterCountry);
     } else if (it.type === 'business') {
         const d = it.data;
         const bizObj = {
-            id: d.id || ('biz_' + Date.now()),
-            name: d.name, contact: d.contact || '',
-            mobileMoney: d.mobileMoney || '', type: d.type || 'Other',
-            icon: d.icon || '🏪', website: d.website || '', address: d.address || '',
-            city: d.city || '', country: d.country || '',
-            password: d.password || '', pin: d.pin || '',
-            mechanisms: d.mechanisms || null,
-            goods: d.goods || []
+            id: d.id || ('biz_' + Date.now()), name: d.name, contact: d.contact || '',
+            mobileMoney: d.mobileMoney || '', type: d.type || 'Other', icon: d.icon || '🏪',
+            website: d.website || '', address: d.address || '', city: d.city || '', country: d.country || '',
+            password: d.password || '', pin: d.pin || '', mechanisms: d.mechanisms || null, goods: d.goods || []
         };
         const ex = getAllBusinesses().find(function(b) { return b.name === bizObj.name; });
-        if (ex) {
-            const keepGoods = (ex.goods && ex.goods.length) ? ex.goods : [];
-            Object.assign(ex, bizObj);
-            if (!bizObj.goods.length && keepGoods.length) ex.goods = keepGoods;
-            if (customBusinesses.indexOf(ex) === -1) customBusinesses.push(ex);
-        } else {
-            customBusinesses.push(bizObj);
-        }
-        saveCustomBusinesses();
-        renderBusinessStrip();
-        renderAgentDropdown(currentAgentFilterCountry);
-        populateAgentSelect(currentAgentFilterCountry);
-        lastSelectedBusinessId = bizObj.id;
-        updateEditBizStripButton();
+        if (ex) { const keepGoods = (ex.goods && ex.goods.length) ? ex.goods : []; Object.assign(ex, bizObj); if (!bizObj.goods.length && keepGoods.length) ex.goods = keepGoods; if (customBusinesses.indexOf(ex) === -1) customBusinesses.push(ex); } else { customBusinesses.push(bizObj); }
+        saveCustomBusinesses(); renderBusinessStrip(); renderAgentDropdown(currentAgentFilterCountry); populateAgentSelect(currentAgentFilterCountry);
+        lastSelectedBusinessId = bizObj.id; updateEditBizStripButton();
         supaBackground(Supa.saveBusiness(bizObj), 'Approved business');
         (bizObj.goods || []).forEach(function(g) { supaBackground(Supa.saveProduct(bizObj.name, g), 'Approved product'); });
     } else {
@@ -3087,27 +2638,15 @@ async function approvePendingItem(id) {
         const biz = getAllBusinesses().find(function(b) { return b.name === d.businessName; });
         if (biz) {
             if (!biz.goods) biz.goods = [];
-            biz.goods.push({
-                name: d.name, price: parseFloat(d.price) || 0,
-                quantity: parseInt(d.quantity) || 1,
-                quality: d.quality || 'Brand new',
-                icon: d.icon || biz.icon || '📦',
-                kind: d.kind || 'product'
-            });
-            saveCustomBusinesses();
-            renderBusinessStrip();
+            biz.goods.push({ name: d.name, price: parseFloat(d.price) || 0, quantity: parseInt(d.quantity) || 1, quality: d.quality || 'Brand new', icon: d.icon || biz.icon || '📦', kind: d.kind || 'product' });
+            saveCustomBusinesses(); renderBusinessStrip();
             supaBackground(Supa.saveProduct(d.businessName, { name: d.name, price: parseFloat(d.price) || 0, quantity: parseInt(d.quantity) || 1, quality: d.quality || 'Brand new', icon: d.icon }), 'Approved product');
         }
     }
     PendingStore.setStatus(id, 'approved', dashCurrentAgentId);
-    refreshDashPanes();
-    showToast('✅ Approved', 1800);
+    refreshDashPanes(); showToast('✅ Approved', 1800);
 }
-function rejectPendingItem(id) {
-    PendingStore.setStatus(id, 'rejected', dashCurrentAgentId);
-    refreshDashPanes();
-    showToast('❌ Rejected', 1800);
-}
+function rejectPendingItem(id) { PendingStore.setStatus(id, 'rejected', dashCurrentAgentId); refreshDashPanes(); showToast('❌ Rejected', 1800); }
 function populateDashCountrySelects() {
     ['dcCountry', 'dbCountry'].forEach(function(id) {
         const s = getEl(id); if (!s) return;
@@ -3124,42 +2663,141 @@ function populateDashBusinessSelect() {
     let all = getAllBusinesses();
     if (area) all = all.filter(function(b) { return !b.country || String(b.country).toLowerCase() === area.toLowerCase(); });
     s.innerHTML = '';
-    if (!all.length) {
-        const o = document.createElement('option');
-        o.value = ''; o.textContent = 'No businesses yet';
-        s.appendChild(o);
-        return;
-    }
-    all.forEach(function(b) {
-        const o = document.createElement('option');
-        o.value = b.name; o.textContent = (b.icon || '🏪') + ' ' + b.name;
-        s.appendChild(o);
-    });
+    if (!all.length) { const o = document.createElement('option'); o.value = ''; o.textContent = 'No businesses yet'; s.appendChild(o); return; }
+    all.forEach(function(b) { const o = document.createElement('option'); o.value = b.name; o.textContent = (b.icon || '🏪') + ' ' + b.name; s.appendChild(o); });
+}
+
+/* ============================================================
+   Add-New-Agent enhancements
+   ============================================================ */
+function buildDaCollateralUssd() {
+    const mm = (getEl('daMobileMoney') && getEl('daMobileMoney').value || '').replace(/\D/g, '');
+    const amt = parseInt(getEl('daCollateral') && getEl('daCollateral').value) || 0;
+    if (!mm || mm.length < 6) return { ok: false, error: '⚠️ Enter a valid mobile money number first.' };
+    if (!amt) return { ok: false, error: '⚠️ Select a collateral amount first.' };
+    return { ok: true, ussd: '#144*2*2*' + mm + '*' + amt + '*0000#' };
+}
+function daDialCollateralUssd() {
+    const r = buildDaCollateralUssd();
+    const msg = getEl('daCollateralMsg'), preview = getEl('daCollateralUssdPreview');
+    if (msg) msg.textContent = '';
+    if (!r.ok) { if (msg) msg.textContent = r.error; return; }
+    if (preview) { preview.textContent = r.ussd; preview.style.display = 'block'; }
+    const a = document.createElement('a'); a.href = 'tel:' + r.ussd; a.click();
+    showToast('📞 Dialing collateral USSD…', 3000);
+}
+function daOpenAgreement() {
+    const bn = (getEl('daBusinessName') && getEl('daBusinessName').value.trim()) || '';
+    const on = (getEl('daOwnerName') && getEl('daOwnerName').value.trim()) || '';
+    if (!bn || !on) { showToast('⚠️ Fill Business Name & Owner Name first.', 2500); return; }
+    const body = getEl('agreementBody');
+    body.innerHTML =
+        '<div style="background:#f8fafc;border-radius:6px;padding:8px 12px;margin-bottom:6px;border-left:3px solid #2c7da0;"><strong>Clause 1 — Identity</strong> I, <b>' + escapeHTML(on) + '</b>, Owner of <b>' + escapeHTML(bn) + '</b>, confirm all information provided is accurate and I am authorised to act on behalf of this business.</div>' +
+        '<div style="background:#f8fafc;border-radius:6px;padding:8px 12px;margin-bottom:6px;border-left:3px solid #2c7da0;"><strong>Clause 2 — Commission</strong> I will receive 7% of transfer charges and 12% of cash-out charges as per AfriPay schedule.</div>' +
+        '<div style="background:#f8fafc;border-radius:6px;padding:8px 12px;margin-bottom:6px;border-left:3px solid #2c7da0;"><strong>Clause 3 — Compliance</strong> Taking more than the agreed percentage, or engaging in fraudulent transactions, will immediately close my agent account and may result in legal action.</div>' +
+        '<div style="background:#f8fafc;border-radius:6px;padding:8px 12px;border-left:3px solid #2c7da0;"><strong>Clause 4 — Data</strong> I consent to AfriPay storing my NIN, ID Number, address and business details for verification and settlement purposes.</div>' +
+        '<div style="margin-top:8px;background:#fffbe6;border:1px solid #ffe8a1;border-radius:6px;padding:8px 12px;"><strong>Sign below</strong><br><input type="text" id="daAgreementSigner" placeholder="Type your full name to accept" style="width:100%;padding:8px;border-radius:8px;border:1px solid #d0dce8;margin-top:6px;" /></div>';
+    getEl('agreementModal').style.display = 'flex';
+    const btn = getEl('agreementAgreeBtn');
+    if (btn) btn.disabled = false;
+    btn.onclick = function(e) {
+        e.preventDefault();
+        const signer = (getEl('daAgreementSigner') && getEl('daAgreementSigner').value.trim()) || '';
+        if (!signer) { showToast('⚠️ Type your name to sign.', 2000); return; }
+        daAgreementSigned = true;
+        const st = getEl('daAgreementStatus');
+        if (st) { st.textContent = 'Signed ✅ (' + signer + ')'; st.style.color = '#27ae60'; }
+        btn.disabled = true;
+        setTimeout(function() { getEl('agreementModal').style.display = 'none'; }, 700);
+    };
+}
+function setupDaSignatureCanvas() {
+    const c = getEl('daSignatureCanvas'); if (!c) return;
+    const fresh = c.cloneNode(true); c.parentNode.replaceChild(fresh, c);
+    const cx = fresh.getContext('2d');
+    cx.fillStyle = '#fff'; cx.fillRect(0, 0, fresh.width, fresh.height);
+    cx.strokeStyle = '#0a2b3c'; cx.lineWidth = 2; cx.lineCap = 'round';
+    let drawing = false, lastX = 0, lastY = 0;
+    const pos = function(e) { const r = fresh.getBoundingClientRect(); const ex = e.clientX || (e.touches && e.touches[0] && e.touches[0].clientX) || 0; const ey = e.clientY || (e.touches && e.touches[0] && e.touches[0].clientY) || 0; return { x: (ex - r.left) * (fresh.width / r.width), y: (ey - r.top) * (fresh.height / r.height) }; };
+    fresh.addEventListener('mousedown', function(e) { e.preventDefault(); drawing = true; const p = pos(e); lastX = p.x; lastY = p.y; });
+    fresh.addEventListener('mousemove', function(e) { e.preventDefault(); if (!drawing) return; const p = pos(e); cx.beginPath(); cx.moveTo(lastX, lastY); cx.lineTo(p.x, p.y); cx.stroke(); lastX = p.x; lastY = p.y; });
+    fresh.addEventListener('mouseup', function() { drawing = false; });
+    fresh.addEventListener('mouseleave', function() { drawing = false; });
+    fresh.addEventListener('touchstart', function(e) { e.preventDefault(); drawing = true; const p = pos(e); lastX = p.x; lastY = p.y; }, { passive: false });
+    fresh.addEventListener('touchmove', function(e) { e.preventDefault(); if (!drawing) return; const p = pos(e); cx.beginPath(); cx.moveTo(lastX, lastY); cx.lineTo(p.x, p.y); cx.stroke(); lastX = p.x; lastY = p.y; }, { passive: false });
+    fresh.addEventListener('touchend', function() { drawing = false; });
+}
+function daClearSignature() {
+    const c = getEl('daSignatureCanvas'); if (!c) return;
+    const cx = c.getContext('2d'); cx.fillStyle = '#fff'; cx.fillRect(0, 0, c.width, c.height);
+    daSignatureDataURL = null;
+    const m = getEl('daSigMsg'); if (m) m.textContent = '';
+}
+function daConfirmSignature() {
+    const c = getEl('daSignatureCanvas'); if (!c) return;
+    const data = c.toDataURL('image/png');
+    if (data === 'data:,') { showToast('⚠️ Please draw your signature first.', 2000); return; }
+    daSignatureDataURL = data;
+    const m = getEl('daSigMsg'); if (m) m.textContent = '✅ Signature captured';
+    showToast('✅ Signature captured.', 1500);
+}
+function daResetNewAgentForm() {
+    ['daBusinessName','daOwnerName','daAddress','daMobileMoney','daCity','daIdNumber','daNin','daPassword','daPin'].forEach(function(id) { const e = getEl(id); if (e) e.value = ''; });
+    const p = getEl('daCollateralUssdPreview'); if (p) { p.style.display = 'none'; p.textContent = ''; }
+    const msg = getEl('daCollateralMsg'); if (msg) msg.textContent = '';
+    daAgreementSigned = false; daSignatureDataURL = null;
+    const st = getEl('daAgreementStatus'); if (st) { st.textContent = 'Not Signed'; st.style.color = '#e74c3c'; }
+    daClearSignature();
+    const sm = getEl('daSigMsg'); if (sm) sm.textContent = '';
 }
 function submitDashAgent() {
     const d = getDashAgent();
     const bn = (getEl('daBusinessName').value || '').trim();
     const on = (getEl('daOwnerName').value || '').trim();
+    const addr = (getEl('daAddress').value || '').trim();
     const mm = (getEl('daMobileMoney').value || '').trim();
     const city = (getEl('daCity').value || '').trim();
+    const idn = (getEl('daIdNumber').value || '').trim();
+    const nin = (getEl('daNin').value || '').trim();
     const cc = getEl('daCountryCode').value;
     const collat = parseInt(getEl('daCollateral').value) || 0;
     const pw = (getEl('daPassword').value || '').trim();
     const pin = (getEl('daPin').value || '').trim();
     const msg = getEl('daAgentMsg');
     msg.style.color = '#c0392b';
-    if (!bn || !on || !mm || !city) { msg.textContent = '❌ Business, owner, mobile money and city are required.'; return; }
+    if (!bn) { msg.textContent = '❌ Business Name is required.'; return; }
+    if (!on) { msg.textContent = '❌ Owner Name is required.'; return; }
+    if (!addr) { msg.textContent = '❌ Business Address is required.'; return; }
+    if (!mm) { msg.textContent = '❌ Mobile Money is required.'; return; }
+    if (!city) { msg.textContent = '❌ City is required.'; return; }
+    if (!idn) { msg.textContent = '❌ ID Number is required.'; return; }
+    if (!nin) { msg.textContent = '❌ NIN Number is required.'; return; }
+    if (!collat) { msg.textContent = '❌ Select a collateral amount.'; return; }
     if (!/^[A-Za-z0-9]{6}$/.test(pw)) { msg.textContent = '❌ Password must be 6 letters/numbers.'; return; }
     if (!/^[0-9]{5}$/.test(pin)) { msg.textContent = '❌ PIN must be 5 digits.'; return; }
+    if (!daAgreementSigned) { msg.textContent = '❌ Please view and sign the Agreement.'; return; }
+    if (!daSignatureDataURL) { msg.textContent = '❌ Please draw & confirm your signature.'; return; }
+
     PendingStore.add({
         type: 'agent',
         country: COUNTRY_CODE_TO_NAME[cc] || city,
         submittedBy: (d && d.businessName) || 'Agent',
-        data: { businessName: bn, ownerName: on, mobileMoney: mm, city: city, countryCode: cc, collateralLimit: collat, collateralAmount: collat, currency: 'GNF', password: pw, pin: pin, businessAddress: '', regNumber: '', businessType: 'Service', idType: 'National ID', idNumber: '', nin: '', approved: false }
+        data: { businessName: bn, ownerName: on, businessAddress: addr, mobileMoney: mm, city: city, idType: 'National ID', idNumber: idn, nin: nin, countryCode: cc, collateralLimit: collat, collateralAmount: collat, currency: 'GNF', password: pw, pin: pin, regNumber: '', businessType: 'Service', approved: false, agreementSigned: true, signatureDataURL: daSignatureDataURL, ussdUsed: buildDaCollateralUssd().ussd || null }
     });
+
+    // ALSO persist to the `agents` table with approved:false so the
+    // admin dashboard sees it immediately in its Agents tab.
+    supaBackground(Supa.saveAgent({
+        businessName: bn, ownerName: on, businessAddress: addr, city: city,
+        regNumber: '', businessType: 'Service', idType: 'National ID',
+        idNumber: idn, mobileMoney: mm, countryCode: cc, password: pw, pin: pin,
+        collateralAmount: collat, collateralLimit: collat, currency: 'GNF',
+        nin: nin, approved: false, emoji: '🏢'
+    }), 'Agent (pending) → agents table');
+
     msg.style.color = '#27ae60';
     msg.textContent = '✅ Agent submitted for approval.';
-    ['daBusinessName','daOwnerName','daMobileMoney','daCity','daPassword','daPin'].forEach(function(id) { const e = getEl(id); if (e) e.value = ''; });
+    daResetNewAgentForm();
     refreshDashPanes();
 }
 function submitDashClient() {
@@ -3173,25 +2811,15 @@ function submitDashClient() {
     if (!name || !phone) { msg.textContent = '❌ Name and phone are required.'; return; }
     if (dashEditingClientId) {
         const cl = dashClients.find(function(x) { return x.id === dashEditingClientId; });
-        if (cl) {
-            cl.name = name; cl.phone = phone; cl.address = address; cl.city = city; cl.country = country;
-            supaBackground(Supa.saveAgentClient(cl), 'Client update');
-        }
+        if (cl) { cl.name = name; cl.phone = phone; cl.address = address; cl.city = city; cl.country = country; supaBackground(Supa.saveAgentClient(cl), 'Client update'); }
         msg.textContent = '✅ Client updated.';
     } else {
-        const newClient = {
-            id: 'cl_' + Date.now(), agentId: dashCurrentAgentId,
-            name: name, phone: phone, address: address,
-            city: city, country: country, createdAt: new Date().toISOString()
-        };
+        const newClient = { id: 'cl_' + Date.now(), agentId: dashCurrentAgentId, name: name, phone: phone, address: address, city: city, country: country, createdAt: new Date().toISOString() };
         dashClients.push(newClient);
         supaBackground(Supa.saveAgentClient(newClient), 'Client add');
         msg.textContent = '✅ Client saved.';
     }
-    saveDashClients();
-    msg.style.color = '#27ae60';
-    cancelClientEdit(true);
-    refreshDashPanes();
+    saveDashClients(); msg.style.color = '#27ae60'; cancelClientEdit(true); refreshDashPanes();
 }
 function startClientEdit(id) {
     const cl = dashClients.find(function(x) { return x.id === id; });
@@ -3210,14 +2838,7 @@ function cancelClientEdit(silent) {
     if (getEl('dcSubmitClient')) getEl('dcSubmitClient').textContent = '💾 Save Client';
     if (!silent) refreshDashPanes();
 }
-function deleteDashClient(id) {
-    dashClients = dashClients.filter(function(x) { return x.id !== id; });
-    saveDashClients();
-    supaBackground(Supa.deleteAgentClient(id), 'Client delete');
-    if (dashEditingClientId === id) cancelClientEdit(true);
-    refreshDashPanes();
-    showToast('🗑️ Client removed', 1600);
-}
+function deleteDashClient(id) { dashClients = dashClients.filter(function(x) { return x.id !== id; }); saveDashClients(); supaBackground(Supa.deleteAgentClient(id), 'Client delete'); if (dashEditingClientId === id) cancelClientEdit(true); refreshDashPanes(); showToast('🗑️ Client removed', 1600); }
 function submitDashBusiness() {
     const d = getDashAgent();
     const name = (getEl('dbName').value || '').trim();
@@ -3232,19 +2853,10 @@ function submitDashBusiness() {
     if (!name || !contact || !mm || !city) { msg.textContent = '❌ Name, contact, mobile money and city are required.'; return; }
     const mech = collectBizMechanisms('db');
     if (!validateBizMechanisms(mech, function(m) { msg.textContent = m; })) return;
-    PendingStore.add({
-        type: 'business', country: country, submittedBy: (d && d.businessName) || 'Agent',
-        data: {
-            name: name, contact: contact, mobileMoney: mm, type: type, icon: icon,
-            city: city, country: country, address: '', website: '',
-            password: '', pin: '', mechanisms: mech, goods: []
-        }
-    });
-    msg.style.color = '#27ae60';
-    msg.textContent = '✅ Business + payment / auth / delivery mechanisms submitted for approval.';
+    PendingStore.add({ type: 'business', country: country, submittedBy: (d && d.businessName) || 'Agent', data: { name: name, contact: contact, mobileMoney: mm, type: type, icon: icon, city: city, country: country, address: '', website: '', password: '', pin: '', mechanisms: mech, goods: [] } });
+    msg.style.color = '#27ae60'; msg.textContent = '✅ Business + payment / auth / delivery mechanisms submitted for approval.';
     ['dbName','dbContact','dbMobileMoney','dbCity'].forEach(function(id) { const e = getEl(id); if (e) e.value = ''; });
-    resetBizMechanismsForm('db');
-    refreshDashPanes();
+    resetBizMechanismsForm('db'); refreshDashPanes();
 }
 function submitDashProduct() {
     const d = getDashAgent();
@@ -3260,23 +2872,13 @@ function submitDashProduct() {
     if (!biz) { msg.textContent = '❌ Select a business first.'; return; }
     if (!name || price <= 0) { msg.textContent = '❌ Name and a valid price are required.'; return; }
     const bObj = getAllBusinesses().find(function(b) { return b.name === biz; });
-    PendingStore.add({
-        type: kind, country: (bObj && bObj.country) || getDashArea(),
-        submittedBy: (d && d.businessName) || 'Agent',
-        data: { businessName: biz, name: name, price: price, quantity: qty, icon: icon, kind: kind, quality: quality }
-    });
-    msg.style.color = '#27ae60';
-    msg.textContent = '✅ ' + (kind === 'service' ? 'Service' : 'Product') + ' submitted for approval.';
+    PendingStore.add({ type: kind, country: (bObj && bObj.country) || getDashArea(), submittedBy: (d && d.businessName) || 'Agent', data: { businessName: biz, name: name, price: price, quantity: qty, icon: icon, kind: kind, quality: quality } });
+    msg.style.color = '#27ae60'; msg.textContent = '✅ ' + (kind === 'service' ? 'Service' : 'Product') + ' submitted for approval.';
     ['dpName','dpPrice'].forEach(function(id) { const e = getEl(id); if (e) e.value = ''; });
     if (getEl('dpQty')) getEl('dpQty').value = 1;
     refreshDashPanes();
 }
-function openBizFromDash(idStr) {
-    const biz = getAllBusinesses().find(function(b) { return String(b.id) === String(idStr); });
-    if (!biz) { showToast('⚠️ Business not found', 2000); return; }
-    lastSelectedBusinessId = biz.id;
-    handleEditBizStripClick(biz);
-}
+function openBizFromDash(idStr) { const biz = getAllBusinesses().find(function(b) { return String(b.id) === String(idStr); }); if (!biz) { showToast('⚠️ Business not found', 2000); return; } lastSelectedBusinessId = biz.id; handleEditBizStripClick(biz); }
 function setupAgentDashboardEvents() {
     const modal = getEl('editAgentModal');
     if (modal) {
@@ -3284,74 +2886,44 @@ function setupAgentDashboardEvents() {
             if (!e.target || !e.target.closest) return;
             const tabBtn = e.target.closest('.dash-tab');
             if (tabBtn) { e.preventDefault(); switchDashTab(tabBtn.getAttribute('data-dash-tab')); return; }
-            const ap = e.target.closest('[data-dash-approve]');
-            if (ap) { e.preventDefault(); approvePendingItem(ap.getAttribute('data-dash-approve')); return; }
-            const rj = e.target.closest('[data-dash-reject]');
-            if (rj) { e.preventDefault(); rejectPendingItem(rj.getAttribute('data-dash-reject')); return; }
-            const ea = e.target.closest('[data-dash-edit-agent]');
-            if (ea) { e.preventDefault(); openAgentDashboard(ea.getAttribute('data-dash-edit-agent'), { fullscreen: dashStandaloneMode }); return; }
-            const ec = e.target.closest('[data-dash-edit-client]');
-            if (ec) { e.preventDefault(); startClientEdit(ec.getAttribute('data-dash-edit-client')); return; }
-            const dc = e.target.closest('[data-dash-del-client]');
-            if (dc) { e.preventDefault(); deleteDashClient(dc.getAttribute('data-dash-del-client')); return; }
-            const eb = e.target.closest('[data-dash-edit-biz]');
-            if (eb) { e.preventDefault(); openBizFromDash(eb.getAttribute('data-dash-edit-biz')); return; }
+            const ap = e.target.closest('[data-dash-approve]'); if (ap) { e.preventDefault(); approvePendingItem(ap.getAttribute('data-dash-approve')); return; }
+            const rj = e.target.closest('[data-dash-reject]'); if (rj) { e.preventDefault(); rejectPendingItem(rj.getAttribute('data-dash-reject')); return; }
+            const ea = e.target.closest('[data-dash-edit-agent]'); if (ea) { e.preventDefault(); openAgentDashboard(ea.getAttribute('data-dash-edit-agent'), { fullscreen: dashStandaloneMode }); return; }
+            const ec = e.target.closest('[data-dash-edit-client]'); if (ec) { e.preventDefault(); startClientEdit(ec.getAttribute('data-dash-edit-client')); return; }
+            const dc = e.target.closest('[data-dash-del-client]'); if (dc) { e.preventDefault(); deleteDashClient(dc.getAttribute('data-dash-del-client')); return; }
+            const eb = e.target.closest('[data-dash-edit-biz]'); if (eb) { e.preventDefault(); openBizFromDash(eb.getAttribute('data-dash-edit-biz')); return; }
         });
     }
     function bind(id, ev, fn) { const el = getEl(id); if (el) el.addEventListener(ev, fn); }
-    bind('daGenCreds', 'click', function(e) {
-        e.preventDefault();
-        const ch = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        let pw = '';
-        for (let i = 0; i < 6; i++) pw += ch.charAt(Math.floor(Math.random() * ch.length));
-        const pin = String(Math.floor(10000 + Math.random() * 90000));
-        if (getEl('daPassword')) getEl('daPassword').value = pw;
-        if (getEl('daPin')) getEl('daPin').value = pin;
-        showToast('🔑 ' + pw + ' / ' + pin, 3500);
-    });
+    bind('daCollateralUssdBtn', 'click', function(e) { e.preventDefault(); daDialCollateralUssd(); });
+    bind('daOpenAgreementBtn', 'click', function(e) { e.preventDefault(); daOpenAgreement(); });
+    bind('daSigClear', 'click', function(e) { e.preventDefault(); daClearSignature(); });
+    bind('daSigConfirm', 'click', function(e) { e.preventDefault(); daConfirmSignature(); });
+    bind('daMobileMoney', 'input', function() { const p = getEl('daCollateralUssdPreview'); if (p) { p.style.display = 'none'; p.textContent = ''; } });
+    bind('daCollateral', 'change', function() { const p = getEl('daCollateralUssdPreview'); if (p) { p.style.display = 'none'; p.textContent = ''; } });
+    bind('daGenCreds', 'click', function(e) { e.preventDefault(); const ch = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'; let pw = ''; for (let i = 0; i < 6; i++) pw += ch.charAt(Math.floor(Math.random() * ch.length)); const pin = String(Math.floor(10000 + Math.random() * 90000)); if (getEl('daPassword')) getEl('daPassword').value = pw; if (getEl('daPin')) getEl('daPin').value = pin; showToast('🔑 ' + pw + ' / ' + pin, 3500); });
     bind('daSubmitAgent', 'click', function(e) { e.preventDefault(); submitDashAgent(); });
     bind('dcSubmitClient', 'click', function(e) { e.preventDefault(); submitDashClient(); });
     bind('dcCancelEdit', 'click', function(e) { e.preventDefault(); cancelClientEdit(false); });
     bind('dbSubmitBiz', 'click', function(e) { e.preventDefault(); submitDashBusiness(); });
     bind('dpSubmit', 'click', function(e) { e.preventDefault(); submitDashProduct(); });
-    bind('dashToggleReviewed', 'click', function(e) {
-        e.preventDefault();
-        dashShowReviewed = !dashShowReviewed;
-        this.textContent = dashShowReviewed ? '🙈 Hide Reviewed' : '👁️ Show Reviewed';
-        renderDashPendingList();
-    });
-    bind('editGenBtn', 'click', function(e) {
-        e.preventDefault();
-        const d = getDashAgent(); if (!d) return;
-        if (getEl('editPassword')) { getEl('editPassword').value = d.password || ''; getEl('editPassword').dispatchEvent(new Event('input')); }
-        showToast('🔑 Password filled', 1500);
-    });
-    bind('editPinGenBtn', 'click', function(e) {
-        e.preventDefault();
-        const d = getDashAgent(); if (!d) return;
-        if (getEl('editPin')) { getEl('editPin').value = d.pin || ''; getEl('editPin').dispatchEvent(new Event('input')); }
-        showToast('🔑 PIN filled', 1500);
-    });
+    bind('dashToggleReviewed', 'click', function(e) { e.preventDefault(); dashShowReviewed = !dashShowReviewed; this.textContent = dashShowReviewed ? '🙈 Hide Reviewed' : '👁️ Show Reviewed'; renderDashPendingList(); });
+    bind('editGenBtn', 'click', function(e) { e.preventDefault(); const d = getDashAgent(); if (!d) return; if (getEl('editPassword')) { getEl('editPassword').value = d.password || ''; getEl('editPassword').dispatchEvent(new Event('input')); } showToast('🔑 Password filled', 1500); });
+    bind('editPinGenBtn', 'click', function(e) { e.preventDefault(); const d = getDashAgent(); if (!d) return; if (getEl('editPin')) { getEl('editPin').value = d.pin || ''; getEl('editPin').dispatchEvent(new Event('input')); } showToast('🔑 PIN filled', 1500); });
     bind('editLogoImage', 'change', function() {
         const f = this.files && this.files[0];
         if (!f || !f.type.startsWith('image/')) { showToast('⚠️ Image only.', 2000); this.value = ''; return; }
         const r = new FileReader();
-        r.onload = function(ev) {
-            const d = getDashAgent();
-            if (d) { d.avatarDataURL = ev.target.result; saveRegisteredUsers(); supaBackground(Supa.saveAgent(d), 'Agent logo'); }
-            showToast('✅ Logo updated', 1800);
-        };
-        r.readAsDataURL(f);
-        this.value = '';
+        r.onload = function(ev) { const d = getDashAgent(); if (d) { d.avatarDataURL = ev.target.result; saveRegisteredUsers(); supaBackground(Supa.saveAgent(d), 'Agent logo'); } showToast('✅ Logo updated', 1800); };
+        r.readAsDataURL(f); this.value = '';
     });
+    setTimeout(function() { if (getEl('daSignatureCanvas') && !getEl('daSignatureCanvas').dataset.bound) { try { setupDaSignatureCanvas(); getEl('daSignatureCanvas').dataset.bound = '1'; } catch (e) {} } }, 100);
 }
 
 function updatePaybackCalculations() {
     const amount = parseFloat(getEl('paybackCashedOut') && getEl('paybackCashedOut').value) || 0;
-    const charges4 = amount * 0.04;
-    const onePercent = amount * 0.01;
-    const agentCommission = onePercent * 0.12;
-    const platformShare = onePercent * 0.88;
+    const charges4 = amount * 0.04; const onePercent = amount * 0.01;
+    const agentCommission = onePercent * 0.12; const platformShare = onePercent * 0.88;
     if (getEl('paybackCharges4')) getEl('paybackCharges4').textContent = charges4.toFixed(2);
     if (getEl('paybackOnePercent')) getEl('paybackOnePercent').textContent = onePercent.toFixed(2);
     if (getEl('paybackAgentCommission')) getEl('paybackAgentCommission').textContent = agentCommission.toFixed(2);
@@ -3363,37 +2935,25 @@ function openPayBackModal(agentId) {
     const agent = getAgents().find(function(a) { return a.id === agentId; });
     if (!agent) { showToast('Agent not found', 2000); return; }
     const data = agent.agentData || agent;
-    paybackTargetAgentId = agentId;
-    paybackSignatureDataURL = null;
+    paybackTargetAgentId = agentId; paybackSignatureDataURL = null;
     getEl('paybackBusinessName').value = data.businessName || data.name || '';
     getEl('paybackAgentName').value = data.ownerName || data.name || '';
     const countryCode = data.countryCode || '';
     getEl('paybackNationality').value = COUNTRY_CODE_TO_NAME[countryCode] || data.city || '—';
-    getEl('paybackCashedOut').value = '';
-    getEl('paybackProviderTxId').value = '';
-    getEl('paybackTransferCode').value = '';
+    getEl('paybackCashedOut').value = ''; getEl('paybackProviderTxId').value = ''; getEl('paybackTransferCode').value = '';
     getEl('paybackError').textContent = '';
     if (getEl('paybackUssdPreview')) { getEl('paybackUssdPreview').style.display = 'none'; getEl('paybackUssdPreview').textContent = ''; }
-    updatePaybackCalculations();
-    setupPaybackSignatureCanvas();
+    updatePaybackCalculations(); setupPaybackSignatureCanvas();
     getEl('payBackModal').style.display = 'flex';
 }
 function setupPaybackSignatureCanvas() {
     const canvas = getEl('paybackSignatureCanvas'); if (!canvas) return;
-    const newCanvas = canvas.cloneNode(true);
-    canvas.parentNode.replaceChild(newCanvas, canvas);
+    const newCanvas = canvas.cloneNode(true); canvas.parentNode.replaceChild(newCanvas, canvas);
     const c = getEl('paybackSignatureCanvas');
-    const cx = c.getContext('2d');
-    cx.fillStyle = 'white'; cx.fillRect(0, 0, c.width, c.height);
+    const cx = c.getContext('2d'); cx.fillStyle = 'white'; cx.fillRect(0, 0, c.width, c.height);
     cx.strokeStyle = '#0a2b3c'; cx.lineWidth = 2; cx.lineCap = 'round';
     let d = false, lastX = 0, lastY = 0;
-    const pos = function(e) {
-        const r = c.getBoundingClientRect();
-        const ex = e.clientX || (e.touches && e.touches[0] && e.touches[0].clientX) || 0;
-        const ey = e.clientY || (e.touches && e.touches[0] && e.touches[0].clientY) || 0;
-        const x = ex - r.left, y = ey - r.top;
-        return { x: x * (c.width / r.width), y: y * (c.height / r.height) };
-    };
+    const pos = function(e) { const r = c.getBoundingClientRect(); const ex = e.clientX || (e.touches && e.touches[0] && e.touches[0].clientX) || 0; const ey = e.clientY || (e.touches && e.touches[0] && e.touches[0].clientY) || 0; const x = ex - r.left, y = ey - r.top; return { x: x * (c.width / r.width), y: y * (c.height / r.height) }; };
     c.addEventListener('mousedown', function(e) { e.preventDefault(); d = true; const p = pos(e); lastX = p.x; lastY = p.y; });
     c.addEventListener('mousemove', function(e) { e.preventDefault(); if (!d) return; const p = pos(e); cx.beginPath(); cx.moveTo(lastX, lastY); cx.lineTo(p.x, p.y); cx.stroke(); lastX = p.x; lastY = p.y; });
     c.addEventListener('mouseup', function() { d = false; });
@@ -3419,9 +2979,7 @@ function dialPaybackUssd() {
     if (calc.amount <= 0) { getEl('paybackError').textContent = '❌ Enter cashed out amount first.'; return; }
     const ussd = getPaybackUssd();
     if (getEl('paybackUssdPreview')) { getEl('paybackUssdPreview').textContent = ussd; getEl('paybackUssdPreview').style.display = 'block'; }
-    const link = document.createElement('a');
-    link.href = 'tel:' + ussd;
-    link.click();
+    const link = document.createElement('a'); link.href = 'tel:' + ussd; link.click();
     showToast('📞 Dialing (88% share: ' + Math.round(calc.platformShare) + ')...', 3000);
 }
 function submitPayback() {
@@ -3431,35 +2989,18 @@ function submitPayback() {
     const tc = (getEl('paybackTransferCode') && getEl('paybackTransferCode').value.trim()) || '';
     err.textContent = '';
     if (amount <= 0) { err.textContent = '❌ Enter cashed out amount.'; return; }
-    const ptxVal = ProviderTxIdManager.validate(ptx);
-    if (!ptxVal.valid) { err.textContent = '❌ ' + ptxVal.error; return; }
-    const tcVal = TransferCodeManager.validate(tc);
-    if (!tcVal.valid) { err.textContent = '❌ ' + tcVal.error; return; }
-    const canvas = getEl('paybackSignatureCanvas');
-    if (!canvas) { err.textContent = '❌ Signature canvas missing.'; return; }
-    const sigData = canvas.toDataURL('image/png');
-    if (sigData === 'data:,') { err.textContent = '❌ Please sign before submitting.'; return; }
+    const ptxVal = ProviderTxIdManager.validate(ptx); if (!ptxVal.valid) { err.textContent = '❌ ' + ptxVal.error; return; }
+    const tcVal = TransferCodeManager.validate(tc); if (!tcVal.valid) { err.textContent = '❌ ' + tcVal.error; return; }
+    const canvas = getEl('paybackSignatureCanvas'); if (!canvas) { err.textContent = '❌ Signature canvas missing.'; return; }
+    const sigData = canvas.toDataURL('image/png'); if (sigData === 'data:,') { err.textContent = '❌ Please sign before submitting.'; return; }
     paybackSignatureDataURL = sigData;
     const calc = updatePaybackCalculations();
     const agent = getAgents().find(function(a) { return a.id === paybackTargetAgentId; });
     const data = agent ? (agent.agentData || agent) : null;
-    const record = {
-        id: 'payback_' + Date.now(), agentId: paybackTargetAgentId,
-        agentBusinessName: (data && data.businessName) || '',
-        agentName: (data && (data.ownerName || data.name)) || '',
-        agentNationality: (data && data.countryCode) ? COUNTRY_CODE_TO_NAME[data.countryCode] : '',
-        cashedOutAmount: amount, charges4: calc.charges4, onePercent: calc.onePercent,
-        agentCommission: calc.agentCommission, platformShare: calc.platformShare,
-        providerTxId: ptx, transferCode: tc, signature: sigData,
-        ussdUsed: getPaybackUssd(), recipientPhone: PAYBACK_RECIPIENT_PHONE,
-        submittedAt: new Date().toISOString()
-    };
-    let paybacks = [];
-    try { paybacks = JSON.parse(localStorage.getItem('afripay_paybacks') || '[]'); } catch (e) { paybacks = []; }
-    paybacks.push(record);
-    try { localStorage.setItem('afripay_paybacks', JSON.stringify(paybacks)); } catch (e) {}
-    ProviderTxIdManager.markAsUsed(ptx);
-    TransferCodeManager.markAsUsed(tc);
+    const record = { id: 'payback_' + Date.now(), agentId: paybackTargetAgentId, agentBusinessName: (data && data.businessName) || '', agentName: (data && (data.ownerName || data.name)) || '', agentNationality: (data && data.countryCode) ? COUNTRY_CODE_TO_NAME[data.countryCode] : '', cashedOutAmount: amount, charges4: calc.charges4, onePercent: calc.onePercent, agentCommission: calc.agentCommission, platformShare: calc.platformShare, providerTxId: ptx, transferCode: tc, signature: sigData, ussdUsed: getPaybackUssd(), recipientPhone: PAYBACK_RECIPIENT_PHONE, submittedAt: new Date().toISOString() };
+    let paybacks = []; try { paybacks = JSON.parse(localStorage.getItem('afripay_paybacks') || '[]'); } catch (e) { paybacks = []; }
+    paybacks.push(record); try { localStorage.setItem('afripay_paybacks', JSON.stringify(paybacks)); } catch (e) {}
+    ProviderTxIdManager.markAsUsed(ptx); TransferCodeManager.markAsUsed(tc);
     getEl('payBackModal').style.display = 'none';
     showToast('✅ PayBack saved — Agent receives ' + calc.agentCommission.toFixed(2), 3500);
     supaBackground(Supa.savePayback(record), 'PayBack');
@@ -3484,33 +3025,20 @@ function submitUserComplaint() {
     if (!category) { err.textContent = '❌ Please select a category.'; return; }
     if (!details) { err.textContent = '❌ Please describe your grievance.'; return; }
     const complaint = { id: 'complaint_' + Date.now(), name: name, phone: phone, category: category, details: details, submittedAt: new Date().toISOString(), status: 'pending' };
-    let complaints = [];
-    try { complaints = JSON.parse(localStorage.getItem('afripay_complaints') || '[]'); } catch (e) { complaints = []; }
-    complaints.push(complaint);
-    try { localStorage.setItem('afripay_complaints', JSON.stringify(complaints)); } catch (e) {}
+    let complaints = []; try { complaints = JSON.parse(localStorage.getItem('afripay_complaints') || '[]'); } catch (e) { complaints = []; }
+    complaints.push(complaint); try { localStorage.setItem('afripay_complaints', JSON.stringify(complaints)); } catch (e) {}
     getEl('userComplaintModal').style.display = 'none';
     showToast('✅ Complaint submitted (' + category + ')', 3000);
     supaBackground(Supa.saveComplaint(complaint), 'Complaint');
 }
-function toggleOthersDropdown() {
-    const menu = getEl('othersDropdownMenu'); if (!menu) return;
-    menu.classList.toggle('open');
-}
-function closeOthersDropdown() {
-    const menu = getEl('othersDropdownMenu'); if (menu) menu.classList.remove('open');
-}
+function toggleOthersDropdown() { const menu = getEl('othersDropdownMenu'); if (!menu) return; menu.classList.toggle('open'); }
+function closeOthersDropdown() { const menu = getEl('othersDropdownMenu'); if (menu) menu.classList.remove('open'); }
 
 function setupEventListeners() {
-    function safe(id, event, handler) {
-        const el = getEl(id);
-        if (el) el.addEventListener(event, handler);
-    }
+    function safe(id, event, handler) { const el = getEl(id); if (el) el.addEventListener(event, handler); }
     safe('langSelect', 'change', function() { setLanguage(this.value); });
     safe('othersBtn', 'click', function(e) { e.preventDefault(); e.stopPropagation(); toggleOthersDropdown(); });
-    document.addEventListener('click', function(e) {
-        const od = document.querySelector('.others-dropdown');
-        if (od && !od.contains(e.target)) closeOthersDropdown();
-    });
+    document.addEventListener('click', function(e) { const od = document.querySelector('.others-dropdown'); if (od && !od.contains(e.target)) closeOthersDropdown(); });
     safe('directPayBtn', 'click', function(e) { e.preventDefault(); closeOthersDropdown(); window.open(APP_LINKS.directPay, '_blank'); showToast('💳 Opening DirectPay +...', 2000); });
     safe('watuPayBtn', 'click', function(e) { e.preventDefault(); closeOthersDropdown(); window.open(APP_LINKS.watuPay, '_blank'); showToast('🌍 Opening WatuPay...', 2000); });
     safe('weBineBtn', 'click', function(e) { e.preventDefault(); closeOthersDropdown(); window.open(APP_LINKS.weBine, '_blank'); showToast('🏦 Opening WeBine...', 2000); });
@@ -3519,110 +3047,48 @@ function setupEventListeners() {
     safe('loginBtn', 'click', function(e) { e.preventDefault(); getEl('loginError').innerHTML = ''; getEl('loginModal').style.display = 'flex'; });
     safe('registerBtn', 'click', function(e) { e.preventDefault(); regAvatarDataURL = null; regEmoji = '👤'; updateRegAvatarPreview(); getEl('registerModal').style.display = 'flex'; });
     safe('logoutBtn', 'click', function(e) { e.preventDefault(); clearUserStorage(); stopPopupAdTimer(); showToast('Logged out'); });
-
     safe('agentAuthConfirmBtn', 'click', function(e) { e.preventDefault(); confirmAgentAuth(); });
-    safe('agentAuthPassword', 'keydown', function(e) {
-        if (e.key === 'Enter') { e.preventDefault(); if (getEl('agentAuthPin')) getEl('agentAuthPin').focus(); }
-    });
-    safe('agentAuthPin', 'keydown', function(e) {
-        if (e.key === 'Enter') { e.preventDefault(); confirmAgentAuth(); }
-    });
-
-    safe('doLoginBtn', 'click', function(e) {
-        e.preventDefault();
-        if (loginUser(getEl('loginName').value, getEl('loginPhone').value)) {
-            getEl('loginModal').style.display = 'none';
-            getEl('loginName').value = ''; getEl('loginPhone').value = '';
-        }
-    });
+    safe('agentAuthPassword', 'keydown', function(e) { if (e.key === 'Enter') { e.preventDefault(); if (getEl('agentAuthPin')) getEl('agentAuthPin').focus(); } });
+    safe('agentAuthPin', 'keydown', function(e) { if (e.key === 'Enter') { e.preventDefault(); confirmAgentAuth(); } });
+    safe('doLoginBtn', 'click', function(e) { e.preventDefault(); if (loginUser(getEl('loginName').value, getEl('loginPhone').value)) { getEl('loginModal').style.display = 'none'; getEl('loginName').value = ''; getEl('loginPhone').value = ''; } });
     safe('doRegisterBtn', 'click', function(e) {
         e.preventDefault();
-        const btn = getEl('doRegisterBtn');
-        const errEl = getEl('regError');
-        const okEl  = getEl('regSuccess');
+        const btn = getEl('doRegisterBtn'), errEl = getEl('regError'), okEl = getEl('regSuccess');
         if (errEl) errEl.textContent = '';
-        if (okEl)  okEl.textContent  = '';
+        if (okEl) okEl.textContent = '';
         if (btn && btn.dataset.busy === '1') return;
         const originalBtnText = btn ? btn.textContent : 'Register';
-        const name     = (getEl('regName').value || '').trim();
-        const phone    = (getEl('regPhone').value || '').trim();
-        const address  = (getEl('regAddress').value || '').trim();
-        const city     = getCityValue('regCitySelect', 'regCityOther');
-        const country  = getEl('regCountry').value;
-        const nin      = (getEl('regNin').value || '').trim();
+        const name = (getEl('regName').value || '').trim();
+        const phone = (getEl('regPhone').value || '').trim();
+        const address = (getEl('regAddress').value || '').trim();
+        const city = getCityValue('regCitySelect', 'regCityOther');
+        const country = getEl('regCountry').value;
+        const nin = (getEl('regNin').value || '').trim();
         const idNumber = (getEl('regIdNumber').value || '').trim();
         if (!name || !phone || !city) { if (errEl) errEl.textContent = '❌ Fill Name, Phone, City.'; return; }
         if (registeredUsers.some(function(u) { return u.phone === phone; })) { if (errEl) errEl.textContent = '❌ Phone already registered. Try logging in instead.'; return; }
         if (btn) { btn.dataset.busy = '1'; btn.disabled = true; btn.textContent = '⏳ Registering…'; }
         const newUser = { id: 'user_' + Date.now(), name: name, phone: phone, address: address, city: city, country: country, emoji: regEmoji, avatarDataURL: regAvatarDataURL, role: 'user', nin: nin, idNumber: idNumber };
-        try {
-            registeredUsers.push(newUser);
-            saveRegisteredUsers();
-            currentUser = { name: name, phone: phone, address: address, city: city, country: country, emoji: regEmoji, avatarDataURL: regAvatarDataURL, nin: nin, idNumber: idNumber };
-            saveUserToStorage(currentUser);
-        } catch (localErr) { console.error('❌ Local registration save failed:', localErr); }
-        try {
-            if (okEl) okEl.textContent = '✅ Registered!';
-            showToast('✅ Registered!', 1500);
-            showLoggedInUI();
-            renderAgentDropdown(currentAgentFilterCountry);
-            populateAgentSelect(currentAgentFilterCountry);
-        } catch (uiErr) { console.error('❌ UI update after register failed:', uiErr); }
-        setTimeout(function() {
-            try {
-                if (btn) { btn.dataset.busy = ''; btn.disabled = false; btn.textContent = originalBtnText; }
-                const rm = getEl('registerModal'); if (rm) rm.style.display = 'none';
-                ['regName','regPhone','regAddress','regCityOther','regNin','regIdNumber'].forEach(function(id) { const el = getEl(id); if (el) el.value = ''; });
-                const cs = getEl('regCitySelect'); if (cs) cs.value = '';
-                regAvatarDataURL = null; regEmoji = '👤'; updateRegAvatarPreview();
-                const rb = getEl('regRemoveImageBtn'); if (rb) rb.style.display = 'none';
-            } catch (cleanupErr) { console.warn('⚠️ Register modal cleanup error:', cleanupErr); }
-        }, 900);
+        try { registeredUsers.push(newUser); saveRegisteredUsers(); currentUser = { name: name, phone: phone, address: address, city: city, country: country, emoji: regEmoji, avatarDataURL: regAvatarDataURL, nin: nin, idNumber: idNumber }; saveUserToStorage(currentUser); }
+        catch (localErr) { console.error('❌ Local registration save failed:', localErr); }
+        try { if (okEl) okEl.textContent = '✅ Registered!'; showToast('✅ Registered!', 1500); showLoggedInUI(); renderAgentDropdown(currentAgentFilterCountry); populateAgentSelect(currentAgentFilterCountry); }
+        catch (uiErr) { console.error('❌ UI update after register failed:', uiErr); }
+        setTimeout(function() { try { if (btn) { btn.dataset.busy = ''; btn.disabled = false; btn.textContent = originalBtnText; } const rm = getEl('registerModal'); if (rm) rm.style.display = 'none'; ['regName','regPhone','regAddress','regCityOther','regNin','regIdNumber'].forEach(function(id) { const el = getEl(id); if (el) el.value = ''; }); const cs = getEl('regCitySelect'); if (cs) cs.value = ''; regAvatarDataURL = null; regEmoji = '👤'; updateRegAvatarPreview(); const rb = getEl('regRemoveImageBtn'); if (rb) rb.style.display = 'none'; } catch (cleanupErr) { console.warn('⚠️ Register modal cleanup error:', cleanupErr); } }, 900);
         supaBackground(Supa.saveUser(newUser), 'User');
     });
-    safe('regPickEmojiBtn', 'click', function() {
-        const grid = getEl('emojiGrid'); if (!grid) return;
-        grid.innerHTML = '';
-        AVAILABLE_EMOJIS.forEach(function(e) {
-            const s = document.createElement('span');
-            s.className = 'emoji-option'; s.textContent = e;
-            s.addEventListener('click', function() { regEmoji = e; regAvatarDataURL = null; updateRegAvatarPreview(); getEl('emojiPickerModal').style.display = 'none'; });
-            grid.appendChild(s);
-        });
-        getEl('emojiPickerModal').style.display = 'flex';
-    });
+    safe('regPickEmojiBtn', 'click', function() { const grid = getEl('emojiGrid'); if (!grid) return; grid.innerHTML = ''; AVAILABLE_EMOJIS.forEach(function(e) { const s = document.createElement('span'); s.className = 'emoji-option'; s.textContent = e; s.addEventListener('click', function() { regEmoji = e; regAvatarDataURL = null; updateRegAvatarPreview(); getEl('emojiPickerModal').style.display = 'none'; }); grid.appendChild(s); }); getEl('emojiPickerModal').style.display = 'flex'; });
     safe('regUploadImageBtn', 'click', function() { getEl('regAvatarUploadInput').click(); });
-    safe('regAvatarUploadInput', 'change', function() {
-        const f = this.files[0];
-        if (!f || !f.type.startsWith('image/')) { showToast('⚠️ Image only.', 2000); this.value = ''; return; }
-        const r = new FileReader();
-        r.onload = function(ev) { regAvatarDataURL = ev.target.result; updateRegAvatarPreview(); if (getEl('regRemoveImageBtn')) getEl('regRemoveImageBtn').style.display = 'inline-block'; };
-        r.readAsDataURL(f);
-        this.value = '';
-    });
+    safe('regAvatarUploadInput', 'change', function() { const f = this.files[0]; if (!f || !f.type.startsWith('image/')) { showToast('⚠️ Image only.', 2000); this.value = ''; return; } const r = new FileReader(); r.onload = function(ev) { regAvatarDataURL = ev.target.result; updateRegAvatarPreview(); if (getEl('regRemoveImageBtn')) getEl('regRemoveImageBtn').style.display = 'inline-block'; }; r.readAsDataURL(f); this.value = ''; });
     safe('regRemoveImageBtn', 'click', function() { regAvatarDataURL = null; updateRegAvatarPreview(); getEl('regRemoveImageBtn').style.display = 'none'; });
-    safe('userAvatarContainer', 'click', function(e) {
-        if (e.target.closest('.logout-btn') || e.target.closest('.edit-account-btn')) return;
-        if (!currentUser) { showToast('⚠️ Login first.', 2000); return; }
-        openEmojiPicker();
-    });
+    safe('userAvatarContainer', 'click', function(e) { if (e.target.closest('.logout-btn') || e.target.closest('.edit-account-btn')) return; if (!currentUser) { showToast('⚠️ Login first.', 2000); return; } openEmojiPicker(); });
     safe('profileAvatarLarge', 'click', function() { if (!currentUser) { showToast('⚠️ Login first.', 2000); return; } openEmojiPicker(); });
     safe('emojiUploadImageBtn', 'click', function() { getEl('avatarUploadInput').click(); });
     safe('emojiRemoveImageBtn', 'click', function() { removeAvatarImage(); });
-    safe('avatarUploadInput', 'change', function() {
-        const f = this.files[0];
-        if (!f || !f.type.startsWith('image/')) { showToast('⚠️ Image only.', 2000); this.value = ''; return; }
-        const r = new FileReader();
-        r.onload = function(ev) { applyAvatarImage(ev.target.result); };
-        r.readAsDataURL(f);
-        this.value = '';
-    });
+    safe('avatarUploadInput', 'change', function() { const f = this.files[0]; if (!f || !f.type.startsWith('image/')) { showToast('⚠️ Image only.', 2000); this.value = ''; return; } const r = new FileReader(); r.onload = function(ev) { applyAvatarImage(ev.target.result); }; r.readAsDataURL(f); this.value = ''; });
     safe('editAccountBtn', 'click', function(e) {
         e.preventDefault();
         if (!currentUser) { showToast('⚠️ Login first', 2000); return; }
-        getEl('editAccountName').value = currentUser.name || '';
-        getEl('editAccountPhone').value = currentUser.phone || '';
-        getEl('editAccountAddress').value = currentUser.address || '';
+        getEl('editAccountName').value = currentUser.name || ''; getEl('editAccountPhone').value = currentUser.phone || ''; getEl('editAccountAddress').value = currentUser.address || '';
         setCityValue('editAccountCitySelect', 'editAccountCityOther', currentUser.city || '');
         getEl('editAccountCountry').value = currentUser.country || 'Sierra Leone';
         getEl('editAccountNin').value = currentUser.nin || '';
@@ -3630,124 +3096,50 @@ function setupEventListeners() {
     });
     safe('saveEditAccountBtn', 'click', function(e) {
         e.preventDefault();
-        const name = getEl('editAccountName').value.trim();
-        const phone = getEl('editAccountPhone').value.trim();
-        const address = getEl('editAccountAddress').value.trim();
-        const city = getCityValue('editAccountCitySelect', 'editAccountCityOther');
-        const country = getEl('editAccountCountry').value;
-        const nin = getEl('editAccountNin').value.trim();
+        const name = getEl('editAccountName').value.trim(); const phone = getEl('editAccountPhone').value.trim(); const address = getEl('editAccountAddress').value.trim();
+        const city = getCityValue('editAccountCitySelect', 'editAccountCityOther'); const country = getEl('editAccountCountry').value; const nin = getEl('editAccountNin').value.trim();
         if (!name || !phone || !city) { getEl('editAccountError').textContent = '❌ Fill Name, Phone & City'; return; }
-        currentUser.name = name; currentUser.phone = phone; currentUser.address = address;
-        currentUser.city = city; currentUser.country = country; currentUser.nin = nin;
-        saveUserToStorage(currentUser);
-        showLoggedInUI();
-        showToast('✅ Account updated!', 2000);
+        currentUser.name = name; currentUser.phone = phone; currentUser.address = address; currentUser.city = city; currentUser.country = country; currentUser.nin = nin;
+        saveUserToStorage(currentUser); showLoggedInUI(); showToast('✅ Account updated!', 2000);
         setTimeout(function() { getEl('editAccountModal').style.display = 'none'; }, 1000);
         supaBackground(Supa.saveUser(currentUser), 'Account update');
     });
     safe('agentDropdownBtn', 'click', function(e) { e.preventDefault(); e.stopPropagation(); getEl('agentDropdownList').classList.toggle('open'); renderAgentDropdown(currentAgentFilterCountry); });
-    document.addEventListener('click', function(e) {
-        const c = document.querySelector('.agent-dropdown-container');
-        if (c && !c.contains(e.target)) getEl('agentDropdownList').classList.remove('open');
-    });
-    safe('agentNameSelect', 'change', function() {
-        if (this.value) selectAgent(this.value);
-        else { selectedAgentId = null; _selectedAgentId = null; clearAgentSelection(); }
-    });
+    document.addEventListener('click', function(e) { const c = document.querySelector('.agent-dropdown-container'); if (c && !c.contains(e.target)) getEl('agentDropdownList').classList.remove('open'); });
+    safe('agentNameSelect', 'change', function() { if (this.value) selectAgent(this.value); else { selectedAgentId = null; _selectedAgentId = null; clearAgentSelection(); } });
     safe('generateTxBtn', 'click', function(e) { e.preventDefault(); setGeneratedTransactionId(); });
     safe('copyTxBtn', 'click', function(e) { e.preventDefault(); copyTransactionIdToClipboard(); });
-    document.querySelectorAll('.close-modal').forEach(function(b) {
-        b.addEventListener('click', function(e) {
-            e.preventDefault();
-            const m = this.closest('.modal');
-            if (m) m.style.display = 'none';
-        });
-    });
-    safe('mainMmBtn', 'click', function(e) {
-        e.preventDefault();
-        const ai = getEl('amountInput');
-        if (parseFloat(ai && ai.value) <= 0) { showToast('⚠️ Enter amount'); return; }
-        getEl('providerModal').style.display = 'flex';
-    });
-    safe('intlToggleBtn', 'click', function(e) {
-        e.preventDefault();
-        isLocalMode = !isLocalMode;
-        this.classList.toggle('active', !isLocalMode);
-        getEl('countryWrapper').style.display = isLocalMode ? 'none' : 'block';
-        computeCharges();
-        updateAgentDropdownForCountry();
-    });
+    document.querySelectorAll('.close-modal').forEach(function(b) { b.addEventListener('click', function(e) { e.preventDefault(); const m = this.closest('.modal'); if (m) m.style.display = 'none'; }); });
+    safe('mainMmBtn', 'click', function(e) { e.preventDefault(); const ai = getEl('amountInput'); if (parseFloat(ai && ai.value) <= 0) { showToast('⚠️ Enter amount'); return; } getEl('providerModal').style.display = 'flex'; });
+    safe('intlToggleBtn', 'click', function(e) { e.preventDefault(); isLocalMode = !isLocalMode; this.classList.toggle('active', !isLocalMode); getEl('countryWrapper').style.display = isLocalMode ? 'none' : 'block'; computeCharges(); updateAgentDropdownForCountry(); });
     safe('addClientBtnHeader', 'click', function(e) { e.preventDefault(); getEl('addClientModal').style.display = 'flex'; });
     safe('saveClientBtn', 'click', function(e) {
         e.preventDefault();
-        const n = getEl('newClientName').value.trim();
-        const p = getEl('newClientPhone').value.trim();
+        const n = getEl('newClientName').value.trim(); const p = getEl('newClientPhone').value.trim();
         const addr = (getEl('newClientAddress') && getEl('newClientAddress').value.trim()) || '';
         const city = (getEl('newClientCitySelect') && getEl('newClientCitySelect').value) || '';
         const country = (getEl('newClientCountrySelect') && getEl('newClientCountrySelect').value) || '';
         if (!n || !p) { getEl('addClientError').textContent = '❌ Name & Phone required.'; return; }
-        getEl('clientName').value = n;
-        getEl('clientPhone').value = p;
-        getEl('clientSectionTitle').style.display = 'block';
-        getEl('clientFieldsRow').style.display = 'grid';
+        getEl('clientName').value = n; getEl('clientPhone').value = p;
+        getEl('clientSectionTitle').style.display = 'block'; getEl('clientFieldsRow').style.display = 'grid';
         currentClient = { name: n, phone: p };
         const targetAgentId = _selectedAgentId || selectedAgentId || null;
         if (targetAgentId) {
             loadDashClients();
-            const newClient = {
-                id: 'cl_' + Date.now() + '_' + Math.floor(Math.random()*9999),
-                agentId: targetAgentId,
-                name: n, phone: p, address: addr, city: city, country: country,
-                createdAt: new Date().toISOString()
-            };
-            dashClients.push(newClient);
-            saveDashClients();
-            supaBackground(Supa.saveAgentClient(newClient), 'Client (header form)');
+            const newClient = { id: 'cl_' + Date.now() + '_' + Math.floor(Math.random()*9999), agentId: targetAgentId, name: n, phone: p, address: addr, city: city, country: country, createdAt: new Date().toISOString() };
+            dashClients.push(newClient); saveDashClients(); supaBackground(Supa.saveAgentClient(newClient), 'Client (header form)');
             const modal = getEl('editAgentModal');
-            if (modal && modal.style.display === 'flex') {
-                refreshDashPanes();
-                showToast('✅ Client saved to agent dashboard', 2200);
-            } else {
-                showToast('✅ Client "' + n + '" added!', 2000);
-            }
-        } else {
-            showToast('✅ Client "' + n + '" added! (no agent selected)', 2200);
-        }
-        getEl('addClientModal').style.display = 'none';
-        getEl('addClientError').textContent = '';
+            if (modal && modal.style.display === 'flex') { refreshDashPanes(); showToast('✅ Client saved to agent dashboard', 2200); } else { showToast('✅ Client "' + n + '" added!', 2000); }
+        } else { showToast('✅ Client "' + n + '" added! (no agent selected)', 2200); }
+        getEl('addClientModal').style.display = 'none'; getEl('addClientError').textContent = '';
     });
     safe('registerAgentBtn', 'click', function(e) { e.preventDefault(); getEl('registerModal').style.display = 'none'; getEl('agentRegistrationModal').style.display = 'flex'; });
-    safe('generatePasswordBtn', 'click', function(e) {
-        e.preventDefault();
-        const ch = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        let pw = '';
-        for (let i = 0; i < 6; i++) pw += ch.charAt(Math.floor(Math.random() * ch.length));
-        getEl('agentPassword').value = pw;
-        showToast('🔑 ' + pw, 3000);
-    });
-    safe('generatePinBtn', 'click', function(e) {
-        e.preventDefault();
-        const pin = String(Math.floor(10000 + Math.random() * 90000));
-        getEl('agentPin').value = pin;
-        showToast('🔑 ' + pin, 3000);
-    });
-    safe('generateCollateralBtn', 'click', function(e) {
-        e.preventDefault();
-        const mm = getEl('agentMobileMoney').value.trim();
-        if (!mm) { getEl('collateralError').textContent = '⚠️ Enter mobile money'; return; }
-        const amt = parseInt(getEl('agentCollateralLimit').value) || 0;
-        const ussd = '#144*2*2*' + mm.replace(/\D/g, '') + '*' + amt + '*0000#';
-        getEl('collateralUssdDisplay').textContent = ussd;
-        getEl('collateralUssdDisplay').style.display = 'block';
-        const link = document.createElement('a');
-        link.href = 'tel:' + ussd;
-        link.click();
-        showToast('📞 Dialing...', 2500);
-    });
+    safe('generatePasswordBtn', 'click', function(e) { e.preventDefault(); const ch = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'; let pw = ''; for (let i = 0; i < 6; i++) pw += ch.charAt(Math.floor(Math.random() * ch.length)); getEl('agentPassword').value = pw; showToast('🔑 ' + pw, 3000); });
+    safe('generatePinBtn', 'click', function(e) { e.preventDefault(); const pin = String(Math.floor(10000 + Math.random() * 90000)); getEl('agentPin').value = pin; showToast('🔑 ' + pin, 3000); });
+    safe('generateCollateralBtn', 'click', function(e) { e.preventDefault(); const mm = getEl('agentMobileMoney').value.trim(); if (!mm) { getEl('collateralError').textContent = '⚠️ Enter mobile money'; return; } const amt = parseInt(getEl('agentCollateralLimit').value) || 0; const ussd = '#144*2*2*' + mm.replace(/\D/g, '') + '*' + amt + '*0000#'; getEl('collateralUssdDisplay').textContent = ussd; getEl('collateralUssdDisplay').style.display = 'block'; const link = document.createElement('a'); link.href = 'tel:' + ussd; link.click(); showToast('📞 Dialing...', 2500); });
     safe('viewAgreementBtn', 'click', function(e) {
         e.preventDefault();
-        const bn = getEl('agentBusinessName').value.trim();
-        const on = getEl('agentOwnerName').value.trim();
+        const bn = getEl('agentBusinessName').value.trim(); const on = getEl('agentOwnerName').value.trim();
         if (!bn || !on) { showToast('⚠️ Fill Business & Owner.', 3000); return; }
         const body = getEl('agreementBody');
         body.innerHTML = '<div style="background:#f8fafc;border-radius:6px;padding:8px 12px;margin-bottom:6px;border-left:3px solid #2c7da0;"><strong>Clause 1</strong> I <span style="color:#1c6e8f;font-weight:700;">' + on + '</span>, Owner of: <span style="color:#1c6e8f;font-weight:700;">' + bn + '</span> agree.</div>' +
@@ -3756,17 +3148,7 @@ function setupEventListeners() {
             '<div style="background:#f8fafc;border-radius:6px;padding:8px 12px;border-left:3px solid #2c7da0;"><strong>Signature</strong><br><input type="text" id="signatureInput" placeholder="Type your full name" style="width:100%;padding:8px;border-radius:8px;border:1px solid #d0dce8;margin-top:6px;" /></div>';
         getEl('agreementModal').style.display = 'flex';
         getEl('agreementAgreeBtn').disabled = false;
-    });
-    safe('agreementAgreeBtn', 'click', function(e) {
-        e.preventDefault();
-        const sigEl = getEl('signatureInput');
-        const sig = (sigEl && sigEl.value.trim()) || '';
-        if (!sig) { showToast('⚠️ Type your name to sign.', 2000); return; }
-        agreementSigned = true;
-        getEl('agreementStatusText').textContent = 'Signed ✅';
-        getEl('agreementStatusText').style.color = '#27ae60';
-        this.disabled = true;
-        setTimeout(function() { getEl('agreementModal').style.display = 'none'; }, 800);
+        getEl('agreementAgreeBtn').onclick = function(e2) { e2.preventDefault(); const sigEl = getEl('signatureInput'); const sig = (sigEl && sigEl.value.trim()) || ''; if (!sig) { showToast('⚠️ Type your name to sign.', 2000); return; } agreementSigned = true; getEl('agreementStatusText').textContent = 'Signed ✅'; getEl('agreementStatusText').style.color = '#27ae60'; this.disabled = true; setTimeout(function() { getEl('agreementModal').style.display = 'none'; }, 800); };
     });
     safe('agreementCloseBtn', 'click', function(e) { e.preventDefault(); getEl('agreementModal').style.display = 'none'; });
     safe('agreementCloseXBtn', 'click', function(e) { e.preventDefault(); getEl('agreementModal').style.display = 'none'; });
@@ -3801,16 +3183,22 @@ function setupEventListeners() {
             currency: 'GNF', approved: true, role: 'agent', isAgent: true,
             registeredAt: new Date().toISOString(), nin: nin, providerTxId: ptx
         };
-        registeredUsers.push(data);
-        saveRegisteredUsers();
-        renderAgentDropdown(currentAgentFilterCountry);
-        populateAgentSelect(currentAgentFilterCountry);
+        registeredUsers.push(data); saveRegisteredUsers();
+        renderAgentDropdown(currentAgentFilterCountry); populateAgentSelect(currentAgentFilterCountry);
         selectAgent(data.id);
         const _dashModal = getEl('editAgentModal');
         if (_dashModal && _dashModal.style.display === 'flex') refreshDashPanes();
         showToast('✅ Agent registered!', 3000);
         setTimeout(function() { getEl('agentRegistrationModal').style.display = 'none'; }, 1200);
-        supaBackground(Supa.saveAgent(data), 'Agent');
+        supaBackground(Supa.saveAgent({
+            businessName: bn, ownerName: on, businessAddress: ad, city: ci,
+            regNumber: rn, businessType: getEl('agentBusinessType').value,
+            idType: getEl('agentIdType').value, idNumber: idn, mobileMoney: mm,
+            countryCode: getEl('agentCountryCode').value, password: pw, pin: pin,
+            collateralAmount: parseFloat(getEl('agentCollateralLimit').value) || 0,
+            collateralLimit: parseInt(getEl('agentCollateralLimit').value) || 0,
+            currency: 'GNF', approved: true, providerTxId: ptx, nin: nin, emoji: '🏢'
+        }), 'Agent (registration modal) → agents table');
     });
     safe('saveEditAgentBtn', 'click', function(e) {
         e.preventDefault();
@@ -3828,39 +3216,19 @@ function setupEventListeners() {
         const data = agent.agentData || agent;
         if (pw !== data.password) { getEl('editAgentError').textContent = '❌ Wrong password'; return; }
         if (pin !== data.pin) { getEl('editAgentError').textContent = '❌ Wrong PIN'; return; }
-        data.businessName = bn; data.businessAddress = ad; data.city = ci;
-        data.regNumber = rn; data.mobileMoney = mm; data.name = bn; data.nin = nin;
+        data.businessName = bn; data.businessAddress = ad; data.city = ci; data.regNumber = rn; data.mobileMoney = mm; data.name = bn; data.nin = nin;
         saveRegisteredUsers();
         if (getEl('agentDashTitle')) getEl('agentDashTitle').innerHTML = '🏢 ' + escapeHTML(bn);
-        renderAgentDropdown(currentAgentFilterCountry);
-        refreshDashPanes();
+        renderAgentDropdown(currentAgentFilterCountry); refreshDashPanes();
         showToast('✅ Agent updated!', 2000);
         setTimeout(function() { getEl('editAgentModal').style.display = 'none'; }, 1000);
         supaBackground(Supa.saveAgent(data), 'Agent update');
     });
-    safe('payBackBtn', 'click', function(e) {
-        e.preventDefault();
-        const aid = getEl('editAgentId').value;
-        if (!aid) { showToast('⚠️ No agent selected.', 2000); return; }
-        openPayBackModal(aid);
-    });
+    safe('payBackBtn', 'click', function(e) { e.preventDefault(); const aid = getEl('editAgentId').value; if (!aid) { showToast('⚠️ No agent selected.', 2000); return; } openPayBackModal(aid); });
     safe('paybackCashedOut', 'input', function() { updatePaybackCalculations(); });
     safe('paybackUssdBtn', 'click', function(e) { e.preventDefault(); dialPaybackUssd(); });
-    safe('paybackSigClear', 'click', function(e) {
-        e.preventDefault();
-        const canvas = getEl('paybackSignatureCanvas'); if (!canvas) return;
-        const ctx = canvas.getContext('2d');
-        ctx.fillStyle = 'white'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-        paybackSignatureDataURL = null;
-    });
-    safe('paybackSigConfirm', 'click', function(e) {
-        e.preventDefault();
-        const canvas = getEl('paybackSignatureCanvas'); if (!canvas) return;
-        const d = canvas.toDataURL('image/png');
-        if (d === 'data:,') { showToast('⚠️ Draw first.', 2000); return; }
-        paybackSignatureDataURL = d;
-        showToast('✅ Signature captured.', 1500);
-    });
+    safe('paybackSigClear', 'click', function(e) { e.preventDefault(); const canvas = getEl('paybackSignatureCanvas'); if (!canvas) return; const ctx = canvas.getContext('2d'); ctx.fillStyle = 'white'; ctx.fillRect(0, 0, canvas.width, canvas.height); paybackSignatureDataURL = null; });
+    safe('paybackSigConfirm', 'click', function(e) { e.preventDefault(); const canvas = getEl('paybackSignatureCanvas'); if (!canvas) return; const d = canvas.toDataURL('image/png'); if (d === 'data:,') { showToast('⚠️ Draw first.', 2000); return; } paybackSignatureDataURL = d; showToast('✅ Signature captured.', 1500); });
     safe('paybackSubmitBtn', 'click', function(e) { e.preventDefault(); submitPayback(); });
     safe('mainForm', 'submit', function(e) {
         e.preventDefault();
@@ -3868,14 +3236,12 @@ function setupEventListeners() {
         const val = ProviderTxIdManager.validate(ptx);
         if (!val.valid) { const eg = getEl('providerTxIdError'); eg.textContent = val.error; eg.style.display = 'block'; getEl('providerTxId').focus(); return; }
         getEl('providerTxIdError').style.display = 'none';
-        const tcg = getEl('mainTransferCodeGroup');
-        if (tcg) tcg.style.display = 'block';
+        const tcg = getEl('mainTransferCodeGroup'); if (tcg) tcg.style.display = 'block';
         const tc = (getEl('mainTransferCode') && getEl('mainTransferCode').value.trim()) || '';
         const tcv = TransferCodeManager.validate(tc);
         if (!tcv.valid) { const eg = getEl('mainTransferCodeError'); eg.textContent = tcv.error; eg.style.display = 'block'; getEl('mainTransferCode').focus(); return; }
         getEl('mainTransferCodeError').style.display = 'none';
-        const sn = getEl('senderName').value.trim();
-        const sp = getEl('senderPhone').value.trim();
+        const sn = getEl('senderName').value.trim(); const sp = getEl('senderPhone').value.trim();
         const an = (getEl('agentName') && getEl('agentName').value.trim()) || '';
         const ap = (getEl('agentPhone') && getEl('agentPhone').value.trim()) || '';
         if (!sn) { showToast('❌ Enter sender name.'); getEl('senderName').focus(); return; }
@@ -3891,34 +3257,14 @@ function setupEventListeners() {
         const txId = (getEl('transactionId') && getEl('transactionId').value.trim()) || '';
         const clientNameVal = (getEl('clientName') && getEl('clientName').value.trim()) || (currentClient && currentClient.name) || '';
         const clientPhoneVal = (getEl('clientPhone') && getEl('clientPhone').value.trim()) || (currentClient && currentClient.phone) || '';
-        ProviderTxIdManager.markAsUsed(ptx);
-        TransferCodeManager.markAsUsed(tc);
-        const data = {
-            txId: txId, date: new Date().toLocaleString(),
-            mode: isLocalMode ? 'Local' : 'International',
-            sender: sn + ' (' + sp + ')',
-            agent: an + ' (' + ap + ')',
-            clientName: clientNameVal, clientPhone: clientPhoneVal,
-            baseAmount: amount.toFixed(2), charge: charge.toFixed(2), gst: '0.00',
-            total: (amount + charge).toFixed(2), currency: currency,
-            providerTxId: ptx, transferCode: tc
-        };
+        ProviderTxIdManager.markAsUsed(ptx); TransferCodeManager.markAsUsed(tc);
+        const data = { txId: txId, date: new Date().toLocaleString(), mode: isLocalMode ? 'Local' : 'International', sender: sn + ' (' + sp + ')', agent: an + ' (' + ap + ')', clientName: clientNameVal, clientPhone: clientPhoneVal, baseAmount: amount.toFixed(2), charge: charge.toFixed(2), gst: '0.00', total: (amount + charge).toFixed(2), currency: currency, providerTxId: ptx, transferCode: tc };
         showReceiptModal(data);
         showToast('✅ Receipt generated!', 2500);
-        supaBackground(Supa.saveTransaction({
-            txId: data.txId, providerTxId: data.providerTxId, transferCode: data.transferCode,
-            senderName: sn, senderPhone: sp,
-            senderAddress: (getEl('senderAddress') && getEl('senderAddress').value) || '',
-            agentName: an, agentPhone: ap,
-            clientName: clientNameVal, clientPhone: clientPhoneVal,
-            amount: amount, charge: charge, gst: 0, total: amount + charge,
-            currency: currency, mode: data.mode,
-            productDetails: _selectedProductDetails
-        }), 'Transaction');
+        supaBackground(Supa.saveTransaction({ txId: data.txId, providerTxId: data.providerTxId, transferCode: data.transferCode, senderName: sn, senderPhone: sp, senderAddress: (getEl('senderAddress') && getEl('senderAddress').value) || '', agentName: an, agentPhone: ap, clientName: clientNameVal, clientPhone: clientPhoneVal, amount: amount, charge: charge, gst: 0, total: amount + charge, currency: currency, mode: data.mode, productDetails: _selectedProductDetails }), 'Transaction');
     });
     safe('providerTxId', 'input', function() {
-        const v = this.value.trim();
-        const eg = getEl('mainTransferCodeGroup');
+        const v = this.value.trim(); const eg = getEl('mainTransferCodeGroup');
         if (!v) { eg.style.display = 'none'; return; }
         const valid = ProviderTxIdManager.validate(v);
         if (valid.valid) { eg.style.display = 'block'; getEl('providerTxIdError').style.display = 'none'; }
@@ -3946,94 +3292,32 @@ function setupEventListeners() {
     safe('receiptClientWhatsAppBtn', 'click', function(e) { e.preventDefault(); shareClientViaWhatsApp(); });
     safe('chatToggleBtn', 'click', function(e) { e.preventDefault(); toggleChat(); });
     safe('chatCloseBtn', 'click', function(e) { e.preventDefault(); getEl('chatWindow').classList.remove('open'); getEl('chatToggleBtn').style.display = 'flex'; });
-    safe('chatSendBtn', 'click', function(e) {
-        e.preventDefault();
-        const inp = getEl('chatInput');
-        const msg = inp && inp.value.trim();
-        if (!msg) return;
-        const chat = getEl('chatMessages');
-        const el = document.createElement('div');
-        el.style.cssText = 'background:#dcf8c6;padding:6px 10px;border-radius:10px;margin:2px 0;align-self:flex-end;font-size:.82rem;';
-        el.innerHTML = '<strong>Me:</strong> ' + escapeHTML(msg);
-        chat.appendChild(el);
-        chat.scrollTop = chat.scrollHeight;
-        inp.value = '';
-        supaBackground(Supa.sendChatMessage({ sender_id: null, sender_name: (currentUser && currentUser.name) || 'Guest', receiver_id: null, message: msg }), 'Chat');
-    });
+    safe('chatSendBtn', 'click', function(e) { e.preventDefault(); const inp = getEl('chatInput'); const msg = inp && inp.value.trim(); if (!msg) return; const chat = getEl('chatMessages'); const el = document.createElement('div'); el.style.cssText = 'background:#dcf8c6;padding:6px 10px;border-radius:10px;margin:2px 0;align-self:flex-end;font-size:.82rem;'; el.innerHTML = '<strong>Me:</strong> ' + escapeHTML(msg); chat.appendChild(el); chat.scrollTop = chat.scrollHeight; inp.value = ''; supaBackground(Supa.sendChatMessage({ sender_id: null, sender_name: (currentUser && currentUser.name) || 'Guest', receiver_id: null, message: msg }), 'Chat'); });
     safe('aboutAppBtn', 'click', function(e) { e.preventDefault(); showInfoModal('About', 'Cross-border mobile money transfers.'); });
     safe('aboutDevBtn', 'click', function(e) { e.preventDefault(); showInfoModal('Dev', 'Fintech developer.'); });
     safe('contactBtn', 'click', function(e) { e.preventDefault(); showInfoModal('Contact', '+232-76-436-811'); });
     safe('subscribeBtn', 'click', function(e) { e.preventDefault(); getEl('subscribeModal').style.display = 'flex'; });
-    safe('submitSubscribeBtn', 'click', function(e) {
-        e.preventDefault();
-        const email = (getEl('subEmail') && getEl('subEmail').value.trim()) || '';
-        if (email && email.indexOf('@') !== -1) { supaBackground(Supa.saveSubscriber(email), 'Subscriber'); showToast('📧 Subscribed!'); }
-        else { showToast('⚠️ Enter a valid email'); }
-        getEl('subscribeModal').style.display = 'none';
-    });
+    safe('submitSubscribeBtn', 'click', function(e) { e.preventDefault(); const email = (getEl('subEmail') && getEl('subEmail').value.trim()) || ''; if (email && email.indexOf('@') !== -1) { supaBackground(Supa.saveSubscriber(email), 'Subscriber'); showToast('📧 Subscribed!'); } else { showToast('⚠️ Enter a valid email'); } getEl('subscribeModal').style.display = 'none'; });
     safe('howToBtn', 'click', function(e) { e.preventDefault(); window.open('https://aminejalloh-io.github.io/AfriPay-Guide/', '_blank'); });
-    safe('currencyConverterBtn', 'click', function(e) {
-        e.preventDefault();
-        const m = getEl('currencyConverterModal');
-        if (m.style.display === 'flex') { m.style.display = 'none'; return; }
-        populateConverterCountries();
-        populateFromCurrencySelect();
-        updateConverter();
-        m.style.display = 'flex';
-    });
+    safe('currencyConverterBtn', 'click', function(e) { e.preventDefault(); const m = getEl('currencyConverterModal'); if (m.style.display === 'flex') { m.style.display = 'none'; return; } populateConverterCountries(); populateFromCurrencySelect(); updateConverter(); m.style.display = 'flex'; });
     safe('convAmount', 'input', function() { updateConverter(); });
     safe('convCountrySelect', 'change', function() { updateConverter(); });
     safe('convFromCurrency', 'change', function() { updateConverter(); });
     safe('convCloseBtn', 'click', function(e) { e.preventDefault(); getEl('currencyConverterModal').style.display = 'none'; });
     safe('converterCloseXBtn', 'click', function(e) { e.preventDefault(); getEl('currencyConverterModal').style.display = 'none'; });
-    safe('mapButton', 'click', function(e) {
-        e.preventDefault();
-        const city = (getEl('profileCity') && getEl('profileCity').innerText) || '';
-        const country = (getEl('profileCountry') && getEl('profileCountry').innerText) || '';
-        getEl('mapIframe').src = 'https://www.google.com/maps?q=' + encodeURIComponent(city + ', ' + country) + '&output=embed';
-        getEl('mapModal').style.display = 'flex';
-    });
+    safe('mapButton', 'click', function(e) { e.preventDefault(); const city = (getEl('profileCity') && getEl('profileCity').innerText) || ''; const country = (getEl('profileCountry') && getEl('profileCountry').innerText) || ''; getEl('mapIframe').src = 'https://www.google.com/maps?q=' + encodeURIComponent(city + ', ' + country) + '&output=embed'; getEl('mapModal').style.display = 'flex'; });
     safe('addBizBtn', 'click', function(e) { e.preventDefault(); openAddBizModal(); });
     safe('submitAddBizBtn', 'click', function(e) { e.preventDefault(); submitAddBizForm(); });
-    safe('editBizStripBtn', 'click', function(e) {
-        e.preventDefault();
-        if (!lastSelectedBusinessId) { showToast('⚠️ Select a business first.', 2000); return; }
-        const biz = getAllBusinesses().find(function(b) { return b.id === lastSelectedBusinessId; });
-        if (biz) handleEditBizStripClick(biz);
-    });
+    safe('editBizStripBtn', 'click', function(e) { e.preventDefault(); if (!lastSelectedBusinessId) { showToast('⚠️ Select a business first.', 2000); return; } const biz = getAllBusinesses().find(function(b) { return b.id === lastSelectedBusinessId; }); if (biz) handleEditBizStripClick(biz); });
     safe('editBizAuthConfirmBtn', 'click', function(e) { e.preventDefault(); confirmEditBizAuth(); });
     safe('addProductBtn', 'click', function(e) { e.preventDefault(); addProductEntry(); });
-    safe('bizGenPasswordBtn', 'click', function(e) {
-        e.preventDefault();
-        const ch = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        let pw = '';
-        for (let i = 0; i < 6; i++) pw += ch.charAt(Math.floor(Math.random() * ch.length));
-        getEl('bizPassword').value = pw;
-        showToast('🔑 ' + pw, 3000);
-    });
-    safe('bizGenPinBtn', 'click', function(e) {
-        e.preventDefault();
-        const pin = String(Math.floor(10000 + Math.random() * 90000));
-        getEl('bizPin').value = pin;
-        showToast('🔑 ' + pin, 3000);
-    });
-    document.querySelectorAll('.modal').forEach(function(m) {
-        m.addEventListener('click', function(e) {
-            if (e.target === this) {
-                this.style.display = 'none';
-                if (this.id === 'editBizAuthModal') pendingEditBizId = null;
-                if (this.id === 'agentAuthModal') { pendingAgentAuthId = null; if (getEl('agentAuthPassword')) getEl('agentAuthPassword').value = ''; if (getEl('agentAuthPin')) getEl('agentAuthPin').value = ''; if (getEl('agentAuthError')) getEl('agentAuthError').textContent = ''; }
-            }
-        });
-    });
+    safe('bizGenPasswordBtn', 'click', function(e) { e.preventDefault(); const ch = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'; let pw = ''; for (let i = 0; i < 6; i++) pw += ch.charAt(Math.floor(Math.random() * ch.length)); getEl('bizPassword').value = pw; showToast('🔑 ' + pw, 3000); });
+    safe('bizGenPinBtn', 'click', function(e) { e.preventDefault(); const pin = String(Math.floor(10000 + Math.random() * 90000)); getEl('bizPin').value = pin; showToast('🔑 ' + pin, 3000); });
+    document.querySelectorAll('.modal').forEach(function(m) { m.addEventListener('click', function(e) { if (e.target === this) { this.style.display = 'none'; if (this.id === 'editBizAuthModal') pendingEditBizId = null; if (this.id === 'agentAuthModal') { pendingAgentAuthId = null; if (getEl('agentAuthPassword')) getEl('agentAuthPassword').value = ''; if (getEl('agentAuthPin')) getEl('agentAuthPin').value = ''; if (getEl('agentAuthError')) getEl('agentAuthError').textContent = ''; } } }); });
     safe('popupAdOverlay', 'click', function(e) { if (e.target === this) hidePopupAdvert(); });
     setupAgentDashboardEvents();
 }
-function updateRegAvatarPreview() {
-    const preview = getEl('regAvatarPreview'); if (!preview) return;
-    if (regAvatarDataURL) preview.innerHTML = '<img src="' + regAvatarDataURL + '" style="width:40px;height:40px;border-radius:50%;object-fit:cover;" />';
-    else preview.textContent = regEmoji || '👤';
-}
+function updateRegAvatarPreview() { const preview = getEl('regAvatarPreview'); if (!preview) return; if (regAvatarDataURL) preview.innerHTML = '<img src="' + regAvatarDataURL + '" style="width:40px;height:40px;border-radius:50%;object-fit:cover;" />'; else preview.textContent = regEmoji || '👤'; }
 function openAddBizModal() {
     const resetVal = function(id, v) { const e = getEl(id); if (e) e.value = v; };
     resetVal('bizName', ''); resetVal('bizContact', ''); resetVal('bizMobileMoney', '');
@@ -4041,8 +3325,7 @@ function openAddBizModal() {
     if (getEl('bizIconPreview')) getEl('bizIconPreview').textContent = '🏪';
     resetVal('bizAddress', ''); resetVal('bizCitySelect', ''); resetVal('bizCityOther', '');
     resetVal('bizCountrySelect', (currentUser && currentUser.country) || 'Sierra Leone');
-    resetVal('bizWebsite', '');
-    resetVal('bizPassword', ''); resetVal('bizPin', '');
+    resetVal('bizWebsite', ''); resetVal('bizPassword', ''); resetVal('bizPin', '');
     if (getEl('bizEditingId')) getEl('bizEditingId').value = '';
     if (getEl('addBizError')) getEl('addBizError').textContent = '';
     if (getEl('addBizSuccess')) getEl('addBizSuccess').textContent = '';
@@ -4079,68 +3362,30 @@ function initApp() {
     safeCall('populate agent select', function() { populateAgentSelect(null); });
     safeCall('converter countries', function() { populateConverterCountries(); });
     safeCall('converter from', function() { populateFromCurrencySelect(); });
-    safeCall('preselect business', function() {
-        const all = getAllBusinesses();
-        if (!lastSelectedBusinessId && all.length > 0) lastSelectedBusinessId = all[0].id;
-    });
-    safeCall('set lang select', function() {
-        const langSel = getEl('langSelect');
-        if (langSel) langSel.value = currentLang;
-        const icon = getEl('langIcon');
-        if (icon) { const map = { en:'🇬🇧', fr:'🇫🇷', ar:'🇸🇦', es:'🇪🇸' }; icon.textContent = map[currentLang] || '🌐'; }
-    });
+    safeCall('preselect business', function() { const all = getAllBusinesses(); if (!lastSelectedBusinessId && all.length > 0) lastSelectedBusinessId = all[0].id; });
+    safeCall('set lang select', function() { const langSel = getEl('langSelect'); if (langSel) langSel.value = currentLang; const icon = getEl('langIcon'); if (icon) { const map = { en:'🇬🇧', fr:'🇫🇷', ar:'🇸🇦', es:'🇪🇸' }; icon.textContent = map[currentLang] || '🌐'; } });
     safeCall('update user country', function() { if (currentUser) { updateUserCountryData(); updateAgentDropdownForCountry(); } });
     safeCall('translate page', function() { translatePage(); });
     safeCall('first toast', function() { showToast('✅ AfriPay ready!', 1500); });
     safeCall('start popup timer', function() { if (currentUser) startPopupAdTimer(); });
     safeCall('update reg preview', function() { updateRegAvatarPreview(); });
 
-    setInterval(function() {
-        const modal = getEl('editAgentModal');
-        if (modal && modal.style.display === 'flex') {
-            try { refreshDashPanes(); } catch (e) {}
-        }
-    }, 5000);
+    setInterval(function() { const modal = getEl('editAgentModal'); if (modal && modal.style.display === 'flex') { try { refreshDashPanes(); } catch (e) {} } }, 5000);
 
     (async function initSupabaseSync() {
         if (!Supa.isReady()) { console.warn('⚠️ Supabase offline mode — using localStorage only'); return; }
         console.log('🔄 Starting Supabase sync...');
-        try {
-            const ptx = await Supa.loadUsedProviderTxIds();
-            if (ptx && ptx.length) {
-                ptx.forEach(function(id) { if (ProviderTxIdManager.usedIds.indexOf(id) === -1) ProviderTxIdManager.usedIds.push(id); });
-                ProviderTxIdManager.saveUsedIds();
-            }
-        } catch (e) { console.warn('loadUsedProviderTxIds:', e); }
-        try {
-            const codes = await Supa.loadUsedTransferCodes();
-            if (codes && codes.length) {
-                codes.forEach(function(c) { if (TransferCodeManager.usedCodes.indexOf(c) === -1) TransferCodeManager.usedCodes.push(c); });
-                TransferCodeManager.saveUsedCodes();
-            }
-        } catch (e) { console.warn('loadUsedTransferCodes:', e); }
+        try { const ptx = await Supa.loadUsedProviderTxIds(); if (ptx && ptx.length) { ptx.forEach(function(id) { if (ProviderTxIdManager.usedIds.indexOf(id) === -1) ProviderTxIdManager.usedIds.push(id); }); ProviderTxIdManager.saveUsedIds(); } } catch (e) { console.warn('loadUsedProviderTxIds:', e); }
+        try { const codes = await Supa.loadUsedTransferCodes(); if (codes && codes.length) { codes.forEach(function(c) { if (TransferCodeManager.usedCodes.indexOf(c) === -1) TransferCodeManager.usedCodes.push(c); }); TransferCodeManager.saveUsedCodes(); } } catch (e) { console.warn('loadUsedTransferCodes:', e); }
         try {
             const cloudAgents = await Supa.getAgents();
             if (cloudAgents && cloudAgents.length) {
                 cloudAgents.forEach(function(a) {
                     const exists = registeredUsers.find(function(u) { return u.businessName === a.business_name; });
-                    const mapped = {
-                        id: 'agent_' + (a.business_name || a.id).replace(/\W/g, '').toLowerCase(),
-                        name: a.business_name, businessName: a.business_name,
-                        businessAddress: a.business_address, city: a.city,
-                        regNumber: a.reg_number, businessType: a.business_type,
-                        ownerName: a.owner_name, idType: a.id_type, idNumber: a.id_number,
-                        mobileMoney: a.mobile_money, countryCode: a.country_code,
-                        password: a.password, pin: a.pin,
-                        collateralAmount: a.collateral_amount, collateralLimit: a.collateral_limit,
-                        currency: a.currency, approved: a.approved, role: 'agent', isAgent: true,
-                        providerTxId: a.provider_tx_id, transferCode: a.transfer_code, nin: a.nin
-                    };
+                    const mapped = { id: 'agent_' + (a.business_name || a.id).replace(/\W/g, '').toLowerCase(), name: a.business_name, businessName: a.business_name, businessAddress: a.business_address, city: a.city, regNumber: a.reg_number, businessType: a.business_type, ownerName: a.owner_name, idType: a.id_type, idNumber: a.id_number, mobileMoney: a.mobile_money, countryCode: a.country_code, password: a.password, pin: a.pin, collateralAmount: a.collateral_amount, collateralLimit: a.collateral_limit, currency: a.currency, approved: a.approved, role: 'agent', isAgent: true, providerTxId: a.provider_tx_id, transferCode: a.transfer_code, nin: a.nin };
                     if (exists) Object.assign(exists, mapped); else registeredUsers.push(mapped);
                 });
-                saveRegisteredUsers();
-                renderAgentDropdown(currentAgentFilterCountry);
-                populateAgentSelect(currentAgentFilterCountry);
+                saveRegisteredUsers(); renderAgentDropdown(currentAgentFilterCountry); populateAgentSelect(currentAgentFilterCountry);
             }
         } catch (e) { console.warn('getAgents:', e); }
         try {
@@ -4149,106 +3394,22 @@ function initApp() {
                 for (let i = 0; i < cloudBiz.length; i++) {
                     const b = cloudBiz[i];
                     const prods = (await Supa.getProductsForBusiness(b.name)) || [];
-                    const bizGoods = prods.map(function(p) {
-                        return { name: p.name, price: parseFloat(p.price) || 0, quantity: p.quantity || 1, quality: p.quality || 'Brand new', icon: p.icon };
-                    });
+                    const bizGoods = prods.map(function(p) { return { name: p.name, price: parseFloat(p.price) || 0, quantity: p.quantity || 1, quality: p.quality || 'Brand new', icon: p.icon }; });
                     const inBase = businesses.find(function(bb) { return bb.name === b.name; });
-                    if (inBase) {
-                        if (bizGoods.length) inBase.goods = bizGoods;
-                        if (b.mobile_money) inBase.mobileMoney = b.mobile_money;
-                        if (b.password) inBase.password = b.password;
-                        if (b.pin) inBase.pin = b.pin;
-                        if (b.mechanisms) inBase.mechanisms = b.mechanisms;
-                    } else {
-                        const inCustom = customBusinesses.find(function(cb) { return cb.name === b.name; });
-                        const bizObj = { id: typeof b.local_id === 'number' ? b.local_id : ('cloud_' + b.id), name: b.name, contact: b.contact, mobileMoney: b.mobile_money, type: b.type, icon: b.icon, website: b.website, address: b.address, city: b.city, country: b.country, password: b.password, pin: b.pin, mechanisms: b.mechanisms || null, goods: bizGoods };
-                        if (inCustom) Object.assign(inCustom, bizObj); else customBusinesses.push(bizObj);
-                    }
+                    if (inBase) { if (bizGoods.length) inBase.goods = bizGoods; if (b.mobile_money) inBase.mobileMoney = b.mobile_money; if (b.password) inBase.password = b.password; if (b.pin) inBase.pin = b.pin; if (b.mechanisms) inBase.mechanisms = b.mechanisms; }
+                    else { const inCustom = customBusinesses.find(function(cb) { return cb.name === b.name; }); const bizObj = { id: typeof b.local_id === 'number' ? b.local_id : ('cloud_' + b.id), name: b.name, contact: b.contact, mobileMoney: b.mobile_money, type: b.type, icon: b.icon, website: b.website, address: b.address, city: b.city, country: b.country, password: b.password, pin: b.pin, mechanisms: b.mechanisms || null, goods: bizGoods }; if (inCustom) Object.assign(inCustom, bizObj); else customBusinesses.push(bizObj); }
                 }
-                saveCustomBusinesses();
-                renderBusinessStrip();
+                saveCustomBusinesses(); renderBusinessStrip();
             }
         } catch (e) { console.warn('getBusinesses:', e); }
-        try {
-            const msgs = await Supa.getChatMessages(50);
-            if (msgs && msgs.length) {
-                const chat = getEl('chatMessages');
-                if (chat) {
-                    chat.innerHTML = '';
-                    msgs.forEach(function(m) {
-                        const el = document.createElement('div');
-                        el.style.cssText = 'background:#fff;padding:6px 10px;border-radius:10px;margin:2px 0;font-size:.82rem;';
-                        el.innerHTML = '<strong>' + escapeHTML(m.sender_name || 'User') + ':</strong> ' + escapeHTML(m.message);
-                        chat.appendChild(el);
-                    });
-                    chat.scrollTop = chat.scrollHeight;
-                }
-            }
-        } catch (e) { console.warn('getChatMessages:', e); }
-        try {
-            const ok = await PendingStore.loadFromCloud();
-            if (ok) { console.log('✅ Pending items synced'); refreshDashPanes(); }
-        } catch (e) { console.warn('PendingStore.loadFromCloud:', e); }
-        try {
-            const ok = await loadDashClientsFromCloud();
-            if (ok) { console.log('✅ Agent clients synced'); refreshDashPanes(); }
-        } catch (e) { console.warn('loadDashClientsFromCloud:', e); }
-        try {
-            Supa.subscribeAgents(async function() {
-                const list = await Supa.getAgents();
-                if (!list) return;
-                list.forEach(function(a) {
-                    const exists = registeredUsers.find(function(u) { return u.businessName === a.business_name; });
-                    const mapped = { id: 'agent_' + (a.business_name || a.id).replace(/\W/g, '').toLowerCase(), name: a.business_name, businessName: a.business_name, businessAddress: a.business_address, city: a.city, regNumber: a.reg_number, businessType: a.business_type, ownerName: a.owner_name, idType: a.id_type, idNumber: a.id_number, mobileMoney: a.mobile_money, countryCode: a.country_code, password: a.password, pin: a.pin, collateralAmount: a.collateral_amount, collateralLimit: a.collateral_limit, currency: a.currency, approved: a.approved, role: 'agent', isAgent: true, providerTxId: a.provider_tx_id, transferCode: a.transfer_code, nin: a.nin };
-                    if (exists) Object.assign(exists, mapped); else registeredUsers.push(mapped);
-                });
-                saveRegisteredUsers();
-                renderAgentDropdown(currentAgentFilterCountry);
-                populateAgentSelect(currentAgentFilterCountry);
-            });
-        } catch (e) { console.warn('subscribeAgents:', e); }
-        try { Supa.subscribeTransactions(function() { showToast('📡 New transaction received', 2000); }); }
-        catch (e) { console.warn('subscribeTransactions:', e); }
-        try {
-            Supa.subscribeChatMessages(function(payload) {
-                const msg = payload.new;
-                const chat = getEl('chatMessages');
-                if (!chat) return;
-                if (msg.sender_name === ((currentUser && currentUser.name) || 'Guest')) return;
-                const el = document.createElement('div');
-                el.style.cssText = 'background:#fff;padding:6px 10px;border-radius:10px;margin:2px 0;font-size:.82rem;';
-                el.innerHTML = '<strong>' + escapeHTML(msg.sender_name || 'User') + ':</strong> ' + escapeHTML(msg.message);
-                chat.appendChild(el);
-                chat.scrollTop = chat.scrollHeight;
-            });
-        } catch (e) { console.warn('subscribeChatMessages:', e); }
-        try {
-            Supa.subscribePendingItems(function(payload) {
-                const rec = payload.new || payload.old;
-                if (!rec) return;
-                const existing = PendingStore.get(rec.id);
-                const mapped = { id: rec.id, type: rec.type, country: rec.country, submittedBy: rec.submitted_by, data: rec.data, status: rec.status, submittedAt: rec.submitted_at, reviewedAt: rec.reviewed_at, reviewedBy: rec.reviewed_by };
-                if (existing) Object.assign(existing, mapped);
-                else PendingStore.items.push(mapped);
-                PendingStore.save();
-                const modal = getEl('editAgentModal');
-                if (modal && modal.style.display === 'flex') refreshDashPanes();
-                if (payload.eventType === 'INSERT') showToast('📥 New pending item received', 2200);
-            });
-        } catch (e) { console.warn('subscribePendingItems:', e); }
-        try {
-            Supa.subscribeAgentClients(function(payload) {
-                const rec = payload.new;
-                if (!rec) return;
-                const existing = dashClients.find(function(c) { return c.id === rec.id; });
-                const mapped = { id: rec.id, agentId: rec.agent_id, name: rec.name, phone: rec.phone, address: rec.address, city: rec.city, country: rec.country, createdAt: rec.created_at };
-                if (existing) Object.assign(existing, mapped);
-                else dashClients.push(mapped);
-                saveDashClients();
-                const modal = getEl('editAgentModal');
-                if (modal && modal.style.display === 'flex' && dashTab === 'clients') renderDashClientsList();
-            });
-        } catch (e) { console.warn('subscribeAgentClients:', e); }
+        try { const msgs = await Supa.getChatMessages(50); if (msgs && msgs.length) { const chat = getEl('chatMessages'); if (chat) { chat.innerHTML = ''; msgs.forEach(function(m) { const el = document.createElement('div'); el.style.cssText = 'background:#fff;padding:6px 10px;border-radius:10px;margin:2px 0;font-size:.82rem;'; el.innerHTML = '<strong>' + escapeHTML(m.sender_name || 'User') + ':</strong> ' + escapeHTML(m.message); chat.appendChild(el); }); chat.scrollTop = chat.scrollHeight; } } } catch (e) { console.warn('getChatMessages:', e); }
+        try { const ok = await PendingStore.loadFromCloud(); if (ok) { console.log('✅ Pending items synced'); refreshDashPanes(); } } catch (e) { console.warn('PendingStore.loadFromCloud:', e); }
+        try { const ok = await loadDashClientsFromCloud(); if (ok) { console.log('✅ Agent clients synced'); refreshDashPanes(); } } catch (e) { console.warn('loadDashClientsFromCloud:', e); }
+        try { Supa.subscribeAgents(async function() { const list = await Supa.getAgents(); if (!list) return; list.forEach(function(a) { const exists = registeredUsers.find(function(u) { return u.businessName === a.business_name; }); const mapped = { id: 'agent_' + (a.business_name || a.id).replace(/\W/g, '').toLowerCase(), name: a.business_name, businessName: a.business_name, businessAddress: a.business_address, city: a.city, regNumber: a.reg_number, businessType: a.business_type, ownerName: a.owner_name, idType: a.id_type, idNumber: a.id_number, mobileMoney: a.mobile_money, countryCode: a.country_code, password: a.password, pin: a.pin, collateralAmount: a.collateral_amount, collateralLimit: a.collateral_limit, currency: a.currency, approved: a.approved, role: 'agent', isAgent: true, providerTxId: a.provider_tx_id, transferCode: a.transfer_code, nin: a.nin }; if (exists) Object.assign(exists, mapped); else registeredUsers.push(mapped); }); saveRegisteredUsers(); renderAgentDropdown(currentAgentFilterCountry); populateAgentSelect(currentAgentFilterCountry); }); } catch (e) { console.warn('subscribeAgents:', e); }
+        try { Supa.subscribeTransactions(function() { showToast('📡 New transaction received', 2000); }); } catch (e) { console.warn('subscribeTransactions:', e); }
+        try { Supa.subscribeChatMessages(function(payload) { const msg = payload.new; const chat = getEl('chatMessages'); if (!chat) return; if (msg.sender_name === ((currentUser && currentUser.name) || 'Guest')) return; const el = document.createElement('div'); el.style.cssText = 'background:#fff;padding:6px 10px;border-radius:10px;margin:2px 0;font-size:.82rem;'; el.innerHTML = '<strong>' + escapeHTML(msg.sender_name || 'User') + ':</strong> ' + escapeHTML(msg.message); chat.appendChild(el); chat.scrollTop = chat.scrollHeight; }); } catch (e) { console.warn('subscribeChatMessages:', e); }
+        try { Supa.subscribePendingItems(function(payload) { const rec = payload.new || payload.old; if (!rec) return; const existing = PendingStore.get(rec.id); const mapped = { id: rec.id, type: rec.type, country: rec.country, submittedBy: rec.submitted_by, data: rec.data, status: rec.status, submittedAt: rec.submitted_at, reviewedAt: rec.reviewed_at, reviewedBy: rec.reviewed_by }; if (existing) Object.assign(existing, mapped); else PendingStore.items.push(mapped); PendingStore.save(); const modal = getEl('editAgentModal'); if (modal && modal.style.display === 'flex') refreshDashPanes(); if (payload.eventType === 'INSERT') showToast('📥 New pending item received', 2200); }); } catch (e) { console.warn('subscribePendingItems:', e); }
+        try { Supa.subscribeAgentClients(function(payload) { const rec = payload.new; if (!rec) return; const existing = dashClients.find(function(c) { return c.id === rec.id; }); const mapped = { id: rec.id, agentId: rec.agent_id, name: rec.name, phone: rec.phone, address: rec.address, city: rec.city, country: rec.country, createdAt: rec.created_at }; if (existing) Object.assign(existing, mapped); else dashClients.push(mapped); saveDashClients(); const modal = getEl('editAgentModal'); if (modal && modal.style.display === 'flex' && dashTab === 'clients') renderDashClientsList(); }); } catch (e) { console.warn('subscribeAgentClients:', e); }
         console.log('✅ Supabase sync complete — cloud realtime active');
     })();
     console.log('✅ initApp complete');
