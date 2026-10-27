@@ -107,7 +107,7 @@ body{background:linear-gradient(145deg,#eef2f7 0%,#d9e2ec 100%);min-height:100vh
 .others-dropdown-menu .wp-btn{background:linear-gradient(135deg,#27ae60,#229954)}
 .others-dropdown-menu .wb-btn{background:linear-gradient(135deg,#8e44ad,#6c3483)}
 .toast-msg{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);background:#1e2f3c;color:#fff;padding:5px 16px;border-radius:40px;z-index:1100;pointer-events:none;opacity:0;visibility:hidden;transition:opacity .25s ease,visibility .25s ease;max-width:85%;text-align:center;font-size:.85rem;white-space:pre-line}
-.chat-toggle-btn{position:fixed;bottom:18px;left:18px;width:60px;height:60px;border-radius:50%;background:#0f2b3d;color:#fff;border:none;box-shadow:0 4px 12px rgba(0,0,0,.3);font-size:2rem;cursor:pointer;z-index:500;display:flex;align-items:center;justify-content:center;position:fixed}
+.chat-toggle-btn{position:fixed;bottom:18px;left:18px;width:60px;height:60px;border-radius:50%;background:#0f2b3d;color:#fff;border:none;box-shadow:0 4px 12px rgba(0,0,0,.3);font-size:2rem;cursor:pointer;z-index:500;display:flex;align-items:center;justify-content:center}
 .chat-toggle-btn .chat-badge{position:absolute;top:-4px;right:-4px;width:20px;height:20px;background:#e74c3c;color:#fff;border-radius:50%;font-size:.7rem;font-weight:800;display:none;align-items:center;justify-content:center;border:2px solid #fff;animation:badge-pulse 1.4s infinite}
 .chat-toggle-btn .chat-badge.show{display:flex}
 @keyframes badge-pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.12);opacity:.85}}
@@ -428,7 +428,6 @@ body{background:linear-gradient(145deg,#eef2f7 0%,#d9e2ec 100%);min-height:100vh
 <div class="input-group"><label>🪪 NIN *</label><input type="text" id="regNin" /></div>
 <div class="input-group"><label>📄 ID Number *</label><input type="text" id="regIdNumber" /></div>
 
-<!-- RESTORED: Profile Avatar upload block -->
 <div class="input-group">
 <label data-i18n="profileAvatar">😊 Profile Avatar</label>
 <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
@@ -461,14 +460,12 @@ body{background:linear-gradient(145deg,#eef2f7 0%,#d9e2ec 100%);min-height:100vh
 <div class="input-group"><label>Password *</label><div style="display:flex;gap:4px;"><input type="text" id="agentPassword" readonly style="flex:1;" /><button type="button" class="action-btn green" id="generatePasswordBtn">🔑 Gen</button></div></div>
 <div class="input-group"><label>5-Digit PIN *</label><div style="display:flex;gap:4px;"><input type="text" id="agentPin" readonly style="flex:1;" /><button type="button" class="action-btn green" id="generatePinBtn">🔑 Gen PIN</button></div></div>
 
-<!-- RESTORED: ID Document upload -->
 <div class="input-group">
 <label>🪪 Upload ID Document *</label>
 <input type="file" id="agentIdUpload" accept="image/*,application/pdf" />
 <img id="agentIdPreview" class="id-preview" alt="ID Preview" />
 </div>
 
-<!-- RESTORED: Business Profile / Logo upload -->
 <div class="input-group">
 <label>🏢 Upload Business Profile / Logo *</label>
 <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
@@ -529,7 +526,6 @@ body{background:linear-gradient(145deg,#eef2f7 0%,#d9e2ec 100%);min-height:100vh
 <div class="input-group"><label>Password *</label><input type="text" id="editPassword" maxlength="6" /></div>
 <div class="input-group"><label>5-Digit PIN *</label><input type="password" id="editPin" maxlength="5" style="text-align:center;" /></div>
 
-<!-- RESTORED: Agent Dashboard logo replacement -->
 <div class="input-group">
 <label data-i18n="replaceLogo">🖼️ Replace Agent Logo</label>
 <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
@@ -606,7 +602,6 @@ body{background:linear-gradient(145deg,#eef2f7 0%,#d9e2ec 100%);min-height:100vh
 <div class="input-group"><label>Icon</label><input type="text" id="dpIcon" maxlength="2" value="📱" /></div>
 </div>
 
-<!-- RESTORED: Product Image upload in dashboard -->
 <div class="input-group">
 <label>📷 Product Image</label>
 <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
@@ -993,7 +988,6 @@ function loadRegisteredUsers() { try { registeredUsers = JSON.parse(localStorage
 function saveRegisteredUsers() {
     try { localStorage.setItem('afripay_registered_users', JSON.stringify(registeredUsers)); }
     catch (e) {
-        // Fallback: strip large avatarDataURL fields
         try {
             const light = registeredUsers.map(function(u) {
                 if (u && u.avatarDataURL && String(u.avatarDataURL).length > 200000) { const c = Object.assign({}, u); delete c.avatarDataURL; return c; }
@@ -1407,7 +1401,6 @@ function openAgentDashboard(agentId) {
     setCityValue('editCitySelect', 'editCityOther', data.city || '');
     setV('editMobileMoney', data.mobileMoney || agent.phone || ''); setV('editPassword', ''); setV('editPin', '');
 
-    /* Show existing agent logo preview */
     const logoPreview = getEl('editAgentLogoPreview');
     const logoRemove = getEl('editAgentRemoveLogoBtn');
     if (logoPreview) {
@@ -1509,7 +1502,6 @@ function submitDashProduct() {
     if (!biz || !name || price <= 0) { msg.textContent = '❌ Fill fields.'; return; }
     PendingStore.add({ type: getEl('dpKind').value, country: getDashArea(), submittedBy: getDashAgent() && getDashAgent().businessName, data: { businessName: biz, name: name, price: price, quantity: parseInt(getEl('dpQty').value) || 1, icon: getEl('dpIcon').value, image: dpImageDataURL || null, kind: getEl('dpKind').value, quality: getEl('dpQuality').value } });
     msg.style.color = '#27ae60'; msg.textContent = '✅ Submitted.'; refreshDashPanes();
-    /* reset product form image */
     dpImageDataURL = null;
     const pv = getEl('dpImagePreview'); if (pv) { pv.src = ''; pv.style.display = 'none'; }
     const cb = getEl('dpImageClearBtn'); if (cb) cb.style.display = 'none';
@@ -1546,7 +1538,6 @@ function setupAgentDashboardEvents() {
         supaBackground(Supa.saveAgent(data), 'Agent update');
     });
 
-    /* Dashboard logo replacement */
     bind('editAgentUploadLogoBtn', 'click', function(e) { e.preventDefault(); const fi = getEl('editLogoImage'); if (fi) fi.click(); });
     bind('editLogoImage', 'change', function() {
         const f = this.files && this.files[0]; if (!f) return;
@@ -1575,7 +1566,6 @@ function setupAgentDashboardEvents() {
         showToast('🗑️ Logo removed', 1500);
     });
 
-    /* Product image upload in dashboard */
     bind('dpImagePickBtn', 'click', function(e) { e.preventDefault(); const fi = getEl('dpImageUpload'); if (fi) fi.click(); });
     bind('dpImageUpload', 'change', function() {
         const f = this.files && this.files[0]; if (!f) return;
@@ -1760,7 +1750,6 @@ function setupEventListeners() {
     safe('agentAuthConfirmBtn', 'click', function(e) { e.preventDefault(); confirmAgentAuth(); });
     safe('doLoginBtn', 'click', function(e) { e.preventDefault(); if (loginUser(getEl('loginName').value, getEl('loginPhone').value)) { getEl('loginModal').style.display = 'none'; getEl('loginName').value = ''; getEl('loginPhone').value = ''; } });
 
-    /* REGISTER — avatar upload buttons */
     safe('regPickEmojiBtn', 'click', function() {
         const grid = getEl('emojiGrid'); if (!grid) return;
         grid.innerHTML = '';
@@ -1810,7 +1799,6 @@ function setupEventListeners() {
         supaBackground(Supa.saveUser(newUser), 'User');
     });
 
-    /* Global header/profile avatar picker */
     safe('userAvatarContainer', 'click', function(e) { if (e.target.closest('.logout-btn') || e.target.closest('.edit-account-btn')) return; if (!currentUser) return; openEmojiPicker(); });
     safe('profileAvatarLarge', 'click', function() { if (!currentUser) return; openEmojiPicker(); });
     safe('emojiUploadImageBtn', 'click', function() { getEl('avatarUploadInput').click(); });
@@ -1880,7 +1868,6 @@ function setupEventListeners() {
         getEl('registerModal').style.display = 'none';
         try { populateCapitalCityDropdown('agentCitySelect'); } catch(err) {}
         try { populateCollateralDropdowns(); } catch(err) {}
-        /* Reset logo preview */
         agentBizProfileDataURL = null; agentBizProfileEmoji = '🏢';
         updateAgentBizProfilePreview();
         if (getEl('agentBizProfileUpload')) getEl('agentBizProfileUpload').value = '';
@@ -1889,7 +1876,6 @@ function setupEventListeners() {
         getEl('agentRegistrationModal').style.display = 'flex';
     });
 
-    /* AGENT REGISTRATION — logo/business profile upload */
     safe('agentPickLogoEmojiBtn', 'click', function() {
         const grid = getEl('emojiGrid'); if (!grid) return;
         grid.innerHTML = '';
@@ -2064,7 +2050,6 @@ function initApp() {
     safeCall('init register avatar preview', function() { updateRegAvatarPreview(); });
     safeCall('init agent biz profile preview', function() { updateAgentBizProfilePreview(); });
 
-    /* Prefix routing self-test */
     try {
         console.log('🧪 Prefix routing self-test:');
         ['030123456', '070123456', '077123456', '088123456', '099123456', '033123456', '080123456', '090123456', '076123456', '078123456', '079123456', '075123456', '074123456', '073123456', '23230123456'].forEach(function(p) {
