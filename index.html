@@ -40,7 +40,7 @@ body{background:linear-gradient(145deg,#eef2f7 0%,#d9e2ec 100%);min-height:100vh
 .auth-buttons{display:flex;gap:4px}
 .auth-btn{background:rgba(255,255,255,.15);border:none;padding:5px 12px;border-radius:30px;color:#fff;cursor:pointer;font-weight:600;height:34px;font-size:.8rem}
 .user-welcome{display:flex;align-items:center;gap:4px;background:rgba(255,255,255,.12);padding:2px 10px 2px 5px;border-radius:30px;height:34px}
-.user-avatar{width:26px;height:26px;border-radius:50%;display:inline-block;background:#2c7da0;color:#fff;text-align:center;line-height:26px;cursor:pointer;position:relative;font-size:.9rem}
+.user-avatar{width:26px;height:26px;border-radius:50%;display:inline-block;background:#2c7da0;color:#fff;text-align:center;line-height:26px;cursor:pointer;position:relative;font-size:.9rem;overflow:hidden}
 .user-avatar-img{width:100%;height:100%;border-radius:50%;object-fit:cover}
 .user-name-display{font-weight:700;font-size:.75rem}
 .logout-btn,.edit-account-btn{background:rgba(255,255,255,.18);border:none;padding:2px 10px;border-radius:20px;color:#fff;cursor:pointer;font-size:.7rem;font-weight:600;height:26px}
@@ -131,7 +131,7 @@ body{background:linear-gradient(145deg,#eef2f7 0%,#d9e2ec 100%);min-height:100vh
 .modal-content{background:#fff;border-radius:1.2rem;padding:.9rem;width:88%;max-width:380px;max-height:80vh;overflow-y:auto;box-shadow:0 20px 40px rgba(0,0,0,.3)}
 .modal-content h3{margin-bottom:5px;font-size:1.05rem}
 .action-buttons-row{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
-.action-btn{padding:7px 14px;border-radius:30px;font-weight:700;border:none;cursor:pointer;background:#0f2b3d;color:#fff;height:40px;font-size:.85rem;display:flex;align-items:center;justify-content:center}
+.action-btn{padding:7px 14px;border-radius:30px;font-weight:700;border:none;cursor:pointer;background:#0f2b3d;color:#fff;height:40px;font-size:.85rem;display:flex;align-items:center;justify-content:center;gap:4px}
 .action-btn.close-modal{background:#ccc;color:#222}
 .action-btn.orange{background:#f4a261}
 .action-btn.green{background:#27ae60}
@@ -425,6 +425,21 @@ body{background:linear-gradient(145deg,#eef2f7 0%,#d9e2ec 100%);min-height:100vh
 <input type="text" id="regAddress" placeholder="Address" style="width:100%;padding:5px 10px;margin:2px 0;border-radius:30px;border:1px solid #ddd;height:38px;" />
 <div class="input-group"><label>City *</label><div class="city-input-row"><select id="regCitySelect"><option value="">Select city...</option></select><span class="or-text">OR</span><input type="text" id="regCityOther" placeholder="Other city" /></div></div>
 <select id="regCountry" style="width:100%;padding:5px 10px;margin:2px 0;border-radius:30px;border:1px solid #ddd;height:38px;"></select>
+<div class="input-group"><label>🪪 NIN *</label><input type="text" id="regNin" /></div>
+<div class="input-group"><label>📄 ID Number *</label><input type="text" id="regIdNumber" /></div>
+
+<!-- RESTORED: Profile Avatar upload block -->
+<div class="input-group">
+<label data-i18n="profileAvatar">😊 Profile Avatar</label>
+<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+<span id="regAvatarPreview" style="font-size:2rem;display:inline-block;">👤</span>
+<button type="button" class="action-btn" id="regPickEmojiBtn" style="background:#2c7da0;height:36px;">🎨 Emoji</button>
+<button type="button" class="action-btn" id="regUploadImageBtn" style="background:#2c7da0;height:36px;">📷 Upload</button>
+<button type="button" class="action-btn" id="regRemoveImageBtn" style="background:#e74c3c;height:36px;display:none;">🗑️</button>
+</div>
+<input type="file" id="regAvatarUploadInput" accept="image/*" class="hidden-input" />
+</div>
+
 <div id="regError" class="error-msg"></div><div id="regSuccess" class="success-msg"></div>
 <div class="action-buttons-row"><button id="doRegisterBtn" class="action-btn">Register</button><button id="registerAgentBtn" class="action-btn orange">🏢 Agent</button><button class="action-btn close-modal">Cancel</button></div>
 </div></div>
@@ -445,6 +460,27 @@ body{background:linear-gradient(145deg,#eef2f7 0%,#d9e2ec 100%);min-height:100vh
 <div class="input-group"><label>Country Code</label><select id="agentCountryCode"><option value="+232">🇸🇱 +232</option><option value="+224" selected>🇬🇳 +224</option><option value="+221">🇸🇳 +221</option><option value="+220">🇬🇲 +220</option><option value="+226">🇧🇫 +226</option></select></div>
 <div class="input-group"><label>Password *</label><div style="display:flex;gap:4px;"><input type="text" id="agentPassword" readonly style="flex:1;" /><button type="button" class="action-btn green" id="generatePasswordBtn">🔑 Gen</button></div></div>
 <div class="input-group"><label>5-Digit PIN *</label><div style="display:flex;gap:4px;"><input type="text" id="agentPin" readonly style="flex:1;" /><button type="button" class="action-btn green" id="generatePinBtn">🔑 Gen PIN</button></div></div>
+
+<!-- RESTORED: ID Document upload -->
+<div class="input-group">
+<label>🪪 Upload ID Document *</label>
+<input type="file" id="agentIdUpload" accept="image/*,application/pdf" />
+<img id="agentIdPreview" class="id-preview" alt="ID Preview" />
+</div>
+
+<!-- RESTORED: Business Profile / Logo upload -->
+<div class="input-group">
+<label>🏢 Upload Business Profile / Logo *</label>
+<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+<span id="agentBizProfilePreviewEmoji" style="font-size:2rem;display:inline-block;">🏢</span>
+<button type="button" class="action-btn blue" id="agentPickLogoEmojiBtn" style="height:36px;">🎨 Emoji</button>
+<button type="button" class="action-btn blue" id="agentUploadLogoBtn" style="height:36px;">📷 Upload</button>
+<button type="button" class="action-btn red" id="agentRemoveLogoBtn" style="height:36px;display:none;">🗑️</button>
+</div>
+<input type="file" id="agentBizProfileUpload" accept="image/*" class="hidden-input" />
+<img id="agentBizProfilePreview" class="id-preview" alt="Business Profile Preview" style="width:60px;height:60px;object-fit:cover;border-radius:50%;" />
+</div>
+
 <div class="collateral-box"><button class="action-btn orange" id="generateCollateralBtn">USSD</button><div id="collateralUssdDisplay" class="ussd-code" style="display:none;"></div><div id="collateralError" class="error-msg"></div></div>
 <div style="text-align:center;margin:6px 0;"><button class="action-btn orange" id="viewAgreementBtn" style="width:100%;">📜 Agreement</button><div style="font-size:.68rem;"><span id="agreementStatusText" style="color:#e74c3c;">Not Signed</span></div></div>
 <div class="input-group"><label>🔐 Provider TX ID *</label><input type="text" id="agentProviderTxId" /><div id="agentProviderTxIdError" class="error-msg"></div></div>
@@ -492,6 +528,18 @@ body{background:linear-gradient(145deg,#eef2f7 0%,#d9e2ec 100%);min-height:100vh
 <div class="input-group"><label>Mobile Money *</label><input type="tel" id="editMobileMoney" /></div>
 <div class="input-group"><label>Password *</label><input type="text" id="editPassword" maxlength="6" /></div>
 <div class="input-group"><label>5-Digit PIN *</label><input type="password" id="editPin" maxlength="5" style="text-align:center;" /></div>
+
+<!-- RESTORED: Agent Dashboard logo replacement -->
+<div class="input-group">
+<label data-i18n="replaceLogo">🖼️ Replace Agent Logo</label>
+<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+<img id="editAgentLogoPreview" alt="Agent Logo" style="width:48px;height:48px;object-fit:cover;border-radius:50%;border:2px solid #d0dce8;display:none;" />
+<button type="button" class="action-btn blue" id="editAgentUploadLogoBtn" style="height:36px;">📷 Upload Logo</button>
+<button type="button" class="action-btn red" id="editAgentRemoveLogoBtn" style="height:36px;display:none;">🗑️ Remove</button>
+</div>
+<input type="file" id="editLogoImage" accept="image/*" class="hidden-input" />
+</div>
+
 <div class="action-buttons-row">
 <button class="action-btn" id="saveEditAgentBtn">Save</button>
 <button class="action-btn close-modal" style="background:#2c7da0;">Close</button>
@@ -557,6 +605,18 @@ body{background:linear-gradient(145deg,#eef2f7 0%,#d9e2ec 100%);min-height:100vh
 <div class="input-group"><label>Name *</label><input type="text" id="dpName" /></div>
 <div class="input-group"><label>Icon</label><input type="text" id="dpIcon" maxlength="2" value="📱" /></div>
 </div>
+
+<!-- RESTORED: Product Image upload in dashboard -->
+<div class="input-group">
+<label>📷 Product Image</label>
+<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+<img id="dpImagePreview" alt="" style="display:none;width:40px;height:40px;object-fit:cover;border-radius:8px;border:1px solid #e0e8f0;" />
+<input type="file" id="dpImageUpload" accept="image/*" class="hidden-input" />
+<button type="button" class="mini-btn neutral" id="dpImagePickBtn">📷 Upload Image</button>
+<button type="button" class="mini-btn reject" id="dpImageClearBtn" style="display:none;">🗑️ Remove</button>
+</div>
+</div>
+
 <div class="double-row">
 <div class="input-group"><label>Price *</label><input type="number" id="dpPrice" step="any" /></div>
 <div class="input-group"><label>Quantity</label><input type="number" id="dpQty" value="1" min="1" /></div>
@@ -696,7 +756,6 @@ body{background:linear-gradient(145deg,#eef2f7 0%,#d9e2ec 100%);min-height:100vh
     else boot();
 })();
 
-/* MANAGERS */
 const ProviderTxIdManager = {
     pattern: /^[A-Za-z]{2}[0-9]{6}\.[0-9]{4}\.[A-Za-z][0-9]{5}$/,
     usedIds: [],
@@ -740,8 +799,8 @@ try {
 
 const Supa = {
     isReady: function() { return !!supabaseClient; },
-    async saveUser(u) { if (!supabaseClient) return null; try { const { data, error } = await supabaseClient.from('users').upsert({ local_id: u.id || null, name: u.name, phone: u.phone, address: u.address || null, city: u.city || null, country: u.country || null, emoji: u.emoji || '👤', role: u.role || 'user' }, { onConflict: 'phone' }).select().single(); if (error) throw error; return data; } catch (e) { return null; } },
-    async saveAgent(a) { if (!supabaseClient) return null; try { const { data, error } = await supabaseClient.from('agents').upsert({ business_name: a.businessName, business_address: a.businessAddress || null, city: a.city || null, reg_number: a.regNumber || null, business_type: a.businessType || null, owner_name: a.ownerName || null, id_type: a.idType || null, id_number: a.idNumber || null, mobile_money: a.mobileMoney || null, country_code: a.countryCode || null, password: a.password || null, pin: a.pin || null, collateral_amount: a.collateralAmount || 0, collateral_limit: a.collateralLimit || 0, currency: a.currency || 'SLL', approved: a.approved === true, status: a.approved ? 'active' : 'pending', provider_tx_id: a.providerTxId || null, nin: a.nin || null, emoji: a.emoji || '🏢' }, { onConflict: 'business_name' }).select().single(); if (error) throw error; return data; } catch (e) { return null; } },
+    async saveUser(u) { if (!supabaseClient) return null; try { const { data, error } = await supabaseClient.from('users').upsert({ local_id: u.id || null, name: u.name, phone: u.phone, address: u.address || null, city: u.city || null, country: u.country || null, emoji: u.emoji || '👤', avatar_data_url: u.avatarDataURL || null, role: u.role || 'user' }, { onConflict: 'phone' }).select().single(); if (error) throw error; return data; } catch (e) { return null; } },
+    async saveAgent(a) { if (!supabaseClient) return null; try { const { data, error } = await supabaseClient.from('agents').upsert({ business_name: a.businessName, business_address: a.businessAddress || null, city: a.city || null, reg_number: a.regNumber || null, business_type: a.businessType || null, owner_name: a.ownerName || null, id_type: a.idType || null, id_number: a.idNumber || null, mobile_money: a.mobileMoney || null, country_code: a.countryCode || null, password: a.password || null, pin: a.pin || null, collateral_amount: a.collateralAmount || 0, collateral_limit: a.collateralLimit || 0, currency: a.currency || 'SLL', approved: a.approved === true, status: a.approved ? 'active' : 'pending', provider_tx_id: a.providerTxId || null, nin: a.nin || null, emoji: a.emoji || '🏢', avatar_data_url: a.avatarDataURL || null }, { onConflict: 'business_name' }).select().single(); if (error) throw error; return data; } catch (e) { return null; } },
     async getAgents() { if (!supabaseClient) return null; try { const { data, error } = await supabaseClient.from('agents').select('*').eq('approved', true); if (error) throw error; return data || []; } catch (e) { return null; } },
     async saveBusiness(b) { if (!supabaseClient) return null; try { const { data, error } = await supabaseClient.from('businesses').upsert({ local_id: typeof b.id === 'number' ? String(b.id) : (b.id || null), name: b.name, contact: b.contact || null, mobile_money: b.mobileMoney || null, type: b.type || null, icon: b.icon || '🏪', website: b.website || null, address: b.address || null, city: b.city || null, country: b.country || null }, { onConflict: 'name' }).select().single(); if (error) throw error; return data; } catch (e) { return null; } },
     async saveTransaction(t) { if (!supabaseClient) return null; try { const { data, error } = await supabaseClient.from('transactions').insert({ tx_id: t.txId, provider_tx_id: t.providerTxId || null, transfer_code: t.transferCode || null, sender_name: t.senderName || null, sender_phone: t.senderPhone || null, agent_name: t.agentName || null, agent_phone: t.agentPhone || null, amount: parseFloat(t.amount) || 0, charge: parseFloat(t.charge) || 0, gst: parseFloat(t.gst) || 0, total: parseFloat(t.total) || 0, currency: t.currency || 'SLL', mode: t.mode || 'Local', status: 'confirmed' }).select().single(); if (error) throw error; return data; } catch (e) { return null; } },
@@ -753,10 +812,10 @@ const Supa = {
 };
 
 const TRANSLATIONS = {
-    en: { login:"Login", register:"Register", logout:"Logout", sender:"👤 SENDER", agent:"👤 AGENT", client:"👥 CLIENT", name:"Name *", phone:"Phone *", address:"Address", city:"City *", amount:"Amount *", country:"🌍 Country", base:"💰 Base:", fee:"📊 Fee (4%):", gst:"🏛️ GST", total:"💵 Total:", currency:"🌍 Currency:", operator:"💸 Operator", txId:"🔖 TX ID", providerTxId:"🔐 Provider TX ID", transferCode:"Transfer Code *", submit:"Submit", quickPay:"⭐ QUICK PAY ⭐", addBiz:"➕ Add Biz", editBiz:"✏️ Edit Biz", about:"About", dev:"Dev", contact:"Contact", subscribe:"Subscribe", how:"📖 How", convert:"💱 Convert", addClient:"➕ Client", gen:"Gen", copy:"Copy", save:"Save", cancel:"Cancel", close:"Close", selectContact:"Select a contact", send:"Send" },
-    fr: { login:"Connexion", register:"Inscription", logout:"Déconnexion", sender:"👤 EXPÉDITEUR", agent:"👤 AGENT", client:"👥 CLIENT", name:"Nom *", phone:"Téléphone *", address:"Adresse", city:"Ville *", amount:"Montant *", country:"🌍 Pays", base:"💰 Base:", fee:"📊 Frais (4%):", gst:"🏛️ TVA", total:"💵 Total:", currency:"🌍 Devise:", operator:"💸 Opérateur", txId:"🔖 ID TX", providerTxId:"🔐 ID TX Fournisseur", transferCode:"Code de transfert *", submit:"Soumettre", quickPay:"⭐ PAIEMENT RAPIDE ⭐", addBiz:"➕ Ajouter Entreprise", editBiz:"✏️ Modifier Entreprise", about:"À propos", dev:"Développeur", contact:"Contact", subscribe:"S'abonner", how:"📖 Comment", convert:"💱 Convertir", addClient:"➕ Client", gen:"Gén", copy:"Copier", save:"Enregistrer", cancel:"Annuler", close:"Fermer", selectContact:"Sélectionner un contact", send:"Envoyer" },
-    ar: { login:"تسجيل الدخول", register:"تسجيل", logout:"خروج", sender:"👤 المرسل", agent:"👤 الوكيل", client:"👥 العميل", name:"الاسم *", phone:"الهاتف *", address:"العنوان", city:"المدينة *", amount:"المبلغ *", country:"🌍 البلد", base:"💰 الأساس:", fee:"📊 الرسوم (4%):", gst:"🏛️ ضريبة", total:"💵 المجموع:", currency:"🌍 العملة:", operator:"💸 المشغل", txId:"🔖 معرف المعاملة", providerTxId:"🔐 معرف مزود المعاملة", transferCode:"رمز التحويل *", submit:"إرسال", quickPay:"⭐ دفع سريع ⭐", addBiz:"➕ إضافة نشاط", editBiz:"✏️ تعديل النشاط", about:"حول", dev:"المطور", contact:"اتصل", subscribe:"اشترك", how:"📖 كيف", convert:"💱 تحويل", addClient:"➕ عميل", gen:"توليد", copy:"نسخ", save:"حفظ", cancel:"إلغاء", close:"إغلاق", selectContact:"اختر جهة اتصال", send:"إرسال" },
-    es: { login:"Iniciar sesión", register:"Registrarse", logout:"Cerrar sesión", sender:"👤 REMITENTE", agent:"👤 AGENTE", client:"👥 CLIENTE", name:"Nombre *", phone:"Teléfono *", address:"Dirección", city:"Ciudad *", amount:"Monto *", country:"🌍 País", base:"💰 Base:", fee:"📊 Tarifa (4%):", gst:"🏛️ IVA", total:"💵 Total:", currency:"🌍 Moneda:", operator:"💸 Operador", txId:"🔖 ID TX", providerTxId:"🔐 ID TX Proveedor", transferCode:"Código de transferencia *", submit:"Enviar", quickPay:"⭐ PAGO RÁPIDO ⭐", addBiz:"➕ Añadir Negocio", editBiz:"✏️ Editar Negocio", about:"Acerca de", dev:"Desarrollador", contact:"Contacto", subscribe:"Suscribirse", how:"📖 Cómo", convert:"💱 Convertir", addClient:"➕ Cliente", gen:"Gen", copy:"Copiar", save:"Guardar", cancel:"Cancelar", close:"Cerrar", selectContact:"Selecciona un contacto", send:"Enviar" }
+    en: { login:"Login", register:"Register", logout:"Logout", sender:"👤 SENDER", agent:"👤 AGENT", client:"👥 CLIENT", name:"Name *", phone:"Phone *", address:"Address", city:"City *", amount:"Amount *", country:"🌍 Country", base:"💰 Base:", fee:"📊 Fee (4%):", gst:"🏛️ GST", total:"💵 Total:", currency:"🌍 Currency:", operator:"💸 Operator", txId:"🔖 TX ID", providerTxId:"🔐 Provider TX ID", transferCode:"Transfer Code *", submit:"Submit", quickPay:"⭐ QUICK PAY ⭐", addBiz:"➕ Add Biz", editBiz:"✏️ Edit Biz", about:"About", dev:"Dev", contact:"Contact", subscribe:"Subscribe", how:"📖 How", convert:"💱 Convert", addClient:"➕ Client", gen:"Gen", copy:"Copy", save:"Save", cancel:"Cancel", close:"Close", selectContact:"Select a contact", send:"Send", chooseAvatar:"😊 Choose Your Avatar", profileAvatar:"😊 Profile Avatar", upload:"📷 Upload", remove:"🗑️ Remove", emoji:"🎨 Emoji", replaceLogo:"🖼️ Replace Agent Logo", credentialsCorrect:"✅ Credentials correct" },
+    fr: { login:"Connexion", register:"Inscription", logout:"Déconnexion", sender:"👤 EXPÉDITEUR", agent:"👤 AGENT", client:"👥 CLIENT", name:"Nom *", phone:"Téléphone *", address:"Adresse", city:"Ville *", amount:"Montant *", country:"🌍 Pays", base:"💰 Base:", fee:"📊 Frais (4%):", gst:"🏛️ TVA", total:"💵 Total:", currency:"🌍 Devise:", operator:"💸 Opérateur", txId:"🔖 ID TX", providerTxId:"🔐 ID TX Fournisseur", transferCode:"Code de transfert *", submit:"Soumettre", quickPay:"⭐ PAIEMENT RAPIDE ⭐", addBiz:"➕ Ajouter Entreprise", editBiz:"✏️ Modifier Entreprise", about:"À propos", dev:"Développeur", contact:"Contact", subscribe:"S'abonner", how:"📖 Comment", convert:"💱 Convertir", addClient:"➕ Client", gen:"Gén", copy:"Copier", save:"Enregistrer", cancel:"Annuler", close:"Fermer", selectContact:"Sélectionner un contact", send:"Envoyer", chooseAvatar:"😊 Choisissez votre avatar", profileAvatar:"😊 Avatar du profil", upload:"📷 Télécharger", remove:"🗑️ Supprimer", emoji:"🎨 Emoji", replaceLogo:"🖼️ Remplacer le logo", credentialsCorrect:"✅ Identifiants corrects" },
+    ar: { login:"تسجيل الدخول", register:"تسجيل", logout:"خروج", sender:"👤 المرسل", agent:"👤 الوكيل", client:"👥 العميل", name:"الاسم *", phone:"الهاتف *", address:"العنوان", city:"المدينة *", amount:"المبلغ *", country:"🌍 البلد", base:"💰 الأساس:", fee:"📊 الرسوم (4%):", gst:"🏛️ ضريبة", total:"💵 المجموع:", currency:"🌍 العملة:", operator:"💸 المشغل", txId:"🔖 معرف المعاملة", providerTxId:"🔐 معرف مزود المعاملة", transferCode:"رمز التحويل *", submit:"إرسال", quickPay:"⭐ دفع سريع ⭐", addBiz:"➕ إضافة نشاط", editBiz:"✏️ تعديل النشاط", about:"حول", dev:"المطور", contact:"اتصل", subscribe:"اشترك", how:"📖 كيف", convert:"💱 تحويل", addClient:"➕ عميل", gen:"توليد", copy:"نسخ", save:"حفظ", cancel:"إلغاء", close:"إغلاق", selectContact:"اختر جهة اتصال", send:"إرسال", chooseAvatar:"😊 اختر الصورة الرمزية", profileAvatar:"😊 صورة الملف الشخصي", upload:"📷 رفع", remove:"🗑️ إزالة", emoji:"🎨 رمز", replaceLogo:"🖼️ استبدال الشعار", credentialsCorrect:"✅ بيانات الاعتماد صحيحة" },
+    es: { login:"Iniciar sesión", register:"Registrarse", logout:"Cerrar sesión", sender:"👤 REMITENTE", agent:"👤 AGENTE", client:"👥 CLIENTE", name:"Nombre *", phone:"Teléfono *", address:"Dirección", city:"Ciudad *", amount:"Monto *", country:"🌍 País", base:"💰 Base:", fee:"📊 Tarifa (4%):", gst:"🏛️ IVA", total:"💵 Total:", currency:"🌍 Moneda:", operator:"💸 Operador", txId:"🔖 ID TX", providerTxId:"🔐 ID TX Proveedor", transferCode:"Código de transferencia *", submit:"Enviar", quickPay:"⭐ PAGO RÁPIDO ⭐", addBiz:"➕ Añadir Negocio", editBiz:"✏️ Editar Negocio", about:"Acerca de", dev:"Desarrollador", contact:"Contacto", subscribe:"Suscribirse", how:"📖 Cómo", convert:"💱 Convertir", addClient:"➕ Cliente", gen:"Gen", copy:"Copiar", save:"Guardar", cancel:"Cancelar", close:"Cerrar", selectContact:"Selecciona un contacto", send:"Enviar", chooseAvatar:"😊 Elige tu avatar", profileAvatar:"😊 Avatar del perfil", upload:"📷 Subir", remove:"🗑️ Eliminar", emoji:"🎨 Emoji", replaceLogo:"🖼️ Reemplazar logo", credentialsCorrect:"✅ Credenciales correctas" }
 };
 
 let currentLang = 'en';
@@ -838,13 +897,42 @@ let customBusinesses = [];
 let lastSelectedBusinessId = null;
 let regAvatarDataURL = null;
 let regEmoji = '👤';
+let agentBizProfileDataURL = null;
+let agentBizProfileEmoji = '🏢';
 let paybackTargetAgentId = null;
 let currentClient = null;
 let pendingAgentAuthId = null;
 let chatActiveTarget = null;
 let chatUnreadCount = 0;
+let dpImageDataURL = null;
 
 const APP_LINKS = { directPay: 'https://www.appcreator24.com/app4066434-hmkuo4', watuPay: 'https://aminejalloh-io.github.io/WatuPay/', weBine: 'https://www.appcreator24.com/app814705-24jpuf' };
+
+/* ============================================================ */
+/* IMAGE RESIZE (for logos and products) */
+/* ============================================================ */
+function resizeImageFile(file, maxSize, quality) {
+    return new Promise(function(resolve, reject) {
+        if (!file || !file.type || file.type.indexOf('image/') !== 0) { reject(new Error('Not an image file')); return; }
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+            const img = new Image();
+            img.onload = function() {
+                try {
+                    let w = img.width || maxSize, h = img.height || maxSize;
+                    if (w > maxSize || h > maxSize) { if (w > h) { h = Math.round(h * maxSize / w); w = maxSize; } else { w = Math.round(w * maxSize / h); h = maxSize; } }
+                    const canvas = document.createElement('canvas'); canvas.width = w; canvas.height = h;
+                    const ctx = canvas.getContext('2d'); ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, w, h); ctx.drawImage(img, 0, 0, w, h);
+                    resolve(canvas.toDataURL('image/jpeg', quality || 0.82));
+                } catch (e) { reject(e); }
+            };
+            img.onerror = function() { reject(new Error('Image load failed')); };
+            img.src = ev.target.result;
+        };
+        reader.onerror = function() { reject(new Error('File read failed')); };
+        reader.readAsDataURL(file);
+    });
+}
 
 function populateCapitalCityDropdown(selectId) {
     const s = getEl(selectId); if (!s) return;
@@ -903,7 +991,17 @@ function updateUserCountryData() {
 }
 function loadRegisteredUsers() { try { registeredUsers = JSON.parse(localStorage.getItem('afripay_registered_users') || '[]'); } catch (e) { registeredUsers = []; } if (!Array.isArray(registeredUsers)) registeredUsers = []; }
 function saveRegisteredUsers() {
-    try { localStorage.setItem('afripay_registered_users', JSON.stringify(registeredUsers)); } catch (e) {}
+    try { localStorage.setItem('afripay_registered_users', JSON.stringify(registeredUsers)); }
+    catch (e) {
+        // Fallback: strip large avatarDataURL fields
+        try {
+            const light = registeredUsers.map(function(u) {
+                if (u && u.avatarDataURL && String(u.avatarDataURL).length > 200000) { const c = Object.assign({}, u); delete c.avatarDataURL; return c; }
+                return u;
+            });
+            localStorage.setItem('afripay_registered_users', JSON.stringify(light));
+        } catch (e2) {}
+    }
     try { syncConnectedUsersFromRegistered(); } catch (e) {}
 }
 function syncConnectedUsersFromRegistered() {
@@ -1028,7 +1126,13 @@ function computeCharges() {
     if (getEl('totalAmount')) getEl('totalAmount').innerText = total.toFixed(2);
     if (getEl('currencySymbol')) getEl('currencySymbol').innerText = isLocalMode ? getUserCurrency() : currentCountryData.currency;
 }
-function saveUserToStorage(u) { if (!u) return; try { localStorage.setItem('afripay_user', JSON.stringify(u)); } catch (e) {} }
+function saveUserToStorage(u) {
+    if (!u) return;
+    try { localStorage.setItem('afripay_user', JSON.stringify(u)); }
+    catch (e) {
+        try { const light = Object.assign({}, u); delete light.avatarDataURL; localStorage.setItem('afripay_user', JSON.stringify(light)); } catch (e2) {}
+    }
+}
 function clearUserStorage() { try { localStorage.removeItem('afripay_user'); } catch (e) {} currentUser = null; showLoggedOutUI(); }
 function loadStoredUser() {
     const stored = localStorage.getItem('afripay_user');
@@ -1068,12 +1172,14 @@ function showLoggedOutUI() {
 }
 function updateAvatarDisplay(user) {
     const em = getEl('userAvatarEmoji'), img = getEl('userAvatarImg'); if (!em || !img) return;
-    if (user && user.emoji) { em.style.display = 'inline'; img.style.display = 'none'; em.innerText = user.emoji; }
+    if (user && user.avatarDataURL) { em.style.display = 'none'; img.style.display = 'block'; img.src = user.avatarDataURL; }
+    else if (user && user.emoji) { em.style.display = 'inline'; img.style.display = 'none'; em.innerText = user.emoji; }
     else { em.style.display = 'inline'; img.style.display = 'none'; em.innerText = '👤'; }
 }
 function updateProfileAvatarDisplay(user) {
     const em = getEl('profileAvatarEmoji'), img = getEl('profileAvatarImg'); if (!em || !img) return;
-    if (user && user.emoji) { em.style.display = 'inline'; img.style.display = 'none'; em.innerText = user.emoji; }
+    if (user && user.avatarDataURL) { em.style.display = 'none'; img.style.display = 'block'; img.src = user.avatarDataURL; }
+    else if (user && user.emoji) { em.style.display = 'inline'; img.style.display = 'none'; em.innerText = user.emoji; }
     else { em.style.display = 'inline'; img.style.display = 'none'; em.innerText = '👤'; }
 }
 function loginUser(fullName, phoneNumber) {
@@ -1091,7 +1197,7 @@ function loginUser(fullName, phoneNumber) {
     loadRegisteredUsers();
     const user = registeredUsers.find(function(u) { return u.name.toLowerCase() === name.toLowerCase() && u.phone === phone; });
     if (user) {
-        currentUser = { name:user.name, phone:user.phone, address:user.address || '', city:user.city || '', country:user.country || '', emoji:user.emoji || '👤' };
+        currentUser = { name:user.name, phone:user.phone, address:user.address || '', city:user.city || '', country:user.country || '', emoji:user.emoji || '👤', avatarDataURL: user.avatarDataURL || null };
         saveUserToStorage(currentUser);
         showToast('✅ Welcome ' + currentUser.name + '!', 1800);
         showLoggedInUI(); renderAgentDropdown(currentAgentFilterCountry); populateAgentSelect(currentAgentFilterCountry);
@@ -1171,7 +1277,7 @@ function openEmojiPicker() {
     AVAILABLE_EMOJIS.forEach(function(e) { const s = document.createElement('span'); s.className = 'emoji-option'; s.textContent = e; s.addEventListener('click', function() { applyEmoji(e); }); grid.appendChild(s); });
     getEl('emojiPickerModal').style.display = 'flex';
 }
-function applyEmoji(e) { if (currentUser) { currentUser.emoji = e; saveUserToStorage(currentUser); updateAvatarDisplay(currentUser); updateProfileAvatarDisplay(currentUser); } showToast('✅ Avatar: ' + e, 1500); setTimeout(function() { getEl('emojiPickerModal').style.display = 'none'; }, 400); }
+function applyEmoji(e) { if (currentUser) { currentUser.emoji = e; currentUser.avatarDataURL = null; saveUserToStorage(currentUser); updateAvatarDisplay(currentUser); updateProfileAvatarDisplay(currentUser); } showToast('✅ Avatar: ' + e, 1500); setTimeout(function() { getEl('emojiPickerModal').style.display = 'none'; }, 400); }
 function applyAvatarImage(dataURL) { if (currentUser) { currentUser.avatarDataURL = dataURL; saveUserToStorage(currentUser); updateAvatarDisplay(currentUser); updateProfileAvatarDisplay(currentUser); } showToast('✅ Image updated!', 1800); getEl('emojiPickerModal').style.display = 'none'; }
 function removeAvatarImage() { if (currentUser) { currentUser.avatarDataURL = null; if (!currentUser.emoji) currentUser.emoji = '👤'; saveUserToStorage(currentUser); updateAvatarDisplay(currentUser); updateProfileAvatarDisplay(currentUser); } showToast('🗑️ Image removed', 1500); }
 function renderHeaderFlags() {
@@ -1214,7 +1320,6 @@ function initializePermanentAgents() {
             { biz:'TW-SENEGAL GUINEE', owner:'TW Rep', addr:'Dakar', city:'Dakar', reg:'TW-2025-001', mobile:'772605278', cc:'+221', pw:'TW$en1', pin:'12345', collat:2000, curr:'XOF', pTx:'TW123456.1234.X12345', tCode:'12345678', nin:'SN-123456789' },
             { biz:'IBS-Burkina', owner:'Ibrahim Simpore', addr:'Ouagadougou', city:'Ouagadougou', reg:'IB2563245S', mobile:'66960317', cc:'+226', pw:'8PESWF', pin:'87411', collat:200, curr:'XOF', pTx:'MP260662.2354.A25632', tCode:'036214', nin:'A3335688' }
         ];
-
         seedData.forEach(function(s) {
             const existing = registeredUsers.find(function(u) { return u.businessName === s.biz; });
             if (existing) {
@@ -1301,6 +1406,15 @@ function openAgentDashboard(agentId) {
     setV('editAgentId', agentId); setV('editBusinessName', data.businessName || ''); setV('editAddress', data.businessAddress || '');
     setCityValue('editCitySelect', 'editCityOther', data.city || '');
     setV('editMobileMoney', data.mobileMoney || agent.phone || ''); setV('editPassword', ''); setV('editPin', '');
+
+    /* Show existing agent logo preview */
+    const logoPreview = getEl('editAgentLogoPreview');
+    const logoRemove = getEl('editAgentRemoveLogoBtn');
+    if (logoPreview) {
+        if (data.avatarDataURL) { logoPreview.src = data.avatarDataURL; logoPreview.style.display = 'block'; if (logoRemove) logoRemove.style.display = 'inline-flex'; }
+        else { logoPreview.src = ''; logoPreview.style.display = 'none'; if (logoRemove) logoRemove.style.display = 'none'; }
+    }
+
     if (getEl('agentDashTitle')) getEl('agentDashTitle').innerHTML = '🏢 ' + escapeHTML((data.businessName || 'Agent').replace(/\(.*\)/, '').trim());
     if (getEl('agentDashSubtitle')) getEl('agentDashSubtitle').innerHTML = getAgentFlag(agent) + ' ' + escapeHTML(getDashArea() || '—');
     switchDashTab('profile');
@@ -1393,8 +1507,13 @@ function submitDashProduct() {
     const biz = getEl('dpBusiness').value; const name = (getEl('dpName').value || '').trim(); const price = parseFloat(getEl('dpPrice').value) || 0;
     const msg = getEl('dpMsg'); msg.style.color = '#c0392b';
     if (!biz || !name || price <= 0) { msg.textContent = '❌ Fill fields.'; return; }
-    PendingStore.add({ type: getEl('dpKind').value, country: getDashArea(), submittedBy: getDashAgent() && getDashAgent().businessName, data: { businessName: biz, name: name, price: price, quantity: parseInt(getEl('dpQty').value) || 1, icon: getEl('dpIcon').value, kind: getEl('dpKind').value, quality: getEl('dpQuality').value } });
+    PendingStore.add({ type: getEl('dpKind').value, country: getDashArea(), submittedBy: getDashAgent() && getDashAgent().businessName, data: { businessName: biz, name: name, price: price, quantity: parseInt(getEl('dpQty').value) || 1, icon: getEl('dpIcon').value, image: dpImageDataURL || null, kind: getEl('dpKind').value, quality: getEl('dpQuality').value } });
     msg.style.color = '#27ae60'; msg.textContent = '✅ Submitted.'; refreshDashPanes();
+    /* reset product form image */
+    dpImageDataURL = null;
+    const pv = getEl('dpImagePreview'); if (pv) { pv.src = ''; pv.style.display = 'none'; }
+    const cb = getEl('dpImageClearBtn'); if (cb) cb.style.display = 'none';
+    const fi = getEl('dpImageUpload'); if (fi) fi.value = '';
 }
 function setupAgentDashboardEvents() {
     const modal = getEl('editAgentModal');
@@ -1426,10 +1545,59 @@ function setupAgentDashboardEvents() {
         setTimeout(function() { getEl('editAgentModal').style.display = 'none'; }, 1000);
         supaBackground(Supa.saveAgent(data), 'Agent update');
     });
+
+    /* Dashboard logo replacement */
+    bind('editAgentUploadLogoBtn', 'click', function(e) { e.preventDefault(); const fi = getEl('editLogoImage'); if (fi) fi.click(); });
+    bind('editLogoImage', 'change', function() {
+        const f = this.files && this.files[0]; if (!f) return;
+        resizeImageFile(f, 200, 0.82).then(function(dataUrl) {
+            const aid = getEl('editAgentId').value;
+            const agent = getAgents().find(function(a) { return a.id === aid; });
+            if (agent) {
+                const data = agent.agentData || agent;
+                data.avatarDataURL = dataUrl;
+                saveRegisteredUsers();
+                supaBackground(Supa.saveAgent(data), 'Agent logo');
+            }
+            const pv = getEl('editAgentLogoPreview'); if (pv) { pv.src = dataUrl; pv.style.display = 'block'; }
+            const rb = getEl('editAgentRemoveLogoBtn'); if (rb) rb.style.display = 'inline-flex';
+            showToast('✅ Logo updated', 1800);
+        }).catch(function() { showToast('⚠️ Could not process image.', 2200); });
+        this.value = '';
+    });
+    bind('editAgentRemoveLogoBtn', 'click', function(e) {
+        e.preventDefault();
+        const aid = getEl('editAgentId').value;
+        const agent = getAgents().find(function(a) { return a.id === aid; });
+        if (agent) { const data = agent.agentData || agent; delete data.avatarDataURL; saveRegisteredUsers(); supaBackground(Supa.saveAgent(data), 'Agent logo removed'); }
+        const pv = getEl('editAgentLogoPreview'); if (pv) { pv.src = ''; pv.style.display = 'none'; }
+        this.style.display = 'none';
+        showToast('🗑️ Logo removed', 1500);
+    });
+
+    /* Product image upload in dashboard */
+    bind('dpImagePickBtn', 'click', function(e) { e.preventDefault(); const fi = getEl('dpImageUpload'); if (fi) fi.click(); });
+    bind('dpImageUpload', 'change', function() {
+        const f = this.files && this.files[0]; if (!f) return;
+        resizeImageFile(f, 200, 0.82).then(function(dataUrl) {
+            dpImageDataURL = dataUrl;
+            const pv = getEl('dpImagePreview'); if (pv) { pv.src = dataUrl; pv.style.display = 'block'; }
+            const cb = getEl('dpImageClearBtn'); if (cb) cb.style.display = 'inline-flex';
+            showToast('✅ Image ready', 1200);
+        }).catch(function() { showToast('⚠️ Could not process image.', 2200); });
+        this.value = '';
+    });
+    bind('dpImageClearBtn', 'click', function(e) {
+        e.preventDefault();
+        dpImageDataURL = null;
+        const pv = getEl('dpImagePreview'); if (pv) { pv.src = ''; pv.style.display = 'none'; }
+        this.style.display = 'none';
+        const fi = getEl('dpImageUpload'); if (fi) fi.value = '';
+    });
 }
 
 /* ============================================================ */
-/* MB-FOUR — FIXED PREFIX ROUTING (2-DIGIT MATCH) */
+/* MB-FOUR — fixed 2-digit prefix routing */
 /* ============================================================ */
 const PREFIX_144_2D = ['76','78','79','75','74','73'];
 const PREFIX_161_2D = ['88','99','77','33','30','70','80','90'];
@@ -1437,213 +1605,138 @@ const PREFIX_161_2D = ['88','99','77','33','30','70','80','90'];
 function getUssdTemplateForPhone(agentPhoneDigits) {
     const digits = String(agentPhoneDigits || '').replace(/\D/g, '');
     let local = digits;
-    // Strip leading +232 / 232 / 0
     if (local.indexOf('232') === 0) local = local.slice(3);
     if (local.indexOf('0') === 0) local = local.slice(1);
-    // Now local is the 2-digit operator prefix + rest of number
-    const twoDigit = local.slice(0, 2);   // "76", "88", "30", "70", "90", "80", ...
-
+    const twoDigit = local.slice(0, 2);
     console.log('🔀 USSD routing:', { raw: digits, normalized: local, twoDigit: twoDigit });
-
-    if (PREFIX_144_2D.indexOf(twoDigit) !== -1) {
-        return { variant: '144', template: '#144*2*2*{AGENT}*{AMOUNT}*0000#', label: 'MB-FOUR (144)' };
-    }
-    if (PREFIX_161_2D.indexOf(twoDigit) !== -1) {
-        return { variant: '161', template: '*161*1*1*{AGENT}*{AMOUNT}*0000#', label: 'MB-FOUR (161)' };
-    }
-    // Default fallback
+    if (PREFIX_144_2D.indexOf(twoDigit) !== -1) return { variant: '144', template: '#144*2*2*{AGENT}*{AMOUNT}*0000#', label: 'MB-FOUR (144)' };
+    if (PREFIX_161_2D.indexOf(twoDigit) !== -1) return { variant: '161', template: '*161*1*1*{AGENT}*{AMOUNT}*0000#', label: 'MB-FOUR (161)' };
     return { variant: '144', template: '#144*2*2*{AGENT}*{AMOUNT}*0000#', label: 'MB-FOUR (144)' };
 }
-
 function getSenderCountry() { if (currentUser && currentUser.country) return currentUser.country; return getCountryNameFromSelect() || null; }
 
 function openMbFourAgentPicker() {
     const allAgents = getAdminApprovedAgents();
     if (!allAgents.length) { showToast('⚠️ No admin-approved agents available yet.', 2800); return; }
-
     const senderCountry = getSenderCountry();
     let agents = allAgents;
     if (senderCountry) {
-        const filtered = allAgents.filter(function(a) {
-            const cn = getAgentCountryName(a);
-            return cn && cn.toLowerCase() === senderCountry.toLowerCase();
-        });
+        const filtered = allAgents.filter(function(a) { const cn = getAgentCountryName(a); return cn && cn.toLowerCase() === senderCountry.toLowerCase(); });
         if (filtered.length > 0) agents = filtered;
         else showToast('⚠️ No admin-approved agents in ' + senderCountry + ' — showing all.', 2800);
     }
-
-    const modal = getEl('mbFourAgentPicker');
-    const list = getEl('mbFourAgentList');
-    const hint = getEl('mbFourPickerHint');
+    const modal = getEl('mbFourAgentPicker'); const list = getEl('mbFourAgentList'); const hint = getEl('mbFourPickerHint');
     if (!modal || !list) return;
-
-    if (hint) {
-        hint.innerHTML = senderCountry
-            ? 'Showing <strong>admin-approved</strong> agents in <strong>' + escapeHTML(senderCountry) + '</strong>.'
-            : 'Showing <strong>admin-approved</strong> agents only.';
-    }
-
+    if (hint) hint.innerHTML = senderCountry ? 'Showing <strong>admin-approved</strong> agents in <strong>' + escapeHTML(senderCountry) + '</strong>.' : 'Showing <strong>admin-approved</strong> agents only.';
     if (agents.length === 1) { selectAgent(agents[0].id); confirmMbFourAgent(agents[0].id); return; }
-
     const byCountry = {};
-    agents.forEach(function(a) {
-        const c = getAgentCountryName(a) || 'Other';
-        if (!byCountry[c]) byCountry[c] = [];
-        byCountry[c].push(a);
-    });
-
+    agents.forEach(function(a) { const c = getAgentCountryName(a) || 'Other'; if (!byCountry[c]) byCountry[c] = []; byCountry[c].push(a); });
     list.innerHTML = Object.keys(byCountry).sort().map(function(country) {
-        const code = COUNTRY_NAME_TO_CODE[country];
-        const flag = (code && COUNTRY_CODE_TO_FLAG[code]) || '🌍';
+        const code = COUNTRY_NAME_TO_CODE[country]; const flag = (code && COUNTRY_CODE_TO_FLAG[code]) || '🌍';
         const header = '<div style="font-weight:800;color:#1c6e8f;font-size:.78rem;margin:8px 0 4px;border-left:3px solid #f4a261;padding-left:7px;">' + flag + ' ' + escapeHTML(country) + '</div>';
-        const rows = byCountry[country].sort(function(a, b) {
-            const an = (a.agentData && a.agentData.businessName) || a.name;
-            const bn = (b.agentData && b.agentData.businessName) || b.name;
-            return an.localeCompare(bn);
-        }).map(function(a) {
-            const d = a.agentData || a;
-            const name = (d.businessName || a.name || '').replace(/\(.*\)/, '').trim();
-            const phone = d.mobileMoney || d.phone || a.phone || '—';
-            const route = getUssdTemplateForPhone(phone);
-            return '<button type="button" class="broadcast-option" data-mbfour-agent="' + escapeHTML(a.id) + '" style="width:100%;text-align:left;">' +
-                '<span class="bo-icon">' + (d.emoji || '🏢') + '</span>' +
-                '<span class="bo-text">' +
-                    '<span class="bo-title">' + escapeHTML(name) + ' <span style="color:#27ae60;font-size:.62rem;font-weight:700;">✅ Admin-verified</span></span>' +
-                    '<span class="bo-sub">📱 ' + escapeHTML(phone) + ' · 🔀 ' + route.label + '</span>' +
-                '</span>' +
-                '<span style="color:#2c7da0;font-size:1.2rem;">›</span>' +
-            '</button>';
+        const rows = byCountry[country].sort(function(a, b) { const an = (a.agentData && a.agentData.businessName) || a.name; const bn = (b.agentData && b.agentData.businessName) || b.name; return an.localeCompare(bn); }).map(function(a) {
+            const d = a.agentData || a; const name = (d.businessName || a.name || '').replace(/\(.*\)/, '').trim();
+            const phone = d.mobileMoney || d.phone || a.phone || '—'; const route = getUssdTemplateForPhone(phone);
+            return '<button type="button" class="broadcast-option" data-mbfour-agent="' + escapeHTML(a.id) + '" style="width:100%;text-align:left;"><span class="bo-icon">' + (d.emoji || '🏢') + '</span><span class="bo-text"><span class="bo-title">' + escapeHTML(name) + ' <span style="color:#27ae60;font-size:.62rem;font-weight:700;">✅ Admin-verified</span></span><span class="bo-sub">📱 ' + escapeHTML(phone) + ' · 🔀 ' + route.label + '</span></span><span style="color:#2c7da0;font-size:1.2rem;">›</span></button>';
         }).join('');
         return header + rows;
     }).join('');
-
-    list.querySelectorAll('[data-mbfour-agent]').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-            const id = btn.getAttribute('data-mbfour-agent');
-            selectAgent(id);
-            modal.style.display = 'none';
-            confirmMbFourAgent(id);
-        });
-    });
-
+    list.querySelectorAll('[data-mbfour-agent]').forEach(function(btn) { btn.addEventListener('click', function() { const id = btn.getAttribute('data-mbfour-agent'); selectAgent(id); modal.style.display = 'none'; confirmMbFourAgent(id); }); });
     modal.style.display = 'flex';
 }
 
 function confirmMbFourAgent(agentId) {
     const agent = getAgents().find(function(a) { return a.id === agentId; });
     if (!agent) { showToast('⚠️ Agent not found.', 2200); return; }
-
     const d = agent.agentData || agent;
     const phoneRaw = String(d.mobileMoney || d.phone || agent.phone || '').replace(/\D/g, '');
     if (phoneRaw.length < 6) { showToast('⚠️ Agent has no valid phone number.', 2600); return; }
-
     const amountRaw = parseFloat(getEl('amountInput') && getEl('amountInput').value) || 0;
     const amt = Math.round(amountRaw);
     if (amt <= 0) { showToast('⚠️ Enter a valid amount first.', 2200); return; }
-
     const route = getUssdTemplateForPhone(phoneRaw);
     const ussd = route.template.replace('{AGENT}', phoneRaw).replace('{AMOUNT}', String(amt));
-
     const displayName = (d.businessName || agent.name || 'Agent').replace(/\(.*\)/, '').trim();
     const isMobile = /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|Mobile/i.test(navigator.userAgent);
-
     if (isMobile) {
-        const link = document.createElement('a');
-        link.href = 'tel:' + ussd;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        const link = document.createElement('a'); link.href = 'tel:' + ussd;
+        document.body.appendChild(link); link.click(); document.body.removeChild(link);
         showToast('📞 ' + route.label + ' → ' + displayName + ' · ' + amt + '\nEnter your PIN in the dialer.', 5000);
         return;
     }
-
     showMbFourUssdModal({ agentName: displayName, agentPhone: phoneRaw, amount: amt, routeLabel: route.label, ussd: ussd });
 }
 
 function showMbFourUssdModal(data) {
-    const existing = document.getElementById('mbFourUssdDisplayModal');
-    if (existing) existing.remove();
-
+    const existing = document.getElementById('mbFourUssdDisplayModal'); if (existing) existing.remove();
     const modal = document.createElement('div');
-    modal.id = 'mbFourUssdDisplayModal';
-    modal.className = 'modal';
-    modal.style.display = 'flex';
-
-    const escapedName = escapeHTML(data.agentName);
-    const escapedPhone = escapeHTML(data.agentPhone);
-    const escapedAmount = escapeHTML(String(data.amount));
-    const escapedRoute = escapeHTML(data.routeLabel);
-    const escapedUssd = escapeHTML(data.ussd);
-
+    modal.id = 'mbFourUssdDisplayModal'; modal.className = 'modal'; modal.style.display = 'flex';
+    const eN = escapeHTML(data.agentName); const eP = escapeHTML(data.agentPhone); const eA = escapeHTML(String(data.amount)); const eR = escapeHTML(data.routeLabel); const eU = escapeHTML(data.ussd);
     modal.innerHTML =
         '<div class="modal-content" style="max-width:460px;">' +
             '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">' +
-                '<h3 style="margin:0;color:#0f2b3d;">📞 ' + escapedRoute + '</h3>' +
+                '<h3 style="margin:0;color:#0f2b3d;">📞 ' + eR + '</h3>' +
                 '<button type="button" class="action-btn close-mbusssd" style="width:32px;height:32px;padding:0;border-radius:50%;background:#ccc;color:#222;font-size:1rem;">✕</button>' +
             '</div>' +
             '<div style="background:#f8fafc;border:1px solid #e2edf7;border-radius:10px;padding:10px 12px;margin-bottom:10px;text-align:left;">' +
-                '<div style="display:flex;justify-content:space-between;font-size:.8rem;padding:3px 0;">' +
-                    '<span style="color:#7f8c8d;">🏢 Agent</span>' +
-                    '<span style="color:#0f2b3d;font-weight:700;">' + escapedName + '</span>' +
-                '</div>' +
-                '<div style="display:flex;justify-content:space-between;font-size:.8rem;padding:3px 0;">' +
-                    '<span style="color:#7f8c8d;">📱 Phone</span>' +
-                    '<span style="color:#0f2b3d;font-weight:700;">' + escapedPhone + '</span>' +
-                '</div>' +
-                '<div style="display:flex;justify-content:space-between;font-size:.8rem;padding:3px 0;">' +
-                    '<span style="color:#7f8c8d;">💵 Amount</span>' +
-                    '<span style="color:#0f2b3d;font-weight:700;">' + escapedAmount + '</span>' +
-                '</div>' +
+                '<div style="display:flex;justify-content:space-between;font-size:.8rem;padding:3px 0;"><span style="color:#7f8c8d;">🏢 Agent</span><span style="color:#0f2b3d;font-weight:700;">' + eN + '</span></div>' +
+                '<div style="display:flex;justify-content:space-between;font-size:.8rem;padding:3px 0;"><span style="color:#7f8c8d;">📱 Phone</span><span style="color:#0f2b3d;font-weight:700;">' + eP + '</span></div>' +
+                '<div style="display:flex;justify-content:space-between;font-size:.8rem;padding:3px 0;"><span style="color:#7f8c8d;">💵 Amount</span><span style="color:#0f2b3d;font-weight:700;">' + eA + '</span></div>' +
             '</div>' +
             '<div style="font-weight:700;color:#1c6e8f;font-size:.82rem;margin-bottom:4px;">🔐 USSD Code to Dial:</div>' +
-            '<div id="mbUssdCodeBox" style="background:#0f2b3d;color:#FFD966;border-radius:10px;padding:14px 12px;font-family:\'Courier New\',monospace;font-size:1rem;font-weight:700;text-align:center;word-break:break-all;letter-spacing:.5px;user-select:all;margin-bottom:8px;">' + escapedUssd + '</div>' +
-            '<div style="background:#fff8e1;border:1px solid #ffe0a3;border-radius:8px;padding:8px 12px;font-size:.72rem;color:#8a6d3b;margin-bottom:10px;line-height:1.4;">' +
-                '💡 <strong>How to complete:</strong><br>' +
-                '• Tap the <strong>Copy</strong> button below<br>' +
-                '• Dial the USSD on your <strong>phone</strong> (it contains <code>0000#</code> at the end)<br>' +
-                '• When the phone prompts for the PIN, enter your <strong>4-digit PIN</strong> in place of <code>0000</code>' +
-            '</div>' +
+            '<div id="mbUssdCodeBox" style="background:#0f2b3d;color:#FFD966;border-radius:10px;padding:14px 12px;font-family:\'Courier New\',monospace;font-size:1rem;font-weight:700;text-align:center;word-break:break-all;letter-spacing:.5px;user-select:all;margin-bottom:8px;">' + eU + '</div>' +
+            '<div style="background:#fff8e1;border:1px solid #ffe0a3;border-radius:8px;padding:8px 12px;font-size:.72rem;color:#8a6d3b;margin-bottom:10px;line-height:1.4;">💡 <strong>How to complete:</strong><br>• Tap the <strong>Copy</strong> button below<br>• Dial the USSD on your <strong>phone</strong> (contains <code>0000#</code> at the end)<br>• When the phone prompts for PIN, enter your <strong>4-digit PIN</strong> in place of <code>0000</code></div>' +
             '<div class="action-buttons-row" style="gap:6px;">' +
                 '<button type="button" class="action-btn green" id="mbUssdCopyBtn" style="flex:1;">📋 Copy USSD</button>' +
                 '<button type="button" class="action-btn close-mbusssd" style="background:#95a5a6;flex:1;">Close</button>' +
             '</div>' +
-            '<button type="button" class="action-btn" id="mbUssdTryTelBtn" style="background:#2c7da0;width:100%;margin-top:6px;font-size:.78rem;">' +
-                '📞 Try Opening Dialer Anyway (desktop)' +
-            '</button>' +
+            '<button type="button" class="action-btn" id="mbUssdTryTelBtn" style="background:#2c7da0;width:100%;margin-top:6px;font-size:.78rem;">📞 Try Opening Dialer Anyway (desktop)</button>' +
         '</div>';
-
     document.body.appendChild(modal);
-
-    modal.querySelectorAll('.close-mbusssd').forEach(function(btn) { btn.addEventListener('click', function() { modal.remove(); }); });
-
-    const copyBtn = modal.querySelector('#mbUssdCopyBtn');
-    if (copyBtn) {
-        copyBtn.addEventListener('click', function() {
-            const code = data.ussd;
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(code).then(function() { showToast('✅ USSD copied — paste into your phone dialer', 2600); }).catch(function() { fallbackCopy(code); });
-            } else { fallbackCopy(code); }
-        });
-    }
-    const telBtn = modal.querySelector('#mbUssdTryTelBtn');
-    if (telBtn) {
-        telBtn.addEventListener('click', function() {
-            const link = document.createElement('a'); link.href = 'tel:' + data.ussd;
-            document.body.appendChild(link); link.click(); document.body.removeChild(link);
-        });
-    }
+    modal.querySelectorAll('.close-mbusssd').forEach(function(b) { b.addEventListener('click', function() { modal.remove(); }); });
+    const cb = modal.querySelector('#mbUssdCopyBtn');
+    if (cb) cb.addEventListener('click', function() { const code = data.ussd; if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(code).then(function() { showToast('✅ USSD copied — paste into your phone dialer', 2600); }).catch(function() { fallbackCopy(code); }); } else fallbackCopy(code); });
+    const tb = modal.querySelector('#mbUssdTryTelBtn');
+    if (tb) tb.addEventListener('click', function() { const link = document.createElement('a'); link.href = 'tel:' + data.ussd; document.body.appendChild(link); link.click(); document.body.removeChild(link); });
     modal.addEventListener('click', function(e) { if (e.target === modal) modal.remove(); });
 }
-
 function fallbackCopy(text) {
-    const ta = document.createElement('textarea');
-    ta.value = text; ta.style.position = 'fixed'; ta.style.left = '-9999px';
+    const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.left = '-9999px';
     document.body.appendChild(ta); ta.select();
-    try { document.execCommand('copy'); showToast('✅ USSD copied — paste into your phone dialer', 2600); }
-    catch (err) { showToast('⚠️ Copy failed — select the code manually', 2600); }
+    try { document.execCommand('copy'); showToast('✅ USSD copied', 2600); } catch (err) { showToast('⚠️ Copy failed — select manually', 2600); }
     document.body.removeChild(ta);
 }
 
+/* ============================================================ */
+/* Helper: update register avatar preview */
+/* ============================================================ */
+function updateRegAvatarPreview() {
+    const preview = getEl('regAvatarPreview'); if (!preview) return;
+    if (regAvatarDataURL) preview.innerHTML = '<img src="' + regAvatarDataURL + '" style="width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.15);" />';
+    else preview.textContent = regEmoji || '👤';
+}
+
+/* ============================================================ */
+/* Helper: update agent business profile preview */
+/* ============================================================ */
+function updateAgentBizProfilePreview() {
+    const emojiEl = getEl('agentBizProfilePreviewEmoji');
+    const imgEl = getEl('agentBizProfilePreview');
+    const removeBtn = getEl('agentRemoveLogoBtn');
+    if (agentBizProfileDataURL) {
+        if (emojiEl) emojiEl.style.display = 'none';
+        if (imgEl) { imgEl.src = agentBizProfileDataURL; imgEl.style.display = 'block'; }
+        if (removeBtn) removeBtn.style.display = 'inline-flex';
+    } else {
+        if (emojiEl) { emojiEl.style.display = 'inline-block'; emojiEl.textContent = agentBizProfileEmoji || '🏢'; }
+        if (imgEl) { imgEl.src = ''; imgEl.style.display = 'none'; }
+        if (removeBtn) removeBtn.style.display = 'none';
+    }
+}
+
+/* ============================================================ */
+/* Event listeners */
+/* ============================================================ */
 function setupEventListeners() {
     function safe(id, event, handler) { const el = getEl(id); if (el) el.addEventListener(event, handler); }
 
@@ -1653,17 +1746,53 @@ function setupEventListeners() {
     safe('directPayBtn', 'click', function(e) { e.preventDefault(); window.open(APP_LINKS.directPay, '_blank'); });
     safe('watuPayBtn', 'click', function(e) { e.preventDefault(); window.open(APP_LINKS.watuPay, '_blank'); });
     safe('weBineBtn', 'click', function(e) { e.preventDefault(); window.open(APP_LINKS.weBine, '_blank'); });
+
     safe('loginBtn', 'click', function(e) { e.preventDefault(); getEl('loginError').innerHTML = ''; getEl('loginModal').style.display = 'flex'; });
     safe('registerBtn', 'click', function(e) {
         e.preventDefault();
         try { populateCountryDropdown('regCountry'); } catch(err) {}
         try { populateCapitalCityDropdown('regCitySelect'); } catch(err) {}
         regAvatarDataURL = null; regEmoji = '👤'; updateRegAvatarPreview();
+        const rb = getEl('regRemoveImageBtn'); if (rb) rb.style.display = 'none';
         getEl('registerModal').style.display = 'flex';
     });
     safe('logoutBtn', 'click', function(e) { e.preventDefault(); clearUserStorage(); showToast('Logged out'); });
     safe('agentAuthConfirmBtn', 'click', function(e) { e.preventDefault(); confirmAgentAuth(); });
     safe('doLoginBtn', 'click', function(e) { e.preventDefault(); if (loginUser(getEl('loginName').value, getEl('loginPhone').value)) { getEl('loginModal').style.display = 'none'; getEl('loginName').value = ''; getEl('loginPhone').value = ''; } });
+
+    /* REGISTER — avatar upload buttons */
+    safe('regPickEmojiBtn', 'click', function() {
+        const grid = getEl('emojiGrid'); if (!grid) return;
+        grid.innerHTML = '';
+        AVAILABLE_EMOJIS.forEach(function(e) {
+            const s = document.createElement('span');
+            s.className = 'emoji-option'; s.textContent = e;
+            s.addEventListener('click', function() {
+                regEmoji = e; regAvatarDataURL = null;
+                updateRegAvatarPreview();
+                const rb = getEl('regRemoveImageBtn'); if (rb) rb.style.display = 'none';
+                getEl('emojiPickerModal').style.display = 'none';
+            });
+            grid.appendChild(s);
+        });
+        getEl('emojiPickerModal').style.display = 'flex';
+    });
+    safe('regUploadImageBtn', 'click', function() { const fi = getEl('regAvatarUploadInput'); if (fi) fi.click(); });
+    safe('regAvatarUploadInput', 'change', function() {
+        const f = this.files[0]; if (!f) return;
+        resizeImageFile(f, 200, 0.82).then(function(dataUrl) {
+            regAvatarDataURL = dataUrl;
+            updateRegAvatarPreview();
+            const rb = getEl('regRemoveImageBtn'); if (rb) rb.style.display = 'inline-flex';
+        }).catch(function() { showToast('⚠️ Could not process image.', 2200); });
+        this.value = '';
+    });
+    safe('regRemoveImageBtn', 'click', function() {
+        regAvatarDataURL = null; regEmoji = '👤';
+        updateRegAvatarPreview();
+        this.style.display = 'none';
+    });
+
     safe('doRegisterBtn', 'click', function(e) {
         e.preventDefault();
         const errEl = getEl('regError'), okEl = getEl('regSuccess');
@@ -1671,20 +1800,27 @@ function setupEventListeners() {
         const name = (getEl('regName').value || '').trim(); const phone = (getEl('regPhone').value || '').trim(); const city = getCityValue('regCitySelect', 'regCityOther');
         if (!name || !phone || !city) { if (errEl) errEl.textContent = '❌ Fill required.'; return; }
         if (registeredUsers.some(function(u) { return u.phone === phone; })) { if (errEl) errEl.textContent = '❌ Phone already registered.'; return; }
-        const newUser = { id: 'user_' + Date.now(), name: name, phone: phone, address: getEl('regAddress').value, city: city, country: getEl('regCountry').value, emoji: regEmoji, avatarDataURL: regAvatarDataURL, role: 'user' };
+        const newUser = { id: 'user_' + Date.now(), name: name, phone: phone, address: getEl('regAddress').value, city: city, country: getEl('regCountry').value, emoji: regEmoji, avatarDataURL: regAvatarDataURL, role: 'user', nin: getEl('regNin').value, idNumber: getEl('regIdNumber').value };
         registeredUsers.push(newUser); saveRegisteredUsers();
-        currentUser = { name: name, phone: phone, address: newUser.address, city: city, country: newUser.country, emoji: regEmoji, avatarDataURL: regAvatarDataURL };
+        currentUser = { name: name, phone: phone, address: newUser.address, city: city, country: newUser.country, emoji: regEmoji, avatarDataURL: regAvatarDataURL, nin: newUser.nin, idNumber: newUser.idNumber };
         saveUserToStorage(currentUser);
         if (okEl) okEl.textContent = '✅ Registered!';
         showToast('✅ Registered!', 1500); showLoggedInUI();
         setTimeout(function() { getEl('registerModal').style.display = 'none'; }, 900);
         supaBackground(Supa.saveUser(newUser), 'User');
     });
+
+    /* Global header/profile avatar picker */
     safe('userAvatarContainer', 'click', function(e) { if (e.target.closest('.logout-btn') || e.target.closest('.edit-account-btn')) return; if (!currentUser) return; openEmojiPicker(); });
     safe('profileAvatarLarge', 'click', function() { if (!currentUser) return; openEmojiPicker(); });
     safe('emojiUploadImageBtn', 'click', function() { getEl('avatarUploadInput').click(); });
     safe('emojiRemoveImageBtn', 'click', function() { removeAvatarImage(); });
-    safe('avatarUploadInput', 'change', function() { const f = this.files[0]; if (!f) return; const r = new FileReader(); r.onload = function(ev) { applyAvatarImage(ev.target.result); }; r.readAsDataURL(f); this.value = ''; });
+    safe('avatarUploadInput', 'change', function() {
+        const f = this.files[0]; if (!f) return;
+        resizeImageFile(f, 200, 0.82).then(function(dataUrl) { applyAvatarImage(dataUrl); }).catch(function() { showToast('⚠️ Could not process image.', 2200); });
+        this.value = '';
+    });
+
     safe('editAccountBtn', 'click', function(e) {
         e.preventDefault();
         if (!currentUser) { showToast('⚠️ Login first', 2000); return; }
@@ -1707,6 +1843,7 @@ function setupEventListeners() {
         setTimeout(function() { getEl('editAccountModal').style.display = 'none'; }, 1000);
         supaBackground(Supa.saveUser(currentUser), 'Account update');
     });
+
     safe('agentDropdownBtn', 'click', function(e) { e.preventDefault(); e.stopPropagation(); getEl('agentDropdownList').classList.toggle('open'); renderAgentDropdown(currentAgentFilterCountry); });
     document.addEventListener('click', function(e) { const c = document.querySelector('.agent-dropdown-container'); if (c && !c.contains(e.target)) getEl('agentDropdownList').classList.remove('open'); });
     safe('agentNameSelect', 'change', function() { if (this.value) selectAgent(this.value); else { selectedAgentId = null; _selectedAgentId = null; clearAgentSelection(); } });
@@ -1737,13 +1874,65 @@ function setupEventListeners() {
         showToast('✅ Client "' + n + '" added!', 2000);
         getEl('addClientModal').style.display = 'none';
     });
+
     safe('registerAgentBtn', 'click', function(e) {
         e.preventDefault();
         getEl('registerModal').style.display = 'none';
         try { populateCapitalCityDropdown('agentCitySelect'); } catch(err) {}
         try { populateCollateralDropdowns(); } catch(err) {}
+        /* Reset logo preview */
+        agentBizProfileDataURL = null; agentBizProfileEmoji = '🏢';
+        updateAgentBizProfilePreview();
+        if (getEl('agentBizProfileUpload')) getEl('agentBizProfileUpload').value = '';
+        if (getEl('agentIdUpload')) getEl('agentIdUpload').value = '';
+        if (getEl('agentIdPreview')) getEl('agentIdPreview').style.display = 'none';
         getEl('agentRegistrationModal').style.display = 'flex';
     });
+
+    /* AGENT REGISTRATION — logo/business profile upload */
+    safe('agentPickLogoEmojiBtn', 'click', function() {
+        const grid = getEl('emojiGrid'); if (!grid) return;
+        grid.innerHTML = '';
+        AVAILABLE_EMOJIS.forEach(function(e) {
+            const s = document.createElement('span');
+            s.className = 'emoji-option'; s.textContent = e;
+            s.addEventListener('click', function() {
+                agentBizProfileEmoji = e; agentBizProfileDataURL = null;
+                updateAgentBizProfilePreview();
+                getEl('emojiPickerModal').style.display = 'none';
+            });
+            grid.appendChild(s);
+        });
+        getEl('emojiPickerModal').style.display = 'flex';
+    });
+    safe('agentUploadLogoBtn', 'click', function() { const fi = getEl('agentBizProfileUpload'); if (fi) fi.click(); });
+    safe('agentBizProfileUpload', 'change', function() {
+        const f = this.files[0]; if (!f) return;
+        resizeImageFile(f, 200, 0.82).then(function(dataUrl) {
+            agentBizProfileDataURL = dataUrl;
+            updateAgentBizProfilePreview();
+        }).catch(function() { showToast('⚠️ Could not process image.', 2200); });
+        this.value = '';
+    });
+    safe('agentRemoveLogoBtn', 'click', function() {
+        agentBizProfileDataURL = null; agentBizProfileEmoji = '🏢';
+        updateAgentBizProfilePreview();
+    });
+    safe('agentIdUpload', 'change', function() {
+        const f = this.files[0]; if (!f) return;
+        if (f.type.startsWith('image/')) {
+            const r = new FileReader();
+            r.onload = function(ev) {
+                const pv = getEl('agentIdPreview'); if (pv) { pv.src = ev.target.result; pv.style.display = 'block'; }
+            };
+            r.readAsDataURL(f);
+        } else {
+            const pv = getEl('agentIdPreview'); if (pv) pv.style.display = 'none';
+        }
+        showToast('✅ ID uploaded', 1500);
+        this.value = '';
+    });
+
     safe('generatePasswordBtn', 'click', function(e) { e.preventDefault(); const ch = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'; let pw = ''; for (let i = 0; i < 6; i++) pw += ch.charAt(Math.floor(Math.random() * ch.length)); getEl('agentPassword').value = pw; showToast('🔑 ' + pw, 3000); });
     safe('generatePinBtn', 'click', function(e) { e.preventDefault(); const pin = String(Math.floor(10000 + Math.random() * 90000)); getEl('agentPin').value = pin; showToast('🔑 ' + pin, 3000); });
 
@@ -1766,7 +1955,9 @@ function setupEventListeners() {
             pin: getEl('agentPin').value.trim(), collateralAmount: parseFloat(getEl('agentCollateralLimit').value) || 0,
             collateralLimit: parseInt(getEl('agentCollateralLimit').value) || 0, currency: 'GNF',
             approved: false, role: 'agent', isAgent: true,
-            registeredAt: new Date().toISOString(), nin: getEl('agentNin').value.trim(), providerTxId: ptx
+            registeredAt: new Date().toISOString(), nin: getEl('agentNin').value.trim(), providerTxId: ptx,
+            avatarDataURL: agentBizProfileDataURL || null,
+            emoji: agentBizProfileEmoji || '🏢'
         };
         PendingStore.add({ type: 'agent', country: COUNTRY_CODE_TO_NAME[data.countryCode] || data.city, submittedBy: bn, data: data });
         registeredUsers.push(data); saveRegisteredUsers();
@@ -1780,20 +1971,12 @@ function setupEventListeners() {
         try {
             const ptx = (getEl('providerTxId') && getEl('providerTxId').value.trim()) || '';
             const val = ProviderTxIdManager.validate(ptx);
-            if (!val.valid) {
-                const eg = getEl('providerTxIdError');
-                if (eg) { eg.textContent = val.error; eg.style.display = 'block'; }
-                showToast('❌ ' + val.error, 2500); return;
-            }
+            if (!val.valid) { const eg = getEl('providerTxIdError'); if (eg) { eg.textContent = val.error; eg.style.display = 'block'; } showToast('❌ ' + val.error, 2500); return; }
             const ptxErr = getEl('providerTxIdError'); if (ptxErr) ptxErr.style.display = 'none';
             const tcg = getEl('mainTransferCodeGroup'); if (tcg) tcg.style.display = 'block';
             const tc = (getEl('mainTransferCode') && getEl('mainTransferCode').value.trim()) || '';
             const tcv = TransferCodeManager.validate(tc);
-            if (!tcv.valid) {
-                const eg = getEl('mainTransferCodeError');
-                if (eg) { eg.textContent = tcv.error; eg.style.display = 'block'; }
-                showToast('❌ ' + tcv.error, 2500); return;
-            }
+            if (!tcv.valid) { const eg = getEl('mainTransferCodeError'); if (eg) { eg.textContent = tcv.error; eg.style.display = 'block'; } showToast('❌ ' + tcv.error, 2500); return; }
             const tcErr = getEl('mainTransferCodeError'); if (tcErr) tcErr.style.display = 'none';
             const sn = getEl('senderName').value.trim(); const sp = getEl('senderPhone').value.trim();
             const an = (getEl('agentName') && getEl('agentName').value.trim()) || '';
@@ -1845,7 +2028,6 @@ function setupEventListeners() {
     setupAgentDashboardEvents();
 }
 
-function updateRegAvatarPreview() { const preview = getEl('regAvatarPreview'); if (!preview) return; if (regAvatarDataURL) preview.innerHTML = '<img src="' + regAvatarDataURL + '" style="width:40px;height:40px;border-radius:50%;object-fit:cover;" />'; else preview.textContent = regEmoji || '👤'; }
 function openAddBizModal() {
     try { populateCountryDropdown('bizCountrySelect'); } catch(err) {}
     try { populateCapitalCityDropdown('bizCitySelect'); } catch(err) {}
@@ -1879,8 +2061,10 @@ function initApp() {
     safeCall('set lang select', function() { const s = getEl('langSelect'); if (s) s.value = currentLang; });
     safeCall('translate page', function() { translatePage(); });
     safeCall('first toast', function() { showToast('✅ AfriPay ready!', 1500); });
+    safeCall('init register avatar preview', function() { updateRegAvatarPreview(); });
+    safeCall('init agent biz profile preview', function() { updateAgentBizProfilePreview(); });
 
-    /* Self-test of prefix routing at startup */
+    /* Prefix routing self-test */
     try {
         console.log('🧪 Prefix routing self-test:');
         ['030123456', '070123456', '077123456', '088123456', '099123456', '033123456', '080123456', '090123456', '076123456', '078123456', '079123456', '075123456', '074123456', '073123456', '23230123456'].forEach(function(p) {
@@ -1914,7 +2098,9 @@ function initApp() {
                         approvedBy: a.approved === true ? 'cloud-admin' : null,
                         approvedAt: a.approved === true ? new Date().toISOString() : null,
                         role: 'agent', isAgent: true,
-                        providerTxId: a.provider_tx_id, transferCode: a.transfer_code, nin: a.nin
+                        providerTxId: a.provider_tx_id, transferCode: a.transfer_code, nin: a.nin,
+                        avatarDataURL: a.avatar_data_url || null,
+                        emoji: a.emoji || '🏢'
                     };
                     if (exists) Object.assign(exists, mapped); else registeredUsers.push(mapped);
                 });
