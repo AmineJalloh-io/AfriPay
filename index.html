@@ -72,9 +72,10 @@ body{background:linear-gradient(145deg,#eef2f7 0%,#d9e2ec 100%);min-height:100vh
 .tx-btn{background:#f4a261;border:none;padding:5px 12px;border-radius:30px;font-weight:700;cursor:pointer;color:#fff;white-space:nowrap;height:38px;font-size:.85rem}
 .tx-btn.copy{background:#2c7da0}
 .mode-row{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:.35rem}
-.mode-row .btn{flex:1;padding:5px 12px;border-radius:30px;font-weight:700;cursor:pointer;height:38px;border:1.5px solid #e0e8f0;background:#f1f5f9;color:#1e3b4a;min-width:80px;font-size:.85rem}
+.mode-row .btn{flex:1;padding:5px 12px;border-radius:30px;font-weight:700;cursor:pointer;height:38px;border:1.5px solid #e0e8f0;background:#f1f5f9;color:#1e3b4a;min-width:70px;font-size:.78rem}
 .mode-row .btn.active{background:#0f2b3d;color:#fff;border-color:#0f2b3d}
 .mode-row .btn.add-client-btn-header{background:#2c7da0;color:#fff;border-color:#2c7da0}
+.mode-row .btn.local-agent-btn{background:#8e44ad;color:#fff;border-color:#8e44ad}
 .country-selector{display:flex;gap:3px;align-items:center;background:#fff;border:1.5px solid #e0e8f0;border-radius:30px;padding:0 4px;height:38px}
 .country-flag{font-size:1.2rem}
 #countryCodeSelect{flex:1;border:none;background:transparent;outline:none;font-size:.85rem;height:34px}
@@ -138,6 +139,9 @@ body{background:linear-gradient(145deg,#eef2f7 0%,#d9e2ec 100%);min-height:100vh
 .action-btn.red{background:#e74c3c}
 .action-btn.blue{background:#2c7da0}
 .action-btn.purple{background:#8e44ad}
+.action-btn.whatsapp{background:#25D366}
+.action-btn.sms{background:#3498db}
+.action-btn.dial{background:#27ae60}
 .hidden-input{display:none}
 .city-input-row{display:flex;gap:.35rem;align-items:center}
 .city-input-row select,.city-input-row input{flex:1}
@@ -212,7 +216,147 @@ body{background:linear-gradient(145deg,#eef2f7 0%,#d9e2ec 100%);min-height:100vh
 .broadcast-option .bo-text{flex:1;text-align:left}
 .broadcast-option .bo-text .bo-title{font-weight:800;color:#0f2b3d;font-size:.85rem}
 .broadcast-option .bo-text .bo-sub{font-size:.68rem;color:#7f8c8d}
+/* Local agent details display */
+.local-agent-details{background:#f0f8f0;border:1.5px solid #b8e0b8;border-radius:12px;padding:.5rem .7rem;margin:.35rem 0;display:none;}
+.local-agent-details.show{display:block}
+.local-agent-details .lad-title{font-weight:800;color:#27ae60;font-size:.78rem;margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.local-agent-details .lad-row{display:flex;justify-content:space-between;padding:2px 0;font-size:.8rem}
+.local-agent-details .lad-row .lad-label{color:#7f8c8d}
+.local-agent-details .lad-row .lad-value{font-weight:700;color:#0f2b3d}
+.local-agent-details .lad-actions{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+/* Charge breakdown section between mode buttons and operator */
+.charge-breakdown-section{background:linear-gradient(135deg,#f0f6fb,#e8f4fd);border:1.5px solid #c0d8e8;border-radius:12px;padding:.5rem .7rem;margin:.35rem 0;display:none}
+.charge-breakdown-section.show{display:block}
+.cbs-title{font-weight:800;color:#1c6e8f;font-size:.8rem;margin-bottom:6px;display:flex;align-items:center;gap:6px;text-transform:uppercase}
+.cbs-row{display:flex;justify-content:space-between;padding:3px 0;font-size:.82rem;border-bottom:1px solid #e0e8f0}
+.cbs-row:last-child{border-bottom:none}
+.cbs-row .cbs-label{color:#1e3b4a;display:flex;align-items:center;gap:5px}
+.cbs-row .cbs-value{font-weight:700;color:#0f2b3d}
+.cbs-row.cbs-total{border-top:2px solid #1c4e6c;margin-top:4px;padding-top:6px;font-weight:800;font-size:.9rem}
+.cbs-badge{font-size:.6rem;background:#f4a261;color:#fff;padding:1px 6px;border-radius:10px;font-weight:700;margin-left:4px}
+/* USSD Display modal styles */
+.ussd-modal-details{background:#f8fafc;border:1px solid #e2edf7;border-radius:10px;padding:10px 12px;margin-bottom:10px;text-align:left}
+.ussd-modal-row{display:flex;justify-content:space-between;font-size:.8rem;padding:3px 0}
+.ussd-modal-label{color:#7f8c8d}
+.ussd-modal-value{color:#0f2b3d;font-weight:700}
+.ussd-code-box{background:#0f2b3d;color:#FFD966;border-radius:10px;padding:14px 12px;font-family:'Courier New',monospace;font-size:1rem;font-weight:700;text-align:center;word-break:break-all;letter-spacing:.5px;user-select:all;margin-bottom:8px}
+.ussd-hint{background:#fff8e1;border:1px solid #ffe0a3;border-radius:8px;padding:8px 12px;font-size:.72rem;color:#8a6d3b;margin-bottom:10px;line-height:1.4}
+/* Receipt agent/client social buttons */
+.receipt-social-row{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.receipt-social-row .action-btn{flex:1;min-width:80px;height:34px;font-size:.75rem}
+/* Currency converter inline (restored original design) */
+.currency-converter-inline{background:#f8fafc;border:1.5px solid #e0e8f0;border-radius:12px;padding:.5rem .7rem;margin:.35rem 0}
+.cci-title{font-weight:800;color:#1c6e8f;font-size:.78rem;margin-bottom:5px;display:flex;align-items:center;gap:5px;text-transform:uppercase}
+.cci-row{display:flex;gap:5px;align-items:center;margin-bottom:4px}
+.cci-row select,.cci-row input{flex:1;height:34px;font-size:.8rem;padding:3px 8px;border-radius:14px;border:1.5px solid #e0e8f0;background:#fff;outline:none;width:100%}
+.cci-row .cci-eq{font-weight:900;color:#1c6e8f;font-size:1rem;text-align:center;flex-shrink:0}
+.cci-result-row{display:flex;gap:5px;align-items:center}
+.cci-result-row input{flex:1;height:34px;font-size:.8rem;padding:3px 8px;border-radius:14px;border:1.5px solid #27ae60;background:#f0f8f0;font-weight:700;color:#27ae60;outline:none}
+.cci-amount-row{display:flex;gap:5px;align-items:center}
+.cci-amount-row input{flex:1;height:34px;font-size:.8rem;padding:3px 8px;border-radius:14px;border:1.5px solid #e0e8f0;background:#fff;outline:none}
+/* Styled Currency Converter Modal (matching screenshot) */
+.modal-header-cc{background:linear-gradient(135deg,#0a2b3c,#1c4e6c);padding:12px 18px;color:white;text-align:center;position:relative;border-radius:1.2rem 1.2rem 0 0;}
+.modal-header-cc h3{margin:0;font-size:1.05rem;}
+.modal-header-cc .close-x-btn{position:absolute;top:5px;right:12px;background:rgba(255,255,255,.15);border:none;color:white;font-size:1.3rem;cursor:pointer;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.cc-body{padding:14px 18px;}
+.cc-input-group{margin-bottom:10px;display:flex;flex-direction:column;gap:2px;}
+.cc-input-group label{font-weight:700;color:#1e3b4a;font-size:.8rem;}
+.cc-input-group select,.cc-input-group input{padding:5px 10px;border-radius:18px;border:1.5px solid #e0e8f0;font-size:.95rem;outline:none;background:#fff;height:38px;width:100%;}
+.cc-fee-panel{background:#f8fafc;border-radius:12px;padding:10px 12px;margin-top:10px;border:1px solid #e2edf7;}
+.cc-fee-row{display:flex;justify-content:space-between;padding:3px 0;font-size:.82rem;}
+.cc-fee-row span:first-child{color:#7f8c8d;}
+.cc-fee-row span:last-child{color:#1e3b4a;font-weight:600;}
+.cc-fee-row.cc-total{font-weight:800;border-top:2px solid #1c4e6c;margin-top:4px;padding-top:6px;font-size:.92rem;color:#0f2b3d;}
+.cc-fee-row.cc-total span:last-child{color:#0f2b3d;}
+.cc-fee-row.cc-rate{color:#1c6e8f;font-size:.78rem;margin-top:2px;}
+.cc-fee-row.cc-recipient{background:#f0f8f0;border:1px solid #b8e0b8;border-radius:8px;padding:6px 10px;margin-top:6px;font-weight:700;color:#27ae60;font-size:.85rem;}
+.cc-fee-row.cc-recipient span:last-child{color:#27ae60;}
+.cc-footer{background:#f5f8fa;padding:10px 18px;border-top:1px solid #e8edf2;display:flex;gap:6px;justify-content:center;border-radius:0 0 1.2rem 1.2rem;}
+.cc-btn-close{background:#0f2b3d;color:#fff;border:none;padding:7px 24px;border-radius:30px;font-weight:700;cursor:pointer;height:40px;font-size:.85rem;}
 @media(max-width:600px){.double-row{grid-template-columns:1fr;gap:0}.brand-text{font-size:1.3rem}.afripay-logo-img{width:36px;height:36px}.modal-content{padding:.7rem;max-width:320px}.action-btn{padding:5px 12px;height:36px;font-size:.75rem}.form-container{padding:.5rem .6rem .35rem .6rem}.chat-window{left:0;right:0;width:100%;bottom:0;height:100vh}.chat-sidebar{display:none}.dash-tab{font-size:.6rem;padding:4px 5px}}
+
+/* ============================================================ */
+/* ANIMATED POPUP AD STYLES                                       */
+/* ============================================================ */
+@keyframes adOverlayFadeIn{from{opacity:0}to{opacity:1}}
+@keyframes adPopIn{0%{opacity:0;transform:translateY(40px) scale(.85)}60%{opacity:1;transform:translateY(-6px) scale(1.02)}100%{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes adFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes adIconBounce{0%,100%{transform:translateY(0) scale(1)}30%{transform:translateY(-12px) scale(1.15)}60%{transform:translateY(-4px) scale(1.05)}80%{transform:translateY(-8px) scale(1.1)}}
+@keyframes adShine{0%{background-position:-200% center}100%{background-position:200% center}}
+@keyframes adPulseRing{0%{box-shadow:0 0 0 0 rgba(244,162,97,.7)}70%{box-shadow:0 0 0 18px rgba(244,162,97,0)}100%{box-shadow:0 0 0 0 rgba(244,162,97,0)}}
+@keyframes adCrownSpin{0%{transform:rotate(-8deg) scale(1)}50%{transform:rotate(8deg) scale(1.15)}100%{transform:rotate(-8deg) scale(1)}}
+@keyframes adSparkle{0%,100%{opacity:0;transform:scale(.5) rotate(0deg)}50%{opacity:1;transform:scale(1.2) rotate(180deg)}}
+@keyframes adPremiumGlow{0%,100%{box-shadow:0 0 20px rgba(244,162,97,.5),0 0 40px rgba(230,126,34,.3),0 20px 40px rgba(0,0,0,.35)}50%{box-shadow:0 0 30px rgba(244,162,97,.9),0 0 60px rgba(230,126,34,.5),0 20px 40px rgba(0,0,0,.35)}}
+@keyframes adProgressBar{from{width:100%}to{width:0%}}
+@keyframes adBadgeGlow{0%,100%{box-shadow:0 0 6px rgba(244,162,97,.6)}50%{box-shadow:0 0 16px rgba(244,162,97,1)}}
+@keyframes adTagPop{0%{transform:scale(0) rotate(-30deg);opacity:0}70%{transform:scale(1.15) rotate(-8deg);opacity:1}100%{transform:scale(1) rotate(-15deg);opacity:1}}
+
+#popupAdModal{animation:adOverlayFadeIn .35s ease-out}
+#popupAdModal .modal-content{animation:adPopIn .55s cubic-bezier(.22,1.2,.36,1) both;position:relative;overflow:hidden}
+.popup-ad-card{position:relative;overflow:hidden}
+.popup-ad-card::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:linear-gradient(45deg,transparent 30%,rgba(255,255,255,.35) 50%,transparent 70%);background-size:200% 200%;animation:adShine 3.5s ease-in-out infinite;pointer-events:none;z-index:1}
+.popup-ad-card.premium::before{background:linear-gradient(45deg,transparent 30%,rgba(255,255,255,.5) 50%,transparent 70%);background-size:200% 200%;animation:adShine 2.2s ease-in-out infinite}
+
+.popup-ad-icon-wrap{position:relative;display:inline-block}
+.popup-ad-icon{font-size:2.8rem;line-height:1;display:inline-block;animation:adIconBounce 2.4s ease-in-out infinite;filter:drop-shadow(0 6px 12px rgba(0,0,0,.35))}
+.popup-ad-card.premium .popup-ad-icon{animation:adCrownSpin 2.8s ease-in-out infinite;font-size:3rem;filter:drop-shadow(0 0 14px rgba(255,215,0,.9))}
+
+.popup-ad-sparkle{position:absolute;color:#FFD966;font-size:.9rem;animation:adSparkle 2s ease-in-out infinite;pointer-events:none;z-index:2}
+.popup-ad-sparkle.s1{top:-8px;left:-14px;animation-delay:0s}
+.popup-ad-sparkle.s2{top:-4px;right:-16px;animation-delay:.5s;font-size:.7rem}
+.popup-ad-sparkle.s3{bottom:-6px;left:-18px;animation-delay:1s;font-size:.75rem}
+.popup-ad-sparkle.s4{bottom:-2px;right:-10px;animation-delay:1.5s;font-size:.85rem}
+
+.popup-ad-title{animation:adFloat 3s ease-in-out infinite;background:linear-gradient(90deg,#fff,#FFD966,#fff);background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;background-position:0 center}
+.popup-ad-card.premium .popup-ad-title{animation:adFloat 2.2s ease-in-out infinite;text-shadow:0 2px 14px rgba(0,0,0,.25)}
+.popup-ad-card.premium{animation:adPremiumGlow 2.5s ease-in-out infinite}
+
+.popup-ad-tag{position:absolute;top:-10px;left:-10px;color:#fff;font-size:.6rem;font-weight:800;padding:4px 14px;border-radius:0 0 12px 0;z-index:5;animation:adTagPop .7s cubic-bezier(.22,1.4,.36,1) both}
+.popup-ad-tag.green{background:linear-gradient(135deg,#27ae60,#1e8449);box-shadow:0 3px 12px rgba(39,174,96,.6)}
+.popup-ad-tag.red{background:linear-gradient(135deg,#e74c3c,#c0392b);box-shadow:0 3px 12px rgba(231,76,60,.6);animation:adTagPop .7s cubic-bezier(.22,1.4,.36,1) both,adBadgeGlow 1.8s ease-in-out 1s infinite}
+
+.popup-ad-close{position:absolute;top:8px;right:8px;background:rgba(0,0,0,.45);color:#fff;border:none;border-radius:50%;width:30px;height:30px;font-size:1.15rem;cursor:pointer;z-index:10;display:flex;align-items:center;justify-content:center;transition:all .2s ease;backdrop-filter:blur(4px)}
+.popup-ad-close:hover{background:rgba(231,76,60,.95);transform:rotate(90deg) scale(1.1)}
+
+.popup-ad-btn{position:relative;overflow:hidden;transition:all .25s cubic-bezier(.22,1.2,.36,1);animation:adPulseRing 2.4s ease-in-out infinite}
+.popup-ad-btn::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent);transition:left .6s ease}
+.popup-ad-btn:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 10px 24px rgba(0,0,0,.28)}
+.popup-ad-btn:hover::after{left:100%}
+.popup-ad-btn:active{transform:translateY(0) scale(.98)}
+.popup-ad-card.premium .popup-ad-btn{animation:adPulseRing 1.6s ease-in-out infinite}
+
+.popup-ad-detail-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:.83rem;border-bottom:1px dashed #e8eef4;transition:all .2s ease;opacity:0;animation:adDetailFadeIn .5s ease forwards}
+.popup-ad-detail-row:last-child{border-bottom:none}
+.popup-ad-detail-row .label{color:#7f8c8d;display:flex;align-items:center;gap:5px;font-weight:600}
+.popup-ad-detail-row .value{color:#0f2b3d;font-weight:800;text-align:right;max-width:62%;word-break:break-word}
+.popup-ad-detail-row.price .value{color:#e67e22;font-size:.95rem}
+.popup-ad-detail-row.delivery .value{color:#27ae60}
+.popup-ad-detail-row:nth-child(1){animation-delay:.15s}
+.popup-ad-detail-row:nth-child(2){animation-delay:.25s}
+.popup-ad-detail-row:nth-child(3){animation-delay:.35s}
+.popup-ad-detail-row:nth-child(4){animation-delay:.45s}
+.popup-ad-detail-row:nth-child(5){animation-delay:.55s}
+.popup-ad-detail-row:nth-child(6){animation-delay:.65s}
+@keyframes adDetailFadeIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:translateX(0)}}
+
+.popup-ad-details-panel{background:linear-gradient(135deg,#f8fafc,#eef5fa);border:1px solid #d8e6f0;border-radius:14px;padding:10px 12px;margin-bottom:14px;text-align:left;box-shadow:inset 0 1px 3px rgba(0,0,0,.04)}
+
+.popup-ad-website{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:12px;font-size:.72rem;color:#2c7da0;text-decoration:none;font-weight:700;padding:8px 10px;background:linear-gradient(135deg,#f0f6fb,#e3effa);border-radius:12px;border:1px solid #cfe2f0;word-break:break-all;transition:all .2s ease;opacity:0;animation:adDetailFadeIn .5s ease .8s forwards}
+.popup-ad-website:hover{background:linear-gradient(135deg,#e3effa,#d4e8f7);transform:translateY(-2px);box-shadow:0 4px 12px rgba(44,125,160,.25)}
+
+.popup-ad-progress{position:absolute;bottom:0;left:0;height:4px;background:linear-gradient(90deg,#f4a261,#e67e22,#f4a261);background-size:200% auto;animation:adProgressBar 8s linear forwards,adShine 2s linear infinite;border-radius:0 0 0 1.2rem;z-index:3}
+.popup-ad-card.premium .popup-ad-progress{background:linear-gradient(90deg,#FFD966,#f4a261,#FFD966);background-size:200% auto}
+
+.popup-ad-header-glow{position:absolute;inset:0;background:radial-gradient(circle at 50% 20%,rgba(255,255,255,.25),transparent 60%);pointer-events:none}
+.popup-ad-mini-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,.2);padding:2px 10px;border-radius:20px;font-size:.62rem;font-weight:800;backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,.3);animation:adFloat 2.8s ease-in-out infinite}
+
+/* Product order confirmation badge in form */
+.order-product-badge{display:flex;align-items:center;gap:8px;background:linear-gradient(135deg,#e8f8f0,#d4f0e4);border:1.5px solid #27ae60;border-radius:12px;padding:8px 12px;margin-bottom:.4rem;animation:adDetailFadeIn .4s ease}
+.order-product-badge .opb-icon{font-size:1.6rem;flex-shrink:0}
+.order-product-badge .opb-info{flex:1;min-width:0}
+.order-product-badge .opb-title{font-weight:800;color:#1e8449;font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.order-product-badge .opb-sub{font-size:.68rem;color:#27ae60}
+.order-product-badge .opb-clear{background:#27ae60;color:#fff;border:none;border-radius:50%;width:24px;height:24px;font-size:.75rem;cursor:pointer;flex-shrink:0}
 </style>
 </head>
 <body>
@@ -284,6 +428,10 @@ body{background:linear-gradient(145deg,#eef2f7 0%,#d9e2ec 100%);min-height:100vh
 </div>
 <button class="map-btn" id="mapButton">🗺️</button>
 </div>
+
+<!-- ORDER PRODUCT BADGE (shows when ordering from popup ad) -->
+<div id="orderProductBadgeContainer" style="display:none;"></div>
+
 <form id="mainForm" novalidate>
 <div class="section-title" data-i18n="sender">👤 SENDER</div>
 <div class="double-row">
@@ -315,25 +463,57 @@ body{background:linear-gradient(145deg,#eef2f7 0%,#d9e2ec 100%);min-height:100vh
 <div class="mode-row">
 <button type="button" class="btn" id="intlToggleBtn">Intl</button>
 <button type="button" class="btn add-client-btn-header" id="addClientBtnHeader" data-i18n="addClient">➕ Client</button>
+<button type="button" class="btn local-agent-btn" id="localAgentBtn">📞 LocalAgent</button>
 </div>
-<div class="country-selector-wrapper" id="countryWrapper" style="display:none;">
-<div class="input-group">
-<label data-i18n="country">🌍 Country</label>
-<div class="country-selector">
-<span class="country-flag" id="flagEmoji">🇱🇷</span>
-<select id="countryCodeSelect"></select>
+
+<!-- CURRENCY CONVERTER SECTION (Inline) -->
+<div class="currency-converter-inline" id="inlineConverterSection">
+<div class="cci-title">💱 Quick Currency Converter</div>
+<div class="cci-row">
+<select id="inlineConvFrom"></select>
+<span class="cci-eq">→</span>
+<select id="inlineConvTo"></select>
+</div>
+<div class="cci-amount-row">
+<input type="number" id="inlineConvAmount" placeholder="Amount" value="100" step="any" />
+</div>
+<div class="cci-result-row">
+<input type="text" id="inlineConvResult" placeholder="Result" readonly />
 </div>
 </div>
+
+<!-- LOCAL AGENT DETAILS DISPLAY -->
+<div class="local-agent-details" id="localAgentDetails">
+<div class="lad-title">📞 Selected Local Agent</div>
+<div class="lad-row"><span class="lad-label">Name</span><span class="lad-value" id="localAgentName">—</span></div>
+<div class="lad-row"><span class="lad-label">Phone</span><span class="lad-value" id="localAgentPhone">—</span></div>
+<div class="lad-actions">
+<button type="button" class="action-btn whatsapp" id="localAgentWhatsAppBtn" style="flex:1;height:34px;font-size:.75rem;">💬 WhatsApp</button>
+<button type="button" class="action-btn sms" id="localAgentSmsBtn" style="flex:1;height:34px;font-size:.75rem;">✉️ SMS</button>
+<button type="button" class="action-btn" id="localAgentClearBtn" style="background:#95a5a6;height:34px;font-size:.75rem;">✖</button>
 </div>
+</div>
+
+<!-- CHARGE BREAKDOWN SECTION -->
+<div class="charge-breakdown-section" id="chargeBreakdownSection">
+<div class="cbs-title">💳 Fee Breakdown <span class="cbs-badge">5%</span></div>
+<div class="cbs-row"><span class="cbs-label">🚚 Carrear Charges <span style="font-size:.65rem;color:#7f8c8d;">(3%)</span></span><span class="cbs-value" id="cbsCarrear">0.00</span></div>
+<div class="cbs-row"><span class="cbs-label">📞 Local Transfer <span style="font-size:.65rem;color:#7f8c8d;">(1%)</span></span><span class="cbs-value" id="cbsLocal">0.00</span></div>
+<div class="cbs-row"><span class="cbs-label">🛠️ Services <span style="font-size:.65rem;color:#7f8c8d;">(1%)</span></span><span class="cbs-value" id="cbsServices">0.00</span></div>
+<div class="cbs-row cbs-total"><span class="cbs-label">💵 Total Charges</span><span class="cbs-value" id="cbsTotal">0.00</span></div>
+</div>
+
 <div class="charges-panel">
 <div class="charges-row"><span data-i18n="base">💰 Base:</span><span id="displayAmount">0.00</span></div>
-<div class="charges-row"><span data-i18n="fee">📊 Fee (4%):</span><span id="chargeAmount">0.00</span></div>
+<div class="charges-row"><span data-i18n="fee">📊 Fee (5%):</span><span id="chargeAmount">0.00</span></div>
 <div class="charges-row"><span><span data-i18n="gst">🏛️ GST</span> (<span id="gstRateLabel">15</span>%):</span><span id="gstAmount">0.00</span></div>
 <div class="charges-row total-row"><span data-i18n="total">💵 Total:</span><span id="totalAmount">0.00</span></div>
 <div class="charges-row"><span data-i18n="currency">🌍 Currency:</span><span id="currencySymbol">SLL</span></div>
 </div>
 <div class="section-title" data-i18n="operator">💸 Operator</div>
-<div class="mm-button-container"><button type="button" class="single-mm-btn" id="mainMmBtn">MB-FOUR</button></div>
+<div class="mm-button-container">
+<button type="button" class="single-mm-btn" id="mainMmBtn">MB-FOUR</button>
+</div>
 <div class="section-title" data-i18n="txId">🔖 TX ID</div>
 <div class="tx-row">
 <div class="input-group"><label data-i18n="txId">TX ID</label><input type="text" id="transactionId" placeholder="Generate" /></div>
@@ -694,6 +874,7 @@ body{background:linear-gradient(145deg,#eef2f7 0%,#d9e2ec 100%);min-height:100vh
 <div style="font-size:.68rem;opacity:.8;">RECEIPT</div>
 </div>
 <div id="receiptBody" style="padding:12px 16px;"></div>
+<div id="receiptSocialButtons" style="padding:10px 16px;border-top:1px solid #e8edf2;"></div>
 <div style="padding:10px 16px;border-top:1px solid #e8edf2;text-align:center;">
 <div style="font-weight:700;color:#1c6e8f;font-size:.85rem;">✨ Thank you!</div>
 <button class="action-btn close-modal" id="receiptCloseBtn" style="margin-top:6px;width:100%;">Close</button>
@@ -703,15 +884,43 @@ body{background:linear-gradient(145deg,#eef2f7 0%,#d9e2ec 100%);min-height:100vh
 
 <div id="agreementModal" class="modal"><div class="modal-content" style="padding:0;"><div style="background:linear-gradient(135deg,#0a2b3c,#1c4e6c);padding:12px 18px;color:white;text-align:center;position:relative;"><button id="agreementCloseXBtn" style="position:absolute;top:5px;right:12px;background:rgba(255,255,255,.15);border:none;color:white;font-size:1.3rem;cursor:pointer;width:28px;height:28px;border-radius:50%;">✕</button><h3>📜 AGREEMENT</h3></div><div id="agreementBody" style="padding:14px 18px;max-height:55vh;overflow-y:auto;font-size:.8rem;"></div><div style="background:#f5f8fa;padding:10px 18px;border-top:1px solid #e8edf2;display:flex;gap:6px;justify-content:center;"><button class="action-btn green" id="agreementAgreeBtn" disabled>✋ Agree</button><button class="action-btn close-modal" id="agreementCloseBtn">Close</button></div></div></div>
 
-<div id="currencyConverterModal" class="modal"><div class="modal-content" style="padding:0;max-width:500px;">
-<div style="background:linear-gradient(135deg,#0a2b3c,#1c4e6c);padding:12px 18px;color:white;text-align:center;position:relative;"><button id="converterCloseXBtn" style="position:absolute;top:5px;right:12px;background:rgba(255,255,255,.15);border:none;color:white;font-size:1.3rem;cursor:pointer;width:28px;height:28px;border-radius:50%;">✕</button><h3>💱 Currency Converter</h3></div>
-<div style="padding:14px 18px;">
-<div class="input-group"><label>From Country / Currency</label><select id="convFromCurrency" style="width:100%;padding:5px 10px;border-radius:18px;border:1.5px solid #e0e8f0;height:38px;"></select></div>
-<div class="input-group"><label>💰 Amount *</label><input type="number" id="convAmount" step="any" value="100" style="width:100%;padding:5px 10px;border-radius:18px;border:1.5px solid #e0e8f0;height:38px;" /></div>
-<div class="input-group"><label>🌍 To Country / Currency</label><select id="convCountrySelect" style="width:100%;padding:5px 10px;border-radius:18px;border:1.5px solid #e0e8f0;height:38px;"></select></div>
+<!-- STYLED CURRENCY CONVERTER MODAL (MATCHING SCREENSHOT) -->
+<div id="currencyConverterModal" class="modal">
+  <div class="modal-content" style="padding:0;max-width:420px;">
+    <div class="modal-header-cc">
+      <button id="converterCloseXBtn" class="close-x-btn">✕</button>
+      <h3>💱 Currency Converter</h3>
+    </div>
+    <div class="cc-body">
+      <div class="cc-input-group">
+        <label>From Country / Currency</label>
+        <select id="convFromCurrency"></select>
+      </div>
+      <div class="cc-input-group">
+        <label>Amount *</label>
+        <input type="number" id="convAmount" step="any" value="100" />
+      </div>
+      <div class="cc-input-group">
+        <label>To Country / Currency</label>
+        <select id="convCountrySelect"></select>
+      </div>
+      
+      <!-- FEE BREAKDOWN IN CONVERTER -->
+      <div class="cc-fee-panel">
+        <div class="cc-fee-row"><span>💰 Base:</span><span id="convBase">0.00</span></div>
+        <div class="cc-fee-row"><span>🚚 Carrear Charges (3%):</span><span id="convCarrear">0.00</span></div>
+        <div class="cc-fee-row"><span>📞 Local Transfer (1%):</span><span id="convLocal">0.00</span></div>
+        <div class="cc-fee-row"><span>🛠️ Services (1%):</span><span id="convServices">0.00</span></div>
+        <div class="cc-fee-row cc-total"><span>💵 Total:</span><span id="convTotal">0.00</span></div>
+        <div class="cc-fee-row cc-rate"><span>Rate:</span><span id="convRate">1.00 = 1.00</span></div>
+        <div class="cc-fee-row cc-recipient"><span>🤝 Recipient:</span><span id="convRecipient">0.00</span></div>
+      </div>
+    </div>
+    <div class="cc-footer">
+      <button class="cc-btn-close" id="convCloseBtn">Close</button>
+    </div>
+  </div>
 </div>
-<div style="background:#f5f8fa;padding:10px 18px;border-top:1px solid #e8edf2;display:flex;gap:6px;justify-content:center;"><button class="action-btn" id="convCloseBtn">Close</button></div>
-</div></div>
 
 <div id="addBizModal" class="modal"><div class="modal-content" style="max-width:540px;">
 <h3 id="addBizTitle">🏢 Add Your Business</h3>
@@ -807,10 +1016,10 @@ const Supa = {
 };
 
 const TRANSLATIONS = {
-    en: { login:"Login", register:"Register", logout:"Logout", sender:"👤 SENDER", agent:"👤 AGENT", client:"👥 CLIENT", name:"Name *", phone:"Phone *", address:"Address", city:"City *", amount:"Amount *", country:"🌍 Country", base:"💰 Base:", fee:"📊 Fee (4%):", gst:"🏛️ GST", total:"💵 Total:", currency:"🌍 Currency:", operator:"💸 Operator", txId:"🔖 TX ID", providerTxId:"🔐 Provider TX ID", transferCode:"Transfer Code *", submit:"Submit", quickPay:"⭐ QUICK PAY ⭐", addBiz:"➕ Add Biz", editBiz:"✏️ Edit Biz", about:"About", dev:"Dev", contact:"Contact", subscribe:"Subscribe", how:"📖 How", convert:"💱 Convert", addClient:"➕ Client", gen:"Gen", copy:"Copy", save:"Save", cancel:"Cancel", close:"Close", selectContact:"Select a contact", send:"Send", chooseAvatar:"😊 Choose Your Avatar", profileAvatar:"😊 Profile Avatar", upload:"📷 Upload", remove:"🗑️ Remove", emoji:"🎨 Emoji", replaceLogo:"🖼️ Replace Agent Logo", credentialsCorrect:"✅ Credentials correct" },
-    fr: { login:"Connexion", register:"Inscription", logout:"Déconnexion", sender:"👤 EXPÉDITEUR", agent:"👤 AGENT", client:"👥 CLIENT", name:"Nom *", phone:"Téléphone *", address:"Adresse", city:"Ville *", amount:"Montant *", country:"🌍 Pays", base:"💰 Base:", fee:"📊 Frais (4%):", gst:"🏛️ TVA", total:"💵 Total:", currency:"🌍 Devise:", operator:"💸 Opérateur", txId:"🔖 ID TX", providerTxId:"🔐 ID TX Fournisseur", transferCode:"Code de transfert *", submit:"Soumettre", quickPay:"⭐ PAIEMENT RAPIDE ⭐", addBiz:"➕ Ajouter Entreprise", editBiz:"✏️ Modifier Entreprise", about:"À propos", dev:"Développeur", contact:"Contact", subscribe:"S'abonner", how:"📖 Comment", convert:"💱 Convertir", addClient:"➕ Client", gen:"Gén", copy:"Copier", save:"Enregistrer", cancel:"Annuler", close:"Fermer", selectContact:"Sélectionner un contact", send:"Envoyer", chooseAvatar:"😊 Choisissez votre avatar", profileAvatar:"😊 Avatar du profil", upload:"📷 Télécharger", remove:"🗑️ Supprimer", emoji:"🎨 Emoji", replaceLogo:"🖼️ Remplacer le logo", credentialsCorrect:"✅ Identifiants corrects" },
-    ar: { login:"تسجيل الدخول", register:"تسجيل", logout:"خروج", sender:"👤 المرسل", agent:"👤 الوكيل", client:"👥 العميل", name:"الاسم *", phone:"الهاتف *", address:"العنوان", city:"المدينة *", amount:"المبلغ *", country:"🌍 البلد", base:"💰 الأساس:", fee:"📊 الرسوم (4%):", gst:"🏛️ ضريبة", total:"💵 المجموع:", currency:"🌍 العملة:", operator:"💸 المشغل", txId:"🔖 معرف المعاملة", providerTxId:"🔐 معرف مزود المعاملة", transferCode:"رمز التحويل *", submit:"إرسال", quickPay:"⭐ دفع سريع ⭐", addBiz:"➕ إضافة نشاط", editBiz:"✏️ تعديل النشاط", about:"حول", dev:"المطور", contact:"اتصل", subscribe:"اشترك", how:"📖 كيف", convert:"💱 تحويل", addClient:"➕ عميل", gen:"توليد", copy:"نسخ", save:"حفظ", cancel:"إلغاء", close:"إغلاق", selectContact:"اختر جهة اتصال", send:"إرسال", chooseAvatar:"😊 اختر الصورة الرمزية", profileAvatar:"😊 صورة الملف الشخصي", upload:"📷 رفع", remove:"🗑️ إزالة", emoji:"🎨 رمز", replaceLogo:"🖼️ استبدال الشعار", credentialsCorrect:"✅ بيانات الاعتماد صحيحة" },
-    es: { login:"Iniciar sesión", register:"Registrarse", logout:"Cerrar sesión", sender:"👤 REMITENTE", agent:"👤 AGENTE", client:"👥 CLIENTE", name:"Nombre *", phone:"Teléfono *", address:"Dirección", city:"Ciudad *", amount:"Monto *", country:"🌍 País", base:"💰 Base:", fee:"📊 Tarifa (4%):", gst:"🏛️ IVA", total:"💵 Total:", currency:"🌍 Moneda:", operator:"💸 Operador", txId:"🔖 ID TX", providerTxId:"🔐 ID TX Proveedor", transferCode:"Código de transferencia *", submit:"Enviar", quickPay:"⭐ PAGO RÁPIDO ⭐", addBiz:"➕ Añadir Negocio", editBiz:"✏️ Editar Negocio", about:"Acerca de", dev:"Desarrollador", contact:"Contacto", subscribe:"Suscribirse", how:"📖 Cómo", convert:"💱 Convertir", addClient:"➕ Cliente", gen:"Gen", copy:"Copiar", save:"Guardar", cancel:"Cancelar", close:"Cerrar", selectContact:"Selecciona un contacto", send:"Enviar", chooseAvatar:"😊 Elige tu avatar", profileAvatar:"😊 Avatar del perfil", upload:"📷 Subir", remove:"🗑️ Eliminar", emoji:"🎨 Emoji", replaceLogo:"🖼️ Reemplazar logo", credentialsCorrect:"✅ Credenciales correctas" }
+    en: { login:"Login", register:"Register", logout:"Logout", sender:"👤 SENDER", agent:"👤 AGENT", client:"👥 CLIENT", name:"Name *", phone:"Phone *", address:"Address", city:"City *", amount:"Amount *", country:"🌍 Country", base:"💰 Base:", fee:"📊 Fee (5%):", gst:"🏛️ GST", total:"💵 Total:", currency:"🌍 Currency:", operator:"💸 Operator", txId:"🔖 TX ID", providerTxId:"🔐 Provider TX ID", transferCode:"Transfer Code *", submit:"Submit", quickPay:"⭐ QUICK PAY ⭐", addBiz:"➕ Add Biz", editBiz:"✏️ Edit Biz", about:"About", dev:"Dev", contact:"Contact", subscribe:"Subscribe", how:"📖 How", convert:"💱 Convert", addClient:"➕ Client", gen:"Gen", copy:"Copy", save:"Save", cancel:"Cancel", close:"Close", selectContact:"Select a contact", send:"Send", chooseAvatar:"😊 Choose Your Avatar", profileAvatar:"😊 Profile Avatar", upload:"📷 Upload", remove:"🗑️ Remove", emoji:"🎨 Emoji", replaceLogo:"🖼️ Replace Agent Logo", credentialsCorrect:"✅ Credentials correct" },
+    fr: { login:"Connexion", register:"Inscription", logout:"Déconnexion", sender:"👤 EXPÉDITEUR", agent:"👤 AGENT", client:"👥 CLIENT", name:"Nom *", phone:"Téléphone *", address:"Adresse", city:"Ville *", amount:"Montant *", country:"🌍 Pays", base:"💰 Base:", fee:"📊 Frais (5%):", gst:"🏛️ TVA", total:"💵 Total:", currency:"🌍 Devise:", operator:"💸 Opérateur", txId:"🔖 ID TX", providerTxId:"🔐 ID TX Fournisseur", transferCode:"Code de transfert *", submit:"Soumettre", quickPay:"⭐ PAIEMENT RAPIDE ⭐", addBiz:"➕ Ajouter Entreprise", editBiz:"✏️ Modifier Entreprise", about:"À propos", dev:"Développeur", contact:"Contact", subscribe:"S'abonner", how:"📖 Comment", convert:"💱 Convertir", addClient:"➕ Client", gen:"Gén", copy:"Copier", save:"Enregistrer", cancel:"Annuler", close:"Fermer", selectContact:"Sélectionner un contact", send:"Envoyer", chooseAvatar:"😊 Choisissez votre avatar", profileAvatar:"😊 Avatar du profil", upload:"📷 Télécharger", remove:"🗑️ Supprimer", emoji:"🎨 Emoji", replaceLogo:"🖼️ Remplacer le logo", credentialsCorrect:"✅ Identifiants corrects" },
+    ar: { login:"تسجيل الدخول", register:"تسجيل", logout:"خروج", sender:"👤 المرسل", agent:"👤 الوكيل", client:"👥 العميل", name:"الاسم *", phone:"الهاتف *", address:"العنوان", city:"المدينة *", amount:"المبلغ *", country:"🌍 البلد", base:"💰 الأساس:", fee:"📊 الرسوم (5%):", gst:"🏛️ ضريبة", total:"💵 المجموع:", currency:"🌍 العملة:", operator:"💸 المشغل", txId:"🔖 معرف المعاملة", providerTxId:"🔐 معرف مزود المعاملة", transferCode:"رمز التحويل *", submit:"إرسال", quickPay:"⭐ دفع سريع ⭐", addBiz:"➕ إضافة نشاط", editBiz:"✏️ تعديل النشاط", about:"حول", dev:"المطور", contact:"اتصل", subscribe:"اشترك", how:"📖 كيف", convert:"💱 تحويل", addClient:"➕ عميل", gen:"توليد", copy:"نسخ", save:"حفظ", cancel:"إلغاء", close:"إغلاق", selectContact:"اختر جهة اتصال", send:"إرسال", chooseAvatar:"😊 اختر الصورة الرمزية", profileAvatar:"😊 صورة الملف الشخصي", upload:"📷 رفع", remove:"🗑️ إزالة", emoji:"🎨 رمز", replaceLogo:"🖼️ استبدال الشعار", credentialsCorrect:"✅ بيانات الاعتماد صحيحة" },
+    es: { login:"Iniciar sesión", register:"Registrarse", logout:"Cerrar sesión", sender:"👤 REMITENTE", agent:"👤 AGENTE", client:"👥 CLIENTE", name:"Nombre *", phone:"Teléfono *", address:"Dirección", city:"Ciudad *", amount:"Monto *", country:"🌍 País", base:"💰 Base:", fee:"📊 Tarifa (5%):", gst:"🏛️ IVA", total:"💵 Total:", currency:"🌍 Moneda:", operator:"💸 Operador", txId:"🔖 ID TX", providerTxId:"🔐 ID TX Proveedor", transferCode:"Código de transferencia *", submit:"Enviar", quickPay:"⭐ PAGO RÁPIDO ⭐", addBiz:"➕ Añadir Negocio", editBiz:"✏️ Editar Negocio", about:"Acerca de", dev:"Desarrollador", contact:"Contacto", subscribe:"Suscribirse", how:"📖 Cómo", convert:"💱 Convertir", addClient:"➕ Cliente", gen:"Gen", copy:"Copiar", save:"Guardar", cancel:"Cancelar", close:"Cerrar", selectContact:"Selecciona un contacto", send:"Enviar", chooseAvatar:"😊 Elige tu avatar", profileAvatar:"😊 Avatar del perfil", upload:"📷 Subir", remove:"🗑️ Eliminar", emoji:"🎨 Emoji", replaceLogo:"🖼️ Reemplazar logo", credentialsCorrect:"✅ Credenciales correctas" }
 };
 
 let currentLang = 'en';
@@ -867,15 +1076,15 @@ const SUPPORTED_COUNTRY_FLAGS = ['🇱🇷','🇬🇳','🇸🇳','🇲🇱','�
 const AVAILABLE_EMOJIS = ['👤','👩','👨','👧','👦','👴','👵','🧑','👶','🧒','👱','🧔','🧑‍💼','👩‍💼','👨‍💼','🧑‍🎓','👩‍🎓','👨‍🎓','🧑‍🏫','👩‍🏫','👨‍🏫','🧑‍⚕️','👩‍⚕️','👨‍⚕️','🧑‍🍳','👩‍🍳','👨‍🍳','🧑‍🌾','👩‍🌾','👨‍🌾','🧑‍🔧','👩‍🔧','👨‍🔧','🧑‍💻','👩‍💻','👨‍💻','😀','😃','😄','😁','😊','🙂','😉','😍','🤩','😎','🤗','🤔','🧐','😇','🥰','😘','🦁','🐯','🐶','🐱','🐼','🦊','🐨','🐻','🐵','🐸','🐷','🐔','🦄','🐲','🦋','🐢','💰','💵','💴','💶','💷','💸','💳','🪙','🏦','📱','💻','🖥️','🛒','🛍️','🎁','⭐'];
 
 const businesses = [
-    { id:1, name:"Mama's Kitchen", contact:"+232-76-123-456", type:"Restaurant", icon:"🍽️", website:"https://www.mamaskitchen.sl", goods:[{name:"Jollof Rice + Chicken",price:85,quantity:10,quality:"Fresh"}] },
-    { id:2, name:"Freetown Computer Hub", contact:"+232-80-234-567", type:"Electronics", icon:"💻", website:"https://www.freetowncomputers.com", goods:[{name:"Laptop Repair",price:150,quantity:1,quality:"Brand new"}] },
-    { id:3, name:"Excellence School", contact:"+232-73-345-678", type:"Education", icon:"📚", website:"https://www.excellenceschool.edu", goods:[{name:"Tuition Fee",price:120,quantity:30,quality:"Standard"}] },
-    { id:4, name:"Dr. Kamara Clinic", contact:"+232-76-456-789", type:"Healthcare", icon:"🏥", website:"https://www.drkimaraclinic.com", goods:[{name:"Consultation",price:25,quantity:1,quality:"Premium"}] },
-    { id:5, name:"John Hardware", contact:"+232-80-567-890", type:"Hardware", icon:"🔨", website:"https://www.johnshardware.sl", goods:[{name:"Cement (50kg)",price:180,quantity:200,quality:"Brand new"}] },
-    { id:6, name:"Salone Fashion", contact:"+232-73-678-901", type:"Fashion", icon:"👗", website:"https://www.salonefashion.com", goods:[{name:"African Print Dress",price:150,quantity:20,quality:"Premium"}] },
-    { id:7, name:"James Williams", contact:"+232-76-012-345", type:"Individual", icon:"👤", website:"https://www.jameswilliams.com", goods:[{name:"Freelance Web Design",price:500,quantity:5,quality:"Premium"}] },
-    { id:8, name:"Mary Koroma", contact:"+232-80-123-456", type:"Individual", icon:"👩", website:"https://www.marykoroma.com", goods:[{name:"Handmade Crafts",price:45,quantity:30,quality:"Brand new"}] },
-    { id:9, name:"NUSWEB Biz", contact:"+232-76-436-811", type:"Electronics", icon:"🖥️", website:"https://www.nuswebtech.com", goods:[{name:"Samsung Galaxy A06 64GB",price:3250,quantity:10,quality:"Brand new"}] }
+    { id:1, name:"Mama's Kitchen", contact:"+232-76-123-456", mobileMoney:"+232-76-123-456", type:"Restaurant", icon:"🍽️", website:"https://www.mamaskitchen.sl", goods:[{name:"Jollof Rice + Chicken",price:85,quantity:10,quality:"Fresh",kind:"product",delivery:"Same day in Freetown",icon:"🍛"}] },
+    { id:2, name:"Freetown Computer Hub", contact:"+232-80-234-567", mobileMoney:"+232-80-234-567", type:"Electronics", icon:"💻", website:"https://www.freetowncomputers.com", goods:[{name:"Laptop Repair",price:150,quantity:1,quality:"Brand new",kind:"service",delivery:"1-2 business days",icon:"🔧"}] },
+    { id:3, name:"Excellence School", contact:"+232-73-345-678", mobileMoney:"+232-73-345-678", type:"Education", icon:"📚", website:"https://www.excellenceschool.edu", goods:[{name:"Tuition Fee",price:120,quantity:30,quality:"Standard",kind:"service",delivery:"Instant enrollment",icon:"🎓"}] },
+    { id:4, name:"Dr. Kamara Clinic", contact:"+232-76-456-789", mobileMoney:"+232-76-456-789", type:"Healthcare", icon:"🏥", website:"https://www.drkimaraclinic.com", goods:[{name:"Consultation",price:25,quantity:1,quality:"Premium",kind:"service",delivery:"Walk-in or appointment",icon:"🩺"}] },
+    { id:5, name:"John Hardware", contact:"+232-80-567-890", mobileMoney:"+232-80-567-890", type:"Hardware", icon:"🔨", website:"https://www.johnshardware.sl", goods:[{name:"Cement (50kg)",price:180,quantity:200,quality:"Brand new",kind:"product",delivery:"Delivery within 24h",icon:"🧱"}] },
+    { id:6, name:"Salone Fashion", contact:"+232-73-678-901", mobileMoney:"+232-73-678-901", type:"Fashion", icon:"👗", website:"https://www.salonefashion.com", goods:[{name:"African Print Dress",price:150,quantity:20,quality:"Premium",kind:"product",delivery:"3-5 days nationwide",icon:"👘"}] },
+    { id:7, name:"James Williams", contact:"+232-76-012-345", mobileMoney:"+232-76-012-345", type:"Individual", icon:"👤", website:"https://www.jameswilliams.com", goods:[{name:"Freelance Web Design",price:500,quantity:5,quality:"Premium",kind:"service",delivery:"1-2 weeks",icon:"💻"}] },
+    { id:8, name:"Mary Koroma", contact:"+232-80-123-456", mobileMoney:"+232-80-123-456", type:"Individual", icon:"👩", website:"https://www.marykoroma.com", goods:[{name:"Handmade Crafts",price:45,quantity:30,quality:"Brand new",kind:"product",delivery:"Local pickup or delivery",icon:"🧶"}] },
+    { id:9, name:"NUSWEB Biz", contact:"+232-76-436-811", mobileMoney:"+232-76-436-811", type:"Electronics", icon:"🖥️", website:"https://www.nuswebtech.com", goods:[{name:"Samsung Galaxy A06 64GB",price:3250,quantity:10,quality:"Brand new",kind:"product",delivery:"Free delivery in Freetown",icon:"📱"}] }
 ];
 
 let currentUser = null;
@@ -901,10 +1110,395 @@ let chatActiveTarget = null;
 let chatUnreadCount = 0;
 let dpImageDataURL = null;
 
+/* Currently ordered product from popup ad (used to enrich receipt / transaction) */
+let currentOrderedProduct = null;
+
+/* ============================================================ */
+/* MB-FOUR SEPARATE STATE — prevents overwriting main agent */
+/* ============================================================ */
+let mbFourSelectedAgentId = null;
+let mbFourSelectedAgentPhone = null;
+
+/* Fee percentages: Carrear 3% + Local 1% + Services 1% = 5% */
+const FEE_CARREAR = 0.03;
+const FEE_LOCAL = 0.01;
+const FEE_SERVICES = 0.01;
+const FEE_TOTAL = FEE_CARREAR + FEE_LOCAL + FEE_SERVICES;
+
+/* Approximate FX rates relative to 1 USD for inline converter */
+const FX_TO_USD = { SLL:0.000044, LRD:0.0052, GNF:0.000116, XOF:0.00165, GHS:0.066, GMD:0.014, KES:0.0077, XAF:0.00165, ETB:0.0175, MGA:0.00022, MAD:0.10, RWF:0.00078, UGX:0.00027, CDF:0.00035 };
+
 const APP_LINKS = { directPay: 'https://www.appcreator24.com/app4066434-hmkuo4', watuPay: 'https://aminejalloh-io.github.io/WatuPay/', weBine: 'https://www.appcreator24.com/app814705-24jpuf' };
 
 /* ============================================================ */
-/* IMAGE RESIZE (for logos and products) */
+/* POPUP ADS — every 90 seconds, Premium ad every 7th           */
+/* Now shows RANDOM products from RANDOM registered businesses  */
+/* WITH FULL ANIMATIONS AND GRAPHICS                            */
+/* ============================================================ */
+let popupAdCount = 0;
+let popupAdIntervalId = null;
+let currentPopupAdModal = null;
+
+const PREMIUM_POPUP_AD = {
+    icon: '👑',
+    title: 'AfriPay PREMIUM',
+    body: 'Unlock the full power of AfriPay! Zero fees on all transfers, priority 24/7 support, higher transaction limits, and exclusive partner discounts. Join thousands of premium members today!',
+    buttonText: '🌟 Upgrade to Premium',
+    buttonAction: function() { alert('Redirecting to Premium signup...'); },
+    isPremium: true
+};
+
+/* Pick a random product from a random registered business */
+function getRandomProductAd() {
+    const allBiz = getAllBusinesses();
+    const candidates = [];
+    allBiz.forEach(function(biz) {
+        if (biz.goods && biz.goods.length > 0) {
+            biz.goods.forEach(function(g) {
+                candidates.push({ biz: biz, product: g });
+            });
+        }
+    });
+    if (candidates.length === 0) {
+        return {
+            icon: '🏪',
+            title: 'Discover AfriPay Businesses',
+            body: 'Browse local businesses, order products and services, and pay instantly with AfriPay.',
+            buttonText: 'Explore Now',
+            buttonAction: function() { showToast('🏪 Browse the Quick Pay strip!', 2200); }
+        };
+    }
+    const pick = candidates[Math.floor(Math.random() * candidates.length)];
+    const biz = pick.biz;
+    const p = pick.product;
+    const currency = (typeof getUserCurrency === 'function' ? getUserCurrency() : 'SLL');
+    const price = parseFloat(p.price) || 0;
+    const qty = p.quantity || 1;
+    const quality = p.quality || 'Standard';
+    const kind = (p.kind || 'product').toLowerCase();
+    const delivery = p.delivery || (kind === 'service' ? 'Service via appointment' : 'Delivery 1-3 business days');
+    const icon = p.icon || biz.icon || (kind === 'service' ? '🛠️' : '📦');
+
+    return {
+        icon: icon,
+        title: p.name || 'Featured Product',
+        isProductAd: true,
+        businessId: biz.id,
+        businessName: biz.name,
+        businessIcon: biz.icon || '🏪',
+        businessType: biz.type || '',
+        businessMobileMoney: biz.mobileMoney || biz.contact || '',
+        productName: p.name || 'Item',
+        price: price,
+        currency: currency,
+        quality: quality,
+        quantity: qty,
+        kind: kind,
+        delivery: delivery,
+        website: biz.website || '',
+        buttonText: '🛒 Order via AfriPay',
+        buttonAction: function() { placeProductOrder(adDataRef); }
+    };
+}
+
+/* Reference used inside buttonAction closure */
+let adDataRef = null;
+
+/* ============================================================ */
+/* PLACE PRODUCT ORDER — fill the transaction form with product */
+/* details: product name → TX label / amount / agent / phone    */
+/* ============================================================ */
+function placeProductOrder(adData) {
+    if (!adData) return;
+
+    // Require login (form is hidden when not logged in)
+    if (!currentUser) {
+        showToast('🔐 Please login or register to place an order.', 2600);
+        try { getEl('loginModal').style.display = 'flex'; } catch (e) {}
+        return;
+    }
+
+    // Ensure we're not in business mode so the agent select shows correctly
+    try { exitBusinessMode(); } catch (e) {}
+
+    // 1) Amount from product price
+    const amountInput = getEl('amountInput');
+    if (amountInput) {
+        amountInput.value = (parseFloat(adData.price) || 0).toFixed(2);
+        amountInput.dispatchEvent(new Event('input'));
+    }
+
+    // 2) Agent name from business name
+    const agentNameEl = getEl('agentName');
+    if (agentNameEl) agentNameEl.value = adData.businessName || 'Business';
+
+    // 3) Agent phone from business mobile money number
+    const agentPhoneEl = getEl('agentPhone');
+    if (agentPhoneEl) agentPhoneEl.value = adData.businessMobileMoney || adData.businessContact || '';
+
+    // 4) Show a display field replacing the agent <select> (business mode style)
+    const agentSelect = getEl('agentNameSelect');
+    const agentLabel = getEl('agentNameLabel');
+    if (agentSelect) {
+        isBusinessMode = true;
+        agentSelect.style.display = 'none';
+        let bd = getEl('bizDisplayField');
+        if (!bd) {
+            bd = document.createElement('div');
+            bd.id = 'bizDisplayField';
+            bd.className = 'biz-display-field';
+            agentSelect.parentNode.insertBefore(bd, agentSelect.nextSibling);
+        }
+        bd.innerHTML = '<span>' + (adData.businessIcon || '🏪') + '</span><span>' + escapeHTML(adData.businessName || 'Business') + '</span>';
+        bd.style.display = 'flex';
+        if (agentLabel) agentLabel.textContent = '🏢 Business (from ad)';
+    }
+
+    // 5) Store the ordered product for the receipt / transaction
+    currentOrderedProduct = {
+        productName: adData.productName || 'Item',
+        productIcon: adData.icon || '📦',
+        businessName: adData.businessName || 'Business',
+        businessIcon: adData.businessIcon || '🏪',
+        businessMobileMoney: adData.businessMobileMoney || '',
+        price: parseFloat(adData.price) || 0,
+        currency: adData.currency || getUserCurrency(),
+        quality: adData.quality || '',
+        quantity: adData.quantity || 1,
+        delivery: adData.delivery || '',
+        website: adData.website || '',
+        kind: adData.kind || 'product'
+    };
+
+    // 6) Show a clear badge at the top of the form confirming the product order
+    renderOrderProductBadge(currentOrderedProduct);
+
+    // 7) Recompute charges & generate a TX ID
+    computeCharges();
+    try { ensureTransactionId(); } catch (e) {}
+
+    // 8) Scroll to the top of the form so user sees the filled details
+    try {
+        const fc = getEl('mainFormContainer');
+        if (fc && fc.scrollIntoView) fc.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (amountInput && amountInput.focus) amountInput.focus();
+    } catch (e) {}
+
+    showToast('🛒 Order ready: ' + (adData.productName || 'Item') + ' — ' + adData.currency + ' ' + (parseFloat(adData.price) || 0).toFixed(2), 3200);
+}
+
+/* Show / refresh the order badge above the form */
+function renderOrderProductBadge(order) {
+    const container = getEl('orderProductBadgeContainer');
+    if (!container) return;
+    if (!order) {
+        container.innerHTML = '';
+        container.style.display = 'none';
+        return;
+    }
+    container.innerHTML =
+        '<div class="order-product-badge">' +
+            '<span class="opb-icon">' + (order.productIcon || '📦') + '</span>' +
+            '<div class="opb-info">' +
+                '<div class="opb-title">' + escapeHTML(order.productName) + '</div>' +
+                '<div class="opb-sub">' + (order.businessIcon || '🏪') + ' ' + escapeHTML(order.businessName) +
+                    ' · ' + escapeHTML(order.currency) + ' ' + (parseFloat(order.price) || 0).toFixed(2) +
+                    (order.delivery ? ' · 🚚 ' + escapeHTML(order.delivery) : '') +
+                '</div>' +
+            '</div>' +
+            '<button type="button" class="opb-clear" id="clearOrderProductBtn" title="Clear product">✕</button>' +
+        '</div>';
+    container.style.display = 'block';
+    const clearBtn = getEl('clearOrderProductBtn');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function() {
+            clearOrderedProduct();
+            showToast('🗑️ Product cleared from order', 1800);
+        });
+    }
+}
+
+function clearOrderedProduct() {
+    currentOrderedProduct = null;
+    renderOrderProductBadge(null);
+    // Reset agent field back to the normal dropdown
+    try {
+        exitBusinessMode();
+        const sel = getEl('agentNameSelect');
+        if (sel) sel.style.display = 'block';
+        const lbl = getEl('agentNameLabel');
+        if (lbl) lbl.textContent = 'Agent *';
+        if (getEl('agentName')) getEl('agentName').value = '';
+        if (getEl('agentPhone')) getEl('agentPhone').value = '';
+        if (getEl('amountInput')) { getEl('amountInput').value = ''; }
+        computeCharges();
+    } catch (e) {}
+}
+
+function removeExistingPopupAd() {
+    if (currentPopupAdModal && currentPopupAdModal.parentNode) {
+        currentPopupAdModal.parentNode.removeChild(currentPopupAdModal);
+    }
+    currentPopupAdModal = null;
+}
+
+function showPopupAd(adData) {
+    removeExistingPopupAd();
+    adDataRef = adData;
+
+    const adModal = document.createElement('div');
+    adModal.id = 'popupAdModal';
+    adModal.className = 'modal';
+    adModal.style.display = 'flex';
+    adModal.style.zIndex = '2000';
+
+    const isPremium = adData.isPremium === true;
+    const isProduct = adData.isProductAd === true;
+
+    let headerBg, iconSize, titleSize, buttonBg, borderGlow;
+    if (isPremium) {
+        headerBg = 'linear-gradient(135deg,#f4a261,#e67e22 50%,#d35400)';
+        iconSize = '3rem'; titleSize = '1.5rem'; buttonBg = '#0f2b3d';
+        borderGlow = 'box-shadow:0 0 0 3px rgba(244,162,97,.5),0 0 30px rgba(244,162,97,.4),0 20px 40px rgba(0,0,0,.35);';
+    } else if (isProduct) {
+        headerBg = 'linear-gradient(135deg,#0a2b3c 0%,#2c7da0 55%,#4aa8c9 100%)';
+        iconSize = '2.8rem'; titleSize = '1.25rem'; buttonBg = '#f4a261';
+        borderGlow = 'box-shadow:0 0 0 3px rgba(44,125,160,.35),0 0 22px rgba(44,125,160,.3),0 20px 40px rgba(0,0,0,.32);';
+    } else {
+        headerBg = 'linear-gradient(135deg,#0a2b3c,#1c4e6c)';
+        iconSize = '2.5rem'; titleSize = '1.3rem'; buttonBg = '#f4a261'; borderGlow = '';
+    }
+
+    // Build product detail block if it's a product ad
+    let productDetailsHtml = '';
+    if (isProduct) {
+        productDetailsHtml =
+            '<div class="popup-ad-details-panel">' +
+                '<div class="popup-ad-detail-row">' +
+                    '<span class="label">🏢 Business</span>' +
+                    '<span class="value">' + (adData.businessIcon || '🏪') + ' ' + escapeHTML(adData.businessName) + '</span>' +
+                '</div>' +
+                '<div class="popup-ad-detail-row">' +
+                    '<span class="label">🏷️ Product</span>' +
+                    '<span class="value">' + escapeHTML(adData.productName) + '</span>' +
+                '</div>' +
+                '<div class="popup-ad-detail-row price">' +
+                    '<span class="label">💰 Price</span>' +
+                    '<span class="value">' + adData.currency + ' ' + (parseFloat(adData.price) || 0).toFixed(2) + '</span>' +
+                '</div>' +
+                '<div class="popup-ad-detail-row">' +
+                    '<span class="label">⭐ Quality</span>' +
+                    '<span class="value">' + escapeHTML(adData.quality) + '</span>' +
+                '</div>' +
+                '<div class="popup-ad-detail-row">' +
+                    '<span class="label">📦 Quantity</span>' +
+                    '<span class="value">' + escapeHTML(String(adData.quantity)) + ' available</span>' +
+                '</div>' +
+                '<div class="popup-ad-detail-row delivery">' +
+                    '<span class="label">🚚 Delivery</span>' +
+                    '<span class="value">' + escapeHTML(adData.delivery) + '</span>' +
+                '</div>' +
+                (adData.businessMobileMoney ? '<div class="popup-ad-detail-row"><span class="label">📱 Mobile Money</span><span class="value">' + escapeHTML(adData.businessMobileMoney) + '</span></div>' : '') +
+            '</div>';
+    }
+
+    let websiteHtml = '';
+    if (isProduct && adData.website) {
+        websiteHtml = '<a class="popup-ad-website" href="' + escapeHTML(adData.website) + '" target="_blank" rel="noopener">🌐 ' + escapeHTML(adData.website) + '</a>';
+    }
+
+    // Sparkle positions
+    const sparkles = '<span class="popup-ad-sparkle s1">✦</span><span class="popup-ad-sparkle s2">✦</span><span class="popup-ad-sparkle s3">✦</span><span class="popup-ad-sparkle s4">✦</span>';
+
+    // Premium badge
+    const premiumBadge = isPremium ? '<div class="popup-ad-mini-badge" style="background:rgba(255,255,255,.25);">👑 VIP ONLY</div>' : '';
+
+    adModal.innerHTML = `
+        <div class="modal-content popup-ad-card${isPremium ? ' premium' : ''}" style="max-width:${isPremium ? '380px' : (isProduct ? '360px' : '320px')}; padding:0; overflow:hidden; position:relative; border-radius:1.2rem; ${borderGlow}">
+            <button class="popup-ad-close" id="closeAdBtn">✕</button>
+            ${isPremium ? '<div class="popup-ad-tag red">🔥 LIMITED OFFER</div>' : ''}
+            ${isProduct ? '<div class="popup-ad-tag green">✨ FEATURED</div>' : ''}
+            <div style="background:${headerBg};padding:${isPremium ? '30px 20px 22px' : '22px 20px'};text-align:center;color:white;position:relative;overflow:hidden;">
+                <div class="popup-ad-header-glow"></div>
+                ${sparkles}
+                <div class="popup-ad-icon-wrap">
+                    <div class="popup-ad-icon">${adData.icon}</div>
+                </div>
+                <h2 class="popup-ad-title" style="margin:8px 0 0;font-size:${titleSize};font-weight:900;word-break:break-word;letter-spacing:.3px;">${escapeHTML(adData.title)}</h2>
+                ${isProduct ? '<div style="font-size:.68rem;opacity:.85;margin-top:6px;font-weight:600;">from ' + escapeHTML(adData.businessName) + '</div>' : ''}
+                ${isPremium ? '<div style="margin-top:8px;">' + premiumBadge + '</div>' : ''}
+            </div>
+            <div style="padding:18px;text-align:center;background:#fff;">
+                ${productDetailsHtml}
+                ${(!isProduct) ? '<p style="color:#1e3b4a;margin-bottom:15px;font-size:0.9rem;line-height:1.5;">' + escapeHTML(adData.body) + '</p>' : ''}
+                <button class="popup-ad-btn" id="popupAdActionBtn" style="background:${buttonBg};color:#fff;border:none;padding:13px 20px;border-radius:30px;font-weight:800;font-size:${isPremium ? '1rem' : '0.95rem'};cursor:pointer;width:100%;">${escapeHTML(adData.buttonText)}</button>
+                ${isPremium ? '<div style="margin-top:12px;font-size:.65rem;color:#95a5a6;display:flex;align-items:center;justify-content:center;gap:6px;">🔒 Secure payment · Cancel anytime</div>' : ''}
+                ${websiteHtml}
+            </div>
+            <div class="popup-ad-progress"></div>
+        </div>
+    `;
+
+    document.body.appendChild(adModal);
+    currentPopupAdModal = adModal;
+
+    document.getElementById('closeAdBtn').addEventListener('click', function() {
+        adModal.style.display = 'none';
+        removeExistingPopupAd();
+    });
+
+    const actionBtn = document.getElementById('popupAdActionBtn');
+    if (actionBtn) {
+        actionBtn.addEventListener('click', function() {
+            adData.buttonAction();
+            adModal.style.display = 'none';
+            removeExistingPopupAd();
+        });
+    }
+
+    adModal.addEventListener('click', function(e) {
+        if (e.target === adModal) {
+            adModal.style.display = 'none';
+            removeExistingPopupAd();
+        }
+    });
+}
+
+function triggerNextPopupAd() {
+    popupAdCount++;
+
+    if (popupAdCount % 7 === 0) {
+        // Every 7th popup is the Premium ad
+        showPopupAd(PREMIUM_POPUP_AD);
+        console.log('📢 Popup ad #' + popupAdCount + ' (PREMIUM)');
+    } else {
+        // Random product ad from a random business
+        const productAd = getRandomProductAd();
+        showPopupAd(productAd);
+        console.log('📢 Popup ad #' + popupAdCount + ' (Product: ' + (productAd.productName || 'n/a') + ' from ' + (productAd.businessName || 'n/a') + ')');
+    }
+}
+
+function initPopupAds() {
+    // Clear any existing interval
+    if (popupAdIntervalId) {
+        clearInterval(popupAdIntervalId);
+    }
+
+    // Show first ad after 5 seconds, then every 90 seconds
+    setTimeout(function() {
+        triggerNextPopupAd();
+    }, 5000);
+
+    popupAdIntervalId = setInterval(function() {
+        triggerNextPopupAd();
+    }, 90000); // 90 seconds
+
+    console.log('📢 Popup ads scheduled: every 90s, Premium every 7th, others = random products');
+}
+
+/* ============================================================ */
+/* IMAGE RESIZE */
 /* ============================================================ */
 function resizeImageFile(file, maxSize, quality) {
     return new Promise(function(resolve, reject) {
@@ -969,6 +1563,16 @@ function populateCountryCodeSelect() {
     const s = getEl('countryCodeSelect'); if (!s) return;
     s.innerHTML = '';
     SUPPORTED_CURRENCIES.forEach(function(c, i) { const o = document.createElement('option'); o.value = c.code + '|' + c.name + '|' + c.currency + '|' + c.flag + '|' + c.gst + '|' + (i+1); o.textContent = c.flag + ' ' + c.name; s.appendChild(o); });
+}
+function populateInlineConverter() {
+    const from = getEl('inlineConvFrom'), to = getEl('inlineConvTo');
+    if (!from || !to) return;
+    const codes = Object.keys(FX_TO_USD);
+    const opts = codes.map(function(c) { return '<option value="' + c + '">' + c + '</option>'; }).join('');
+    if (!from.options.length) from.innerHTML = opts;
+    if (!to.options.length) to.innerHTML = opts;
+    try { from.value = getUserCurrency(); } catch (e) {}
+    try { to.value = 'SLL'; } catch (e) {}
 }
 function getUserCurrency() {
     const map = { 'Sierra Leone':'SLL','Liberia':'LRD','Guinea':'GNF','Senegal':'XOF','Mali':'XOF','Ivory Coast':'XOF','Ghana':'GHS','Niger':'XOF','Benin':'XOF','Guinea Bissau':'XOF','Gambia':'GMD','Togo':'XOF','Kenya':'KES','Central Africa Rep':'XAF','Ethiopia':'ETB','Gabon':'XAF','Madagascar':'MGA','Morocco':'MAD','Rwanda':'RWF','Uganda':'UGX','DR Congo':'CDF','Burkina Faso':'XOF' };
@@ -1111,15 +1715,36 @@ function selectAgent(agentId) {
 }
 function computeCharges() {
     const raw = parseFloat(getEl('amountInput') && getEl('amountInput').value) || 0;
-    const charge = raw * 0.04;
-    const gst = isLocalMode ? 0 : charge * (currentCountryData.gstRate / 100);
-    const total = raw + charge + gst;
+    const carrear = raw * FEE_CARREAR;
+    const local = raw * FEE_LOCAL;
+    const services = raw * FEE_SERVICES;
+    const chargeTotal = raw * FEE_TOTAL;
+    const gst = isLocalMode ? 0 : chargeTotal * (currentCountryData.gstRate / 100);
+    const total = raw + chargeTotal + gst;
     if (getEl('displayAmount')) getEl('displayAmount').innerText = raw.toFixed(2);
-    if (getEl('chargeAmount')) getEl('chargeAmount').innerText = charge.toFixed(2);
+    if (getEl('chargeAmount')) getEl('chargeAmount').innerText = chargeTotal.toFixed(2);
     if (getEl('gstAmount')) getEl('gstAmount').innerText = gst.toFixed(2);
     if (getEl('totalAmount')) getEl('totalAmount').innerText = total.toFixed(2);
     if (getEl('currencySymbol')) getEl('currencySymbol').innerText = isLocalMode ? getUserCurrency() : currentCountryData.currency;
+    if (getEl('cbsCarrear')) getEl('cbsCarrear').innerText = carrear.toFixed(2);
+    if (getEl('cbsLocal')) getEl('cbsLocal').innerText = local.toFixed(2);
+    if (getEl('cbsServices')) getEl('cbsServices').innerText = services.toFixed(2);
+    if (getEl('cbsTotal')) getEl('cbsTotal').innerText = chargeTotal.toFixed(2);
+    const cbs = getEl('chargeBreakdownSection');
+    if (cbs) { if (raw > 0) cbs.classList.add('show'); else cbs.classList.remove('show'); }
+    updateInlineConversion();
 }
+function updateInlineConversion() {
+    const from = getEl('inlineConvFrom'), to = getEl('inlineConvTo'), amtEl = getEl('inlineConvAmount'), resEl = getEl('inlineConvResult');
+    if (!from || !to || !amtEl || !resEl) return;
+    const amt = parseFloat(amtEl.value) || 0;
+    const fromCur = from.value, toCur = to.value;
+    const fromRate = FX_TO_USD[fromCur] || 1;
+    const toRate = FX_TO_USD[toCur] || 1;
+    const result = amt * fromRate / toRate;
+    resEl.value = result.toFixed(2) + ' ' + toCur;
+}
+
 function saveUserToStorage(u) {
     if (!u) return;
     try { localStorage.setItem('afripay_user', JSON.stringify(u)); }
@@ -1155,6 +1780,7 @@ function showLoggedInUI() {
     updateUserCountryData();
     if (getEl('currencySymbol')) getEl('currencySymbol').innerText = isLocalMode ? getUserCurrency() : currentCountryData.currency;
     if (getEl('gstRateLabel')) getEl('gstRateLabel').innerText = currentCountryData.gstRate;
+    populateInlineConverter();
     renderBusinessStrip(); updateAgentDropdownForCountry(); computeCharges(); translatePage();
 }
 function showLoggedOutUI() {
@@ -1251,17 +1877,112 @@ function setGeneratedTransactionId() { const f = getEl('transactionId'); if (f) 
 function copyTransactionIdToClipboard() { const v = getEl('transactionId') && getEl('transactionId').value; if (v) navigator.clipboard.writeText(v).then(function() { showToast('✅ Copied!', 1800); }).catch(function() { showToast('✅ Copied!', 1800); }); else showToast('⚠️ No ID', 1500); }
 function ensureTransactionId() { const f = getEl('transactionId'); if (f && !f.value.trim()) f.value = generateTransactionId(); }
 function showInfoModal(title, body) { getEl('modalTitle').innerText = title; getEl('modalBody').innerHTML = body; getEl('infoModal').style.display = 'flex'; }
+
+/* ============================================================ */
+/* WhatsApp / SMS messaging                                     */
+/* ============================================================ */
+function openWhatsApp(phone, name) {
+    if (!phone) { showToast('⚠️ No phone number available.', 2200); return; }
+    const clean = String(phone).replace(/\D/g, '');
+    if (!clean) { showToast('⚠️ Invalid phone number.', 2200); return; }
+    const greeting = 'Hello ' + (name || '') + ', I am reaching out from AfriPay regarding a transaction.';
+    const url = 'https://wa.me/' + clean + '?text=' + encodeURIComponent(greeting);
+    window.open(url, '_blank');
+}
+function openSMS(phone, name) {
+    if (!phone) { showToast('⚠️ No phone number available.', 2200); return; }
+    const clean = String(phone).replace(/\s+/g, '');
+    if (!clean) { showToast('⚠️ Invalid phone number.', 2200); return; }
+    const body = 'Hello ' + (name || '') + ', I am reaching out from AfriPay regarding a transaction.';
+    const isMobile = /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|Mobile/i.test(navigator.userAgent);
+    const sep = isMobile && /iPhone|iPad|iPod/i.test(navigator.userAgent) ? '&' : '?';
+    const url = 'sms:' + clean + sep + 'body=' + encodeURIComponent(body);
+    window.location.href = url;
+}
+
+/* ============================================================ */
+/* Receipt modal with fee breakdown + social buttons            */
+/* ============================================================ */
 function showReceiptModal(data) {
     const body = getEl('receiptBody');
-    const lines = [{ key: 'TX ID', value: data.txId }, { key: 'Date', value: data.date }, { key: 'Type', value: data.mode }, { key: 'Sender', value: data.sender }, { key: 'Agent', value: data.agent }];
+    const lines = [
+        { key: 'TX ID', value: data.txId },
+        { key: 'Date', value: data.date },
+        { key: 'Type', value: data.mode },
+        { key: 'Sender', value: data.sender },
+        { key: 'Agent', value: data.agent }
+    ];
+    if (data.localAgentName) lines.push({ key: 'Local Agent', value: data.localAgentName + (data.localAgentPhone ? ' (' + data.localAgentPhone + ')' : '') });
     lines.push({ key: 'Provider TX ID', value: data.providerTxId || 'N/A' });
     lines.push({ key: 'Transfer Code', value: data.transferCode || 'N/A' });
-    lines.push({ key: 'Base', value: data.currency + ' ' + data.baseAmount });
-    lines.push({ key: 'Fee', value: data.currency + ' ' + data.charge });
-    lines.push({ key: 'Total', value: data.currency + ' ' + data.total, total: true });
+
+    // If the transaction was placed from a popup product ad, include the product line(s)
+    if (data.orderedProduct) {
+        const op = data.orderedProduct;
+        lines.push({ key: '— Product Order —', value: '' });
+        lines.push({ key: (op.productIcon || '📦') + ' Product', value: op.productName });
+        if (op.businessName) lines.push({ key: '🏢 Business', value: op.businessName });
+        if (op.quality) lines.push({ key: '⭐ Quality', value: op.quality });
+        if (op.quantity) lines.push({ key: '📦 Quantity', value: String(op.quantity) });
+        if (op.delivery) lines.push({ key: '🚚 Delivery', value: op.delivery });
+    }
+
+    lines.push({ key: 'Base Amount', value: data.currency + ' ' + data.baseAmount });
+    lines.push({ key: '— Fee Breakdown (5%) —', value: '' });
+    lines.push({ key: 'Carrear Charges (3%)', value: data.currency + ' ' + (data.carrear || '0.00') });
+    lines.push({ key: 'Local Transfer (1%)', value: data.currency + ' ' + (data.localFee || '0.00') });
+    lines.push({ key: 'Services (1%)', value: data.currency + ' ' + (data.servicesFee || '0.00') });
+    lines.push({ key: 'Total Charges', value: data.currency + ' ' + data.charge });
+    lines.push({ key: 'Grand Total', value: data.currency + ' ' + data.total, total: true });
     let html = '';
-    lines.forEach(function(l) { let style = 'display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #f0f0f0;font-size:.82rem;'; if (l.total) style += 'font-weight:800;border-top:2px solid #1c4e6c;border-bottom:none;padding-top:8px;'; html += '<div style="' + style + '"><span style="color:#7f8c8d;">' + l.key + '</span><span style="color:#1e3b4a;font-weight:600;text-align:right;max-width:60%;word-break:break-word;">' + escapeHTML(l.value) + '</span></div>'; });
+    lines.forEach(function(l) {
+        if (l.value === '') {
+            html += '<div style="padding:6px 0 2px;color:#f4a261;font-weight:800;font-size:.78rem;border-bottom:1px solid #f0f0f0;text-transform:uppercase;letter-spacing:.3px;">' + l.key + '</div>';
+            return;
+        }
+        let style = 'display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #f0f0f0;font-size:.82rem;';
+        if (l.total) style += 'font-weight:800;border-top:2px solid #1c4e6c;border-bottom:none;padding-top:8px;font-size:.95rem;';
+        html += '<div style="' + style + '"><span style="color:#7f8c8d;">' + l.key + '</span><span style="color:#1e3b4a;font-weight:600;text-align:right;max-width:60%;word-break:break-word;">' + escapeHTML(l.value) + '</span></div>';
+    });
     body.innerHTML = html;
+
+    const socialEl = getEl('receiptSocialButtons');
+    if (socialEl) {
+        let socialHtml = '';
+        if (data.localAgentPhone) {
+            socialHtml += '<button type="button" class="action-btn whatsapp" id="receiptLocalAgentWhatsAppBtn" style="flex:1;min-width:100px;height:36px;font-size:.78rem;">💬 Local Agent WhatsApp</button>';
+        }
+        if (data.agentPhoneRaw) {
+            socialHtml += '<button type="button" class="action-btn whatsapp" id="receiptAgentWhatsAppBtn" style="flex:1;min-width:90px;height:36px;font-size:.78rem;">💬 Agent WhatsApp</button>';
+            socialHtml += '<button type="button" class="action-btn sms" id="receiptAgentSmsBtn" style="flex:1;min-width:70px;height:36px;font-size:.78rem;">✉️ Agent SMS</button>';
+        }
+        if (data.clientPhoneRaw) {
+            socialHtml += '<button type="button" class="action-btn whatsapp" id="receiptClientWhatsAppBtn" style="flex:1;min-width:90px;height:36px;font-size:.78rem;">💬 Client WhatsApp</button>';
+            socialHtml += '<button type="button" class="action-btn sms" id="receiptClientSmsBtn" style="flex:1;min-width:70px;height:36px;font-size:.78rem;">✉️ Client SMS</button>';
+        }
+        if (socialHtml) {
+            socialEl.innerHTML = '<div style="font-size:.72rem;color:#7f8c8d;font-weight:700;margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px;">📱 Quick Contact</div><div class="receipt-social-row">' + socialHtml + '</div>';
+            if (data.localAgentPhone) {
+                const laBtn = getEl('receiptLocalAgentWhatsAppBtn');
+                if (laBtn) laBtn.addEventListener('click', function() { openWhatsApp(data.localAgentPhone, data.localAgentName); });
+            }
+            if (data.agentPhoneRaw) {
+                const aWpBtn = getEl('receiptAgentWhatsAppBtn');
+                if (aWpBtn) aWpBtn.addEventListener('click', function() { openWhatsApp(data.agentPhoneRaw, data.agentName); });
+                const aSmsBtn = getEl('receiptAgentSmsBtn');
+                if (aSmsBtn) aSmsBtn.addEventListener('click', function() { openSMS(data.agentPhoneRaw, data.agentName); });
+            }
+            if (data.clientPhoneRaw) {
+                const cWpBtn = getEl('receiptClientWhatsAppBtn');
+                if (cWpBtn) cWpBtn.addEventListener('click', function() { openWhatsApp(data.clientPhoneRaw, data.clientName); });
+                const cSmsBtn = getEl('receiptClientSmsBtn');
+                if (cSmsBtn) cSmsBtn.addEventListener('click', function() { openSMS(data.clientPhoneRaw, data.clientName); });
+            }
+        } else {
+            socialEl.innerHTML = '';
+        }
+    }
+
     getEl('receiptModal').style.display = 'flex';
 }
 function toggleChat() { const w = getEl('chatWindow'); const open = w.classList.toggle('open'); getEl('chatToggleBtn').style.display = open ? 'none' : 'flex'; }
@@ -1598,96 +2319,161 @@ function getUssdTemplateForPhone(agentPhoneDigits) {
     if (local.indexOf('232') === 0) local = local.slice(3);
     if (local.indexOf('0') === 0) local = local.slice(1);
     const twoDigit = local.slice(0, 2);
-    console.log('🔀 USSD routing:', { raw: digits, normalized: local, twoDigit: twoDigit });
     if (PREFIX_144_2D.indexOf(twoDigit) !== -1) return { variant: '144', template: '#144*2*2*{AGENT}*{AMOUNT}*0000#', label: 'MB-FOUR (144)' };
     if (PREFIX_161_2D.indexOf(twoDigit) !== -1) return { variant: '161', template: '*161*1*1*{AGENT}*{AMOUNT}*0000#', label: 'MB-FOUR (161)' };
     return { variant: '144', template: '#144*2*2*{AGENT}*{AMOUNT}*0000#', label: 'MB-FOUR (144)' };
 }
 function getSenderCountry() { if (currentUser && currentUser.country) return currentUser.country; return getCountryNameFromSelect() || null; }
 
+/* ============================================================ */
+/* MB-FOUR — modal listing ADMIN-APPROVED agents only           */
+/* ============================================================ */
 function openMbFourAgentPicker() {
     const allAgents = getAdminApprovedAgents();
     if (!allAgents.length) { showToast('⚠️ No admin-approved agents available yet.', 2800); return; }
     const senderCountry = getSenderCountry();
     let agents = allAgents;
+    let filteredByCountry = false;
     if (senderCountry) {
         const filtered = allAgents.filter(function(a) { const cn = getAgentCountryName(a); return cn && cn.toLowerCase() === senderCountry.toLowerCase(); });
-        if (filtered.length > 0) agents = filtered;
-        else showToast('⚠️ No admin-approved agents in ' + senderCountry + ' — showing all.', 2800);
+        if (filtered.length > 0) { agents = filtered; filteredByCountry = true; }
     }
-    const modal = getEl('mbFourAgentPicker'); const list = getEl('mbFourAgentList'); const hint = getEl('mbFourPickerHint');
+    const modal = getEl('mbFourAgentPicker');
+    const list = getEl('mbFourAgentList');
+    const hint = getEl('mbFourPickerHint');
     if (!modal || !list) return;
-    if (hint) hint.innerHTML = senderCountry ? 'Showing <strong>admin-approved</strong> agents in <strong>' + escapeHTML(senderCountry) + '</strong>.' : 'Showing <strong>admin-approved</strong> agents only.';
-    if (agents.length === 1) { selectAgent(agents[0].id); confirmMbFourAgent(agents[0].id); return; }
+    if (hint) hint.innerHTML = filteredByCountry
+        ? 'Showing <strong>admin-approved</strong> agents in <strong>' + escapeHTML(senderCountry) + '</strong>.'
+        : 'Showing <strong>all admin-approved</strong> agents (none found in your country).';
+    if (agents.length === 1) {
+        modal.style.display = 'none';
+        selectMbFourAgent(agents[0].id);
+        return;
+    }
     const byCountry = {};
-    agents.forEach(function(a) { const c = getAgentCountryName(a) || 'Other'; if (!byCountry[c]) byCountry[c] = []; byCountry[c].push(a); });
+    agents.forEach(function(a) {
+        const c = getAgentCountryName(a) || 'Other';
+        if (!byCountry[c]) byCountry[c] = [];
+        byCountry[c].push(a);
+    });
     list.innerHTML = Object.keys(byCountry).sort().map(function(country) {
-        const code = COUNTRY_NAME_TO_CODE[country]; const flag = (code && COUNTRY_CODE_TO_FLAG[code]) || '🌍';
+        const code = COUNTRY_NAME_TO_CODE[country];
+        const flag = (code && COUNTRY_CODE_TO_FLAG[code]) || '🌍';
         const header = '<div style="font-weight:800;color:#1c6e8f;font-size:.78rem;margin:8px 0 4px;border-left:3px solid #f4a261;padding-left:7px;">' + flag + ' ' + escapeHTML(country) + '</div>';
-        const rows = byCountry[country].sort(function(a, b) { const an = (a.agentData && a.agentData.businessName) || a.name; const bn = (b.agentData && b.agentData.businessName) || b.name; return an.localeCompare(bn); }).map(function(a) {
-            const d = a.agentData || a; const name = (d.businessName || a.name || '').replace(/\(.*\)/, '').trim();
-            const phone = d.mobileMoney || d.phone || a.phone || '—'; const route = getUssdTemplateForPhone(phone);
-            return '<button type="button" class="broadcast-option" data-mbfour-agent="' + escapeHTML(a.id) + '" style="width:100%;text-align:left;"><span class="bo-icon">' + (d.emoji || '🏢') + '</span><span class="bo-text"><span class="bo-title">' + escapeHTML(name) + ' <span style="color:#27ae60;font-size:.62rem;font-weight:700;">✅ Admin-verified</span></span><span class="bo-sub">📱 ' + escapeHTML(phone) + ' · 🔀 ' + route.label + '</span></span><span style="color:#2c7da0;font-size:1.2rem;">›</span></button>';
+        const rows = byCountry[country].sort(function(a, b) {
+            const an = (a.agentData && a.agentData.businessName) || a.name;
+            const bn = (b.agentData && b.agentData.businessName) || b.name;
+            return an.localeCompare(bn);
+        }).map(function(a) {
+            const d = a.agentData || a;
+            const name = (d.businessName || a.name || '').replace(/\(.*\)/, '').trim();
+            const phone = d.mobileMoney || d.phone || a.phone || '—';
+            const route = getUssdTemplateForPhone(phone);
+            return '<button type="button" class="broadcast-option" data-mbfour-agent="' + escapeHTML(a.id) + '" style="width:100%;text-align:left;">' +
+                '<span class="bo-icon">' + (d.emoji || '🏢') + '</span>' +
+                '<span class="bo-text">' +
+                    '<span class="bo-title">' + escapeHTML(name) +
+                        ' <span style="color:#27ae60;font-size:.62rem;font-weight:700;">✅ Admin-verified</span>' +
+                    '</span>' +
+                    '<span class="bo-sub">📱 ' + escapeHTML(phone) + ' · 🔀 ' + route.label + '</span>' +
+                '</span>' +
+                '<span style="color:#2c7da0;font-size:1.2rem;">›</span>' +
+            '</button>';
         }).join('');
         return header + rows;
     }).join('');
-    list.querySelectorAll('[data-mbfour-agent]').forEach(function(btn) { btn.addEventListener('click', function() { const id = btn.getAttribute('data-mbfour-agent'); selectAgent(id); modal.style.display = 'none'; confirmMbFourAgent(id); }); });
+    list.querySelectorAll('[data-mbfour-agent]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            const id = btn.getAttribute('data-mbfour-agent');
+            modal.style.display = 'none';
+            selectMbFourAgent(id);
+        });
+    });
     modal.style.display = 'flex';
 }
 
-function confirmMbFourAgent(agentId) {
+/* Select MB-FOUR local agent WITHOUT touching main form agent fields */
+function selectMbFourAgent(agentId) {
     const agent = getAgents().find(function(a) { return a.id === agentId; });
     if (!agent) { showToast('⚠️ Agent not found.', 2200); return; }
     const d = agent.agentData || agent;
     const phoneRaw = String(d.mobileMoney || d.phone || agent.phone || '').replace(/\D/g, '');
     if (phoneRaw.length < 6) { showToast('⚠️ Agent has no valid phone number.', 2600); return; }
+    mbFourSelectedAgentId = agentId;
+    mbFourSelectedAgentPhone = phoneRaw;
+    const displayName = (d.businessName || agent.name || 'Agent').replace(/\(.*\)/, '').trim();
+    const detailsEl = getEl('localAgentDetails');
+    if (detailsEl) {
+        if (getEl('localAgentName')) getEl('localAgentName').textContent = displayName;
+        if (getEl('localAgentPhone')) getEl('localAgentPhone').textContent = (d.countryCode || '') + ' ' + phoneRaw;
+        detailsEl.classList.add('show');
+    }
     const amountRaw = parseFloat(getEl('amountInput') && getEl('amountInput').value) || 0;
     const amt = Math.round(amountRaw);
-    if (amt <= 0) { showToast('⚠️ Enter a valid amount first.', 2200); return; }
     const route = getUssdTemplateForPhone(phoneRaw);
-    const ussd = route.template.replace('{AGENT}', phoneRaw).replace('{AMOUNT}', String(amt));
-    const displayName = (d.businessName || agent.name || 'Agent').replace(/\(.*\)/, '').trim();
-    const isMobile = /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|Mobile/i.test(navigator.userAgent);
-    if (isMobile) {
-        const link = document.createElement('a'); link.href = 'tel:' + ussd;
-        document.body.appendChild(link); link.click(); document.body.removeChild(link);
-        showToast('📞 ' + route.label + ' → ' + displayName + ' · ' + amt + '\nEnter your PIN in the dialer.', 5000);
-        return;
-    }
-    showMbFourUssdModal({ agentName: displayName, agentPhone: phoneRaw, amount: amt, routeLabel: route.label, ussd: ussd });
+    const ussd = route.template.replace('{AGENT}', phoneRaw).replace('{AMOUNT}', String(amt > 0 ? amt : 0));
+    showMbFourUssdModal({
+        agentName: displayName,
+        agentPhone: phoneRaw,
+        agentCountryCode: d.countryCode || '',
+        amount: amt,
+        routeLabel: route.label,
+        ussd: ussd
+    });
 }
 
 function showMbFourUssdModal(data) {
     const existing = document.getElementById('mbFourUssdDisplayModal'); if (existing) existing.remove();
     const modal = document.createElement('div');
     modal.id = 'mbFourUssdDisplayModal'; modal.className = 'modal'; modal.style.display = 'flex';
-    const eN = escapeHTML(data.agentName); const eP = escapeHTML(data.agentPhone); const eA = escapeHTML(String(data.amount)); const eR = escapeHTML(data.routeLabel); const eU = escapeHTML(data.ussd);
+    const eN = escapeHTML(data.agentName);
+    const eP = escapeHTML(data.agentPhone);
+    const eCC = escapeHTML(data.agentCountryCode || '');
+    const eA = escapeHTML(String(data.amount));
+    const eR = escapeHTML(data.routeLabel);
+    const eU = escapeHTML(data.ussd);
     modal.innerHTML =
         '<div class="modal-content" style="max-width:460px;">' +
             '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">' +
                 '<h3 style="margin:0;color:#0f2b3d;">📞 ' + eR + '</h3>' +
                 '<button type="button" class="action-btn close-mbusssd" style="width:32px;height:32px;padding:0;border-radius:50%;background:#ccc;color:#222;font-size:1rem;">✕</button>' +
             '</div>' +
-            '<div style="background:#f8fafc;border:1px solid #e2edf7;border-radius:10px;padding:10px 12px;margin-bottom:10px;text-align:left;">' +
-                '<div style="display:flex;justify-content:space-between;font-size:.8rem;padding:3px 0;"><span style="color:#7f8c8d;">🏢 Agent</span><span style="color:#0f2b3d;font-weight:700;">' + eN + '</span></div>' +
-                '<div style="display:flex;justify-content:space-between;font-size:.8rem;padding:3px 0;"><span style="color:#7f8c8d;">📱 Phone</span><span style="color:#0f2b3d;font-weight:700;">' + eP + '</span></div>' +
-                '<div style="display:flex;justify-content:space-between;font-size:.8rem;padding:3px 0;"><span style="color:#7f8c8d;">💵 Amount</span><span style="color:#0f2b3d;font-weight:700;">' + eA + '</span></div>' +
+            '<div class="ussd-modal-details">' +
+                '<div class="ussd-modal-row"><span class="ussd-modal-label">🏢 Local Agent</span><span class="ussd-modal-value">' + eN + '</span></div>' +
+                '<div class="ussd-modal-row"><span class="ussd-modal-label">📱 Phone</span><span class="ussd-modal-value">' + eCC + ' ' + eP + '</span></div>' +
+                '<div class="ussd-modal-row"><span class="ussd-modal-label">💵 Amount</span><span class="ussd-modal-value">' + eA + '</span></div>' +
             '</div>' +
             '<div style="font-weight:700;color:#1c6e8f;font-size:.82rem;margin-bottom:4px;">🔐 USSD Code to Dial:</div>' +
-            '<div id="mbUssdCodeBox" style="background:#0f2b3d;color:#FFD966;border-radius:10px;padding:14px 12px;font-family:\'Courier New\',monospace;font-size:1rem;font-weight:700;text-align:center;word-break:break-all;letter-spacing:.5px;user-select:all;margin-bottom:8px;">' + eU + '</div>' +
-            '<div style="background:#fff8e1;border:1px solid #ffe0a3;border-radius:8px;padding:8px 12px;font-size:.72rem;color:#8a6d3b;margin-bottom:10px;line-height:1.4;">💡 <strong>How to complete:</strong><br>• Tap the <strong>Copy</strong> button below<br>• Dial the USSD on your <strong>phone</strong> (contains <code>0000#</code> at the end)<br>• When the phone prompts for PIN, enter your <strong>4-digit PIN</strong> in place of <code>0000</code></div>' +
+            '<div id="mbUssdCodeBox" class="ussd-code-box">' + eU + '</div>' +
+            '<div class="ussd-hint">💡 <strong>How to complete:</strong><br>• Tap <strong>Dial USSD</strong> to open your phone dialer with the code pre-filled<br>• When prompted for PIN, enter your <strong>4-digit PIN</strong> in place of <code>0000</code></div>' +
             '<div class="action-buttons-row" style="gap:6px;">' +
-                '<button type="button" class="action-btn green" id="mbUssdCopyBtn" style="flex:1;">📋 Copy USSD</button>' +
-                '<button type="button" class="action-btn close-mbusssd" style="background:#95a5a6;flex:1;">Close</button>' +
+                '<button type="button" class="action-btn dial" id="mbUssdDialBtn" style="flex:1;">📞 Dial USSD</button>' +
+                '<button type="button" class="action-btn green" id="mbUssdCopyBtn" style="flex:1;">📋 Copy</button>' +
             '</div>' +
-            '<button type="button" class="action-btn" id="mbUssdTryTelBtn" style="background:#2c7da0;width:100%;margin-top:6px;font-size:.78rem;">📞 Try Opening Dialer Anyway (desktop)</button>' +
+            '<button type="button" class="action-btn close-mbusssd" style="background:#95a5a6;width:100%;margin-top:6px;">Close</button>' +
         '</div>';
     document.body.appendChild(modal);
+
     modal.querySelectorAll('.close-mbusssd').forEach(function(b) { b.addEventListener('click', function() { modal.remove(); }); });
-    const cb = modal.querySelector('#mbUssdCopyBtn');
-    if (cb) cb.addEventListener('click', function() { const code = data.ussd; if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(code).then(function() { showToast('✅ USSD copied — paste into your phone dialer', 2600); }).catch(function() { fallbackCopy(code); }); } else fallbackCopy(code); });
-    const tb = modal.querySelector('#mbUssdTryTelBtn');
-    if (tb) tb.addEventListener('click', function() { const link = document.createElement('a'); link.href = 'tel:' + data.ussd; document.body.appendChild(link); link.click(); document.body.removeChild(link); });
+
+    const dialBtn = modal.querySelector('#mbUssdDialBtn');
+    if (dialBtn) {
+        dialBtn.addEventListener('click', function() {
+            const link = document.createElement('a');
+            link.href = 'tel:' + encodeURIComponent(data.ussd).replace(/%23/g, '#');
+            document.body.appendChild(link); link.click(); document.body.removeChild(link);
+            showToast('📞 Opening dialer with USSD code...', 2600);
+        });
+    }
+    const copyBtn = modal.querySelector('#mbUssdCopyBtn');
+    if (copyBtn) {
+        copyBtn.addEventListener('click', function() {
+            const code = data.ussd;
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(code).then(function() { showToast('✅ USSD copied — paste into your phone dialer', 2600); }).catch(function() { fallbackCopy(code); });
+            } else fallbackCopy(code);
+        });
+    }
     modal.addEventListener('click', function(e) { if (e.target === modal) modal.remove(); });
 }
 function fallbackCopy(text) {
@@ -1722,6 +2508,68 @@ function updateAgentBizProfilePreview() {
         if (imgEl) { imgEl.src = ''; imgEl.style.display = 'none'; }
         if (removeBtn) removeBtn.style.display = 'none';
     }
+}
+
+/* ============================================================ */
+/* CURRENCY CONVERTER MODAL LOGIC                               */
+/* ============================================================ */
+function populateConverterDropdowns() {
+    const fromSel = getEl('convFromCurrency');
+    const toSel = getEl('convCountrySelect');
+    if (!fromSel || !toSel) return;
+    
+    // Populate both dropdowns with all supported currencies
+    const optionsHtml = SUPPORTED_CURRENCIES.map(c => `<option value="${c.currency}">${c.flag} ${c.name} (${c.currency})</option>`).join('');
+    
+    if (!fromSel.options.length) fromSel.innerHTML = optionsHtml;
+    if (!toSel.options.length) toSel.innerHTML = optionsHtml;
+    
+    // Set defaults
+    try { fromSel.value = getUserCurrency(); } catch(e) {}
+    try { toSel.value = 'SLL'; } catch(e) {}
+}
+
+function updateConverterModal() {
+    const fromCur = getEl('convFromCurrency').value;
+    const toCur = getEl('convCountrySelect').value;
+    const amt = parseFloat(getEl('convAmount').value) || 0;
+    
+    if (!fromCur || !toCur || amt <= 0) {
+        // Reset fields
+        ['convBase','convCarrear','convLocal','convServices','convTotal','convRecipient'].forEach(id => { if (getEl(id)) getEl(id).textContent = '0.00'; });
+        if (getEl('convRate')) getEl('convRate').textContent = '1.00 = 1.00';
+        return;
+    }
+
+    // Calculate conversion logic
+    const fromRate = FX_TO_USD[fromCur] || 1;
+    const toRate = FX_TO_USD[toCur] || 1;
+    const conversionRate = fromRate / toRate;
+    
+    const baseInToCur = amt * conversionRate;
+    
+    // Apply 5% fee breakdown
+    const carrear = baseInToCur * FEE_CARREAR;
+    const local = baseInToCur * FEE_LOCAL;
+    const services = baseInToCur * FEE_SERVICES;
+    const totalFees = carrear + local + services; // Should equal baseInToCur * 0.05
+    const total = baseInToCur + totalFees;
+    
+    // The screenshot shows Recipient gets the base amount minus fees? 
+    // Or Recipient gets Base Amount. Looking at screenshot: Base 100, Fee 4, GST 0.4, Total 104.4, Recipient 100.
+    // So Recipient = Base Amount. Let's stick to that logic.
+    // Wait, if sender pays 104.4, recipient gets 100. The 4.4 is the fee.
+    // So Recipient = baseInToCur.
+    const recipientAmount = baseInToCur;
+
+    // Update UI elements
+    if (getEl('convBase')) getEl('convBase').textContent = amt.toFixed(2) + ' ' + fromCur;
+    if (getEl('convCarrear')) getEl('convCarrear').textContent = carrear.toFixed(2) + ' ' + toCur;
+    if (getEl('convLocal')) getEl('convLocal').textContent = local.toFixed(2) + ' ' + toCur;
+    if (getEl('convServices')) getEl('convServices').textContent = services.toFixed(2) + ' ' + toCur;
+    if (getEl('convTotal')) getEl('convTotal').textContent = total.toFixed(2) + ' ' + toCur;
+    if (getEl('convRate')) getEl('convRate').textContent = `1 ${fromCur} = ${conversionRate.toFixed(4)} ${toCur}`;
+    if (getEl('convRecipient')) getEl('convRecipient').textContent = recipientAmount.toFixed(2) + ' ' + toCur;
 }
 
 /* ============================================================ */
@@ -1845,6 +2693,65 @@ function setupEventListeners() {
         if (amt <= 0) { showToast('⚠️ Enter an amount first.', 2200); return; }
         openMbFourAgentPicker();
     });
+
+    safe('localAgentBtn', 'click', function(e) {
+        e.preventDefault();
+        if (!mbFourSelectedAgentId) {
+            showToast('⚠️ No local agent selected yet. Tap MB-FOUR first.', 2400);
+            return;
+        }
+        const agent = getAgents().find(function(a) { return a.id === mbFourSelectedAgentId; });
+        if (!agent) { showToast('⚠️ Local agent not found.', 2200); return; }
+        const d = agent.agentData || agent;
+        const displayName = (d.businessName || agent.name || 'Agent').replace(/\(.*\)/, '').trim();
+        const phoneRaw = String(d.mobileMoney || d.phone || agent.phone || '').replace(/\D/g, '');
+        const amount = parseFloat(getEl('amountInput') && getEl('amountInput').value) || 0;
+        if (phoneRaw.length < 6) { showToast('⚠️ Local agent has no valid phone number.', 2400); return; }
+        const route = getUssdTemplateForPhone(phoneRaw);
+        const amt = Math.round(amount);
+        const ussd = route.template.replace('{AGENT}', phoneRaw).replace('{AMOUNT}', String(amt > 0 ? amt : 0));
+        showMbFourUssdModal({
+            agentName: displayName,
+            agentPhone: phoneRaw,
+            agentCountryCode: d.countryCode || '',
+            amount: amt,
+            routeLabel: route.label,
+            ussd: ussd
+        });
+    });
+
+    safe('localAgentClearBtn', 'click', function(e) {
+        e.preventDefault();
+        mbFourSelectedAgentId = null;
+        mbFourSelectedAgentPhone = null;
+        const d = getEl('localAgentDetails'); if (d) d.classList.remove('show');
+        showToast('✅ Local agent cleared', 1500);
+    });
+
+    safe('localAgentWhatsAppBtn', 'click', function(e) {
+        e.preventDefault();
+        if (!mbFourSelectedAgentId) { showToast('⚠️ Select a local agent first.', 2200); return; }
+        const agent = getAgents().find(function(a) { return a.id === mbFourSelectedAgentId; });
+        if (!agent) { showToast('⚠️ Agent not found.', 2200); return; }
+        const d = agent.agentData || agent;
+        const phone = d.mobileMoney || d.phone || agent.phone || '';
+        const name = (d.businessName || agent.name || 'Agent').replace(/\(.*\)/, '').trim();
+        openWhatsApp(phone, name);
+    });
+    safe('localAgentSmsBtn', 'click', function(e) {
+        e.preventDefault();
+        if (!mbFourSelectedAgentId) { showToast('⚠️ Select a local agent first.', 2200); return; }
+        const agent = getAgents().find(function(a) { return a.id === mbFourSelectedAgentId; });
+        if (!agent) { showToast('⚠️ Agent not found.', 2200); return; }
+        const d = agent.agentData || agent;
+        const phone = d.mobileMoney || d.phone || agent.phone || '';
+        const name = (d.businessName || agent.name || '').replace(/\(.*\)/, '').trim();
+        openSMS(phone, name);
+    });
+
+    safe('inlineConvFrom', 'change', function() { updateInlineConversion(); });
+    safe('inlineConvTo', 'change', function() { updateInlineConversion(); });
+    safe('inlineConvAmount', 'input', function() { updateInlineConversion(); });
 
     safe('intlToggleBtn', 'click', function(e) { e.preventDefault(); isLocalMode = !isLocalMode; this.classList.toggle('active', !isLocalMode); getEl('countryWrapper').style.display = isLocalMode ? 'none' : 'block'; computeCharges(); updateAgentDropdownForCountry(); });
     safe('addClientBtnHeader', 'click', function(e) {
@@ -1973,14 +2880,47 @@ function setupEventListeners() {
             const amount = parseFloat(getEl('amountInput') && getEl('amountInput').value) || 0;
             if (amount <= 0) { showToast('❌ Enter amount.'); return; }
             ensureTransactionId();
-            const charge = amount * 0.04;
+            const carrear = amount * FEE_CARREAR;
+            const localFee = amount * FEE_LOCAL;
+            const servicesFee = amount * FEE_SERVICES;
+            const chargeTotal = amount * FEE_TOTAL;
             const currency = isLocalMode ? getUserCurrency() : currentCountryData.currency;
             const txId = (getEl('transactionId') && getEl('transactionId').value.trim()) || '';
             ProviderTxIdManager.markAsUsed(ptx); TransferCodeManager.markAsUsed(tc);
-            const data = { txId: txId, date: new Date().toLocaleString(), mode: isLocalMode ? 'Local' : 'International', sender: sn + ' (' + sp + ')', agent: an + ' (' + ap + ')', baseAmount: amount.toFixed(2), charge: charge.toFixed(2), gst: '0.00', total: (amount + charge).toFixed(2), currency: currency, providerTxId: ptx, transferCode: tc };
+            let localAgentName = '';
+            let localAgentPhone = '';
+            if (mbFourSelectedAgentId) {
+                const la = getAgents().find(function(a) { return a.id === mbFourSelectedAgentId; });
+                if (la) {
+                    const ld = la.agentData || la;
+                    localAgentName = (ld.businessName || la.name || '').replace(/\(.*\)/, '').trim();
+                    localAgentPhone = ld.mobileMoney || ld.phone || la.phone || '';
+                }
+            }
+            const agentPhoneRaw = String(ap).replace(/\D/g, '');
+            const clientName = (getEl('clientName') && getEl('clientName').value.trim()) || '';
+            const clientPhoneRaw = String(getEl('clientPhone') && getEl('clientPhone').value || '').replace(/\D/g, '');
+
+            // Snapshot the ordered product (if any) for the receipt
+            const orderedProductSnapshot = currentOrderedProduct ? Object.assign({}, currentOrderedProduct) : null;
+
+            const data = {
+                txId: txId, date: new Date().toLocaleString(), mode: isLocalMode ? 'Local' : 'International',
+                sender: sn + ' (' + sp + ')', agent: an + ' (' + ap + ')', agentName: an, agentPhoneRaw: agentPhoneRaw,
+                clientName: clientName, clientPhoneRaw: clientPhoneRaw,
+                localAgentName: localAgentName, localAgentPhone: localAgentPhone,
+                baseAmount: amount.toFixed(2), charge: chargeTotal.toFixed(2),
+                carrear: carrear.toFixed(2), localFee: localFee.toFixed(2), servicesFee: servicesFee.toFixed(2),
+                gst: '0.00', total: (amount + chargeTotal).toFixed(2),
+                currency: currency, providerTxId: ptx, transferCode: tc,
+                orderedProduct: orderedProductSnapshot
+            };
             showReceiptModal(data);
             showToast('✅ Receipt generated!', 2500);
-            supaBackground(Supa.saveTransaction({ txId: data.txId, providerTxId: data.providerTxId, transferCode: data.transferCode, senderName: sn, senderPhone: sp, agentName: an, agentPhone: ap, amount: amount, charge: charge, gst: 0, total: amount + charge, currency: currency, mode: data.mode }), 'Transaction');
+            supaBackground(Supa.saveTransaction({ txId: data.txId, providerTxId: data.providerTxId, transferCode: data.transferCode, senderName: sn, senderPhone: sp, agentName: an, agentPhone: ap, amount: amount, charge: chargeTotal, gst: 0, total: amount + chargeTotal, currency: currency, mode: data.mode }), 'Transaction');
+
+            // Clear the ordered product snapshot & badge after successful submission
+            clearOrderedProduct();
         } catch (err) {
             console.error('❌ Submit:', err);
             showToast('❌ Submit failed: ' + (err.message || 'Error'), 3500);
@@ -2004,9 +2944,20 @@ function setupEventListeners() {
     safe('subscribeBtn', 'click', function(e) { e.preventDefault(); getEl('subscribeModal').style.display = 'flex'; });
     safe('submitSubscribeBtn', 'click', function(e) { e.preventDefault(); const email = (getEl('subEmail') && getEl('subEmail').value.trim()) || ''; if (email && email.indexOf('@') !== -1) { supaBackground(Supa.saveSubscriber(email), 'Subscriber'); showToast('📧 Subscribed!'); } getEl('subscribeModal').style.display = 'none'; });
     safe('howToBtn', 'click', function(e) { e.preventDefault(); window.open('https://aminejalloh-io.github.io/AfriPay-Guide/', '_blank'); });
-    safe('currencyConverterBtn', 'click', function(e) { e.preventDefault(); getEl('currencyConverterModal').style.display = 'flex'; });
+    safe('currencyConverterBtn', 'click', function(e) { 
+        e.preventDefault(); 
+        populateConverterDropdowns();
+        updateConverterModal();
+        getEl('currencyConverterModal').style.display = 'flex'; 
+    });
     safe('convCloseBtn', 'click', function(e) { e.preventDefault(); getEl('currencyConverterModal').style.display = 'none'; });
     safe('converterCloseXBtn', 'click', function(e) { e.preventDefault(); getEl('currencyConverterModal').style.display = 'none'; });
+    
+    // Add event listeners for converter inputs
+    safe('convFromCurrency', 'change', updateConverterModal);
+    safe('convCountrySelect', 'change', updateConverterModal);
+    safe('convAmount', 'input', updateConverterModal);
+    
     safe('mapButton', 'click', function(e) { e.preventDefault(); const city = getEl('profileCity').innerText; const country = getEl('profileCountry').innerText; getEl('mapIframe').src = 'https://www.google.com/maps?q=' + encodeURIComponent(city + ', ' + country) + '&output=embed'; getEl('mapModal').style.display = 'flex'; });
     safe('addBizBtn', 'click', function(e) { e.preventDefault(); openAddBizModal(); });
     safe('submitAddBizBtn', 'click', function(e) { e.preventDefault(); });
@@ -2038,6 +2989,8 @@ function initApp() {
     safeCall('populate dropdowns', function() { populateAllDropdowns(); });
     safeCall('populate collateral', function() { populateCollateralDropdowns(); });
     safeCall('populate country codes', function() { populateCountryCodeSelect(); });
+    safeCall('populate inline converter', function() { populateInlineConverter(); });
+    safeCall('populate modal converter', function() { populateConverterDropdowns(); }); // New
     safeCall('render business strip', function() { renderBusinessStrip(); });
     safeCall('render header flags', function() { renderHeaderFlags(); });
     safeCall('setup event listeners', function() { setupEventListeners(); });
@@ -2049,6 +3002,8 @@ function initApp() {
     safeCall('first toast', function() { showToast('✅ AfriPay ready!', 1500); });
     safeCall('init register avatar preview', function() { updateRegAvatarPreview(); });
     safeCall('init agent biz profile preview', function() { updateAgentBizProfilePreview(); });
+    safeCall('compute charges', function() { computeCharges(); });
+    safeCall('init popup ads', function() { setTimeout(initPopupAds, 1000); }); // Trigger ad after 1s
 
     try {
         console.log('🧪 Prefix routing self-test:');
