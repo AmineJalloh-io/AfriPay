@@ -240,17 +240,69 @@
 
 <div class="toast-msg" id="toastMsg"></div>
 <button class="chat-toggle-btn" id="chatToggleBtn">💬<span class="chat-badge" id="chatUnreadBadge">0</span></button>
+
+<!-- ============================================================ -->
+<!-- NEW CHAT WINDOW — with left bar, right bar, groups, logo      -->
+<!-- ============================================================ -->
 <div class="chat-window" id="chatWindow">
-<div class="chat-sidebar" id="chatSidebar"></div>
-<div class="chat-main">
-<div class="chat-nav">
-<span class="chat-contact" id="chatContact" data-i18n="selectContact">Select a contact</span>
-<button class="chat-close" id="chatCloseBtn">✕</button>
+  <!-- ============ LEFT SIDEBAR: MEDIA TOOLS ============ -->
+  <div class="chat-leftbar" id="chatLeftbar">
+    <button type="button" class="chat-tool-btn" id="chatAudioCallBtn" title="Audio call">📞</button>
+    <button type="button" class="chat-tool-btn" id="chatVideoCallBtn" title="Video call">🎥</button>
+    <button type="button" class="chat-tool-btn" id="chatAudioMsgBtn" title="Audio message">🎙️</button>
+    <button type="button" class="chat-tool-btn" id="chatVideoMsgBtn" title="Video message">📹</button>
+    <button type="button" class="chat-tool-btn" id="chatImagePostBtn" title="Post image">🖼️</button>
+    <input type="file" id="chatImageInput" accept="image/*" class="hidden-input" />
+    <input type="file" id="chatAudioInput" accept="audio/*" class="hidden-input" />
+    <input type="file" id="chatVideoInput" accept="video/*" class="hidden-input" />
+    <div class="chat-leftbar-footer">
+      <button type="button" class="chat-tool-btn" id="chatToggleRightBarBtn" title="Toggle members">👥</button>
+    </div>
+  </div>
+
+  <!-- ============ MAIN CHAT AREA ============ -->
+  <div class="chat-main">
+    <div class="chat-nav">
+      <img id="chatHeaderLogo" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='44' fill='%230a2b3c'/><text x='50' y='62' text-anchor='middle' font-family='Arial Black' font-size='40' font-weight='900' fill='%23FFD966'>AP</text></svg>" alt="AP" />
+      <div class="chat-nav-center">
+        <span class="chat-contact" id="chatContact" data-i18n="selectContact">Select a contact</span>
+        <span class="chat-datetime" id="chatDatetime">--</span>
+      </div>
+      <div class="chat-nav-actions">
+        <div class="chat-groups-wrap">
+          <button type="button" class="chat-groups-btn" id="chatGroupsBtn" title="Groups">👥 Groups ▾</button>
+          <div class="chat-groups-menu" id="chatGroupsMenu">
+            <button type="button" data-group="agents">🏢 All Agents</button>
+            <button type="button" data-group="users">👤 All Users</button>
+            <button type="button" data-group="clients">👥 All Clients</button>
+            <button type="button" data-group="developer">🧑‍💻 Direct Developer</button>
+          </div>
+        </div>
+        <button type="button" class="chat-close" id="chatCloseBtn">✕</button>
+      </div>
+    </div>
+
+    <div class="chat-messages" id="chatMessages">
+      <div class="chat-empty-hint" id="chatEmptyHint">Select a conversation from the Groups menu or right panel.</div>
+    </div>
+
+    <div class="chat-input-area">
+      <input type="text" id="chatInput" placeholder="Type a message..." />
+      <button type="button" id="chatSendBtn">Send</button>
+    </div>
+  </div>
+
+  <!-- ============ RIGHT SIDEBAR: MEMBERS ============ -->
+  <div class="chat-rightbar" id="chatRightbar">
+    <div class="chat-rightbar-title">🟢 Online <span id="chatOnlineCount">0</span></div>
+    <div id="chatOnlineList" class="chat-member-list"></div>
+    <div class="chat-rightbar-title">👥 Members <span id="chatMemberCount">0</span></div>
+    <div id="chatMemberList" class="chat-member-list"></div>
+  </div>
 </div>
-<div class="chat-messages" id="chatMessages"></div>
-<div class="chat-input-area"><input type="text" id="chatInput" placeholder="Type a message..." /><button id="chatSendBtn">Send</button></div>
-</div>
-</div>
+<!-- ============================================================ -->
+<!-- END CHAT WINDOW                                                -->
+<!-- ============================================================ -->
 
 <div id="mapModal" class="modal"><div class="modal-content"><h3>📍 Location</h3><iframe id="mapIframe" style="width:100%;height:300px;border:none;border-radius:8px;"></iframe><button class="action-btn close-modal">Close</button></div></div>
 <div id="infoModal" class="modal"><div class="modal-content"><h3 id="modalTitle"></h3><div id="modalBody"></div><button class="action-btn close-modal">Close</button></div></div>
