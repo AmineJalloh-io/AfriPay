@@ -2054,3 +2054,540 @@ if (document.readyState === 'complete' || document.readyState === 'interactive')
         if ((u && !u.dataset.ussdBound) || (a && !a.dataset.agreementBound)) boot();
     }, 800);
 })();
+
+/* ============================================================ */
+/* CHAT MODULE — send, realtime, groups, members, media          */
+/* Self-contained, works even if other parts of script.js break  */
+/* Binds: chatSendBtn, chatInput, chatGroupsBtn, chatGroupsMenu, */
+/* chatAudioCallBtn, chatVideoCallBtn, chatAudioMsgBtn,          */
+/* chatVideoMsgBtn, chatImagePostBtn, chatToggleRightBarBtn,     */
+/* chatOnlineList, chatMemberList, chatContact, chatDatetime     */
+/* ============================================================ */
+(function initChatModule() {
+    const DEVELOPER_KEY  = 'dev_amine';
+    const DEVELOPER_NAME = 'AfriPay Developer';
+    const AGREEMENT_KEY = 'afripay_agent_agreement_signed'; // shared but unused here
+
+    let currentConvo    = null;
+    let unsubRealtime   = null;
+    let membersCache    = [];
+    let currentUserKey  = null;
+    let currentUserName = null;
+
+    /* -------- helpers -------- */
+    function safe(fn, label) { try { fn(); } catch (e) { console.warn('chat.' + (label || '') + ':', e); } }
+    function el(id) { return document.getElementById(id); }
+    function toast(m, d) { try { if (typeof showToast === 'function') showToast(m, d || 2000); } catch (e) {} }
+    function esc(s) { if (s == null) return ''; return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
+    function fmtTime(iso) {
+        try { return new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); }
+        catch (e) { return ''; }
+    }
+    function fmtDateTime(d) {
+        try { return d.toLocaleString([], { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }); }
+        catch (e) { return ''; }
+    }
+
+    function getMyKey() {
+        if (typeof currentUser !== 'undefined' && currentUser && currentUser.id) return currentUser.id;
+        if (typeof currentUser !== 'undefined' && currentUser && currentUser.phone) return 'user_' + currentUser.phone;
+        let g = localStorage.getItem('afripay_guest_key');
+        if (!g) { g = 'guest_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7); localStorage.setItem('afripay_guest_key', g); }
+        return g;
+    }
+    function getMyName() {
+        if (typeof currentUser !== 'undefined' && currentUser && currentUser.name) return currentUser.name;
+        return 'Guest';
+    }
+
+    function buildConvoId(a, b) { return [a, b].sort().join('__'); }
+
+    function supaReady() {
+        try { return typeof Supa !== 'undefined' && Supa.isReady && Supa.isReady() && typeof supabaseClient !== 'undefined' && supabaseClient; } catch (e) { return false; }
+    }
+
+    async function ensureConversation(keyA, keyB) {
+        const convoId = buildConvoId(keyA, keyB);
+        if (!supaReady()) return { convo_id: convoId, participant_a: keyA, participant_b: keyB };
+        try {
+            const { data: existing } = await supabaseClient
+                .from('chat_conversations').select('*').eq('convo_id', convoId).maybeSingle();
+            if (existing) return existing;
+            const { data, error } = await supabaseClient.from('chat_conversations').insert({
+                convo_id: convoId, participant_a: keyA, participant_b: keyB
+            }).select().single();
+            if (error) throw error;
+            return data;
+        } catch (e) {
+            console.warn('ensureConversation:', e);
+            return { convo_id: convoId, participant_a: keyA, participant_b: keyB };
+        }
+    }
+
+    async function fetchMessages(convoId) {
+        if (!supaReady()) {
+            try { return JSON.parse(localStorage.getItem('chat_local_' + convoId) || '[]'); }
+            catch (e) { return []; }
+        }
+        try {
+            const { data, error } = await supabaseClient
+                .from('chat_messages').select('*').eq('convo_id', convoId)
+                .order('created_at', { ascending: true }).limit(300);
+            if (error) throw error;
+            return data || [];
+        } catch (e) {
+            console.warn('fetchMessages:', e);
+            return [];
+        }
+    }
+
+    function renderMessage(msg) {
+        const mine = msg.sender_key === currentUserKey;
+        const wrap = document.createElement('div');
+        wrap.className = 'chat-msg ' + (mine ? 'mine' : 'theirs');
+        const body = msg.body || '';
+        let bodyHtml = '';
+        let m;
+        if ((m = body.match(/^\[img\](.+)$/))) {
+            bodyHtml = '<img class="chat-img" src="' + esc(m[1]) + '" alt="image" />';
+        } else if ((m = body.match(/^\[audio\](.+)$/))) {
+            bodyHtml = '<audio controls src="' + esc(m[1]) + '"></audio>';
+        } else if ((m = body.match(/^\[video\](.+)$/))) {
+            bodyHtml = '<video controls src="' + esc(m[1]) + '"></video>';
+        } else {
+            bodyHtml = esc(body).replace(/\n/g, '<br>');
+        }
+        wrap.innerHTML =
+            '<div class="msg-head"><strong>' + esc(msg.sender_name || (mine ? 'You' : 'User')) + '</strong> · ' + esc(fmtTime(msg.created_at)) + '</div>' +
+            '<div class="msg-body">' + bodyHtml + '</div>';
+        if (msg.id) wrap.dataset.msgId = msg.id;
+        return wrap;
+    }
+
+    async function paintMessages() {
+        const list = el('chatMessages'); if (!list) return;
+        const hint = el('chatEmptyHint');
+        if (!currentConvo) {
+            list.innerHTML = '';
+            if (hint) { hint.style.display = 'block'; list.appendChild(hint); }
+            return;
+        }
+        if (hint) hint.style.display = 'none';
+        list.innerHTML = '<div style="text-align:center;color:#95a5a6;font-size:.75rem;padding:8px;">Loading…</div>';
+        const msgs = await fetchMessages(currentConvo.convoId);
+        list.innerHTML = '';
+        if (!msgs.length) {
+            list.innerHTML = '<div style="text-align:center;color:#95a5a6;font-size:.78rem;padding:20px;">No messages yet. Say hello 👋</div>';
+        } else {
+            msgs.forEach(m => list.appendChild(renderMessage(m)));
+        }
+        list.scrollTop = list.scrollHeight;
+    }
+
+    function subscribeRealtime(convoId) {
+        if (unsubRealtime) { try { unsubRealtime(); } catch (e) {} unsubRealtime = null; }
+        if (!supaReady() || !convoId) return;
+        try {
+            const channel = supabaseClient
+                .channel('chat:' + convoId)
+                .on('postgres_changes',
+                    { event: 'INSERT', schema: 'public', table: 'chat_messages', filter: 'convo_id=eq.' + convoId },
+                    (payload) => {
+                        const list = el('chatMessages');
+                        if (!list || !payload || !payload.new) return;
+                        const existing = list.querySelector('[data-msg-id="' + payload.new.id + '"]');
+                        if (existing) return;
+                        const node = renderMessage(payload.new);
+                        node.dataset.msgId = payload.new.id;
+                        const hintNode = list.querySelector('div[style*="No messages"]');
+                        if (hintNode) hintNode.remove();
+                        list.appendChild(node);
+                        list.scrollTop = list.scrollHeight;
+                    })
+                .subscribe();
+            unsubRealtime = () => { try { supabaseClient.removeChannel(channel); } catch (e) {} };
+        } catch (e) { console.warn('subscribeRealtime:', e); }
+    }
+
+    async function sendMessage(rawBody) {
+        const body = (rawBody || '').trim();
+        if (!body) { toast('⚠️ Type a message first', 1500); return; }
+        if (!currentConvo) { toast('⚠️ Select a conversation first', 2000); return; }
+
+        const convoId = currentConvo.convoId;
+        const payload = {
+            convo_id: convoId,
+            sender_key: currentUserKey,
+            sender_name: currentUserName,
+            body: body
+        };
+
+        const list = el('chatMessages');
+        if (list) {
+            const emptyHint = list.querySelector('div[style*="No messages"]');
+            if (emptyHint) emptyHint.remove();
+            const optimistic = renderMessage({
+                sender_key: currentUserKey,
+                sender_name: currentUserName,
+                body: body,
+                created_at: new Date().toISOString()
+            });
+            list.appendChild(optimistic);
+            list.scrollTop = list.scrollHeight;
+        }
+
+        if (supaReady()) {
+            try {
+                const { data, error } = await supabaseClient.from('chat_messages').insert(payload).select().single();
+                if (error) throw error;
+                if (list && data && data.id) {
+                    const nodes = list.querySelectorAll('.chat-msg');
+                    const last = nodes[nodes.length - 1];
+                    if (last && !last.dataset.msgId) last.dataset.msgId = data.id;
+                }
+                try {
+                    await supabaseClient.from('chat_conversations')
+                        .update({ last_message: body, last_message_at: new Date().toISOString() })
+                        .eq('convo_id', convoId);
+                } catch (e2) {}
+            } catch (e) {
+                console.warn('sendMessage supabase:', e);
+                const arr = JSON.parse(localStorage.getItem('chat_local_' + convoId) || '[]');
+                arr.push({ id: 'local_' + Date.now(), ...payload, created_at: new Date().toISOString() });
+                localStorage.setItem('chat_local_' + convoId, JSON.stringify(arr));
+            }
+        } else {
+            const arr = JSON.parse(localStorage.getItem('chat_local_' + convoId) || '[]');
+            arr.push({ id: 'local_' + Date.now(), ...payload, created_at: new Date().toISOString() });
+            localStorage.setItem('chat_local_' + convoId, JSON.stringify(arr));
+        }
+    }
+
+    async function openConversation(opts) {
+        currentConvo = opts;
+        const contactEl = el('chatContact');
+        if (contactEl) contactEl.textContent = opts.title || 'Conversation';
+        await paintMessages();
+        subscribeRealtime(opts.convoId);
+        const inp = el('chatInput'); if (inp) inp.focus();
+    }
+
+    async function openDirectChat(targetKey, targetName) {
+        const conv = await ensureConversation(currentUserKey, targetKey);
+        await openConversation({
+            convoId: conv.convo_id,
+            title: targetName || targetKey,
+            kind: 'direct',
+            targetKey: targetKey,
+            targetName: targetName
+        });
+    }
+
+    async function openGroupChat(kind) {
+        const convoId = 'group_' + kind;
+        const titles = {
+            agents: '🏢 All Agents',
+            users: '👤 All Users',
+            clients: '👥 All Clients',
+            developer: '🧑‍💻 Direct Developer'
+        };
+        if (kind === 'developer') {
+            await openDirectChat(DEVELOPER_KEY, DEVELOPER_NAME);
+            return;
+        }
+        if (supaReady()) {
+            try {
+                const { data: existing } = await supabaseClient.from('chat_conversations').select('*').eq('convo_id', convoId).maybeSingle();
+                if (!existing) {
+                    await supabaseClient.from('chat_conversations').insert({
+                        convo_id: convoId,
+                        participant_a: convoId,
+                        participant_b: currentUserKey
+                    });
+                }
+            } catch (e) { console.warn('group convo create:', e); }
+        }
+        await openConversation({
+            convoId: convoId,
+            title: titles[kind] || ('Group: ' + kind),
+            kind: 'group-' + kind,
+            targetKey: convoId,
+            targetName: titles[kind]
+        });
+    }
+
+    async function collectMembers() {
+        const online = [];
+        const all = [];
+
+        if (typeof currentUser !== 'undefined' && currentUser && currentUser.name) {
+            online.push({
+                key: currentUserKey,
+                name: (currentUser.name || 'You') + ' (you)',
+                emoji: currentUser.emoji || '👤',
+                isOnline: true,
+                role: 'user'
+            });
+        }
+
+        try {
+            const agents = JSON.parse(localStorage.getItem('afripay_registered_users') || '[]');
+            agents.forEach(a => {
+                if (a.role === 'agent' || a.isAgent === true || a.businessName) {
+                    all.push({
+                        key: a.id || ('agent_' + (a.businessName || '').replace(/\W/g, '').toLowerCase()),
+                        name: a.businessName || a.name || 'Agent',
+                        emoji: a.emoji || '🏢',
+                        isOnline: a.approved === true,
+                        role: 'agent'
+                    });
+                } else if (a.name && a.phone) {
+                    all.push({
+                        key: a.id || ('user_' + a.phone),
+                        name: a.name,
+                        emoji: a.emoji || '👤',
+                        isOnline: false,
+                        role: 'user'
+                    });
+                }
+            });
+        } catch (e) {}
+
+        if (supaReady()) {
+            try {
+                const { data } = await supabaseClient.from('agent_clients').select('id,name,phone').limit(50);
+                (data || []).forEach(c => {
+                    all.push({
+                        key: 'client_' + (c.id || c.phone),
+                        name: c.name || c.phone || 'Client',
+                        emoji: '👥',
+                        isOnline: false,
+                        role: 'client'
+                    });
+                });
+            } catch (e) {}
+        }
+
+        all.push({
+            key: DEVELOPER_KEY,
+            name: DEVELOPER_NAME,
+            emoji: '🧑‍💻',
+            isOnline: true,
+            role: 'developer'
+        });
+
+        const seen = new Set();
+        const dedup = (arr) => arr.filter(x => { if (!x.key || seen.has(x.key)) return false; seen.add(x.key); return true; });
+
+        const onlineDedup = dedup(online.slice());
+        const rest = dedup(all);
+
+        membersCache = onlineDedup.concat(rest);
+        return { online: onlineDedup, all: membersCache };
+    }
+
+    async function refreshMembers() {
+        const onlineList = el('chatOnlineList');
+        const allList = el('chatMemberList');
+        const onlineCount = el('chatOnlineCount');
+        const memberCount = el('chatMemberCount');
+        if (!onlineList || !allList) return;
+
+        const { online, all } = await collectMembers();
+        onlineList.innerHTML = '';
+        allList.innerHTML = '';
+
+        if (!online.length) {
+            onlineList.innerHTML = '<div class="chat-member" style="color:#95a5a6;">No one online</div>';
+        } else {
+            online.forEach(m => onlineList.appendChild(makeMemberRow(m, true)));
+        }
+
+        const onlineKeys = new Set(online.map(x => x.key));
+        const rest = all.filter(x => !onlineKeys.has(x.key));
+        if (!rest.length) {
+            allList.innerHTML = '<div class="chat-member" style="color:#95a5a6;">No other members</div>';
+        } else {
+            rest.forEach(m => allList.appendChild(makeMemberRow(m, false)));
+        }
+
+        if (onlineCount) onlineCount.textContent = online.length;
+        if (memberCount) memberCount.textContent = all.length;
+    }
+
+    function makeMemberRow(m, isOnline) {
+        const row = document.createElement('div');
+        row.className = 'chat-member' + (isOnline ? ' online' : '');
+        row.innerHTML = '<div class="avatar">' + (m.emoji || '👤') + '</div><div class="name">' + esc(m.name) + '</div>';
+        row.addEventListener('click', function() {
+            if (m.key === currentUserKey) { toast('This is you 🙂', 1500); return; }
+            openDirectChat(m.key, m.name);
+        });
+        return row;
+    }
+
+    let dtTimer = null;
+    function startDatetimeTicker() {
+        const elm = el('chatDatetime');
+        if (!elm) return;
+        if (dtTimer) clearInterval(dtTimer);
+        const tick = () => { elm.textContent = fmtDateTime(new Date()); };
+        tick();
+        dtTimer = setInterval(tick, 30000);
+    }
+
+    function bind() {
+        currentUserKey  = getMyKey();
+        currentUserName = getMyName();
+
+        const groupsBtn = el('chatGroupsBtn');
+        const groupsMenu = el('chatGroupsMenu');
+        if (groupsBtn && groupsMenu && !groupsBtn.dataset.bound) {
+            groupsBtn.dataset.bound = '1';
+            groupsBtn.addEventListener('click', function(e) {
+                e.preventDefault(); e.stopPropagation();
+                groupsMenu.classList.toggle('open');
+            });
+            document.addEventListener('click', function(e) {
+                const wrap = groupsBtn.parentElement;
+                if (wrap && !wrap.contains(e.target)) groupsMenu.classList.remove('open');
+            });
+            groupsMenu.querySelectorAll('[data-group]').forEach(b => {
+                b.addEventListener('click', async function(e) {
+                    e.preventDefault(); e.stopPropagation();
+                    groupsMenu.classList.remove('open');
+                    const kind = b.getAttribute('data-group');
+                    await openGroupChat(kind);
+                });
+            });
+        }
+
+        const sendBtn = el('chatSendBtn');
+        const input = el('chatInput');
+        if (sendBtn && input && !sendBtn.dataset.bound) {
+            sendBtn.dataset.bound = '1';
+            sendBtn.addEventListener('click', async function(e) {
+                e.preventDefault();
+                const v = input.value;
+                input.value = '';
+                await sendMessage(v);
+                input.focus();
+            });
+            input.addEventListener('keydown', async function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    const v = input.value;
+                    input.value = '';
+                    await sendMessage(v);
+                }
+            });
+        }
+
+        bindMediaButtons();
+
+        const toggleRight = el('chatToggleRightBarBtn');
+        const rightBar = el('chatRightbar');
+        if (toggleRight && rightBar && !toggleRight.dataset.bound) {
+            toggleRight.dataset.bound = '1';
+            toggleRight.addEventListener('click', function(e) {
+                e.preventDefault();
+                rightBar.style.display = (rightBar.style.display === 'none') ? 'flex' : 'none';
+            });
+        }
+
+        const chatToggle = el('chatToggleBtn');
+        if (chatToggle && !chatToggle.dataset.chatBound) {
+            chatToggle.dataset.chatBound = '1';
+            chatToggle.addEventListener('click', function() {
+                setTimeout(refreshMembers, 100);
+                startDatetimeTicker();
+            });
+        }
+
+        refreshMembers();
+        startDatetimeTicker();
+        const hint = el('chatEmptyHint');
+        if (hint) hint.style.display = 'block';
+
+        console.log('✅ Chat module initialized (user=' + currentUserKey + ')');
+    }
+
+    function bindMediaButtons() {
+        const audioCall = el('chatAudioCallBtn');
+        const videoCall = el('chatVideoCallBtn');
+        const audioMsg  = el('chatAudioMsgBtn');
+        const videoMsg  = el('chatVideoMsgBtn');
+        const imagePost = el('chatImagePostBtn');
+        const audioInput= el('chatAudioInput');
+        const videoInput= el('chatVideoInput');
+        const imageInput= el('chatImageInput');
+
+        if (audioCall && !audioCall.dataset.bound) {
+            audioCall.dataset.bound = '1';
+            audioCall.addEventListener('click', function() {
+                if (!currentConvo) { toast('⚠️ Open a conversation first', 2000); return; }
+                toast('📞 Audio call requested with ' + (currentConvo.targetName || currentConvo.title), 2600);
+            });
+        }
+        if (videoCall && !videoCall.dataset.bound) {
+            videoCall.dataset.bound = '1';
+            videoCall.addEventListener('click', function() {
+                if (!currentConvo) { toast('⚠️ Open a conversation first', 2000); return; }
+                toast('🎥 Video call requested with ' + (currentConvo.targetName || currentConvo.title), 2600);
+            });
+        }
+        if (audioMsg && audioInput && !audioMsg.dataset.bound) {
+            audioMsg.dataset.bound = '1';
+            audioMsg.addEventListener('click', () => audioInput.click());
+            audioInput.addEventListener('change', function() {
+                const f = this.files && this.files[0]; if (!f) return;
+                if (!currentConvo) { toast('⚠️ Open a conversation first', 2000); return; }
+                const reader = new FileReader();
+                reader.onload = (ev) => { sendMessage('[audio]' + ev.target.result); };
+                reader.readAsDataURL(f);
+                this.value = '';
+            });
+        }
+        if (videoMsg && videoInput && !videoMsg.dataset.bound) {
+            videoMsg.dataset.bound = '1';
+            videoMsg.addEventListener('click', () => videoInput.click());
+            videoInput.addEventListener('change', function() {
+                const f = this.files && this.files[0]; if (!f) return;
+                if (!currentConvo) { toast('⚠️ Open a conversation first', 2000); return; }
+                if (f.size > 2 * 1024 * 1024) { toast('⚠️ Video too large (max 2 MB)', 2600); this.value = ''; return; }
+                const reader = new FileReader();
+                reader.onload = (ev) => { sendMessage('[video]' + ev.target.result); };
+                reader.readAsDataURL(f);
+                this.value = '';
+            });
+        }
+        if (imagePost && imageInput && !imagePost.dataset.bound) {
+            imagePost.dataset.bound = '1';
+            imagePost.addEventListener('click', () => imageInput.click());
+            imageInput.addEventListener('change', function() {
+                const f = this.files && this.files[0]; if (!f) return;
+                if (!currentConvo) { toast('⚠️ Open a conversation first', 2000); return; }
+                const reader = new FileReader();
+                reader.onload = (ev) => { sendMessage('[img]' + ev.target.result); };
+                reader.readAsDataURL(f);
+                this.value = '';
+            });
+        }
+    }
+
+    function boot() {
+        if (!el('chatWindow')) { console.warn('Chat: #chatWindow missing'); return; }
+        if (el('chatWindow').dataset.chatBound === '1') { return; }
+        el('chatWindow').dataset.chatBound = '1';
+        bind();
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', boot);
+    } else {
+        boot();
+    }
+    setTimeout(function() {
+        if (el('chatWindow') && el('chatWindow').dataset.chatBound !== '1') boot();
+    }, 900);
+})();
