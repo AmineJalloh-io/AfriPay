@@ -1,3 +1,8 @@
+/* ============================================================ */
+/* GLOBAL STUB — ensures __seedDeliverTransaction always exists  */
+/* ============================================================ */
+window.__seedDeliverTransaction = window.__seedDeliverTransaction || function (tx) { window.__pendingDeliverSeed = tx || null; };
+
 /* CLOCK */
 (function startClock() {
     function pad(n) { return n < 10 ? '0' + n : String(n); }
@@ -68,6 +73,69 @@ const Supa = {
     async saveComplaint(c) { if (!supabaseClient) return null; try { const { data, error } = await supabaseClient.from('complaints').insert({ name: c.name, phone: c.phone, category: c.category, details: c.details, status: 'pending' }).select().single(); if (error) throw error; return data; } catch (e) { return null; } }
 };
 
+/* CLOUD AGENTS SYNC */
+async function supaRefreshAgents() {
+    if (!Supa.isReady()) return false;
+    try {
+        const cloudAgents = await Supa.getAgents();
+        if (!Array.isArray(cloudAgents)) return false;
+        let changed = false;
+        cloudAgents.forEach(function (a) {
+            const exists = registeredUsers.find(function (u) { return u.businessName === a.business_name; });
+            const mapped = {
+                id: 'agent_' + (a.business_name || a.id).replace(/\W/g, '').toLowerCase(),
+                name: a.business_name, businessName: a.business_name,
+                businessAddress: a.business_address, city: a.city,
+                regNumber: a.reg_number, businessType: a.business_type,
+                ownerName: a.owner_name, idType: a.id_type, idNumber: a.id_number,
+                mobileMoney: a.mobile_money, countryCode: a.country_code,
+                password: a.password, pin: a.pin,
+                collateralAmount: a.collateral_amount, collateralLimit: a.collateral_limit,
+                currency: a.currency, approved: a.approved === true,
+                approvedBy: a.approved === true ? 'cloud-admin' : null,
+                approvedAt: a.approved === true ? new Date().toISOString() : null,
+                role: 'agent', isAgent: true,
+                providerTxId: a.provider_tx_id, transferCode: a.transfer_code, nin: a.nin,
+                avatarDataURL: a.avatar_data_url || null,
+                emoji: a.emoji || '🏢'
+            };
+            if (exists) {
+                if (JSON.stringify(exists) !== JSON.stringify(Object.assign({}, exists, mapped))) { Object.assign(exists, mapped); changed = true; }
+            } else { registeredUsers.push(mapped); changed = true; }
+        });
+        if (changed) {
+            saveRegisteredUsers();
+            try { renderAgentDropdown(currentAgentFilterCountry); } catch (e) {}
+            try { populateAgentSelect(currentAgentFilterCountry); } catch (e) {}
+            try { updateAgentDropdownPlaceholder(); } catch (e) {}
+        }
+        return changed;
+    } catch (e) { console.warn('supaRefreshAgents:', e && e.message); return false; }
+}
+
+function subscribeAgentRealtime() {
+    if (!Supa.isReady()) return;
+    try {
+        if (window.__agentRealtimeChannel) { try { supabaseClient.removeChannel(window.__agentRealtimeChannel); } catch (e) {} }
+        window.__agentRealtimeChannel = supabaseClient.channel('agents-live').on('postgres_changes', { event: '*', schema: 'public', table: 'agents' }, function () { console.log('📡 agents table changed'); supaRefreshAgents(); }).subscribe();
+        console.log('✅ Subscribed to agents realtime');
+    } catch (e) { console.warn('subscribeAgentRealtime:', e && e.message); }
+}
+
+window.addEventListener('storage', function (e) {
+    if (e.key !== 'afripay_registered_users') return;
+    try {
+        loadRegisteredUsers();
+        try { syncConnectedUsersFromRegistered(); } catch (e) {}
+        try { renderAgentDropdown(currentAgentFilterCountry); } catch (e) {}
+        try { populateAgentSelect(currentAgentFilterCountry); } catch (e) {}
+        console.log('🔄 agents synced from another tab');
+    } catch (err) {}
+});
+
+setInterval(function () { if (Supa.isReady()) supaRefreshAgents(); }, 30000);
+
+/* TRANSLATIONS */
 const TRANSLATIONS = {
     en: { login:"Login", register:"Register", logout:"Logout", sender:"👤 SENDER", agent:"👤 AGENT", client:"👥 CLIENT", name:"Name *", phone:"Phone *", address:"Address", city:"City *", amount:"Amount *", country:"🌍 Country", base:"💰 Base:", fee:"📊 Fee (5%):", gst:"🏛️ GST", total:"💵 Total:", currency:"🌍 Currency:", operator:"💸 Operator", txId:"🔖 TX ID", providerTxId:"🔐 Provider TX ID", transferCode:"Transfer Code *", submit:"Submit", quickPay:"⭐ QUICK PAY ⭐", addBiz:"➕ Add Biz", editBiz:"✏️ Edit Biz", about:"About", dev:"Dev", contact:"Contact", subscribe:"Subscribe", how:"📖 How", convert:"💱 Convert", addClient:"➕ Client", gen:"Gen", copy:"Copy", save:"Save", cancel:"Cancel", close:"Close", selectContact:"Select a contact", send:"Send", chooseAvatar:"😊 Choose Your Avatar", profileAvatar:"😊 Profile Avatar", upload:"📷 Upload", remove:"🗑️ Remove", emoji:"🎨 Emoji", replaceLogo:"🖼️ Replace Agent Logo", credentialsCorrect:"✅ Credentials correct" },
     fr: { login:"Connexion", register:"Inscription", logout:"Déconnexion", sender:"👤 EXPÉDITEUR", agent:"👤 AGENT", client:"👥 CLIENT", name:"Nom *", phone:"Téléphone *", address:"Adresse", city:"Ville *", amount:"Montant *", country:"🌍 Pays", base:"💰 Base:", fee:"📊 Frais (5%):", gst:"🏛️ TVA", total:"💵 Total:", currency:"🌍 Devise:", operator:"💸 Opérateur", txId:"🔖 ID TX", providerTxId:"🔐 ID TX Fournisseur", transferCode:"Code de transfert *", submit:"Soumettre", quickPay:"⭐ PAIEMENT RAPIDE ⭐", addBiz:"➕ Ajouter Entreprise", editBiz:"✏️ Modifier Entreprise", about:"À propos", dev:"Développeur", contact:"Contact", subscribe:"S'abonner", how:"📖 Comment", convert:"💱 Convertir", addClient:"➕ Client", gen:"Gén", copy:"Copier", save:"Enregistrer", cancel:"Annuler", close:"Fermer", selectContact:"Sélectionner un contact", send:"Envoyer", chooseAvatar:"😊 Choisissez votre avatar", profileAvatar:"😊 Avatar du profil", upload:"📷 Télécharger", remove:"🗑️ Supprimer", emoji:"🎨 Emoji", replaceLogo:"🖼️ Remplacer le logo", credentialsCorrect:"✅ Identifiants corrects" },
@@ -162,9 +230,7 @@ let pendingAgentAuthId = null;
 let chatActiveTarget = null;
 let chatUnreadCount = 0;
 let dpImageDataURL = null;
-
 let currentOrderedProduct = null;
-
 let mbFourSelectedAgentId = null;
 let mbFourSelectedAgentPhone = null;
 
@@ -193,30 +259,18 @@ const PREMIUM_POPUP_AD = {
 function getRandomProductAd() {
     const allBiz = getAllBusinesses();
     const candidates = [];
-    allBiz.forEach(function(biz) {
-        if (biz.goods && biz.goods.length > 0) {
-            biz.goods.forEach(function(g) { candidates.push({ biz: biz, product: g }); });
-        }
-    });
-    if (candidates.length === 0) {
-        return { icon: '🏪', title: 'Discover AfriPay Businesses', body: 'Browse local businesses, order products and services, and pay instantly with AfriPay.', buttonText: 'Explore Now', buttonAction: function() { showToast('🏪 Browse the Quick Pay strip!', 2200); } };
-    }
+    allBiz.forEach(function(biz) { if (biz.goods && biz.goods.length > 0) biz.goods.forEach(function(g) { candidates.push({ biz: biz, product: g }); }); });
+    if (candidates.length === 0) return { icon: '🏪', title: 'Discover AfriPay Businesses', body: 'Browse local businesses, order products and services, and pay instantly with AfriPay.', buttonText: 'Explore Now', buttonAction: function() { showToast('🏪 Browse the Quick Pay strip!', 2200); } };
     const pick = candidates[Math.floor(Math.random() * candidates.length)];
-    const biz = pick.biz;
-    const p = pick.product;
+    const biz = pick.biz; const p = pick.product;
     const currency = (typeof getUserCurrency === 'function' ? getUserCurrency() : 'SLL');
-    const price = parseFloat(p.price) || 0;
-    const qty = p.quantity || 1;
-    const quality = p.quality || 'Standard';
-    const kind = (p.kind || 'product').toLowerCase();
-    const delivery = p.delivery || (kind === 'service' ? 'Service via appointment' : 'Delivery 1-3 business days');
-    const icon = p.icon || biz.icon || (kind === 'service' ? '🛠️' : '📦');
     return {
-        icon: icon, title: p.name || 'Featured Product', isProductAd: true,
+        icon: p.icon || biz.icon || '📦', title: p.name || 'Featured Product', isProductAd: true,
         businessId: biz.id, businessName: biz.name, businessIcon: biz.icon || '🏪',
         businessType: biz.type || '', businessMobileMoney: biz.mobileMoney || biz.contact || '',
-        productName: p.name || 'Item', price: price, currency: currency, quality: quality,
-        quantity: qty, kind: kind, delivery: delivery, website: biz.website || '',
+        productName: p.name || 'Item', price: parseFloat(p.price) || 0, currency: currency,
+        quality: p.quality || 'Standard', quantity: p.quantity || 1, kind: (p.kind || 'product').toLowerCase(),
+        delivery: p.delivery || 'Delivery 1-3 business days', website: biz.website || '',
         buttonText: '🛒 Order via AfriPay',
         buttonAction: function() { placeProductOrder(adDataRef); }
     };
@@ -226,65 +280,36 @@ let adDataRef = null;
 
 function placeProductOrder(adData) {
     if (!adData) return;
-    if (!currentUser) {
-        showToast('🔐 Please login or register to place an order.', 2600);
-        try { getEl('loginModal').style.display = 'flex'; } catch (e) {}
-        return;
-    }
+    if (!currentUser) { showToast('🔐 Please login or register to place an order.', 2600); try { getEl('loginModal').style.display = 'flex'; } catch (e) {} return; }
     try { exitBusinessMode(); } catch (e) {}
     const amountInput = getEl('amountInput');
     if (amountInput) { amountInput.value = (parseFloat(adData.price) || 0).toFixed(2); amountInput.dispatchEvent(new Event('input')); }
-    const agentNameEl = getEl('agentName'); if (agentNameEl) agentNameEl.value = adData.businessName || 'Business';
-    const agentPhoneEl = getEl('agentPhone'); if (agentPhoneEl) agentPhoneEl.value = adData.businessMobileMoney || adData.businessContact || '';
-    const agentSelect = getEl('agentNameSelect');
-    const agentLabel = getEl('agentNameLabel');
+    if (getEl('agentName')) getEl('agentName').value = adData.businessName || 'Business';
+    if (getEl('agentPhone')) getEl('agentPhone').value = adData.businessMobileMoney || '';
+    const agentSelect = getEl('agentNameSelect'); const agentLabel = getEl('agentNameLabel');
     if (agentSelect) {
-        isBusinessMode = true;
-        agentSelect.style.display = 'none';
+        isBusinessMode = true; agentSelect.style.display = 'none';
         let bd = getEl('bizDisplayField');
         if (!bd) { bd = document.createElement('div'); bd.id = 'bizDisplayField'; bd.className = 'biz-display-field'; agentSelect.parentNode.insertBefore(bd, agentSelect.nextSibling); }
         bd.innerHTML = '<span>' + (adData.businessIcon || '🏪') + '</span><span>' + escapeHTML(adData.businessName || 'Business') + '</span>';
         bd.style.display = 'flex';
         if (agentLabel) agentLabel.textContent = '🏢 Business (from ad)';
     }
-    currentOrderedProduct = {
-        productName: adData.productName || 'Item', productIcon: adData.icon || '📦',
-        businessName: adData.businessName || 'Business', businessIcon: adData.businessIcon || '🏪',
-        businessMobileMoney: adData.businessMobileMoney || '', price: parseFloat(adData.price) || 0,
-        currency: adData.currency || getUserCurrency(), quality: adData.quality || '',
-        quantity: adData.quantity || 1, delivery: adData.delivery || '',
-        website: adData.website || '', kind: adData.kind || 'product'
-    };
+    currentOrderedProduct = { productName: adData.productName || 'Item', productIcon: adData.icon || '📦', businessName: adData.businessName || 'Business', businessIcon: adData.businessIcon || '🏪', businessMobileMoney: adData.businessMobileMoney || '', price: parseFloat(adData.price) || 0, currency: adData.currency || getUserCurrency(), quality: adData.quality || '', quantity: adData.quantity || 1, delivery: adData.delivery || '', website: adData.website || '', kind: adData.kind || 'product' };
     renderOrderProductBadge(currentOrderedProduct);
     computeCharges();
     try { ensureTransactionId(); } catch (e) {}
-    try {
-        const fc = getEl('mainFormContainer');
-        if (fc && fc.scrollIntoView) fc.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        if (amountInput && amountInput.focus) amountInput.focus();
-    } catch (e) {}
-    showToast('🛒 Order ready: ' + (adData.productName || 'Item') + ' — ' + adData.currency + ' ' + (parseFloat(adData.price) || 0).toFixed(2), 3200);
+    try { const fc = getEl('mainFormContainer'); if (fc && fc.scrollIntoView) fc.scrollIntoView({ behavior: 'smooth', block: 'start' }); if (amountInput && amountInput.focus) amountInput.focus(); } catch (e) {}
+    showToast('🛒 Order ready: ' + (adData.productName || 'Item'), 3200);
 }
 
 function renderOrderProductBadge(order) {
-    const container = getEl('orderProductBadgeContainer');
-    if (!container) return;
+    const container = getEl('orderProductBadgeContainer'); if (!container) return;
     if (!order) { container.innerHTML = ''; container.style.display = 'none'; return; }
-    container.innerHTML =
-        '<div class="order-product-badge">' +
-            '<span class="opb-icon">' + (order.productIcon || '📦') + '</span>' +
-            '<div class="opb-info">' +
-                '<div class="opb-title">' + escapeHTML(order.productName) + '</div>' +
-                '<div class="opb-sub">' + (order.businessIcon || '🏪') + ' ' + escapeHTML(order.businessName) +
-                    ' · ' + escapeHTML(order.currency) + ' ' + (parseFloat(order.price) || 0).toFixed(2) +
-                    (order.delivery ? ' · 🚚 ' + escapeHTML(order.delivery) : '') +
-                '</div>' +
-            '</div>' +
-            '<button type="button" class="opb-clear" id="clearOrderProductBtn" title="Clear product">✕</button>' +
-        '</div>';
+    container.innerHTML = '<div class="order-product-badge"><span class="opb-icon">' + (order.productIcon || '📦') + '</span><div class="opb-info"><div class="opb-title">' + escapeHTML(order.productName) + '</div><div class="opb-sub">' + (order.businessIcon || '🏪') + ' ' + escapeHTML(order.businessName) + ' · ' + escapeHTML(order.currency) + ' ' + (parseFloat(order.price) || 0).toFixed(2) + (order.delivery ? ' · 🚚 ' + escapeHTML(order.delivery) : '') + '</div></div><button type="button" class="opb-clear" id="clearOrderProductBtn" title="Clear product">✕</button></div>';
     container.style.display = 'block';
     const clearBtn = getEl('clearOrderProductBtn');
-    if (clearBtn) { clearBtn.addEventListener('click', function() { clearOrderedProduct(); showToast('🗑️ Product cleared from order', 1800); }); }
+    if (clearBtn) clearBtn.addEventListener('click', function() { clearOrderedProduct(); showToast('🗑️ Product cleared from order', 1800); });
 }
 
 function clearOrderedProduct() {
@@ -296,7 +321,7 @@ function clearOrderedProduct() {
         const lbl = getEl('agentNameLabel'); if (lbl) lbl.textContent = 'Agent *';
         if (getEl('agentName')) getEl('agentName').value = '';
         if (getEl('agentPhone')) getEl('agentPhone').value = '';
-        if (getEl('amountInput')) { getEl('amountInput').value = ''; }
+        if (getEl('amountInput')) getEl('amountInput').value = '';
         computeCharges();
     } catch (e) {}
 }
@@ -311,71 +336,37 @@ function showPopupAd(adData) {
     adDataRef = adData;
     const adModal = document.createElement('div');
     adModal.id = 'popupAdModal'; adModal.className = 'modal'; adModal.style.display = 'flex'; adModal.style.zIndex = '2000';
-    const isPremium = adData.isPremium === true;
-    const isProduct = adData.isProductAd === true;
-    let headerBg, iconSize, titleSize, buttonBg, borderGlow;
-    if (isPremium) { headerBg = 'linear-gradient(135deg,#f4a261,#e67e22 50%,#d35400)'; iconSize = '3rem'; titleSize = '1.5rem'; buttonBg = '#0f2b3d'; borderGlow = 'box-shadow:0 0 0 3px rgba(244,162,97,.5),0 0 30px rgba(244,162,97,.4),0 20px 40px rgba(0,0,0,.35);'; }
-    else if (isProduct) { headerBg = 'linear-gradient(135deg,#0a2b3c 0%,#2c7da0 55%,#4aa8c9 100%)'; iconSize = '2.8rem'; titleSize = '1.25rem'; buttonBg = '#f4a261'; borderGlow = 'box-shadow:0 0 0 3px rgba(44,125,160,.35),0 0 22px rgba(44,125,160,.3),0 20px 40px rgba(0,0,0,.32);'; }
-    else { headerBg = 'linear-gradient(135deg,#0a2b3c,#1c4e6c)'; iconSize = '2.5rem'; titleSize = '1.3rem'; buttonBg = '#f4a261'; borderGlow = ''; }
+    const isPremium = adData.isPremium === true; const isProduct = adData.isProductAd === true;
+    let headerBg, titleSize, buttonBg, borderGlow;
+    if (isPremium) { headerBg = 'linear-gradient(135deg,#f4a261,#e67e22 50%,#d35400)'; titleSize = '1.5rem'; buttonBg = '#0f2b3d'; borderGlow = 'box-shadow:0 0 0 3px rgba(244,162,97,.5),0 0 30px rgba(244,162,97,.4),0 20px 40px rgba(0,0,0,.35);'; }
+    else if (isProduct) { headerBg = 'linear-gradient(135deg,#0a2b3c 0%,#2c7da0 55%,#4aa8c9 100%)'; titleSize = '1.25rem'; buttonBg = '#f4a261'; borderGlow = 'box-shadow:0 0 0 3px rgba(44,125,160,.35),0 0 22px rgba(44,125,160,.3),0 20px 40px rgba(0,0,0,.32);'; }
+    else { headerBg = 'linear-gradient(135deg,#0a2b3c,#1c4e6c)'; titleSize = '1.3rem'; buttonBg = '#f4a261'; borderGlow = ''; }
     let productDetailsHtml = '';
     if (isProduct) {
-        productDetailsHtml =
-            '<div class="popup-ad-details-panel">' +
-                '<div class="popup-ad-detail-row"><span class="label">🏢 Business</span><span class="value">' + (adData.businessIcon || '🏪') + ' ' + escapeHTML(adData.businessName) + '</span></div>' +
-                '<div class="popup-ad-detail-row"><span class="label">🏷️ Product</span><span class="value">' + escapeHTML(adData.productName) + '</span></div>' +
-                '<div class="popup-ad-detail-row price"><span class="label">💰 Price</span><span class="value">' + adData.currency + ' ' + (parseFloat(adData.price) || 0).toFixed(2) + '</span></div>' +
-                '<div class="popup-ad-detail-row"><span class="label">⭐ Quality</span><span class="value">' + escapeHTML(adData.quality) + '</span></div>' +
-                '<div class="popup-ad-detail-row"><span class="label">📦 Quantity</span><span class="value">' + escapeHTML(String(adData.quantity)) + ' available</span></div>' +
-                '<div class="popup-ad-detail-row delivery"><span class="label">🚚 Delivery</span><span class="value">' + escapeHTML(adData.delivery) + '</span></div>' +
-                (adData.businessMobileMoney ? '<div class="popup-ad-detail-row"><span class="label">📱 Mobile Money</span><span class="value">' + escapeHTML(adData.businessMobileMoney) + '</span></div>' : '') +
-            '</div>';
+        productDetailsHtml = '<div class="popup-ad-details-panel"><div class="popup-ad-detail-row"><span class="label">🏢 Business</span><span class="value">' + (adData.businessIcon || '🏪') + ' ' + escapeHTML(adData.businessName) + '</span></div><div class="popup-ad-detail-row"><span class="label">🏷️ Product</span><span class="value">' + escapeHTML(adData.productName) + '</span></div><div class="popup-ad-detail-row price"><span class="label">💰 Price</span><span class="value">' + adData.currency + ' ' + (parseFloat(adData.price) || 0).toFixed(2) + '</span></div><div class="popup-ad-detail-row"><span class="label">⭐ Quality</span><span class="value">' + escapeHTML(adData.quality) + '</span></div><div class="popup-ad-detail-row"><span class="label">📦 Quantity</span><span class="value">' + escapeHTML(String(adData.quantity)) + ' available</span></div><div class="popup-ad-detail-row delivery"><span class="label">🚚 Delivery</span><span class="value">' + escapeHTML(adData.delivery) + '</span></div>' + (adData.businessMobileMoney ? '<div class="popup-ad-detail-row"><span class="label">📱 Mobile Money</span><span class="value">' + escapeHTML(adData.businessMobileMoney) + '</span></div>' : '') + '</div>';
     }
-    let websiteHtml = '';
-    if (isProduct && adData.website) { websiteHtml = '<a class="popup-ad-website" href="' + escapeHTML(adData.website) + '" target="_blank" rel="noopener">🌐 ' + escapeHTML(adData.website) + '</a>'; }
+    let websiteHtml = ''; if (isProduct && adData.website) websiteHtml = '<a class="popup-ad-website" href="' + escapeHTML(adData.website) + '" target="_blank" rel="noopener">🌐 ' + escapeHTML(adData.website) + '</a>';
     const sparkles = '<span class="popup-ad-sparkle s1">✦</span><span class="popup-ad-sparkle s2">✦</span><span class="popup-ad-sparkle s3">✦</span><span class="popup-ad-sparkle s4">✦</span>';
     const premiumBadge = isPremium ? '<div class="popup-ad-mini-badge" style="background:rgba(255,255,255,.25);">👑 VIP ONLY</div>' : '';
-    adModal.innerHTML = `
-        <div class="modal-content popup-ad-card${isPremium ? ' premium' : ''}" style="max-width:${isPremium ? '380px' : (isProduct ? '360px' : '320px')}; padding:0; overflow:hidden; position:relative; border-radius:1.2rem; ${borderGlow}">
-            <button class="popup-ad-close" id="closeAdBtn">✕</button>
-            ${isPremium ? '<div class="popup-ad-tag red">🔥 LIMITED OFFER</div>' : ''}
-            ${isProduct ? '<div class="popup-ad-tag green">✨ FEATURED</div>' : ''}
-            <div style="background:${headerBg};padding:${isPremium ? '30px 20px 22px' : '22px 20px'};text-align:center;color:white;position:relative;overflow:hidden;">
-                <div class="popup-ad-header-glow"></div>
-                ${sparkles}
-                <div class="popup-ad-icon-wrap"><div class="popup-ad-icon">${adData.icon}</div></div>
-                <h2 class="popup-ad-title" style="margin:8px 0 0;font-size:${titleSize};font-weight:900;word-break:break-word;letter-spacing:.3px;">${escapeHTML(adData.title)}</h2>
-                ${isProduct ? '<div style="font-size:.68rem;opacity:.85;margin-top:6px;font-weight:600;">from ' + escapeHTML(adData.businessName) + '</div>' : ''}
-                ${isPremium ? '<div style="margin-top:8px;">' + premiumBadge + '</div>' : ''}
-            </div>
-            <div style="padding:18px;text-align:center;background:#fff;">
-                ${productDetailsHtml}
-                ${(!isProduct) ? '<p style="color:#1e3b4a;margin-bottom:15px;font-size:0.9rem;line-height:1.5;">' + escapeHTML(adData.body) + '</p>' : ''}
-                <button class="popup-ad-btn" id="popupAdActionBtn" style="background:${buttonBg};color:#fff;border:none;padding:13px 20px;border-radius:30px;font-weight:800;font-size:${isPremium ? '1rem' : '0.95rem'};cursor:pointer;width:100%;">${escapeHTML(adData.buttonText)}</button>
-                ${isPremium ? '<div style="margin-top:12px;font-size:.65rem;color:#95a5a6;display:flex;align-items:center;justify-content:center;gap:6px;">🔒 Secure payment · Cancel anytime</div>' : ''}
-                ${websiteHtml}
-            </div>
-            <div class="popup-ad-progress"></div>
-        </div>
-    `;
+    adModal.innerHTML = '<div class="modal-content popup-ad-card' + (isPremium ? ' premium' : '') + '" style="max-width:' + (isPremium ? '380px' : (isProduct ? '360px' : '320px')) + '; padding:0; overflow:hidden; position:relative; border-radius:1.2rem; ' + borderGlow + '"><button class="popup-ad-close" id="closeAdBtn">✕</button>' + (isPremium ? '<div class="popup-ad-tag red">🔥 LIMITED OFFER</div>' : '') + (isProduct ? '<div class="popup-ad-tag green">✨ FEATURED</div>' : '') + '<div style="background:' + headerBg + ';padding:22px 20px;text-align:center;color:white;position:relative;overflow:hidden;"><div class="popup-ad-header-glow"></div>' + sparkles + '<div class="popup-ad-icon-wrap"><div class="popup-ad-icon">' + adData.icon + '</div></div><h2 class="popup-ad-title" style="margin:8px 0 0;font-size:' + titleSize + ';font-weight:900;">' + escapeHTML(adData.title) + '</h2>' + (isProduct ? '<div style="font-size:.68rem;opacity:.85;margin-top:6px;font-weight:600;">from ' + escapeHTML(adData.businessName) + '</div>' : '') + (isPremium ? '<div style="margin-top:8px;">' + premiumBadge + '</div>' : '') + '</div><div style="padding:18px;text-align:center;background:#fff;">' + productDetailsHtml + (!isProduct ? '<p style="color:#1e3b4a;margin-bottom:15px;font-size:0.9rem;line-height:1.5;">' + escapeHTML(adData.body) + '</p>' : '') + '<button class="popup-ad-btn" id="popupAdActionBtn" style="background:' + buttonBg + ';color:#fff;border:none;padding:13px 20px;border-radius:30px;font-weight:800;cursor:pointer;width:100%;">' + escapeHTML(adData.buttonText) + '</button>' + websiteHtml + '</div><div class="popup-ad-progress"></div></div>';
     document.body.appendChild(adModal);
     currentPopupAdModal = adModal;
     document.getElementById('closeAdBtn').addEventListener('click', function() { adModal.style.display = 'none'; removeExistingPopupAd(); });
     const actionBtn = document.getElementById('popupAdActionBtn');
-    if (actionBtn) { actionBtn.addEventListener('click', function() { adData.buttonAction(); adModal.style.display = 'none'; removeExistingPopupAd(); }); }
+    if (actionBtn) actionBtn.addEventListener('click', function() { adData.buttonAction(); adModal.style.display = 'none'; removeExistingPopupAd(); });
     adModal.addEventListener('click', function(e) { if (e.target === adModal) { adModal.style.display = 'none'; removeExistingPopupAd(); } });
 }
 
 function triggerNextPopupAd() {
     popupAdCount++;
-    if (popupAdCount % 7 === 0) { showPopupAd(PREMIUM_POPUP_AD); console.log('📢 Popup ad #' + popupAdCount + ' (PREMIUM)'); }
-    else { const productAd = getRandomProductAd(); showPopupAd(productAd); console.log('📢 Popup ad #' + popupAdCount + ' (Product)'); }
+    if (popupAdCount % 7 === 0) showPopupAd(PREMIUM_POPUP_AD);
+    else showPopupAd(getRandomProductAd());
 }
 
 function initPopupAds() {
     if (popupAdIntervalId) clearInterval(popupAdIntervalId);
     setTimeout(function() { triggerNextPopupAd(); }, 5000);
     popupAdIntervalId = setInterval(function() { triggerNextPopupAd(); }, 90000);
-    console.log('📢 Popup ads scheduled');
 }
 
 function resizeImageFile(file, maxSize, quality) {
@@ -401,71 +392,15 @@ function resizeImageFile(file, maxSize, quality) {
     });
 }
 
-function populateCapitalCityDropdown(selectId) {
-    const s = getEl(selectId); if (!s) return;
-    const cv = s.value;
-    s.innerHTML = '<option value="">Select city...</option>';
-    CAPITAL_CITIES.forEach(function(c) { const o = document.createElement('option'); o.value = c; o.textContent = c; s.appendChild(o); });
-    if (cv && Array.from(s.options).some(function(o) { return o.value === cv; })) s.value = cv;
-}
-function populateCountryDropdown(selectId) {
-    const s = getEl(selectId); if (!s) return;
-    const cv = s.value;
-    s.innerHTML = '';
-    ALL_COUNTRIES.forEach(function(c) { const o = document.createElement('option'); o.value = c; o.textContent = c; s.appendChild(o); });
-    if (cv && Array.from(s.options).some(function(o) { return o.value === cv; })) s.value = cv;
-}
-function populateAllDropdowns() {
-    ['senderCitySelect','regCitySelect','agentCitySelect','editCitySelect','editAccountCitySelect','bizCitySelect','newClientCitySelect'].forEach(populateCapitalCityDropdown);
-    ['regCountry','editAccountCountry','newClientCountrySelect','bizCountrySelect','dcCountry','dbCountry'].forEach(populateCountryDropdown);
-}
-function ensureSelectsArePopulated() {
-    document.addEventListener('focusin', function(e) {
-        var t = e.target; if (!t || t.tagName !== 'SELECT') return;
-        if (t.options && t.options.length > 1) return;
-        var id = t.id;
-        var cities = ['senderCitySelect','regCitySelect','agentCitySelect','editCitySelect','editAccountCitySelect','bizCitySelect','newClientCitySelect'];
-        var countries = ['regCountry','editAccountCountry','newClientCountrySelect','bizCountrySelect','dcCountry','dbCountry'];
-        try { if (cities.indexOf(id) !== -1) populateCapitalCityDropdown(id); else if (countries.indexOf(id) !== -1) populateCountryDropdown(id); } catch (err) {}
-    }, true);
-}
-function populateCollateralDropdowns() {
-    ['agentCollateralLimit','editCollateralLimit','daCollateral'].forEach(function(id) {
-        const s = getEl(id); if (!s) return;
-        const cv = s.value; s.innerHTML = '';
-        COLLATERAL_OPTIONS.forEach(function(v) { const o = document.createElement('option'); o.value = v; o.textContent = v.toLocaleString(); s.appendChild(o); });
-        if (cv) s.value = cv;
-    });
-}
-function populateCountryCodeSelect() {
-    let s = getEl('countryCodeSelect');
-    if (!s) { s = document.createElement('select'); s.id = 'countryCodeSelect'; s.style.display = 'none'; document.body.appendChild(s); }
-    s.innerHTML = '';
-    SUPPORTED_CURRENCIES.forEach(function(c, i) {
-        const o = document.createElement('option');
-        o.value = c.code + '|' + c.name + '|' + c.currency + '|' + c.flag + '|' + c.gst + '|' + (i + 1);
-        o.textContent = c.flag + ' ' + c.name;
-        s.appendChild(o);
-    });
-}
-function populateInlineConverter() {
-    const from = getEl('inlineConvFrom'), to = getEl('inlineConvTo');
-    if (!from || !to) return;
-    const codes = Object.keys(FX_TO_USD);
-    const opts = codes.map(function(c) { return '<option value="' + c + '">' + c + '</option>'; }).join('');
-    if (!from.options.length) from.innerHTML = opts;
-    if (!to.options.length) to.innerHTML = opts;
-    try { from.value = getUserCurrency(); } catch (e) {}
-    try { to.value = 'SLL'; } catch (e) {}
-}
+function populateCapitalCityDropdown(selectId) { const s = getEl(selectId); if (!s) return; const cv = s.value; s.innerHTML = '<option value="">Select city...</option>'; CAPITAL_CITIES.forEach(function(c) { const o = document.createElement('option'); o.value = c; o.textContent = c; s.appendChild(o); }); if (cv && Array.from(s.options).some(function(o) { return o.value === cv; })) s.value = cv; }
+function populateCountryDropdown(selectId) { const s = getEl(selectId); if (!s) return; const cv = s.value; s.innerHTML = ''; ALL_COUNTRIES.forEach(function(c) { const o = document.createElement('option'); o.value = c; o.textContent = c; s.appendChild(o); }); if (cv && Array.from(s.options).some(function(o) { return o.value === cv; })) s.value = cv; }
+function populateAllDropdowns() { ['senderCitySelect','regCitySelect','agentCitySelect','editCitySelect','editAccountCitySelect','bizCitySelect','newClientCitySelect'].forEach(populateCapitalCityDropdown); ['regCountry','editAccountCountry','newClientCountrySelect','bizCountrySelect','dcCountry','dbCountry'].forEach(populateCountryDropdown); }
+function ensureSelectsArePopulated() { document.addEventListener('focusin', function(e) { var t = e.target; if (!t || t.tagName !== 'SELECT') return; if (t.options && t.options.length > 1) return; var id = t.id; var cities = ['senderCitySelect','regCitySelect','agentCitySelect','editCitySelect','editAccountCitySelect','bizCitySelect','newClientCitySelect']; var countries = ['regCountry','editAccountCountry','newClientCountrySelect','bizCountrySelect','dcCountry','dbCountry']; try { if (cities.indexOf(id) !== -1) populateCapitalCityDropdown(id); else if (countries.indexOf(id) !== -1) populateCountryDropdown(id); } catch (err) {} }, true); }
+function populateCollateralDropdowns() { ['agentCollateralLimit','editCollateralLimit','daCollateral'].forEach(function(id) { const s = getEl(id); if (!s) return; const cv = s.value; s.innerHTML = ''; COLLATERAL_OPTIONS.forEach(function(v) { const o = document.createElement('option'); o.value = v; o.textContent = v.toLocaleString(); s.appendChild(o); }); if (cv) s.value = cv; }); }
+function populateCountryCodeSelect() { let s = getEl('countryCodeSelect'); if (!s) { s = document.createElement('select'); s.id = 'countryCodeSelect'; s.style.display = 'none'; document.body.appendChild(s); } s.innerHTML = ''; SUPPORTED_CURRENCIES.forEach(function(c, i) { const o = document.createElement('option'); o.value = c.code + '|' + c.name + '|' + c.currency + '|' + c.flag + '|' + c.gst + '|' + (i + 1); o.textContent = c.flag + ' ' + c.name; s.appendChild(o); }); }
+function populateInlineConverter() { const from = getEl('inlineConvFrom'), to = getEl('inlineConvTo'); if (!from || !to) return; const codes = Object.keys(FX_TO_USD); const opts = codes.map(function(c) { return '<option value="' + c + '">' + c + '</option>'; }).join(''); if (!from.options.length) from.innerHTML = opts; if (!to.options.length) to.innerHTML = opts; try { from.value = getUserCurrency(); } catch (e) {} try { to.value = 'SLL'; } catch (e) {} }
 function getUserCurrency() {
-    const map = {
-        'Sierra Leone':'SLL','Liberia':'LRD','Guinea':'GNF','Senegal':'XOF','Mali':'XOF',
-        'Ivory Coast':'XOF','Ghana':'GHS','Niger':'XOF','Benin':'XOF','Guinea Bissau':'XOF',
-        'Gambia':'GMD','Togo':'XOF','Kenya':'KES','Central Africa Rep':'XAF','Ethiopia':'ETB',
-        'Gabon':'XAF','Madagascar':'MGA','Morocco':'MAD','Rwanda':'RWF','Uganda':'UGX',
-        'DR Congo':'CDF','Burkina Faso':'XOF'
-    };
+    const map = { 'Sierra Leone':'SLL','Liberia':'LRD','Guinea':'GNF','Senegal':'XOF','Mali':'XOF','Ivory Coast':'XOF','Ghana':'GHS','Niger':'XOF','Benin':'XOF','Guinea Bissau':'XOF','Gambia':'GMD','Togo':'XOF','Kenya':'KES','Central Africa Rep':'XAF','Ethiopia':'ETB','Gabon':'XAF','Madagascar':'MGA','Morocco':'MAD','Rwanda':'RWF','Uganda':'UGX','DR Congo':'CDF','Burkina Faso':'XOF' };
     const uc = currentUser && currentUser.country;
     if (uc && map[uc]) return map[uc];
     if (!isLocalMode && currentCountryData && currentCountryData.currency) return currentCountryData.currency;
@@ -473,63 +408,26 @@ function getUserCurrency() {
     if (s && s.value) { const p = s.value.split('|'); if (p[2]) return p[2]; }
     return 'SLL';
 }
-function updateUserCountryData() {
-    if (currentUser && currentUser.country) {
-        const sup = SUPPORTED_CURRENCIES.find(function(c) { return c.name.toLowerCase() === currentUser.country.toLowerCase(); });
-        if (sup) currentCountryData = { gstRate: sup.gst, currency: sup.currency, flag: sup.flag, countryName: sup.name };
-    }
-}
+function updateUserCountryData() { if (currentUser && currentUser.country) { const sup = SUPPORTED_CURRENCIES.find(function(c) { return c.name.toLowerCase() === currentUser.country.toLowerCase(); }); if (sup) currentCountryData = { gstRate: sup.gst, currency: sup.currency, flag: sup.flag, countryName: sup.name }; } }
 function loadRegisteredUsers() { try { registeredUsers = JSON.parse(localStorage.getItem('afripay_registered_users') || '[]'); } catch (e) { registeredUsers = []; } if (!Array.isArray(registeredUsers)) registeredUsers = []; }
 function saveRegisteredUsers() {
     try { localStorage.setItem('afripay_registered_users', JSON.stringify(registeredUsers)); }
-    catch (e) {
-        try {
-            const light = registeredUsers.map(function(u) {
-                if (u && u.avatarDataURL && String(u.avatarDataURL).length > 200000) { const c = Object.assign({}, u); delete c.avatarDataURL; return c; }
-                return u;
-            });
-            localStorage.setItem('afripay_registered_users', JSON.stringify(light));
-        } catch (e2) {}
-    }
+    catch (e) { try { const light = registeredUsers.map(function(u) { if (u && u.avatarDataURL && String(u.avatarDataURL).length > 200000) { const c = Object.assign({}, u); delete c.avatarDataURL; return c; } return u; }); localStorage.setItem('afripay_registered_users', JSON.stringify(light)); } catch (e2) {} }
     try { syncConnectedUsersFromRegistered(); } catch (e) {}
 }
 function syncConnectedUsersFromRegistered() {
     const curr = connectedUsers.find(function(u) { return u.id === 'current'; });
     connectedUsers = curr ? [curr] : [];
-    registeredUsers.forEach(function(u) {
-        const isAgentRec = (u.isAgent === true || u.role === 'agent' || u.businessName);
-        if (isAgentRec) {
-            if (!connectedUsers.find(function(c) { return c.id === u.id; })) {
-                connectedUsers.push({ id: u.id || ('agent_' + Date.now() + '_' + Math.random().toString(36).slice(2,7)), name: u.businessName || u.name || '', phone: u.mobileMoney || u.phone || '', emoji: u.emoji || '🏢', status: 'online', isAgent: true, role: 'agent', agentData: u });
-            }
-        }
-    });
+    registeredUsers.forEach(function(u) { const isAgentRec = (u.isAgent === true || u.role === 'agent' || u.businessName); if (isAgentRec) { if (!connectedUsers.find(function(c) { return c.id === u.id; })) connectedUsers.push({ id: u.id || ('agent_' + Date.now() + '_' + Math.random().toString(36).slice(2,7)), name: u.businessName || u.name || '', phone: u.mobileMoney || u.phone || '', emoji: u.emoji || '🏢', status: 'online', isAgent: true, role: 'agent', agentData: u }); } });
 }
-function getAgents() {
-    try { syncConnectedUsersFromRegistered(); } catch (e) {}
-    return connectedUsers.filter(function(u) { if (!(u.isAgent === true || u.role === 'agent')) return false; const d = u.agentData || u; return d.approved !== false; });
-}
-function getAdminApprovedAgents() {
-    return getAgents().filter(function(a) {
-        const d = a.agentData || a;
-        if (d.approved !== true) return false;
-        const hasApprovalStamp = !!(d.approvedBy || d.approvedAt);
-        const isSeedAgent = d.approvedBy === 'system-seed';
-        return hasApprovalStamp || isSeedAgent;
-    });
-}
+function getAgents() { try { syncConnectedUsersFromRegistered(); } catch (e) {} return connectedUsers.filter(function(u) { if (!(u.isAgent === true || u.role === 'agent')) return false; const d = u.agentData || u; return d.approved !== false; }); }
+function getAdminApprovedAgents() { return getAgents().filter(function(a) { const d = a.agentData || a; if (d.approved !== true) return false; return !!(d.approvedBy || d.approvedAt) || d.approvedBy === 'system-seed'; }); }
 function getAgentInitials(agent) { const d = agent.agentData || agent; let n = d.businessName || agent.name || ''; n = n.replace(/\(.*\)/, '').trim(); return n.substring(0, 2).toUpperCase() || 'AG'; }
 function getAgentFlag(agent) { const c = (agent.agentData || agent).countryCode || ''; return COUNTRY_CODE_TO_FLAG[c] || '🌍'; }
 function getAgentCountryName(agent) { const c = (agent.agentData || agent).countryCode || ''; return COUNTRY_CODE_TO_NAME[c] || ''; }
 function getCityValue(sid, oid) { const s = getEl(sid), o = getEl(oid); if (s && s.value) return s.value; if (o && o.value.trim()) return o.value.trim(); return ''; }
 function setCityValue(sid, oid, value) { const s = getEl(sid), o = getEl(oid); if (!s || !o) return; let found = false; for (let i = 0; i < s.options.length; i++) { if (s.options[i].value === value) { s.value = value; found = true; break; } } if (!found && value) { s.value = ''; o.value = value; } else { o.value = ''; } }
-function updateAgentDropdownPlaceholder() {
-    const b = getEl('selectedAgentName'); if (!b || isBusinessMode) return;
-    if (currentAgentFilterCountry && !selectedAgentId) {
-        const flag = COUNTRY_NAME_TO_CODE[currentAgentFilterCountry] ? COUNTRY_CODE_TO_FLAG[COUNTRY_NAME_TO_CODE[currentAgentFilterCountry]] : '🌍';
-        b.innerHTML = 'Select Agent in ' + flag + ' ' + currentAgentFilterCountry;
-    } else if (!selectedAgentId) b.textContent = 'Select Agent';
-}
+function updateAgentDropdownPlaceholder() { const b = getEl('selectedAgentName'); if (!b || isBusinessMode) return; if (currentAgentFilterCountry && !selectedAgentId) { const flag = COUNTRY_NAME_TO_CODE[currentAgentFilterCountry] ? COUNTRY_CODE_TO_FLAG[COUNTRY_NAME_TO_CODE[currentAgentFilterCountry]] : '🌍'; b.innerHTML = 'Select Agent in ' + flag + ' ' + currentAgentFilterCountry; } else if (!selectedAgentId) b.textContent = 'Select Agent'; }
 function getCountryNameFromSelect() { const s = getEl('countryCodeSelect'); if (!s || !s.value) return null; return s.value.split('|')[1] || null; }
 function getAgentsByCountry(cn) { if (!cn) return getAgents(); return getAgents().filter(function(a) { return getAgentCountryName(a).toLowerCase() === cn.toLowerCase(); }); }
 
@@ -561,12 +459,7 @@ function populateAgentSelect(filterCountry) {
     select.style.display = 'block'; select.innerHTML = '';
     let agents = (filterCountry ? getAgentsByCountry(filterCountry) : getAgents()).sort(function(a, b) { const aN = (a.agentData && a.agentData.businessName) || a.name; const bN = (b.agentData && b.agentData.businessName) || b.name; return aN.localeCompare(bN); });
     const ph = document.createElement('option'); ph.value = ''; ph.textContent = filterCountry ? 'Agent in ' + filterCountry : '-- Select Agent --'; ph.disabled = true; ph.selected = true; select.appendChild(ph);
-    agents.forEach(function(agent) {
-        const opt = document.createElement('option'); opt.value = agent.id;
-        const data = agent.agentData || agent;
-        opt.textContent = getAgentFlag(agent) + ' ' + (data.businessName || agent.name || '').replace(/\(.*\)/, '').trim();
-        select.appendChild(opt);
-    });
+    agents.forEach(function(agent) { const opt = document.createElement('option'); opt.value = agent.id; const data = agent.agentData || agent; opt.textContent = getAgentFlag(agent) + ' ' + (data.businessName || agent.name || '').replace(/\(.*\)/, '').trim(); select.appendChild(opt); });
     if (selectedAgentId) select.value = selectedAgentId;
 }
 function clearAgentSelection() {
@@ -576,14 +469,7 @@ function clearAgentSelection() {
     const s = getEl('agentNameSelect'); if (s) s.value = '';
     exitBusinessMode();
 }
-function exitBusinessMode() {
-    isBusinessMode = false;
-    const sel = getEl('agentNameSelect'), lbl = getEl('agentNameLabel'), bd = getEl('bizDisplayField');
-    if (sel) sel.style.display = 'block';
-    if (bd) bd.style.display = 'none';
-    if (lbl) lbl.textContent = 'Agent *';
-    populateAgentSelect(currentAgentFilterCountry);
-}
+function exitBusinessMode() { isBusinessMode = false; const sel = getEl('agentNameSelect'), lbl = getEl('agentNameLabel'), bd = getEl('bizDisplayField'); if (sel) sel.style.display = 'block'; if (bd) bd.style.display = 'none'; if (lbl) lbl.textContent = 'Agent *'; populateAgentSelect(currentAgentFilterCountry); }
 function selectAgent(agentId) {
     if (isBusinessMode) exitBusinessMode();
     const agent = getAgents().find(function(a) { return a.id === agentId; });
@@ -606,9 +492,7 @@ function selectAgent(agentId) {
 }
 function computeCharges() {
     const raw = parseFloat(getEl('amountInput') && getEl('amountInput').value) || 0;
-    const carrear = raw * FEE_CARREAR;
-    const local = raw * FEE_LOCAL;
-    const services = raw * FEE_SERVICES;
+    const carrear = raw * FEE_CARREAR; const local = raw * FEE_LOCAL; const services = raw * FEE_SERVICES;
     const chargeTotal = raw * FEE_TOTAL;
     const gst = isLocalMode ? 0 : chargeTotal * (currentCountryData.gstRate / 100);
     const total = raw + chargeTotal + gst;
@@ -625,33 +509,11 @@ function computeCharges() {
     if (cbs) { if (raw > 0) cbs.classList.add('show'); else cbs.classList.remove('show'); }
     updateInlineConversion();
 }
-function updateInlineConversion() {
-    const from = getEl('inlineConvFrom'), to = getEl('inlineConvTo'), amtEl = getEl('inlineConvAmount'), resEl = getEl('inlineConvResult');
-    if (!from || !to || !amtEl || !resEl) return;
-    const amt = parseFloat(amtEl.value) || 0;
-    const fromCur = from.value, toCur = to.value;
-    const fromRate = FX_TO_USD[fromCur] || 1;
-    const toRate = FX_TO_USD[toCur] || 1;
-    const result = amt * fromRate / toRate;
-    resEl.value = result.toFixed(2) + ' ' + toCur;
-}
+function updateInlineConversion() { const from = getEl('inlineConvFrom'), to = getEl('inlineConvTo'), amtEl = getEl('inlineConvAmount'), resEl = getEl('inlineConvResult'); if (!from || !to || !amtEl || !resEl) return; const amt = parseFloat(amtEl.value) || 0; const fromCur = from.value, toCur = to.value; const fromRate = FX_TO_USD[fromCur] || 1; const toRate = FX_TO_USD[toCur] || 1; const result = amt * fromRate / toRate; resEl.value = result.toFixed(2) + ' ' + toCur; }
 
-function saveUserToStorage(u) {
-    if (!u) return;
-    try { localStorage.setItem('afripay_user', JSON.stringify(u)); }
-    catch (e) { try { const light = Object.assign({}, u); delete light.avatarDataURL; localStorage.setItem('afripay_user', JSON.stringify(light)); } catch (e2) {} }
-}
+function saveUserToStorage(u) { if (!u) return; try { localStorage.setItem('afripay_user', JSON.stringify(u)); } catch (e) { try { const light = Object.assign({}, u); delete light.avatarDataURL; localStorage.setItem('afripay_user', JSON.stringify(light)); } catch (e2) {} } }
 function clearUserStorage() { try { localStorage.removeItem('afripay_user'); } catch (e) {} currentUser = null; showLoggedOutUI(); }
-function loadStoredUser() {
-    const stored = localStorage.getItem('afripay_user');
-    if (stored) {
-        try {
-            const u = JSON.parse(stored);
-            if (u && u.name && u.phone) { currentUser = u; if (!currentUser.emoji) currentUser.emoji = '👤'; showLoggedInUI(); return true; }
-        } catch (e) {}
-    }
-    showLoggedOutUI(); return false;
-}
+function loadStoredUser() { const stored = localStorage.getItem('afripay_user'); if (stored) { try { const u = JSON.parse(stored); if (u && u.name && u.phone) { currentUser = u; if (!currentUser.emoji) currentUser.emoji = '👤'; showLoggedInUI(); return true; } } catch (e) {} } showLoggedOutUI(); return false; }
 function showLoggedInUI() {
     getEl('authButtons').style.display = 'none';
     getEl('welcomeSection').style.display = 'flex';
@@ -668,25 +530,9 @@ function showLoggedInUI() {
     populateInlineConverter();
     renderBusinessStrip(); updateAgentDropdownForCountry(); computeCharges(); translatePage();
 }
-function showLoggedOutUI() {
-    getEl('authButtons').style.display = 'flex';
-    getEl('welcomeSection').style.display = 'none';
-    getEl('mainFormContainer').style.display = 'none';
-    connectedUsers = connectedUsers.filter(function(u) { return u.id !== 'current'; });
-    renderAgentDropdown(null);
-}
-function updateAvatarDisplay(user) {
-    const em = getEl('userAvatarEmoji'), img = getEl('userAvatarImg'); if (!em || !img) return;
-    if (user && user.avatarDataURL) { em.style.display = 'none'; img.style.display = 'block'; img.src = user.avatarDataURL; }
-    else if (user && user.emoji) { em.style.display = 'inline'; img.style.display = 'none'; em.innerText = user.emoji; }
-    else { em.style.display = 'inline'; img.style.display = 'none'; em.innerText = '👤'; }
-}
-function updateProfileAvatarDisplay(user) {
-    const em = getEl('profileAvatarEmoji'), img = getEl('profileAvatarImg'); if (!em || !img) return;
-    if (user && user.avatarDataURL) { em.style.display = 'none'; img.style.display = 'block'; img.src = user.avatarDataURL; }
-    else if (user && user.emoji) { em.style.display = 'inline'; img.style.display = 'none'; em.innerText = user.emoji; }
-    else { em.style.display = 'inline'; img.style.display = 'none'; em.innerText = '👤'; }
-}
+function showLoggedOutUI() { getEl('authButtons').style.display = 'flex'; getEl('welcomeSection').style.display = 'none'; getEl('mainFormContainer').style.display = 'none'; connectedUsers = connectedUsers.filter(function(u) { return u.id !== 'current'; }); renderAgentDropdown(null); }
+function updateAvatarDisplay(user) { const em = getEl('userAvatarEmoji'), img = getEl('userAvatarImg'); if (!em || !img) return; if (user && user.avatarDataURL) { em.style.display = 'none'; img.style.display = 'block'; img.src = user.avatarDataURL; } else if (user && user.emoji) { em.style.display = 'inline'; img.style.display = 'none'; em.innerText = user.emoji; } else { em.style.display = 'inline'; img.style.display = 'none'; em.innerText = '👤'; } }
+function updateProfileAvatarDisplay(user) { const em = getEl('profileAvatarEmoji'), img = getEl('profileAvatarImg'); if (!em || !img) return; if (user && user.avatarDataURL) { em.style.display = 'none'; img.style.display = 'block'; img.src = user.avatarDataURL; } else if (user && user.emoji) { em.style.display = 'inline'; img.style.display = 'none'; em.innerText = user.emoji; } else { em.style.display = 'inline'; img.style.display = 'none'; em.innerText = '👤'; } }
 function loginUser(fullName, phoneNumber) {
     const name = fullName.trim(), phone = phoneNumber.trim();
     if (!name || !phone) { getEl('loginError').innerHTML = '❌ Enter both fields'; return false; }
@@ -694,8 +540,7 @@ function loginUser(fullName, phoneNumber) {
     try { const s = localStorage.getItem('afripay_user'); if (s) storedUser = JSON.parse(s); } catch (e) {}
     if (storedUser && storedUser.name.toLowerCase() === name.toLowerCase() && storedUser.phone === phone) {
         currentUser = storedUser; if (!currentUser.emoji) currentUser.emoji = '👤';
-        saveUserToStorage(storedUser);
-        showToast('✅ Welcome ' + storedUser.name + '!', 1800);
+        saveUserToStorage(storedUser); showToast('✅ Welcome ' + storedUser.name + '!', 1800);
         showLoggedInUI(); renderAgentDropdown(currentAgentFilterCountry);
         getEl('loginError').innerHTML = ''; return true;
     }
@@ -703,8 +548,7 @@ function loginUser(fullName, phoneNumber) {
     const user = registeredUsers.find(function(u) { return u.name.toLowerCase() === name.toLowerCase() && u.phone === phone; });
     if (user) {
         currentUser = { name:user.name, phone:user.phone, address:user.address || '', city:user.city || '', country:user.country || '', emoji:user.emoji || '👤', avatarDataURL: user.avatarDataURL || null };
-        saveUserToStorage(currentUser);
-        showToast('✅ Welcome ' + currentUser.name + '!', 1800);
+        saveUserToStorage(currentUser); showToast('✅ Welcome ' + currentUser.name + '!', 1800);
         showLoggedInUI(); renderAgentDropdown(currentAgentFilterCountry); populateAgentSelect(currentAgentFilterCountry);
         getEl('loginError').innerHTML = ''; return true;
     }
@@ -713,28 +557,14 @@ function loginUser(fullName, phoneNumber) {
 function loadCustomBusinesses() { try { customBusinesses = JSON.parse(localStorage.getItem('afripay_custom_businesses') || '[]'); } catch (e) { customBusinesses = []; } if (!Array.isArray(customBusinesses)) customBusinesses = []; }
 function saveCustomBusinesses() { try { localStorage.setItem('afripay_custom_businesses', JSON.stringify(customBusinesses)); } catch (e) {} }
 function getAllBusinesses() { return businesses.concat(customBusinesses); }
-function renderBusinessStrip() {
-    const c = getEl('businessIconsContainer'); if (!c) return;
-    c.innerHTML = '';
-    getAllBusinesses().forEach(function(biz) {
-        const div = document.createElement('div'); div.className = 'business-item';
-        div.innerHTML = '<div class="business-icon-img">' + (biz.icon || '🏪') + '</div><div class="business-name">' + escapeHTML(biz.name) + '</div><div class="business-category">' + escapeHTML(biz.type) + '</div>';
-        div.addEventListener('click', function() { lastSelectedBusinessId = biz.id; try { showGoodsModal(biz.id); } catch (e) {} });
-        c.appendChild(div);
-    });
-}
+function renderBusinessStrip() { const c = getEl('businessIconsContainer'); if (!c) return; c.innerHTML = ''; getAllBusinesses().forEach(function(biz) { const div = document.createElement('div'); div.className = 'business-item'; div.innerHTML = '<div class="business-icon-img">' + (biz.icon || '🏪') + '</div><div class="business-name">' + escapeHTML(biz.name) + '</div><div class="business-category">' + escapeHTML(biz.type) + '</div>'; div.addEventListener('click', function() { lastSelectedBusinessId = biz.id; try { showGoodsModal(biz.id); } catch (e) {} }); c.appendChild(div); }); }
 function showGoodsModal(businessId) {
-    const biz = getAllBusinesses().find(function(b) { return b.id === businessId; });
-    if (!biz) return;
+    const biz = getAllBusinesses().find(function(b) { return b.id === businessId; }); if (!biz) return;
     lastSelectedBusinessId = businessId;
     const displayCur = isLocalMode ? getUserCurrency() : currentCountryData.currency;
     let html = '';
-    if (biz.goods && biz.goods.length > 0) {
-        html = biz.goods.map(function(g) {
-            const price = parseFloat(g.price) || 0;
-            return '<div class="goods-item" data-price="' + price + '" data-name="' + escapeHTML(g.name) + '" data-quantity="' + (g.quantity || 1) + '" data-business="' + escapeHTML(biz.name) + '" data-businessphone="' + escapeHTML(biz.mobileMoney || biz.contact || '') + '"><div class="goods-row"><span class="goods-name">📦 ' + escapeHTML(g.name) + '</span><span class="goods-price">' + price.toFixed(2) + ' ' + displayCur + '</span><button class="goods-select-btn">Select</button></div></div>';
-        }).join('');
-    } else html = '<div style="text-align:center;padding:12px;color:#95a5a6;">No items yet.</div>';
+    if (biz.goods && biz.goods.length > 0) html = biz.goods.map(function(g) { const price = parseFloat(g.price) || 0; return '<div class="goods-item" data-price="' + price + '" data-name="' + escapeHTML(g.name) + '" data-quantity="' + (g.quantity || 1) + '" data-business="' + escapeHTML(biz.name) + '" data-businessphone="' + escapeHTML(biz.mobileMoney || biz.contact || '') + '"><div class="goods-row"><span class="goods-name">📦 ' + escapeHTML(g.name) + '</span><span class="goods-price">' + price.toFixed(2) + ' ' + displayCur + '</span><button class="goods-select-btn">Select</button></div></div>'; }).join('');
+    else html = '<div style="text-align:center;padding:12px;color:#95a5a6;">No items yet.</div>';
     getEl('goodsModalTitle').innerHTML = (biz.icon || '🏪') + ' ' + escapeHTML(biz.name);
     getEl('goodsList').innerHTML = html;
     const wl = getEl('businessWebsiteLink'); wl.href = biz.website || '#'; wl.style.display = biz.website ? 'block' : 'none';
@@ -752,8 +582,7 @@ function showGoodsModal(businessId) {
             const aSel = getEl('agentNameSelect'); const aLbl = getEl('agentNameLabel');
             if (aSel) { isBusinessMode = true; aSel.style.display = 'none'; let bd = getEl('bizDisplayField'); if (!bd) { bd = document.createElement('div'); bd.id = 'bizDisplayField'; bd.className = 'biz-display-field'; aSel.parentNode.insertBefore(bd, aSel.nextSibling); } bd.textContent = bName; bd.style.display = 'flex'; if (aLbl) aLbl.textContent = '🏢 Business'; }
             selectedAgentId = null; _selectedAgentId = null;
-            showToast('✅ ' + name, 2000);
-            getEl('goodsModal').style.display = 'none';
+            showToast('✅ ' + name, 2000); getEl('goodsModal').style.display = 'none';
         });
     });
 }
@@ -763,42 +592,16 @@ function copyTransactionIdToClipboard() { const v = getEl('transactionId') && ge
 function ensureTransactionId() { const f = getEl('transactionId'); if (f && !f.value.trim()) f.value = generateTransactionId(); }
 function showInfoModal(title, body) { getEl('modalTitle').innerText = title; getEl('modalBody').innerHTML = body; getEl('infoModal').style.display = 'flex'; }
 
-function openWhatsApp(phone, name) {
-    if (!phone) { showToast('⚠️ No phone number available.', 2200); return; }
-    const clean = String(phone).replace(/\D/g, '');
-    if (!clean) { showToast('⚠️ Invalid phone number.', 2200); return; }
-    const greeting = 'Hello ' + (name || '') + ', I am reaching out from AfriPay regarding a transaction.';
-    window.open('https://wa.me/' + clean + '?text=' + encodeURIComponent(greeting), '_blank');
-}
-function openSMS(phone, name) {
-    if (!phone) { showToast('⚠️ No phone number available.', 2200); return; }
-    const clean = String(phone).replace(/\s+/g, '');
-    if (!clean) { showToast('⚠️ Invalid phone number.', 2200); return; }
-    const body = 'Hello ' + (name || '') + ', I am reaching out from AfriPay regarding a transaction.';
-    const isMobile = /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|Mobile/i.test(navigator.userAgent);
-    const sep = isMobile && /iPhone|iPad|iPod/i.test(navigator.userAgent) ? '&' : '?';
-    window.location.href = 'sms:' + clean + sep + 'body=' + encodeURIComponent(body);
-}
+function openWhatsApp(phone, name) { if (!phone) { showToast('⚠️ No phone number available.', 2200); return; } const clean = String(phone).replace(/\D/g, ''); if (!clean) { showToast('⚠️ Invalid phone number.', 2200); return; } const greeting = 'Hello ' + (name || '') + ', I am reaching out from AfriPay regarding a transaction.'; window.open('https://wa.me/' + clean + '?text=' + encodeURIComponent(greeting), '_blank'); }
+function openSMS(phone, name) { if (!phone) { showToast('⚠️ No phone number available.', 2200); return; } const clean = String(phone).replace(/\s+/g, ''); if (!clean) { showToast('⚠️ Invalid phone number.', 2200); return; } const body = 'Hello ' + (name || '') + ', I am reaching out from AfriPay regarding a transaction.'; const isMobile = /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|Mobile/i.test(navigator.userAgent); const sep = isMobile && /iPhone|iPad|iPod/i.test(navigator.userAgent) ? '&' : '?'; window.location.href = 'sms:' + clean + sep + 'body=' + encodeURIComponent(body); }
 
 function showReceiptModal(data) {
     const body = getEl('receiptBody');
-    const lines = [
-        { key: 'TX ID', value: data.txId }, { key: 'Date', value: data.date },
-        { key: 'Type', value: data.mode }, { key: 'Sender', value: data.sender },
-        { key: 'Agent', value: data.agent }
-    ];
+    const lines = [{ key: 'TX ID', value: data.txId }, { key: 'Date', value: data.date }, { key: 'Type', value: data.mode }, { key: 'Sender', value: data.sender }, { key: 'Agent', value: data.agent }];
     if (data.localAgentName) lines.push({ key: 'Local Agent', value: data.localAgentName + (data.localAgentPhone ? ' (' + data.localAgentPhone + ')' : '') });
     lines.push({ key: 'Provider TX ID', value: data.providerTxId || 'N/A' });
     lines.push({ key: 'Transfer Code', value: data.transferCode || 'N/A' });
-    if (data.orderedProduct) {
-        const op = data.orderedProduct;
-        lines.push({ key: '— Product Order —', value: '' });
-        lines.push({ key: (op.productIcon || '📦') + ' Product', value: op.productName });
-        if (op.businessName) lines.push({ key: '🏢 Business', value: op.businessName });
-        if (op.quality) lines.push({ key: '⭐ Quality', value: op.quality });
-        if (op.quantity) lines.push({ key: '📦 Quantity', value: String(op.quantity) });
-        if (op.delivery) lines.push({ key: '🚚 Delivery', value: op.delivery });
-    }
+    if (data.orderedProduct) { const op = data.orderedProduct; lines.push({ key: '— Product Order —', value: '' }); lines.push({ key: (op.productIcon || '📦') + ' Product', value: op.productName }); if (op.businessName) lines.push({ key: '🏢 Business', value: op.businessName }); if (op.quality) lines.push({ key: '⭐ Quality', value: op.quality }); if (op.quantity) lines.push({ key: '📦 Quantity', value: String(op.quantity) }); if (op.delivery) lines.push({ key: '🚚 Delivery', value: op.delivery }); }
     lines.push({ key: 'Base Amount', value: data.currency + ' ' + data.baseAmount });
     lines.push({ key: '— Fee Breakdown (5%) —', value: '' });
     lines.push({ key: 'Carrear Charges (3%)', value: data.currency + ' ' + (data.carrear || '0.00') });
@@ -823,43 +626,32 @@ function showReceiptModal(data) {
         if (socialHtml) {
             socialEl.innerHTML = '<div style="font-size:.72rem;color:#7f8c8d;font-weight:700;margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px;">📱 Quick Contact</div><div class="receipt-social-row">' + socialHtml + '</div>';
             if (data.localAgentPhone) { const laBtn = getEl('receiptLocalAgentWhatsAppBtn'); if (laBtn) laBtn.addEventListener('click', function() { openWhatsApp(data.localAgentPhone, data.localAgentName); }); }
-            if (data.agentPhoneRaw) {
-                const aWpBtn = getEl('receiptAgentWhatsAppBtn'); if (aWpBtn) aWpBtn.addEventListener('click', function() { openWhatsApp(data.agentPhoneRaw, data.agentName); });
-                const aSmsBtn = getEl('receiptAgentSmsBtn'); if (aSmsBtn) aSmsBtn.addEventListener('click', function() { openSMS(data.agentPhoneRaw, data.agentName); });
-            }
-            if (data.clientPhoneRaw) {
-                const cWpBtn = getEl('receiptClientWhatsAppBtn'); if (cWpBtn) cWpBtn.addEventListener('click', function() { openWhatsApp(data.clientPhoneRaw, data.clientName); });
-                const cSmsBtn = getEl('receiptClientSmsBtn'); if (cSmsBtn) cSmsBtn.addEventListener('click', function() { openSMS(data.clientPhoneRaw, data.clientName); });
-            }
+            if (data.agentPhoneRaw) { const aWpBtn = getEl('receiptAgentWhatsAppBtn'); if (aWpBtn) aWpBtn.addEventListener('click', function() { openWhatsApp(data.agentPhoneRaw, data.agentName); }); const aSmsBtn = getEl('receiptAgentSmsBtn'); if (aSmsBtn) aSmsBtn.addEventListener('click', function() { openSMS(data.agentPhoneRaw, data.agentName); }); }
+            if (data.clientPhoneRaw) { const cWpBtn = getEl('receiptClientWhatsAppBtn'); if (cWpBtn) cWpBtn.addEventListener('click', function() { openWhatsApp(data.clientPhoneRaw, data.clientName); }); const cSmsBtn = getEl('receiptClientSmsBtn'); if (cSmsBtn) cSmsBtn.addEventListener('click', function() { openSMS(data.clientPhoneRaw, data.clientName); }); }
         } else { socialEl.innerHTML = ''; }
     }
     getEl('receiptModal').style.display = 'flex';
 }
-function toggleChat() { const w = getEl('chatWindow'); const open = w.classList.toggle('open'); getEl('chatToggleBtn').style.display = open ? 'none' : 'flex'; }
-function openEmojiPicker() {
-    const grid = getEl('emojiGrid'); if (!grid) return;
-    grid.innerHTML = '';
-    AVAILABLE_EMOJIS.forEach(function(e) { const s = document.createElement('span'); s.className = 'emoji-option'; s.textContent = e; s.addEventListener('click', function() { applyEmoji(e); }); grid.appendChild(s); });
-    getEl('emojiPickerModal').style.display = 'flex';
+function toggleChat() {
+    const w = getEl('chatWindow'); if (!w) return;
+    const open = w.classList.toggle('open');
+    const t = getEl('chatToggleBtn'); if (t) t.style.display = open ? 'none' : 'flex';
 }
+function openEmojiPicker() { const grid = getEl('emojiGrid'); if (!grid) return; grid.innerHTML = ''; AVAILABLE_EMOJIS.forEach(function(e) { const s = document.createElement('span'); s.className = 'emoji-option'; s.textContent = e; s.addEventListener('click', function() { applyEmoji(e); }); grid.appendChild(s); }); getEl('emojiPickerModal').style.display = 'flex'; }
 function applyEmoji(e) { if (currentUser) { currentUser.emoji = e; currentUser.avatarDataURL = null; saveUserToStorage(currentUser); updateAvatarDisplay(currentUser); updateProfileAvatarDisplay(currentUser); } showToast('✅ Avatar: ' + e, 1500); setTimeout(function() { getEl('emojiPickerModal').style.display = 'none'; }, 400); }
 function applyAvatarImage(dataURL) { if (currentUser) { currentUser.avatarDataURL = dataURL; saveUserToStorage(currentUser); updateAvatarDisplay(currentUser); updateProfileAvatarDisplay(currentUser); } showToast('✅ Image updated!', 1800); getEl('emojiPickerModal').style.display = 'none'; }
 function removeAvatarImage() { if (currentUser) { currentUser.avatarDataURL = null; if (!currentUser.emoji) currentUser.emoji = '👤'; saveUserToStorage(currentUser); updateAvatarDisplay(currentUser); updateProfileAvatarDisplay(currentUser); } showToast('🗑️ Image removed', 1500); }
 function renderHeaderFlags() {
-    const grid = getEl('headerFlagGrid'); if (!grid) return;
-    grid.innerHTML = '';
+    const grid = getEl('headerFlagGrid'); if (!grid) return; grid.innerHTML = '';
     SUPPORTED_COUNTRY_FLAGS.forEach(function(f) {
-        const s = document.createElement('span');
-        s.className = 'flag-icon';
-        s.textContent = f;
+        const s = document.createElement('span'); s.className = 'flag-icon'; s.textContent = f;
         s.addEventListener('click', function() {
             let sel = getEl('countryCodeSelect');
             if (!sel) { sel = document.createElement('select'); sel.id = 'countryCodeSelect'; sel.style.display = 'none'; document.body.appendChild(sel); populateCountryCodeSelect(); }
-            if (!sel.options || sel.options.length === 0) { populateCountryCodeSelect(); }
+            if (!sel.options || sel.options.length === 0) populateCountryCodeSelect();
             for (let i = 0; i < sel.options.length; i++) {
                 if (sel.options[i].text.startsWith(f)) {
-                    sel.selectedIndex = i;
-                    const parts = sel.value.split('|');
+                    sel.selectedIndex = i; const parts = sel.value.split('|');
                     currentCountryData = { gstRate: parseFloat(parts[4]) || 10, currency: parts[2] || 'USD', flag: parts[3] || '🌍', countryName: parts[1] || '' };
                     isLocalMode = false;
                     const intlBtn = getEl('intlToggleBtn'); if (intlBtn) intlBtn.classList.add('active');
@@ -868,30 +660,15 @@ function renderHeaderFlags() {
                     if (getEl('currencySymbol')) getEl('currencySymbol').innerText = currentCountryData.currency;
                     if (getEl('flagEmoji')) getEl('flagEmoji').innerText = currentCountryData.flag;
                     computeCharges(); updateAgentDropdownForCountry();
-                    showToast('📍 ' + currentCountryData.countryName, 1500);
-                    break;
+                    showToast('📍 ' + currentCountryData.countryName, 1500); break;
                 }
             }
         });
         grid.appendChild(s);
     });
 }
-function handleCountrySelectChange(selectEl) {
-    const parts = (selectEl.value || '').split('|');
-    if (!parts || !parts[2]) return;
-    currentCountryData = { gstRate: parseFloat(parts[4]) || 10, currency: parts[2], flag: parts[3] || '🌍', countryName: parts[1] || '' };
-    if (getEl('flagEmoji')) getEl('flagEmoji').innerText = currentCountryData.flag;
-    if (getEl('gstRateLabel')) getEl('gstRateLabel').innerText = currentCountryData.gstRate;
-    if (getEl('currencySymbol')) getEl('currencySymbol').innerText = currentCountryData.currency;
-    computeCharges(); updateAgentDropdownForCountry();
-    showToast('📍 ' + currentCountryData.countryName, 1500);
-}
-function updateAgentDropdownForCountry() {
-    const cw = getEl('countryWrapper');
-    if (!cw || cw.style.display === 'none' || isLocalMode) { currentAgentFilterCountry = null; renderAgentDropdown(null); populateAgentSelect(null); return; }
-    const cn = getCountryNameFromSelect(); currentAgentFilterCountry = cn;
-    renderAgentDropdown(cn); populateAgentSelect(cn);
-}
+function handleCountrySelectChange(selectEl) { const parts = (selectEl.value || '').split('|'); if (!parts || !parts[2]) return; currentCountryData = { gstRate: parseFloat(parts[4]) || 10, currency: parts[2], flag: parts[3] || '🌍', countryName: parts[1] || '' }; if (getEl('flagEmoji')) getEl('flagEmoji').innerText = currentCountryData.flag; if (getEl('gstRateLabel')) getEl('gstRateLabel').innerText = currentCountryData.gstRate; if (getEl('currencySymbol')) getEl('currencySymbol').innerText = currentCountryData.currency; computeCharges(); updateAgentDropdownForCountry(); showToast('📍 ' + currentCountryData.countryName, 1500); }
+function updateAgentDropdownForCountry() { const cw = getEl('countryWrapper'); if (!cw || cw.style.display === 'none' || isLocalMode) { currentAgentFilterCountry = null; renderAgentDropdown(null); populateAgentSelect(null); return; } const cn = getCountryNameFromSelect(); currentAgentFilterCountry = cn; renderAgentDropdown(cn); populateAgentSelect(cn); }
 
 function initializePermanentAgents() {
     try {
@@ -904,42 +681,13 @@ function initializePermanentAgents() {
         ];
         seedData.forEach(function(s) {
             const existing = registeredUsers.find(function(u) { return u.businessName === s.biz; });
-            if (existing) {
-                if (existing.approved !== true) existing.approved = true;
-                if (!existing.approvedBy) existing.approvedBy = 'system-seed';
-                if (!existing.approvedAt) existing.approvedAt = new Date().toISOString();
-                if (existing.role !== 'agent') existing.role = 'agent';
-                if (existing.isAgent !== true) existing.isAgent = true;
-            } else {
-                registeredUsers.push({
-                    id: 'agent_' + s.biz.replace(/\W/g, '').toLowerCase(),
-                    name: s.biz, businessName: s.biz, ownerName: s.owner,
-                    businessAddress: s.addr, city: s.city, regNumber: s.reg,
-                    businessType: 'Service', idType: 'Business Registration', idNumber: s.reg,
-                    mobileMoney: s.mobile, countryCode: s.cc, password: s.pw, pin: s.pin,
-                    collateralAmount: s.collat, collateralLimit: s.collat, currency: s.curr,
-                    approved: true, approvedBy: 'system-seed', approvedAt: new Date().toISOString(),
-                    role: 'agent', isAgent: true, registeredAt: new Date().toISOString(),
-                    providerTxId: s.pTx, transferCode: s.tCode, nin: s.nin
-                });
-            }
+            if (existing) { if (existing.approved !== true) existing.approved = true; if (!existing.approvedBy) existing.approvedBy = 'system-seed'; if (!existing.approvedAt) existing.approvedAt = new Date().toISOString(); if (existing.role !== 'agent') existing.role = 'agent'; if (existing.isAgent !== true) existing.isAgent = true; }
+            else registeredUsers.push({ id: 'agent_' + s.biz.replace(/\W/g, '').toLowerCase(), name: s.biz, businessName: s.biz, ownerName: s.owner, businessAddress: s.addr, city: s.city, regNumber: s.reg, businessType: 'Service', idType: 'Business Registration', idNumber: s.reg, mobileMoney: s.mobile, countryCode: s.cc, password: s.pw, pin: s.pin, collateralAmount: s.collat, collateralLimit: s.collat, currency: s.curr, approved: true, approvedBy: 'system-seed', approvedAt: new Date().toISOString(), role: 'agent', isAgent: true, registeredAt: new Date().toISOString(), providerTxId: s.pTx, transferCode: s.tCode, nin: s.nin });
         });
         saveRegisteredUsers();
     } catch (e) { console.error('seed agents error:', e); }
 }
-function promptAgentCredentials(agentId) {
-    const agent = getAgents().find(function(a) { return a.id === agentId; });
-    if (!agent) { showToast('⚠️ Agent not found.', 2200); return; }
-    const data = agent.agentData || agent;
-    pendingAgentAuthId = agentId;
-    if (getEl('agentAuthFlag')) getEl('agentAuthFlag').textContent = getAgentFlag(agent);
-    if (getEl('agentAuthName')) getEl('agentAuthName').textContent = (data.businessName || data.name || 'Agent').replace(/\(.*\)/, '').trim();
-    if (getEl('agentAuthInitials')) getEl('agentAuthInitials').textContent = getAgentInitials(agent);
-    if (getEl('agentAuthPassword')) getEl('agentAuthPassword').value = '';
-    if (getEl('agentAuthPin')) getEl('agentAuthPin').value = '';
-    if (getEl('agentAuthError')) getEl('agentAuthError').textContent = '';
-    getEl('agentAuthModal').style.display = 'flex';
-}
+function promptAgentCredentials(agentId) { const agent = getAgents().find(function(a) { return a.id === agentId; }); if (!agent) { showToast('⚠️ Agent not found.', 2200); return; } const data = agent.agentData || agent; pendingAgentAuthId = agentId; if (getEl('agentAuthFlag')) getEl('agentAuthFlag').textContent = getAgentFlag(agent); if (getEl('agentAuthName')) getEl('agentAuthName').textContent = (data.businessName || data.name || 'Agent').replace(/\(.*\)/, '').trim(); if (getEl('agentAuthInitials')) getEl('agentAuthInitials').textContent = getAgentInitials(agent); if (getEl('agentAuthPassword')) getEl('agentAuthPassword').value = ''; if (getEl('agentAuthPin')) getEl('agentAuthPin').value = ''; if (getEl('agentAuthError')) getEl('agentAuthError').textContent = ''; getEl('agentAuthModal').style.display = 'flex'; }
 function confirmAgentAuth() {
     const err = getEl('agentAuthError');
     const pw = (getEl('agentAuthPassword') && getEl('agentAuthPassword').value.trim()) || '';
@@ -953,8 +701,7 @@ function confirmAgentAuth() {
     const data = agent.agentData || agent;
     if (pw !== (data.password || '') || pin !== (data.pin || '')) { err.textContent = '❌ Incorrect credentials.'; return; }
     const id = pendingAgentAuthId; pendingAgentAuthId = null;
-    getEl('agentAuthModal').style.display = 'none';
-    showToast('✅ Authenticated!', 1400);
+    getEl('agentAuthModal').style.display = 'none'; showToast('✅ Authenticated!', 1400);
     setTimeout(function() { openAgentDashboard(id); }, 250);
 }
 
@@ -976,10 +723,8 @@ function saveDashClients() { try { localStorage.setItem('afripay_agent_clients',
 function getDashAgent() { if (!dashCurrentAgentId) return null; const a = getAgents().find(function(x) { return x.id === dashCurrentAgentId; }); return a ? (a.agentData || a) : null; }
 function getDashArea() { const d = getDashAgent(); if (!d) return ''; return COUNTRY_CODE_TO_NAME[d.countryCode] || d.city || ''; }
 function openAgentDashboard(agentId) {
-    const agent = getAgents().find(function(a) { return a.id === agentId; });
-    if (!agent) { showToast('Agent not found', 2000); return; }
-    dashCurrentAgentId = agentId;
-    const data = agent.agentData || agent;
+    const agent = getAgents().find(function(a) { return a.id === agentId; }); if (!agent) { showToast('Agent not found', 2000); return; }
+    dashCurrentAgentId = agentId; const data = agent.agentData || agent;
     try { populateCapitalCityDropdown('editCitySelect'); } catch(e) {}
     try { populateCollateralDropdowns(); } catch(e) {}
     try { populateCountryDropdown('dcCountry'); } catch(e) {}
@@ -988,65 +733,20 @@ function openAgentDashboard(agentId) {
     setV('editAgentId', agentId); setV('editBusinessName', data.businessName || ''); setV('editAddress', data.businessAddress || '');
     setCityValue('editCitySelect', 'editCityOther', data.city || '');
     setV('editMobileMoney', data.mobileMoney || agent.phone || ''); setV('editPassword', ''); setV('editPin', '');
-    const logoPreview = getEl('editAgentLogoPreview');
-    const logoRemove = getEl('editAgentRemoveLogoBtn');
-    if (logoPreview) {
-        if (data.avatarDataURL) { logoPreview.src = data.avatarDataURL; logoPreview.style.display = 'block'; if (logoRemove) logoRemove.style.display = 'inline-flex'; }
-        else { logoPreview.src = ''; logoPreview.style.display = 'none'; if (logoRemove) logoRemove.style.display = 'none'; }
-    }
+    const logoPreview = getEl('editAgentLogoPreview'); const logoRemove = getEl('editAgentRemoveLogoBtn');
+    if (logoPreview) { if (data.avatarDataURL) { logoPreview.src = data.avatarDataURL; logoPreview.style.display = 'block'; if (logoRemove) logoRemove.style.display = 'inline-flex'; } else { logoPreview.src = ''; logoPreview.style.display = 'none'; if (logoRemove) logoRemove.style.display = 'none'; } }
     if (getEl('agentDashTitle')) getEl('agentDashTitle').innerHTML = '🏢 ' + escapeHTML((data.businessName || 'Agent').replace(/\(.*\)/, '').trim());
     if (getEl('agentDashSubtitle')) getEl('agentDashSubtitle').innerHTML = getAgentFlag(agent) + ' ' + escapeHTML(getDashArea() || '—');
-    switchDashTab('profile');
-    getEl('editAgentModal').style.display = 'flex';
+    switchDashTab('profile'); getEl('editAgentModal').style.display = 'flex';
 }
-function switchDashTab(tab) {
-    dashTab = tab;
-    document.querySelectorAll('#editAgentModal .dash-tab').forEach(function(b) { b.classList.toggle('active', b.getAttribute('data-dash-tab') === tab); });
-    document.querySelectorAll('#editAgentModal .dash-pane').forEach(function(p) { p.classList.toggle('active', p.id === 'dash-pane-' + tab); });
-    refreshDashPanes();
-}
-function refreshDashPanes() {
-    const area = getDashArea(); const pend = PendingStore.pendingFor(area);
-    const badge = getEl('dashPendingBadge');
-    if (badge) { badge.textContent = pend.length; badge.style.display = pend.length ? 'inline-block' : 'none'; }
-    renderDashAgentsList(); renderDashClientsList(); renderDashBizList(); renderDashPendingList();
-}
-function renderDashAgentsList() {
-    const c = getEl('dashAgentsList'); if (!c) return;
-    const area = getDashArea(); let agents = getAgents();
-    if (area) agents = agents.filter(function(a) { return (getAgentCountryName(a) || '').toLowerCase() === area.toLowerCase(); });
-    if (!agents.length) { c.innerHTML = '<div class="dash-empty">No agents in this area yet.</div>'; return; }
-    c.innerHTML = agents.map(function(a) {
-        const d = a.agentData || a;
-        const name = escapeHTML((d.businessName || a.name || '').replace(/\(.*\)/, '').trim());
-        return '<div class="dash-list-item"><div class="dli-head"><span>' + getAgentFlag(a) + ' ' + name + '</span></div><div class="dli-meta"><span>📱 ' + escapeHTML(d.mobileMoney || '—') + '</span><span>💳 ' + (d.collateralLimit || 0) + '</span></div></div>';
-    }).join('');
-}
-function renderDashClientsList() {
-    const c = getEl('dashClientsList'); if (!c) return;
-    const mine = dashClients.filter(function(x) { return x.agentId === dashCurrentAgentId; });
-    if (!mine.length) { c.innerHTML = '<div class="dash-empty">No clients added yet.</div>'; return; }
-    c.innerHTML = mine.map(function(cl) { return '<div class="dash-list-item"><div class="dli-head"><span>👤 ' + escapeHTML(cl.name) + '</span></div><div class="dli-meta"><span>📱 ' + escapeHTML(cl.phone) + '</span></div></div>'; }).join('');
-}
-function renderDashBizList() {
-    const c = getEl('dashBizList'); if (!c) return;
-    const area = getDashArea(); let all = getAllBusinesses();
-    if (area) all = all.filter(function(b) { return !b.country || String(b.country).toLowerCase() === area.toLowerCase(); });
-    if (!all.length) { c.innerHTML = '<div class="dash-empty">No businesses yet.</div>'; return; }
-    c.innerHTML = all.map(function(b) { return '<div class="dash-list-item"><div class="dli-head"><span>' + (b.icon || '🏪') + ' ' + escapeHTML(b.name) + '</span></div></div>'; }).join('');
-}
-function renderDashPendingList() {
-    const c = getEl('dashPendingList'); if (!c) return;
-    const area = getDashArea(); const pend = PendingStore.pendingFor(area);
-    if (!pend.length) { c.innerHTML = '<div class="dash-empty">No pending approvals.</div>'; return; }
-    c.innerHTML = pend.map(function(it) {
-        const d = it.data || {};
-        return '<div class="dash-list-item"><div class="dli-head"><span>' + escapeHTML(d.businessName || d.name || 'Item') + '</span></div><div class="dash-actions"><button type="button" class="mini-btn approve" data-dash-approve="' + it.id + '">✅ Approve</button><button type="button" class="mini-btn reject" data-dash-reject="' + it.id + '">❌ Reject</button></div></div>';
-    }).join('');
-}
+function switchDashTab(tab) { dashTab = tab; document.querySelectorAll('#editAgentModal .dash-tab').forEach(function(b) { b.classList.toggle('active', b.getAttribute('data-dash-tab') === tab); }); document.querySelectorAll('#editAgentModal .dash-pane').forEach(function(p) { p.classList.toggle('active', p.id === 'dash-pane-' + tab); }); refreshDashPanes(); }
+function refreshDashPanes() { const area = getDashArea(); const pend = PendingStore.pendingFor(area); const badge = getEl('dashPendingBadge'); if (badge) { badge.textContent = pend.length; badge.style.display = pend.length ? 'inline-block' : 'none'; } renderDashAgentsList(); renderDashClientsList(); renderDashBizList(); renderDashPendingList(); }
+function renderDashAgentsList() { const c = getEl('dashAgentsList'); if (!c) return; const area = getDashArea(); let agents = getAgents(); if (area) agents = agents.filter(function(a) { return (getAgentCountryName(a) || '').toLowerCase() === area.toLowerCase(); }); if (!agents.length) { c.innerHTML = '<div class="dash-empty">No agents in this area yet.</div>'; return; } c.innerHTML = agents.map(function(a) { const d = a.agentData || a; const name = escapeHTML((d.businessName || a.name || '').replace(/\(.*\)/, '').trim()); return '<div class="dash-list-item"><div class="dli-head"><span>' + getAgentFlag(a) + ' ' + name + '</span></div><div class="dli-meta"><span>📱 ' + escapeHTML(d.mobileMoney || '—') + '</span><span>💳 ' + (d.collateralLimit || 0) + '</span></div></div>'; }).join(''); }
+function renderDashClientsList() { const c = getEl('dashClientsList'); if (!c) return; const mine = dashClients.filter(function(x) { return x.agentId === dashCurrentAgentId; }); if (!mine.length) { c.innerHTML = '<div class="dash-empty">No clients added yet.</div>'; return; } c.innerHTML = mine.map(function(cl) { return '<div class="dash-list-item"><div class="dli-head"><span>👤 ' + escapeHTML(cl.name) + '</span></div><div class="dli-meta"><span>📱 ' + escapeHTML(cl.phone) + '</span></div></div>'; }).join(''); }
+function renderDashBizList() { const c = getEl('dashBizList'); if (!c) return; const area = getDashArea(); let all = getAllBusinesses(); if (area) all = all.filter(function(b) { return !b.country || String(b.country).toLowerCase() === area.toLowerCase(); }); if (!all.length) { c.innerHTML = '<div class="dash-empty">No businesses yet.</div>'; return; } c.innerHTML = all.map(function(b) { return '<div class="dash-list-item"><div class="dli-head"><span>' + (b.icon || '🏪') + ' ' + escapeHTML(b.name) + '</span></div></div>'; }).join(''); }
+function renderDashPendingList() { const c = getEl('dashPendingList'); if (!c) return; const area = getDashArea(); const pend = PendingStore.pendingFor(area); if (!pend.length) { c.innerHTML = '<div class="dash-empty">No pending approvals.</div>'; return; } c.innerHTML = pend.map(function(it) { const d = it.data || {}; return '<div class="dash-list-item"><div class="dli-head"><span>' + escapeHTML(d.businessName || d.name || 'Item') + '</span></div><div class="dash-actions"><button type="button" class="mini-btn approve" data-dash-approve="' + it.id + '">✅ Approve</button><button type="button" class="mini-btn reject" data-dash-reject="' + it.id + '">❌ Reject</button></div></div>'; }).join(''); }
 function approvePendingItem(id) {
-    const it = PendingStore.get(id);
-    if (!it || it.status !== 'pending') return;
+    const it = PendingStore.get(id); if (!it || it.status !== 'pending') return;
     if (it.type === 'agent') {
         const d = it.data;
         const rec = Object.assign({}, d, { id: d.id || ('agent_' + Date.now()), name: d.businessName, businessName: d.businessName, approved: true, approvedBy: dashCurrentAgentId || 'admin', approvedAt: new Date().toISOString(), role: 'agent', isAgent: true });
@@ -1054,7 +754,8 @@ function approvePendingItem(id) {
         if (ex) Object.assign(ex, rec); else registeredUsers.push(rec);
         saveRegisteredUsers();
         supaBackground(Supa.saveAgent(rec), 'Approved agent');
-        renderAgentDropdown(currentAgentFilterCountry); populateAgentSelect(currentAgentFilterCountry);
+        try { renderAgentDropdown(currentAgentFilterCountry); } catch (e) {}
+        try { populateAgentSelect(currentAgentFilterCountry); } catch (e) {}
     } else if (it.type === 'business') {
         const d = it.data;
         const bizObj = { id: d.id || ('biz_' + Date.now()), name: d.name, contact: d.contact || '', mobileMoney: d.mobileMoney || '', type: d.type || 'Other', icon: d.icon || '🏪', city: d.city || '', country: d.country || '', goods: d.goods || [] };
@@ -1065,34 +766,15 @@ function approvePendingItem(id) {
     }
     PendingStore.setStatus(id, 'approved', dashCurrentAgentId);
     refreshDashPanes(); showToast('✅ Approved', 2400);
+    try { renderAgentDropdown(currentAgentFilterCountry); } catch (e) {}
+    try { populateAgentSelect(currentAgentFilterCountry); } catch (e) {}
+    try { updateAgentDropdownPlaceholder(); } catch (e) {}
+    setTimeout(function () { supaRefreshAgents(); }, 400);
 }
 function rejectPendingItem(id) { PendingStore.setStatus(id, 'rejected', dashCurrentAgentId); refreshDashPanes(); showToast('❌ Rejected', 1800); }
-function submitDashClient() {
-    const name = (getEl('dcName').value || '').trim(); const phone = (getEl('dcPhone').value || '').trim();
-    const msg = getEl('dcMsg'); msg.style.color = '#c0392b';
-    if (!name || !phone) { msg.textContent = '❌ Name and phone required.'; return; }
-    const newClient = { id: 'cl_' + Date.now(), agentId: dashCurrentAgentId, name: name, phone: phone, city: getEl('dcCity').value, country: getEl('dcCountry').value };
-    dashClients.push(newClient); saveDashClients(); supaBackground(Supa.saveAgentClient(newClient), 'Client');
-    msg.style.color = '#27ae60'; msg.textContent = '✅ Client saved.'; refreshDashPanes();
-}
-function submitDashBusiness() {
-    const name = (getEl('dbName').value || '').trim(); const contact = (getEl('dbContact').value || '').trim();
-    const msg = getEl('dbMsg'); msg.style.color = '#c0392b';
-    if (!name || !contact) { msg.textContent = '❌ Fill fields.'; return; }
-    PendingStore.add({ type: 'business', country: getEl('dbCountry').value, submittedBy: getDashAgent() && getDashAgent().businessName, data: { name: name, contact: contact, mobileMoney: getEl('dbMobileMoney').value, type: getEl('dbType').value, icon: getEl('dbIcon').value, city: getEl('dbCity').value, country: getEl('dbCountry').value } });
-    msg.style.color = '#27ae60'; msg.textContent = '✅ Submitted.'; refreshDashPanes();
-}
-function submitDashProduct() {
-    const biz = getEl('dpBusiness').value; const name = (getEl('dpName').value || '').trim(); const price = parseFloat(getEl('dpPrice').value) || 0;
-    const msg = getEl('dpMsg'); msg.style.color = '#c0392b';
-    if (!biz || !name || price <= 0) { msg.textContent = '❌ Fill fields.'; return; }
-    PendingStore.add({ type: getEl('dpKind').value, country: getDashArea(), submittedBy: getDashAgent() && getDashAgent().businessName, data: { businessName: biz, name: name, price: price, quantity: parseInt(getEl('dpQty').value) || 1, icon: getEl('dpIcon').value, image: dpImageDataURL || null, kind: getEl('dpKind').value, quality: getEl('dpQuality').value } });
-    msg.style.color = '#27ae60'; msg.textContent = '✅ Submitted.'; refreshDashPanes();
-    dpImageDataURL = null;
-    const pv = getEl('dpImagePreview'); if (pv) { pv.src = ''; pv.style.display = 'none'; }
-    const cb = getEl('dpImageClearBtn'); if (cb) cb.style.display = 'none';
-    const fi = getEl('dpImageUpload'); if (fi) fi.value = '';
-}
+function submitDashClient() { const name = (getEl('dcName').value || '').trim(); const phone = (getEl('dcPhone').value || '').trim(); const msg = getEl('dcMsg'); msg.style.color = '#c0392b'; if (!name || !phone) { msg.textContent = '❌ Name and phone required.'; return; } const newClient = { id: 'cl_' + Date.now(), agentId: dashCurrentAgentId, name: name, phone: phone, city: getEl('dcCity').value, country: getEl('dcCountry').value }; dashClients.push(newClient); saveDashClients(); supaBackground(Supa.saveAgentClient(newClient), 'Client'); msg.style.color = '#27ae60'; msg.textContent = '✅ Client saved.'; refreshDashPanes(); }
+function submitDashBusiness() { const name = (getEl('dbName').value || '').trim(); const contact = (getEl('dbContact').value || '').trim(); const msg = getEl('dbMsg'); msg.style.color = '#c0392b'; if (!name || !contact) { msg.textContent = '❌ Fill fields.'; return; } PendingStore.add({ type: 'business', country: getEl('dbCountry').value, submittedBy: getDashAgent() && getDashAgent().businessName, data: { name: name, contact: contact, mobileMoney: getEl('dbMobileMoney').value, type: getEl('dbType').value, icon: getEl('dbIcon').value, city: getEl('dbCity').value, country: getEl('dbCountry').value } }); msg.style.color = '#27ae60'; msg.textContent = '✅ Submitted.'; refreshDashPanes(); }
+function submitDashProduct() { const biz = getEl('dpBusiness').value; const name = (getEl('dpName').value || '').trim(); const price = parseFloat(getEl('dpPrice').value) || 0; const msg = getEl('dpMsg'); msg.style.color = '#c0392b'; if (!biz || !name || price <= 0) { msg.textContent = '❌ Fill fields.'; return; } PendingStore.add({ type: getEl('dpKind').value, country: getDashArea(), submittedBy: getDashAgent() && getDashAgent().businessName, data: { businessName: biz, name: name, price: price, quantity: parseInt(getEl('dpQty').value) || 1, icon: getEl('dpIcon').value, image: dpImageDataURL || null, kind: getEl('dpKind').value, quality: getEl('dpQuality').value } }); msg.style.color = '#27ae60'; msg.textContent = '✅ Submitted.'; refreshDashPanes(); dpImageDataURL = null; const pv = getEl('dpImagePreview'); if (pv) { pv.src = ''; pv.style.display = 'none'; } const cb = getEl('dpImageClearBtn'); if (cb) cb.style.display = 'none'; const fi = getEl('dpImageUpload'); if (fi) fi.value = ''; }
 function setupAgentDashboardEvents() {
     const modal = getEl('editAgentModal');
     if (modal) {
@@ -1136,33 +818,15 @@ function setupAgentDashboardEvents() {
         }).catch(function() { showToast('⚠️ Could not process image.', 2200); });
         this.value = '';
     });
-    bind('editAgentRemoveLogoBtn', 'click', function(e) {
-        e.preventDefault();
-        const aid = getEl('editAgentId').value;
-        const agent = getAgents().find(function(a) { return a.id === aid; });
-        if (agent) { const data = agent.agentData || agent; delete data.avatarDataURL; saveRegisteredUsers(); supaBackground(Supa.saveAgent(data), 'Agent logo removed'); }
-        const pv = getEl('editAgentLogoPreview'); if (pv) { pv.src = ''; pv.style.display = 'none'; }
-        this.style.display = 'none';
-        showToast('🗑️ Logo removed', 1500);
-    });
+    bind('editAgentRemoveLogoBtn', 'click', function(e) { e.preventDefault(); const aid = getEl('editAgentId').value; const agent = getAgents().find(function(a) { return a.id === aid; }); if (agent) { const data = agent.agentData || agent; delete data.avatarDataURL; saveRegisteredUsers(); supaBackground(Supa.saveAgent(data), 'Agent logo removed'); } const pv = getEl('editAgentLogoPreview'); if (pv) { pv.src = ''; pv.style.display = 'none'; } this.style.display = 'none'; showToast('🗑️ Logo removed', 1500); });
     bind('dpImagePickBtn', 'click', function(e) { e.preventDefault(); const fi = getEl('dpImageUpload'); if (fi) fi.click(); });
     bind('dpImageUpload', 'change', function() {
         const f = this.files && this.files[0]; if (!f) return;
-        resizeImageFile(f, 200, 0.82).then(function(dataUrl) {
-            dpImageDataURL = dataUrl;
-            const pv = getEl('dpImagePreview'); if (pv) { pv.src = dataUrl; pv.style.display = 'block'; }
-            const cb = getEl('dpImageClearBtn'); if (cb) cb.style.display = 'inline-flex';
-            showToast('✅ Image ready', 1200);
-        }).catch(function() { showToast('⚠️ Could not process image.', 2200); });
+        resizeImageFile(f, 200, 0.82).then(function(dataUrl) { dpImageDataURL = dataUrl; const pv = getEl('dpImagePreview'); if (pv) { pv.src = dataUrl; pv.style.display = 'block'; } const cb = getEl('dpImageClearBtn'); if (cb) cb.style.display = 'inline-flex'; showToast('✅ Image ready', 1200); }).catch(function() { showToast('⚠️ Could not process image.', 2200); });
         this.value = '';
     });
-    bind('dpImageClearBtn', 'click', function(e) {
-        e.preventDefault();
-        dpImageDataURL = null;
-        const pv = getEl('dpImagePreview'); if (pv) { pv.src = ''; pv.style.display = 'none'; }
-        this.style.display = 'none';
-        const fi = getEl('dpImageUpload'); if (fi) fi.value = '';
-    });
+    bind('dpImageClearBtn', 'click', function(e) { e.preventDefault(); dpImageDataURL = null; const pv = getEl('dpImagePreview'); if (pv) { pv.src = ''; pv.style.display = 'none'; } this.style.display = 'none'; const fi = getEl('dpImageUpload'); if (fi) fi.value = ''; });
+    bind('refreshAgentsBtn', 'click', async function(e) { e.preventDefault(); showToast('🔄 Refreshing agents…', 1200); await supaRefreshAgents(); showToast('✅ Agents refreshed', 1400); });
 }
 
 const PREFIX_144_2D = ['76','78','79','75','74','73'];
@@ -1184,169 +848,75 @@ function openMbFourAgentPicker() {
     const allAgents = getAdminApprovedAgents();
     if (!allAgents.length) { showToast('⚠️ No admin-approved agents available yet.', 2800); return; }
     const senderCountry = getSenderCountry();
-    let agents = allAgents;
-    let filteredByCountry = false;
-    if (senderCountry) {
-        const filtered = allAgents.filter(function(a) { const cn = getAgentCountryName(a); return cn && cn.toLowerCase() === senderCountry.toLowerCase(); });
-        if (filtered.length > 0) { agents = filtered; filteredByCountry = true; }
-    }
-    const modal = getEl('mbFourAgentPicker');
-    const list = getEl('mbFourAgentList');
-    const hint = getEl('mbFourPickerHint');
+    let agents = allAgents; let filteredByCountry = false;
+    if (senderCountry) { const filtered = allAgents.filter(function(a) { const cn = getAgentCountryName(a); return cn && cn.toLowerCase() === senderCountry.toLowerCase(); }); if (filtered.length > 0) { agents = filtered; filteredByCountry = true; } }
+    const modal = getEl('mbFourAgentPicker'); const list = getEl('mbFourAgentList'); const hint = getEl('mbFourPickerHint');
     if (!modal || !list) return;
-    if (hint) hint.innerHTML = filteredByCountry ? 'Showing <strong>admin-approved</strong> agents in <strong>' + escapeHTML(senderCountry) + '</strong>.' : 'Showing <strong>all admin-approved</strong> agents (none found in your country).';
+    if (hint) hint.innerHTML = filteredByCountry ? 'Showing <strong>admin-approved</strong> agents in <strong>' + escapeHTML(senderCountry) + '</strong>.' : 'Showing <strong>all admin-approved</strong> agents.';
     if (agents.length === 1) { modal.style.display = 'none'; selectMbFourAgent(agents[0].id); return; }
     const byCountry = {};
     agents.forEach(function(a) { const c = getAgentCountryName(a) || 'Other'; if (!byCountry[c]) byCountry[c] = []; byCountry[c].push(a); });
     list.innerHTML = Object.keys(byCountry).sort().map(function(country) {
-        const code = COUNTRY_NAME_TO_CODE[country];
-        const flag = (code && COUNTRY_CODE_TO_FLAG[code]) || '🌍';
+        const code = COUNTRY_NAME_TO_CODE[country]; const flag = (code && COUNTRY_CODE_TO_FLAG[code]) || '🌍';
         const header = '<div style="font-weight:800;color:#1c6e8f;font-size:.78rem;margin:8px 0 4px;border-left:3px solid #f4a261;padding-left:7px;">' + flag + ' ' + escapeHTML(country) + '</div>';
         const rows = byCountry[country].sort(function(a, b) { const an = (a.agentData && a.agentData.businessName) || a.name; const bn = (b.agentData && b.agentData.businessName) || b.name; return an.localeCompare(bn); }).map(function(a) {
-            const d = a.agentData || a;
-            const name = (d.businessName || a.name || '').replace(/\(.*\)/, '').trim();
-            const phone = d.mobileMoney || d.phone || a.phone || '—';
-            const route = getUssdTemplateForPhone(phone);
-            return '<button type="button" class="broadcast-option" data-mbfour-agent="' + escapeHTML(a.id) + '" style="width:100%;text-align:left;">' +
-                '<span class="bo-icon">' + (d.emoji || '🏢') + '</span>' +
-                '<span class="bo-text">' +
-                    '<span class="bo-title">' + escapeHTML(name) + ' <span style="color:#27ae60;font-size:.62rem;font-weight:700;">✅ Admin-verified</span></span>' +
-                    '<span class="bo-sub">📱 ' + escapeHTML(phone) + ' · 🔀 ' + route.label + '</span>' +
-                '</span>' +
-                '<span style="color:#2c7da0;font-size:1.2rem;">›</span>' +
-            '</button>';
+            const d = a.agentData || a; const name = (d.businessName || a.name || '').replace(/\(.*\)/, '').trim();
+            const phone = d.mobileMoney || d.phone || a.phone || '—'; const route = getUssdTemplateForPhone(phone);
+            return '<button type="button" class="broadcast-option" data-mbfour-agent="' + escapeHTML(a.id) + '" style="width:100%;text-align:left;"><span class="bo-icon">' + (d.emoji || '🏢') + '</span><span class="bo-text"><span class="bo-title">' + escapeHTML(name) + ' <span style="color:#27ae60;font-size:.62rem;font-weight:700;">✅ Admin-verified</span></span><span class="bo-sub">📱 ' + escapeHTML(phone) + ' · 🔀 ' + route.label + '</span></span><span style="color:#2c7da0;font-size:1.2rem;">›</span></button>';
         }).join('');
         return header + rows;
     }).join('');
-    list.querySelectorAll('[data-mbfour-agent]').forEach(function(btn) {
-        btn.addEventListener('click', function() { const id = btn.getAttribute('data-mbfour-agent'); modal.style.display = 'none'; selectMbFourAgent(id); });
-    });
+    list.querySelectorAll('[data-mbfour-agent]').forEach(function(btn) { btn.addEventListener('click', function() { const id = btn.getAttribute('data-mbfour-agent'); modal.style.display = 'none'; selectMbFourAgent(id); }); });
     modal.style.display = 'flex';
 }
-
 function selectMbFourAgent(agentId) {
-    const agent = getAgents().find(function(a) { return a.id === agentId; });
-    if (!agent) { showToast('⚠️ Agent not found.', 2200); return; }
+    const agent = getAgents().find(function(a) { return a.id === agentId; }); if (!agent) { showToast('⚠️ Agent not found.', 2200); return; }
     const d = agent.agentData || agent;
     const phoneRaw = String(d.mobileMoney || d.phone || agent.phone || '').replace(/\D/g, '');
     if (phoneRaw.length < 6) { showToast('⚠️ Agent has no valid phone number.', 2600); return; }
-    mbFourSelectedAgentId = agentId;
-    mbFourSelectedAgentPhone = phoneRaw;
+    mbFourSelectedAgentId = agentId; mbFourSelectedAgentPhone = phoneRaw;
     const displayName = (d.businessName || agent.name || 'Agent').replace(/\(.*\)/, '').trim();
     const detailsEl = getEl('localAgentDetails');
-    if (detailsEl) {
-        if (getEl('localAgentName')) getEl('localAgentName').textContent = displayName;
-        if (getEl('localAgentPhone')) getEl('localAgentPhone').textContent = (d.countryCode || '') + ' ' + phoneRaw;
-        detailsEl.classList.add('show');
-    }
+    if (detailsEl) { if (getEl('localAgentName')) getEl('localAgentName').textContent = displayName; if (getEl('localAgentPhone')) getEl('localAgentPhone').textContent = (d.countryCode || '') + ' ' + phoneRaw; detailsEl.classList.add('show'); }
     const amountRaw = parseFloat(getEl('amountInput') && getEl('amountInput').value) || 0;
     const amt = Math.round(amountRaw);
     const route = getUssdTemplateForPhone(phoneRaw);
     const ussd = route.template.replace('{AGENT}', phoneRaw).replace('{AMOUNT}', String(amt > 0 ? amt : 0));
     showMbFourUssdModal({ agentName: displayName, agentPhone: phoneRaw, agentCountryCode: d.countryCode || '', amount: amt, routeLabel: route.label, ussd: ussd });
 }
-
 function showMbFourUssdModal(data) {
     const existing = document.getElementById('mbFourUssdDisplayModal'); if (existing) existing.remove();
-    const modal = document.createElement('div');
-    modal.id = 'mbFourUssdDisplayModal'; modal.className = 'modal'; modal.style.display = 'flex';
-    const eN = escapeHTML(data.agentName);
-    const eP = escapeHTML(data.agentPhone);
-    const eCC = escapeHTML(data.agentCountryCode || '');
-    const eA = escapeHTML(String(data.amount));
-    const eR = escapeHTML(data.routeLabel);
-    const eU = escapeHTML(data.ussd);
-    modal.innerHTML =
-        '<div class="modal-content" style="max-width:460px;">' +
-            '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">' +
-                '<h3 style="margin:0;color:#0f2b3d;">📞 ' + eR + '</h3>' +
-                '<button type="button" class="action-btn close-mbusssd" style="width:32px;height:32px;padding:0;border-radius:50%;background:#ccc;color:#222;font-size:1rem;">✕</button>' +
-            '</div>' +
-            '<div class="ussd-modal-details">' +
-                '<div class="ussd-modal-row"><span class="ussd-modal-label">🏢 Local Agent</span><span class="ussd-modal-value">' + eN + '</span></div>' +
-                '<div class="ussd-modal-row"><span class="ussd-modal-label">📱 Phone</span><span class="ussd-modal-value">' + eCC + ' ' + eP + '</span></div>' +
-                '<div class="ussd-modal-row"><span class="ussd-modal-label">💵 Amount</span><span class="ussd-modal-value">' + eA + '</span></div>' +
-            '</div>' +
-            '<div style="font-weight:700;color:#1c6e8f;font-size:.82rem;margin-bottom:4px;">🔐 USSD Code to Dial:</div>' +
-            '<div id="mbUssdCodeBox" class="ussd-code-box">' + eU + '</div>' +
-            '<div class="ussd-hint">💡 <strong>How to complete:</strong><br>• Tap <strong>Dial USSD</strong> to open your phone dialer with the code pre-filled<br>• When prompted for PIN, enter your <strong>4-digit PIN</strong> in place of <code>0000</code></div>' +
-            '<div class="action-buttons-row" style="gap:6px;">' +
-                '<button type="button" class="action-btn dial" id="mbUssdDialBtn" style="flex:1;">📞 Dial USSD</button>' +
-                '<button type="button" class="action-btn green" id="mbUssdCopyBtn" style="flex:1;">📋 Copy</button>' +
-            '</div>' +
-            '<button type="button" class="action-btn close-mbusssd" style="background:#95a5a6;width:100%;margin-top:6px;">Close</button>' +
-        '</div>';
+    const modal = document.createElement('div'); modal.id = 'mbFourUssdDisplayModal'; modal.className = 'modal'; modal.style.display = 'flex';
+    const eN = escapeHTML(data.agentName); const eP = escapeHTML(data.agentPhone); const eCC = escapeHTML(data.agentCountryCode || ''); const eA = escapeHTML(String(data.amount)); const eR = escapeHTML(data.routeLabel); const eU = escapeHTML(data.ussd);
+    modal.innerHTML = '<div class="modal-content" style="max-width:460px;"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;"><h3 style="margin:0;color:#0f2b3d;">📞 ' + eR + '</h3><button type="button" class="action-btn close-mbusssd" style="width:32px;height:32px;padding:0;border-radius:50%;background:#ccc;color:#222;font-size:1rem;">✕</button></div><div class="ussd-modal-details"><div class="ussd-modal-row"><span class="ussd-modal-label">🏢 Local Agent</span><span class="ussd-modal-value">' + eN + '</span></div><div class="ussd-modal-row"><span class="ussd-modal-label">📱 Phone</span><span class="ussd-modal-value">' + eCC + ' ' + eP + '</span></div><div class="ussd-modal-row"><span class="ussd-modal-label">💵 Amount</span><span class="ussd-modal-value">' + eA + '</span></div></div><div style="font-weight:700;color:#1c6e8f;font-size:.82rem;margin-bottom:4px;">🔐 USSD Code to Dial:</div><div id="mbUssdCodeBox" class="ussd-code-box">' + eU + '</div><div class="ussd-hint">💡 Tap <strong>Dial USSD</strong> to open your phone dialer with the code pre-filled.<br>When prompted for PIN, enter your <strong>4-digit PIN</strong> in place of <code>0000</code>.</div><div class="action-buttons-row" style="gap:6px;"><button type="button" class="action-btn dial" id="mbUssdDialBtn" style="flex:1;">📞 Dial USSD</button><button type="button" class="action-btn green" id="mbUssdCopyBtn" style="flex:1;">📋 Copy</button></div><button type="button" class="action-btn close-mbusssd" style="background:#95a5a6;width:100%;margin-top:6px;">Close</button></div>';
     document.body.appendChild(modal);
     modal.querySelectorAll('.close-mbusssd').forEach(function(b) { b.addEventListener('click', function() { modal.remove(); }); });
     const dialBtn = modal.querySelector('#mbUssdDialBtn');
-    if (dialBtn) { dialBtn.addEventListener('click', function() { const link = document.createElement('a'); link.href = 'tel:' + encodeURIComponent(data.ussd).replace(/%23/g, '#'); document.body.appendChild(link); link.click(); document.body.removeChild(link); showToast('📞 Opening dialer with USSD code...', 2600); }); }
+    if (dialBtn) dialBtn.addEventListener('click', function() { const link = document.createElement('a'); link.href = 'tel:' + encodeURIComponent(data.ussd).replace(/%23/g, '#'); document.body.appendChild(link); link.click(); document.body.removeChild(link); showToast('📞 Opening dialer with USSD code...', 2600); });
     const copyBtn = modal.querySelector('#mbUssdCopyBtn');
-    if (copyBtn) { copyBtn.addEventListener('click', function() { const code = data.ussd; if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(code).then(function() { showToast('✅ USSD copied — paste into your phone dialer', 2600); }).catch(function() { fallbackCopy(code); }); } else fallbackCopy(code); }); }
+    if (copyBtn) copyBtn.addEventListener('click', function() { const code = data.ussd; if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(code).then(function() { showToast('✅ USSD copied', 2600); }).catch(function() { fallbackCopy(code); }); } else fallbackCopy(code); });
     modal.addEventListener('click', function(e) { if (e.target === modal) modal.remove(); });
 }
-function fallbackCopy(text) {
-    const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.left = '-9999px';
-    document.body.appendChild(ta); ta.select();
-    try { document.execCommand('copy'); showToast('✅ USSD copied', 2600); } catch (err) { showToast('⚠️ Copy failed — select manually', 2600); }
-    document.body.removeChild(ta);
-}
+function fallbackCopy(text) { const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.left = '-9999px'; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); showToast('✅ USSD copied', 2600); } catch (err) { showToast('⚠️ Copy failed', 2600); } document.body.removeChild(ta); }
 
-function updateRegAvatarPreview() {
-    const preview = getEl('regAvatarPreview'); if (!preview) return;
-    if (regAvatarDataURL) preview.innerHTML = '<img src="' + regAvatarDataURL + '" style="width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.15);" />';
-    else preview.textContent = regEmoji || '👤';
-}
-function updateAgentBizProfilePreview() {
-    const emojiEl = getEl('agentBizProfilePreviewEmoji');
-    const imgEl = getEl('agentBizProfilePreview');
-    const removeBtn = getEl('agentRemoveLogoBtn');
-    if (agentBizProfileDataURL) {
-        if (emojiEl) emojiEl.style.display = 'none';
-        if (imgEl) { imgEl.src = agentBizProfileDataURL; imgEl.style.display = 'block'; }
-        if (removeBtn) removeBtn.style.display = 'inline-flex';
-    } else {
-        if (emojiEl) { emojiEl.style.display = 'inline-block'; emojiEl.textContent = agentBizProfileEmoji || '🏢'; }
-        if (imgEl) { imgEl.src = ''; imgEl.style.display = 'none'; }
-        if (removeBtn) removeBtn.style.display = 'none';
-    }
-}
+function updateRegAvatarPreview() { const preview = getEl('regAvatarPreview'); if (!preview) return; if (regAvatarDataURL) preview.innerHTML = '<img src="' + regAvatarDataURL + '" style="width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.15);" />'; else preview.textContent = regEmoji || '👤'; }
+function updateAgentBizProfilePreview() { const emojiEl = getEl('agentBizProfilePreviewEmoji'); const imgEl = getEl('agentBizProfilePreview'); const removeBtn = getEl('agentRemoveLogoBtn'); if (agentBizProfileDataURL) { if (emojiEl) emojiEl.style.display = 'none'; if (imgEl) { imgEl.src = agentBizProfileDataURL; imgEl.style.display = 'block'; } if (removeBtn) removeBtn.style.display = 'inline-flex'; } else { if (emojiEl) { emojiEl.style.display = 'inline-block'; emojiEl.textContent = agentBizProfileEmoji || '🏢'; } if (imgEl) { imgEl.src = ''; imgEl.style.display = 'none'; } if (removeBtn) removeBtn.style.display = 'none'; } }
 
-function populateConverterDropdowns() {
-    const fromSel = getEl('convFromCurrency');
-    const toSel = getEl('convCountrySelect');
-    if (!fromSel || !toSel) return;
-    const optionsHtml = SUPPORTED_CURRENCIES.map(function(c) { return '<option value="' + c.currency + '">' + c.flag + ' ' + c.name + ' (' + c.currency + ')</option>'; }).join('');
-    if (!fromSel.options.length) fromSel.innerHTML = optionsHtml;
-    if (!toSel.options.length) toSel.innerHTML = optionsHtml;
-    try { fromSel.value = getUserCurrency(); } catch(e) {}
-    try { toSel.value = 'SLL'; } catch(e) {}
-}
+function populateConverterDropdowns() { const fromSel = getEl('convFromCurrency'); const toSel = getEl('convCountrySelect'); if (!fromSel || !toSel) return; const optionsHtml = SUPPORTED_CURRENCIES.map(function(c) { return '<option value="' + c.currency + '">' + c.flag + ' ' + c.name + ' (' + c.currency + ')</option>'; }).join(''); if (!fromSel.options.length) fromSel.innerHTML = optionsHtml; if (!toSel.options.length) toSel.innerHTML = optionsHtml; try { fromSel.value = getUserCurrency(); } catch(e) {} try { toSel.value = 'SLL'; } catch(e) {} }
 function updateConverterModal() {
-    const fromCur = getEl('convFromCurrency').value;
-    const toCur = getEl('convCountrySelect').value;
-    const amt = parseFloat(getEl('convAmount').value) || 0;
-    if (!fromCur || !toCur || amt <= 0) {
-        ['convBase','convCarrear','convLocal','convServices','convTotal','convRecipient'].forEach(function(id) { if (getEl(id)) getEl(id).textContent = '0.00'; });
-        if (getEl('convRate')) getEl('convRate').textContent = '1.00 = 1.00';
-        return;
-    }
-    const fromRate = FX_TO_USD[fromCur] || 1;
-    const toRate = FX_TO_USD[toCur] || 1;
-    const conversionRate = fromRate / toRate;
+    const fromCur = getEl('convFromCurrency').value; const toCur = getEl('convCountrySelect').value; const amt = parseFloat(getEl('convAmount').value) || 0;
+    if (!fromCur || !toCur || amt <= 0) { ['convBase','convCarrear','convLocal','convServices','convTotal','convRecipient'].forEach(function(id) { if (getEl(id)) getEl(id).textContent = '0.00'; }); if (getEl('convRate')) getEl('convRate').textContent = '1.00 = 1.00'; return; }
+    const fromRate = FX_TO_USD[fromCur] || 1; const toRate = FX_TO_USD[toCur] || 1; const conversionRate = fromRate / toRate;
     const baseInToCur = amt * conversionRate;
-    const carrear = baseInToCur * FEE_CARREAR;
-    const local = baseInToCur * FEE_LOCAL;
-    const services = baseInToCur * FEE_SERVICES;
-    const totalFees = carrear + local + services;
-    const total = baseInToCur + totalFees;
-    const recipientAmount = baseInToCur;
+    const carrear = baseInToCur * FEE_CARREAR; const local = baseInToCur * FEE_LOCAL; const services = baseInToCur * FEE_SERVICES;
+    const total = baseInToCur + carrear + local + services;
     if (getEl('convBase')) getEl('convBase').textContent = amt.toFixed(2) + ' ' + fromCur;
     if (getEl('convCarrear')) getEl('convCarrear').textContent = carrear.toFixed(2) + ' ' + toCur;
     if (getEl('convLocal')) getEl('convLocal').textContent = local.toFixed(2) + ' ' + toCur;
     if (getEl('convServices')) getEl('convServices').textContent = services.toFixed(2) + ' ' + toCur;
     if (getEl('convTotal')) getEl('convTotal').textContent = total.toFixed(2) + ' ' + toCur;
     if (getEl('convRate')) getEl('convRate').textContent = '1 ' + fromCur + ' = ' + conversionRate.toFixed(4) + ' ' + toCur;
-    if (getEl('convRecipient')) getEl('convRecipient').textContent = recipientAmount.toFixed(2) + ' ' + toCur;
+    if (getEl('convRecipient')) getEl('convRecipient').textContent = baseInToCur.toFixed(2) + ' ' + toCur;
 }
 
 function setupEventListeners() {
@@ -1354,49 +924,23 @@ function setupEventListeners() {
 
     safe('langSelect', 'change', function() { setLanguage(this.value); });
     safe('othersBtn', 'click', function(e) { e.preventDefault(); e.stopPropagation(); const m = getEl('othersDropdownMenu'); if (m) m.classList.toggle('open'); });
-    document.addEventListener('click', function(e) { const od = document.querySelector('.others-dropdown'); if (od && !od.contains(e.target)) { const m = getEl('othersDropdownMenu'); if (m) m.classList.remove('open'); } });
-    safe('directPayBtn', 'click', function(e) { e.preventDefault(); window.open(APP_LINKS.directPay, '_blank'); });
-    safe('watuPayBtn', 'click', function(e) { e.preventDefault(); window.open(APP_LINKS.watuPay, '_blank'); });
-    safe('weBineBtn', 'click', function(e) { e.preventDefault(); window.open(APP_LINKS.weBine, '_blank'); });
+    document.addEventListener('click', function(e) { const od = document.querySelector('.others-dropdown'); if (!od) return; if (!od.contains(e.target)) { const m = getEl('othersDropdownMenu'); if (m) m.classList.remove('open'); } });
 
     safe('loginBtn', 'click', function(e) { e.preventDefault(); getEl('loginError').innerHTML = ''; getEl('loginModal').style.display = 'flex'; });
-    safe('registerBtn', 'click', function(e) {
-        e.preventDefault();
-        try { populateCountryDropdown('regCountry'); } catch(err) {}
-        try { populateCapitalCityDropdown('regCitySelect'); } catch(err) {}
-        regAvatarDataURL = null; regEmoji = '👤'; updateRegAvatarPreview();
-        const rb = getEl('regRemoveImageBtn'); if (rb) rb.style.display = 'none';
-        getEl('registerModal').style.display = 'flex';
-    });
+    safe('registerBtn', 'click', function(e) { e.preventDefault(); try { populateCountryDropdown('regCountry'); } catch(err) {} try { populateCapitalCityDropdown('regCitySelect'); } catch(err) {} regAvatarDataURL = null; regEmoji = '👤'; updateRegAvatarPreview(); const rb = getEl('regRemoveImageBtn'); if (rb) rb.style.display = 'none'; getEl('registerModal').style.display = 'flex'; });
     safe('logoutBtn', 'click', function(e) { e.preventDefault(); clearUserStorage(); showToast('Logged out'); });
     safe('agentAuthConfirmBtn', 'click', function(e) { e.preventDefault(); confirmAgentAuth(); });
     safe('doLoginBtn', 'click', function(e) { e.preventDefault(); if (loginUser(getEl('loginName').value, getEl('loginPhone').value)) { getEl('loginModal').style.display = 'none'; getEl('loginName').value = ''; getEl('loginPhone').value = ''; } });
-
     safe('countryCodeSelect', 'change', function() { handleCountrySelectChange(this); });
 
-    safe('regPickEmojiBtn', 'click', function() {
-        const grid = getEl('emojiGrid'); if (!grid) return;
-        grid.innerHTML = '';
-        AVAILABLE_EMOJIS.forEach(function(e) {
-            const s = document.createElement('span');
-            s.className = 'emoji-option'; s.textContent = e;
-            s.addEventListener('click', function() { regEmoji = e; regAvatarDataURL = null; updateRegAvatarPreview(); const rb = getEl('regRemoveImageBtn'); if (rb) rb.style.display = 'none'; getEl('emojiPickerModal').style.display = 'none'; });
-            grid.appendChild(s);
-        });
-        getEl('emojiPickerModal').style.display = 'flex';
-    });
+    safe('regPickEmojiBtn', 'click', function() { const grid = getEl('emojiGrid'); if (!grid) return; grid.innerHTML = ''; AVAILABLE_EMOJIS.forEach(function(e) { const s = document.createElement('span'); s.className = 'emoji-option'; s.textContent = e; s.addEventListener('click', function() { regEmoji = e; regAvatarDataURL = null; updateRegAvatarPreview(); const rb = getEl('regRemoveImageBtn'); if (rb) rb.style.display = 'none'; getEl('emojiPickerModal').style.display = 'none'; }); grid.appendChild(s); }); getEl('emojiPickerModal').style.display = 'flex'; });
     safe('regUploadImageBtn', 'click', function() { const fi = getEl('regAvatarUploadInput'); if (fi) fi.click(); });
-    safe('regAvatarUploadInput', 'change', function() {
-        const f = this.files[0]; if (!f) return;
-        resizeImageFile(f, 200, 0.82).then(function(dataUrl) { regAvatarDataURL = dataUrl; updateRegAvatarPreview(); const rb = getEl('regRemoveImageBtn'); if (rb) rb.style.display = 'inline-flex'; }).catch(function() { showToast('⚠️ Could not process image.', 2200); });
-        this.value = '';
-    });
+    safe('regAvatarUploadInput', 'change', function() { const f = this.files[0]; if (!f) return; resizeImageFile(f, 200, 0.82).then(function(dataUrl) { regAvatarDataURL = dataUrl; updateRegAvatarPreview(); const rb = getEl('regRemoveImageBtn'); if (rb) rb.style.display = 'inline-flex'; }).catch(function() { showToast('⚠️ Could not process image.', 2200); }); this.value = ''; });
     safe('regRemoveImageBtn', 'click', function() { regAvatarDataURL = null; regEmoji = '👤'; updateRegAvatarPreview(); this.style.display = 'none'; });
 
     safe('doRegisterBtn', 'click', function(e) {
         e.preventDefault();
-        const errEl = getEl('regError'), okEl = getEl('regSuccess');
-        if (errEl) errEl.textContent = ''; if (okEl) okEl.textContent = '';
+        const errEl = getEl('regError'), okEl = getEl('regSuccess'); if (errEl) errEl.textContent = ''; if (okEl) okEl.textContent = '';
         const name = (getEl('regName').value || '').trim(); const phone = (getEl('regPhone').value || '').trim(); const city = getCityValue('regCitySelect', 'regCityOther');
         if (!name || !phone || !city) { if (errEl) errEl.textContent = '❌ Fill required.'; return; }
         if (registeredUsers.some(function(u) { return u.phone === phone; })) { if (errEl) errEl.textContent = '❌ Phone already registered.'; return; }
@@ -1404,8 +948,7 @@ function setupEventListeners() {
         registeredUsers.push(newUser); saveRegisteredUsers();
         currentUser = { name: name, phone: phone, address: newUser.address, city: city, country: newUser.country, emoji: regEmoji, avatarDataURL: regAvatarDataURL, nin: newUser.nin, idNumber: newUser.idNumber };
         saveUserToStorage(currentUser);
-        if (okEl) okEl.textContent = '✅ Registered!';
-        showToast('✅ Registered!', 1500); showLoggedInUI();
+        if (okEl) okEl.textContent = '✅ Registered!'; showToast('✅ Registered!', 1500); showLoggedInUI();
         setTimeout(function() { getEl('registerModal').style.display = 'none'; }, 900);
         supaBackground(Supa.saveUser(newUser), 'User');
     });
@@ -1414,20 +957,13 @@ function setupEventListeners() {
     safe('profileAvatarLarge', 'click', function() { if (!currentUser) return; openEmojiPicker(); });
     safe('emojiUploadImageBtn', 'click', function() { getEl('avatarUploadInput').click(); });
     safe('emojiRemoveImageBtn', 'click', function() { removeAvatarImage(); });
-    safe('avatarUploadInput', 'change', function() {
-        const f = this.files[0]; if (!f) return;
-        resizeImageFile(f, 200, 0.82).then(function(dataUrl) { applyAvatarImage(dataUrl); }).catch(function() { showToast('⚠️ Could not process image.', 2200); });
-        this.value = '';
-    });
+    safe('avatarUploadInput', 'change', function() { const f = this.files[0]; if (!f) return; resizeImageFile(f, 200, 0.82).then(function(dataUrl) { applyAvatarImage(dataUrl); }).catch(function() { showToast('⚠️ Could not process image.', 2200); }); this.value = ''; });
 
     safe('editAccountBtn', 'click', function(e) {
-        e.preventDefault();
-        if (!currentUser) { showToast('⚠️ Login first', 2000); return; }
+        e.preventDefault(); if (!currentUser) { showToast('⚠️ Login first', 2000); return; }
         try { populateCountryDropdown('editAccountCountry'); } catch(err) {}
         try { populateCapitalCityDropdown('editAccountCitySelect'); } catch(err) {}
-        getEl('editAccountName').value = currentUser.name || '';
-        getEl('editAccountPhone').value = currentUser.phone || '';
-        getEl('editAccountAddress').value = currentUser.address || '';
+        getEl('editAccountName').value = currentUser.name || ''; getEl('editAccountPhone').value = currentUser.phone || ''; getEl('editAccountAddress').value = currentUser.address || '';
         setCityValue('editAccountCitySelect', 'editAccountCityOther', currentUser.city || '');
         getEl('editAccountCountry').value = currentUser.country || 'Sierra Leone';
         getEl('editAccountModal').style.display = 'flex';
@@ -1437,25 +973,20 @@ function setupEventListeners() {
         const name = getEl('editAccountName').value.trim(); const phone = getEl('editAccountPhone').value.trim(); const city = getCityValue('editAccountCitySelect', 'editAccountCityOther');
         if (!name || !phone || !city) { getEl('editAccountError').textContent = '❌ Fill Name, Phone & City'; return; }
         currentUser.name = name; currentUser.phone = phone; currentUser.address = getEl('editAccountAddress').value; currentUser.city = city; currentUser.country = getEl('editAccountCountry').value;
-        saveUserToStorage(currentUser);
-        showLoggedInUI(); showToast('✅ Account updated!', 2000);
+        saveUserToStorage(currentUser); showLoggedInUI(); showToast('✅ Account updated!', 2000);
         setTimeout(function() { getEl('editAccountModal').style.display = 'none'; }, 1000);
         supaBackground(Supa.saveUser(currentUser), 'Account update');
     });
 
     safe('agentDropdownBtn', 'click', function(e) { e.preventDefault(); e.stopPropagation(); getEl('agentDropdownList').classList.toggle('open'); renderAgentDropdown(currentAgentFilterCountry); });
-    document.addEventListener('click', function(e) { const c = document.querySelector('.agent-dropdown-container'); if (c && !c.contains(e.target)) getEl('agentDropdownList').classList.remove('open'); });
+    document.addEventListener('click', function(e) { const c = document.querySelector('.agent-dropdown-container'); if (c && !c.contains(e.target)) { const list = getEl('agentDropdownList'); if (list) list.classList.remove('open'); } });
+
     safe('agentNameSelect', 'change', function() { if (this.value) selectAgent(this.value); else { selectedAgentId = null; _selectedAgentId = null; clearAgentSelection(); } });
     safe('generateTxBtn', 'click', function(e) { e.preventDefault(); setGeneratedTransactionId(); });
     safe('copyTxBtn', 'click', function(e) { e.preventDefault(); copyTransactionIdToClipboard(); });
     document.querySelectorAll('.close-modal').forEach(function(b) { b.addEventListener('click', function(e) { e.preventDefault(); const m = this.closest('.modal'); if (m) m.style.display = 'none'; }); });
 
-    safe('mainMmBtn', 'click', function(e) {
-        e.preventDefault();
-        const amt = parseFloat(getEl('amountInput') && getEl('amountInput').value) || 0;
-        if (amt <= 0) { showToast('⚠️ Enter an amount first.', 2200); return; }
-        openMbFourAgentPicker();
-    });
+    safe('mainMmBtn', 'click', function(e) { e.preventDefault(); const amt = parseFloat(getEl('amountInput') && getEl('amountInput').value) || 0; if (amt <= 0) { showToast('⚠️ Enter an amount first.', 2200); return; } openMbFourAgentPicker(); });
 
     safe('localAgentBtn', 'click', function(e) {
         e.preventDefault();
@@ -1474,85 +1005,24 @@ function setupEventListeners() {
     });
 
     safe('localAgentClearBtn', 'click', function(e) { e.preventDefault(); mbFourSelectedAgentId = null; mbFourSelectedAgentPhone = null; const d = getEl('localAgentDetails'); if (d) d.classList.remove('show'); showToast('✅ Local agent cleared', 1500); });
-    safe('localAgentWhatsAppBtn', 'click', function(e) {
-        e.preventDefault();
-        if (!mbFourSelectedAgentId) { showToast('⚠️ Select a local agent first.', 2200); return; }
-        const agent = getAgents().find(function(a) { return a.id === mbFourSelectedAgentId; });
-        if (!agent) { showToast('⚠️ Agent not found.', 2200); return; }
-        const d = agent.agentData || agent;
-        openWhatsApp(d.mobileMoney || d.phone || agent.phone || '', (d.businessName || agent.name || 'Agent').replace(/\(.*\)/, '').trim());
-    });
-    safe('localAgentSmsBtn', 'click', function(e) {
-        e.preventDefault();
-        if (!mbFourSelectedAgentId) { showToast('⚠️ Select a local agent first.', 2200); return; }
-        const agent = getAgents().find(function(a) { return a.id === mbFourSelectedAgentId; });
-        if (!agent) { showToast('⚠️ Agent not found.', 2200); return; }
-        const d = agent.agentData || agent;
-        openSMS(d.mobileMoney || d.phone || agent.phone || '', (d.businessName || agent.name || '').replace(/\(.*\)/, '').trim());
-    });
+    safe('localAgentWhatsAppBtn', 'click', function(e) { e.preventDefault(); if (!mbFourSelectedAgentId) { showToast('⚠️ Select a local agent first.', 2200); return; } const agent = getAgents().find(function(a) { return a.id === mbFourSelectedAgentId; }); if (!agent) { showToast('⚠️ Agent not found.', 2200); return; } const d = agent.agentData || agent; openWhatsApp(d.mobileMoney || d.phone || agent.phone || '', (d.businessName || agent.name || 'Agent').replace(/\(.*\)/, '').trim()); });
+    safe('localAgentSmsBtn', 'click', function(e) { e.preventDefault(); if (!mbFourSelectedAgentId) { showToast('⚠️ Select a local agent first.', 2200); return; } const agent = getAgents().find(function(a) { return a.id === mbFourSelectedAgentId; }); if (!agent) { showToast('⚠️ Agent not found.', 2200); return; } const d = agent.agentData || agent; openSMS(d.mobileMoney || d.phone || agent.phone || '', (d.businessName || agent.name || '').replace(/\(.*\)/, '').trim()); });
 
     safe('inlineConvFrom', 'change', function() { updateInlineConversion(); });
     safe('inlineConvTo', 'change', function() { updateInlineConversion(); });
     safe('inlineConvAmount', 'input', function() { updateInlineConversion(); });
 
     safe('intlToggleBtn', 'click', function(e) { e.preventDefault(); isLocalMode = !isLocalMode; this.classList.toggle('active', !isLocalMode); const cw = getEl('countryWrapper'); if (cw) cw.style.display = isLocalMode ? 'none' : 'block'; computeCharges(); updateAgentDropdownForCountry(); });
-    safe('addClientBtnHeader', 'click', function(e) {
-        e.preventDefault();
-        getEl('addClientModal').style.display = 'flex';
-        try { populateCountryDropdown('newClientCountrySelect'); } catch(err) {}
-        try { populateCapitalCityDropdown('newClientCitySelect'); } catch(err) {}
-    });
-    safe('saveClientBtn', 'click', function(e) {
-        e.preventDefault();
-        const n = getEl('newClientName').value.trim(); const p = getEl('newClientPhone').value.trim();
-        if (!n || !p) { getEl('addClientError').textContent = '❌ Name & Phone required.'; return; }
-        getEl('clientName').value = n; getEl('clientPhone').value = p; getEl('clientSectionTitle').style.display = 'block'; getEl('clientFieldsRow').style.display = 'grid';
-        currentClient = { name: n, phone: p };
-        showToast('✅ Client "' + n + '" added!', 2000);
-        getEl('addClientModal').style.display = 'none';
-    });
+    safe('addClientBtnHeader', 'click', function(e) { e.preventDefault(); getEl('addClientModal').style.display = 'flex'; try { populateCountryDropdown('newClientCountrySelect'); } catch(err) {} try { populateCapitalCityDropdown('newClientCitySelect'); } catch(err) {} });
+    safe('saveClientBtn', 'click', function(e) { e.preventDefault(); const n = getEl('newClientName').value.trim(); const p = getEl('newClientPhone').value.trim(); if (!n || !p) { getEl('addClientError').textContent = '❌ Name & Phone required.'; return; } getEl('clientName').value = n; getEl('clientPhone').value = p; getEl('clientSectionTitle').style.display = 'block'; getEl('clientFieldsRow').style.display = 'grid'; currentClient = { name: n, phone: p }; showToast('✅ Client "' + n + '" added!', 2000); getEl('addClientModal').style.display = 'none'; });
 
-    safe('registerAgentBtn', 'click', function(e) {
-        e.preventDefault();
-        getEl('registerModal').style.display = 'none';
-        try { populateCapitalCityDropdown('agentCitySelect'); } catch(err) {}
-        try { populateCollateralDropdowns(); } catch(err) {}
-        agentBizProfileDataURL = null; agentBizProfileEmoji = '🏢';
-        updateAgentBizProfilePreview();
-        if (getEl('agentBizProfileUpload')) getEl('agentBizProfileUpload').value = '';
-        if (getEl('agentIdUpload')) getEl('agentIdUpload').value = '';
-        if (getEl('agentIdPreview')) getEl('agentIdPreview').style.display = 'none';
-        getEl('agentRegistrationModal').style.display = 'flex';
-    });
+    safe('registerAgentBtn', 'click', function(e) { e.preventDefault(); getEl('registerModal').style.display = 'none'; try { populateCapitalCityDropdown('agentCitySelect'); } catch(err) {} try { populateCollateralDropdowns(); } catch(err) {} agentBizProfileDataURL = null; agentBizProfileEmoji = '🏢'; updateAgentBizProfilePreview(); if (getEl('agentBizProfileUpload')) getEl('agentBizProfileUpload').value = ''; if (getEl('agentIdUpload')) getEl('agentIdUpload').value = ''; if (getEl('agentIdPreview')) getEl('agentIdPreview').style.display = 'none'; getEl('agentRegistrationModal').style.display = 'flex'; });
 
-    safe('agentPickLogoEmojiBtn', 'click', function() {
-        const grid = getEl('emojiGrid'); if (!grid) return;
-        grid.innerHTML = '';
-        AVAILABLE_EMOJIS.forEach(function(e) {
-            const s = document.createElement('span');
-            s.className = 'emoji-option'; s.textContent = e;
-            s.addEventListener('click', function() { agentBizProfileEmoji = e; agentBizProfileDataURL = null; updateAgentBizProfilePreview(); getEl('emojiPickerModal').style.display = 'none'; });
-            grid.appendChild(s);
-        });
-        getEl('emojiPickerModal').style.display = 'flex';
-    });
+    safe('agentPickLogoEmojiBtn', 'click', function() { const grid = getEl('emojiGrid'); if (!grid) return; grid.innerHTML = ''; AVAILABLE_EMOJIS.forEach(function(e) { const s = document.createElement('span'); s.className = 'emoji-option'; s.textContent = e; s.addEventListener('click', function() { agentBizProfileEmoji = e; agentBizProfileDataURL = null; updateAgentBizProfilePreview(); getEl('emojiPickerModal').style.display = 'none'; }); grid.appendChild(s); }); getEl('emojiPickerModal').style.display = 'flex'; });
     safe('agentUploadLogoBtn', 'click', function() { const fi = getEl('agentBizProfileUpload'); if (fi) fi.click(); });
-    safe('agentBizProfileUpload', 'change', function() {
-        const f = this.files[0]; if (!f) return;
-        resizeImageFile(f, 200, 0.82).then(function(dataUrl) { agentBizProfileDataURL = dataUrl; updateAgentBizProfilePreview(); }).catch(function() { showToast('⚠️ Could not process image.', 2200); });
-        this.value = '';
-    });
+    safe('agentBizProfileUpload', 'change', function() { const f = this.files[0]; if (!f) return; resizeImageFile(f, 200, 0.82).then(function(dataUrl) { agentBizProfileDataURL = dataUrl; updateAgentBizProfilePreview(); }).catch(function() { showToast('⚠️ Could not process image.', 2200); }); this.value = ''; });
     safe('agentRemoveLogoBtn', 'click', function() { agentBizProfileDataURL = null; agentBizProfileEmoji = '🏢'; updateAgentBizProfilePreview(); });
-    safe('agentIdUpload', 'change', function() {
-        const f = this.files[0]; if (!f) return;
-        if (f.type.startsWith('image/')) {
-            const r = new FileReader();
-            r.onload = function(ev) { const pv = getEl('agentIdPreview'); if (pv) { pv.src = ev.target.result; pv.style.display = 'block'; } };
-            r.readAsDataURL(f);
-        } else { const pv = getEl('agentIdPreview'); if (pv) pv.style.display = 'none'; }
-        showToast('✅ ID uploaded', 1500);
-        this.value = '';
-    });
+    safe('agentIdUpload', 'change', function() { const f = this.files[0]; if (!f) return; if (f.type.startsWith('image/')) { const r = new FileReader(); r.onload = function(ev) { const pv = getEl('agentIdPreview'); if (pv) { pv.src = ev.target.result; pv.style.display = 'block'; } }; r.readAsDataURL(f); } else { const pv = getEl('agentIdPreview'); if (pv) pv.style.display = 'none'; } showToast('✅ ID uploaded', 1500); this.value = ''; });
 
     safe('generatePasswordBtn', 'click', function(e) { e.preventDefault(); const ch = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'; let pw = ''; for (let i = 0; i < 6; i++) pw += ch.charAt(Math.floor(Math.random() * ch.length)); getEl('agentPassword').value = pw; showToast('🔑 ' + pw, 3000); });
     safe('generatePinBtn', 'click', function(e) { e.preventDefault(); const pin = String(Math.floor(10000 + Math.random() * 90000)); getEl('agentPin').value = pin; showToast('🔑 ' + pin, 3000); });
@@ -1566,19 +1036,7 @@ function setupEventListeners() {
         const ci = getCityValue('agentCitySelect', 'agentCityOther');
         if (!bn || !ci) { getEl('agentRegError').textContent = '❌ Fill required fields.'; return; }
         ProviderTxIdManager.markAsUsed(ptx);
-        const data = {
-            id: 'agent_' + Date.now(), name: bn, businessName: bn,
-            businessAddress: getEl('agentAddress').value.trim(), city: ci,
-            regNumber: getEl('agentRegNumber').value.trim(), businessType: getEl('agentBusinessType').value,
-            ownerName: getEl('agentOwnerName').value.trim(), idType: getEl('agentIdType').value,
-            idNumber: getEl('agentIdNumber').value.trim(), mobileMoney: getEl('agentMobileMoney').value.trim(),
-            countryCode: getEl('agentCountryCode').value, password: getEl('agentPassword').value.trim(),
-            pin: getEl('agentPin').value.trim(), collateralAmount: parseFloat(getEl('agentCollateralLimit').value) || 0,
-            collateralLimit: parseInt(getEl('agentCollateralLimit').value) || 0, currency: 'GNF',
-            approved: false, role: 'agent', isAgent: true,
-            registeredAt: new Date().toISOString(), nin: getEl('agentNin').value.trim(), providerTxId: ptx,
-            avatarDataURL: agentBizProfileDataURL || null, emoji: agentBizProfileEmoji || '🏢'
-        };
+        const data = { id: 'agent_' + Date.now(), name: bn, businessName: bn, businessAddress: getEl('agentAddress').value.trim(), city: ci, regNumber: getEl('agentRegNumber').value.trim(), businessType: getEl('agentBusinessType').value, ownerName: getEl('agentOwnerName').value.trim(), idType: getEl('agentIdType').value, idNumber: getEl('agentIdNumber').value.trim(), mobileMoney: getEl('agentMobileMoney').value.trim(), countryCode: getEl('agentCountryCode').value, password: getEl('agentPassword').value.trim(), pin: getEl('agentPin').value.trim(), collateralAmount: parseFloat(getEl('agentCollateralLimit').value) || 0, collateralLimit: parseInt(getEl('agentCollateralLimit').value) || 0, currency: 'GNF', approved: false, role: 'agent', isAgent: true, registeredAt: new Date().toISOString(), nin: getEl('agentNin').value.trim(), providerTxId: ptx, avatarDataURL: agentBizProfileDataURL || null, emoji: agentBizProfileEmoji || '🏢' };
         PendingStore.add({ type: 'agent', country: COUNTRY_CODE_TO_NAME[data.countryCode] || data.city, submittedBy: bn, data: data });
         registeredUsers.push(data); saveRegisteredUsers();
         showToast('✅ Agent submitted — awaiting admin approval.', 3200);
@@ -1607,74 +1065,41 @@ function setupEventListeners() {
             const amount = parseFloat(getEl('amountInput') && getEl('amountInput').value) || 0;
             if (amount <= 0) { showToast('❌ Enter amount.'); return; }
             ensureTransactionId();
-            const carrear = amount * FEE_CARREAR;
-            const localFee = amount * FEE_LOCAL;
-            const servicesFee = amount * FEE_SERVICES;
+            const carrear = amount * FEE_CARREAR; const localFee = amount * FEE_LOCAL; const servicesFee = amount * FEE_SERVICES;
             const chargeTotal = amount * FEE_TOTAL;
             const currency = isLocalMode ? getUserCurrency() : currentCountryData.currency;
             const txId = (getEl('transactionId') && getEl('transactionId').value.trim()) || '';
             ProviderTxIdManager.markAsUsed(ptx); TransferCodeManager.markAsUsed(tc);
             let localAgentName = '', localAgentPhone = '';
-            if (mbFourSelectedAgentId) {
-                const la = getAgents().find(function(a) { return a.id === mbFourSelectedAgentId; });
-                if (la) { const ld = la.agentData || la; localAgentName = (ld.businessName || la.name || '').replace(/\(.*\)/, '').trim(); localAgentPhone = ld.mobileMoney || ld.phone || la.phone || ''; }
-            }
+            if (mbFourSelectedAgentId) { const la = getAgents().find(function(a) { return a.id === mbFourSelectedAgentId; }); if (la) { const ld = la.agentData || la; localAgentName = (ld.businessName || la.name || '').replace(/\(.*\)/, '').trim(); localAgentPhone = ld.mobileMoney || ld.phone || la.phone || ''; } }
             const agentPhoneRaw = String(ap).replace(/\D/g, '');
             const clientName = (getEl('clientName') && getEl('clientName').value.trim()) || '';
             const clientPhoneRaw = String(getEl('clientPhone') && getEl('clientPhone').value || '').replace(/\D/g, '');
             const orderedProductSnapshot = currentOrderedProduct ? Object.assign({}, currentOrderedProduct) : null;
-            const data = {
-                txId: txId, date: new Date().toLocaleString(), mode: isLocalMode ? 'Local' : 'International',
-                sender: sn + ' (' + sp + ')', agent: an + ' (' + ap + ')', agentName: an, agentPhoneRaw: agentPhoneRaw,
-                clientName: clientName, clientPhoneRaw: clientPhoneRaw,
-                localAgentName: localAgentName, localAgentPhone: localAgentPhone,
-                baseAmount: amount.toFixed(2), charge: chargeTotal.toFixed(2),
-                carrear: carrear.toFixed(2), localFee: localFee.toFixed(2), servicesFee: servicesFee.toFixed(2),
-                gst: '0.00', total: (amount + chargeTotal).toFixed(2),
-                currency: currency, providerTxId: ptx, transferCode: tc,
-                orderedProduct: orderedProductSnapshot
-            };
+            const data = { txId: txId, date: new Date().toLocaleString(), mode: isLocalMode ? 'Local' : 'International', sender: sn + ' (' + sp + ')', agent: an + ' (' + ap + ')', agentName: an, agentPhoneRaw: agentPhoneRaw, clientName: clientName, clientPhoneRaw: clientPhoneRaw, localAgentName: localAgentName, localAgentPhone: localAgentPhone, baseAmount: amount.toFixed(2), charge: chargeTotal.toFixed(2), carrear: carrear.toFixed(2), localFee: localFee.toFixed(2), servicesFee: servicesFee.toFixed(2), gst: '0.00', total: (amount + chargeTotal).toFixed(2), currency: currency, providerTxId: ptx, transferCode: tc, orderedProduct: orderedProductSnapshot };
             showReceiptModal(data);
+            try {
+                if (typeof window.__seedDeliverTransaction === 'function') {
+                    window.__seedDeliverTransaction({ senderName: (typeof sn !== 'undefined' ? sn : ''), senderPhone: (typeof sp !== 'undefined' ? sp : ''), clientName: (typeof clientName !== 'undefined' ? clientName : ''), clientPhone: (function(){ try { const el = getEl('clientPhone'); return el ? el.value : ''; } catch(e){ return ''; } })(), amount: (typeof amount !== 'undefined' ? amount : 0), currency: (typeof currency !== 'undefined' ? currency : 'SLL'), localAgentName: (typeof localAgentName !== 'undefined' ? localAgentName : ''), localAgentPhone: (typeof localAgentPhone !== 'undefined' ? localAgentPhone : ''), txId: (data && data.txId) || '', providerTxId: (data && data.providerTxId) || '', transferCode: (data && data.transferCode) || '' });
+                }
+            } catch (seedErr) { console.warn('Deliver seed failed:', seedErr); }
             showToast('✅ Receipt generated!', 2500);
             supaBackground(Supa.saveTransaction({ txId: data.txId, providerTxId: data.providerTxId, transferCode: data.transferCode, senderName: sn, senderPhone: sp, agentName: an, agentPhone: ap, amount: amount, charge: chargeTotal, gst: 0, total: amount + chargeTotal, currency: currency, mode: data.mode }), 'Transaction');
             clearOrderedProduct();
-        } catch (err) {
-            console.error('❌ Submit:', err);
-            showToast('❌ Submit failed: ' + (err.message || 'Error'), 3500);
-        }
+        } catch (err) { console.error('❌ Submit:', err); showToast('❌ Submit failed: ' + (err.message || 'Error'), 3500); }
     });
 
-    safe('providerTxId', 'input', function() {
-        const v = this.value.trim(); const eg = getEl('mainTransferCodeGroup');
-        if (!v) { if (eg) eg.style.display = 'none'; return; }
-        const valid = ProviderTxIdManager.validate(v);
-        if (valid.valid) { if (eg) eg.style.display = 'block'; if (getEl('providerTxIdError')) getEl('providerTxIdError').style.display = 'none'; }
-        else { if (eg) eg.style.display = 'none'; if (getEl('providerTxIdError')) { getEl('providerTxIdError').textContent = valid.error; getEl('providerTxIdError').style.display = 'block'; } }
-    });
+    safe('providerTxId', 'input', function() { const v = this.value.trim(); const eg = getEl('mainTransferCodeGroup'); if (!v) { if (eg) eg.style.display = 'none'; return; } const valid = ProviderTxIdManager.validate(v); if (valid.valid) { if (eg) eg.style.display = 'block'; if (getEl('providerTxIdError')) getEl('providerTxIdError').style.display = 'none'; } else { if (eg) eg.style.display = 'none'; if (getEl('providerTxIdError')) { getEl('providerTxIdError').textContent = valid.error; getEl('providerTxIdError').style.display = 'block'; } } });
     safe('receiptCloseXBtn', 'click', function(e) { e.preventDefault(); getEl('receiptModal').style.display = 'none'; });
     safe('receiptCloseBtn', 'click', function(e) { e.preventDefault(); getEl('receiptModal').style.display = 'none'; });
     safe('chatToggleBtn', 'click', function(e) { e.preventDefault(); toggleChat(); });
     safe('chatCloseBtn', 'click', function(e) { e.preventDefault(); getEl('chatWindow').classList.remove('open'); getEl('chatToggleBtn').style.display = 'flex'; });
-    safe('aboutAppBtn', 'click', function(e) { e.preventDefault(); showInfoModal('About', 'Cross-border mobile money transfers.'); });
-    safe('aboutDevBtn', 'click', function(e) { e.preventDefault(); showInfoModal('Dev', 'Fintech developer.'); });
-    safe('contactBtn', 'click', function(e) { e.preventDefault(); showInfoModal('Contact', '+232-76-436-811'); });
-    safe('subscribeBtn', 'click', function(e) { e.preventDefault(); getEl('subscribeModal').style.display = 'flex'; });
-    safe('submitSubscribeBtn', 'click', function(e) { e.preventDefault(); const email = (getEl('subEmail') && getEl('subEmail').value.trim()) || ''; if (email && email.indexOf('@') !== -1) { supaBackground(Supa.saveSubscriber(email), 'Subscriber'); showToast('📧 Subscribed!'); } getEl('subscribeModal').style.display = 'none'; });
-    safe('howToBtn', 'click', function(e) { e.preventDefault(); window.open('https://aminejalloh-io.github.io/AfriPay-Guide/', '_blank'); });
-    safe('currencyConverterBtn', 'click', function(e) {
-        e.preventDefault();
-        populateConverterDropdowns();
-        updateConverterModal();
-        getEl('currencyConverterModal').style.display = 'flex';
-    });
     safe('convCloseBtn', 'click', function(e) { e.preventDefault(); getEl('currencyConverterModal').style.display = 'none'; });
     safe('converterCloseXBtn', 'click', function(e) { e.preventDefault(); getEl('currencyConverterModal').style.display = 'none'; });
     safe('convFromCurrency', 'change', updateConverterModal);
     safe('convCountrySelect', 'change', updateConverterModal);
     safe('convAmount', 'input', updateConverterModal);
     safe('mapButton', 'click', function(e) { e.preventDefault(); const city = getEl('profileCity').innerText; const country = getEl('profileCountry').innerText; getEl('mapIframe').src = 'https://www.google.com/maps?q=' + encodeURIComponent(city + ', ' + country) + '&output=embed'; getEl('mapModal').style.display = 'flex'; });
-    safe('addBizBtn', 'click', function(e) { e.preventDefault(); openAddBizModal(); });
-    safe('submitAddBizBtn', 'click', function(e) { e.preventDefault(); });
     document.querySelectorAll('.modal').forEach(function(m) { m.addEventListener('click', function(e) { if (e.target === this) this.style.display = 'none'; }); });
     setupAgentDashboardEvents();
 }
@@ -1719,875 +1144,464 @@ function initApp() {
     safeCall('compute charges', function() { computeCharges(); });
     safeCall('init popup ads', function() { setTimeout(initPopupAds, 1000); });
 
-    try {
-        console.log('🧪 Prefix routing self-test:');
-        ['030123456', '070123456', '077123456', '088123456', '099123456', '033123456', '080123456', '090123456', '076123456', '078123456', '079123456', '075123456', '074123456', '073123456', '23230123456'].forEach(function(p) {
-            const r = getUssdTemplateForPhone(p);
-            console.log('  ' + p + ' → ' + r.label);
-        });
-    } catch (e) {}
+    setTimeout(function() { try { renderAgentDropdown(currentAgentFilterCountry); } catch(e) {} try { populateAgentSelect(currentAgentFilterCountry); } catch(e) {} }, 300);
 
-    setTimeout(function() {
-        try { renderAgentDropdown(currentAgentFilterCountry); } catch(e) {}
-        try { populateAgentSelect(currentAgentFilterCountry); } catch(e) {}
-    }, 300);
-
-    (async function initSupabaseSync() {
-        if (!Supa.isReady()) return;
-        try {
-            const cloudAgents = await Supa.getAgents();
-            if (cloudAgents && cloudAgents.length) {
-                cloudAgents.forEach(function(a) {
-                    const exists = registeredUsers.find(function(u) { return u.businessName === a.business_name; });
-                    const mapped = {
-                        id: 'agent_' + (a.business_name || a.id).replace(/\W/g, '').toLowerCase(),
-                        name: a.business_name, businessName: a.business_name,
-                        businessAddress: a.business_address, city: a.city,
-                        regNumber: a.reg_number, businessType: a.business_type,
-                        ownerName: a.owner_name, idType: a.id_type, idNumber: a.id_number,
-                        mobileMoney: a.mobile_money, countryCode: a.country_code,
-                        password: a.password, pin: a.pin,
-                        collateralAmount: a.collateral_amount, collateralLimit: a.collateral_limit,
-                        currency: a.currency, approved: a.approved === true,
-                        approvedBy: a.approved === true ? 'cloud-admin' : null,
-                        approvedAt: a.approved === true ? new Date().toISOString() : null,
-                        role: 'agent', isAgent: true,
-                        providerTxId: a.provider_tx_id, transferCode: a.transfer_code, nin: a.nin,
-                        avatarDataURL: a.avatar_data_url || null,
-                        emoji: a.emoji || '🏢'
-                    };
-                    if (exists) Object.assign(exists, mapped); else registeredUsers.push(mapped);
-                });
-                saveRegisteredUsers();
-                renderAgentDropdown(currentAgentFilterCountry);
-                populateAgentSelect(currentAgentFilterCountry);
-            }
-        } catch (e) {}
-    })();
+    (async function initSupabaseSync() { if (!Supa.isReady()) return; try { await supaRefreshAgents(); subscribeAgentRealtime(); } catch (e) {} })();
 }
 
-if (document.readyState === 'complete' || document.readyState === 'interactive') {
-    setTimeout(initApp, 50);
-} else {
-    document.addEventListener('DOMContentLoaded', function() { setTimeout(initApp, 50); });
-}
+if (document.readyState === 'complete' || document.readyState === 'interactive') setTimeout(initApp, 50);
+else document.addEventListener('DOMContentLoaded', function() { setTimeout(initApp, 50); });
 
 /* ============================================================ */
-/* STANDALONE REPORT MODULE — self-contained                    */
+/* STANDALONE REPORT MODULE                                      */
 /* ============================================================ */
 (function initReportModule() {
     function boot() {
         var reportBtn = document.getElementById('reportAppBtn');
         var reportModal = document.getElementById('reportModal');
         var submitBtn = document.getElementById('submitReportBtn');
-        if (!reportModal) { console.error('❌ Report module: #reportModal is missing from index.html'); return; }
-        if (!reportBtn)   { console.error('❌ Report module: #reportAppBtn is missing from index.html'); return; }
-        if (!submitBtn)   { console.error('❌ Report module: #submitReportBtn is missing from index.html'); return; }
-        if (reportBtn.dataset.reportBound === '1') { console.log('✅ Report module already initialized'); return; }
+        if (!reportModal || !reportBtn || !submitBtn) return;
+        if (reportBtn.dataset.reportBound === '1') return;
         reportBtn.dataset.reportBound = '1';
-
         reportBtn.addEventListener('click', function(e) {
             e.preventDefault(); e.stopPropagation();
-            var errEl = document.getElementById('reportError');
-            var okEl = document.getElementById('reportSuccess');
-            if (errEl) errEl.textContent = '';
-            if (okEl) okEl.textContent = '';
-            try {
-                if (typeof currentUser !== 'undefined' && currentUser) {
-                    var nameField = document.getElementById('reportName');
-                    var phoneField = document.getElementById('reportPhone');
-                    if (nameField && !nameField.value) nameField.value = currentUser.name || '';
-                    if (phoneField && !phoneField.value) phoneField.value = currentUser.phone || '';
-                }
-            } catch (e) {}
+            var errEl = document.getElementById('reportError'); var okEl = document.getElementById('reportSuccess');
+            if (errEl) errEl.textContent = ''; if (okEl) okEl.textContent = '';
+            try { if (typeof currentUser !== 'undefined' && currentUser) { var nameField = document.getElementById('reportName'); var phoneField = document.getElementById('reportPhone'); if (nameField && !nameField.value) nameField.value = currentUser.name || ''; if (phoneField && !phoneField.value) phoneField.value = currentUser.phone || ''; } } catch (e) {}
             reportModal.style.display = 'flex';
         });
-
         submitBtn.addEventListener('click', function(e) {
             e.preventDefault(); e.stopPropagation();
-            var errEl = document.getElementById('reportError');
-            var okEl = document.getElementById('reportSuccess');
-            if (errEl) errEl.textContent = '';
-            if (okEl) okEl.textContent = '';
+            var errEl = document.getElementById('reportError'); var okEl = document.getElementById('reportSuccess');
+            if (errEl) errEl.textContent = ''; if (okEl) okEl.textContent = '';
             var name = (document.getElementById('reportName').value || '').trim();
             var phone = (document.getElementById('reportPhone').value || '').trim();
             var category = document.getElementById('reportCategory').value;
             var details = (document.getElementById('reportDetails').value || '').trim();
-            if (!name)     { if (errEl) errEl.textContent = '❌ Enter your name.'; return; }
-            if (!phone)    { if (errEl) errEl.textContent = '❌ Enter your phone number.'; return; }
+            if (!name) { if (errEl) errEl.textContent = '❌ Enter your name.'; return; }
+            if (!phone) { if (errEl) errEl.textContent = '❌ Enter your phone number.'; return; }
             if (!category) { if (errEl) errEl.textContent = '❌ Select a category.'; return; }
-            if (!details)  { if (errEl) errEl.textContent = '❌ Describe the issue.'; return; }
+            if (!details) { if (errEl) errEl.textContent = '❌ Describe the issue.'; return; }
             var complaint = { name: name, phone: phone, category: category, details: details };
-            try {
-                if (typeof Supa !== 'undefined' && Supa.isReady && Supa.isReady()) {
-                    Supa.saveComplaint(complaint).catch(function(err) { console.warn('⚠️ Report cloud save failed:', err && err.message); });
-                }
-            } catch (e) {}
-            try {
-                var list = JSON.parse(localStorage.getItem('afripay_complaints') || '[]');
-                list.push(Object.assign({}, complaint, { submittedAt: new Date().toISOString() }));
-                localStorage.setItem('afripay_complaints', JSON.stringify(list));
-            } catch (e) {}
+            try { if (typeof Supa !== 'undefined' && Supa.isReady && Supa.isReady()) Supa.saveComplaint(complaint).catch(function(err) { console.warn('⚠️ Report cloud save failed:', err && err.message); }); } catch (e) {}
+            try { var list = JSON.parse(localStorage.getItem('afripay_complaints') || '[]'); list.push(Object.assign({}, complaint, { submittedAt: new Date().toISOString() })); localStorage.setItem('afripay_complaints', JSON.stringify(list)); } catch (e) {}
             if (okEl) okEl.textContent = '✅ Report submitted. Thank you!';
             try { if (typeof showToast === 'function') showToast('🚨 Report submitted', 2200); } catch (e) {}
-            document.getElementById('reportName').value = '';
-            document.getElementById('reportPhone').value = '';
-            document.getElementById('reportCategory').value = '';
-            document.getElementById('reportDetails').value = '';
+            document.getElementById('reportName').value = ''; document.getElementById('reportPhone').value = ''; document.getElementById('reportCategory').value = ''; document.getElementById('reportDetails').value = '';
             setTimeout(function() { reportModal.style.display = 'none'; }, 1200);
         });
-
         reportModal.addEventListener('click', function(e) { if (e.target === reportModal) reportModal.style.display = 'none'; });
         console.log('✅ Report module initialized');
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
     else boot();
-    setTimeout(function() {
-        if (!document.getElementById('reportModal')) return;
-        var btn = document.getElementById('reportAppBtn');
-        if (btn && !btn.dataset.reportBound) boot();
-    }, 800);
+    setTimeout(function() { if (!document.getElementById('reportModal')) return; var btn = document.getElementById('reportAppBtn'); if (btn && !btn.dataset.reportBound) boot(); }, 800);
 })();
 
 /* ============================================================ */
 /* AGENT REGISTRATION HELPERS — USSD + Agreement                 */
-/* Binds: #generateCollateralBtn, #viewAgreementBtn              */
-/* Modals: #collateralUssdDisplay, #agreementModal               */
-/* Self-contained — no dependency on setupEventListeners()       */
 /* ============================================================ */
 (function initAgentRegistrationHelpers() {
     var AGREEMENT_KEY = 'afripay_agent_agreement_signed';
-
     function boot() {
-        var ussdBtn     = document.getElementById('generateCollateralBtn');
-        var agreementBtn= document.getElementById('viewAgreementBtn');
+        var ussdBtn = document.getElementById('generateCollateralBtn');
+        var agreementBtn = document.getElementById('viewAgreementBtn');
         var ussdDisplay = document.getElementById('collateralUssdDisplay');
-        var ussdError   = document.getElementById('collateralError');
+        var ussdError = document.getElementById('collateralError');
         var agreementModal = document.getElementById('agreementModal');
-
         if (!ussdBtn && !agreementBtn) return;
-
-        /* ------------------------------------------------------- */
-        /* USSD COLLATERAL CODE                                     */
-        /* ------------------------------------------------------- */
         if (ussdBtn && !ussdBtn.dataset.ussdBound) {
             ussdBtn.dataset.ussdBound = '1';
             ussdBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-
+                e.preventDefault(); e.stopPropagation();
                 if (ussdError) ussdError.textContent = '';
                 if (ussdDisplay) { ussdDisplay.textContent = ''; ussdDisplay.style.display = 'none'; }
-
-                var bizName   = (document.getElementById('agentBusinessName') || {}).value || '';
-                var mobile    = (document.getElementById('agentMobileMoney') || {}).value || '';
-                var collat    = (document.getElementById('agentCollateralLimit') || {}).value || '';
-                var cc        = (document.getElementById('agentCountryCode') || {}).value || '+232';
-
-                bizName = bizName.trim();
-                mobile  = mobile.replace(/\D/g, '');
-                collat  = parseFloat(collat) || 0;
-
+                var bizName = (document.getElementById('agentBusinessName') || {}).value || '';
+                var mobile = (document.getElementById('agentMobileMoney') || {}).value || '';
+                var collat = (document.getElementById('agentCollateralLimit') || {}).value || '';
+                var cc = (document.getElementById('agentCountryCode') || {}).value || '+232';
+                bizName = bizName.trim(); mobile = mobile.replace(/\D/g, ''); collat = parseFloat(collat) || 0;
                 if (!bizName) { if (ussdError) ussdError.textContent = '❌ Enter the Business name first.'; return; }
                 if (mobile.length < 6) { if (ussdError) ussdError.textContent = '❌ Enter a valid Mobile Money number.'; return; }
                 if (collat <= 0) { if (ussdError) ussdError.textContent = '❌ Select a collateral amount.'; return; }
-
-                var route;
-                try {
-                    route = (typeof getUssdTemplateForPhone === 'function') ? getUssdTemplateForPhone(mobile) : null;
-                } catch (e) { route = null; }
-                if (!route) {
-                    var local = mobile;
-                    if (local.indexOf('232') === 0) local = local.slice(3);
-                    if (local.indexOf('0') === 0) local = local.slice(1);
-                    var two = local.slice(0, 2);
-                    var P144 = ['76','78','79','75','74','73'];
-                    var P161 = ['88','99','77','33','30','70','80','90'];
-                    if (P144.indexOf(two) !== -1) route = { template: '#144*2*2*{AGENT}*{AMOUNT}*0000#', label: 'MB-FOUR (144)' };
-                    else if (P161.indexOf(two) !== -1) route = { template: '*161*1*1*{AGENT}*{AMOUNT}*0000#', label: 'MB-FOUR (161)' };
-                    else route = { template: '#144*2*2*{AGENT}*{AMOUNT}*0000#', label: 'MB-FOUR (144)' };
-                }
-
+                var route; try { route = (typeof getUssdTemplateForPhone === 'function') ? getUssdTemplateForPhone(mobile) : null; } catch (e) { route = null; }
+                if (!route) route = { template: '#144*2*2*{AGENT}*{AMOUNT}*0000#', label: 'MB-FOUR (144)' };
                 var ussd = route.template.replace('{AGENT}', mobile).replace('{AMOUNT}', String(Math.round(collat)));
-
                 if (ussdDisplay) {
-                    ussdDisplay.textContent = ussd;
-                    ussdDisplay.style.display = 'block';
-                    ussdDisplay.title = 'Tap to copy';
-                    ussdDisplay.style.cursor = 'pointer';
-                    ussdDisplay.onclick = function() {
-                        try {
-                            if (navigator.clipboard && navigator.clipboard.writeText) {
-                                navigator.clipboard.writeText(ussd).then(function() { if (typeof showToast === 'function') showToast('📋 USSD copied', 1600); });
-                            } else {
-                                var ta = document.createElement('textarea');
-                                ta.value = ussd;
-                                ta.style.position = 'fixed';
-                                ta.style.left = '-9999px';
-                                document.body.appendChild(ta);
-                                ta.select();
-                                document.execCommand('copy');
-                                document.body.removeChild(ta);
-                                if (typeof showToast === 'function') showToast('📋 USSD copied', 1600);
-                            }
-                        } catch (err) {}
-                    };
+                    ussdDisplay.textContent = ussd; ussdDisplay.style.display = 'block';
+                    ussdDisplay.title = 'Tap to copy'; ussdDisplay.style.cursor = 'pointer';
+                    ussdDisplay.onclick = function() { try { if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(ussd).then(function() { if (typeof showToast === 'function') showToast('📋 USSD copied', 1600); }); } catch (err) {} };
                 }
-
-                try {
-                    if (typeof showMbFourUssdModal === 'function') {
-                        showMbFourUssdModal({
-                            agentName: bizName,
-                            agentPhone: mobile,
-                            agentCountryCode: cc,
-                            amount: Math.round(collat),
-                            routeLabel: route.label,
-                            ussd: ussd
-                        });
-                    }
-                } catch (err) { console.warn('USSD modal unavailable:', err); }
-
+                try { if (typeof showMbFourUssdModal === 'function') showMbFourUssdModal({ agentName: bizName, agentPhone: mobile, agentCountryCode: cc, amount: Math.round(collat), routeLabel: route.label, ussd: ussd }); } catch (err) {}
                 if (typeof showToast === 'function') showToast('✅ USSD code generated', 1600);
             });
         }
-
-        /* ------------------------------------------------------- */
-        /* AGREEMENT MODAL                                          */
-        /* ------------------------------------------------------- */
         if (agreementBtn && !agreementBtn.dataset.agreementBound) {
             agreementBtn.dataset.agreementBound = '1';
-
             agreementBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
+                e.preventDefault(); e.stopPropagation();
                 if (!agreementModal) { if (typeof showToast === 'function') showToast('⚠️ Agreement modal missing', 2200); return; }
-
                 var body = document.getElementById('agreementBody');
                 if (body && !body.dataset.populated) {
                     body.dataset.populated = '1';
                     var bizName = ((document.getElementById('agentBusinessName') || {}).value || '').trim() || 'the Agent';
-                    var collat  = parseFloat((document.getElementById('agentCollateralLimit') || {}).value) || 0;
-                    var cc      = ((document.getElementById('agentCountryCode') || {}).value || '').trim() || '+232';
-
-                    body.innerHTML =
-                        '<p style="margin-bottom:10px;line-height:1.5;">This <strong>AfriPay Agent Agreement</strong> is entered into between <strong>AfriPay</strong> and <strong>' +
-                        (bizName.replace(/[<>&"\'\/]/g, '')) +
-                        '</strong> ("the Agent") under the following terms:</p>' +
-                        '<ol style="padding-left:20px;line-height:1.6;">' +
-                        '<li>The Agent agrees to comply with all AfriPay transfer rules and applicable mobile-money regulations.</li>' +
-                        '<li>The Agent has pledged a collateral of <strong>' + collat.toLocaleString() + '</strong> units for the country code <strong>' + cc + '</strong> as security against any losses arising from misuse.</li>' +
-                        '<li>The Agent is responsible for verifying sender and client details before processing any transaction.</li>' +
-                        '<li>All fees (Carrear 3%, Local Transfer 1%, Services 1%) are non-refundable once a transaction is confirmed.</li>' +
-                        '<li>AfriPay may suspend or revoke this agreement if the Agent violates any of the above terms.</li>' +
-                        '<li>This agreement is effective immediately upon acceptance and remains in force until terminated.</li>' +
-                        '</ol>' +
-                        '<p style="margin-top:10px;font-size:.78rem;color:#7f8c8d;">By tapping <strong>Agree</strong>, you acknowledge that you have read and accept these terms.</p>';
+                    var collat = parseFloat((document.getElementById('agentCollateralLimit') || {}).value) || 0;
+                    var cc = ((document.getElementById('agentCountryCode') || {}).value || '').trim() || '+232';
+                    body.innerHTML = '<p style="margin-bottom:10px;line-height:1.5;">This <strong>AfriPay Agent Agreement</strong> is entered into between <strong>AfriPay</strong> and <strong>' + (bizName.replace(/[<>&"\'\/]/g, '')) + '</strong> ("the Agent") under the following terms:</p><ol style="padding-left:20px;line-height:1.6;"><li>The Agent agrees to comply with all AfriPay transfer rules and applicable mobile-money regulations.</li><li>The Agent has pledged a collateral of <strong>' + collat.toLocaleString() + '</strong> units for the country code <strong>' + cc + '</strong> as security against any losses arising from misuse.</li><li>The Agent is responsible for verifying sender and client details before processing any transaction.</li><li>All fees (Carrear 3%, Local Transfer 1%, Services 1%) are non-refundable once a transaction is confirmed.</li><li>AfriPay may suspend or revoke this agreement if the Agent violates any of the above terms.</li><li>This agreement is effective immediately upon acceptance and remains in force until terminated.</li></ol><p style="margin-top:10px;font-size:.78rem;color:#7f8c8d;">By tapping <strong>Agree</strong>, you acknowledge that you have read and accept these terms.</p>';
                 }
-
-                var agreeBtn = document.getElementById('agreementAgreeBtn');
-                var statusTxt = document.getElementById('agreementStatusText');
-                var alreadySigned = false;
-                try { alreadySigned = localStorage.getItem(AGREEMENT_KEY) === '1'; } catch (err) {}
-
-                if (agreeBtn) {
-                    if (alreadySigned) { agreeBtn.disabled = true; agreeBtn.textContent = '✅ Signed'; }
-                    else { agreeBtn.disabled = false; agreeBtn.textContent = '✋ Agree'; }
-                }
-                if (statusTxt) {
-                    if (alreadySigned) { statusTxt.textContent = 'Signed'; statusTxt.style.color = '#27ae60'; }
-                    else { statusTxt.textContent = 'Not Signed'; statusTxt.style.color = '#e74c3c'; }
-                }
-
+                var agreeBtn = document.getElementById('agreementAgreeBtn'); var statusTxt = document.getElementById('agreementStatusText');
+                var alreadySigned = false; try { alreadySigned = localStorage.getItem(AGREEMENT_KEY) === '1'; } catch (err) {}
+                if (agreeBtn) { if (alreadySigned) { agreeBtn.disabled = true; agreeBtn.textContent = '✅ Signed'; } else { agreeBtn.disabled = false; agreeBtn.textContent = '✋ Agree'; } }
+                if (statusTxt) { if (alreadySigned) { statusTxt.textContent = 'Signed'; statusTxt.style.color = '#27ae60'; } else { statusTxt.textContent = 'Not Signed'; statusTxt.style.color = '#e74c3c'; } }
                 agreementModal.style.display = 'flex';
             });
-
             var agreeBtnEl = document.getElementById('agreementAgreeBtn');
             if (agreeBtnEl && !agreeBtnEl.dataset.bound) {
                 agreeBtnEl.dataset.bound = '1';
-                agreeBtnEl.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    try { localStorage.setItem(AGREEMENT_KEY, '1'); } catch (err) {}
-                    try { agreementSigned = true; } catch (err) {}
-                    var statusTxt = document.getElementById('agreementStatusText');
-                    if (statusTxt) { statusTxt.textContent = 'Signed'; statusTxt.style.color = '#27ae60'; }
-                    this.disabled = true;
-                    this.textContent = '✅ Signed';
-                    if (typeof showToast === 'function') showToast('✅ Agreement signed', 1800);
-                });
+                agreeBtnEl.addEventListener('click', function(e) { e.preventDefault(); try { localStorage.setItem(AGREEMENT_KEY, '1'); } catch (err) {} try { agreementSigned = true; } catch (err) {} var statusTxt = document.getElementById('agreementStatusText'); if (statusTxt) { statusTxt.textContent = 'Signed'; statusTxt.style.color = '#27ae60'; } this.disabled = true; this.textContent = '✅ Signed'; if (typeof showToast === 'function') showToast('✅ Agreement signed', 1800); });
             }
-
-            ['agreementCloseXBtn', 'agreementCloseBtn'].forEach(function(id) {
-                var b = document.getElementById(id);
-                if (b && !b.dataset.bound) {
-                    b.dataset.bound = '1';
-                    b.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        if (agreementModal) agreementModal.style.display = 'none';
-                    });
-                }
-            });
-
-            if (!agreementModal.dataset.backdropBound) {
-                agreementModal.dataset.backdropBound = '1';
-                agreementModal.addEventListener('click', function(e) {
-                    if (e.target === agreementModal) agreementModal.style.display = 'none';
-                });
-            }
-
-            try {
-                if (localStorage.getItem(AGREEMENT_KEY) === '1') {
-                    var statusTxt2 = document.getElementById('agreementStatusText');
-                    if (statusTxt2) { statusTxt2.textContent = 'Signed'; statusTxt2.style.color = '#27ae60'; }
-                }
-            } catch (err) {}
+            ['agreementCloseXBtn', 'agreementCloseBtn'].forEach(function(id) { var b = document.getElementById(id); if (b && !b.dataset.bound) { b.dataset.bound = '1'; b.addEventListener('click', function(e) { e.preventDefault(); if (agreementModal) agreementModal.style.display = 'none'; }); } });
+            if (!agreementModal.dataset.backdropBound) { agreementModal.dataset.backdropBound = '1'; agreementModal.addEventListener('click', function(e) { if (e.target === agreementModal) agreementModal.style.display = 'none'; }); }
+            try { if (localStorage.getItem(AGREEMENT_KEY) === '1') { var statusTxt2 = document.getElementById('agreementStatusText'); if (statusTxt2) { statusTxt2.textContent = 'Signed'; statusTxt2.style.color = '#27ae60'; } } } catch (err) {}
         }
     }
-
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', boot);
-    } else {
-        boot();
-    }
-    setTimeout(function() {
-        var u = document.getElementById('generateCollateralBtn');
-        var a = document.getElementById('viewAgreementBtn');
-        if ((u && !u.dataset.ussdBound) || (a && !a.dataset.agreementBound)) boot();
-    }, 800);
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+    setTimeout(function() { var u = document.getElementById('generateCollateralBtn'); var a = document.getElementById('viewAgreementBtn'); if ((u && !u.dataset.ussdBound) || (a && !a.dataset.agreementBound)) boot(); }, 800);
 })();
 
 /* ============================================================ */
 /* CHAT MODULE — send, realtime, groups, members, media          */
-/* Self-contained, works even if other parts of script.js break  */
-/* Binds: chatSendBtn, chatInput, chatGroupsBtn, chatGroupsMenu, */
-/* chatAudioCallBtn, chatVideoCallBtn, chatAudioMsgBtn,          */
-/* chatVideoMsgBtn, chatImagePostBtn, chatToggleRightBarBtn,     */
-/* chatOnlineList, chatMemberList, chatContact, chatDatetime     */
 /* ============================================================ */
 (function initChatModule() {
-    const DEVELOPER_KEY  = 'dev_amine';
+    const DEVELOPER_KEY = 'dev_amine';
     const DEVELOPER_NAME = 'AfriPay Developer';
-    const AGREEMENT_KEY = 'afripay_agent_agreement_signed'; // shared but unused here
-
-    let currentConvo    = null;
-    let unsubRealtime   = null;
-    let membersCache    = [];
-    let currentUserKey  = null;
-    let currentUserName = null;
-
-    /* -------- helpers -------- */
-    function safe(fn, label) { try { fn(); } catch (e) { console.warn('chat.' + (label || '') + ':', e); } }
+    let currentConvo = null; let unsubRealtime = null; let membersCache = []; let currentUserKey = null; let currentUserName = null;
     function el(id) { return document.getElementById(id); }
     function toast(m, d) { try { if (typeof showToast === 'function') showToast(m, d || 2000); } catch (e) {} }
     function esc(s) { if (s == null) return ''; return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
-    function fmtTime(iso) {
-        try { return new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); }
-        catch (e) { return ''; }
-    }
-    function fmtDateTime(d) {
-        try { return d.toLocaleString([], { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }); }
-        catch (e) { return ''; }
-    }
-
-    function getMyKey() {
-        if (typeof currentUser !== 'undefined' && currentUser && currentUser.id) return currentUser.id;
-        if (typeof currentUser !== 'undefined' && currentUser && currentUser.phone) return 'user_' + currentUser.phone;
-        let g = localStorage.getItem('afripay_guest_key');
-        if (!g) { g = 'guest_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7); localStorage.setItem('afripay_guest_key', g); }
-        return g;
-    }
-    function getMyName() {
-        if (typeof currentUser !== 'undefined' && currentUser && currentUser.name) return currentUser.name;
-        return 'Guest';
-    }
-
+    function fmtTime(iso) { try { return new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); } catch (e) { return ''; } }
+    function fmtDateTime(d) { try { return d.toLocaleString([], { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }); } catch (e) { return ''; } }
+    function getMyKey() { if (typeof currentUser !== 'undefined' && currentUser && currentUser.id) return currentUser.id; if (typeof currentUser !== 'undefined' && currentUser && currentUser.phone) return 'user_' + currentUser.phone; let g = localStorage.getItem('afripay_guest_key'); if (!g) { g = 'guest_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7); localStorage.setItem('afripay_guest_key', g); } return g; }
+    function getMyName() { if (typeof currentUser !== 'undefined' && currentUser && currentUser.name) return currentUser.name; return 'Guest'; }
     function buildConvoId(a, b) { return [a, b].sort().join('__'); }
-
-    function supaReady() {
-        try { return typeof Supa !== 'undefined' && Supa.isReady && Supa.isReady() && typeof supabaseClient !== 'undefined' && supabaseClient; } catch (e) { return false; }
-    }
-
+    function supaReady() { try { return typeof Supa !== 'undefined' && Supa.isReady && Supa.isReady() && typeof supabaseClient !== 'undefined' && supabaseClient; } catch (e) { return false; } }
     async function ensureConversation(keyA, keyB) {
         const convoId = buildConvoId(keyA, keyB);
         if (!supaReady()) return { convo_id: convoId, participant_a: keyA, participant_b: keyB };
-        try {
-            const { data: existing } = await supabaseClient
-                .from('chat_conversations').select('*').eq('convo_id', convoId).maybeSingle();
-            if (existing) return existing;
-            const { data, error } = await supabaseClient.from('chat_conversations').insert({
-                convo_id: convoId, participant_a: keyA, participant_b: keyB
-            }).select().single();
-            if (error) throw error;
-            return data;
-        } catch (e) {
-            console.warn('ensureConversation:', e);
-            return { convo_id: convoId, participant_a: keyA, participant_b: keyB };
-        }
+        try { const { data: existing } = await supabaseClient.from('chat_conversations').select('*').eq('convo_id', convoId).maybeSingle(); if (existing) return existing; const { data, error } = await supabaseClient.from('chat_conversations').insert({ convo_id: convoId, participant_a: keyA, participant_b: keyB }).select().single(); if (error) throw error; return data; } catch (e) { return { convo_id: convoId, participant_a: keyA, participant_b: keyB }; }
     }
-
-    async function fetchMessages(convoId) {
-        if (!supaReady()) {
-            try { return JSON.parse(localStorage.getItem('chat_local_' + convoId) || '[]'); }
-            catch (e) { return []; }
-        }
-        try {
-            const { data, error } = await supabaseClient
-                .from('chat_messages').select('*').eq('convo_id', convoId)
-                .order('created_at', { ascending: true }).limit(300);
-            if (error) throw error;
-            return data || [];
-        } catch (e) {
-            console.warn('fetchMessages:', e);
-            return [];
-        }
-    }
-
+    async function fetchMessages(convoId) { if (!supaReady()) { try { return JSON.parse(localStorage.getItem('chat_local_' + convoId) || '[]'); } catch (e) { return []; } } try { const { data, error } = await supabaseClient.from('chat_messages').select('*').eq('convo_id', convoId).order('created_at', { ascending: true }).limit(300); if (error) throw error; return data || []; } catch (e) { return []; } }
     function renderMessage(msg) {
         const mine = msg.sender_key === currentUserKey;
-        const wrap = document.createElement('div');
-        wrap.className = 'chat-msg ' + (mine ? 'mine' : 'theirs');
-        const body = msg.body || '';
-        let bodyHtml = '';
-        let m;
-        if ((m = body.match(/^\[img\](.+)$/))) {
-            bodyHtml = '<img class="chat-img" src="' + esc(m[1]) + '" alt="image" />';
-        } else if ((m = body.match(/^\[audio\](.+)$/))) {
-            bodyHtml = '<audio controls src="' + esc(m[1]) + '"></audio>';
-        } else if ((m = body.match(/^\[video\](.+)$/))) {
-            bodyHtml = '<video controls src="' + esc(m[1]) + '"></video>';
-        } else {
-            bodyHtml = esc(body).replace(/\n/g, '<br>');
-        }
-        wrap.innerHTML =
-            '<div class="msg-head"><strong>' + esc(msg.sender_name || (mine ? 'You' : 'User')) + '</strong> · ' + esc(fmtTime(msg.created_at)) + '</div>' +
-            '<div class="msg-body">' + bodyHtml + '</div>';
+        const wrap = document.createElement('div'); wrap.className = 'chat-msg ' + (mine ? 'mine' : 'theirs');
+        const body = msg.body || ''; let bodyHtml = ''; let m;
+        if ((m = body.match(/^\[img\](.+)$/))) bodyHtml = '<img class="chat-img" src="' + esc(m[1]) + '" alt="image" />';
+        else if ((m = body.match(/^\[audio\](.+)$/))) bodyHtml = '<audio controls src="' + esc(m[1]) + '"></audio>';
+        else if ((m = body.match(/^\[video\](.+)$/))) bodyHtml = '<video controls src="' + esc(m[1]) + '"></video>';
+        else bodyHtml = esc(body).replace(/\n/g, '<br>');
+        wrap.innerHTML = '<div class="msg-head"><strong>' + esc(msg.sender_name || (mine ? 'You' : 'User')) + '</strong> · ' + esc(fmtTime(msg.created_at)) + '</div><div class="msg-body">' + bodyHtml + '</div>';
         if (msg.id) wrap.dataset.msgId = msg.id;
         return wrap;
     }
-
     async function paintMessages() {
         const list = el('chatMessages'); if (!list) return;
         const hint = el('chatEmptyHint');
-        if (!currentConvo) {
-            list.innerHTML = '';
-            if (hint) { hint.style.display = 'block'; list.appendChild(hint); }
-            return;
-        }
+        if (!currentConvo) { list.innerHTML = ''; if (hint) { hint.style.display = 'block'; list.appendChild(hint); } return; }
         if (hint) hint.style.display = 'none';
         list.innerHTML = '<div style="text-align:center;color:#95a5a6;font-size:.75rem;padding:8px;">Loading…</div>';
-        const msgs = await fetchMessages(currentConvo.convoId);
-        list.innerHTML = '';
-        if (!msgs.length) {
-            list.innerHTML = '<div style="text-align:center;color:#95a5a6;font-size:.78rem;padding:20px;">No messages yet. Say hello 👋</div>';
-        } else {
-            msgs.forEach(m => list.appendChild(renderMessage(m)));
-        }
+        const msgs = await fetchMessages(currentConvo.convoId); list.innerHTML = '';
+        if (!msgs.length) list.innerHTML = '<div style="text-align:center;color:#95a5a6;font-size:.78rem;padding:20px;">No messages yet. Say hello 👋</div>';
+        else msgs.forEach(m => list.appendChild(renderMessage(m)));
         list.scrollTop = list.scrollHeight;
     }
-
     function subscribeRealtime(convoId) {
         if (unsubRealtime) { try { unsubRealtime(); } catch (e) {} unsubRealtime = null; }
         if (!supaReady() || !convoId) return;
         try {
-            const channel = supabaseClient
-                .channel('chat:' + convoId)
-                .on('postgres_changes',
-                    { event: 'INSERT', schema: 'public', table: 'chat_messages', filter: 'convo_id=eq.' + convoId },
-                    (payload) => {
-                        const list = el('chatMessages');
-                        if (!list || !payload || !payload.new) return;
-                        const existing = list.querySelector('[data-msg-id="' + payload.new.id + '"]');
-                        if (existing) return;
-                        const node = renderMessage(payload.new);
-                        node.dataset.msgId = payload.new.id;
-                        const hintNode = list.querySelector('div[style*="No messages"]');
-                        if (hintNode) hintNode.remove();
-                        list.appendChild(node);
-                        list.scrollTop = list.scrollHeight;
-                    })
-                .subscribe();
+            const channel = supabaseClient.channel('chat:' + convoId).on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_messages', filter: 'convo_id=eq.' + convoId }, (payload) => {
+                const list = el('chatMessages'); if (!list || !payload || !payload.new) return;
+                if (list.querySelector('[data-msg-id="' + payload.new.id + '"]')) return;
+                const node = renderMessage(payload.new); node.dataset.msgId = payload.new.id;
+                const hintNode = list.querySelector('div[style*="No messages"]'); if (hintNode) hintNode.remove();
+                list.appendChild(node); list.scrollTop = list.scrollHeight;
+            }).subscribe();
             unsubRealtime = () => { try { supabaseClient.removeChannel(channel); } catch (e) {} };
-        } catch (e) { console.warn('subscribeRealtime:', e); }
+        } catch (e) {}
     }
-
     async function sendMessage(rawBody) {
         const body = (rawBody || '').trim();
         if (!body) { toast('⚠️ Type a message first', 1500); return; }
         if (!currentConvo) { toast('⚠️ Select a conversation first', 2000); return; }
-
         const convoId = currentConvo.convoId;
-        const payload = {
-            convo_id: convoId,
-            sender_key: currentUserKey,
-            sender_name: currentUserName,
-            body: body
-        };
-
+        const payload = { convo_id: convoId, sender_key: currentUserKey, sender_name: currentUserName, body: body };
         const list = el('chatMessages');
-        if (list) {
-            const emptyHint = list.querySelector('div[style*="No messages"]');
-            if (emptyHint) emptyHint.remove();
-            const optimistic = renderMessage({
-                sender_key: currentUserKey,
-                sender_name: currentUserName,
-                body: body,
-                created_at: new Date().toISOString()
-            });
-            list.appendChild(optimistic);
-            list.scrollTop = list.scrollHeight;
-        }
-
+        if (list) { const emptyHint = list.querySelector('div[style*="No messages"]'); if (emptyHint) emptyHint.remove(); const optimistic = renderMessage({ sender_key: currentUserKey, sender_name: currentUserName, body: body, created_at: new Date().toISOString() }); list.appendChild(optimistic); list.scrollTop = list.scrollHeight; }
         if (supaReady()) {
-            try {
-                const { data, error } = await supabaseClient.from('chat_messages').insert(payload).select().single();
-                if (error) throw error;
-                if (list && data && data.id) {
-                    const nodes = list.querySelectorAll('.chat-msg');
-                    const last = nodes[nodes.length - 1];
-                    if (last && !last.dataset.msgId) last.dataset.msgId = data.id;
-                }
-                try {
-                    await supabaseClient.from('chat_conversations')
-                        .update({ last_message: body, last_message_at: new Date().toISOString() })
-                        .eq('convo_id', convoId);
-                } catch (e2) {}
-            } catch (e) {
-                console.warn('sendMessage supabase:', e);
-                const arr = JSON.parse(localStorage.getItem('chat_local_' + convoId) || '[]');
-                arr.push({ id: 'local_' + Date.now(), ...payload, created_at: new Date().toISOString() });
-                localStorage.setItem('chat_local_' + convoId, JSON.stringify(arr));
-            }
-        } else {
-            const arr = JSON.parse(localStorage.getItem('chat_local_' + convoId) || '[]');
-            arr.push({ id: 'local_' + Date.now(), ...payload, created_at: new Date().toISOString() });
-            localStorage.setItem('chat_local_' + convoId, JSON.stringify(arr));
-        }
+            try { const { data, error } = await supabaseClient.from('chat_messages').insert(payload).select().single(); if (error) throw error; if (list && data && data.id) { const nodes = list.querySelectorAll('.chat-msg'); const last = nodes[nodes.length - 1]; if (last && !last.dataset.msgId) last.dataset.msgId = data.id; } try { await supabaseClient.from('chat_conversations').update({ last_message: body, last_message_at: new Date().toISOString() }).eq('convo_id', convoId); } catch (e2) {} }
+            catch (e) { const arr = JSON.parse(localStorage.getItem('chat_local_' + convoId) || '[]'); arr.push({ id: 'local_' + Date.now(), ...payload, created_at: new Date().toISOString() }); localStorage.setItem('chat_local_' + convoId, JSON.stringify(arr)); }
+        } else { const arr = JSON.parse(localStorage.getItem('chat_local_' + convoId) || '[]'); arr.push({ id: 'local_' + Date.now(), ...payload, created_at: new Date().toISOString() }); localStorage.setItem('chat_local_' + convoId, JSON.stringify(arr)); }
     }
-
-    async function openConversation(opts) {
-        currentConvo = opts;
-        const contactEl = el('chatContact');
-        if (contactEl) contactEl.textContent = opts.title || 'Conversation';
-        await paintMessages();
-        subscribeRealtime(opts.convoId);
-        const inp = el('chatInput'); if (inp) inp.focus();
-    }
-
-    async function openDirectChat(targetKey, targetName) {
-        const conv = await ensureConversation(currentUserKey, targetKey);
-        await openConversation({
-            convoId: conv.convo_id,
-            title: targetName || targetKey,
-            kind: 'direct',
-            targetKey: targetKey,
-            targetName: targetName
-        });
-    }
-
+    async function openConversation(opts) { currentConvo = opts; const contactEl = el('chatContact'); if (contactEl) contactEl.textContent = opts.title || 'Conversation'; await paintMessages(); subscribeRealtime(opts.convoId); const inp = el('chatInput'); if (inp) inp.focus(); }
+    async function openDirectChat(targetKey, targetName) { const conv = await ensureConversation(currentUserKey, targetKey); await openConversation({ convoId: conv.convo_id, title: targetName || targetKey, kind: 'direct', targetKey: targetKey, targetName: targetName }); }
     async function openGroupChat(kind) {
         const convoId = 'group_' + kind;
-        const titles = {
-            agents: '🏢 All Agents',
-            users: '👤 All Users',
-            clients: '👥 All Clients',
-            developer: '🧑‍💻 Direct Developer'
-        };
-        if (kind === 'developer') {
-            await openDirectChat(DEVELOPER_KEY, DEVELOPER_NAME);
-            return;
-        }
-        if (supaReady()) {
-            try {
-                const { data: existing } = await supabaseClient.from('chat_conversations').select('*').eq('convo_id', convoId).maybeSingle();
-                if (!existing) {
-                    await supabaseClient.from('chat_conversations').insert({
-                        convo_id: convoId,
-                        participant_a: convoId,
-                        participant_b: currentUserKey
-                    });
-                }
-            } catch (e) { console.warn('group convo create:', e); }
-        }
-        await openConversation({
-            convoId: convoId,
-            title: titles[kind] || ('Group: ' + kind),
-            kind: 'group-' + kind,
-            targetKey: convoId,
-            targetName: titles[kind]
-        });
+        const titles = { agents: '🏢 All Agents', users: '👤 All Users', clients: '👥 All Clients', developer: '🧑‍💻 Direct Developer' };
+        if (kind === 'developer') { await openDirectChat(DEVELOPER_KEY, DEVELOPER_NAME); return; }
+        if (supaReady()) { try { const { data: existing } = await supabaseClient.from('chat_conversations').select('*').eq('convo_id', convoId).maybeSingle(); if (!existing) await supabaseClient.from('chat_conversations').insert({ convo_id: convoId, participant_a: convoId, participant_b: currentUserKey }); } catch (e) {} }
+        await openConversation({ convoId: convoId, title: titles[kind] || ('Group: ' + kind), kind: 'group-' + kind, targetKey: convoId, targetName: titles[kind] });
     }
-
     async function collectMembers() {
-        const online = [];
-        const all = [];
-
-        if (typeof currentUser !== 'undefined' && currentUser && currentUser.name) {
-            online.push({
-                key: currentUserKey,
-                name: (currentUser.name || 'You') + ' (you)',
-                emoji: currentUser.emoji || '👤',
-                isOnline: true,
-                role: 'user'
-            });
-        }
-
-        try {
-            const agents = JSON.parse(localStorage.getItem('afripay_registered_users') || '[]');
-            agents.forEach(a => {
-                if (a.role === 'agent' || a.isAgent === true || a.businessName) {
-                    all.push({
-                        key: a.id || ('agent_' + (a.businessName || '').replace(/\W/g, '').toLowerCase()),
-                        name: a.businessName || a.name || 'Agent',
-                        emoji: a.emoji || '🏢',
-                        isOnline: a.approved === true,
-                        role: 'agent'
-                    });
-                } else if (a.name && a.phone) {
-                    all.push({
-                        key: a.id || ('user_' + a.phone),
-                        name: a.name,
-                        emoji: a.emoji || '👤',
-                        isOnline: false,
-                        role: 'user'
-                    });
-                }
-            });
-        } catch (e) {}
-
-        if (supaReady()) {
-            try {
-                const { data } = await supabaseClient.from('agent_clients').select('id,name,phone').limit(50);
-                (data || []).forEach(c => {
-                    all.push({
-                        key: 'client_' + (c.id || c.phone),
-                        name: c.name || c.phone || 'Client',
-                        emoji: '👥',
-                        isOnline: false,
-                        role: 'client'
-                    });
-                });
-            } catch (e) {}
-        }
-
-        all.push({
-            key: DEVELOPER_KEY,
-            name: DEVELOPER_NAME,
-            emoji: '🧑‍💻',
-            isOnline: true,
-            role: 'developer'
-        });
-
+        const online = []; const all = [];
+        if (typeof currentUser !== 'undefined' && currentUser && currentUser.name) online.push({ key: currentUserKey, name: (currentUser.name || 'You') + ' (you)', emoji: currentUser.emoji || '👤', isOnline: true, role: 'user' });
+        try { const agents = JSON.parse(localStorage.getItem('afripay_registered_users') || '[]'); agents.forEach(a => { if (a.role === 'agent' || a.isAgent === true || a.businessName) all.push({ key: a.id || ('agent_' + (a.businessName || '').replace(/\W/g, '').toLowerCase()), name: a.businessName || a.name || 'Agent', emoji: a.emoji || '🏢', isOnline: a.approved === true, role: 'agent' }); else if (a.name && a.phone) all.push({ key: a.id || ('user_' + a.phone), name: a.name, emoji: a.emoji || '👤', isOnline: false, role: 'user' }); }); } catch (e) {}
+        if (supaReady()) { try { const { data } = await supabaseClient.from('agent_clients').select('id,name,phone').limit(50); (data || []).forEach(c => { all.push({ key: 'client_' + (c.id || c.phone), name: c.name || c.phone || 'Client', emoji: '👥', isOnline: false, role: 'client' }); }); } catch (e) {} }
+        all.push({ key: DEVELOPER_KEY, name: DEVELOPER_NAME, emoji: '🧑‍💻', isOnline: true, role: 'developer' });
         const seen = new Set();
         const dedup = (arr) => arr.filter(x => { if (!x.key || seen.has(x.key)) return false; seen.add(x.key); return true; });
-
         const onlineDedup = dedup(online.slice());
         const rest = dedup(all);
-
         membersCache = onlineDedup.concat(rest);
         return { online: onlineDedup, all: membersCache };
     }
-
     async function refreshMembers() {
-        const onlineList = el('chatOnlineList');
-        const allList = el('chatMemberList');
-        const onlineCount = el('chatOnlineCount');
-        const memberCount = el('chatMemberCount');
+        const onlineList = el('chatOnlineList'); const allList = el('chatMemberList');
+        const onlineCount = el('chatOnlineCount'); const memberCount = el('chatMemberCount');
         if (!onlineList || !allList) return;
-
         const { online, all } = await collectMembers();
-        onlineList.innerHTML = '';
-        allList.innerHTML = '';
-
-        if (!online.length) {
-            onlineList.innerHTML = '<div class="chat-member" style="color:#95a5a6;">No one online</div>';
-        } else {
-            online.forEach(m => onlineList.appendChild(makeMemberRow(m, true)));
-        }
-
+        onlineList.innerHTML = ''; allList.innerHTML = '';
+        if (!online.length) onlineList.innerHTML = '<div class="chat-member" style="color:#95a5a6;">No one online</div>';
+        else online.forEach(m => onlineList.appendChild(makeMemberRow(m, true)));
         const onlineKeys = new Set(online.map(x => x.key));
         const rest = all.filter(x => !onlineKeys.has(x.key));
-        if (!rest.length) {
-            allList.innerHTML = '<div class="chat-member" style="color:#95a5a6;">No other members</div>';
-        } else {
-            rest.forEach(m => allList.appendChild(makeMemberRow(m, false)));
-        }
-
+        if (!rest.length) allList.innerHTML = '<div class="chat-member" style="color:#95a5a6;">No other members</div>';
+        else rest.forEach(m => allList.appendChild(makeMemberRow(m, false)));
         if (onlineCount) onlineCount.textContent = online.length;
         if (memberCount) memberCount.textContent = all.length;
     }
-
-    function makeMemberRow(m, isOnline) {
-        const row = document.createElement('div');
-        row.className = 'chat-member' + (isOnline ? ' online' : '');
-        row.innerHTML = '<div class="avatar">' + (m.emoji || '👤') + '</div><div class="name">' + esc(m.name) + '</div>';
-        row.addEventListener('click', function() {
-            if (m.key === currentUserKey) { toast('This is you 🙂', 1500); return; }
-            openDirectChat(m.key, m.name);
-        });
-        return row;
-    }
-
+    function makeMemberRow(m, isOnline) { const row = document.createElement('div'); row.className = 'chat-member' + (isOnline ? ' online' : ''); row.innerHTML = '<div class="avatar">' + (m.emoji || '👤') + '</div><div class="name">' + esc(m.name) + '</div>'; row.addEventListener('click', function() { if (m.key === currentUserKey) { toast('This is you 🙂', 1500); return; } openDirectChat(m.key, m.name); }); return row; }
     let dtTimer = null;
-    function startDatetimeTicker() {
-        const elm = el('chatDatetime');
-        if (!elm) return;
-        if (dtTimer) clearInterval(dtTimer);
-        const tick = () => { elm.textContent = fmtDateTime(new Date()); };
-        tick();
-        dtTimer = setInterval(tick, 30000);
-    }
-
+    function startDatetimeTicker() { const elm = el('chatDatetime'); if (!elm) return; if (dtTimer) clearInterval(dtTimer); const tick = () => { elm.textContent = fmtDateTime(new Date()); }; tick(); dtTimer = setInterval(tick, 30000); }
     function bind() {
-        currentUserKey  = getMyKey();
-        currentUserName = getMyName();
-
-        const groupsBtn = el('chatGroupsBtn');
-        const groupsMenu = el('chatGroupsMenu');
+        currentUserKey = getMyKey(); currentUserName = getMyName();
+        const groupsBtn = el('chatGroupsBtn'); const groupsMenu = el('chatGroupsMenu');
         if (groupsBtn && groupsMenu && !groupsBtn.dataset.bound) {
             groupsBtn.dataset.bound = '1';
-            groupsBtn.addEventListener('click', function(e) {
-                e.preventDefault(); e.stopPropagation();
-                groupsMenu.classList.toggle('open');
-            });
-            document.addEventListener('click', function(e) {
-                const wrap = groupsBtn.parentElement;
-                if (wrap && !wrap.contains(e.target)) groupsMenu.classList.remove('open');
-            });
-            groupsMenu.querySelectorAll('[data-group]').forEach(b => {
-                b.addEventListener('click', async function(e) {
-                    e.preventDefault(); e.stopPropagation();
-                    groupsMenu.classList.remove('open');
-                    const kind = b.getAttribute('data-group');
-                    await openGroupChat(kind);
-                });
-            });
+            groupsBtn.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); groupsMenu.classList.toggle('open'); });
+            document.addEventListener('click', function(e) { const wrap = groupsBtn.parentElement; if (wrap && !wrap.contains(e.target)) groupsMenu.classList.remove('open'); });
+            groupsMenu.querySelectorAll('[data-group]').forEach(b => { b.addEventListener('click', async function(e) { e.preventDefault(); e.stopPropagation(); groupsMenu.classList.remove('open'); await openGroupChat(b.getAttribute('data-group')); }); });
         }
-
-        const sendBtn = el('chatSendBtn');
-        const input = el('chatInput');
+        const sendBtn = el('chatSendBtn'); const input = el('chatInput');
         if (sendBtn && input && !sendBtn.dataset.bound) {
             sendBtn.dataset.bound = '1';
-            sendBtn.addEventListener('click', async function(e) {
-                e.preventDefault();
-                const v = input.value;
-                input.value = '';
-                await sendMessage(v);
-                input.focus();
-            });
-            input.addEventListener('keydown', async function(e) {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    const v = input.value;
-                    input.value = '';
-                    await sendMessage(v);
-                }
-            });
+            sendBtn.addEventListener('click', async function(e) { e.preventDefault(); const v = input.value; input.value = ''; await sendMessage(v); input.focus(); });
+            input.addEventListener('keydown', async function(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); const v = input.value; input.value = ''; await sendMessage(v); } });
         }
-
         bindMediaButtons();
-
-        const toggleRight = el('chatToggleRightBarBtn');
-        const rightBar = el('chatRightbar');
-        if (toggleRight && rightBar && !toggleRight.dataset.bound) {
-            toggleRight.dataset.bound = '1';
-            toggleRight.addEventListener('click', function(e) {
-                e.preventDefault();
-                rightBar.style.display = (rightBar.style.display === 'none') ? 'flex' : 'none';
-            });
-        }
-
+        const toggleRight = el('chatToggleRightBarBtn'); const rightBar = el('chatRightbar');
+        if (toggleRight && rightBar && !toggleRight.dataset.bound) { toggleRight.dataset.bound = '1'; toggleRight.addEventListener('click', function(e) { e.preventDefault(); rightBar.style.display = (rightBar.style.display === 'none') ? 'flex' : 'none'; }); }
         const chatToggle = el('chatToggleBtn');
-        if (chatToggle && !chatToggle.dataset.chatBound) {
-            chatToggle.dataset.chatBound = '1';
-            chatToggle.addEventListener('click', function() {
-                setTimeout(refreshMembers, 100);
-                startDatetimeTicker();
-            });
-        }
-
-        refreshMembers();
-        startDatetimeTicker();
-        const hint = el('chatEmptyHint');
-        if (hint) hint.style.display = 'block';
-
-        console.log('✅ Chat module initialized (user=' + currentUserKey + ')');
+        if (chatToggle && !chatToggle.dataset.chatBound) { chatToggle.dataset.chatBound = '1'; chatToggle.addEventListener('click', function() { setTimeout(refreshMembers, 100); startDatetimeTicker(); }); }
+        refreshMembers(); startDatetimeTicker();
+        const hint = el('chatEmptyHint'); if (hint) hint.style.display = 'block';
+        console.log('✅ Chat module initialized');
     }
-
     function bindMediaButtons() {
-        const audioCall = el('chatAudioCallBtn');
-        const videoCall = el('chatVideoCallBtn');
-        const audioMsg  = el('chatAudioMsgBtn');
-        const videoMsg  = el('chatVideoMsgBtn');
-        const imagePost = el('chatImagePostBtn');
-        const audioInput= el('chatAudioInput');
-        const videoInput= el('chatVideoInput');
-        const imageInput= el('chatImageInput');
-
-        if (audioCall && !audioCall.dataset.bound) {
-            audioCall.dataset.bound = '1';
-            audioCall.addEventListener('click', function() {
-                if (!currentConvo) { toast('⚠️ Open a conversation first', 2000); return; }
-                toast('📞 Audio call requested with ' + (currentConvo.targetName || currentConvo.title), 2600);
-            });
-        }
-        if (videoCall && !videoCall.dataset.bound) {
-            videoCall.dataset.bound = '1';
-            videoCall.addEventListener('click', function() {
-                if (!currentConvo) { toast('⚠️ Open a conversation first', 2000); return; }
-                toast('🎥 Video call requested with ' + (currentConvo.targetName || currentConvo.title), 2600);
-            });
-        }
-        if (audioMsg && audioInput && !audioMsg.dataset.bound) {
-            audioMsg.dataset.bound = '1';
-            audioMsg.addEventListener('click', () => audioInput.click());
-            audioInput.addEventListener('change', function() {
-                const f = this.files && this.files[0]; if (!f) return;
-                if (!currentConvo) { toast('⚠️ Open a conversation first', 2000); return; }
-                const reader = new FileReader();
-                reader.onload = (ev) => { sendMessage('[audio]' + ev.target.result); };
-                reader.readAsDataURL(f);
-                this.value = '';
-            });
-        }
-        if (videoMsg && videoInput && !videoMsg.dataset.bound) {
-            videoMsg.dataset.bound = '1';
-            videoMsg.addEventListener('click', () => videoInput.click());
-            videoInput.addEventListener('change', function() {
-                const f = this.files && this.files[0]; if (!f) return;
-                if (!currentConvo) { toast('⚠️ Open a conversation first', 2000); return; }
-                if (f.size > 2 * 1024 * 1024) { toast('⚠️ Video too large (max 2 MB)', 2600); this.value = ''; return; }
-                const reader = new FileReader();
-                reader.onload = (ev) => { sendMessage('[video]' + ev.target.result); };
-                reader.readAsDataURL(f);
-                this.value = '';
-            });
-        }
-        if (imagePost && imageInput && !imagePost.dataset.bound) {
-            imagePost.dataset.bound = '1';
-            imagePost.addEventListener('click', () => imageInput.click());
-            imageInput.addEventListener('change', function() {
-                const f = this.files && this.files[0]; if (!f) return;
-                if (!currentConvo) { toast('⚠️ Open a conversation first', 2000); return; }
-                const reader = new FileReader();
-                reader.onload = (ev) => { sendMessage('[img]' + ev.target.result); };
-                reader.readAsDataURL(f);
-                this.value = '';
-            });
-        }
+        const audioCall = el('chatAudioCallBtn'); const videoCall = el('chatVideoCallBtn');
+        const audioMsg = el('chatAudioMsgBtn'); const videoMsg = el('chatVideoMsgBtn'); const imagePost = el('chatImagePostBtn');
+        const audioInput = el('chatAudioInput'); const videoInput = el('chatVideoInput'); const imageInput = el('chatImageInput');
+        if (audioCall && !audioCall.dataset.bound) { audioCall.dataset.bound = '1'; audioCall.addEventListener('click', function() { if (!currentConvo) { toast('⚠️ Open a conversation first', 2000); return; } toast('📞 Audio call requested with ' + (currentConvo.targetName || currentConvo.title), 2600); }); }
+        if (videoCall && !videoCall.dataset.bound) { videoCall.dataset.bound = '1'; videoCall.addEventListener('click', function() { if (!currentConvo) { toast('⚠️ Open a conversation first', 2000); return; } toast('🎥 Video call requested with ' + (currentConvo.targetName || currentConvo.title), 2600); }); }
+        if (audioMsg && audioInput && !audioMsg.dataset.bound) { audioMsg.dataset.bound = '1'; audioMsg.addEventListener('click', () => audioInput.click()); audioInput.addEventListener('change', function() { const f = this.files && this.files[0]; if (!f) return; if (!currentConvo) { toast('⚠️ Open a conversation first', 2000); return; } const r = new FileReader(); r.onload = (ev) => sendMessage('[audio]' + ev.target.result); r.readAsDataURL(f); this.value = ''; }); }
+        if (videoMsg && videoInput && !videoMsg.dataset.bound) { videoMsg.dataset.bound = '1'; videoMsg.addEventListener('click', () => videoInput.click()); videoInput.addEventListener('change', function() { const f = this.files && this.files[0]; if (!f) return; if (!currentConvo) { toast('⚠️ Open a conversation first', 2000); return; } if (f.size > 2 * 1024 * 1024) { toast('⚠️ Video too large (max 2 MB)', 2600); this.value = ''; return; } const r = new FileReader(); r.onload = (ev) => sendMessage('[video]' + ev.target.result); r.readAsDataURL(f); this.value = ''; }); }
+        if (imagePost && imageInput && !imagePost.dataset.bound) { imagePost.dataset.bound = '1'; imagePost.addEventListener('click', () => imageInput.click()); imageInput.addEventListener('change', function() { const f = this.files && this.files[0]; if (!f) return; if (!currentConvo) { toast('⚠️ Open a conversation first', 2000); return; } const r = new FileReader(); r.onload = (ev) => sendMessage('[img]' + ev.target.result); r.readAsDataURL(f); this.value = ''; }); }
     }
+    function boot() { if (!el('chatWindow')) return; if (el('chatWindow').dataset.chatBound === '1') return; el('chatWindow').dataset.chatBound = '1'; bind(); }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+    setTimeout(function() { if (el('chatWindow') && el('chatWindow').dataset.chatBound !== '1') boot(); }, 900);
+})();
+
+/* ============================================================ */
+/* DELIVER MODULE                                                */
+/* ============================================================ */
+try {
+(function initDeliverModule() {
+    const DELIVER_PREFIX_144 = ['78','79','76','75','73','74'];
+    const DELIVER_PREFIX_161 = ['88','99','77','33','30','80','70','90'];
+    let dealMessages = []; let currentDeliverSeed = null;
+    function el(id) { return document.getElementById(id); }
+    function esc(s) { if (s==null) return ''; return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+    function toast(m,d) { try { if (typeof showToast==='function') showToast(m,d||2000); } catch(e){} }
+    function getCurrentAgent() { try { if (typeof dashCurrentAgentId === 'undefined' || !dashCurrentAgentId) return null; if (typeof getAgents !== 'function') return null; const a = getAgents().find(x => x.id === dashCurrentAgentId); return a ? (a.agentData || a) : null; } catch (e) { return null; } }
+    function pickUssdForAgent(agent) { const phone = String((agent && (agent.mobileMoney || agent.phone)) || '').replace(/\D/g,''); let local = phone; if (local.indexOf('232') === 0) local = local.slice(3); if (local.indexOf('0') === 0) local = local.slice(1); const two = local.slice(0, 2); if (DELIVER_PREFIX_144.indexOf(two) !== -1) return { template: '#144*2*5*1*{CC}#', label: 'Dial 144' }; if (DELIVER_PREFIX_161.indexOf(two) !== -1) return { template: '*161*1*6*1*{CC}#', label: 'Dial 161' }; return { template: '#144*2*5*1*{CC}#', label: 'Dial 144' }; }
+    function getCountryDialCode(countryName) { const map = { 'Sierra Leone':'232','Guinea':'224','Senegal':'221','Liberia':'231','Ghana':'233','Nigeria':'234','Kenya':'254','Mali':'223','Ivory Coast':'225','Niger':'227','Benin':'229','Guinea Bissau':'245','Gambia':'220','Togo':'228','Central Africa Rep':'236','Ethiopia':'251','Gabon':'241','Madagascar':'261','Morocco':'212','Rwanda':'250','Uganda':'256','DR Congo':'243','Burkina Faso':'226' }; return map[countryName] || '232'; }
+    function fillCountrySelect() { const sel = el('deliverCountrySelect'); if (!sel) return; if (sel.options.length > 0) return; try { if (typeof SUPPORTED_CURRENCIES !== 'undefined') sel.innerHTML = SUPPORTED_CURRENCIES.map(c => '<option value="' + esc(c.name) + '">' + c.flag + ' ' + esc(c.name) + '</option>').join(''); } catch (e) {} }
+    function updateUssd() { const agent = getCurrentAgent(); if (!agent) { if (el('deliverUssdBox')) el('deliverUssdBox').textContent = '—'; return; } const countryName = (el('deliverCountrySelect') || {}).value || ''; const cc = getCountryDialCode(countryName); const route = pickUssdForAgent(agent); const ussd = route.template.replace('{CC}', cc); if (el('deliverUssdBox')) el('deliverUssdBox').textContent = ussd; }
+    function prefillFromTransaction(tx) { if (!tx) return; const set = (id, v) => { const e = el(id); if (e) e.value = v || ''; }; set('deliverSenderName', tx.senderName || (tx.sender||'').split('(')[0].trim()); set('deliverSenderPhone', tx.senderPhone || ''); set('deliverClientName', tx.clientName || ''); set('deliverClientPhone', tx.clientPhone || ''); set('deliverAmount', tx.amount || tx.baseAmount || ''); set('deliverCurrency', tx.currency || 'SLL'); set('deliverLocalAgentName', tx.localAgentName || ''); set('deliverLocalAgentPhone', tx.localAgentPhone || ''); set('deliverTxId', tx.txId || ''); set('deliverProviderTxId', tx.providerTxId || ''); set('deliverTransferCode', tx.transferCode || ''); updateUssd(); }
+    function normalizeDeal(d) { return { senderName: d.sender_name || d.senderName || '', senderPhone: d.sender_phone || d.senderPhone || '', clientName: d.client_name || d.clientName || '', clientPhone: d.client_phone || d.clientPhone || '', amount: d.amount || 0, currency: d.currency || 'SLL', localAgentName: d.agent_name || d.agentName || '', localAgentPhone: d.agent_phone || d.agentPhone || '', txId: d.tx_id || d.txId || '', providerTxId: d.provider_tx_id || d.providerTxId || '', transferCode: d.transfer_code || d.transferCode || '' }; }
+    async function loadDeals() { if (typeof supabaseClient === 'undefined' || !supabaseClient) { refreshDealsUI(); return; } const agent = getCurrentAgent(); if (!agent) { refreshDealsUI(); return; } try { const { data, error } = await supabaseClient.from('transactions').select('*').eq('agent_name', agent.businessName || agent.name || '').order('created_at', { ascending: false }).limit(20); if (error) throw error; dealMessages = (data || []).map(normalizeDeal); } catch (e) { dealMessages = []; } refreshDealsUI(); }
+    function refreshDealsUI() {
+        const btn = el('deliverDealsBtn'); const countEl = el('deliverDealsCount'); const menu = el('deliverDealsMenu');
+        if (!btn) return;
+        const n = dealMessages.length;
+        btn.classList.remove('has-deals','no-deals');
+        if (n > 0) { btn.classList.add('has-deals'); if (countEl) { countEl.style.display = 'inline'; countEl.textContent = n; } } else { btn.classList.add('no-deals'); if (countEl) { countEl.style.display = 'none'; } }
+        if (!menu) return;
+        if (!n) { menu.innerHTML = ''; return; }
+        menu.innerHTML = dealMessages.map((d,i) => '<div class="deliver-deal-item" data-deal-idx="' + i + '"><span class="deal-icon">💸</span><div class="deal-info"><div class="deal-title">' + esc(d.senderName || 'Sender') + ' → ' + esc(d.amount) + ' ' + esc(d.currency) + '</div><div class="deal-sub">' + esc(d.txId || '—') + ' · ' + esc(d.senderPhone || '') + '</div></div></div>').join('');
+        menu.querySelectorAll('[data-deal-idx]').forEach(row => { row.addEventListener('click', function() { const idx = parseInt(this.getAttribute('data-deal-idx'), 10); const deal = dealMessages[idx]; if (!deal) return; prefillFromTransaction(deal); menu.classList.remove('open'); toast('✅ Deal loaded', 2000); }); });
+    }
+    function bind() {
+        const openBtn = el('openDeliverBtn'); const modal = el('deliverModal');
+        if (openBtn && !openBtn.dataset.bound) { openBtn.dataset.bound = '1'; openBtn.addEventListener('click', function(e) { e.preventDefault(); if (!modal) return; fillCountrySelect(); loadDeals(); prefillFromTransaction(currentDeliverSeed || null); if (el('deliverError')) el('deliverError').textContent = ''; if (el('deliverSuccess')) el('deliverSuccess').textContent = ''; modal.style.display = 'flex'; }); }
+        if (el('deliverCountrySelect') && !el('deliverCountrySelect').dataset.bound) { el('deliverCountrySelect').dataset.bound = '1'; el('deliverCountrySelect').addEventListener('change', updateUssd); }
+        if (el('deliverSendUssdBtn') && !el('deliverSendUssdBtn').dataset.bound) { el('deliverSendUssdBtn').dataset.bound = '1'; el('deliverSendUssdBtn').addEventListener('click', function(e) { e.preventDefault(); const code = (el('deliverUssdBox') || {}).textContent || ''; if (!code || code === '—') { toast('⚠️ Select a country first', 2000); return; } const link = document.createElement('a'); link.href = 'tel:' + encodeURIComponent(code).replace(/%23/g, '#'); document.body.appendChild(link); link.click(); document.body.removeChild(link); toast('📞 Opening dialer with USSD code...', 2600); }); }
+        if (el('deliverDealsBtn') && !el('deliverDealsBtn').dataset.bound) { el('deliverDealsBtn').dataset.bound = '1'; el('deliverDealsBtn').addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); const menu = el('deliverDealsMenu'); if (menu) menu.classList.toggle('open'); }); }
+        if (el('deliverSubmitBtn') && !el('deliverSubmitBtn').dataset.bound) { el('deliverSubmitBtn').dataset.bound = '1'; el('deliverSubmitBtn').addEventListener('click', submitDelivery); }
+    }
+    async function submitDelivery(e) {
+        if (e) e.preventDefault();
+        const errEl = el('deliverError'); const okEl = el('deliverSuccess');
+        if (errEl) errEl.textContent = ''; if (okEl) okEl.textContent = '';
+        const senderName = (el('deliverSenderName') || {}).value || ''; const senderPhone = (el('deliverSenderPhone') || {}).value || '';
+        const amount = parseFloat((el('deliverAmount') || {}).value) || 0; const currency = (el('deliverCurrency') || {}).value || 'SLL';
+        const agentPtx = (el('deliverAgentProviderTxId') || {}).value.trim(); const agentTc = (el('deliverAgentTransferCode') || {}).value.trim();
+        if (!senderName.trim()) { if (errEl) errEl.textContent = '❌ Sender name required.'; return; }
+        if (!senderPhone.trim()) { if (errEl) errEl.textContent = '❌ Sender phone required.'; return; }
+        if (amount <= 0) { if (errEl) errEl.textContent = '❌ Amount must be greater than zero.'; return; }
+        if (!agentPtx) { if (errEl) errEl.textContent = '❌ Your Provider TX ID required.'; return; }
+        if (!agentTc) { if (errEl) errEl.textContent = '❌ Your Transfer Code required.'; return; }
+        try { if (typeof ProviderTxIdManager !== 'undefined') { const v = ProviderTxIdManager.validate(agentPtx); if (!v.valid) { if (errEl) errEl.textContent = '❌ ' + v.error; return; } } if (typeof TransferCodeManager !== 'undefined') { const v = TransferCodeManager.validate(agentTc); if (!v.valid) { if (errEl) errEl.textContent = '❌ ' + v.error; return; } } } catch (e2) {}
+        const agent = getCurrentAgent(); const agentName = (agent && (agent.businessName || agent.name)) || 'Agent'; const agentPhone = (agent && (agent.mobileMoney || agent.phone)) || '';
+        const country = (el('deliverCountrySelect') || {}).value || ''; const cc = getCountryDialCode(country);
+        const route = pickUssdForAgent(agent); const ussdUsed = route.template.replace('{CC}', cc);
+        const txId = (el('deliverTxId') || {}).value || ('WB' + Date.now()); const providerTxId = (el('deliverProviderTxId') || {}).value || ''; const transferCode = (el('deliverTransferCode') || {}).value || '';
+        try { ProviderTxIdManager.markAsUsed(agentPtx); } catch (e) {}
+        try { TransferCodeManager.markAsUsed(agentTc); } catch (e) {}
+        const payload = { tx_id: txId, provider_tx_id: agentPtx, transfer_code: agentTc, sender_name: senderName, sender_phone: senderPhone, agent_name: agentName, agent_phone: agentPhone, amount: amount, charge: 0, gst: 0, total: amount, currency: currency, mode: 'Delivered', status: 'delivered' };
+        let insertedId = null;
+        if (typeof supabaseClient !== 'undefined' && supabaseClient) { try { const { data, error } = await supabaseClient.from('transactions').insert(payload).select().single(); if (error) throw error; insertedId = data && data.id; } catch (err) { if (errEl) errEl.textContent = '⚠️ Saved locally'; } }
+        try { const list = JSON.parse(localStorage.getItem('afripay_deliveries') || '[]'); list.push(Object.assign({}, payload, { local_provider_tx_id: providerTxId, local_transfer_code: transferCode, local_agent_name: (el('deliverLocalAgentName') || {}).value || '', local_agent_phone: (el('deliverLocalAgentPhone') || {}).value || '', client_name: (el('deliverClientName') || {}).value || '', client_phone: (el('deliverClientPhone') || {}).value || '', ussd_used: ussdUsed, destination_country: country, delivered_at: new Date().toISOString() })); localStorage.setItem('afripay_deliveries', JSON.stringify(list)); } catch (e) {}
+        if (okEl) okEl.textContent = '✅ Transaction delivered successfully!';
+        showDeliverReceipt({ txId: txId, agentProviderTxId: agentPtx, agentTransferCode: agentTc, senderName: senderName, senderPhone: senderPhone, clientName: (el('deliverClientName') || {}).value || '', clientPhone: (el('deliverClientPhone') || {}).value || '', amount: amount, currency: currency, localAgentName: (el('deliverLocalAgentName') || {}).value || '', localAgentPhone: (el('deliverLocalAgentPhone') || {}).value || '', destinationCountry: country, destinationCode: cc, ussdUsed: ussdUsed, agentName: agentName, agentPhone: agentPhone, localProviderTxId: providerTxId, localTransferCode: transferCode });
+        try { if (insertedId) { dealMessages = dealMessages.filter(d => d.txId !== txId); refreshDealsUI(); } } catch (e) {}
+    }
+    function showDeliverReceipt(r) {
+        const body = el('deliverReceiptBody'); const social = el('deliverReceiptSocial'); if (!body) return;
+        const rows = [['📤 Sender', r.senderName + ' — ' + r.senderPhone], ['👤 Client', (r.clientName || '—') + ' — ' + (r.clientPhone || '—')], ['🏢 Local Agent', (r.localAgentName || '—') + ' — ' + (r.localAgentPhone || '—')], ['🌍 Destination', r.destinationCountry + ' (+' + r.destinationCode + ')'], ['🛠 USSD Used', r.ussdUsed], ['🔖 App TX ID', r.txId], ['🔐 App Provider TX ID', r.localProviderTxId || 'N/A'], ['🔐 Your Provider TX ID', r.agentProviderTxId], ['🔑 Your Transfer Code', r.agentTransferCode], ['💵 Amount', r.amount.toFixed(2) + ' ' + r.currency], ['🤝 Agent', r.agentName + ' — ' + r.agentPhone], ['📅 Delivered', new Date().toLocaleString()]];
+        body.innerHTML = rows.map(([k,v]) => '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f0f0f0;font-size:.82rem;"><span style="color:#7f8c8d;">' + esc(k) + '</span><span style="color:#1e3b4a;font-weight:600;text-align:right;max-width:62%;word-break:break-word;">' + esc(v) + '</span></div>').join('');
+        let socialHtml = '<div style="font-size:.72rem;color:#7f8c8d;font-weight:700;margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px;">📱 Send Receipt</div><div class="receipt-social-row">';
+        if (r.senderPhone) { socialHtml += '<button type="button" class="action-btn whatsapp" id="deliverSenderWhatsApp" style="flex:1;min-width:90px;height:36px;font-size:.75rem;">💬 Sender WhatsApp</button>'; socialHtml += '<button type="button" class="action-btn sms" id="deliverSenderSms" style="flex:1;min-width:70px;height:36px;font-size:.75rem;">✉️ Sender SMS</button>'; }
+        if (r.clientPhone) { socialHtml += '<button type="button" class="action-btn whatsapp" id="deliverClientWhatsApp" style="flex:1;min-width:90px;height:36px;font-size:.75rem;">💬 Client WhatsApp</button>'; socialHtml += '<button type="button" class="action-btn sms" id="deliverClientSms" style="flex:1;min-width:70px;height:36px;font-size:.75rem;">✉️ Client SMS</button>'; }
+        socialHtml += '</div>'; if (social) social.innerHTML = socialHtml;
+        if (el('deliverSenderWhatsApp')) el('deliverSenderWhatsApp').addEventListener('click', () => openWhatsApp(r.senderPhone, r.senderName));
+        if (el('deliverSenderSms')) el('deliverSenderSms').addEventListener('click', () => openSMS(r.senderPhone, r.senderName));
+        if (el('deliverClientWhatsApp')) el('deliverClientWhatsApp').addEventListener('click', () => openWhatsApp(r.clientPhone, r.clientName));
+        if (el('deliverClientSms')) el('deliverClientSms').addEventListener('click', () => openSMS(r.clientPhone, r.clientName));
+        if (el('deliverReceiptModal')) el('deliverReceiptModal').style.display = 'flex';
+    }
+    window.__seedDeliverTransaction = function(tx) { currentDeliverSeed = tx || null; };
+    function boot() { if (!el('deliverModal')) return; if (el('deliverModal').dataset.bound === '1') return; el('deliverModal').dataset.bound = '1'; bind(); if (el('deliverReceiptCloseXBtn')) el('deliverReceiptCloseXBtn').addEventListener('click', () => { el('deliverReceiptModal').style.display = 'none'; }); if (el('deliverReceiptCloseBtn')) el('deliverReceiptCloseBtn').addEventListener('click', () => { el('deliverReceiptModal').style.display = 'none'; }); if (el('deliverReceiptModal')) el('deliverReceiptModal').addEventListener('click', function(e) { if (e.target === el('deliverReceiptModal')) el('deliverReceiptModal').style.display = 'none'; }); document.addEventListener('click', function(e) { const menu = el('deliverDealsMenu'); const btn = el('deliverDealsBtn'); if (!menu || !btn) return; if (!btn.contains(e.target) && !menu.contains(e.target)) menu.classList.remove('open'); }); console.log('✅ Deliver module initialized'); }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+    setTimeout(function() { if (el('deliverModal') && el('deliverModal').dataset.bound !== '1') boot(); }, 900);
+})();
+} catch (deliverBootErr) { console.warn('⚠️ Deliver module failed:', deliverBootErr); }
+
+/* ============================================================ */
+/* FOOTER MODULE — self-contained, survives other code failures  */
+/* ============================================================ */
+(function initFooterModule() {
+    function el(id) { return document.getElementById(id); }
+    function toast(msg, dur) { try { if (typeof showToast === 'function') showToast(msg, dur || 2000); } catch (e) {} }
+    function info(title, body) { try { if (typeof showInfoModal === 'function') { showInfoModal(title, body); return true; } return false; } catch (e) { return false; } }
+    function openUrl(u) { try { window.open(u, '_blank', 'noopener'); } catch (e) { window.location.href = u; } }
 
     function boot() {
-        if (!el('chatWindow')) { console.warn('Chat: #chatWindow missing'); return; }
-        if (el('chatWindow').dataset.chatBound === '1') { return; }
-        el('chatWindow').dataset.chatBound = '1';
-        bind();
+        var aboutBtn = el('aboutAppBtn');
+        if (aboutBtn && !aboutBtn.dataset.footerBound) {
+            aboutBtn.dataset.footerBound = '1';
+            aboutBtn.addEventListener('click', function (e) { e.preventDefault(); if (!info('About AfriPay', '<p>AfriPay is a cross-border mobile-money platform for sending money between African countries.</p>')) toast('About AfriPay — v1.0', 2400); });
+        }
+        var devBtn = el('aboutDevBtn');
+        if (devBtn && !devBtn.dataset.footerBound) {
+            devBtn.dataset.footerBound = '1';
+            devBtn.addEventListener('click', function (e) { e.preventDefault(); if (!info('Developer', '<p><strong>Mohamed Amine Jalloh</strong><br>Fintech & mobile-money developer.</p><p>📞 +232 76 436 811</p>')) toast('Developer: Amine Jalloh', 2400); });
+        }
+        var contactBtn = el('contactBtn');
+        if (contactBtn && !contactBtn.dataset.footerBound) {
+            contactBtn.dataset.footerBound = '1';
+            contactBtn.addEventListener('click', function (e) { e.preventDefault(); if (!info('Contact Us', '<p>📞 +232 76 436 811<br>📧 support@afripay.app</p><p>Available Mon–Sat, 8am–8pm GMT.</p>')) toast('📞 +232 76 436 811', 2400); });
+        }
+        var subscribeBtn = el('subscribeBtn');
+        if (subscribeBtn && !subscribeBtn.dataset.footerBound) {
+            subscribeBtn.dataset.footerBound = '1';
+            subscribeBtn.addEventListener('click', function (e) { e.preventDefault(); var modal = el('subscribeModal'); if (modal) modal.style.display = 'flex'; else toast('Subscribe: modal missing', 2000); });
+        }
+        var howBtn = el('howToBtn');
+        if (howBtn && !howBtn.dataset.footerBound) {
+            howBtn.dataset.footerBound = '1';
+            howBtn.addEventListener('click', function (e) { e.preventDefault(); openUrl('https://aminejalloh-io.github.io/AfriPay-Guide/'); toast('📖 Opening AfriPay Guide…', 1800); });
+        }
+        var convBtn = el('currencyConverterBtn');
+        if (convBtn && !convBtn.dataset.footerBound) {
+            convBtn.dataset.footerBound = '1';
+            convBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                try { if (typeof populateConverterDropdowns === 'function') populateConverterDropdowns(); } catch (err) {}
+                try { if (typeof updateConverterModal === 'function') updateConverterModal(); } catch (err) {}
+                var m = el('currencyConverterModal'); if (m) m.style.display = 'flex'; else toast('Converter: modal missing', 2000);
+            });
+        }
+        var reportBtn = el('reportAppBtn');
+        if (reportBtn && !reportBtn.dataset.footerBound) {
+            reportBtn.dataset.footerBound = '1';
+            reportBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                var m = el('reportModal'); if (!m) { toast('⚠️ Report modal missing', 2200); return; }
+                var errEl = el('reportError'); if (errEl) errEl.textContent = '';
+                var okEl = el('reportSuccess'); if (okEl) okEl.textContent = '';
+                try { if (typeof currentUser !== 'undefined' && currentUser) { var nf = el('reportName'); if (nf && !nf.value) nf.value = currentUser.name || ''; var pf = el('reportPhone'); if (pf && !pf.value) pf.value = currentUser.phone || ''; } } catch (err) {}
+                m.style.display = 'flex';
+            });
+        }
+        var othersBtn = el('othersBtn');
+        var othersMenu = el('othersDropdownMenu');
+        if (othersBtn && othersMenu && !othersBtn.dataset.footerBound) {
+            othersBtn.dataset.footerBound = '1';
+            othersBtn.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); othersMenu.classList.toggle('open'); });
+        }
+        var appLinks = { directPay: 'https://www.appcreator24.com/app4066434-hmkuo4', watuPay: 'https://aminejalloh-io.github.io/WatuPay/', weBine: 'https://www.appcreator24.com/app814705-24jpuf' };
+        ['directPayBtn', 'watuPayBtn', 'weBineBtn'].forEach(function (id) {
+            var b = el(id);
+            if (b && !b.dataset.footerBound) {
+                b.dataset.footerBound = '1';
+                b.addEventListener('click', function (e) { e.preventDefault(); var key = id.replace('Btn', ''); if (appLinks[key]) openUrl(appLinks[key]); if (othersMenu) othersMenu.classList.remove('open'); });
+            }
+        });
+        document.querySelectorAll('.social-icons .social-icon').forEach(function (a) {
+            if (a.dataset.footerBound) return;
+            a.dataset.footerBound = '1';
+            a.addEventListener('click', function (e) {
+                e.preventDefault();
+                var label = (a.textContent || '').trim().toUpperCase();
+                if (label === 'WA') openUrl('https://wa.me/23276436811');
+                else if (label === 'FB') openUrl('https://facebook.com/afripay');
+                else if (label === 'IG') openUrl('https://instagram.com/afripay');
+                else if (label === 'YT') openUrl('https://youtube.com/@afripay');
+                else if (label === 'WB') openUrl('https://aminejalloh-io.github.io/WatuPay/');
+                else toast('🔗 ' + label, 1400);
+            });
+        });
+        if (!window.__footerOutsideBound) {
+            window.__footerOutsideBound = true;
+            document.addEventListener('click', function (e) {
+                var od = document.querySelector('.others-dropdown'); if (!od) return;
+                if (!od.contains(e.target)) { var m = el('othersDropdownMenu'); if (m) m.classList.remove('open'); }
+            });
+        }
+        console.log('✅ Footer module initialized');
     }
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', boot);
-    } else {
-        boot();
-    }
-    setTimeout(function() {
-        if (el('chatWindow') && el('chatWindow').dataset.chatBound !== '1') boot();
-    }, 900);
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+    else boot();
+    setTimeout(function () { var a = el('aboutAppBtn'); if (a && !a.dataset.footerBound) boot(); }, 1200);
 })();
