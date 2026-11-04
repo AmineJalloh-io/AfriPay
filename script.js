@@ -65,7 +65,31 @@ const Supa = {
     async saveAgent(a) { if (!supabaseClient) return null; try { const { data, error } = await supabaseClient.from('agents').upsert({ business_name: a.businessName, business_address: a.businessAddress || null, city: a.city || null, reg_number: a.regNumber || null, business_type: a.businessType || null, owner_name: a.ownerName || null, id_type: a.idType || null, id_number: a.idNumber || null, mobile_money: a.mobileMoney || null, country_code: a.countryCode || null, password: a.password || null, pin: a.pin || null, collateral_amount: a.collateralAmount || 0, collateral_limit: a.collateralLimit || 0, currency: a.currency || 'SLL', approved: a.approved === true, status: a.approved ? 'active' : 'pending', provider_tx_id: a.providerTxId || null, nin: a.nin || null, emoji: a.emoji || '🏢', avatar_data_url: a.avatarDataURL || null }, { onConflict: 'business_name' }).select().single(); if (error) throw error; return data; } catch (e) { return null; } },
     async getAgents() { if (!supabaseClient) return null; try { const { data, error } = await supabaseClient.from('agents').select('*').eq('approved', true); if (error) throw error; return data || []; } catch (e) { return null; } },
     async saveBusiness(b) { if (!supabaseClient) return null; try { const { data, error } = await supabaseClient.from('businesses').upsert({ local_id: typeof b.id === 'number' ? String(b.id) : (b.id || null), name: b.name, contact: b.contact || null, mobile_money: b.mobileMoney || null, type: b.type || null, icon: b.icon || '🏪', website: b.website || null, address: b.address || null, city: b.city || null, country: b.country || null }, { onConflict: 'name' }).select().single(); if (error) throw error; return data; } catch (e) { return null; } },
-    async saveTransaction(t) { if (!supabaseClient) return null; try { const { data, error } = await supabaseClient.from('transactions').insert({ tx_id: t.txId, provider_tx_id: t.providerTxId || null, transfer_code: t.transferCode || null, sender_name: t.senderName || null, sender_phone: t.senderPhone || null, agent_name: t.agentName || null, agent_phone: t.agentPhone || null, amount: parseFloat(t.amount) || 0, charge: parseFloat(t.charge) || 0, gst: parseFloat(t.gst) || 0, total: parseFloat(t.total) || 0, currency: t.currency || 'SLL', mode: t.mode || 'Local', status: 'confirmed' }).select().single(); if (error) throw error; return data; } catch (e) { return null; } },
+    async saveTransaction(t) {
+        if (!supabaseClient) return null;
+        try {
+            const { data, error } = await supabaseClient.from('transactions').insert({
+                tx_id: t.txId,
+                provider_tx_id: t.providerTxId || null,
+                transfer_code: t.transferCode || null,
+                sender_name: t.senderName || null,
+                sender_phone: t.senderPhone || null,
+                client_name: t.clientName || null,
+                client_phone: t.clientPhone || null,
+                agent_name: t.agentName || null,
+                agent_phone: t.agentPhone || null,
+                amount: parseFloat(t.amount) || 0,
+                charge: parseFloat(t.charge) || 0,
+                gst: parseFloat(t.gst) || 0,
+                total: parseFloat(t.total) || 0,
+                currency: t.currency || 'SLL',
+                mode: t.mode || 'Local',
+                status: 'confirmed'
+            }).select().single();
+            if (error) throw error;
+            return data;
+        } catch (e) { return null; }
+    },
     async savePendingItem(item) { if (!supabaseClient) return null; try { const { data, error } = await supabaseClient.from('pending_items').upsert({ id: item.id, type: item.type, country: item.country || null, submitted_by: item.submittedBy || null, data: item.data || null, status: item.status || 'pending', submitted_at: item.submittedAt || new Date().toISOString() }, { onConflict: 'id' }).select().single(); if (error) throw error; return data; } catch (e) { return null; } },
     async updatePendingItemStatus(id, status, reviewedBy) { if (!supabaseClient) return null; try { const { data, error } = await supabaseClient.from('pending_items').update({ status: status, reviewed_at: new Date().toISOString(), reviewed_by: reviewedBy || null }).eq('id', id).select().single(); if (error) throw error; return data; } catch (e) { return null; } },
     async saveAgentClient(client) { if (!supabaseClient) return null; try { const { data, error } = await supabaseClient.from('agent_clients').upsert({ id: client.id, agent_id: client.agentId, name: client.name, phone: client.phone, address: client.address || null, city: client.city || null, country: client.country || null, status: 'pending' }, { onConflict: 'id' }).select().single(); if (error) throw error; return data; } catch (e) { return null; } },
@@ -357,17 +381,8 @@ function showPopupAd(adData) {
     adModal.addEventListener('click', function(e) { if (e.target === adModal) { adModal.style.display = 'none'; removeExistingPopupAd(); } });
 }
 
-function triggerNextPopupAd() {
-    popupAdCount++;
-    if (popupAdCount % 7 === 0) showPopupAd(PREMIUM_POPUP_AD);
-    else showPopupAd(getRandomProductAd());
-}
-
-function initPopupAds() {
-    if (popupAdIntervalId) clearInterval(popupAdIntervalId);
-    setTimeout(function() { triggerNextPopupAd(); }, 5000);
-    popupAdIntervalId = setInterval(function() { triggerNextPopupAd(); }, 90000);
-}
+function triggerNextPopupAd() { popupAdCount++; if (popupAdCount % 7 === 0) showPopupAd(PREMIUM_POPUP_AD); else showPopupAd(getRandomProductAd()); }
+function initPopupAds() { if (popupAdIntervalId) clearInterval(popupAdIntervalId); setTimeout(function() { triggerNextPopupAd(); }, 5000); popupAdIntervalId = setInterval(function() { triggerNextPopupAd(); }, 90000); }
 
 function resizeImageFile(file, maxSize, quality) {
     return new Promise(function(resolve, reject) {
@@ -410,16 +425,8 @@ function getUserCurrency() {
 }
 function updateUserCountryData() { if (currentUser && currentUser.country) { const sup = SUPPORTED_CURRENCIES.find(function(c) { return c.name.toLowerCase() === currentUser.country.toLowerCase(); }); if (sup) currentCountryData = { gstRate: sup.gst, currency: sup.currency, flag: sup.flag, countryName: sup.name }; } }
 function loadRegisteredUsers() { try { registeredUsers = JSON.parse(localStorage.getItem('afripay_registered_users') || '[]'); } catch (e) { registeredUsers = []; } if (!Array.isArray(registeredUsers)) registeredUsers = []; }
-function saveRegisteredUsers() {
-    try { localStorage.setItem('afripay_registered_users', JSON.stringify(registeredUsers)); }
-    catch (e) { try { const light = registeredUsers.map(function(u) { if (u && u.avatarDataURL && String(u.avatarDataURL).length > 200000) { const c = Object.assign({}, u); delete c.avatarDataURL; return c; } return u; }); localStorage.setItem('afripay_registered_users', JSON.stringify(light)); } catch (e2) {} }
-    try { syncConnectedUsersFromRegistered(); } catch (e) {}
-}
-function syncConnectedUsersFromRegistered() {
-    const curr = connectedUsers.find(function(u) { return u.id === 'current'; });
-    connectedUsers = curr ? [curr] : [];
-    registeredUsers.forEach(function(u) { const isAgentRec = (u.isAgent === true || u.role === 'agent' || u.businessName); if (isAgentRec) { if (!connectedUsers.find(function(c) { return c.id === u.id; })) connectedUsers.push({ id: u.id || ('agent_' + Date.now() + '_' + Math.random().toString(36).slice(2,7)), name: u.businessName || u.name || '', phone: u.mobileMoney || u.phone || '', emoji: u.emoji || '🏢', status: 'online', isAgent: true, role: 'agent', agentData: u }); } });
-}
+function saveRegisteredUsers() { try { localStorage.setItem('afripay_registered_users', JSON.stringify(registeredUsers)); } catch (e) { try { const light = registeredUsers.map(function(u) { if (u && u.avatarDataURL && String(u.avatarDataURL).length > 200000) { const c = Object.assign({}, u); delete c.avatarDataURL; return c; } return u; }); localStorage.setItem('afripay_registered_users', JSON.stringify(light)); } catch (e2) {} } try { syncConnectedUsersFromRegistered(); } catch (e) {} }
+function syncConnectedUsersFromRegistered() { const curr = connectedUsers.find(function(u) { return u.id === 'current'; }); connectedUsers = curr ? [curr] : []; registeredUsers.forEach(function(u) { const isAgentRec = (u.isAgent === true || u.role === 'agent' || u.businessName); if (isAgentRec) { if (!connectedUsers.find(function(c) { return c.id === u.id; })) connectedUsers.push({ id: u.id || ('agent_' + Date.now() + '_' + Math.random().toString(36).slice(2,7)), name: u.businessName || u.name || '', phone: u.mobileMoney || u.phone || '', emoji: u.emoji || '🏢', status: 'online', isAgent: true, role: 'agent', agentData: u }); } }); }
 function getAgents() { try { syncConnectedUsersFromRegistered(); } catch (e) {} return connectedUsers.filter(function(u) { if (!(u.isAgent === true || u.role === 'agent')) return false; const d = u.agentData || u; return d.approved !== false; }); }
 function getAdminApprovedAgents() { return getAgents().filter(function(a) { const d = a.agentData || a; if (d.approved !== true) return false; return !!(d.approvedBy || d.approvedAt) || d.approvedBy === 'system-seed'; }); }
 function getAgentInitials(agent) { const d = agent.agentData || agent; let n = d.businessName || agent.name || ''; n = n.replace(/\(.*\)/, '').trim(); return n.substring(0, 2).toUpperCase() || 'AG'; }
@@ -462,13 +469,7 @@ function populateAgentSelect(filterCountry) {
     agents.forEach(function(agent) { const opt = document.createElement('option'); opt.value = agent.id; const data = agent.agentData || agent; opt.textContent = getAgentFlag(agent) + ' ' + (data.businessName || agent.name || '').replace(/\(.*\)/, '').trim(); select.appendChild(opt); });
     if (selectedAgentId) select.value = selectedAgentId;
 }
-function clearAgentSelection() {
-    ['agentName','agentPhone'].forEach(function(id) { const e = getEl(id); if (e) e.value = ''; });
-    const amt = getEl('amountInput'); if (amt) { amt.removeAttribute('max'); amt.placeholder = 'Amount'; }
-    const li = getEl('amountLimitIndicator'); if (li) li.style.display = 'none';
-    const s = getEl('agentNameSelect'); if (s) s.value = '';
-    exitBusinessMode();
-}
+function clearAgentSelection() { ['agentName','agentPhone'].forEach(function(id) { const e = getEl(id); if (e) e.value = ''; }); const amt = getEl('amountInput'); if (amt) { amt.removeAttribute('max'); amt.placeholder = 'Amount'; } const li = getEl('amountLimitIndicator'); if (li) li.style.display = 'none'; const s = getEl('agentNameSelect'); if (s) s.value = ''; exitBusinessMode(); }
 function exitBusinessMode() { isBusinessMode = false; const sel = getEl('agentNameSelect'), lbl = getEl('agentNameLabel'), bd = getEl('bizDisplayField'); if (sel) sel.style.display = 'block'; if (bd) bd.style.display = 'none'; if (lbl) lbl.textContent = 'Agent *'; populateAgentSelect(currentAgentFilterCountry); }
 function selectAgent(agentId) {
     if (isBusinessMode) exitBusinessMode();
@@ -515,8 +516,7 @@ function saveUserToStorage(u) { if (!u) return; try { localStorage.setItem('afri
 function clearUserStorage() { try { localStorage.removeItem('afripay_user'); } catch (e) {} currentUser = null; showLoggedOutUI(); }
 function loadStoredUser() { const stored = localStorage.getItem('afripay_user'); if (stored) { try { const u = JSON.parse(stored); if (u && u.name && u.phone) { currentUser = u; if (!currentUser.emoji) currentUser.emoji = '👤'; showLoggedInUI(); return true; } } catch (e) {} } showLoggedOutUI(); return false; }
 function showLoggedInUI() {
-    getEl('authButtons').style.display = 'none';
-    getEl('welcomeSection').style.display = 'flex';
+    getEl('authButtons').style.display = 'none'; getEl('welcomeSection').style.display = 'flex';
     getEl('loggedUserName').innerText = (currentUser && currentUser.name) || 'User';
     updateAvatarDisplay(currentUser); updateProfileAvatarDisplay(currentUser);
     getEl('mainFormContainer').style.display = 'block';
@@ -527,8 +527,7 @@ function showLoggedInUI() {
     updateUserCountryData();
     if (getEl('currencySymbol')) getEl('currencySymbol').innerText = isLocalMode ? getUserCurrency() : currentCountryData.currency;
     if (getEl('gstRateLabel')) getEl('gstRateLabel').innerText = currentCountryData.gstRate;
-    populateInlineConverter();
-    renderBusinessStrip(); updateAgentDropdownForCountry(); computeCharges(); translatePage();
+    populateInlineConverter(); renderBusinessStrip(); updateAgentDropdownForCountry(); computeCharges(); translatePage();
 }
 function showLoggedOutUI() { getEl('authButtons').style.display = 'flex'; getEl('welcomeSection').style.display = 'none'; getEl('mainFormContainer').style.display = 'none'; connectedUsers = connectedUsers.filter(function(u) { return u.id !== 'current'; }); renderAgentDropdown(null); }
 function updateAvatarDisplay(user) { const em = getEl('userAvatarEmoji'), img = getEl('userAvatarImg'); if (!em || !img) return; if (user && user.avatarDataURL) { em.style.display = 'none'; img.style.display = 'block'; img.src = user.avatarDataURL; } else if (user && user.emoji) { em.style.display = 'inline'; img.style.display = 'none'; em.innerText = user.emoji; } else { em.style.display = 'inline'; img.style.display = 'none'; em.innerText = '👤'; } }
@@ -536,22 +535,11 @@ function updateProfileAvatarDisplay(user) { const em = getEl('profileAvatarEmoji
 function loginUser(fullName, phoneNumber) {
     const name = fullName.trim(), phone = phoneNumber.trim();
     if (!name || !phone) { getEl('loginError').innerHTML = '❌ Enter both fields'; return false; }
-    let storedUser = null;
-    try { const s = localStorage.getItem('afripay_user'); if (s) storedUser = JSON.parse(s); } catch (e) {}
-    if (storedUser && storedUser.name.toLowerCase() === name.toLowerCase() && storedUser.phone === phone) {
-        currentUser = storedUser; if (!currentUser.emoji) currentUser.emoji = '👤';
-        saveUserToStorage(storedUser); showToast('✅ Welcome ' + storedUser.name + '!', 1800);
-        showLoggedInUI(); renderAgentDropdown(currentAgentFilterCountry);
-        getEl('loginError').innerHTML = ''; return true;
-    }
+    let storedUser = null; try { const s = localStorage.getItem('afripay_user'); if (s) storedUser = JSON.parse(s); } catch (e) {}
+    if (storedUser && storedUser.name.toLowerCase() === name.toLowerCase() && storedUser.phone === phone) { currentUser = storedUser; if (!currentUser.emoji) currentUser.emoji = '👤'; saveUserToStorage(storedUser); showToast('✅ Welcome ' + storedUser.name + '!', 1800); showLoggedInUI(); renderAgentDropdown(currentAgentFilterCountry); getEl('loginError').innerHTML = ''; return true; }
     loadRegisteredUsers();
     const user = registeredUsers.find(function(u) { return u.name.toLowerCase() === name.toLowerCase() && u.phone === phone; });
-    if (user) {
-        currentUser = { name:user.name, phone:user.phone, address:user.address || '', city:user.city || '', country:user.country || '', emoji:user.emoji || '👤', avatarDataURL: user.avatarDataURL || null };
-        saveUserToStorage(currentUser); showToast('✅ Welcome ' + currentUser.name + '!', 1800);
-        showLoggedInUI(); renderAgentDropdown(currentAgentFilterCountry); populateAgentSelect(currentAgentFilterCountry);
-        getEl('loginError').innerHTML = ''; return true;
-    }
+    if (user) { currentUser = { name:user.name, phone:user.phone, address:user.address || '', city:user.city || '', country:user.country || '', emoji:user.emoji || '👤', avatarDataURL: user.avatarDataURL || null }; saveUserToStorage(currentUser); showToast('✅ Welcome ' + currentUser.name + '!', 1800); showLoggedInUI(); renderAgentDropdown(currentAgentFilterCountry); populateAgentSelect(currentAgentFilterCountry); getEl('loginError').innerHTML = ''; return true; }
     getEl('loginError').innerHTML = '❌ Account not found.'; return false;
 }
 function loadCustomBusinesses() { try { customBusinesses = JSON.parse(localStorage.getItem('afripay_custom_businesses') || '[]'); } catch (e) { customBusinesses = []; } if (!Array.isArray(customBusinesses)) customBusinesses = []; }
@@ -560,8 +548,7 @@ function getAllBusinesses() { return businesses.concat(customBusinesses); }
 function renderBusinessStrip() { const c = getEl('businessIconsContainer'); if (!c) return; c.innerHTML = ''; getAllBusinesses().forEach(function(biz) { const div = document.createElement('div'); div.className = 'business-item'; div.innerHTML = '<div class="business-icon-img">' + (biz.icon || '🏪') + '</div><div class="business-name">' + escapeHTML(biz.name) + '</div><div class="business-category">' + escapeHTML(biz.type) + '</div>'; div.addEventListener('click', function() { lastSelectedBusinessId = biz.id; try { showGoodsModal(biz.id); } catch (e) {} }); c.appendChild(div); }); }
 function showGoodsModal(businessId) {
     const biz = getAllBusinesses().find(function(b) { return b.id === businessId; }); if (!biz) return;
-    lastSelectedBusinessId = businessId;
-    const displayCur = isLocalMode ? getUserCurrency() : currentCountryData.currency;
+    lastSelectedBusinessId = businessId; const displayCur = isLocalMode ? getUserCurrency() : currentCountryData.currency;
     let html = '';
     if (biz.goods && biz.goods.length > 0) html = biz.goods.map(function(g) { const price = parseFloat(g.price) || 0; return '<div class="goods-item" data-price="' + price + '" data-name="' + escapeHTML(g.name) + '" data-quantity="' + (g.quantity || 1) + '" data-business="' + escapeHTML(biz.name) + '" data-businessphone="' + escapeHTML(biz.mobileMoney || biz.contact || '') + '"><div class="goods-row"><span class="goods-name">📦 ' + escapeHTML(g.name) + '</span><span class="goods-price">' + price.toFixed(2) + ' ' + displayCur + '</span><button class="goods-select-btn">Select</button></div></div>'; }).join('');
     else html = '<div style="text-align:center;padding:12px;color:#95a5a6;">No items yet.</div>';
@@ -632,41 +619,12 @@ function showReceiptModal(data) {
     }
     getEl('receiptModal').style.display = 'flex';
 }
-function toggleChat() {
-    const w = getEl('chatWindow'); if (!w) return;
-    const open = w.classList.toggle('open');
-    const t = getEl('chatToggleBtn'); if (t) t.style.display = open ? 'none' : 'flex';
-}
+function toggleChat() { const w = getEl('chatWindow'); if (!w) return; const open = w.classList.toggle('open'); const t = getEl('chatToggleBtn'); if (t) t.style.display = open ? 'none' : 'flex'; }
 function openEmojiPicker() { const grid = getEl('emojiGrid'); if (!grid) return; grid.innerHTML = ''; AVAILABLE_EMOJIS.forEach(function(e) { const s = document.createElement('span'); s.className = 'emoji-option'; s.textContent = e; s.addEventListener('click', function() { applyEmoji(e); }); grid.appendChild(s); }); getEl('emojiPickerModal').style.display = 'flex'; }
 function applyEmoji(e) { if (currentUser) { currentUser.emoji = e; currentUser.avatarDataURL = null; saveUserToStorage(currentUser); updateAvatarDisplay(currentUser); updateProfileAvatarDisplay(currentUser); } showToast('✅ Avatar: ' + e, 1500); setTimeout(function() { getEl('emojiPickerModal').style.display = 'none'; }, 400); }
 function applyAvatarImage(dataURL) { if (currentUser) { currentUser.avatarDataURL = dataURL; saveUserToStorage(currentUser); updateAvatarDisplay(currentUser); updateProfileAvatarDisplay(currentUser); } showToast('✅ Image updated!', 1800); getEl('emojiPickerModal').style.display = 'none'; }
 function removeAvatarImage() { if (currentUser) { currentUser.avatarDataURL = null; if (!currentUser.emoji) currentUser.emoji = '👤'; saveUserToStorage(currentUser); updateAvatarDisplay(currentUser); updateProfileAvatarDisplay(currentUser); } showToast('🗑️ Image removed', 1500); }
-function renderHeaderFlags() {
-    const grid = getEl('headerFlagGrid'); if (!grid) return; grid.innerHTML = '';
-    SUPPORTED_COUNTRY_FLAGS.forEach(function(f) {
-        const s = document.createElement('span'); s.className = 'flag-icon'; s.textContent = f;
-        s.addEventListener('click', function() {
-            let sel = getEl('countryCodeSelect');
-            if (!sel) { sel = document.createElement('select'); sel.id = 'countryCodeSelect'; sel.style.display = 'none'; document.body.appendChild(sel); populateCountryCodeSelect(); }
-            if (!sel.options || sel.options.length === 0) populateCountryCodeSelect();
-            for (let i = 0; i < sel.options.length; i++) {
-                if (sel.options[i].text.startsWith(f)) {
-                    sel.selectedIndex = i; const parts = sel.value.split('|');
-                    currentCountryData = { gstRate: parseFloat(parts[4]) || 10, currency: parts[2] || 'USD', flag: parts[3] || '🌍', countryName: parts[1] || '' };
-                    isLocalMode = false;
-                    const intlBtn = getEl('intlToggleBtn'); if (intlBtn) intlBtn.classList.add('active');
-                    const cw = getEl('countryWrapper'); if (cw) cw.style.display = 'block';
-                    if (getEl('gstRateLabel')) getEl('gstRateLabel').innerText = currentCountryData.gstRate;
-                    if (getEl('currencySymbol')) getEl('currencySymbol').innerText = currentCountryData.currency;
-                    if (getEl('flagEmoji')) getEl('flagEmoji').innerText = currentCountryData.flag;
-                    computeCharges(); updateAgentDropdownForCountry();
-                    showToast('📍 ' + currentCountryData.countryName, 1500); break;
-                }
-            }
-        });
-        grid.appendChild(s);
-    });
-}
+function renderHeaderFlags() { const grid = getEl('headerFlagGrid'); if (!grid) return; grid.innerHTML = ''; SUPPORTED_COUNTRY_FLAGS.forEach(function(f) { const s = document.createElement('span'); s.className = 'flag-icon'; s.textContent = f; s.addEventListener('click', function() { let sel = getEl('countryCodeSelect'); if (!sel) { sel = document.createElement('select'); sel.id = 'countryCodeSelect'; sel.style.display = 'none'; document.body.appendChild(sel); populateCountryCodeSelect(); } if (!sel.options || sel.options.length === 0) populateCountryCodeSelect(); for (let i = 0; i < sel.options.length; i++) { if (sel.options[i].text.startsWith(f)) { sel.selectedIndex = i; const parts = sel.value.split('|'); currentCountryData = { gstRate: parseFloat(parts[4]) || 10, currency: parts[2] || 'USD', flag: parts[3] || '🌍', countryName: parts[1] || '' }; isLocalMode = false; const intlBtn = getEl('intlToggleBtn'); if (intlBtn) intlBtn.classList.add('active'); const cw = getEl('countryWrapper'); if (cw) cw.style.display = 'block'; if (getEl('gstRateLabel')) getEl('gstRateLabel').innerText = currentCountryData.gstRate; if (getEl('currencySymbol')) getEl('currencySymbol').innerText = currentCountryData.currency; if (getEl('flagEmoji')) getEl('flagEmoji').innerText = currentCountryData.flag; computeCharges(); updateAgentDropdownForCountry(); showToast('📍 ' + currentCountryData.countryName, 1500); break; } } }); grid.appendChild(s); }); }
 function handleCountrySelectChange(selectEl) { const parts = (selectEl.value || '').split('|'); if (!parts || !parts[2]) return; currentCountryData = { gstRate: parseFloat(parts[4]) || 10, currency: parts[2], flag: parts[3] || '🌍', countryName: parts[1] || '' }; if (getEl('flagEmoji')) getEl('flagEmoji').innerText = currentCountryData.flag; if (getEl('gstRateLabel')) getEl('gstRateLabel').innerText = currentCountryData.gstRate; if (getEl('currencySymbol')) getEl('currencySymbol').innerText = currentCountryData.currency; computeCharges(); updateAgentDropdownForCountry(); showToast('📍 ' + currentCountryData.countryName, 1500); }
 function updateAgentDropdownForCountry() { const cw = getEl('countryWrapper'); if (!cw || cw.style.display === 'none' || isLocalMode) { currentAgentFilterCountry = null; renderAgentDropdown(null); populateAgentSelect(null); return; } const cn = getCountryNameFromSelect(); currentAgentFilterCountry = cn; renderAgentDropdown(cn); populateAgentSelect(cn); }
 
@@ -709,8 +667,7 @@ let dashCurrentAgentId = null;
 let dashTab = 'profile';
 let dashClients = [];
 const PendingStore = {
-    key: 'afripay_pending_items',
-    items: [],
+    key: 'afripay_pending_items', items: [],
     load: function() { try { this.items = JSON.parse(localStorage.getItem(this.key) || '[]'); } catch (e) { this.items = []; } if (!Array.isArray(this.items)) this.items = []; },
     save: function() { try { localStorage.setItem(this.key, JSON.stringify(this.items)); } catch (e) {} },
     add: function(item) { item.id = 'pend_' + Date.now() + '_' + Math.floor(Math.random() * 10000); item.status = 'pending'; item.submittedAt = new Date().toISOString(); this.items.push(item); this.save(); supaBackground(Supa.savePendingItem(item), 'Pending'); return item; },
@@ -747,25 +704,9 @@ function renderDashBizList() { const c = getEl('dashBizList'); if (!c) return; c
 function renderDashPendingList() { const c = getEl('dashPendingList'); if (!c) return; const area = getDashArea(); const pend = PendingStore.pendingFor(area); if (!pend.length) { c.innerHTML = '<div class="dash-empty">No pending approvals.</div>'; return; } c.innerHTML = pend.map(function(it) { const d = it.data || {}; return '<div class="dash-list-item"><div class="dli-head"><span>' + escapeHTML(d.businessName || d.name || 'Item') + '</span></div><div class="dash-actions"><button type="button" class="mini-btn approve" data-dash-approve="' + it.id + '">✅ Approve</button><button type="button" class="mini-btn reject" data-dash-reject="' + it.id + '">❌ Reject</button></div></div>'; }).join(''); }
 function approvePendingItem(id) {
     const it = PendingStore.get(id); if (!it || it.status !== 'pending') return;
-    if (it.type === 'agent') {
-        const d = it.data;
-        const rec = Object.assign({}, d, { id: d.id || ('agent_' + Date.now()), name: d.businessName, businessName: d.businessName, approved: true, approvedBy: dashCurrentAgentId || 'admin', approvedAt: new Date().toISOString(), role: 'agent', isAgent: true });
-        const ex = registeredUsers.find(function(u) { return u.businessName === rec.businessName; });
-        if (ex) Object.assign(ex, rec); else registeredUsers.push(rec);
-        saveRegisteredUsers();
-        supaBackground(Supa.saveAgent(rec), 'Approved agent');
-        try { renderAgentDropdown(currentAgentFilterCountry); } catch (e) {}
-        try { populateAgentSelect(currentAgentFilterCountry); } catch (e) {}
-    } else if (it.type === 'business') {
-        const d = it.data;
-        const bizObj = { id: d.id || ('biz_' + Date.now()), name: d.name, contact: d.contact || '', mobileMoney: d.mobileMoney || '', type: d.type || 'Other', icon: d.icon || '🏪', city: d.city || '', country: d.country || '', goods: d.goods || [] };
-        const ex = getAllBusinesses().find(function(b) { return b.name === bizObj.name; });
-        if (ex) Object.assign(ex, bizObj); else customBusinesses.push(bizObj);
-        saveCustomBusinesses(); renderBusinessStrip();
-        supaBackground(Supa.saveBusiness(bizObj), 'Approved business');
-    }
-    PendingStore.setStatus(id, 'approved', dashCurrentAgentId);
-    refreshDashPanes(); showToast('✅ Approved', 2400);
+    if (it.type === 'agent') { const d = it.data; const rec = Object.assign({}, d, { id: d.id || ('agent_' + Date.now()), name: d.businessName, businessName: d.businessName, approved: true, approvedBy: dashCurrentAgentId || 'admin', approvedAt: new Date().toISOString(), role: 'agent', isAgent: true }); const ex = registeredUsers.find(function(u) { return u.businessName === rec.businessName; }); if (ex) Object.assign(ex, rec); else registeredUsers.push(rec); saveRegisteredUsers(); supaBackground(Supa.saveAgent(rec), 'Approved agent'); try { renderAgentDropdown(currentAgentFilterCountry); } catch (e) {} try { populateAgentSelect(currentAgentFilterCountry); } catch (e) {} }
+    else if (it.type === 'business') { const d = it.data; const bizObj = { id: d.id || ('biz_' + Date.now()), name: d.name, contact: d.contact || '', mobileMoney: d.mobileMoney || '', type: d.type || 'Other', icon: d.icon || '🏪', city: d.city || '', country: d.country || '', goods: d.goods || [] }; const ex = getAllBusinesses().find(function(b) { return b.name === bizObj.name; }); if (ex) Object.assign(ex, bizObj); else customBusinesses.push(bizObj); saveCustomBusinesses(); renderBusinessStrip(); supaBackground(Supa.saveBusiness(bizObj), 'Approved business'); }
+    PendingStore.setStatus(id, 'approved', dashCurrentAgentId); refreshDashPanes(); showToast('✅ Approved', 2400);
     try { renderAgentDropdown(currentAgentFilterCountry); } catch (e) {}
     try { populateAgentSelect(currentAgentFilterCountry); } catch (e) {}
     try { updateAgentDropdownPlaceholder(); } catch (e) {}
@@ -777,54 +718,29 @@ function submitDashBusiness() { const name = (getEl('dbName').value || '').trim(
 function submitDashProduct() { const biz = getEl('dpBusiness').value; const name = (getEl('dpName').value || '').trim(); const price = parseFloat(getEl('dpPrice').value) || 0; const msg = getEl('dpMsg'); msg.style.color = '#c0392b'; if (!biz || !name || price <= 0) { msg.textContent = '❌ Fill fields.'; return; } PendingStore.add({ type: getEl('dpKind').value, country: getDashArea(), submittedBy: getDashAgent() && getDashAgent().businessName, data: { businessName: biz, name: name, price: price, quantity: parseInt(getEl('dpQty').value) || 1, icon: getEl('dpIcon').value, image: dpImageDataURL || null, kind: getEl('dpKind').value, quality: getEl('dpQuality').value } }); msg.style.color = '#27ae60'; msg.textContent = '✅ Submitted.'; refreshDashPanes(); dpImageDataURL = null; const pv = getEl('dpImagePreview'); if (pv) { pv.src = ''; pv.style.display = 'none'; } const cb = getEl('dpImageClearBtn'); if (cb) cb.style.display = 'none'; const fi = getEl('dpImageUpload'); if (fi) fi.value = ''; }
 function setupAgentDashboardEvents() {
     const modal = getEl('editAgentModal');
-    if (modal) {
-        modal.addEventListener('click', function(e) {
-            if (!e.target || !e.target.closest) return;
-            const tabBtn = e.target.closest('.dash-tab'); if (tabBtn) { e.preventDefault(); switchDashTab(tabBtn.getAttribute('data-dash-tab')); return; }
-            const ap = e.target.closest('[data-dash-approve]'); if (ap) { e.preventDefault(); approvePendingItem(ap.getAttribute('data-dash-approve')); return; }
-            const rj = e.target.closest('[data-dash-reject]'); if (rj) { e.preventDefault(); rejectPendingItem(rj.getAttribute('data-dash-reject')); return; }
-        });
-    }
+    if (modal) { modal.addEventListener('click', function(e) { if (!e.target || !e.target.closest) return; const tabBtn = e.target.closest('.dash-tab'); if (tabBtn) { e.preventDefault(); switchDashTab(tabBtn.getAttribute('data-dash-tab')); return; } const ap = e.target.closest('[data-dash-approve]'); if (ap) { e.preventDefault(); approvePendingItem(ap.getAttribute('data-dash-approve')); return; } const rj = e.target.closest('[data-dash-reject]'); if (rj) { e.preventDefault(); rejectPendingItem(rj.getAttribute('data-dash-reject')); return; } }); }
     function bind(id, ev, fn) { const el = getEl(id); if (el) el.addEventListener(ev, fn); }
     bind('dcSubmitClient', 'click', function(e) { e.preventDefault(); submitDashClient(); });
     bind('dbSubmitBiz', 'click', function(e) { e.preventDefault(); submitDashBusiness(); });
     bind('dpSubmit', 'click', function(e) { e.preventDefault(); submitDashProduct(); });
     bind('saveEditAgentBtn', 'click', function(e) {
         e.preventDefault();
-        const aid = getEl('editAgentId').value;
-        const agent = getAgents().find(function(a) { return a.id === aid; });
+        const aid = getEl('editAgentId').value; const agent = getAgents().find(function(a) { return a.id === aid; });
         if (!agent) { getEl('editAgentError').textContent = 'Agent not found'; return; }
         const data = agent.agentData || agent;
         if (getEl('editPassword').value !== data.password) { getEl('editAgentError').textContent = '❌ Wrong password'; return; }
         if (getEl('editPin').value !== data.pin) { getEl('editAgentError').textContent = '❌ Wrong PIN'; return; }
-        data.businessName = getEl('editBusinessName').value.trim();
-        data.businessAddress = getEl('editAddress').value.trim();
-        data.city = getCityValue('editCitySelect', 'editCityOther');
-        data.mobileMoney = getEl('editMobileMoney').value.trim();
+        data.businessName = getEl('editBusinessName').value.trim(); data.businessAddress = getEl('editAddress').value.trim();
+        data.city = getCityValue('editCitySelect', 'editCityOther'); data.mobileMoney = getEl('editMobileMoney').value.trim();
         saveRegisteredUsers(); refreshDashPanes(); showToast('✅ Updated!', 2000);
         setTimeout(function() { getEl('editAgentModal').style.display = 'none'; }, 1000);
         supaBackground(Supa.saveAgent(data), 'Agent update');
     });
     bind('editAgentUploadLogoBtn', 'click', function(e) { e.preventDefault(); const fi = getEl('editLogoImage'); if (fi) fi.click(); });
-    bind('editLogoImage', 'change', function() {
-        const f = this.files && this.files[0]; if (!f) return;
-        resizeImageFile(f, 200, 0.82).then(function(dataUrl) {
-            const aid = getEl('editAgentId').value;
-            const agent = getAgents().find(function(a) { return a.id === aid; });
-            if (agent) { const data = agent.agentData || agent; data.avatarDataURL = dataUrl; saveRegisteredUsers(); supaBackground(Supa.saveAgent(data), 'Agent logo'); }
-            const pv = getEl('editAgentLogoPreview'); if (pv) { pv.src = dataUrl; pv.style.display = 'block'; }
-            const rb = getEl('editAgentRemoveLogoBtn'); if (rb) rb.style.display = 'inline-flex';
-            showToast('✅ Logo updated', 1800);
-        }).catch(function() { showToast('⚠️ Could not process image.', 2200); });
-        this.value = '';
-    });
+    bind('editLogoImage', 'change', function() { const f = this.files && this.files[0]; if (!f) return; resizeImageFile(f, 200, 0.82).then(function(dataUrl) { const aid = getEl('editAgentId').value; const agent = getAgents().find(function(a) { return a.id === aid; }); if (agent) { const data = agent.agentData || agent; data.avatarDataURL = dataUrl; saveRegisteredUsers(); supaBackground(Supa.saveAgent(data), 'Agent logo'); } const pv = getEl('editAgentLogoPreview'); if (pv) { pv.src = dataUrl; pv.style.display = 'block'; } const rb = getEl('editAgentRemoveLogoBtn'); if (rb) rb.style.display = 'inline-flex'; showToast('✅ Logo updated', 1800); }).catch(function() { showToast('⚠️ Could not process image.', 2200); }); this.value = ''; });
     bind('editAgentRemoveLogoBtn', 'click', function(e) { e.preventDefault(); const aid = getEl('editAgentId').value; const agent = getAgents().find(function(a) { return a.id === aid; }); if (agent) { const data = agent.agentData || agent; delete data.avatarDataURL; saveRegisteredUsers(); supaBackground(Supa.saveAgent(data), 'Agent logo removed'); } const pv = getEl('editAgentLogoPreview'); if (pv) { pv.src = ''; pv.style.display = 'none'; } this.style.display = 'none'; showToast('🗑️ Logo removed', 1500); });
     bind('dpImagePickBtn', 'click', function(e) { e.preventDefault(); const fi = getEl('dpImageUpload'); if (fi) fi.click(); });
-    bind('dpImageUpload', 'change', function() {
-        const f = this.files && this.files[0]; if (!f) return;
-        resizeImageFile(f, 200, 0.82).then(function(dataUrl) { dpImageDataURL = dataUrl; const pv = getEl('dpImagePreview'); if (pv) { pv.src = dataUrl; pv.style.display = 'block'; } const cb = getEl('dpImageClearBtn'); if (cb) cb.style.display = 'inline-flex'; showToast('✅ Image ready', 1200); }).catch(function() { showToast('⚠️ Could not process image.', 2200); });
-        this.value = '';
-    });
+    bind('dpImageUpload', 'change', function() { const f = this.files && this.files[0]; if (!f) return; resizeImageFile(f, 200, 0.82).then(function(dataUrl) { dpImageDataURL = dataUrl; const pv = getEl('dpImagePreview'); if (pv) { pv.src = dataUrl; pv.style.display = 'block'; } const cb = getEl('dpImageClearBtn'); if (cb) cb.style.display = 'inline-flex'; showToast('✅ Image ready', 1200); }).catch(function() { showToast('⚠️ Could not process image.', 2200); }); this.value = ''; });
     bind('dpImageClearBtn', 'click', function(e) { e.preventDefault(); dpImageDataURL = null; const pv = getEl('dpImagePreview'); if (pv) { pv.src = ''; pv.style.display = 'none'; } this.style.display = 'none'; const fi = getEl('dpImageUpload'); if (fi) fi.value = ''; });
     bind('refreshAgentsBtn', 'click', async function(e) { e.preventDefault(); showToast('🔄 Refreshing agents…', 1200); await supaRefreshAgents(); showToast('✅ Agents refreshed', 1400); });
 }
@@ -832,38 +748,21 @@ function setupAgentDashboardEvents() {
 const PREFIX_144_2D = ['76','78','79','75','74','73'];
 const PREFIX_161_2D = ['88','99','77','33','30','70','80','90'];
 
-function getUssdTemplateForPhone(agentPhoneDigits) {
-    const digits = String(agentPhoneDigits || '').replace(/\D/g, '');
-    let local = digits;
-    if (local.indexOf('232') === 0) local = local.slice(3);
-    if (local.indexOf('0') === 0) local = local.slice(1);
-    const twoDigit = local.slice(0, 2);
-    if (PREFIX_144_2D.indexOf(twoDigit) !== -1) return { variant: '144', template: '#144*2*2*{AGENT}*{AMOUNT}*0000#', label: 'MB-FOUR (144)' };
-    if (PREFIX_161_2D.indexOf(twoDigit) !== -1) return { variant: '161', template: '*161*1*1*{AGENT}*{AMOUNT}*0000#', label: 'MB-FOUR (161)' };
-    return { variant: '144', template: '#144*2*2*{AGENT}*{AMOUNT}*0000#', label: 'MB-FOUR (144)' };
-}
+function getUssdTemplateForPhone(agentPhoneDigits) { const digits = String(agentPhoneDigits || '').replace(/\D/g, ''); let local = digits; if (local.indexOf('232') === 0) local = local.slice(3); if (local.indexOf('0') === 0) local = local.slice(1); const twoDigit = local.slice(0, 2); if (PREFIX_144_2D.indexOf(twoDigit) !== -1) return { variant: '144', template: '#144*2*2*{AGENT}*{AMOUNT}*0000#', label: 'MB-FOUR (144)' }; if (PREFIX_161_2D.indexOf(twoDigit) !== -1) return { variant: '161', template: '*161*1*1*{AGENT}*{AMOUNT}*0000#', label: 'MB-FOUR (161)' }; return { variant: '144', template: '#144*2*2*{AGENT}*{AMOUNT}*0000#', label: 'MB-FOUR (144)' }; }
 function getSenderCountry() { if (currentUser && currentUser.country) return currentUser.country; return getCountryNameFromSelect() || null; }
 
 function openMbFourAgentPicker() {
-    const allAgents = getAdminApprovedAgents();
-    if (!allAgents.length) { showToast('⚠️ No admin-approved agents available yet.', 2800); return; }
-    const senderCountry = getSenderCountry();
-    let agents = allAgents; let filteredByCountry = false;
+    const allAgents = getAdminApprovedAgents(); if (!allAgents.length) { showToast('⚠️ No admin-approved agents available yet.', 2800); return; }
+    const senderCountry = getSenderCountry(); let agents = allAgents; let filteredByCountry = false;
     if (senderCountry) { const filtered = allAgents.filter(function(a) { const cn = getAgentCountryName(a); return cn && cn.toLowerCase() === senderCountry.toLowerCase(); }); if (filtered.length > 0) { agents = filtered; filteredByCountry = true; } }
-    const modal = getEl('mbFourAgentPicker'); const list = getEl('mbFourAgentList'); const hint = getEl('mbFourPickerHint');
-    if (!modal || !list) return;
+    const modal = getEl('mbFourAgentPicker'); const list = getEl('mbFourAgentList'); const hint = getEl('mbFourPickerHint'); if (!modal || !list) return;
     if (hint) hint.innerHTML = filteredByCountry ? 'Showing <strong>admin-approved</strong> agents in <strong>' + escapeHTML(senderCountry) + '</strong>.' : 'Showing <strong>all admin-approved</strong> agents.';
     if (agents.length === 1) { modal.style.display = 'none'; selectMbFourAgent(agents[0].id); return; }
-    const byCountry = {};
-    agents.forEach(function(a) { const c = getAgentCountryName(a) || 'Other'; if (!byCountry[c]) byCountry[c] = []; byCountry[c].push(a); });
+    const byCountry = {}; agents.forEach(function(a) { const c = getAgentCountryName(a) || 'Other'; if (!byCountry[c]) byCountry[c] = []; byCountry[c].push(a); });
     list.innerHTML = Object.keys(byCountry).sort().map(function(country) {
         const code = COUNTRY_NAME_TO_CODE[country]; const flag = (code && COUNTRY_CODE_TO_FLAG[code]) || '🌍';
         const header = '<div style="font-weight:800;color:#1c6e8f;font-size:.78rem;margin:8px 0 4px;border-left:3px solid #f4a261;padding-left:7px;">' + flag + ' ' + escapeHTML(country) + '</div>';
-        const rows = byCountry[country].sort(function(a, b) { const an = (a.agentData && a.agentData.businessName) || a.name; const bn = (b.agentData && b.agentData.businessName) || b.name; return an.localeCompare(bn); }).map(function(a) {
-            const d = a.agentData || a; const name = (d.businessName || a.name || '').replace(/\(.*\)/, '').trim();
-            const phone = d.mobileMoney || d.phone || a.phone || '—'; const route = getUssdTemplateForPhone(phone);
-            return '<button type="button" class="broadcast-option" data-mbfour-agent="' + escapeHTML(a.id) + '" style="width:100%;text-align:left;"><span class="bo-icon">' + (d.emoji || '🏢') + '</span><span class="bo-text"><span class="bo-title">' + escapeHTML(name) + ' <span style="color:#27ae60;font-size:.62rem;font-weight:700;">✅ Admin-verified</span></span><span class="bo-sub">📱 ' + escapeHTML(phone) + ' · 🔀 ' + route.label + '</span></span><span style="color:#2c7da0;font-size:1.2rem;">›</span></button>';
-        }).join('');
+        const rows = byCountry[country].sort(function(a, b) { const an = (a.agentData && a.agentData.businessName) || a.name; const bn = (b.agentData && b.agentData.businessName) || b.name; return an.localeCompare(bn); }).map(function(a) { const d = a.agentData || a; const name = (d.businessName || a.name || '').replace(/\(.*\)/, '').trim(); const phone = d.mobileMoney || d.phone || a.phone || '—'; const route = getUssdTemplateForPhone(phone); return '<button type="button" class="broadcast-option" data-mbfour-agent="' + escapeHTML(a.id) + '" style="width:100%;text-align:left;"><span class="bo-icon">' + (d.emoji || '🏢') + '</span><span class="bo-text"><span class="bo-title">' + escapeHTML(name) + ' <span style="color:#27ae60;font-size:.62rem;font-weight:700;">✅ Admin-verified</span></span><span class="bo-sub">📱 ' + escapeHTML(phone) + ' · 🔀 ' + route.label + '</span></span><span style="color:#2c7da0;font-size:1.2rem;">›</span></button>'; }).join('');
         return header + rows;
     }).join('');
     list.querySelectorAll('[data-mbfour-agent]').forEach(function(btn) { btn.addEventListener('click', function() { const id = btn.getAttribute('data-mbfour-agent'); modal.style.display = 'none'; selectMbFourAgent(id); }); });
@@ -871,17 +770,14 @@ function openMbFourAgentPicker() {
 }
 function selectMbFourAgent(agentId) {
     const agent = getAgents().find(function(a) { return a.id === agentId; }); if (!agent) { showToast('⚠️ Agent not found.', 2200); return; }
-    const d = agent.agentData || agent;
-    const phoneRaw = String(d.mobileMoney || d.phone || agent.phone || '').replace(/\D/g, '');
+    const d = agent.agentData || agent; const phoneRaw = String(d.mobileMoney || d.phone || agent.phone || '').replace(/\D/g, '');
     if (phoneRaw.length < 6) { showToast('⚠️ Agent has no valid phone number.', 2600); return; }
     mbFourSelectedAgentId = agentId; mbFourSelectedAgentPhone = phoneRaw;
     const displayName = (d.businessName || agent.name || 'Agent').replace(/\(.*\)/, '').trim();
     const detailsEl = getEl('localAgentDetails');
     if (detailsEl) { if (getEl('localAgentName')) getEl('localAgentName').textContent = displayName; if (getEl('localAgentPhone')) getEl('localAgentPhone').textContent = (d.countryCode || '') + ' ' + phoneRaw; detailsEl.classList.add('show'); }
-    const amountRaw = parseFloat(getEl('amountInput') && getEl('amountInput').value) || 0;
-    const amt = Math.round(amountRaw);
-    const route = getUssdTemplateForPhone(phoneRaw);
-    const ussd = route.template.replace('{AGENT}', phoneRaw).replace('{AMOUNT}', String(amt > 0 ? amt : 0));
+    const amountRaw = parseFloat(getEl('amountInput') && getEl('amountInput').value) || 0; const amt = Math.round(amountRaw);
+    const route = getUssdTemplateForPhone(phoneRaw); const ussd = route.template.replace('{AGENT}', phoneRaw).replace('{AMOUNT}', String(amt > 0 ? amt : 0));
     showMbFourUssdModal({ agentName: displayName, agentPhone: phoneRaw, agentCountryCode: d.countryCode || '', amount: amt, routeLabel: route.label, ussd: ussd });
 }
 function showMbFourUssdModal(data) {
@@ -891,10 +787,8 @@ function showMbFourUssdModal(data) {
     modal.innerHTML = '<div class="modal-content" style="max-width:460px;"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;"><h3 style="margin:0;color:#0f2b3d;">📞 ' + eR + '</h3><button type="button" class="action-btn close-mbusssd" style="width:32px;height:32px;padding:0;border-radius:50%;background:#ccc;color:#222;font-size:1rem;">✕</button></div><div class="ussd-modal-details"><div class="ussd-modal-row"><span class="ussd-modal-label">🏢 Local Agent</span><span class="ussd-modal-value">' + eN + '</span></div><div class="ussd-modal-row"><span class="ussd-modal-label">📱 Phone</span><span class="ussd-modal-value">' + eCC + ' ' + eP + '</span></div><div class="ussd-modal-row"><span class="ussd-modal-label">💵 Amount</span><span class="ussd-modal-value">' + eA + '</span></div></div><div style="font-weight:700;color:#1c6e8f;font-size:.82rem;margin-bottom:4px;">🔐 USSD Code to Dial:</div><div id="mbUssdCodeBox" class="ussd-code-box">' + eU + '</div><div class="ussd-hint">💡 Tap <strong>Dial USSD</strong> to open your phone dialer with the code pre-filled.<br>When prompted for PIN, enter your <strong>4-digit PIN</strong> in place of <code>0000</code>.</div><div class="action-buttons-row" style="gap:6px;"><button type="button" class="action-btn dial" id="mbUssdDialBtn" style="flex:1;">📞 Dial USSD</button><button type="button" class="action-btn green" id="mbUssdCopyBtn" style="flex:1;">📋 Copy</button></div><button type="button" class="action-btn close-mbusssd" style="background:#95a5a6;width:100%;margin-top:6px;">Close</button></div>';
     document.body.appendChild(modal);
     modal.querySelectorAll('.close-mbusssd').forEach(function(b) { b.addEventListener('click', function() { modal.remove(); }); });
-    const dialBtn = modal.querySelector('#mbUssdDialBtn');
-    if (dialBtn) dialBtn.addEventListener('click', function() { const link = document.createElement('a'); link.href = 'tel:' + encodeURIComponent(data.ussd).replace(/%23/g, '#'); document.body.appendChild(link); link.click(); document.body.removeChild(link); showToast('📞 Opening dialer with USSD code...', 2600); });
-    const copyBtn = modal.querySelector('#mbUssdCopyBtn');
-    if (copyBtn) copyBtn.addEventListener('click', function() { const code = data.ussd; if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(code).then(function() { showToast('✅ USSD copied', 2600); }).catch(function() { fallbackCopy(code); }); } else fallbackCopy(code); });
+    const dialBtn = modal.querySelector('#mbUssdDialBtn'); if (dialBtn) dialBtn.addEventListener('click', function() { const link = document.createElement('a'); link.href = 'tel:' + encodeURIComponent(data.ussd).replace(/%23/g, '#'); document.body.appendChild(link); link.click(); document.body.removeChild(link); showToast('📞 Opening dialer with USSD code...', 2600); });
+    const copyBtn = modal.querySelector('#mbUssdCopyBtn'); if (copyBtn) copyBtn.addEventListener('click', function() { const code = data.ussd; if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(code).then(function() { showToast('✅ USSD copied', 2600); }).catch(function() { fallbackCopy(code); }); } else fallbackCopy(code); });
     modal.addEventListener('click', function(e) { if (e.target === modal) modal.remove(); });
 }
 function fallbackCopy(text) { const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.left = '-9999px'; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); showToast('✅ USSD copied', 2600); } catch (err) { showToast('⚠️ Copy failed', 2600); } document.body.removeChild(ta); }
@@ -903,21 +797,7 @@ function updateRegAvatarPreview() { const preview = getEl('regAvatarPreview'); i
 function updateAgentBizProfilePreview() { const emojiEl = getEl('agentBizProfilePreviewEmoji'); const imgEl = getEl('agentBizProfilePreview'); const removeBtn = getEl('agentRemoveLogoBtn'); if (agentBizProfileDataURL) { if (emojiEl) emojiEl.style.display = 'none'; if (imgEl) { imgEl.src = agentBizProfileDataURL; imgEl.style.display = 'block'; } if (removeBtn) removeBtn.style.display = 'inline-flex'; } else { if (emojiEl) { emojiEl.style.display = 'inline-block'; emojiEl.textContent = agentBizProfileEmoji || '🏢'; } if (imgEl) { imgEl.src = ''; imgEl.style.display = 'none'; } if (removeBtn) removeBtn.style.display = 'none'; } }
 
 function populateConverterDropdowns() { const fromSel = getEl('convFromCurrency'); const toSel = getEl('convCountrySelect'); if (!fromSel || !toSel) return; const optionsHtml = SUPPORTED_CURRENCIES.map(function(c) { return '<option value="' + c.currency + '">' + c.flag + ' ' + c.name + ' (' + c.currency + ')</option>'; }).join(''); if (!fromSel.options.length) fromSel.innerHTML = optionsHtml; if (!toSel.options.length) toSel.innerHTML = optionsHtml; try { fromSel.value = getUserCurrency(); } catch(e) {} try { toSel.value = 'SLL'; } catch(e) {} }
-function updateConverterModal() {
-    const fromCur = getEl('convFromCurrency').value; const toCur = getEl('convCountrySelect').value; const amt = parseFloat(getEl('convAmount').value) || 0;
-    if (!fromCur || !toCur || amt <= 0) { ['convBase','convCarrear','convLocal','convServices','convTotal','convRecipient'].forEach(function(id) { if (getEl(id)) getEl(id).textContent = '0.00'; }); if (getEl('convRate')) getEl('convRate').textContent = '1.00 = 1.00'; return; }
-    const fromRate = FX_TO_USD[fromCur] || 1; const toRate = FX_TO_USD[toCur] || 1; const conversionRate = fromRate / toRate;
-    const baseInToCur = amt * conversionRate;
-    const carrear = baseInToCur * FEE_CARREAR; const local = baseInToCur * FEE_LOCAL; const services = baseInToCur * FEE_SERVICES;
-    const total = baseInToCur + carrear + local + services;
-    if (getEl('convBase')) getEl('convBase').textContent = amt.toFixed(2) + ' ' + fromCur;
-    if (getEl('convCarrear')) getEl('convCarrear').textContent = carrear.toFixed(2) + ' ' + toCur;
-    if (getEl('convLocal')) getEl('convLocal').textContent = local.toFixed(2) + ' ' + toCur;
-    if (getEl('convServices')) getEl('convServices').textContent = services.toFixed(2) + ' ' + toCur;
-    if (getEl('convTotal')) getEl('convTotal').textContent = total.toFixed(2) + ' ' + toCur;
-    if (getEl('convRate')) getEl('convRate').textContent = '1 ' + fromCur + ' = ' + conversionRate.toFixed(4) + ' ' + toCur;
-    if (getEl('convRecipient')) getEl('convRecipient').textContent = baseInToCur.toFixed(2) + ' ' + toCur;
-}
+function updateConverterModal() { const fromCur = getEl('convFromCurrency').value; const toCur = getEl('convCountrySelect').value; const amt = parseFloat(getEl('convAmount').value) || 0; if (!fromCur || !toCur || amt <= 0) { ['convBase','convCarrear','convLocal','convServices','convTotal','convRecipient'].forEach(function(id) { if (getEl(id)) getEl(id).textContent = '0.00'; }); if (getEl('convRate')) getEl('convRate').textContent = '1.00 = 1.00'; return; } const fromRate = FX_TO_USD[fromCur] || 1; const toRate = FX_TO_USD[toCur] || 1; const conversionRate = fromRate / toRate; const baseInToCur = amt * conversionRate; const carrear = baseInToCur * FEE_CARREAR; const local = baseInToCur * FEE_LOCAL; const services = baseInToCur * FEE_SERVICES; const total = baseInToCur + carrear + local + services; if (getEl('convBase')) getEl('convBase').textContent = amt.toFixed(2) + ' ' + fromCur; if (getEl('convCarrear')) getEl('convCarrear').textContent = carrear.toFixed(2) + ' ' + toCur; if (getEl('convLocal')) getEl('convLocal').textContent = local.toFixed(2) + ' ' + toCur; if (getEl('convServices')) getEl('convServices').textContent = services.toFixed(2) + ' ' + toCur; if (getEl('convTotal')) getEl('convTotal').textContent = total.toFixed(2) + ' ' + toCur; if (getEl('convRate')) getEl('convRate').textContent = '1 ' + fromCur + ' = ' + conversionRate.toFixed(4) + ' ' + toCur; if (getEl('convRecipient')) getEl('convRecipient').textContent = baseInToCur.toFixed(2) + ' ' + toCur; }
 
 function setupEventListeners() {
     function safe(id, event, handler) { const el = getEl(id); if (el) el.addEventListener(event, handler); }
@@ -959,24 +839,8 @@ function setupEventListeners() {
     safe('emojiRemoveImageBtn', 'click', function() { removeAvatarImage(); });
     safe('avatarUploadInput', 'change', function() { const f = this.files[0]; if (!f) return; resizeImageFile(f, 200, 0.82).then(function(dataUrl) { applyAvatarImage(dataUrl); }).catch(function() { showToast('⚠️ Could not process image.', 2200); }); this.value = ''; });
 
-    safe('editAccountBtn', 'click', function(e) {
-        e.preventDefault(); if (!currentUser) { showToast('⚠️ Login first', 2000); return; }
-        try { populateCountryDropdown('editAccountCountry'); } catch(err) {}
-        try { populateCapitalCityDropdown('editAccountCitySelect'); } catch(err) {}
-        getEl('editAccountName').value = currentUser.name || ''; getEl('editAccountPhone').value = currentUser.phone || ''; getEl('editAccountAddress').value = currentUser.address || '';
-        setCityValue('editAccountCitySelect', 'editAccountCityOther', currentUser.city || '');
-        getEl('editAccountCountry').value = currentUser.country || 'Sierra Leone';
-        getEl('editAccountModal').style.display = 'flex';
-    });
-    safe('saveEditAccountBtn', 'click', function(e) {
-        e.preventDefault();
-        const name = getEl('editAccountName').value.trim(); const phone = getEl('editAccountPhone').value.trim(); const city = getCityValue('editAccountCitySelect', 'editAccountCityOther');
-        if (!name || !phone || !city) { getEl('editAccountError').textContent = '❌ Fill Name, Phone & City'; return; }
-        currentUser.name = name; currentUser.phone = phone; currentUser.address = getEl('editAccountAddress').value; currentUser.city = city; currentUser.country = getEl('editAccountCountry').value;
-        saveUserToStorage(currentUser); showLoggedInUI(); showToast('✅ Account updated!', 2000);
-        setTimeout(function() { getEl('editAccountModal').style.display = 'none'; }, 1000);
-        supaBackground(Supa.saveUser(currentUser), 'Account update');
-    });
+    safe('editAccountBtn', 'click', function(e) { e.preventDefault(); if (!currentUser) { showToast('⚠️ Login first', 2000); return; } try { populateCountryDropdown('editAccountCountry'); } catch(err) {} try { populateCapitalCityDropdown('editAccountCitySelect'); } catch(err) {} getEl('editAccountName').value = currentUser.name || ''; getEl('editAccountPhone').value = currentUser.phone || ''; getEl('editAccountAddress').value = currentUser.address || ''; setCityValue('editAccountCitySelect', 'editAccountCityOther', currentUser.city || ''); getEl('editAccountCountry').value = currentUser.country || 'Sierra Leone'; getEl('editAccountModal').style.display = 'flex'; });
+    safe('saveEditAccountBtn', 'click', function(e) { e.preventDefault(); const name = getEl('editAccountName').value.trim(); const phone = getEl('editAccountPhone').value.trim(); const city = getCityValue('editAccountCitySelect', 'editAccountCityOther'); if (!name || !phone || !city) { getEl('editAccountError').textContent = '❌ Fill Name, Phone & City'; return; } currentUser.name = name; currentUser.phone = phone; currentUser.address = getEl('editAccountAddress').value; currentUser.city = city; currentUser.country = getEl('editAccountCountry').value; saveUserToStorage(currentUser); showLoggedInUI(); showToast('✅ Account updated!', 2000); setTimeout(function() { getEl('editAccountModal').style.display = 'none'; }, 1000); supaBackground(Supa.saveUser(currentUser), 'Account update'); });
 
     safe('agentDropdownBtn', 'click', function(e) { e.preventDefault(); e.stopPropagation(); getEl('agentDropdownList').classList.toggle('open'); renderAgentDropdown(currentAgentFilterCountry); });
     document.addEventListener('click', function(e) { const c = document.querySelector('.agent-dropdown-container'); if (c && !c.contains(e.target)) { const list = getEl('agentDropdownList'); if (list) list.classList.remove('open'); } });
@@ -988,21 +852,7 @@ function setupEventListeners() {
 
     safe('mainMmBtn', 'click', function(e) { e.preventDefault(); const amt = parseFloat(getEl('amountInput') && getEl('amountInput').value) || 0; if (amt <= 0) { showToast('⚠️ Enter an amount first.', 2200); return; } openMbFourAgentPicker(); });
 
-    safe('localAgentBtn', 'click', function(e) {
-        e.preventDefault();
-        if (!mbFourSelectedAgentId) { showToast('⚠️ No local agent selected yet. Tap MB-FOUR first.', 2400); return; }
-        const agent = getAgents().find(function(a) { return a.id === mbFourSelectedAgentId; });
-        if (!agent) { showToast('⚠️ Local agent not found.', 2200); return; }
-        const d = agent.agentData || agent;
-        const displayName = (d.businessName || agent.name || 'Agent').replace(/\(.*\)/, '').trim();
-        const phoneRaw = String(d.mobileMoney || d.phone || agent.phone || '').replace(/\D/g, '');
-        const amount = parseFloat(getEl('amountInput') && getEl('amountInput').value) || 0;
-        if (phoneRaw.length < 6) { showToast('⚠️ Local agent has no valid phone number.', 2400); return; }
-        const route = getUssdTemplateForPhone(phoneRaw);
-        const amt = Math.round(amount);
-        const ussd = route.template.replace('{AGENT}', phoneRaw).replace('{AMOUNT}', String(amt > 0 ? amt : 0));
-        showMbFourUssdModal({ agentName: displayName, agentPhone: phoneRaw, agentCountryCode: d.countryCode || '', amount: amt, routeLabel: route.label, ussd: ussd });
-    });
+    safe('localAgentBtn', 'click', function(e) { e.preventDefault(); if (!mbFourSelectedAgentId) { showToast('⚠️ No local agent selected yet. Tap MB-FOUR first.', 2400); return; } const agent = getAgents().find(function(a) { return a.id === mbFourSelectedAgentId; }); if (!agent) { showToast('⚠️ Local agent not found.', 2200); return; } const d = agent.agentData || agent; const displayName = (d.businessName || agent.name || 'Agent').replace(/\(.*\)/, '').trim(); const phoneRaw = String(d.mobileMoney || d.phone || agent.phone || '').replace(/\D/g, ''); const amount = parseFloat(getEl('amountInput') && getEl('amountInput').value) || 0; if (phoneRaw.length < 6) { showToast('⚠️ Local agent has no valid phone number.', 2400); return; } const route = getUssdTemplateForPhone(phoneRaw); const amt = Math.round(amount); const ussd = route.template.replace('{AGENT}', phoneRaw).replace('{AMOUNT}', String(amt > 0 ? amt : 0)); showMbFourUssdModal({ agentName: displayName, agentPhone: phoneRaw, agentCountryCode: d.countryCode || '', amount: amt, routeLabel: route.label, ussd: ussd }); });
 
     safe('localAgentClearBtn', 'click', function(e) { e.preventDefault(); mbFourSelectedAgentId = null; mbFourSelectedAgentPhone = null; const d = getEl('localAgentDetails'); if (d) d.classList.remove('show'); showToast('✅ Local agent cleared', 1500); });
     safe('localAgentWhatsAppBtn', 'click', function(e) { e.preventDefault(); if (!mbFourSelectedAgentId) { showToast('⚠️ Select a local agent first.', 2200); return; } const agent = getAgents().find(function(a) { return a.id === mbFourSelectedAgentId; }); if (!agent) { showToast('⚠️ Agent not found.', 2200); return; } const d = agent.agentData || agent; openWhatsApp(d.mobileMoney || d.phone || agent.phone || '', (d.businessName || agent.name || 'Agent').replace(/\(.*\)/, '').trim()); });
@@ -1075,16 +925,35 @@ function setupEventListeners() {
             const agentPhoneRaw = String(ap).replace(/\D/g, '');
             const clientName = (getEl('clientName') && getEl('clientName').value.trim()) || '';
             const clientPhoneRaw = String(getEl('clientPhone') && getEl('clientPhone').value || '').replace(/\D/g, '');
+            const clientPhoneValue = (getEl('clientPhone') && getEl('clientPhone').value) || '';
             const orderedProductSnapshot = currentOrderedProduct ? Object.assign({}, currentOrderedProduct) : null;
             const data = { txId: txId, date: new Date().toLocaleString(), mode: isLocalMode ? 'Local' : 'International', sender: sn + ' (' + sp + ')', agent: an + ' (' + ap + ')', agentName: an, agentPhoneRaw: agentPhoneRaw, clientName: clientName, clientPhoneRaw: clientPhoneRaw, localAgentName: localAgentName, localAgentPhone: localAgentPhone, baseAmount: amount.toFixed(2), charge: chargeTotal.toFixed(2), carrear: carrear.toFixed(2), localFee: localFee.toFixed(2), servicesFee: servicesFee.toFixed(2), gst: '0.00', total: (amount + chargeTotal).toFixed(2), currency: currency, providerTxId: ptx, transferCode: tc, orderedProduct: orderedProductSnapshot };
             showReceiptModal(data);
+
             try {
                 if (typeof window.__seedDeliverTransaction === 'function') {
                     window.__seedDeliverTransaction({ senderName: (typeof sn !== 'undefined' ? sn : ''), senderPhone: (typeof sp !== 'undefined' ? sp : ''), clientName: (typeof clientName !== 'undefined' ? clientName : ''), clientPhone: (function(){ try { const el = getEl('clientPhone'); return el ? el.value : ''; } catch(e){ return ''; } })(), amount: (typeof amount !== 'undefined' ? amount : 0), currency: (typeof currency !== 'undefined' ? currency : 'SLL'), localAgentName: (typeof localAgentName !== 'undefined' ? localAgentName : ''), localAgentPhone: (typeof localAgentPhone !== 'undefined' ? localAgentPhone : ''), txId: (data && data.txId) || '', providerTxId: (data && data.providerTxId) || '', transferCode: (data && data.transferCode) || '' });
                 }
             } catch (seedErr) { console.warn('Deliver seed failed:', seedErr); }
+
             showToast('✅ Receipt generated!', 2500);
-            supaBackground(Supa.saveTransaction({ txId: data.txId, providerTxId: data.providerTxId, transferCode: data.transferCode, senderName: sn, senderPhone: sp, agentName: an, agentPhone: ap, amount: amount, charge: chargeTotal, gst: 0, total: amount + chargeTotal, currency: currency, mode: data.mode }), 'Transaction');
+            supaBackground(Supa.saveTransaction({
+                txId: data.txId,
+                providerTxId: data.providerTxId,
+                transferCode: data.transferCode,
+                senderName: sn,
+                senderPhone: sp,
+                clientName: clientName,
+                clientPhone: clientPhoneValue,
+                agentName: an,
+                agentPhone: ap,
+                amount: amount,
+                charge: chargeTotal,
+                gst: 0,
+                total: amount + chargeTotal,
+                currency: currency,
+                mode: data.mode
+            }), 'Transaction');
             clearOrderedProduct();
         } catch (err) { console.error('❌ Submit:', err); showToast('❌ Submit failed: ' + (err.message || 'Error'), 3500); }
     });
@@ -1104,14 +973,7 @@ function setupEventListeners() {
     setupAgentDashboardEvents();
 }
 
-function openAddBizModal() {
-    try { populateCountryDropdown('bizCountrySelect'); } catch(err) {}
-    try { populateCapitalCityDropdown('bizCitySelect'); } catch(err) {}
-    const resetVal = function(id, v) { const e = getEl(id); if (e) e.value = v; };
-    resetVal('bizName', ''); resetVal('bizContact', ''); resetVal('bizMobileMoney', ''); resetVal('bizType', 'Service'); resetVal('bizIcon', '🏪');
-    resetVal('bizCountrySelect', (currentUser && currentUser.country) || 'Sierra Leone');
-    getEl('addBizModal').style.display = 'flex';
-}
+function openAddBizModal() { try { populateCountryDropdown('bizCountrySelect'); } catch(err) {} try { populateCapitalCityDropdown('bizCitySelect'); } catch(err) {} const resetVal = function(id, v) { const e = getEl(id); if (e) e.value = v; }; resetVal('bizName', ''); resetVal('bizContact', ''); resetVal('bizMobileMoney', ''); resetVal('bizType', 'Service'); resetVal('bizIcon', '🏪'); resetVal('bizCountrySelect', (currentUser && currentUser.country) || 'Sierra Leone'); getEl('addBizModal').style.display = 'flex'; }
 
 function initApp() {
     function safeCall(label, fn) { try { fn(); } catch (e) { console.error('❌ init step failed:', label, e); } }
@@ -1152,74 +1014,33 @@ function initApp() {
 if (document.readyState === 'complete' || document.readyState === 'interactive') setTimeout(initApp, 50);
 else document.addEventListener('DOMContentLoaded', function() { setTimeout(initApp, 50); });
 
-/* ============================================================ */
-/* STANDALONE REPORT MODULE                                      */
-/* ============================================================ */
+/* STANDALONE REPORT MODULE */
 (function initReportModule() {
     function boot() {
-        var reportBtn = document.getElementById('reportAppBtn');
-        var reportModal = document.getElementById('reportModal');
-        var submitBtn = document.getElementById('submitReportBtn');
-        if (!reportModal || !reportBtn || !submitBtn) return;
-        if (reportBtn.dataset.reportBound === '1') return;
-        reportBtn.dataset.reportBound = '1';
-        reportBtn.addEventListener('click', function(e) {
-            e.preventDefault(); e.stopPropagation();
-            var errEl = document.getElementById('reportError'); var okEl = document.getElementById('reportSuccess');
-            if (errEl) errEl.textContent = ''; if (okEl) okEl.textContent = '';
-            try { if (typeof currentUser !== 'undefined' && currentUser) { var nameField = document.getElementById('reportName'); var phoneField = document.getElementById('reportPhone'); if (nameField && !nameField.value) nameField.value = currentUser.name || ''; if (phoneField && !phoneField.value) phoneField.value = currentUser.phone || ''; } } catch (e) {}
-            reportModal.style.display = 'flex';
-        });
-        submitBtn.addEventListener('click', function(e) {
-            e.preventDefault(); e.stopPropagation();
-            var errEl = document.getElementById('reportError'); var okEl = document.getElementById('reportSuccess');
-            if (errEl) errEl.textContent = ''; if (okEl) okEl.textContent = '';
-            var name = (document.getElementById('reportName').value || '').trim();
-            var phone = (document.getElementById('reportPhone').value || '').trim();
-            var category = document.getElementById('reportCategory').value;
-            var details = (document.getElementById('reportDetails').value || '').trim();
-            if (!name) { if (errEl) errEl.textContent = '❌ Enter your name.'; return; }
-            if (!phone) { if (errEl) errEl.textContent = '❌ Enter your phone number.'; return; }
-            if (!category) { if (errEl) errEl.textContent = '❌ Select a category.'; return; }
-            if (!details) { if (errEl) errEl.textContent = '❌ Describe the issue.'; return; }
-            var complaint = { name: name, phone: phone, category: category, details: details };
-            try { if (typeof Supa !== 'undefined' && Supa.isReady && Supa.isReady()) Supa.saveComplaint(complaint).catch(function(err) { console.warn('⚠️ Report cloud save failed:', err && err.message); }); } catch (e) {}
-            try { var list = JSON.parse(localStorage.getItem('afripay_complaints') || '[]'); list.push(Object.assign({}, complaint, { submittedAt: new Date().toISOString() })); localStorage.setItem('afripay_complaints', JSON.stringify(list)); } catch (e) {}
-            if (okEl) okEl.textContent = '✅ Report submitted. Thank you!';
-            try { if (typeof showToast === 'function') showToast('🚨 Report submitted', 2200); } catch (e) {}
-            document.getElementById('reportName').value = ''; document.getElementById('reportPhone').value = ''; document.getElementById('reportCategory').value = ''; document.getElementById('reportDetails').value = '';
-            setTimeout(function() { reportModal.style.display = 'none'; }, 1200);
-        });
+        var reportBtn = document.getElementById('reportAppBtn'); var reportModal = document.getElementById('reportModal'); var submitBtn = document.getElementById('submitReportBtn');
+        if (!reportModal || !reportBtn || !submitBtn) return; if (reportBtn.dataset.reportBound === '1') return; reportBtn.dataset.reportBound = '1';
+        reportBtn.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); var errEl = document.getElementById('reportError'); var okEl = document.getElementById('reportSuccess'); if (errEl) errEl.textContent = ''; if (okEl) okEl.textContent = ''; try { if (typeof currentUser !== 'undefined' && currentUser) { var nameField = document.getElementById('reportName'); var phoneField = document.getElementById('reportPhone'); if (nameField && !nameField.value) nameField.value = currentUser.name || ''; if (phoneField && !phoneField.value) phoneField.value = currentUser.phone || ''; } } catch (e) {} reportModal.style.display = 'flex'; });
+        submitBtn.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); var errEl = document.getElementById('reportError'); var okEl = document.getElementById('reportSuccess'); if (errEl) errEl.textContent = ''; if (okEl) okEl.textContent = ''; var name = (document.getElementById('reportName').value || '').trim(); var phone = (document.getElementById('reportPhone').value || '').trim(); var category = document.getElementById('reportCategory').value; var details = (document.getElementById('reportDetails').value || '').trim(); if (!name) { if (errEl) errEl.textContent = '❌ Enter your name.'; return; } if (!phone) { if (errEl) errEl.textContent = '❌ Enter your phone number.'; return; } if (!category) { if (errEl) errEl.textContent = '❌ Select a category.'; return; } if (!details) { if (errEl) errEl.textContent = '❌ Describe the issue.'; return; } var complaint = { name: name, phone: phone, category: category, details: details }; try { if (typeof Supa !== 'undefined' && Supa.isReady && Supa.isReady()) Supa.saveComplaint(complaint).catch(function(err) { console.warn('⚠️ Report cloud save failed:', err && err.message); }); } catch (e) {} try { var list = JSON.parse(localStorage.getItem('afripay_complaints') || '[]'); list.push(Object.assign({}, complaint, { submittedAt: new Date().toISOString() })); localStorage.setItem('afripay_complaints', JSON.stringify(list)); } catch (e) {} if (okEl) okEl.textContent = '✅ Report submitted. Thank you!'; try { if (typeof showToast === 'function') showToast('🚨 Report submitted', 2200); } catch (e) {} document.getElementById('reportName').value = ''; document.getElementById('reportPhone').value = ''; document.getElementById('reportCategory').value = ''; document.getElementById('reportDetails').value = ''; setTimeout(function() { reportModal.style.display = 'none'; }, 1200); });
         reportModal.addEventListener('click', function(e) { if (e.target === reportModal) reportModal.style.display = 'none'; });
         console.log('✅ Report module initialized');
     }
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
-    else boot();
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
     setTimeout(function() { if (!document.getElementById('reportModal')) return; var btn = document.getElementById('reportAppBtn'); if (btn && !btn.dataset.reportBound) boot(); }, 800);
 })();
 
-/* ============================================================ */
-/* AGENT REGISTRATION HELPERS — USSD + Agreement                 */
-/* ============================================================ */
+/* AGENT REGISTRATION HELPERS — USSD + Agreement */
 (function initAgentRegistrationHelpers() {
     var AGREEMENT_KEY = 'afripay_agent_agreement_signed';
     function boot() {
-        var ussdBtn = document.getElementById('generateCollateralBtn');
-        var agreementBtn = document.getElementById('viewAgreementBtn');
-        var ussdDisplay = document.getElementById('collateralUssdDisplay');
-        var ussdError = document.getElementById('collateralError');
-        var agreementModal = document.getElementById('agreementModal');
+        var ussdBtn = document.getElementById('generateCollateralBtn'); var agreementBtn = document.getElementById('viewAgreementBtn');
+        var ussdDisplay = document.getElementById('collateralUssdDisplay'); var ussdError = document.getElementById('collateralError'); var agreementModal = document.getElementById('agreementModal');
         if (!ussdBtn && !agreementBtn) return;
         if (ussdBtn && !ussdBtn.dataset.ussdBound) {
             ussdBtn.dataset.ussdBound = '1';
             ussdBtn.addEventListener('click', function(e) {
                 e.preventDefault(); e.stopPropagation();
-                if (ussdError) ussdError.textContent = '';
-                if (ussdDisplay) { ussdDisplay.textContent = ''; ussdDisplay.style.display = 'none'; }
-                var bizName = (document.getElementById('agentBusinessName') || {}).value || '';
-                var mobile = (document.getElementById('agentMobileMoney') || {}).value || '';
-                var collat = (document.getElementById('agentCollateralLimit') || {}).value || '';
-                var cc = (document.getElementById('agentCountryCode') || {}).value || '+232';
+                if (ussdError) ussdError.textContent = ''; if (ussdDisplay) { ussdDisplay.textContent = ''; ussdDisplay.style.display = 'none'; }
+                var bizName = (document.getElementById('agentBusinessName') || {}).value || ''; var mobile = (document.getElementById('agentMobileMoney') || {}).value || ''; var collat = (document.getElementById('agentCollateralLimit') || {}).value || ''; var cc = (document.getElementById('agentCountryCode') || {}).value || '+232';
                 bizName = bizName.trim(); mobile = mobile.replace(/\D/g, ''); collat = parseFloat(collat) || 0;
                 if (!bizName) { if (ussdError) ussdError.textContent = '❌ Enter the Business name first.'; return; }
                 if (mobile.length < 6) { if (ussdError) ussdError.textContent = '❌ Enter a valid Mobile Money number.'; return; }
@@ -1227,11 +1048,7 @@ else document.addEventListener('DOMContentLoaded', function() { setTimeout(initA
                 var route; try { route = (typeof getUssdTemplateForPhone === 'function') ? getUssdTemplateForPhone(mobile) : null; } catch (e) { route = null; }
                 if (!route) route = { template: '#144*2*2*{AGENT}*{AMOUNT}*0000#', label: 'MB-FOUR (144)' };
                 var ussd = route.template.replace('{AGENT}', mobile).replace('{AMOUNT}', String(Math.round(collat)));
-                if (ussdDisplay) {
-                    ussdDisplay.textContent = ussd; ussdDisplay.style.display = 'block';
-                    ussdDisplay.title = 'Tap to copy'; ussdDisplay.style.cursor = 'pointer';
-                    ussdDisplay.onclick = function() { try { if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(ussd).then(function() { if (typeof showToast === 'function') showToast('📋 USSD copied', 1600); }); } catch (err) {} };
-                }
+                if (ussdDisplay) { ussdDisplay.textContent = ussd; ussdDisplay.style.display = 'block'; ussdDisplay.title = 'Tap to copy'; ussdDisplay.style.cursor = 'pointer'; ussdDisplay.onclick = function() { try { if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(ussd).then(function() { if (typeof showToast === 'function') showToast('📋 USSD copied', 1600); }); } catch (err) {} }; }
                 try { if (typeof showMbFourUssdModal === 'function') showMbFourUssdModal({ agentName: bizName, agentPhone: mobile, agentCountryCode: cc, amount: Math.round(collat), routeLabel: route.label, ussd: ussd }); } catch (err) {}
                 if (typeof showToast === 'function') showToast('✅ USSD code generated', 1600);
             });
@@ -1256,10 +1073,7 @@ else document.addEventListener('DOMContentLoaded', function() { setTimeout(initA
                 agreementModal.style.display = 'flex';
             });
             var agreeBtnEl = document.getElementById('agreementAgreeBtn');
-            if (agreeBtnEl && !agreeBtnEl.dataset.bound) {
-                agreeBtnEl.dataset.bound = '1';
-                agreeBtnEl.addEventListener('click', function(e) { e.preventDefault(); try { localStorage.setItem(AGREEMENT_KEY, '1'); } catch (err) {} try { agreementSigned = true; } catch (err) {} var statusTxt = document.getElementById('agreementStatusText'); if (statusTxt) { statusTxt.textContent = 'Signed'; statusTxt.style.color = '#27ae60'; } this.disabled = true; this.textContent = '✅ Signed'; if (typeof showToast === 'function') showToast('✅ Agreement signed', 1800); });
-            }
+            if (agreeBtnEl && !agreeBtnEl.dataset.bound) { agreeBtnEl.dataset.bound = '1'; agreeBtnEl.addEventListener('click', function(e) { e.preventDefault(); try { localStorage.setItem(AGREEMENT_KEY, '1'); } catch (err) {} try { agreementSigned = true; } catch (err) {} var statusTxt = document.getElementById('agreementStatusText'); if (statusTxt) { statusTxt.textContent = 'Signed'; statusTxt.style.color = '#27ae60'; } this.disabled = true; this.textContent = '✅ Signed'; if (typeof showToast === 'function') showToast('✅ Agreement signed', 1800); }); }
             ['agreementCloseXBtn', 'agreementCloseBtn'].forEach(function(id) { var b = document.getElementById(id); if (b && !b.dataset.bound) { b.dataset.bound = '1'; b.addEventListener('click', function(e) { e.preventDefault(); if (agreementModal) agreementModal.style.display = 'none'; }); } });
             if (!agreementModal.dataset.backdropBound) { agreementModal.dataset.backdropBound = '1'; agreementModal.addEventListener('click', function(e) { if (e.target === agreementModal) agreementModal.style.display = 'none'; }); }
             try { if (localStorage.getItem(AGREEMENT_KEY) === '1') { var statusTxt2 = document.getElementById('agreementStatusText'); if (statusTxt2) { statusTxt2.textContent = 'Signed'; statusTxt2.style.color = '#27ae60'; } } } catch (err) {}
@@ -1269,12 +1083,9 @@ else document.addEventListener('DOMContentLoaded', function() { setTimeout(initA
     setTimeout(function() { var u = document.getElementById('generateCollateralBtn'); var a = document.getElementById('viewAgreementBtn'); if ((u && !u.dataset.ussdBound) || (a && !a.dataset.agreementBound)) boot(); }, 800);
 })();
 
-/* ============================================================ */
-/* CHAT MODULE — send, realtime, groups, members, media          */
-/* ============================================================ */
+/* CHAT MODULE */
 (function initChatModule() {
-    const DEVELOPER_KEY = 'dev_amine';
-    const DEVELOPER_NAME = 'AfriPay Developer';
+    const DEVELOPER_KEY = 'dev_amine'; const DEVELOPER_NAME = 'AfriPay Developer';
     let currentConvo = null; let unsubRealtime = null; let membersCache = []; let currentUserKey = null; let currentUserName = null;
     function el(id) { return document.getElementById(id); }
     function toast(m, d) { try { if (typeof showToast === 'function') showToast(m, d || 2000); } catch (e) {} }
@@ -1285,144 +1096,28 @@ else document.addEventListener('DOMContentLoaded', function() { setTimeout(initA
     function getMyName() { if (typeof currentUser !== 'undefined' && currentUser && currentUser.name) return currentUser.name; return 'Guest'; }
     function buildConvoId(a, b) { return [a, b].sort().join('__'); }
     function supaReady() { try { return typeof Supa !== 'undefined' && Supa.isReady && Supa.isReady() && typeof supabaseClient !== 'undefined' && supabaseClient; } catch (e) { return false; } }
-    async function ensureConversation(keyA, keyB) {
-        const convoId = buildConvoId(keyA, keyB);
-        if (!supaReady()) return { convo_id: convoId, participant_a: keyA, participant_b: keyB };
-        try { const { data: existing } = await supabaseClient.from('chat_conversations').select('*').eq('convo_id', convoId).maybeSingle(); if (existing) return existing; const { data, error } = await supabaseClient.from('chat_conversations').insert({ convo_id: convoId, participant_a: keyA, participant_b: keyB }).select().single(); if (error) throw error; return data; } catch (e) { return { convo_id: convoId, participant_a: keyA, participant_b: keyB }; }
-    }
+    async function ensureConversation(keyA, keyB) { const convoId = buildConvoId(keyA, keyB); if (!supaReady()) return { convo_id: convoId, participant_a: keyA, participant_b: keyB }; try { const { data: existing } = await supabaseClient.from('chat_conversations').select('*').eq('convo_id', convoId).maybeSingle(); if (existing) return existing; const { data, error } = await supabaseClient.from('chat_conversations').insert({ convo_id: convoId, participant_a: keyA, participant_b: keyB }).select().single(); if (error) throw error; return data; } catch (e) { return { convo_id: convoId, participant_a: keyA, participant_b: keyB }; } }
     async function fetchMessages(convoId) { if (!supaReady()) { try { return JSON.parse(localStorage.getItem('chat_local_' + convoId) || '[]'); } catch (e) { return []; } } try { const { data, error } = await supabaseClient.from('chat_messages').select('*').eq('convo_id', convoId).order('created_at', { ascending: true }).limit(300); if (error) throw error; return data || []; } catch (e) { return []; } }
-    function renderMessage(msg) {
-        const mine = msg.sender_key === currentUserKey;
-        const wrap = document.createElement('div'); wrap.className = 'chat-msg ' + (mine ? 'mine' : 'theirs');
-        const body = msg.body || ''; let bodyHtml = ''; let m;
-        if ((m = body.match(/^\[img\](.+)$/))) bodyHtml = '<img class="chat-img" src="' + esc(m[1]) + '" alt="image" />';
-        else if ((m = body.match(/^\[audio\](.+)$/))) bodyHtml = '<audio controls src="' + esc(m[1]) + '"></audio>';
-        else if ((m = body.match(/^\[video\](.+)$/))) bodyHtml = '<video controls src="' + esc(m[1]) + '"></video>';
-        else bodyHtml = esc(body).replace(/\n/g, '<br>');
-        wrap.innerHTML = '<div class="msg-head"><strong>' + esc(msg.sender_name || (mine ? 'You' : 'User')) + '</strong> · ' + esc(fmtTime(msg.created_at)) + '</div><div class="msg-body">' + bodyHtml + '</div>';
-        if (msg.id) wrap.dataset.msgId = msg.id;
-        return wrap;
-    }
-    async function paintMessages() {
-        const list = el('chatMessages'); if (!list) return;
-        const hint = el('chatEmptyHint');
-        if (!currentConvo) { list.innerHTML = ''; if (hint) { hint.style.display = 'block'; list.appendChild(hint); } return; }
-        if (hint) hint.style.display = 'none';
-        list.innerHTML = '<div style="text-align:center;color:#95a5a6;font-size:.75rem;padding:8px;">Loading…</div>';
-        const msgs = await fetchMessages(currentConvo.convoId); list.innerHTML = '';
-        if (!msgs.length) list.innerHTML = '<div style="text-align:center;color:#95a5a6;font-size:.78rem;padding:20px;">No messages yet. Say hello 👋</div>';
-        else msgs.forEach(m => list.appendChild(renderMessage(m)));
-        list.scrollTop = list.scrollHeight;
-    }
-    function subscribeRealtime(convoId) {
-        if (unsubRealtime) { try { unsubRealtime(); } catch (e) {} unsubRealtime = null; }
-        if (!supaReady() || !convoId) return;
-        try {
-            const channel = supabaseClient.channel('chat:' + convoId).on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_messages', filter: 'convo_id=eq.' + convoId }, (payload) => {
-                const list = el('chatMessages'); if (!list || !payload || !payload.new) return;
-                if (list.querySelector('[data-msg-id="' + payload.new.id + '"]')) return;
-                const node = renderMessage(payload.new); node.dataset.msgId = payload.new.id;
-                const hintNode = list.querySelector('div[style*="No messages"]'); if (hintNode) hintNode.remove();
-                list.appendChild(node); list.scrollTop = list.scrollHeight;
-            }).subscribe();
-            unsubRealtime = () => { try { supabaseClient.removeChannel(channel); } catch (e) {} };
-        } catch (e) {}
-    }
-    async function sendMessage(rawBody) {
-        const body = (rawBody || '').trim();
-        if (!body) { toast('⚠️ Type a message first', 1500); return; }
-        if (!currentConvo) { toast('⚠️ Select a conversation first', 2000); return; }
-        const convoId = currentConvo.convoId;
-        const payload = { convo_id: convoId, sender_key: currentUserKey, sender_name: currentUserName, body: body };
-        const list = el('chatMessages');
-        if (list) { const emptyHint = list.querySelector('div[style*="No messages"]'); if (emptyHint) emptyHint.remove(); const optimistic = renderMessage({ sender_key: currentUserKey, sender_name: currentUserName, body: body, created_at: new Date().toISOString() }); list.appendChild(optimistic); list.scrollTop = list.scrollHeight; }
-        if (supaReady()) {
-            try { const { data, error } = await supabaseClient.from('chat_messages').insert(payload).select().single(); if (error) throw error; if (list && data && data.id) { const nodes = list.querySelectorAll('.chat-msg'); const last = nodes[nodes.length - 1]; if (last && !last.dataset.msgId) last.dataset.msgId = data.id; } try { await supabaseClient.from('chat_conversations').update({ last_message: body, last_message_at: new Date().toISOString() }).eq('convo_id', convoId); } catch (e2) {} }
-            catch (e) { const arr = JSON.parse(localStorage.getItem('chat_local_' + convoId) || '[]'); arr.push({ id: 'local_' + Date.now(), ...payload, created_at: new Date().toISOString() }); localStorage.setItem('chat_local_' + convoId, JSON.stringify(arr)); }
-        } else { const arr = JSON.parse(localStorage.getItem('chat_local_' + convoId) || '[]'); arr.push({ id: 'local_' + Date.now(), ...payload, created_at: new Date().toISOString() }); localStorage.setItem('chat_local_' + convoId, JSON.stringify(arr)); }
-    }
+    function renderMessage(msg) { const mine = msg.sender_key === currentUserKey; const wrap = document.createElement('div'); wrap.className = 'chat-msg ' + (mine ? 'mine' : 'theirs'); const body = msg.body || ''; let bodyHtml = ''; let m; if ((m = body.match(/^\[img\](.+)$/))) bodyHtml = '<img class="chat-img" src="' + esc(m[1]) + '" alt="image" />'; else if ((m = body.match(/^\[audio\](.+)$/))) bodyHtml = '<audio controls src="' + esc(m[1]) + '"></audio>'; else if ((m = body.match(/^\[video\](.+)$/))) bodyHtml = '<video controls src="' + esc(m[1]) + '"></video>'; else bodyHtml = esc(body).replace(/\n/g, '<br>'); wrap.innerHTML = '<div class="msg-head"><strong>' + esc(msg.sender_name || (mine ? 'You' : 'User')) + '</strong> · ' + esc(fmtTime(msg.created_at)) + '</div><div class="msg-body">' + bodyHtml + '</div>'; if (msg.id) wrap.dataset.msgId = msg.id; return wrap; }
+    async function paintMessages() { const list = el('chatMessages'); if (!list) return; const hint = el('chatEmptyHint'); if (!currentConvo) { list.innerHTML = ''; if (hint) { hint.style.display = 'block'; list.appendChild(hint); } return; } if (hint) hint.style.display = 'none'; list.innerHTML = '<div style="text-align:center;color:#95a5a6;font-size:.75rem;padding:8px;">Loading…</div>'; const msgs = await fetchMessages(currentConvo.convoId); list.innerHTML = ''; if (!msgs.length) list.innerHTML = '<div style="text-align:center;color:#95a5a6;font-size:.78rem;padding:20px;">No messages yet. Say hello 👋</div>'; else msgs.forEach(m => list.appendChild(renderMessage(m))); list.scrollTop = list.scrollHeight; }
+    function subscribeRealtime(convoId) { if (unsubRealtime) { try { unsubRealtime(); } catch (e) {} unsubRealtime = null; } if (!supaReady() || !convoId) return; try { const channel = supabaseClient.channel('chat:' + convoId).on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_messages', filter: 'convo_id=eq.' + convoId }, (payload) => { const list = el('chatMessages'); if (!list || !payload || !payload.new) return; if (list.querySelector('[data-msg-id="' + payload.new.id + '"]')) return; const node = renderMessage(payload.new); node.dataset.msgId = payload.new.id; const hintNode = list.querySelector('div[style*="No messages"]'); if (hintNode) hintNode.remove(); list.appendChild(node); list.scrollTop = list.scrollHeight; }).subscribe(); unsubRealtime = () => { try { supabaseClient.removeChannel(channel); } catch (e) {} }; } catch (e) {} }
+    async function sendMessage(rawBody) { const body = (rawBody || '').trim(); if (!body) { toast('⚠️ Type a message first', 1500); return; } if (!currentConvo) { toast('⚠️ Select a conversation first', 2000); return; } const convoId = currentConvo.convoId; const payload = { convo_id: convoId, sender_key: currentUserKey, sender_name: currentUserName, body: body }; const list = el('chatMessages'); if (list) { const emptyHint = list.querySelector('div[style*="No messages"]'); if (emptyHint) emptyHint.remove(); const optimistic = renderMessage({ sender_key: currentUserKey, sender_name: currentUserName, body: body, created_at: new Date().toISOString() }); list.appendChild(optimistic); list.scrollTop = list.scrollHeight; } if (supaReady()) { try { const { data, error } = await supabaseClient.from('chat_messages').insert(payload).select().single(); if (error) throw error; if (list && data && data.id) { const nodes = list.querySelectorAll('.chat-msg'); const last = nodes[nodes.length - 1]; if (last && !last.dataset.msgId) last.dataset.msgId = data.id; } try { await supabaseClient.from('chat_conversations').update({ last_message: body, last_message_at: new Date().toISOString() }).eq('convo_id', convoId); } catch (e2) {} } catch (e) { const arr = JSON.parse(localStorage.getItem('chat_local_' + convoId) || '[]'); arr.push({ id: 'local_' + Date.now(), ...payload, created_at: new Date().toISOString() }); localStorage.setItem('chat_local_' + convoId, JSON.stringify(arr)); } } else { const arr = JSON.parse(localStorage.getItem('chat_local_' + convoId) || '[]'); arr.push({ id: 'local_' + Date.now(), ...payload, created_at: new Date().toISOString() }); localStorage.setItem('chat_local_' + convoId, JSON.stringify(arr)); } }
     async function openConversation(opts) { currentConvo = opts; const contactEl = el('chatContact'); if (contactEl) contactEl.textContent = opts.title || 'Conversation'; await paintMessages(); subscribeRealtime(opts.convoId); const inp = el('chatInput'); if (inp) inp.focus(); }
     async function openDirectChat(targetKey, targetName) { const conv = await ensureConversation(currentUserKey, targetKey); await openConversation({ convoId: conv.convo_id, title: targetName || targetKey, kind: 'direct', targetKey: targetKey, targetName: targetName }); }
-    async function openGroupChat(kind) {
-        const convoId = 'group_' + kind;
-        const titles = { agents: '🏢 All Agents', users: '👤 All Users', clients: '👥 All Clients', developer: '🧑‍💻 Direct Developer' };
-        if (kind === 'developer') { await openDirectChat(DEVELOPER_KEY, DEVELOPER_NAME); return; }
-        if (supaReady()) { try { const { data: existing } = await supabaseClient.from('chat_conversations').select('*').eq('convo_id', convoId).maybeSingle(); if (!existing) await supabaseClient.from('chat_conversations').insert({ convo_id: convoId, participant_a: convoId, participant_b: currentUserKey }); } catch (e) {} }
-        await openConversation({ convoId: convoId, title: titles[kind] || ('Group: ' + kind), kind: 'group-' + kind, targetKey: convoId, targetName: titles[kind] });
-    }
-    async function collectMembers() {
-        const online = []; const all = [];
-        if (typeof currentUser !== 'undefined' && currentUser && currentUser.name) online.push({ key: currentUserKey, name: (currentUser.name || 'You') + ' (you)', emoji: currentUser.emoji || '👤', isOnline: true, role: 'user' });
-        try { const agents = JSON.parse(localStorage.getItem('afripay_registered_users') || '[]'); agents.forEach(a => { if (a.role === 'agent' || a.isAgent === true || a.businessName) all.push({ key: a.id || ('agent_' + (a.businessName || '').replace(/\W/g, '').toLowerCase()), name: a.businessName || a.name || 'Agent', emoji: a.emoji || '🏢', isOnline: a.approved === true, role: 'agent' }); else if (a.name && a.phone) all.push({ key: a.id || ('user_' + a.phone), name: a.name, emoji: a.emoji || '👤', isOnline: false, role: 'user' }); }); } catch (e) {}
-        if (supaReady()) { try { const { data } = await supabaseClient.from('agent_clients').select('id,name,phone').limit(50); (data || []).forEach(c => { all.push({ key: 'client_' + (c.id || c.phone), name: c.name || c.phone || 'Client', emoji: '👥', isOnline: false, role: 'client' }); }); } catch (e) {} }
-        all.push({ key: DEVELOPER_KEY, name: DEVELOPER_NAME, emoji: '🧑‍💻', isOnline: true, role: 'developer' });
-        const seen = new Set();
-        const dedup = (arr) => arr.filter(x => { if (!x.key || seen.has(x.key)) return false; seen.add(x.key); return true; });
-        const onlineDedup = dedup(online.slice());
-        const rest = dedup(all);
-        membersCache = onlineDedup.concat(rest);
-        return { online: onlineDedup, all: membersCache };
-    }
-    async function refreshMembers() {
-        const onlineList = el('chatOnlineList'); const allList = el('chatMemberList');
-        const onlineCount = el('chatOnlineCount'); const memberCount = el('chatMemberCount');
-        if (!onlineList || !allList) return;
-        const { online, all } = await collectMembers();
-        onlineList.innerHTML = ''; allList.innerHTML = '';
-        if (!online.length) onlineList.innerHTML = '<div class="chat-member" style="color:#95a5a6;">No one online</div>';
-        else online.forEach(m => onlineList.appendChild(makeMemberRow(m, true)));
-        const onlineKeys = new Set(online.map(x => x.key));
-        const rest = all.filter(x => !onlineKeys.has(x.key));
-        if (!rest.length) allList.innerHTML = '<div class="chat-member" style="color:#95a5a6;">No other members</div>';
-        else rest.forEach(m => allList.appendChild(makeMemberRow(m, false)));
-        if (onlineCount) onlineCount.textContent = online.length;
-        if (memberCount) memberCount.textContent = all.length;
-    }
+    async function openGroupChat(kind) { const convoId = 'group_' + kind; const titles = { agents: '🏢 All Agents', users: '👤 All Users', clients: '👥 All Clients', developer: '🧑‍💻 Direct Developer' }; if (kind === 'developer') { await openDirectChat(DEVELOPER_KEY, DEVELOPER_NAME); return; } if (supaReady()) { try { const { data: existing } = await supabaseClient.from('chat_conversations').select('*').eq('convo_id', convoId).maybeSingle(); if (!existing) await supabaseClient.from('chat_conversations').insert({ convo_id: convoId, participant_a: convoId, participant_b: currentUserKey }); } catch (e) {} } await openConversation({ convoId: convoId, title: titles[kind] || ('Group: ' + kind), kind: 'group-' + kind, targetKey: convoId, targetName: titles[kind] }); }
+    async function collectMembers() { const online = []; const all = []; if (typeof currentUser !== 'undefined' && currentUser && currentUser.name) online.push({ key: currentUserKey, name: (currentUser.name || 'You') + ' (you)', emoji: currentUser.emoji || '👤', isOnline: true, role: 'user' }); try { const agents = JSON.parse(localStorage.getItem('afripay_registered_users') || '[]'); agents.forEach(a => { if (a.role === 'agent' || a.isAgent === true || a.businessName) all.push({ key: a.id || ('agent_' + (a.businessName || '').replace(/\W/g, '').toLowerCase()), name: a.businessName || a.name || 'Agent', emoji: a.emoji || '🏢', isOnline: a.approved === true, role: 'agent' }); else if (a.name && a.phone) all.push({ key: a.id || ('user_' + a.phone), name: a.name, emoji: a.emoji || '👤', isOnline: false, role: 'user' }); }); } catch (e) {} if (supaReady()) { try { const { data } = await supabaseClient.from('agent_clients').select('id,name,phone').limit(50); (data || []).forEach(c => { all.push({ key: 'client_' + (c.id || c.phone), name: c.name || c.phone || 'Client', emoji: '👥', isOnline: false, role: 'client' }); }); } catch (e) {} } all.push({ key: DEVELOPER_KEY, name: DEVELOPER_NAME, emoji: '🧑‍💻', isOnline: true, role: 'developer' }); const seen = new Set(); const dedup = (arr) => arr.filter(x => { if (!x.key || seen.has(x.key)) return false; seen.add(x.key); return true; }); const onlineDedup = dedup(online.slice()); const rest = dedup(all); membersCache = onlineDedup.concat(rest); return { online: onlineDedup, all: membersCache }; }
+    async function refreshMembers() { const onlineList = el('chatOnlineList'); const allList = el('chatMemberList'); const onlineCount = el('chatOnlineCount'); const memberCount = el('chatMemberCount'); if (!onlineList || !allList) return; const { online, all } = await collectMembers(); onlineList.innerHTML = ''; allList.innerHTML = ''; if (!online.length) onlineList.innerHTML = '<div class="chat-member" style="color:#95a5a6;">No one online</div>'; else online.forEach(m => onlineList.appendChild(makeMemberRow(m, true))); const onlineKeys = new Set(online.map(x => x.key)); const rest = all.filter(x => !onlineKeys.has(x.key)); if (!rest.length) allList.innerHTML = '<div class="chat-member" style="color:#95a5a6;">No other members</div>'; else rest.forEach(m => allList.appendChild(makeMemberRow(m, false))); if (onlineCount) onlineCount.textContent = online.length; if (memberCount) memberCount.textContent = all.length; }
     function makeMemberRow(m, isOnline) { const row = document.createElement('div'); row.className = 'chat-member' + (isOnline ? ' online' : ''); row.innerHTML = '<div class="avatar">' + (m.emoji || '👤') + '</div><div class="name">' + esc(m.name) + '</div>'; row.addEventListener('click', function() { if (m.key === currentUserKey) { toast('This is you 🙂', 1500); return; } openDirectChat(m.key, m.name); }); return row; }
     let dtTimer = null;
     function startDatetimeTicker() { const elm = el('chatDatetime'); if (!elm) return; if (dtTimer) clearInterval(dtTimer); const tick = () => { elm.textContent = fmtDateTime(new Date()); }; tick(); dtTimer = setInterval(tick, 30000); }
-    function bind() {
-        currentUserKey = getMyKey(); currentUserName = getMyName();
-        const groupsBtn = el('chatGroupsBtn'); const groupsMenu = el('chatGroupsMenu');
-        if (groupsBtn && groupsMenu && !groupsBtn.dataset.bound) {
-            groupsBtn.dataset.bound = '1';
-            groupsBtn.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); groupsMenu.classList.toggle('open'); });
-            document.addEventListener('click', function(e) { const wrap = groupsBtn.parentElement; if (wrap && !wrap.contains(e.target)) groupsMenu.classList.remove('open'); });
-            groupsMenu.querySelectorAll('[data-group]').forEach(b => { b.addEventListener('click', async function(e) { e.preventDefault(); e.stopPropagation(); groupsMenu.classList.remove('open'); await openGroupChat(b.getAttribute('data-group')); }); });
-        }
-        const sendBtn = el('chatSendBtn'); const input = el('chatInput');
-        if (sendBtn && input && !sendBtn.dataset.bound) {
-            sendBtn.dataset.bound = '1';
-            sendBtn.addEventListener('click', async function(e) { e.preventDefault(); const v = input.value; input.value = ''; await sendMessage(v); input.focus(); });
-            input.addEventListener('keydown', async function(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); const v = input.value; input.value = ''; await sendMessage(v); } });
-        }
-        bindMediaButtons();
-        const toggleRight = el('chatToggleRightBarBtn'); const rightBar = el('chatRightbar');
-        if (toggleRight && rightBar && !toggleRight.dataset.bound) { toggleRight.dataset.bound = '1'; toggleRight.addEventListener('click', function(e) { e.preventDefault(); rightBar.style.display = (rightBar.style.display === 'none') ? 'flex' : 'none'; }); }
-        const chatToggle = el('chatToggleBtn');
-        if (chatToggle && !chatToggle.dataset.chatBound) { chatToggle.dataset.chatBound = '1'; chatToggle.addEventListener('click', function() { setTimeout(refreshMembers, 100); startDatetimeTicker(); }); }
-        refreshMembers(); startDatetimeTicker();
-        const hint = el('chatEmptyHint'); if (hint) hint.style.display = 'block';
-        console.log('✅ Chat module initialized');
-    }
-    function bindMediaButtons() {
-        const audioCall = el('chatAudioCallBtn'); const videoCall = el('chatVideoCallBtn');
-        const audioMsg = el('chatAudioMsgBtn'); const videoMsg = el('chatVideoMsgBtn'); const imagePost = el('chatImagePostBtn');
-        const audioInput = el('chatAudioInput'); const videoInput = el('chatVideoInput'); const imageInput = el('chatImageInput');
-        if (audioCall && !audioCall.dataset.bound) { audioCall.dataset.bound = '1'; audioCall.addEventListener('click', function() { if (!currentConvo) { toast('⚠️ Open a conversation first', 2000); return; } toast('📞 Audio call requested with ' + (currentConvo.targetName || currentConvo.title), 2600); }); }
-        if (videoCall && !videoCall.dataset.bound) { videoCall.dataset.bound = '1'; videoCall.addEventListener('click', function() { if (!currentConvo) { toast('⚠️ Open a conversation first', 2000); return; } toast('🎥 Video call requested with ' + (currentConvo.targetName || currentConvo.title), 2600); }); }
-        if (audioMsg && audioInput && !audioMsg.dataset.bound) { audioMsg.dataset.bound = '1'; audioMsg.addEventListener('click', () => audioInput.click()); audioInput.addEventListener('change', function() { const f = this.files && this.files[0]; if (!f) return; if (!currentConvo) { toast('⚠️ Open a conversation first', 2000); return; } const r = new FileReader(); r.onload = (ev) => sendMessage('[audio]' + ev.target.result); r.readAsDataURL(f); this.value = ''; }); }
-        if (videoMsg && videoInput && !videoMsg.dataset.bound) { videoMsg.dataset.bound = '1'; videoMsg.addEventListener('click', () => videoInput.click()); videoInput.addEventListener('change', function() { const f = this.files && this.files[0]; if (!f) return; if (!currentConvo) { toast('⚠️ Open a conversation first', 2000); return; } if (f.size > 2 * 1024 * 1024) { toast('⚠️ Video too large (max 2 MB)', 2600); this.value = ''; return; } const r = new FileReader(); r.onload = (ev) => sendMessage('[video]' + ev.target.result); r.readAsDataURL(f); this.value = ''; }); }
-        if (imagePost && imageInput && !imagePost.dataset.bound) { imagePost.dataset.bound = '1'; imagePost.addEventListener('click', () => imageInput.click()); imageInput.addEventListener('change', function() { const f = this.files && this.files[0]; if (!f) return; if (!currentConvo) { toast('⚠️ Open a conversation first', 2000); return; } const r = new FileReader(); r.onload = (ev) => sendMessage('[img]' + ev.target.result); r.readAsDataURL(f); this.value = ''; }); }
-    }
+    function bind() { currentUserKey = getMyKey(); currentUserName = getMyName(); const groupsBtn = el('chatGroupsBtn'); const groupsMenu = el('chatGroupsMenu'); if (groupsBtn && groupsMenu && !groupsBtn.dataset.bound) { groupsBtn.dataset.bound = '1'; groupsBtn.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); groupsMenu.classList.toggle('open'); }); document.addEventListener('click', function(e) { const wrap = groupsBtn.parentElement; if (wrap && !wrap.contains(e.target)) groupsMenu.classList.remove('open'); }); groupsMenu.querySelectorAll('[data-group]').forEach(b => { b.addEventListener('click', async function(e) { e.preventDefault(); e.stopPropagation(); groupsMenu.classList.remove('open'); await openGroupChat(b.getAttribute('data-group')); }); }); } const sendBtn = el('chatSendBtn'); const input = el('chatInput'); if (sendBtn && input && !sendBtn.dataset.bound) { sendBtn.dataset.bound = '1'; sendBtn.addEventListener('click', async function(e) { e.preventDefault(); const v = input.value; input.value = ''; await sendMessage(v); input.focus(); }); input.addEventListener('keydown', async function(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); const v = input.value; input.value = ''; await sendMessage(v); } }); } bindMediaButtons(); const toggleRight = el('chatToggleRightBarBtn'); const rightBar = el('chatRightbar'); if (toggleRight && rightBar && !toggleRight.dataset.bound) { toggleRight.dataset.bound = '1'; toggleRight.addEventListener('click', function(e) { e.preventDefault(); rightBar.style.display = (rightBar.style.display === 'none') ? 'flex' : 'none'; }); } const chatToggle = el('chatToggleBtn'); if (chatToggle && !chatToggle.dataset.chatBound) { chatToggle.dataset.chatBound = '1'; chatToggle.addEventListener('click', function() { setTimeout(refreshMembers, 100); startDatetimeTicker(); }); } refreshMembers(); startDatetimeTicker(); const hint = el('chatEmptyHint'); if (hint) hint.style.display = 'block'; console.log('✅ Chat module initialized'); }
+    function bindMediaButtons() { const audioCall = el('chatAudioCallBtn'); const videoCall = el('chatVideoCallBtn'); const audioMsg = el('chatAudioMsgBtn'); const videoMsg = el('chatVideoMsgBtn'); const imagePost = el('chatImagePostBtn'); const audioInput = el('chatAudioInput'); const videoInput = el('chatVideoInput'); const imageInput = el('chatImageInput'); if (audioCall && !audioCall.dataset.bound) { audioCall.dataset.bound = '1'; audioCall.addEventListener('click', function() { if (!currentConvo) { toast('⚠️ Open a conversation first', 2000); return; } toast('📞 Audio call requested with ' + (currentConvo.targetName || currentConvo.title), 2600); }); } if (videoCall && !videoCall.dataset.bound) { videoCall.dataset.bound = '1'; videoCall.addEventListener('click', function() { if (!currentConvo) { toast('⚠️ Open a conversation first', 2000); return; } toast('🎥 Video call requested with ' + (currentConvo.targetName || currentConvo.title), 2600); }); } if (audioMsg && audioInput && !audioMsg.dataset.bound) { audioMsg.dataset.bound = '1'; audioMsg.addEventListener('click', () => audioInput.click()); audioInput.addEventListener('change', function() { const f = this.files && this.files[0]; if (!f) return; if (!currentConvo) { toast('⚠️ Open a conversation first', 2000); return; } const r = new FileReader(); r.onload = (ev) => sendMessage('[audio]' + ev.target.result); r.readAsDataURL(f); this.value = ''; }); } if (videoMsg && videoInput && !videoMsg.dataset.bound) { videoMsg.dataset.bound = '1'; videoMsg.addEventListener('click', () => videoInput.click()); videoInput.addEventListener('change', function() { const f = this.files && this.files[0]; if (!f) return; if (!currentConvo) { toast('⚠️ Open a conversation first', 2000); return; } if (f.size > 2 * 1024 * 1024) { toast('⚠️ Video too large (max 2 MB)', 2600); this.value = ''; return; } const r = new FileReader(); r.onload = (ev) => sendMessage('[video]' + ev.target.result); r.readAsDataURL(f); this.value = ''; }); } if (imagePost && imageInput && !imagePost.dataset.bound) { imagePost.dataset.bound = '1'; imagePost.addEventListener('click', () => imageInput.click()); imageInput.addEventListener('change', function() { const f = this.files && this.files[0]; if (!f) return; if (!currentConvo) { toast('⚠️ Open a conversation first', 2000); return; } const r = new FileReader(); r.onload = (ev) => sendMessage('[img]' + ev.target.result); r.readAsDataURL(f); this.value = ''; }); } }
     function boot() { if (!el('chatWindow')) return; if (el('chatWindow').dataset.chatBound === '1') return; el('chatWindow').dataset.chatBound = '1'; bind(); }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
     setTimeout(function() { if (el('chatWindow') && el('chatWindow').dataset.chatBound !== '1') boot(); }, 900);
 })();
 
-/* ============================================================ */
-/* DELIVER MODULE                                                */
-/* ============================================================ */
+/* DELIVER MODULE */
 try {
 (function initDeliverModule() {
     const DELIVER_PREFIX_144 = ['78','79','76','75','73','74'];
@@ -1436,9 +1131,64 @@ try {
     function getCountryDialCode(countryName) { const map = { 'Sierra Leone':'232','Guinea':'224','Senegal':'221','Liberia':'231','Ghana':'233','Nigeria':'234','Kenya':'254','Mali':'223','Ivory Coast':'225','Niger':'227','Benin':'229','Guinea Bissau':'245','Gambia':'220','Togo':'228','Central Africa Rep':'236','Ethiopia':'251','Gabon':'241','Madagascar':'261','Morocco':'212','Rwanda':'250','Uganda':'256','DR Congo':'243','Burkina Faso':'226' }; return map[countryName] || '232'; }
     function fillCountrySelect() { const sel = el('deliverCountrySelect'); if (!sel) return; if (sel.options.length > 0) return; try { if (typeof SUPPORTED_CURRENCIES !== 'undefined') sel.innerHTML = SUPPORTED_CURRENCIES.map(c => '<option value="' + esc(c.name) + '">' + c.flag + ' ' + esc(c.name) + '</option>').join(''); } catch (e) {} }
     function updateUssd() { const agent = getCurrentAgent(); if (!agent) { if (el('deliverUssdBox')) el('deliverUssdBox').textContent = '—'; return; } const countryName = (el('deliverCountrySelect') || {}).value || ''; const cc = getCountryDialCode(countryName); const route = pickUssdForAgent(agent); const ussd = route.template.replace('{CC}', cc); if (el('deliverUssdBox')) el('deliverUssdBox').textContent = ussd; }
-    function prefillFromTransaction(tx) { if (!tx) return; const set = (id, v) => { const e = el(id); if (e) e.value = v || ''; }; set('deliverSenderName', tx.senderName || (tx.sender||'').split('(')[0].trim()); set('deliverSenderPhone', tx.senderPhone || ''); set('deliverClientName', tx.clientName || ''); set('deliverClientPhone', tx.clientPhone || ''); set('deliverAmount', tx.amount || tx.baseAmount || ''); set('deliverCurrency', tx.currency || 'SLL'); set('deliverLocalAgentName', tx.localAgentName || ''); set('deliverLocalAgentPhone', tx.localAgentPhone || ''); set('deliverTxId', tx.txId || ''); set('deliverProviderTxId', tx.providerTxId || ''); set('deliverTransferCode', tx.transferCode || ''); updateUssd(); }
+    function prefillFromTransaction(tx) {
+        if (!tx) return;
+        const set = (id, v) => { const e = el(id); if (e) e.value = v || ''; };
+        set('deliverSenderName', tx.senderName || (tx.sender||'').split('(')[0].trim());
+        set('deliverSenderPhone', tx.senderPhone || '');
+        if (tx.clientName) set('deliverClientName', tx.clientName);
+        if (tx.clientPhone) set('deliverClientPhone', tx.clientPhone);
+        set('deliverAmount', tx.amount || tx.baseAmount || '');
+        set('deliverCurrency', tx.currency || 'SLL');
+        set('deliverLocalAgentName', tx.localAgentName || '');
+        set('deliverLocalAgentPhone', tx.localAgentPhone || '');
+        set('deliverTxId', tx.txId || '');
+        set('deliverProviderTxId', tx.providerTxId || '');
+        set('deliverTransferCode', tx.transferCode || '');
+        updateUssd();
+    }
     function normalizeDeal(d) { return { senderName: d.sender_name || d.senderName || '', senderPhone: d.sender_phone || d.senderPhone || '', clientName: d.client_name || d.clientName || '', clientPhone: d.client_phone || d.clientPhone || '', amount: d.amount || 0, currency: d.currency || 'SLL', localAgentName: d.agent_name || d.agentName || '', localAgentPhone: d.agent_phone || d.agentPhone || '', txId: d.tx_id || d.txId || '', providerTxId: d.provider_tx_id || d.providerTxId || '', transferCode: d.transfer_code || d.transferCode || '' }; }
-    async function loadDeals() { if (typeof supabaseClient === 'undefined' || !supabaseClient) { refreshDealsUI(); return; } const agent = getCurrentAgent(); if (!agent) { refreshDealsUI(); return; } try { const { data, error } = await supabaseClient.from('transactions').select('*').eq('agent_name', agent.businessName || agent.name || '').order('created_at', { ascending: false }).limit(20); if (error) throw error; dealMessages = (data || []).map(normalizeDeal); } catch (e) { dealMessages = []; } refreshDealsUI(); }
+    async function loadDeals() {
+        if (typeof supabaseClient === 'undefined' || !supabaseClient) { refreshDealsUI(); return; }
+        const agent = getCurrentAgent();
+        if (!agent) { refreshDealsUI(); return; }
+        try {
+            const { data, error } = await supabaseClient
+                .from('transactions')
+                .select('*')
+                .eq('agent_name', agent.businessName || agent.name || '')
+                .order('created_at', { ascending: false })
+                .limit(20);
+            if (error) throw error;
+
+            const rows = data || [];
+            dealMessages = [];
+
+            for (const r of rows) {
+                const deal = normalizeDeal(r);
+
+                if ((!deal.clientName || !deal.clientPhone) && deal.senderPhone) {
+                    try {
+                        const { data: clientRow } = await supabaseClient
+                            .from('agent_clients')
+                            .select('name, phone')
+                            .eq('phone', deal.senderPhone)
+                            .maybeSingle();
+                        if (clientRow) {
+                            if (!deal.clientName) deal.clientName = clientRow.name || '';
+                            if (!deal.clientPhone) deal.clientPhone = clientRow.phone || '';
+                        }
+                    } catch (e) { /* ignore */ }
+                }
+
+                dealMessages.push(deal);
+            }
+        } catch (e) {
+            console.warn('loadDeals:', e);
+            dealMessages = [];
+        }
+        refreshDealsUI();
+    }
     function refreshDealsUI() {
         const btn = el('deliverDealsBtn'); const countEl = el('deliverDealsCount'); const menu = el('deliverDealsMenu');
         if (!btn) return;
@@ -1477,7 +1227,7 @@ try {
         const txId = (el('deliverTxId') || {}).value || ('WB' + Date.now()); const providerTxId = (el('deliverProviderTxId') || {}).value || ''; const transferCode = (el('deliverTransferCode') || {}).value || '';
         try { ProviderTxIdManager.markAsUsed(agentPtx); } catch (e) {}
         try { TransferCodeManager.markAsUsed(agentTc); } catch (e) {}
-        const payload = { tx_id: txId, provider_tx_id: agentPtx, transfer_code: agentTc, sender_name: senderName, sender_phone: senderPhone, agent_name: agentName, agent_phone: agentPhone, amount: amount, charge: 0, gst: 0, total: amount, currency: currency, mode: 'Delivered', status: 'delivered' };
+        const payload = { tx_id: txId, provider_tx_id: agentPtx, transfer_code: agentTc, sender_name: senderName, sender_phone: senderPhone, client_name: (el('deliverClientName') || {}).value || null, client_phone: (el('deliverClientPhone') || {}).value || null, agent_name: agentName, agent_phone: agentPhone, amount: amount, charge: 0, gst: 0, total: amount, currency: currency, mode: 'Delivered', status: 'delivered' };
         let insertedId = null;
         if (typeof supabaseClient !== 'undefined' && supabaseClient) { try { const { data, error } = await supabaseClient.from('transactions').insert(payload).select().single(); if (error) throw error; insertedId = data && data.id; } catch (err) { if (errEl) errEl.textContent = '⚠️ Saved locally'; } }
         try { const list = JSON.parse(localStorage.getItem('afripay_deliveries') || '[]'); list.push(Object.assign({}, payload, { local_provider_tx_id: providerTxId, local_transfer_code: transferCode, local_agent_name: (el('deliverLocalAgentName') || {}).value || '', local_agent_phone: (el('deliverLocalAgentPhone') || {}).value || '', client_name: (el('deliverClientName') || {}).value || '', client_phone: (el('deliverClientPhone') || {}).value || '', ussd_used: ussdUsed, destination_country: country, delivered_at: new Date().toISOString() })); localStorage.setItem('afripay_deliveries', JSON.stringify(list)); } catch (e) {}
@@ -1506,102 +1256,27 @@ try {
 })();
 } catch (deliverBootErr) { console.warn('⚠️ Deliver module failed:', deliverBootErr); }
 
-/* ============================================================ */
-/* FOOTER MODULE — self-contained, survives other code failures  */
-/* ============================================================ */
+/* FOOTER MODULE */
 (function initFooterModule() {
     function el(id) { return document.getElementById(id); }
     function toast(msg, dur) { try { if (typeof showToast === 'function') showToast(msg, dur || 2000); } catch (e) {} }
     function info(title, body) { try { if (typeof showInfoModal === 'function') { showInfoModal(title, body); return true; } return false; } catch (e) { return false; } }
     function openUrl(u) { try { window.open(u, '_blank', 'noopener'); } catch (e) { window.location.href = u; } }
-
     function boot() {
-        var aboutBtn = el('aboutAppBtn');
-        if (aboutBtn && !aboutBtn.dataset.footerBound) {
-            aboutBtn.dataset.footerBound = '1';
-            aboutBtn.addEventListener('click', function (e) { e.preventDefault(); if (!info('About AfriPay', '<p>AfriPay is a cross-border mobile-money platform for sending money between African countries.</p>')) toast('About AfriPay — v1.0', 2400); });
-        }
-        var devBtn = el('aboutDevBtn');
-        if (devBtn && !devBtn.dataset.footerBound) {
-            devBtn.dataset.footerBound = '1';
-            devBtn.addEventListener('click', function (e) { e.preventDefault(); if (!info('Developer', '<p><strong>Mohamed Amine Jalloh</strong><br>Fintech & mobile-money developer.</p><p>📞 +232 76 436 811</p>')) toast('Developer: Amine Jalloh', 2400); });
-        }
-        var contactBtn = el('contactBtn');
-        if (contactBtn && !contactBtn.dataset.footerBound) {
-            contactBtn.dataset.footerBound = '1';
-            contactBtn.addEventListener('click', function (e) { e.preventDefault(); if (!info('Contact Us', '<p>📞 +232 76 436 811<br>📧 support@afripay.app</p><p>Available Mon–Sat, 8am–8pm GMT.</p>')) toast('📞 +232 76 436 811', 2400); });
-        }
-        var subscribeBtn = el('subscribeBtn');
-        if (subscribeBtn && !subscribeBtn.dataset.footerBound) {
-            subscribeBtn.dataset.footerBound = '1';
-            subscribeBtn.addEventListener('click', function (e) { e.preventDefault(); var modal = el('subscribeModal'); if (modal) modal.style.display = 'flex'; else toast('Subscribe: modal missing', 2000); });
-        }
-        var howBtn = el('howToBtn');
-        if (howBtn && !howBtn.dataset.footerBound) {
-            howBtn.dataset.footerBound = '1';
-            howBtn.addEventListener('click', function (e) { e.preventDefault(); openUrl('https://aminejalloh-io.github.io/AfriPay-Guide/'); toast('📖 Opening AfriPay Guide…', 1800); });
-        }
-        var convBtn = el('currencyConverterBtn');
-        if (convBtn && !convBtn.dataset.footerBound) {
-            convBtn.dataset.footerBound = '1';
-            convBtn.addEventListener('click', function (e) {
-                e.preventDefault();
-                try { if (typeof populateConverterDropdowns === 'function') populateConverterDropdowns(); } catch (err) {}
-                try { if (typeof updateConverterModal === 'function') updateConverterModal(); } catch (err) {}
-                var m = el('currencyConverterModal'); if (m) m.style.display = 'flex'; else toast('Converter: modal missing', 2000);
-            });
-        }
-        var reportBtn = el('reportAppBtn');
-        if (reportBtn && !reportBtn.dataset.footerBound) {
-            reportBtn.dataset.footerBound = '1';
-            reportBtn.addEventListener('click', function (e) {
-                e.preventDefault();
-                var m = el('reportModal'); if (!m) { toast('⚠️ Report modal missing', 2200); return; }
-                var errEl = el('reportError'); if (errEl) errEl.textContent = '';
-                var okEl = el('reportSuccess'); if (okEl) okEl.textContent = '';
-                try { if (typeof currentUser !== 'undefined' && currentUser) { var nf = el('reportName'); if (nf && !nf.value) nf.value = currentUser.name || ''; var pf = el('reportPhone'); if (pf && !pf.value) pf.value = currentUser.phone || ''; } } catch (err) {}
-                m.style.display = 'flex';
-            });
-        }
-        var othersBtn = el('othersBtn');
-        var othersMenu = el('othersDropdownMenu');
-        if (othersBtn && othersMenu && !othersBtn.dataset.footerBound) {
-            othersBtn.dataset.footerBound = '1';
-            othersBtn.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); othersMenu.classList.toggle('open'); });
-        }
+        var aboutBtn = el('aboutAppBtn'); if (aboutBtn && !aboutBtn.dataset.footerBound) { aboutBtn.dataset.footerBound = '1'; aboutBtn.addEventListener('click', function (e) { e.preventDefault(); if (!info('About AfriPay', '<p>AfriPay is a cross-border mobile-money platform for sending money between African countries.</p>')) toast('About AfriPay — v1.0', 2400); }); }
+        var devBtn = el('aboutDevBtn'); if (devBtn && !devBtn.dataset.footerBound) { devBtn.dataset.footerBound = '1'; devBtn.addEventListener('click', function (e) { e.preventDefault(); if (!info('Developer', '<p><strong>Mohamed Amine Jalloh</strong><br>Fintech & mobile-money developer.</p><p>📞 +232 76 436 811</p>')) toast('Developer: Amine Jalloh', 2400); }); }
+        var contactBtn = el('contactBtn'); if (contactBtn && !contactBtn.dataset.footerBound) { contactBtn.dataset.footerBound = '1'; contactBtn.addEventListener('click', function (e) { e.preventDefault(); if (!info('Contact Us', '<p>📞 +232 76 436 811<br>📧 support@afripay.app</p><p>Available Mon–Sat, 8am–8pm GMT.</p>')) toast('📞 +232 76 436 811', 2400); }); }
+        var subscribeBtn = el('subscribeBtn'); if (subscribeBtn && !subscribeBtn.dataset.footerBound) { subscribeBtn.dataset.footerBound = '1'; subscribeBtn.addEventListener('click', function (e) { e.preventDefault(); var modal = el('subscribeModal'); if (modal) modal.style.display = 'flex'; else toast('Subscribe: modal missing', 2000); }); }
+        var howBtn = el('howToBtn'); if (howBtn && !howBtn.dataset.footerBound) { howBtn.dataset.footerBound = '1'; howBtn.addEventListener('click', function (e) { e.preventDefault(); openUrl('https://aminejalloh-io.github.io/AfriPay-Guide/'); toast('📖 Opening AfriPay Guide…', 1800); }); }
+        var convBtn = el('currencyConverterBtn'); if (convBtn && !convBtn.dataset.footerBound) { convBtn.dataset.footerBound = '1'; convBtn.addEventListener('click', function (e) { e.preventDefault(); try { if (typeof populateConverterDropdowns === 'function') populateConverterDropdowns(); } catch (err) {} try { if (typeof updateConverterModal === 'function') updateConverterModal(); } catch (err) {} var m = el('currencyConverterModal'); if (m) m.style.display = 'flex'; else toast('Converter: modal missing', 2000); }); }
+        var reportBtn = el('reportAppBtn'); if (reportBtn && !reportBtn.dataset.footerBound) { reportBtn.dataset.footerBound = '1'; reportBtn.addEventListener('click', function (e) { e.preventDefault(); var m = el('reportModal'); if (!m) { toast('⚠️ Report modal missing', 2200); return; } var errEl = el('reportError'); if (errEl) errEl.textContent = ''; var okEl = el('reportSuccess'); if (okEl) okEl.textContent = ''; try { if (typeof currentUser !== 'undefined' && currentUser) { var nf = el('reportName'); if (nf && !nf.value) nf.value = currentUser.name || ''; var pf = el('reportPhone'); if (pf && !pf.value) pf.value = currentUser.phone || ''; } } catch (err) {} m.style.display = 'flex'; }); }
+        var othersBtn = el('othersBtn'); var othersMenu = el('othersDropdownMenu'); if (othersBtn && othersMenu && !othersBtn.dataset.footerBound) { othersBtn.dataset.footerBound = '1'; othersBtn.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); othersMenu.classList.toggle('open'); }); }
         var appLinks = { directPay: 'https://www.appcreator24.com/app4066434-hmkuo4', watuPay: 'https://aminejalloh-io.github.io/WatuPay/', weBine: 'https://www.appcreator24.com/app814705-24jpuf' };
-        ['directPayBtn', 'watuPayBtn', 'weBineBtn'].forEach(function (id) {
-            var b = el(id);
-            if (b && !b.dataset.footerBound) {
-                b.dataset.footerBound = '1';
-                b.addEventListener('click', function (e) { e.preventDefault(); var key = id.replace('Btn', ''); if (appLinks[key]) openUrl(appLinks[key]); if (othersMenu) othersMenu.classList.remove('open'); });
-            }
-        });
-        document.querySelectorAll('.social-icons .social-icon').forEach(function (a) {
-            if (a.dataset.footerBound) return;
-            a.dataset.footerBound = '1';
-            a.addEventListener('click', function (e) {
-                e.preventDefault();
-                var label = (a.textContent || '').trim().toUpperCase();
-                if (label === 'WA') openUrl('https://wa.me/23276436811');
-                else if (label === 'FB') openUrl('https://facebook.com/afripay');
-                else if (label === 'IG') openUrl('https://instagram.com/afripay');
-                else if (label === 'YT') openUrl('https://youtube.com/@afripay');
-                else if (label === 'WB') openUrl('https://aminejalloh-io.github.io/WatuPay/');
-                else toast('🔗 ' + label, 1400);
-            });
-        });
-        if (!window.__footerOutsideBound) {
-            window.__footerOutsideBound = true;
-            document.addEventListener('click', function (e) {
-                var od = document.querySelector('.others-dropdown'); if (!od) return;
-                if (!od.contains(e.target)) { var m = el('othersDropdownMenu'); if (m) m.classList.remove('open'); }
-            });
-        }
+        ['directPayBtn', 'watuPayBtn', 'weBineBtn'].forEach(function (id) { var b = el(id); if (b && !b.dataset.footerBound) { b.dataset.footerBound = '1'; b.addEventListener('click', function (e) { e.preventDefault(); var key = id.replace('Btn', ''); if (appLinks[key]) openUrl(appLinks[key]); if (othersMenu) othersMenu.classList.remove('open'); }); } });
+        document.querySelectorAll('.social-icons .social-icon').forEach(function (a) { if (a.dataset.footerBound) return; a.dataset.footerBound = '1'; a.addEventListener('click', function (e) { e.preventDefault(); var label = (a.textContent || '').trim().toUpperCase(); if (label === 'WA') openUrl('https://wa.me/23276436811'); else if (label === 'FB') openUrl('https://facebook.com/afripay'); else if (label === 'IG') openUrl('https://instagram.com/afripay'); else if (label === 'YT') openUrl('https://youtube.com/@afripay'); else if (label === 'WB') openUrl('https://aminejalloh-io.github.io/WatuPay/'); else toast('🔗 ' + label, 1400); }); });
+        if (!window.__footerOutsideBound) { window.__footerOutsideBound = true; document.addEventListener('click', function (e) { var od = document.querySelector('.others-dropdown'); if (!od) return; if (!od.contains(e.target)) { var m = el('othersDropdownMenu'); if (m) m.classList.remove('open'); } }); }
         console.log('✅ Footer module initialized');
     }
-
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
-    else boot();
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
     setTimeout(function () { var a = el('aboutAppBtn'); if (a && !a.dataset.footerBound) boot(); }, 1200);
 })();
