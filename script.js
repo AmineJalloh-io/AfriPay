@@ -519,14 +519,69 @@ function computeCharges() {
 }
 function updateInlineConversion() { const from = getEl('inlineConvFrom'), to = getEl('inlineConvTo'), amtEl = getEl('inlineConvAmount'), resEl = getEl('inlineConvResult'); if (!from || !to || !amtEl || !resEl) return; const amt = parseFloat(amtEl.value) || 0; const fromCur = from.value, toCur = to.value; const fromRate = FX_TO_USD[fromCur] || 1; const toRate = FX_TO_USD[toCur] || 1; const result = amt * fromRate / toRate; resEl.value = result.toFixed(2) + ' ' + toCur; }
 
+/* ============================================================ */
+/* FIX: Converter helpers that were referenced but never defined */
+/* (caused a ReferenceError that aborted setupEventListeners)    */
+/* ============================================================ */
+function populateConverterDropdowns() {
+    const from = getEl('convFromCurrency');
+    const to = getEl('convCountrySelect');
+    if (!from || !to) return;
+
+    const curCodes = Object.keys(FX_TO_USD);
+    if (!from.options.length) {
+        from.innerHTML = curCodes.map(function (c) {
+            return '<option value="' + c + '">' + c + '</option>';
+        }).join('');
+    }
+    if (!to.options.length) {
+        if (typeof SUPPORTED_CURRENCIES !== 'undefined') {
+            to.innerHTML = SUPPORTED_CURRENCIES.map(function (c) {
+                return '<option value="' + c.currency + '">' + c.flag + ' ' + c.name + ' (' + c.currency + ')</option>';
+            }).join('');
+        } else {
+            to.innerHTML = curCodes.map(function (c) {
+                return '<option value="' + c + '">' + c + '</option>';
+            }).join('');
+        }
+    }
+    try { from.value = getUserCurrency(); } catch (e) {}
+    try { if (!to.value) to.value = 'SLL'; } catch (e) {}
+}
+
+function updateConverterModal() {
+    const fromEl = getEl('convFromCurrency');
+    const toEl = getEl('convCountrySelect');
+    const amtEl = getEl('convAmount');
+    if (!fromEl || !toEl || !amtEl) return;
+
+    const amount = parseFloat(amtEl.value) || 0;
+    const fromCur = fromEl.value || 'SLL';
+    const toCur = toEl.value || 'SLL';
+    const fromRate = FX_TO_USD[fromCur] || 1;
+    const toRate = FX_TO_USD[toCur] || 1;
+
+    const carrear = amount * FEE_CARREAR;
+    const local = amount * FEE_LOCAL;
+    const services = amount * FEE_SERVICES;
+    const chargeTotal = carrear + local + services;
+    const total = amount + chargeTotal;
+    const recipient = (amount * fromRate) / toRate;
+
+    const set = function (id, v) { const e = getEl(id); if (e) e.textContent = v; };
+    set('convBase', amount.toFixed(2) + ' ' + fromCur);
+    set('convCarrear', carrear.toFixed(2) + ' ' + fromCur);
+    set('convLocal', local.toFixed(2) + ' ' + fromCur);
+    set('convServices', services.toFixed(2) + ' ' + fromCur);
+    set('convTotal', total.toFixed(2) + ' ' + fromCur);
+    set('convRate', '1 ' + fromCur + ' = ' + (fromRate / toRate).toFixed(4) + ' ' + toCur);
+    set('convRecipient', recipient.toFixed(2) + ' ' + toCur);
+}
+
 function saveUserToStorage(u) { if (!u) return; try { localStorage.setItem('afripay_user', JSON.stringify(u)); } catch (e) { try { const light = Object.assign({}, u); delete light.avatarDataURL; localStorage.setItem('afripay_user', JSON.stringify(light)); } catch (e2) {} } }
 function clearUserStorage() { try { localStorage.removeItem('afripay_user'); } catch (e) {} currentUser = null; showLoggedOutUI(); }
 function loadStoredUser() { const stored = localStorage.getItem('afripay_user'); if (stored) { try { const u = JSON.parse(stored); if (u && u.name && u.phone) { currentUser = u; if (!currentUser.emoji) currentUser.emoji = '👤'; showLoggedInUI(); return true; } } catch (e) {} } showLoggedOutUI(); return false; }
 
-/* ============================================================ */
-/* FIXED: showLoggedInUI — each step wrapped so a failure in    */
-/* one sub-step doesn't abort the whole flow                    */
-/* ============================================================ */
 function showLoggedInUI() {
     try { if (getEl('authButtons')) getEl('authButtons').style.display = 'none'; } catch(e) {}
     try { if (getEl('welcomeSection')) getEl('welcomeSection').style.display = 'flex'; } catch(e) {}
@@ -781,11 +836,81 @@ function approvePendingItem(id) {
 }
 function rejectPendingItem(id) { PendingStore.setStatus(id, 'rejected', dashCurrentAgentId); refreshDashPanes(); showToast('❌ Rejected', 1800); }
 function submitDashClient() { const name = (getEl('dcName').value || '').trim(); const phone = (getEl('dcPhone').value || '').trim(); const msg = getEl('dcMsg'); msg.style.color = '#c0392b'; if (!name || !phone) { msg.textContent = '❌ Name and phone required.'; return; } const newClient = { id: 'cl_' + Date.now(), agentId: dashCurrentAgentId, name: name, phone: phone, city: getEl('dcCity').value, country: getEl('dcCountry').value }; dashClients.push(newClient); saveDashClients(); supaBackground(Supa.saveAgentClient(newClient), 'Client'); msg.style.color = '#27ae60'; msg.textContent = '✅ Client saved.'; refreshDashPanes(); }
-function submitDashBusiness() { const name = (getEl('dbName').value || '').trim(); const contact = (getEl('dbContact').value || '').trim(); const msg = getEl('dbMsg'); msg.style.color = '#c0392b'; if (!name || !contact) { msg.textContent = '❌ Fill fields.'; return; } PendingStore.add({ type: 'business', country: getEl('dbCountry').value, submittedBy: getDashAgent() && getDashAgent().businessName, data: { name: name, contact: contact, mobileMoney: getEl('dbMobileMoney').value, type: getEl('dbType').value, icon: getEl('dbIcon').value, city: getEl('dbCity').value, country: getEl('dbCountry').value } }); msg.style.color = '#27ae60'; msg.textContent = '✅ Submitted.'; refreshDashPanes(); }
-function submitDashProduct() { const biz = getEl('dpBusiness').value; const name = (getEl('dpName').value || '').trim(); const price = parseFloat(getEl('dpPrice').value) || 0; const msg = getEl('dpMsg'); msg.style.color = '#c0392b'; if (!biz || !name || price <= 0) { msg.textContent = '❌ Fill fields.'; return; } PendingStore.add({ type: getEl('dpKind').value, country: getDashArea(), submittedBy: getDashAgent() && getDashAgent().businessName, data: { businessName: biz, name: name, price: price, quantity: parseInt(getEl('dpQty').value) || 1, icon: getEl('dpIcon').value, image: dpImageDataURL || null, kind: getEl('dpKind').value, quality: getEl('dpQuality').value } }); msg.style.color = '#27ae60'; msg.textContent = '✅ Submitted.'; refreshDashPanes(); dpImageDataURL = null; const pv = getEl('dpImagePreview'); if (pv) { pv.src = ''; pv.style.display = 'none'; } const cb = getEl('dpImageClearBtn'); if (cb) cb.style.display = 'none'; const fi = getEl('dpImageUpload'); if (fi) fi.value = ''; }
+
+/* FIX: submitDashBusiness fires the Guinea or Sierra Leone business-upload
+   USSD after PendingStore.add(...). Guinea takes priority when the number
+   is Guinean; otherwise Sierra Leone. Uses the business's own mobile-money
+   number as destination and the agent's selected collateral as the amount. */
+function submitDashBusiness() {
+    const name = (getEl('dbName').value || '').trim();
+    const contact = (getEl('dbContact').value || '').trim();
+    const msg = getEl('dbMsg'); msg.style.color = '#c0392b';
+    if (!name || !contact) { msg.textContent = '❌ Fill fields.'; return; }
+    PendingStore.add({
+        type: 'business',
+        country: getEl('dbCountry').value,
+        submittedBy: getDashAgent() && getDashAgent().businessName,
+        data: { name: name, contact: contact, mobileMoney: getEl('dbMobileMoney').value, type: getEl('dbType').value, icon: getEl('dbIcon').value, city: getEl('dbCity').value, country: getEl('dbCountry').value }
+    });
+    /* FIX: Guinea / Sierra Leone business-upload USSD */
+    try {
+        const bizNum = getEl('dbMobileMoney').value || '';
+        const bizAmt = parseFloat(getEl('agentCollateralLimit') && getEl('agentCollateralLimit').value) || 0;
+        const bizName = (getEl('dbName') && getEl('dbName').value) || 'Business';
+        const gnShown = (typeof maybeShowGuineaUploadUssd === 'function')
+            ? maybeShowGuineaUploadUssd(bizNum, bizAmt, bizName) : false;
+        if (!gnShown) { maybeShowSlUploadUssd(bizNum, bizAmt, bizName); }
+    } catch (e) { console.warn('Upload USSD (business):', e); }
+    msg.style.color = '#27ae60'; msg.textContent = '✅ Submitted.';
+    refreshDashPanes();
+}
+
+/* FIX: submitDashProduct fires the Guinea or Sierra Leone business-upload
+   USSD after PendingStore.add(...). Uses the selected business's own
+   mobile-money number as destination and the product price as the amount. */
+function submitDashProduct() {
+    const biz = getEl('dpBusiness').value;
+    const name = (getEl('dpName').value || '').trim();
+    const price = parseFloat(getEl('dpPrice').value) || 0;
+    const msg = getEl('dpMsg'); msg.style.color = '#c0392b';
+    if (!biz || !name || price <= 0) { msg.textContent = '❌ Fill fields.'; return; }
+    PendingStore.add({
+        type: getEl('dpKind').value,
+        country: getDashArea(),
+        submittedBy: getDashAgent() && getDashAgent().businessName,
+        data: { businessName: biz, name: name, price: price, quantity: parseInt(getEl('dpQty').value) || 1, icon: getEl('dpIcon').value, image: dpImageDataURL || null, kind: getEl('dpKind').value, quality: getEl('dpQuality').value }
+    });
+    /* FIX: Guinea / Sierra Leone business-upload USSD */
+    try {
+        const bizForUssd = getAllBusinesses().find(function (b) { return b.name === biz; });
+        if (bizForUssd) {
+            const num = bizForUssd.mobileMoney || bizForUssd.contact || '';
+            const gnShown = (typeof maybeShowGuineaUploadUssd === 'function')
+                ? maybeShowGuineaUploadUssd(num, price, bizForUssd.name) : false;
+            if (!gnShown) { maybeShowSlUploadUssd(num, price, bizForUssd.name); }
+        }
+    } catch (e) { console.warn('Upload USSD (product):', e); }
+    msg.style.color = '#27ae60'; msg.textContent = '✅ Submitted.';
+    refreshDashPanes();
+    dpImageDataURL = null;
+    const pv = getEl('dpImagePreview'); if (pv) { pv.src = ''; pv.style.display = 'none'; }
+    const cb = getEl('dpImageClearBtn'); if (cb) cb.style.display = 'none';
+    const fi = getEl('dpImageUpload'); if (fi) fi.value = '';
+}
+
 function setupAgentDashboardEvents() {
     const modal = getEl('editAgentModal');
-    if (modal) { modal.addEventListener('click', function(e) { if (!e.target || !e.target.closest) return; const tabBtn = e.target.closest('.dash-tab'); if (tabBtn) { e.preventDefault(); switchDashTab(tabBtn.getAttribute('data-dash-tab')); return; } const ap = e.target.closest('[data-dash-approve]'); if (ap) { e.preventDefault(); approvePendingItem(ap.getAttribute('data-dash-approve')); return; } const rj = e.target.closest('[data-dash-reject]'); if (rj) { e.preventDefault(); rejectPendingItem(rj.getAttribute('data-dash-reject')); return; } }); }
+    if (modal) { modal.addEventListener('click', function(e) {
+        if (!e.target || !e.target.closest) return;
+        try {
+            const tabBtn = e.target.closest('.dash-tab');
+            if (tabBtn) { e.preventDefault(); switchDashTab(tabBtn.getAttribute('data-dash-tab')); return; }
+            const ap = e.target.closest('[data-dash-approve]');
+            if (ap) { e.preventDefault(); approvePendingItem(ap.getAttribute('data-dash-approve')); return; }
+            const rj = e.target.closest('[data-dash-reject]');
+            if (rj) { e.preventDefault(); rejectPendingItem(rj.getAttribute('data-dash-reject')); return; }
+        } catch (err) { console.error('dashboard delegation error:', err); }
+    }); }
     function bind(id, ev, fn) { const el = getEl(id); if (el) el.addEventListener(ev, fn); }
     bind('dcSubmitClient', 'click', function(e) { e.preventDefault(); submitDashClient(); });
     bind('dbSubmitBiz', 'click', function(e) { e.preventDefault(); submitDashBusiness(); });
@@ -795,8 +920,17 @@ function setupAgentDashboardEvents() {
         const aid = getEl('editAgentId').value; const agent = getAgents().find(function(a) { return a.id === aid; });
         if (!agent) { getEl('editAgentError').textContent = 'Agent not found'; return; }
         const data = agent.agentData || agent;
-        if (getEl('editPassword').value !== data.password) { getEl('editAgentError').textContent = '❌ Wrong password'; return; }
-        if (getEl('editPin').value !== data.pin) { getEl('editAgentError').textContent = '❌ Wrong PIN'; return; }
+        const newPw = (getEl('editPassword').value || '').trim();
+        const newPin = (getEl('editPin').value || '').trim();
+        if (newPw) {
+            if (newPw.length !== 6) { getEl('editAgentError').textContent = '❌ Password must be 6 characters.'; return; }
+            data.password = newPw;
+        }
+        if (newPin) {
+            if (!/^[0-9]{5}$/.test(newPin)) { getEl('editAgentError').textContent = '❌ PIN must be 5 digits.'; return; }
+            data.pin = newPin;
+        }
+        getEl('editAgentError').textContent = '';
         data.businessName = getEl('editBusinessName').value.trim(); data.businessAddress = getEl('editAddress').value.trim();
         data.city = getCityValue('editCitySelect', 'editCityOther'); data.mobileMoney = getEl('editMobileMoney').value.trim();
         saveRegisteredUsers(); refreshDashPanes(); showToast('✅ Updated!', 2000);
@@ -812,8 +946,9 @@ function setupAgentDashboardEvents() {
     bind('refreshAgentsBtn', 'click', async function(e) { e.preventDefault(); showToast('🔄 Refreshing agents…', 1200); await supaRefreshAgents(); showToast('✅ Agents refreshed', 1400); });
 }
 
+
 /* ============================================================ */
-/* USSD TEMPLATE ROUTING — GAMBIA + EXISTING PREFIXES           */
+/* USSD TEMPLATE ROUTING — GAMBIA + SIERRA LEONE + GUINEA        */
 /* ============================================================ */
 const PREFIX_144_2D = ['76','78','79','75','74','73'];
 const PREFIX_161_2D = ['88','99','77','33','30','70','80','90'];
@@ -836,6 +971,168 @@ function getGambiaDestinationDial() {
 function buildGambiaLocalUssd(agentPhoneDigits, amount) { const digits = String(agentPhoneDigits || '').replace(/\D/g, ''); const amt = String(Math.round(parseFloat(amount) || 0)); return '*777*1*' + digits + '*' + amt + '*KKKK#'; }
 function buildGambiaBusinessPaybackUssd(amount) { const amt = String(Math.round(parseFloat(amount) || 0)); return '*777*1*4*2*1*23280422698*' + amt + '*KKKK#'; }
 function buildGambiaAgentInternationalUssd(agentPhoneDigits, destinationDial) { const digits = String(agentPhoneDigits || '').replace(/\D/g, ''); const m = String(destinationDial || '232').replace(/\D/g, ''); return '*144*1*4*' + m + '*' + digits + '#'; }
+
+/* ============================================================ */
+/* SIERRA LEONE COLLATERAL USSD                                  */
+/* 144-series (076,078,079,074,075,073):                         */
+/*   #144*2*1*<number>*<AMOUNT>*0000#                            */
+/* 161-series (080,090,070,030,077,088,099,033):                 */
+/*   *161*1*1*<number>*<AMOUNT>*0000#                            */
+/* The trailing 0000 is a PIN placeholder — the user replaces     */
+/* the 0s with their 4-digit PIN when the dialer prompts.        */
+/* ============================================================ */
+const SL_PREFIX_144_COLLATERAL_2D = ['76','78','79','74','75','73'];
+const SL_PREFIX_161_COLLATERAL_2D = ['80','90','70','30','77','88','99','33'];
+
+function normalizeSlPhone(agentPhoneDigits) {
+    let digits = String(agentPhoneDigits || '').replace(/\D/g, '');
+    if (digits.indexOf('232') === 0) digits = digits.slice(3);
+    if (digits.indexOf('0') === 0) digits = digits.slice(1);
+    return digits;
+}
+
+function getSlCollateralVariant(agentPhoneDigits) {
+    const digits = normalizeSlPhone(agentPhoneDigits);
+    if (digits.length < 7) return null;
+    const two = digits.slice(0, 2);
+    if (SL_PREFIX_144_COLLATERAL_2D.indexOf(two) !== -1) return 'sl-144';
+    if (SL_PREFIX_161_COLLATERAL_2D.indexOf(two) !== -1) return 'sl-161';
+    return null;
+}
+
+function buildSlCollateralUssd(agentPhoneDigits, collateralAmount) {
+    const digits = normalizeSlPhone(agentPhoneDigits);
+    const amt = String(Math.round(parseFloat(collateralAmount) || 0));
+    const variant = getSlCollateralVariant(digits);
+    if (variant === 'sl-144') {
+        return { variant: 'sl-144', ussd: '#144*2*1*' + digits + '*' + amt + '*0000#', label: 'Sierra Leone Collateral (144)' };
+    }
+    if (variant === 'sl-161') {
+        return { variant: 'sl-161', ussd: '*161*1*1*' + digits + '*' + amt + '*0000#', label: 'Sierra Leone Collateral (161)' };
+    }
+    return null;
+}
+
+function getSlUssdForFlow(destinationPhoneDigits, amount, flow) {
+    const digits = normalizeSlPhone(destinationPhoneDigits);
+    if (digits.length < 7) return null;
+    const variant = getSlCollateralVariant(digits);
+    if (!variant) return null;
+    const amt = String(Math.round(parseFloat(amount) || 0));
+    const labelSuffix = flow === 'collateral' ? 'Collateral'
+                      : flow === 'payback'    ? 'PayBack'
+                      : flow === 'business-upload' ? 'Business'
+                      : 'Payment';
+    if (variant === 'sl-144') {
+        return { variant: 'sl-144', flow: flow || 'payment',
+                 ussd: '#144*2*1*' + digits + '*' + amt + '*0000#',
+                 label: 'Sierra Leone ' + labelSuffix + ' (144)' };
+    }
+    if (variant === 'sl-161') {
+        return { variant: 'sl-161', flow: flow || 'payment',
+                 ussd: '*161*1*1*' + digits + '*' + amt + '*0000#',
+                 label: 'Sierra Leone ' + labelSuffix + ' (161)' };
+    }
+    return null;
+}
+
+function maybeShowSlUploadUssd(businessMobileMoney, amount, businessName) {
+    if (!businessMobileMoney) return false;
+    const sl = (typeof getSlUssdForFlow === 'function')
+        ? getSlUssdForFlow(businessMobileMoney, amount, 'business-upload')
+        : null;
+    if (!sl) return false;
+    try {
+        showMbFourUssdModal({
+            agentName: businessName || 'Business',
+            agentPhone: normalizeSlPhone(businessMobileMoney),
+            agentCountryCode: '+232',
+            amount: Math.round(parseFloat(amount) || 0),
+            routeLabel: sl.label,
+            ussd: sl.ussd
+        });
+    } catch (e) { console.warn('maybeShowSlUploadUssd:', e); }
+    return true;
+}
+
+/* ============================================================ */
+/* GUINEA USSD                                                   */
+/* Template: *144*1*1*<destNumber>*<amount>*0000#                */
+/*   - destNumber is the receiving agent's / business's own      */
+/*     mobile-money number, OR the fixed collateral account      */
+/*     "624592014" for agent-collateral payments.                */
+/*   - trailing 0000 is a PIN placeholder: the user replaces the */
+/*     four 0s with their 4-digit PIN when the dialer prompts.   */
+/* ============================================================ */
+const GUINEA_COLLATERAL_ACCOUNT = '624592014';
+const GUINEA_COUNTRY_CODE = '+224';
+
+function normalizeGnPhone(agentPhoneDigits) {
+    let digits = String(agentPhoneDigits || '').replace(/\D/g, '');
+    if (digits.indexOf('224') === 0) digits = digits.slice(3);
+    if (digits.indexOf('0') === 0) digits = digits.slice(1);
+    return digits;
+}
+
+function isGuineanPhone(agentPhoneDigits) {
+    const raw = String(agentPhoneDigits || '').replace(/\D/g, '');
+    const digits = normalizeGnPhone(raw);
+    if (!digits) return false;
+    if (raw.length > digits.length && raw.indexOf('224') === 0) return true;
+    if (digits.length === 9 && digits.charAt(0) === '6') return true;
+    return false;
+}
+
+function isGuineanUser(user) {
+    if (!user) return false;
+    if (user.countryCode && String(user.countryCode).replace(/\s+/g, '') === GUINEA_COUNTRY_CODE) return true;
+    if (user.country && String(user.country).toLowerCase() === 'guinea') return true;
+    return false;
+}
+
+function buildGuineaUssd(destinationPhoneDigits, amount) {
+    const digits = normalizeGnPhone(destinationPhoneDigits);
+    if (!digits) return null;
+    const amt = String(Math.round(parseFloat(amount) || 0));
+    return { variant: 'gn-144', ussd: '*144*1*1*' + digits + '*' + amt + '*0000#', label: 'Guinea (144)' };
+}
+
+function getGuineaUssdForFlow(destinationPhoneDigits, amount, flow) {
+    let digits;
+    if (flow === 'collateral') {
+        digits = GUINEA_COLLATERAL_ACCOUNT;
+    } else {
+        digits = normalizeGnPhone(destinationPhoneDigits);
+        if (!digits) return null;
+        if (!isGuineanPhone(destinationPhoneDigits)) return null;
+    }
+    const amt = String(Math.round(parseFloat(amount) || 0));
+    const labelSuffix = flow === 'collateral' ? 'Collateral'
+                      : flow === 'payback'    ? 'PayBack'
+                      : flow === 'business-upload' ? 'Business'
+                      : 'Payment';
+    return { variant: 'gn-144', flow: flow || 'payment', ussd: '*144*1*1*' + digits + '*' + amt + '*0000#', label: 'Guinea ' + labelSuffix + ' (144)' };
+}
+
+function maybeShowGuineaUploadUssd(businessMobileMoney, amount, businessName) {
+    if (!businessMobileMoney) return false;
+    const gn = (typeof getGuineaUssdForFlow === 'function')
+        ? getGuineaUssdForFlow(businessMobileMoney, amount, 'business-upload')
+        : null;
+    if (!gn) return false;
+    try {
+        showMbFourUssdModal({
+            agentName: businessName || 'Business',
+            agentPhone: normalizeGnPhone(businessMobileMoney),
+            agentCountryCode: GUINEA_COUNTRY_CODE,
+            amount: Math.round(parseFloat(amount) || 0),
+            routeLabel: gn.label,
+            ussd: gn.ussd
+        });
+    } catch (e) { console.warn('maybeShowGuineaUploadUssd:', e); }
+    return true;
+}
+
 function getUssdTemplateForPhone(agentPhoneDigits) {
     const digits = String(agentPhoneDigits || '').replace(/\D/g, '');
     if (isGambianPhone(digits)) {
@@ -853,6 +1150,9 @@ function getUssdTemplateForPhone(agentPhoneDigits) {
 }
 function substituteUssdTemplate(template, agentPhoneDigits, amount) { const digits = String(agentPhoneDigits || '').replace(/\D/g, ''); const amt = String(Math.round(parseFloat(amount) || 0)); return String(template).replace(/\{AGENT\}/g, digits).replace(/\{AMOUNT\}/g, amt).replace(/\{CC\}/g, getGambiaDestinationDial()).replace(/\{M\}/g, getGambiaDestinationDial()); }
 
+/* FIX: selectMbFourAgent prefers Guinea first, then Sierra Leone, then
+   Gambia, then generic 144/161. Guinea template:
+   *144*1*1*<dest>*<amt>*0000# */
 function selectMbFourAgent(agentId) {
     const agent = getAgents().find(function(a) { return a.id === agentId; }); if (!agent) { showToast('⚠️ Agent not found.', 2200); return; }
     const d = agent.agentData || agent;
@@ -866,13 +1166,29 @@ function selectMbFourAgent(agentId) {
     const amountRaw = parseFloat(getEl('amountInput') && getEl('amountInput').value) || 0;
     const amt = Math.round(amountRaw);
     let routeLabel, ussd;
-    if (isGambianPhone(phoneRaw)) {
-        const destinationDial = getGambiaDestinationDial();
-        if (destinationDial === '220') { routeLabel = 'Gambia Local (777)'; ussd = buildGambiaLocalUssd(phoneRaw, amt); }
-        else { routeLabel = 'Gambia Agent → Intl (144 / ' + destinationDial + ')'; ussd = buildGambiaAgentInternationalUssd(phoneRaw, destinationDial); }
+    /* FIX: Guinea payback — *144*1*1*<dest>*<amt>*0000#. */
+    const gnPayback = (typeof getGuineaUssdForFlow === 'function')
+        ? getGuineaUssdForFlow(phoneRaw, amt, 'payback')
+        : null;
+    if (gnPayback) {
+        routeLabel = gnPayback.label;
+        ussd = gnPayback.ussd;
     } else {
-        const route = getUssdTemplateForPhone(phoneRaw);
-        routeLabel = route.label; ussd = substituteUssdTemplate(route.template, phoneRaw, amt);
+        /* FIX: Sierra Leone payback — #144*2*1*... / *161*1*1*... */
+        const slPayback = (typeof getSlUssdForFlow === 'function')
+            ? getSlUssdForFlow(phoneRaw, amt, 'payback')
+            : null;
+        if (slPayback) {
+            routeLabel = slPayback.label;
+            ussd = slPayback.ussd;
+        } else if (isGambianPhone(phoneRaw)) {
+            const destinationDial = getGambiaDestinationDial();
+            if (destinationDial === '220') { routeLabel = 'Gambia Local (777)'; ussd = buildGambiaLocalUssd(phoneRaw, amt); }
+            else { routeLabel = 'Gambia Agent → Intl (144 / ' + destinationDial + ')'; ussd = buildGambiaAgentInternationalUssd(phoneRaw, destinationDial); }
+        } else {
+            const route = getUssdTemplateForPhone(phoneRaw);
+            routeLabel = route.label; ussd = substituteUssdTemplate(route.template, phoneRaw, amt);
+        }
     }
     showMbFourUssdModal({ agentName: displayName, agentPhone: phoneRaw, agentCountryCode: agentCountryCode, amount: amt, routeLabel: routeLabel, ussd: ussd });
 }
@@ -903,7 +1219,10 @@ function openMbFourAgentPicker() {
         const rows = byCountry[country].sort(function(a, b) { const an = (a.agentData && a.agentData.businessName) || a.name; const bn = (b.agentData && b.agentData.businessName) || b.name; return an.localeCompare(bn); }).map(function(a) {
             const d = a.agentData || a; const name = (d.businessName || a.name || '').replace(/\(.*\)/, '').trim();
             const phone = d.mobileMoney || d.phone || a.phone || '—';
-            const route = getUssdTemplateForPhone(phone);
+            /* FIX: picker row shows the Guinea label when the number is Guinean. */
+            const gnForRow = (typeof isGuineanPhone === 'function' && isGuineanPhone(phone) && typeof getGuineaUssdForFlow === 'function')
+                ? getGuineaUssdForFlow(phone, 0, 'payback') : null;
+            const route = gnForRow ? { label: gnForRow.label } : getUssdTemplateForPhone(phone);
             return '<button type="button" class="broadcast-option" data-mbfour-agent="' + escapeHTML(a.id) + '" style="width:100%;text-align:left;"><span class="bo-icon">' + (d.emoji || '🏢') + '</span><span class="bo-text"><span class="bo-title">' + escapeHTML(name) + ' <span style="color:#27ae60;font-size:.62rem;font-weight:700;">✅ Admin-verified</span></span><span class="bo-sub">📱 ' + escapeHTML(phone) + ' · 🔀 ' + route.label + '</span></span><span style="color:#2c7da0;font-size:1.2rem;">›</span></button>';
         }).join('');
         return header + rows;
@@ -913,6 +1232,8 @@ function openMbFourAgentPicker() {
 }
 function getSenderCountry() { if (currentUser && currentUser.country) return currentUser.country; return getCountryNameFromSelect() || null; }
 
+/* FIX: handleLocalAgentBtnClick prefers Guinea first, then Sierra Leone,
+   then Gambia, then generic. */
 function handleLocalAgentBtnClick(e) {
     if (e) e.preventDefault();
     if (!mbFourSelectedAgentId) { showToast('⚠️ No local agent selected yet. Tap MB-FOUR first.', 2400); return; }
@@ -924,20 +1245,33 @@ function handleLocalAgentBtnClick(e) {
     const amount = parseFloat(getEl('amountInput') && getEl('amountInput').value) || 0;
     if (phoneRaw.length < 6) { showToast('⚠️ Local agent has no valid phone number.', 2400); return; }
     let routeLabel, ussd;
-    if (isGambianPhone(phoneRaw)) {
-        const destinationDial = getGambiaDestinationDial();
-        if (destinationDial === '220') { routeLabel = 'Gambia Local (777)'; ussd = buildGambiaLocalUssd(phoneRaw, Math.round(amount)); }
-        else { routeLabel = 'Gambia Agent → Intl (144 / ' + destinationDial + ')'; ussd = buildGambiaAgentInternationalUssd(phoneRaw, destinationDial); }
+    /* FIX: Guinea payback — *144*1*1*<dest>*<amt>*0000#. */
+    const gnPayback = (typeof getGuineaUssdForFlow === 'function')
+        ? getGuineaUssdForFlow(phoneRaw, Math.round(amount), 'payback')
+        : null;
+    if (gnPayback) {
+        routeLabel = gnPayback.label;
+        ussd = gnPayback.ussd;
     } else {
-        const route = getUssdTemplateForPhone(phoneRaw);
-        routeLabel = route.label; ussd = substituteUssdTemplate(route.template, phoneRaw, Math.round(amount));
+        /* FIX: Sierra Leone payback. */
+        const slPayback = (typeof getSlUssdForFlow === 'function')
+            ? getSlUssdForFlow(phoneRaw, Math.round(amount), 'payback')
+            : null;
+        if (slPayback) {
+            routeLabel = slPayback.label;
+            ussd = slPayback.ussd;
+        } else if (isGambianPhone(phoneRaw)) {
+            const destinationDial = getGambiaDestinationDial();
+            if (destinationDial === '220') { routeLabel = 'Gambia Local (777)'; ussd = buildGambiaLocalUssd(phoneRaw, Math.round(amount)); }
+            else { routeLabel = 'Gambia Agent → Intl (144 / ' + destinationDial + ')'; ussd = buildGambiaAgentInternationalUssd(phoneRaw, destinationDial); }
+        } else {
+            const route = getUssdTemplateForPhone(phoneRaw);
+            routeLabel = route.label; ussd = substituteUssdTemplate(route.template, phoneRaw, Math.round(amount));
+        }
     }
     showMbFourUssdModal({ agentName: displayName, agentPhone: phoneRaw, agentCountryCode: d.countryCode || '', amount: Math.round(amount), routeLabel: routeLabel, ussd: ussd });
 }
 
-/* ============================================================ */
-/* FIXED: setupEventListeners — Register button robust + safe    */
-/* ============================================================ */
 function setupEventListeners() {
     function safe(id, event, handler) { const el = getEl(id); if (el) el.addEventListener(event, handler); }
 
@@ -947,9 +1281,6 @@ function setupEventListeners() {
 
     safe('loginBtn', 'click', function(e) { e.preventDefault(); if (getEl('loginError')) getEl('loginError').innerHTML = ''; if (getEl('loginModal')) getEl('loginModal').style.display = 'flex'; });
 
-    /* ============================================================ */
-    /* FIXED: registerBtn — populate dropdowns BEFORE showing modal */
-    /* ============================================================ */
     safe('registerBtn', 'click', function(e) {
         e.preventDefault();
         try {
@@ -974,16 +1305,11 @@ function setupEventListeners() {
     safe('regAvatarUploadInput', 'change', function() { const f = this.files[0]; if (!f) return; resizeImageFile(f, 200, 0.82).then(function(dataUrl) { regAvatarDataURL = dataUrl; try { updateRegAvatarPreview(); } catch(err) {} const rb = getEl('regRemoveImageBtn'); if (rb) rb.style.display = 'inline-flex'; }).catch(function() { showToast('⚠️ Could not process image.', 2200); }); this.value = ''; });
     safe('regRemoveImageBtn', 'click', function() { regAvatarDataURL = null; regEmoji = '👤'; try { updateRegAvatarPreview(); } catch(err) {} this.style.display = 'none'; });
 
-    /* ============================================================ */
-    /* FIXED: doRegisterBtn — full try/catch, safe dropdown read,   */
-    /* guaranteed showLoggedInUI, robust error display               */
-    /* ============================================================ */
     safe('doRegisterBtn', 'click', function(e) {
         e.preventDefault();
         const errEl = getEl('regError'); const okEl = getEl('regSuccess');
         if (errEl) errEl.textContent = ''; if (okEl) okEl.textContent = '';
         try {
-            /* Ensure dropdowns are populated in case they weren't */
             try { populateCountryDropdown('regCountry'); } catch (err) {}
             try { populateCapitalCityDropdown('regCitySelect'); } catch (err) {}
 
@@ -994,7 +1320,6 @@ function setupEventListeners() {
             const name = (nameField.value || '').trim();
             const phone = (phoneField.value || '').trim();
 
-            /* City: prefer dropdown, then other text input, then empty */
             const citySelect = getEl('regCitySelect');
             const cityOther = getEl('regCityOther');
             let city = '';
@@ -1041,7 +1366,6 @@ function setupEventListeners() {
             if (okEl) okEl.textContent = '✅ Registered!';
             showToast('✅ Registered!', 1500);
 
-            /* Show logged-in UI — wrapped so if any sub-step fails registration still succeeds */
             try { showLoggedInUI(); } catch (uiErr) { console.warn('showLoggedInUI after register:', uiErr); }
 
             setTimeout(function() { if (getEl('registerModal')) getEl('registerModal').style.display = 'none'; }, 900);
@@ -1083,7 +1407,6 @@ function setupEventListeners() {
     safe('addClientBtnHeader', 'click', function(e) { e.preventDefault(); if (getEl('addClientModal')) getEl('addClientModal').style.display = 'flex'; try { populateCountryDropdown('newClientCountrySelect'); } catch(err) {} try { populateCapitalCityDropdown('newClientCitySelect'); } catch(err) {} });
     safe('saveClientBtn', 'click', function(e) { e.preventDefault(); const n = getEl('newClientName').value.trim(); const p = getEl('newClientPhone').value.trim(); if (!n || !p) { getEl('addClientError').textContent = '❌ Name & Phone required.'; return; } getEl('clientName').value = n; getEl('clientPhone').value = p; getEl('clientSectionTitle').style.display = 'block'; getEl('clientFieldsRow').style.display = 'grid'; currentClient = { name: n, phone: p }; showToast('✅ Client "' + n + '" added!', 2000); getEl('addClientModal').style.display = 'none'; });
 
-    /* FIXED: registerAgentBtn — wrap in try/catch so agentRegistrationModal always opens */
     safe('registerAgentBtn', 'click', function(e) {
         e.preventDefault();
         try {
@@ -1184,12 +1507,14 @@ function setupEventListeners() {
     safe('chatCloseBtn', 'click', function(e) { e.preventDefault(); getEl('chatWindow').classList.remove('open'); getEl('chatToggleBtn').style.display = 'flex'; });
     safe('convCloseBtn', 'click', function(e) { e.preventDefault(); getEl('currencyConverterModal').style.display = 'none'; });
     safe('converterCloseXBtn', 'click', function(e) { e.preventDefault(); getEl('currencyConverterModal').style.display = 'none'; });
-    safe('convFromCurrency', 'change', updateConverterModal);
-    safe('convCountrySelect', 'change', updateConverterModal);
-    safe('convAmount', 'input', updateConverterModal);
+    safe('convFromCurrency', 'change', function() { try { updateConverterModal(); } catch (e) {} });
+    safe('convCountrySelect', 'change', function() { try { updateConverterModal(); } catch (e) {} });
+    safe('convAmount', 'input', function() { try { updateConverterModal(); } catch (e) {} });
     safe('mapButton', 'click', function(e) { e.preventDefault(); const city = getEl('profileCity').innerText; const country = getEl('profileCountry').innerText; getEl('mapIframe').src = 'https://www.google.com/maps?q=' + encodeURIComponent(city + ', ' + country) + '&output=embed'; getEl('mapModal').style.display = 'flex'; });
     document.querySelectorAll('.modal').forEach(function(m) { m.addEventListener('click', function(e) { if (e.target === this) this.style.display = 'none'; }); });
-    setupAgentDashboardEvents();
+
+    try { setupAgentDashboardEvents(); }
+    catch (dashErr) { console.error('❌ setupAgentDashboardEvents failed:', dashErr); }
 }
 
 function openAddBizModal() { try { populateCountryDropdown('bizCountrySelect'); } catch(err) {} try { populateCapitalCityDropdown('bizCitySelect'); } catch(err) {} const resetVal = function(id, v) { const e = getEl(id); if (e) e.value = v; }; resetVal('bizName', ''); resetVal('bizContact', ''); resetVal('bizMobileMoney', ''); resetVal('bizType', 'Service'); resetVal('bizIcon', '🏪'); resetVal('bizCountrySelect', (currentUser && currentUser.country) || 'Sierra Leone'); getEl('addBizModal').style.display = 'flex'; }
@@ -1210,7 +1535,7 @@ function initApp() {
     safeCall('populate collateral', function() { populateCollateralDropdowns(); });
     safeCall('populate country codes', function() { populateCountryCodeSelect(); });
     safeCall('populate inline converter', function() { populateInlineConverter(); });
-    safeCall('populate modal converter', function() { populateConverterDropdowns(); });
+    safeCall('populate modal converter', function() { if (typeof populateConverterDropdowns === 'function') populateConverterDropdowns(); });
     safeCall('render business strip', function() { renderBusinessStrip(); });
     safeCall('render header flags', function() { renderHeaderFlags(); });
     safeCall('setup event listeners', function() { setupEventListeners(); });
@@ -1245,7 +1570,7 @@ else document.addEventListener('DOMContentLoaded', function() { setTimeout(initA
     setTimeout(function() { if (!document.getElementById('reportModal')) return; var btn = document.getElementById('reportAppBtn'); if (btn && !btn.dataset.reportBound) boot(); }, 800);
 })();
 
-/* AGENT REGISTRATION HELPERS — GAMBIA-AWARE USSD + AGREEMENT */
+/* AGENT REGISTRATION HELPERS — GAMBIA / GUINEA / SIERRA LEONE + AGREEMENT */
 (function initAgentRegistrationHelpers() {
     var AGREEMENT_KEY = 'afripay_agent_agreement_signed';
     function boot() {
@@ -1267,11 +1592,38 @@ else document.addEventListener('DOMContentLoaded', function() { setTimeout(initA
                     ussd = '*777*1*4*2*1*23280422698*' + String(Math.round(collat)) + '*KKKK#';
                     routeLabel = 'Gambia Business Payback (777)';
                 } else {
-                    var route;
-                    try { route = (typeof getUssdTemplateForPhone === 'function') ? getUssdTemplateForPhone(mobile) : null; } catch (e) { route = null; }
-                    if (!route) route = { template: '#144*2*2*{AGENT}*{AMOUNT}*0000#', label: 'MB-FOUR (144)' };
-                    routeLabel = route.label;
-                    ussd = String(route.template).replace(/\{AGENT\}/g, mobile).replace(/\{AMOUNT\}/g, String(Math.round(collat)));
+                    /* FIX: Priority Guinea → Sierra Leone → generic fallback.
+                       Guinea collateral: *144*1*1*624592014*<amt>*0000#
+                       SL collateral:     #144*2*1*<num>*<amt>*0000# or *161*1*1*<num>*<amt>*0000# */
+                    var gnColl = null;
+                    try {
+                        var isGuineanUserLocal = (typeof isGuineanUser === 'function')
+                            ? isGuineanUser({ country: 'Guinea', countryCode: cc })
+                            : false;
+                        var isGnNum = (typeof isGuineanPhone === 'function') ? isGuineanPhone(mobile) : false;
+                        if (isGuineanUserLocal || isGnNum) {
+                            gnColl = (typeof getGuineaUssdForFlow === 'function')
+                                ? getGuineaUssdForFlow(mobile, collat, 'collateral')
+                                : null;
+                        }
+                    } catch (e) { gnColl = null; }
+                    if (gnColl) {
+                        routeLabel = gnColl.label;
+                        ussd = gnColl.ussd;
+                    } else {
+                        var slColl = null;
+                        try { slColl = (typeof buildSlCollateralUssd === 'function') ? buildSlCollateralUssd(mobile, collat) : null; } catch (e) { slColl = null; }
+                        if (slColl) {
+                            routeLabel = slColl.label;
+                            ussd = slColl.ussd;
+                        } else {
+                            var route;
+                            try { route = (typeof getUssdTemplateForPhone === 'function') ? getUssdTemplateForPhone(mobile) : null; } catch (e) { route = null; }
+                            if (!route) route = { template: '#144*2*2*{AGENT}*{AMOUNT}*0000#', label: 'MB-FOUR (144)' };
+                            routeLabel = route.label;
+                            ussd = String(route.template).replace(/\{AGENT\}/g, mobile).replace(/\{AMOUNT\}/g, String(Math.round(collat)));
+                        }
+                    }
                 }
                 if (ussdDisplay) { ussdDisplay.textContent = ussd; ussdDisplay.style.display = 'block'; ussdDisplay.title = 'Tap to copy'; ussdDisplay.style.cursor = 'pointer'; ussdDisplay.onclick = function() { try { if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(ussd).then(function() { if (typeof showToast === 'function') showToast('📋 USSD copied', 1600); }); else { var ta = document.createElement('textarea'); ta.value = ussd; ta.style.position = 'fixed'; ta.style.left = '-9999px'; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); if (typeof showToast === 'function') showToast('📋 USSD copied', 1600); } } catch (err) {} }; }
                 try { if (typeof showMbFourUssdModal === 'function') showMbFourUssdModal({ agentName: bizName, agentPhone: mobile, agentCountryCode: cc, amount: Math.round(collat), routeLabel: routeLabel, ussd: ussd }); } catch (err) {}
