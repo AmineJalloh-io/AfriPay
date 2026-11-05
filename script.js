@@ -129,6 +129,7 @@ async function supaRefreshAgents() {
         });
         if (changed) {
             saveRegisteredUsers();
+            try { syncConnectedUsersFromRegistered(); } catch (e) {}
             try { renderAgentDropdown(currentAgentFilterCountry); } catch (e) {}
             try { populateAgentSelect(currentAgentFilterCountry); } catch (e) {}
             try { updateAgentDropdownPlaceholder(); } catch (e) {}
@@ -159,19 +160,21 @@ window.addEventListener('storage', function (e) {
 
 setInterval(function () { if (Supa.isReady()) supaRefreshAgents(); }, 30000);
 
-/* TRANSLATIONS */
+/* ============================================================ */
+/* TRANSLATIONS                                                  */
+/* ============================================================ */
 const TRANSLATIONS = {
-    en: { login:"Login", register:"Register", logout:"Logout", sender:"👤 SENDER", agent:"👤 AGENT", client:"👥 CLIENT", name:"Name *", phone:"Phone *", address:"Address", city:"City *", amount:"Amount *", country:"🌍 Country", base:"💰 Base:", fee:"📊 Fee (5%):", gst:"🏛️ GST", total:"💵 Total:", currency:"🌍 Currency:", operator:"💸 Operator", txId:"🔖 TX ID", providerTxId:"🔐 Provider TX ID", transferCode:"Transfer Code *", submit:"Submit", quickPay:"⭐ QUICK PAY ⭐", addBiz:"➕ Add Biz", editBiz:"✏️ Edit Biz", about:"About", dev:"Dev", contact:"Contact", subscribe:"Subscribe", how:"📖 How", convert:"💱 Convert", addClient:"➕ Client", gen:"Gen", copy:"Copy", save:"Save", cancel:"Cancel", close:"Close", selectContact:"Select a contact", send:"Send", chooseAvatar:"😊 Choose Your Avatar", profileAvatar:"😊 Profile Avatar", upload:"📷 Upload", remove:"🗑️ Remove", emoji:"🎨 Emoji", replaceLogo:"🖼️ Replace Agent Logo", credentialsCorrect:"✅ Credentials correct" },
-    fr: { login:"Connexion", register:"Inscription", logout:"Déconnexion", sender:"👤 EXPÉDITEUR", agent:"👤 AGENT", client:"👥 CLIENT", name:"Nom *", phone:"Téléphone *", address:"Adresse", city:"Ville *", amount:"Montant *", country:"🌍 Pays", base:"💰 Base:", fee:"📊 Frais (5%):", gst:"🏛️ TVA", total:"💵 Total:", currency:"🌍 Devise:", operator:"💸 Opérateur", txId:"🔖 ID TX", providerTxId:"🔐 ID TX Fournisseur", transferCode:"Code de transfert *", submit:"Soumettre", quickPay:"⭐ PAIEMENT RAPIDE ⭐", addBiz:"➕ Ajouter Entreprise", editBiz:"✏️ Modifier Entreprise", about:"À propos", dev:"Développeur", contact:"Contact", subscribe:"S'abonner", how:"📖 Comment", convert:"💱 Convertir", addClient:"➕ Client", gen:"Gén", copy:"Copier", save:"Enregistrer", cancel:"Annuler", close:"Fermer", selectContact:"Sélectionner un contact", send:"Envoyer", chooseAvatar:"😊 Choisissez votre avatar", profileAvatar:"😊 Avatar du profil", upload:"📷 Télécharger", remove:"🗑️ Supprimer", emoji:"🎨 Emoji", replaceLogo:"🖼️ Remplacer le logo", credentialsCorrect:"✅ Identifiants corrects" },
-    ar: { login:"تسجيل الدخول", register:"تسجيل", logout:"خروج", sender:"👤 المرسل", agent:"👤 الوكيل", client:"👥 العميل", name:"الاسم *", phone:"الهاتف *", address:"العنوان", city:"المدينة *", amount:"المبلغ *", country:"🌍 البلد", base:"💰 الأساس:", fee:"📊 الرسوم (5%):", gst:"🏛️ ضريبة", total:"💵 المجموع:", currency:"🌍 العملة:", operator:"💸 المشغل", txId:"🔖 معرف المعاملة", providerTxId:"🔐 معرف مزود المعاملة", transferCode:"رمز التحويل *", submit:"إرسال", quickPay:"⭐ دفع سريع ⭐", addBiz:"➕ إضافة نشاط", editBiz:"✏️ تعديل النشاط", about:"حول", dev:"المطور", contact:"اتصل", subscribe:"اشترك", how:"📖 كيف", convert:"💱 تحويل", addClient:"➕ عميل", gen:"توليد", copy:"نسخ", save:"حفظ", cancel:"إلغاء", close:"إغلاق", selectContact:"اختر جهة اتصال", send:"إرسال", chooseAvatar:"😊 اختر الصورة الرمزية", profileAvatar:"😊 صورة الملف الشخصي", upload:"📷 رفع", remove:"🗑️ إزالة", emoji:"🎨 رمز", replaceLogo:"🖼️ استبدال الشعار", credentialsCorrect:"✅ بيانات الاعتماد صحيحة" },
-    es: { login:"Iniciar sesión", register:"Registrarse", logout:"Cerrar sesión", sender:"👤 REMITENTE", agent:"👤 AGENTE", client:"👥 CLIENTE", name:"Nombre *", phone:"Teléfono *", address:"Dirección", city:"Ciudad *", amount:"Monto *", country:"🌍 País", base:"💰 Base:", fee:"📊 Tarifa (5%):", gst:"🏛️ IVA", total:"💵 Total:", currency:"🌍 Moneda:", operator:"💸 Operador", txId:"🔖 ID TX", providerTxId:"🔐 ID TX Proveedor", transferCode:"Código de transferencia *", submit:"Enviar", quickPay:"⭐ PAGO RÁPIDO ⭐", addBiz:"➕ Añadir Negocio", editBiz:"✏️ Editar Negocio", about:"Acerca de", dev:"Desarrollador", contact:"Contacto", subscribe:"Suscribirse", how:"📖 Cómo", convert:"💱 Convertir", addClient:"➕ Cliente", gen:"Gen", copy:"Copiar", save:"Guardar", cancel:"Cancelar", close:"Cerrar", selectContact:"Selecciona un contacto", send:"Enviar", chooseAvatar:"😊 Elige tu avatar", profileAvatar:"😊 Avatar del perfil", upload:"📷 Subir", remove:"🗑️ Eliminar", emoji:"🎨 Emoji", replaceLogo:"🖼️ Reemplazar logo", credentialsCorrect:"✅ Credenciales correctas" }
+    en: { login:"Login", register:"Register", logout:"Logout", sender:"👤 SENDER", agent:"👤 AGENT", client:"👥 CLIENT", name:"Name *", phone:"Phone *", address:"Address", city:"City *", amount:"Amount *", country:"🌍 Country", base:"💰 Base:", fee:"📊 Fee (5%):", gst:"🏛️ GST", total:"💵 Total:", currency:"🌍 Currency:", operator:"💸 Operator", txId:"🔖 TX ID", providerTxId:"🔐 Provider TX ID", transferCode:"Transfer Code *", submit:"Submit", quickPay:"⭐ QUICK PAY ⭐", addBiz:"➕ Add Biz", editBiz:"✏️ Edit Biz", about:"About", dev:"Dev", contact:"Contact", subscribe:"Subscribe", how:"📖 How", convert:"💱 Convert", addClient:"➕ Client", gen:"Gen", copy:"Copy", save:"Save", cancel:"Cancel", close:"Close", selectContact:"Select a contact", send:"Send", chooseAvatar:"😊 Choose Your Avatar", profileAvatar:"😊 Profile Avatar", upload:"📷 Upload", remove:"🗑️ Remove", emoji:"🎨 Emoji", replaceLogo:"🖼️ Replace Agent Logo", credentialsCorrect:"✅ Credentials correct", directPay:"💳 DirectPay +", watuPay:"🌍 WatuPay", weBine:"🏦 WeBine", others:"🔗 Others", report:"🚨 Report" },
+    fr: { login:"Connexion", register:"Inscription", logout:"Déconnexion", sender:"👤 EXPÉDITEUR", agent:"👤 AGENT", client:"👥 CLIENT", name:"Nom *", phone:"Téléphone *", address:"Adresse", city:"Ville *", amount:"Montant *", country:"🌍 Pays", base:"💰 Base:", fee:"📊 Frais (5%):", gst:"🏛️ TVA", total:"💵 Total:", currency:"🌍 Devise:", operator:"💸 Opérateur", txId:"🔖 ID TX", providerTxId:"🔐 ID TX Fournisseur", transferCode:"Code de transfert *", submit:"Soumettre", quickPay:"⭐ PAIEMENT RAPIDE ⭐", addBiz:"➕ Ajouter Entreprise", editBiz:"✏️ Modifier Entreprise", about:"À propos", dev:"Développeur", contact:"Contact", subscribe:"S'abonner", how:"📖 Comment", convert:"💱 Convertir", addClient:"➕ Client", gen:"Gén", copy:"Copier", save:"Enregistrer", cancel:"Annuler", close:"Fermer", selectContact:"Sélectionner un contact", send:"Envoyer", chooseAvatar:"😊 Choisissez votre avatar", profileAvatar:"😊 Avatar du profil", upload:"📷 Télécharger", remove:"🗑️ Supprimer", emoji:"🎨 Emoji", replaceLogo:"🖼️ Remplacer le logo", credentialsCorrect:"✅ Identifiants corrects", directPay:"💳 DirectPay +", watuPay:"🌍 WatuPay", weBine:"🏦 WeBine", others:"🔗 Autres", report:"🚨 Signaler" },
+    ar: { login:"تسجيل الدخول", register:"تسجيل", logout:"خروج", sender:"👤 المرسل", agent:"👤 الوكيل", client:"👥 العميل", name:"الاسم *", phone:"الهاتف *", address:"العنوان", city:"المدينة *", amount:"المبلغ *", country:"🌍 البلد", base:"💰 الأساس:", fee:"📊 الرسوم (5%):", gst:"🏛️ ضريبة", total:"💵 المجموع:", currency:"🌍 العملة:", operator:"💸 المشغل", txId:"🔖 معرف المعاملة", providerTxId:"🔐 معرف مزود المعاملة", transferCode:"رمز التحويل *", submit:"إرسال", quickPay:"⭐ دفع سريع ⭐", addBiz:"➕ إضافة نشاط", editBiz:"✏️ تعديل النشاط", about:"حول", dev:"المطور", contact:"اتصل", subscribe:"اشترك", how:"📖 كيف", convert:"💱 تحويل", addClient:"➕ عميل", gen:"توليد", copy:"نسخ", save:"حفظ", cancel:"إلغاء", close:"إغلاق", selectContact:"اختر جهة اتصال", send:"إرسال", chooseAvatar:"😊 اختر الصورة الرمزية", profileAvatar:"😊 صورة الملف الشخصي", upload:"📷 رفع", remove:"🗑️ إزالة", emoji:"🎨 رمز", replaceLogo:"🖼️ استبدال الشعار", credentialsCorrect:"✅ بيانات الاعتماد صحيحة", directPay:"💳 DirectPay +", watuPay:"🌍 WatuPay", weBine:"🏦 WeBine", others:"🔗 أخرى", report:"🚨 تقرير" },
+    es: { login:"Iniciar sesión", register:"Registrarse", logout:"Cerrar sesión", sender:"👤 REMITENTE", agent:"👤 AGENTE", client:"👥 CLIENTE", name:"Nombre *", phone:"Teléfono *", address:"Dirección", city:"Ciudad *", amount:"Monto *", country:"🌍 País", base:"💰 Base:", fee:"📊 Tarifa (5%):", gst:"🏛️ IVA", total:"💵 Total:", currency:"🌍 Moneda:", operator:"💸 Operador", txId:"🔖 ID TX", providerTxId:"🔐 ID TX Proveedor", transferCode:"Código de transferencia *", submit:"Enviar", quickPay:"⭐ PAGO RÁPIDO ⭐", addBiz:"➕ Añadir Negocio", editBiz:"✏️ Editar Negocio", about:"Acerca de", dev:"Desarrollador", contact:"Contacto", subscribe:"Suscribirse", how:"📖 Cómo", convert:"💱 Convertir", addClient:"➕ Cliente", gen:"Gen", copy:"Copiar", save:"Guardar", cancel:"Cancelar", close:"Cerrar", selectContact:"Selecciona un contacto", send:"Enviar", chooseAvatar:"😊 Elige tu avatar", profileAvatar:"😊 Avatar del perfil", upload:"📷 Subir", remove:"🗑️ Eliminar", emoji:"🎨 Emoji", replaceLogo:"🖼️ Reemplazar logo", credentialsCorrect:"✅ Credenciales correctas", directPay:"💳 DirectPay +", watuPay:"🌍 WatuPay", weBine:"🏦 WeBine", others:"🔗 Otros", report:"🚨 Informar" }
 };
 
 let currentLang = 'en';
 function getEl(id) { return document.getElementById(id); }
 function showToast(msg, dur) {
     if (!dur) dur = 2800;
-    const el = getEl('toastMsg'); if (!el) return;
+    const el = getEl('toastMsg'); if (!el) { try { alert(msg); } catch(e) {} return; }
     el.innerText = msg; el.style.visibility = 'visible'; el.style.opacity = '1';
     clearTimeout(el._hide);
     el._hide = setTimeout(function() { el.style.opacity = '0'; setTimeout(function() { el.style.visibility = 'hidden'; }, 300); }, dur);
@@ -213,10 +216,12 @@ const SUPPORTED_CURRENCIES = [
     { code:'UG', name:'Uganda', currency:'UGX', flag:'🇺🇬', gst:18 }, { code:'CD', name:'DR Congo', currency:'CDF', flag:'🇨🇩', gst:16 },
     { code:'BF', name:'Burkina Faso', currency:'XOF', flag:'🇧🇫', gst:18 }, { code:'SL', name:'Sierra Leone', currency:'SLL', flag:'🇸🇱', gst:12.5 }
 ];
-const COUNTRY_CODE_TO_NAME = { '+232':'Sierra Leone','+224':'Guinea','+221':'Senegal','+231':'Liberia','+233':'Ghana','+234':'Nigeria','+254':'Kenya','+223':'Mali','+225':'Ivory Coast','+227':'Niger','+229':'Benin','+245':'Guinea Bissau','+220':'Gambia','+228':'Togo','+236':'Central Africa Rep','+251':'Ethiopia','+241':'Gabon','+261':'Madagascar','+212':'Morocco','+250':'Rwanda','+256':'Uganda','+243':'DR Congo','+226':'Burkina Faso' };
-const COUNTRY_CODE_TO_FLAG = { '+232':'🇸🇱','+224':'🇬🇳','+221':'🇸🇳','+231':'🇱🇷','+233':'🇬🇭','+234':'🇳🇬','+254':'🇰🇪','+223':'🇲🇱','+225':'🇨🇮','+227':'🇳🇪','+229':'🇧🇯','+245':'🇬🇼','+220':'🇬🇲','+228':'🇹🇬','+236':'🇨🇫','+251':'🇪🇹','+241':'🇬🇦','+261':'🇲🇬','+212':'🇲🇦','+250':'🇷🇼','+256':'🇺🇬','+243':'🇨🇩','+226':'🇧🇫' };
+
+const COUNTRY_CODE_TO_NAME = { '+232':'Sierra Leone', '+224':'Guinea', '+221':'Senegal', '+231':'Liberia', '+233':'Ghana', '+234':'Nigeria', '+254':'Kenya', '+223':'Mali', '+225':'Ivory Coast', '+227':'Niger', '+229':'Benin', '+245':'Guinea Bissau', '+220':'Gambia', '+228':'Togo', '+236':'Central Africa Rep', '+251':'Ethiopia', '+241':'Gabon', '+261':'Madagascar', '+212':'Morocco', '+250':'Rwanda', '+256':'Uganda', '+243':'DR Congo', '+226':'Burkina Faso' };
+const COUNTRY_CODE_TO_FLAG = { '+232':'🇸🇱', '+224':'🇬🇳', '+221':'🇸🇳', '+231':'🇱🇷', '+233':'🇬🇭', '+234':'🇳🇬', '+254':'🇰🇪', '+223':'🇲🇱', '+225':'🇨🇮', '+227':'🇳🇪', '+229':'🇧🇯', '+245':'🇬🇼', '+220':'🇬🇲', '+228':'🇹🇬', '+236':'🇨🇫', '+251':'🇪🇹', '+241':'🇬🇦', '+261':'🇲🇬', '+212':'🇲🇦', '+250':'🇷🇼', '+256':'🇺🇬', '+243':'🇨🇩', '+226':'🇧🇫' };
 const COUNTRY_NAME_TO_CODE = {};
 for (const code in COUNTRY_CODE_TO_NAME) COUNTRY_NAME_TO_CODE[COUNTRY_CODE_TO_NAME[code]] = code;
+
 const SUPPORTED_COUNTRY_FLAGS = ['🇱🇷','🇬🇳','🇸🇳','🇲🇱','🇨🇮','🇬🇭','🇳🇪','🇧🇯','🇬🇼','🇬🇲','🇹🇬','🇰🇪','🇨🇫','🇪🇹','🇬🇦','🇲🇬','🇲🇦','🇷🇼','🇺🇬','🇨🇩','🇧🇫','🇸🇱'];
 const AVAILABLE_EMOJIS = ['👤','👩','👨','👧','👦','👴','👵','🧑','👶','🧒','👱','🧔','🧑‍💼','👩‍💼','👨‍💼','🧑‍🎓','👩‍🎓','👨‍🎓','🧑‍🏫','👩‍🏫','👨‍🏫','🧑‍⚕️','👩‍⚕️','👨‍⚕️','🧑‍🍳','👩‍🍳','👨‍🍳','🧑‍🌾','👩‍🌾','👨‍🌾','🧑‍🔧','👩‍🔧','👨‍🔧','🧑‍💻','👩‍💻','👨‍💻','😀','😃','😄','😁','😊','🙂','😉','😍','🤩','😎','🤗','🤔','🧐','😇','🥰','😘','🦁','🐯','🐶','🐱','🐼','🦊','🐨','🐻','🐵','🐸','🐷','🐔','🦄','🐲','🦋','🐢','💰','💵','💴','💶','💷','💸','💳','🪙','🏦','📱','💻','🖥️','🛒','🛍️','🎁','⭐'];
 
@@ -272,8 +277,7 @@ let popupAdIntervalId = null;
 let currentPopupAdModal = null;
 
 const PREMIUM_POPUP_AD = {
-    icon: '👑',
-    title: 'AfriPay PREMIUM',
+    icon: '👑', title: 'AfriPay PREMIUM',
     body: 'Unlock the full power of AfriPay! Zero fees on all transfers, priority 24/7 support, higher transaction limits, and exclusive partner discounts. Join thousands of premium members today!',
     buttonText: '🌟 Upgrade to Premium',
     buttonAction: function() { alert('Redirecting to Premium signup...'); },
@@ -288,16 +292,7 @@ function getRandomProductAd() {
     const pick = candidates[Math.floor(Math.random() * candidates.length)];
     const biz = pick.biz; const p = pick.product;
     const currency = (typeof getUserCurrency === 'function' ? getUserCurrency() : 'SLL');
-    return {
-        icon: p.icon || biz.icon || '📦', title: p.name || 'Featured Product', isProductAd: true,
-        businessId: biz.id, businessName: biz.name, businessIcon: biz.icon || '🏪',
-        businessType: biz.type || '', businessMobileMoney: biz.mobileMoney || biz.contact || '',
-        productName: p.name || 'Item', price: parseFloat(p.price) || 0, currency: currency,
-        quality: p.quality || 'Standard', quantity: p.quantity || 1, kind: (p.kind || 'product').toLowerCase(),
-        delivery: p.delivery || 'Delivery 1-3 business days', website: biz.website || '',
-        buttonText: '🛒 Order via AfriPay',
-        buttonAction: function() { placeProductOrder(adDataRef); }
-    };
+    return { icon: p.icon || biz.icon || '📦', title: p.name || 'Featured Product', isProductAd: true, businessId: biz.id, businessName: biz.name, businessIcon: biz.icon || '🏪', businessType: biz.type || '', businessMobileMoney: biz.mobileMoney || biz.contact || '', productName: p.name || 'Item', price: parseFloat(p.price) || 0, currency: currency, quality: p.quality || 'Standard', quantity: p.quantity || 1, kind: (p.kind || 'product').toLowerCase(), delivery: p.delivery || 'Delivery 1-3 business days', website: biz.website || '', buttonText: '🛒 Order via AfriPay', buttonAction: function() { placeProductOrder(adDataRef); } };
 }
 
 let adDataRef = null;
@@ -339,21 +334,10 @@ function renderOrderProductBadge(order) {
 function clearOrderedProduct() {
     currentOrderedProduct = null;
     renderOrderProductBadge(null);
-    try {
-        exitBusinessMode();
-        const sel = getEl('agentNameSelect'); if (sel) sel.style.display = 'block';
-        const lbl = getEl('agentNameLabel'); if (lbl) lbl.textContent = 'Agent *';
-        if (getEl('agentName')) getEl('agentName').value = '';
-        if (getEl('agentPhone')) getEl('agentPhone').value = '';
-        if (getEl('amountInput')) getEl('amountInput').value = '';
-        computeCharges();
-    } catch (e) {}
+    try { exitBusinessMode(); const sel = getEl('agentNameSelect'); if (sel) sel.style.display = 'block'; const lbl = getEl('agentNameLabel'); if (lbl) lbl.textContent = 'Agent *'; if (getEl('agentName')) getEl('agentName').value = ''; if (getEl('agentPhone')) getEl('agentPhone').value = ''; if (getEl('amountInput')) getEl('amountInput').value = ''; computeCharges(); } catch (e) {}
 }
 
-function removeExistingPopupAd() {
-    if (currentPopupAdModal && currentPopupAdModal.parentNode) currentPopupAdModal.parentNode.removeChild(currentPopupAdModal);
-    currentPopupAdModal = null;
-}
+function removeExistingPopupAd() { if (currentPopupAdModal && currentPopupAdModal.parentNode) currentPopupAdModal.parentNode.removeChild(currentPopupAdModal); currentPopupAdModal = null; }
 
 function showPopupAd(adData) {
     removeExistingPopupAd();
@@ -366,9 +350,7 @@ function showPopupAd(adData) {
     else if (isProduct) { headerBg = 'linear-gradient(135deg,#0a2b3c 0%,#2c7da0 55%,#4aa8c9 100%)'; titleSize = '1.25rem'; buttonBg = '#f4a261'; borderGlow = 'box-shadow:0 0 0 3px rgba(44,125,160,.35),0 0 22px rgba(44,125,160,.3),0 20px 40px rgba(0,0,0,.32);'; }
     else { headerBg = 'linear-gradient(135deg,#0a2b3c,#1c4e6c)'; titleSize = '1.3rem'; buttonBg = '#f4a261'; borderGlow = ''; }
     let productDetailsHtml = '';
-    if (isProduct) {
-        productDetailsHtml = '<div class="popup-ad-details-panel"><div class="popup-ad-detail-row"><span class="label">🏢 Business</span><span class="value">' + (adData.businessIcon || '🏪') + ' ' + escapeHTML(adData.businessName) + '</span></div><div class="popup-ad-detail-row"><span class="label">🏷️ Product</span><span class="value">' + escapeHTML(adData.productName) + '</span></div><div class="popup-ad-detail-row price"><span class="label">💰 Price</span><span class="value">' + adData.currency + ' ' + (parseFloat(adData.price) || 0).toFixed(2) + '</span></div><div class="popup-ad-detail-row"><span class="label">⭐ Quality</span><span class="value">' + escapeHTML(adData.quality) + '</span></div><div class="popup-ad-detail-row"><span class="label">📦 Quantity</span><span class="value">' + escapeHTML(String(adData.quantity)) + ' available</span></div><div class="popup-ad-detail-row delivery"><span class="label">🚚 Delivery</span><span class="value">' + escapeHTML(adData.delivery) + '</span></div>' + (adData.businessMobileMoney ? '<div class="popup-ad-detail-row"><span class="label">📱 Mobile Money</span><span class="value">' + escapeHTML(adData.businessMobileMoney) + '</span></div>' : '') + '</div>';
-    }
+    if (isProduct) { productDetailsHtml = '<div class="popup-ad-details-panel"><div class="popup-ad-detail-row"><span class="label">🏢 Business</span><span class="value">' + (adData.businessIcon || '🏪') + ' ' + escapeHTML(adData.businessName) + '</span></div><div class="popup-ad-detail-row"><span class="label">🏷️ Product</span><span class="value">' + escapeHTML(adData.productName) + '</span></div><div class="popup-ad-detail-row price"><span class="label">💰 Price</span><span class="value">' + adData.currency + ' ' + (parseFloat(adData.price) || 0).toFixed(2) + '</span></div><div class="popup-ad-detail-row"><span class="label">⭐ Quality</span><span class="value">' + escapeHTML(adData.quality) + '</span></div><div class="popup-ad-detail-row"><span class="label">📦 Quantity</span><span class="value">' + escapeHTML(String(adData.quantity)) + ' available</span></div><div class="popup-ad-detail-row delivery"><span class="label">🚚 Delivery</span><span class="value">' + escapeHTML(adData.delivery) + '</span></div>' + (adData.businessMobileMoney ? '<div class="popup-ad-detail-row"><span class="label">📱 Mobile Money</span><span class="value">' + escapeHTML(adData.businessMobileMoney) + '</span></div>' : '') + '</div>'; }
     let websiteHtml = ''; if (isProduct && adData.website) websiteHtml = '<a class="popup-ad-website" href="' + escapeHTML(adData.website) + '" target="_blank" rel="noopener">🌐 ' + escapeHTML(adData.website) + '</a>';
     const sparkles = '<span class="popup-ad-sparkle s1">✦</span><span class="popup-ad-sparkle s2">✦</span><span class="popup-ad-sparkle s3">✦</span><span class="popup-ad-sparkle s4">✦</span>';
     const premiumBadge = isPremium ? '<div class="popup-ad-mini-badge" style="background:rgba(255,255,255,.25);">👑 VIP ONLY</div>' : '';
@@ -426,13 +408,35 @@ function getUserCurrency() {
 function updateUserCountryData() { if (currentUser && currentUser.country) { const sup = SUPPORTED_CURRENCIES.find(function(c) { return c.name.toLowerCase() === currentUser.country.toLowerCase(); }); if (sup) currentCountryData = { gstRate: sup.gst, currency: sup.currency, flag: sup.flag, countryName: sup.name }; } }
 function loadRegisteredUsers() { try { registeredUsers = JSON.parse(localStorage.getItem('afripay_registered_users') || '[]'); } catch (e) { registeredUsers = []; } if (!Array.isArray(registeredUsers)) registeredUsers = []; }
 function saveRegisteredUsers() { try { localStorage.setItem('afripay_registered_users', JSON.stringify(registeredUsers)); } catch (e) { try { const light = registeredUsers.map(function(u) { if (u && u.avatarDataURL && String(u.avatarDataURL).length > 200000) { const c = Object.assign({}, u); delete c.avatarDataURL; return c; } return u; }); localStorage.setItem('afripay_registered_users', JSON.stringify(light)); } catch (e2) {} } try { syncConnectedUsersFromRegistered(); } catch (e) {} }
-function syncConnectedUsersFromRegistered() { const curr = connectedUsers.find(function(u) { return u.id === 'current'; }); connectedUsers = curr ? [curr] : []; registeredUsers.forEach(function(u) { const isAgentRec = (u.isAgent === true || u.role === 'agent' || u.businessName); if (isAgentRec) { if (!connectedUsers.find(function(c) { return c.id === u.id; })) connectedUsers.push({ id: u.id || ('agent_' + Date.now() + '_' + Math.random().toString(36).slice(2,7)), name: u.businessName || u.name || '', phone: u.mobileMoney || u.phone || '', emoji: u.emoji || '🏢', status: 'online', isAgent: true, role: 'agent', agentData: u }); } }); }
-function getAgents() { try { syncConnectedUsersFromRegistered(); } catch (e) {} return connectedUsers.filter(function(u) { if (!(u.isAgent === true || u.role === 'agent')) return false; const d = u.agentData || u; return d.approved !== false; }); }
+
+function syncConnectedUsersFromRegistered() {
+    const curr = connectedUsers.find(function(u) { return u.id === 'current'; });
+    connectedUsers = curr ? [curr] : [];
+    registeredUsers.forEach(function(u) {
+        const isAgentRec = (u.isAgent === true || u.role === 'agent' || u.businessName);
+        if (isAgentRec) {
+            if (!connectedUsers.find(function(c) { return c.id === u.id; })) {
+                connectedUsers.push({ id: u.id || ('agent_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7)), name: u.businessName || u.name || '', phone: u.mobileMoney || u.phone || '', emoji: u.emoji || '🏢', status: 'online', isAgent: true, role: 'agent', agentData: u });
+            }
+        }
+    });
+}
+
+function getAgents() {
+    try { syncConnectedUsersFromRegistered(); } catch (e) {}
+    return connectedUsers.filter(function(u) {
+        if (!(u.isAgent === true || u.role === 'agent')) return false;
+        const d = u.agentData || u;
+        if (d.approved === false) return false;
+        return true;
+    });
+}
+
 function getAdminApprovedAgents() { return getAgents().filter(function(a) { const d = a.agentData || a; if (d.approved !== true) return false; return !!(d.approvedBy || d.approvedAt) || d.approvedBy === 'system-seed'; }); }
 function getAgentInitials(agent) { const d = agent.agentData || agent; let n = d.businessName || agent.name || ''; n = n.replace(/\(.*\)/, '').trim(); return n.substring(0, 2).toUpperCase() || 'AG'; }
 function getAgentFlag(agent) { const c = (agent.agentData || agent).countryCode || ''; return COUNTRY_CODE_TO_FLAG[c] || '🌍'; }
 function getAgentCountryName(agent) { const c = (agent.agentData || agent).countryCode || ''; return COUNTRY_CODE_TO_NAME[c] || ''; }
-function getCityValue(sid, oid) { const s = getEl(sid), o = getEl(oid); if (s && s.value) return s.value; if (o && o.value.trim()) return o.value.trim(); return ''; }
+function getCityValue(sid, oid) { const s = getEl(sid), o = getEl(oid); if (s && s.value && s.value !== '') return s.value; if (o && o.value && o.value.trim()) return o.value.trim(); if (s && s.value) return s.value; return ''; }
 function setCityValue(sid, oid, value) { const s = getEl(sid), o = getEl(oid); if (!s || !o) return; let found = false; for (let i = 0; i < s.options.length; i++) { if (s.options[i].value === value) { s.value = value; found = true; break; } } if (!found && value) { s.value = ''; o.value = value; } else { o.value = ''; } }
 function updateAgentDropdownPlaceholder() { const b = getEl('selectedAgentName'); if (!b || isBusinessMode) return; if (currentAgentFilterCountry && !selectedAgentId) { const flag = COUNTRY_NAME_TO_CODE[currentAgentFilterCountry] ? COUNTRY_CODE_TO_FLAG[COUNTRY_NAME_TO_CODE[currentAgentFilterCountry]] : '🌍'; b.innerHTML = 'Select Agent in ' + flag + ' ' + currentAgentFilterCountry; } else if (!selectedAgentId) b.textContent = 'Select Agent'; }
 function getCountryNameFromSelect() { const s = getEl('countryCodeSelect'); if (!s || !s.value) return null; return s.value.split('|')[1] || null; }
@@ -441,6 +445,7 @@ function getAgentsByCountry(cn) { if (!cn) return getAgents(); return getAgents(
 function renderAgentDropdown(filterCountry) {
     const list = getEl('agentDropdownList'); if (!list) return;
     if (isBusinessMode) { list.innerHTML = ''; list.classList.remove('open'); return; }
+    try { syncConnectedUsersFromRegistered(); } catch (e) {}
     if (filterCountry === undefined) filterCountry = currentAgentFilterCountry; else currentAgentFilterCountry = filterCountry;
     let agents = (filterCountry ? getAgentsByCountry(filterCountry) : getAgents()).sort(function(a, b) { const aN = (a.agentData && a.agentData.businessName) || a.name; const bN = (b.agentData && b.agentData.businessName) || b.name; return aN.localeCompare(bN); });
     list.innerHTML = '';
@@ -460,9 +465,11 @@ function renderAgentDropdown(filterCountry) {
     });
     updateAgentDropdownPlaceholder();
 }
+
 function populateAgentSelect(filterCountry) {
     const select = getEl('agentNameSelect'); if (!select) return;
     if (isBusinessMode) { select.style.display = 'none'; return; }
+    try { syncConnectedUsersFromRegistered(); } catch (e) {}
     select.style.display = 'block'; select.innerHTML = '';
     let agents = (filterCountry ? getAgentsByCountry(filterCountry) : getAgents()).sort(function(a, b) { const aN = (a.agentData && a.agentData.businessName) || a.name; const bN = (b.agentData && b.agentData.businessName) || b.name; return aN.localeCompare(bN); });
     const ph = document.createElement('option'); ph.value = ''; ph.textContent = filterCountry ? 'Agent in ' + filterCountry : '-- Select Agent --'; ph.disabled = true; ph.selected = true; select.appendChild(ph);
@@ -515,32 +522,52 @@ function updateInlineConversion() { const from = getEl('inlineConvFrom'), to = g
 function saveUserToStorage(u) { if (!u) return; try { localStorage.setItem('afripay_user', JSON.stringify(u)); } catch (e) { try { const light = Object.assign({}, u); delete light.avatarDataURL; localStorage.setItem('afripay_user', JSON.stringify(light)); } catch (e2) {} } }
 function clearUserStorage() { try { localStorage.removeItem('afripay_user'); } catch (e) {} currentUser = null; showLoggedOutUI(); }
 function loadStoredUser() { const stored = localStorage.getItem('afripay_user'); if (stored) { try { const u = JSON.parse(stored); if (u && u.name && u.phone) { currentUser = u; if (!currentUser.emoji) currentUser.emoji = '👤'; showLoggedInUI(); return true; } } catch (e) {} } showLoggedOutUI(); return false; }
+
+/* ============================================================ */
+/* FIXED: showLoggedInUI — each step wrapped so a failure in    */
+/* one sub-step doesn't abort the whole flow                    */
+/* ============================================================ */
 function showLoggedInUI() {
-    getEl('authButtons').style.display = 'none'; getEl('welcomeSection').style.display = 'flex';
-    getEl('loggedUserName').innerText = (currentUser && currentUser.name) || 'User';
-    updateAvatarDisplay(currentUser); updateProfileAvatarDisplay(currentUser);
-    getEl('mainFormContainer').style.display = 'block';
-    getEl('profileAddress').innerText = (currentUser && currentUser.address) || '—';
-    getEl('profileCity').innerText = (currentUser && currentUser.city) || '—';
-    getEl('profileCountry').innerText = (currentUser && currentUser.country) || '—';
-    if (currentUser) { getEl('senderName').value = currentUser.name || ''; getEl('senderPhone').value = currentUser.phone || ''; getEl('senderAddress').value = currentUser.address || ''; try { populateCapitalCityDropdown('senderCitySelect'); } catch(e) {} setCityValue('senderCitySelect', 'senderCityOther', currentUser.city || ''); }
-    updateUserCountryData();
-    if (getEl('currencySymbol')) getEl('currencySymbol').innerText = isLocalMode ? getUserCurrency() : currentCountryData.currency;
-    if (getEl('gstRateLabel')) getEl('gstRateLabel').innerText = currentCountryData.gstRate;
-    populateInlineConverter(); renderBusinessStrip(); updateAgentDropdownForCountry(); computeCharges(); translatePage();
+    try { if (getEl('authButtons')) getEl('authButtons').style.display = 'none'; } catch(e) {}
+    try { if (getEl('welcomeSection')) getEl('welcomeSection').style.display = 'flex'; } catch(e) {}
+    try { if (getEl('loggedUserName')) getEl('loggedUserName').innerText = (currentUser && currentUser.name) || 'User'; } catch(e) {}
+    try { updateAvatarDisplay(currentUser); } catch(e) {}
+    try { updateProfileAvatarDisplay(currentUser); } catch(e) {}
+    try { if (getEl('mainFormContainer')) getEl('mainFormContainer').style.display = 'block'; } catch(e) {}
+    try { if (getEl('profileAddress')) getEl('profileAddress').innerText = (currentUser && currentUser.address) || '—'; } catch(e) {}
+    try { if (getEl('profileCity')) getEl('profileCity').innerText = (currentUser && currentUser.city) || '—'; } catch(e) {}
+    try { if (getEl('profileCountry')) getEl('profileCountry').innerText = (currentUser && currentUser.country) || '—'; } catch(e) {}
+    try {
+        if (currentUser) {
+            if (getEl('senderName')) getEl('senderName').value = currentUser.name || '';
+            if (getEl('senderPhone')) getEl('senderPhone').value = currentUser.phone || '';
+            if (getEl('senderAddress')) getEl('senderAddress').value = currentUser.address || '';
+            populateCapitalCityDropdown('senderCitySelect');
+            setCityValue('senderCitySelect', 'senderCityOther', currentUser.city || '');
+        }
+    } catch(e) {}
+    try { updateUserCountryData(); } catch(e) {}
+    try { if (getEl('currencySymbol')) getEl('currencySymbol').innerText = isLocalMode ? getUserCurrency() : currentCountryData.currency; } catch(e) {}
+    try { if (getEl('gstRateLabel')) getEl('gstRateLabel').innerText = currentCountryData.gstRate; } catch(e) {}
+    try { populateInlineConverter(); } catch(e) {}
+    try { renderBusinessStrip(); } catch(e) {}
+    try { updateAgentDropdownForCountry(); } catch(e) {}
+    try { computeCharges(); } catch(e) {}
+    try { translatePage(); } catch(e) {}
 }
-function showLoggedOutUI() { getEl('authButtons').style.display = 'flex'; getEl('welcomeSection').style.display = 'none'; getEl('mainFormContainer').style.display = 'none'; connectedUsers = connectedUsers.filter(function(u) { return u.id !== 'current'; }); renderAgentDropdown(null); }
+function showLoggedOutUI() { try { if (getEl('authButtons')) getEl('authButtons').style.display = 'flex'; } catch(e) {} try { if (getEl('welcomeSection')) getEl('welcomeSection').style.display = 'none'; } catch(e) {} try { if (getEl('mainFormContainer')) getEl('mainFormContainer').style.display = 'none'; } catch(e) {} connectedUsers = connectedUsers.filter(function(u) { return u.id !== 'current'; }); try { renderAgentDropdown(null); } catch(e) {} }
 function updateAvatarDisplay(user) { const em = getEl('userAvatarEmoji'), img = getEl('userAvatarImg'); if (!em || !img) return; if (user && user.avatarDataURL) { em.style.display = 'none'; img.style.display = 'block'; img.src = user.avatarDataURL; } else if (user && user.emoji) { em.style.display = 'inline'; img.style.display = 'none'; em.innerText = user.emoji; } else { em.style.display = 'inline'; img.style.display = 'none'; em.innerText = '👤'; } }
 function updateProfileAvatarDisplay(user) { const em = getEl('profileAvatarEmoji'), img = getEl('profileAvatarImg'); if (!em || !img) return; if (user && user.avatarDataURL) { em.style.display = 'none'; img.style.display = 'block'; img.src = user.avatarDataURL; } else if (user && user.emoji) { em.style.display = 'inline'; img.style.display = 'none'; em.innerText = user.emoji; } else { em.style.display = 'inline'; img.style.display = 'none'; em.innerText = '👤'; } }
+
 function loginUser(fullName, phoneNumber) {
     const name = fullName.trim(), phone = phoneNumber.trim();
-    if (!name || !phone) { getEl('loginError').innerHTML = '❌ Enter both fields'; return false; }
+    if (!name || !phone) { if (getEl('loginError')) getEl('loginError').innerHTML = '❌ Enter both fields'; return false; }
     let storedUser = null; try { const s = localStorage.getItem('afripay_user'); if (s) storedUser = JSON.parse(s); } catch (e) {}
-    if (storedUser && storedUser.name.toLowerCase() === name.toLowerCase() && storedUser.phone === phone) { currentUser = storedUser; if (!currentUser.emoji) currentUser.emoji = '👤'; saveUserToStorage(storedUser); showToast('✅ Welcome ' + storedUser.name + '!', 1800); showLoggedInUI(); renderAgentDropdown(currentAgentFilterCountry); getEl('loginError').innerHTML = ''; return true; }
+    if (storedUser && storedUser.name.toLowerCase() === name.toLowerCase() && storedUser.phone === phone) { currentUser = storedUser; if (!currentUser.emoji) currentUser.emoji = '👤'; saveUserToStorage(storedUser); showToast('✅ Welcome ' + storedUser.name + '!', 1800); showLoggedInUI(); renderAgentDropdown(currentAgentFilterCountry); if (getEl('loginError')) getEl('loginError').innerHTML = ''; return true; }
     loadRegisteredUsers();
-    const user = registeredUsers.find(function(u) { return u.name.toLowerCase() === name.toLowerCase() && u.phone === phone; });
-    if (user) { currentUser = { name:user.name, phone:user.phone, address:user.address || '', city:user.city || '', country:user.country || '', emoji:user.emoji || '👤', avatarDataURL: user.avatarDataURL || null }; saveUserToStorage(currentUser); showToast('✅ Welcome ' + currentUser.name + '!', 1800); showLoggedInUI(); renderAgentDropdown(currentAgentFilterCountry); populateAgentSelect(currentAgentFilterCountry); getEl('loginError').innerHTML = ''; return true; }
-    getEl('loginError').innerHTML = '❌ Account not found.'; return false;
+    const user = registeredUsers.find(function(u) { return u.name && u.name.toLowerCase() === name.toLowerCase() && u.phone === phone; });
+    if (user) { currentUser = { name:user.name, phone:user.phone, address:user.address || '', city:user.city || '', country:user.country || '', emoji:user.emoji || '👤', avatarDataURL: user.avatarDataURL || null }; saveUserToStorage(currentUser); showToast('✅ Welcome ' + currentUser.name + '!', 1800); showLoggedInUI(); renderAgentDropdown(currentAgentFilterCountry); populateAgentSelect(currentAgentFilterCountry); if (getEl('loginError')) getEl('loginError').innerHTML = ''; return true; }
+    if (getEl('loginError')) getEl('loginError').innerHTML = '❌ Account not found.'; return false;
 }
 function loadCustomBusinesses() { try { customBusinesses = JSON.parse(localStorage.getItem('afripay_custom_businesses') || '[]'); } catch (e) { customBusinesses = []; } if (!Array.isArray(customBusinesses)) customBusinesses = []; }
 function saveCustomBusinesses() { try { localStorage.setItem('afripay_custom_businesses', JSON.stringify(customBusinesses)); } catch (e) {} }
@@ -583,7 +610,7 @@ function openWhatsApp(phone, name) { if (!phone) { showToast('⚠️ No phone nu
 function openSMS(phone, name) { if (!phone) { showToast('⚠️ No phone number available.', 2200); return; } const clean = String(phone).replace(/\s+/g, ''); if (!clean) { showToast('⚠️ Invalid phone number.', 2200); return; } const body = 'Hello ' + (name || '') + ', I am reaching out from AfriPay regarding a transaction.'; const isMobile = /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|Mobile/i.test(navigator.userAgent); const sep = isMobile && /iPhone|iPad|iPod/i.test(navigator.userAgent) ? '&' : '?'; window.location.href = 'sms:' + clean + sep + 'body=' + encodeURIComponent(body); }
 
 function showReceiptModal(data) {
-    const body = getEl('receiptBody');
+    const body = getEl('receiptBody'); if (!body) return;
     const lines = [{ key: 'TX ID', value: data.txId }, { key: 'Date', value: data.date }, { key: 'Type', value: data.mode }, { key: 'Sender', value: data.sender }, { key: 'Agent', value: data.agent }];
     if (data.localAgentName) lines.push({ key: 'Local Agent', value: data.localAgentName + (data.localAgentPhone ? ' (' + data.localAgentPhone + ')' : '') });
     lines.push({ key: 'Provider TX ID', value: data.providerTxId || 'N/A' });
@@ -617,7 +644,7 @@ function showReceiptModal(data) {
             if (data.clientPhoneRaw) { const cWpBtn = getEl('receiptClientWhatsAppBtn'); if (cWpBtn) cWpBtn.addEventListener('click', function() { openWhatsApp(data.clientPhoneRaw, data.clientName); }); const cSmsBtn = getEl('receiptClientSmsBtn'); if (cSmsBtn) cSmsBtn.addEventListener('click', function() { openSMS(data.clientPhoneRaw, data.clientName); }); }
         } else { socialEl.innerHTML = ''; }
     }
-    getEl('receiptModal').style.display = 'flex';
+    if (getEl('receiptModal')) getEl('receiptModal').style.display = 'flex';
 }
 function toggleChat() { const w = getEl('chatWindow'); if (!w) return; const open = w.classList.toggle('open'); const t = getEl('chatToggleBtn'); if (t) t.style.display = open ? 'none' : 'flex'; }
 function openEmojiPicker() { const grid = getEl('emojiGrid'); if (!grid) return; grid.innerHTML = ''; AVAILABLE_EMOJIS.forEach(function(e) { const s = document.createElement('span'); s.className = 'emoji-option'; s.textContent = e; s.addEventListener('click', function() { applyEmoji(e); }); grid.appendChild(s); }); getEl('emojiPickerModal').style.display = 'flex'; }
@@ -650,14 +677,14 @@ function confirmAgentAuth() {
     const err = getEl('agentAuthError');
     const pw = (getEl('agentAuthPassword') && getEl('agentAuthPassword').value.trim()) || '';
     const pin = (getEl('agentAuthPin') && getEl('agentAuthPin').value.trim()) || '';
-    err.textContent = '';
-    if (pw.length !== 6) { err.textContent = '❌ Password must be 6 chars.'; return; }
-    if (!/^[0-9]{5}$/.test(pin)) { err.textContent = '❌ PIN must be 5 digits.'; return; }
-    if (!pendingAgentAuthId) { err.textContent = '❌ No agent selected.'; return; }
+    if (err) err.textContent = '';
+    if (pw.length !== 6) { if (err) err.textContent = '❌ Password must be 6 chars.'; return; }
+    if (!/^[0-9]{5}$/.test(pin)) { if (err) err.textContent = '❌ PIN must be 5 digits.'; return; }
+    if (!pendingAgentAuthId) { if (err) err.textContent = '❌ No agent selected.'; return; }
     const agent = getAgents().find(function(a) { return a.id === pendingAgentAuthId; });
-    if (!agent) { err.textContent = '❌ Agent not found.'; return; }
+    if (!agent) { if (err) err.textContent = '❌ Agent not found.'; return; }
     const data = agent.agentData || agent;
-    if (pw !== (data.password || '') || pin !== (data.pin || '')) { err.textContent = '❌ Incorrect credentials.'; return; }
+    if (pw !== (data.password || '') || pin !== (data.pin || '')) { if (err) err.textContent = '❌ Incorrect credentials.'; return; }
     const id = pendingAgentAuthId; pendingAgentAuthId = null;
     getEl('agentAuthModal').style.display = 'none'; showToast('✅ Authenticated!', 1400);
     setTimeout(function() { openAgentDashboard(id); }, 250);
@@ -702,15 +729,55 @@ function renderDashAgentsList() { const c = getEl('dashAgentsList'); if (!c) ret
 function renderDashClientsList() { const c = getEl('dashClientsList'); if (!c) return; const mine = dashClients.filter(function(x) { return x.agentId === dashCurrentAgentId; }); if (!mine.length) { c.innerHTML = '<div class="dash-empty">No clients added yet.</div>'; return; } c.innerHTML = mine.map(function(cl) { return '<div class="dash-list-item"><div class="dli-head"><span>👤 ' + escapeHTML(cl.name) + '</span></div><div class="dli-meta"><span>📱 ' + escapeHTML(cl.phone) + '</span></div></div>'; }).join(''); }
 function renderDashBizList() { const c = getEl('dashBizList'); if (!c) return; const area = getDashArea(); let all = getAllBusinesses(); if (area) all = all.filter(function(b) { return !b.country || String(b.country).toLowerCase() === area.toLowerCase(); }); if (!all.length) { c.innerHTML = '<div class="dash-empty">No businesses yet.</div>'; return; } c.innerHTML = all.map(function(b) { return '<div class="dash-list-item"><div class="dli-head"><span>' + (b.icon || '🏪') + ' ' + escapeHTML(b.name) + '</span></div></div>'; }).join(''); }
 function renderDashPendingList() { const c = getEl('dashPendingList'); if (!c) return; const area = getDashArea(); const pend = PendingStore.pendingFor(area); if (!pend.length) { c.innerHTML = '<div class="dash-empty">No pending approvals.</div>'; return; } c.innerHTML = pend.map(function(it) { const d = it.data || {}; return '<div class="dash-list-item"><div class="dli-head"><span>' + escapeHTML(d.businessName || d.name || 'Item') + '</span></div><div class="dash-actions"><button type="button" class="mini-btn approve" data-dash-approve="' + it.id + '">✅ Approve</button><button type="button" class="mini-btn reject" data-dash-reject="' + it.id + '">❌ Reject</button></div></div>'; }).join(''); }
+
 function approvePendingItem(id) {
-    const it = PendingStore.get(id); if (!it || it.status !== 'pending') return;
-    if (it.type === 'agent') { const d = it.data; const rec = Object.assign({}, d, { id: d.id || ('agent_' + Date.now()), name: d.businessName, businessName: d.businessName, approved: true, approvedBy: dashCurrentAgentId || 'admin', approvedAt: new Date().toISOString(), role: 'agent', isAgent: true }); const ex = registeredUsers.find(function(u) { return u.businessName === rec.businessName; }); if (ex) Object.assign(ex, rec); else registeredUsers.push(rec); saveRegisteredUsers(); supaBackground(Supa.saveAgent(rec), 'Approved agent'); try { renderAgentDropdown(currentAgentFilterCountry); } catch (e) {} try { populateAgentSelect(currentAgentFilterCountry); } catch (e) {} }
-    else if (it.type === 'business') { const d = it.data; const bizObj = { id: d.id || ('biz_' + Date.now()), name: d.name, contact: d.contact || '', mobileMoney: d.mobileMoney || '', type: d.type || 'Other', icon: d.icon || '🏪', city: d.city || '', country: d.country || '', goods: d.goods || [] }; const ex = getAllBusinesses().find(function(b) { return b.name === bizObj.name; }); if (ex) Object.assign(ex, bizObj); else customBusinesses.push(bizObj); saveCustomBusinesses(); renderBusinessStrip(); supaBackground(Supa.saveBusiness(bizObj), 'Approved business'); }
-    PendingStore.setStatus(id, 'approved', dashCurrentAgentId); refreshDashPanes(); showToast('✅ Approved', 2400);
+    const it = PendingStore.get(id);
+    if (!it || it.status !== 'pending') return;
+
+    if (it.type === 'agent') {
+        const d = it.data;
+        const rec = Object.assign({}, d, { id: d.id || ('agent_' + Date.now()), name: d.businessName, businessName: d.businessName, approved: true, approvedBy: dashCurrentAgentId || 'admin', approvedAt: new Date().toISOString(), role: 'agent', isAgent: true });
+        if (!rec.countryCode) rec.countryCode = d.countryCode || '+232';
+        if (!rec.mobileMoney) rec.mobileMoney = d.mobileMoney || '';
+        if (!rec.emoji) rec.emoji = d.emoji || '🏢';
+        const ex = registeredUsers.find(function(u) { return u.businessName === rec.businessName || u.id === rec.id; });
+        if (ex) Object.assign(ex, rec); else registeredUsers.push(rec);
+        saveRegisteredUsers();
+        try { syncConnectedUsersFromRegistered(); } catch (e) {}
+        supaBackground(Supa.saveAgent(rec), 'Approved agent');
+        try {
+            const newAgentCountry = COUNTRY_CODE_TO_NAME[rec.countryCode] || '';
+            if (currentAgentFilterCountry && newAgentCountry && currentAgentFilterCountry.toLowerCase() !== newAgentCountry.toLowerCase()) {
+                currentAgentFilterCountry = null;
+                const cw = getEl('countryWrapper'); if (cw) cw.style.display = 'none';
+                isLocalMode = true;
+                const intlBtn = getEl('intlToggleBtn'); if (intlBtn) intlBtn.classList.remove('active');
+            }
+            renderAgentDropdown(currentAgentFilterCountry);
+            populateAgentSelect(currentAgentFilterCountry);
+            updateAgentDropdownPlaceholder();
+            const list = getEl('agentDropdownList');
+            if (list && list.classList.contains('open')) { setTimeout(function() { renderAgentDropdown(currentAgentFilterCountry); }, 50); }
+        } catch (e) { console.warn('agent dropdown refresh:', e); }
+        setTimeout(function() { try { syncConnectedUsersFromRegistered(); renderAgentDropdown(currentAgentFilterCountry); populateAgentSelect(currentAgentFilterCountry); } catch (e) {} }, 150);
+    }
+    else if (it.type === 'business') {
+        const d = it.data;
+        const bizObj = { id: d.id || ('biz_' + Date.now()), name: d.name, contact: d.contact || '', mobileMoney: d.mobileMoney || '', type: d.type || 'Other', icon: d.icon || '🏪', city: d.city || '', country: d.country || '', goods: d.goods || [] };
+        const ex = getAllBusinesses().find(function(b) { return b.name === bizObj.name; });
+        if (ex) Object.assign(ex, bizObj); else customBusinesses.push(bizObj);
+        saveCustomBusinesses();
+        renderBusinessStrip();
+        supaBackground(Supa.saveBusiness(bizObj), 'Approved business');
+    }
+
+    PendingStore.setStatus(id, 'approved', dashCurrentAgentId);
+    refreshDashPanes();
+    showToast('✅ Approved', 2400);
     try { renderAgentDropdown(currentAgentFilterCountry); } catch (e) {}
     try { populateAgentSelect(currentAgentFilterCountry); } catch (e) {}
     try { updateAgentDropdownPlaceholder(); } catch (e) {}
-    setTimeout(function () { supaRefreshAgents(); }, 400);
+    setTimeout(function() { supaRefreshAgents(); }, 400);
 }
 function rejectPendingItem(id) { PendingStore.setStatus(id, 'rejected', dashCurrentAgentId); refreshDashPanes(); showToast('❌ Rejected', 1800); }
 function submitDashClient() { const name = (getEl('dcName').value || '').trim(); const phone = (getEl('dcPhone').value || '').trim(); const msg = getEl('dcMsg'); msg.style.color = '#c0392b'; if (!name || !phone) { msg.textContent = '❌ Name and phone required.'; return; } const newClient = { id: 'cl_' + Date.now(), agentId: dashCurrentAgentId, name: name, phone: phone, city: getEl('dcCity').value, country: getEl('dcCountry').value }; dashClients.push(newClient); saveDashClients(); supaBackground(Supa.saveAgentClient(newClient), 'Client'); msg.style.color = '#27ae60'; msg.textContent = '✅ Client saved.'; refreshDashPanes(); }
@@ -745,11 +812,82 @@ function setupAgentDashboardEvents() {
     bind('refreshAgentsBtn', 'click', async function(e) { e.preventDefault(); showToast('🔄 Refreshing agents…', 1200); await supaRefreshAgents(); showToast('✅ Agents refreshed', 1400); });
 }
 
+/* ============================================================ */
+/* USSD TEMPLATE ROUTING — GAMBIA + EXISTING PREFIXES           */
+/* ============================================================ */
 const PREFIX_144_2D = ['76','78','79','75','74','73'];
 const PREFIX_161_2D = ['88','99','77','33','30','70','80','90'];
+const GAMBIA_PREFIXES_2D = ['70','71','72','73','74','75','76','77','78','79','90','91','92','93','94','95','96','97','98','99'];
+const GAMBIA_DESTINATION_DIAL = { 'Sierra Leone':'232','Guinea':'224','Senegal':'221','Liberia':'231','Ghana':'233','Nigeria':'234','Kenya':'254','Mali':'223','Ivory Coast':'225','Niger':'227','Benin':'229','Guinea Bissau':'245','Gambia':'220','Togo':'228','Central Africa Rep':'236','Ethiopia':'251','Gabon':'241','Madagascar':'261','Morocco':'212','Rwanda':'250','Uganda':'256','DR Congo':'243','Burkina Faso':'226' };
 
-function getUssdTemplateForPhone(agentPhoneDigits) { const digits = String(agentPhoneDigits || '').replace(/\D/g, ''); let local = digits; if (local.indexOf('232') === 0) local = local.slice(3); if (local.indexOf('0') === 0) local = local.slice(1); const twoDigit = local.slice(0, 2); if (PREFIX_144_2D.indexOf(twoDigit) !== -1) return { variant: '144', template: '#144*2*2*{AGENT}*{AMOUNT}*0000#', label: 'MB-FOUR (144)' }; if (PREFIX_161_2D.indexOf(twoDigit) !== -1) return { variant: '161', template: '*161*1*1*{AGENT}*{AMOUNT}*0000#', label: 'MB-FOUR (161)' }; return { variant: '144', template: '#144*2*2*{AGENT}*{AMOUNT}*0000#', label: 'MB-FOUR (144)' }; }
-function getSenderCountry() { if (currentUser && currentUser.country) return currentUser.country; return getCountryNameFromSelect() || null; }
+function isGambianPhone(agentPhoneDigits) {
+    let digits = String(agentPhoneDigits || '').replace(/\D/g, '');
+    if (digits.indexOf('220') === 0) digits = digits.slice(3);
+    if (digits.indexOf('0') === 0) digits = digits.slice(1);
+    if (digits.length < 7) return false;
+    const two = digits.slice(0, 2);
+    return GAMBIA_PREFIXES_2D.indexOf(two) !== -1;
+}
+function getGambiaDestinationDial() {
+    try { const selectEl = getEl('countryCodeSelect'); if (selectEl && selectEl.value) { const parts = selectEl.value.split('|'); const countryName = parts[1]; if (countryName && GAMBIA_DESTINATION_DIAL[countryName]) return GAMBIA_DESTINATION_DIAL[countryName]; } } catch (e) {}
+    try { if (typeof currentCountryData !== 'undefined' && currentCountryData.countryName) { const dial = GAMBIA_DESTINATION_DIAL[currentCountryData.countryName]; if (dial) return dial; } } catch (e) {}
+    return '232';
+}
+function buildGambiaLocalUssd(agentPhoneDigits, amount) { const digits = String(agentPhoneDigits || '').replace(/\D/g, ''); const amt = String(Math.round(parseFloat(amount) || 0)); return '*777*1*' + digits + '*' + amt + '*KKKK#'; }
+function buildGambiaBusinessPaybackUssd(amount) { const amt = String(Math.round(parseFloat(amount) || 0)); return '*777*1*4*2*1*23280422698*' + amt + '*KKKK#'; }
+function buildGambiaAgentInternationalUssd(agentPhoneDigits, destinationDial) { const digits = String(agentPhoneDigits || '').replace(/\D/g, ''); const m = String(destinationDial || '232').replace(/\D/g, ''); return '*144*1*4*' + m + '*' + digits + '#'; }
+function getUssdTemplateForPhone(agentPhoneDigits) {
+    const digits = String(agentPhoneDigits || '').replace(/\D/g, '');
+    if (isGambianPhone(digits)) {
+        const m = getGambiaDestinationDial();
+        if (m === '220') { return { variant: 'gambia-local', template: '*777*1*{AGENT}*{AMOUNT}*KKKK#', label: 'Gambia Local (777)' }; }
+        return { variant: 'gambia-agent-intl', template: '*144*1*4*' + m + '*{AGENT}#', label: 'Gambia Agent → Intl (144 / ' + m + ')' };
+    }
+    let local = digits;
+    if (local.indexOf('232') === 0) local = local.slice(3);
+    if (local.indexOf('0') === 0) local = local.slice(1);
+    const twoDigit = local.slice(0, 2);
+    if (PREFIX_144_2D.indexOf(twoDigit) !== -1) return { variant: '144', template: '#144*2*2*{AGENT}*{AMOUNT}*0000#', label: 'MB-FOUR (144)' };
+    if (PREFIX_161_2D.indexOf(twoDigit) !== -1) return { variant: '161', template: '*161*1*1*{AGENT}*{AMOUNT}*0000#', label: 'MB-FOUR (161)' };
+    return { variant: '144', template: '#144*2*2*{AGENT}*{AMOUNT}*0000#', label: 'MB-FOUR (144)' };
+}
+function substituteUssdTemplate(template, agentPhoneDigits, amount) { const digits = String(agentPhoneDigits || '').replace(/\D/g, ''); const amt = String(Math.round(parseFloat(amount) || 0)); return String(template).replace(/\{AGENT\}/g, digits).replace(/\{AMOUNT\}/g, amt).replace(/\{CC\}/g, getGambiaDestinationDial()).replace(/\{M\}/g, getGambiaDestinationDial()); }
+
+function selectMbFourAgent(agentId) {
+    const agent = getAgents().find(function(a) { return a.id === agentId; }); if (!agent) { showToast('⚠️ Agent not found.', 2200); return; }
+    const d = agent.agentData || agent;
+    const agentCountryCode = d.countryCode || '';
+    const phoneRaw = String(d.mobileMoney || d.phone || agent.phone || '').replace(/\D/g, '');
+    if (phoneRaw.length < 6) { showToast('⚠️ Agent has no valid phone number.', 2600); return; }
+    mbFourSelectedAgentId = agentId; mbFourSelectedAgentPhone = phoneRaw;
+    const displayName = (d.businessName || agent.name || 'Agent').replace(/\(.*\)/, '').trim();
+    const detailsEl = getEl('localAgentDetails');
+    if (detailsEl) { if (getEl('localAgentName')) getEl('localAgentName').textContent = displayName; if (getEl('localAgentPhone')) getEl('localAgentPhone').textContent = agentCountryCode + ' ' + phoneRaw; detailsEl.classList.add('show'); }
+    const amountRaw = parseFloat(getEl('amountInput') && getEl('amountInput').value) || 0;
+    const amt = Math.round(amountRaw);
+    let routeLabel, ussd;
+    if (isGambianPhone(phoneRaw)) {
+        const destinationDial = getGambiaDestinationDial();
+        if (destinationDial === '220') { routeLabel = 'Gambia Local (777)'; ussd = buildGambiaLocalUssd(phoneRaw, amt); }
+        else { routeLabel = 'Gambia Agent → Intl (144 / ' + destinationDial + ')'; ussd = buildGambiaAgentInternationalUssd(phoneRaw, destinationDial); }
+    } else {
+        const route = getUssdTemplateForPhone(phoneRaw);
+        routeLabel = route.label; ussd = substituteUssdTemplate(route.template, phoneRaw, amt);
+    }
+    showMbFourUssdModal({ agentName: displayName, agentPhone: phoneRaw, agentCountryCode: agentCountryCode, amount: amt, routeLabel: routeLabel, ussd: ussd });
+}
+function showMbFourUssdModal(data) {
+    const existing = document.getElementById('mbFourUssdDisplayModal'); if (existing) existing.remove();
+    const modal = document.createElement('div'); modal.id = 'mbFourUssdDisplayModal'; modal.className = 'modal'; modal.style.display = 'flex';
+    const eN = escapeHTML(data.agentName); const eP = escapeHTML(data.agentPhone); const eCC = escapeHTML(data.agentCountryCode || ''); const eA = escapeHTML(String(data.amount)); const eR = escapeHTML(data.routeLabel); const eU = escapeHTML(data.ussd);
+    modal.innerHTML = '<div class="modal-content" style="max-width:460px;"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;"><h3 style="margin:0;color:#0f2b3d;">📞 ' + eR + '</h3><button type="button" class="action-btn close-mbusssd" style="width:32px;height:32px;padding:0;border-radius:50%;background:#ccc;color:#222;font-size:1rem;">✕</button></div><div class="ussd-modal-details"><div class="ussd-modal-row"><span class="ussd-modal-label">🏢 Local Agent</span><span class="ussd-modal-value">' + eN + '</span></div><div class="ussd-modal-row"><span class="ussd-modal-label">📱 Phone</span><span class="ussd-modal-value">' + eCC + ' ' + eP + '</span></div><div class="ussd-modal-row"><span class="ussd-modal-label">💵 Amount</span><span class="ussd-modal-value">' + eA + '</span></div></div><div style="font-weight:700;color:#1c6e8f;font-size:.82rem;margin-bottom:4px;">🔐 USSD Code to Dial:</div><div id="mbUssdCodeBox" class="ussd-code-box">' + eU + '</div><div class="ussd-hint">💡 Tap <strong>Dial USSD</strong> to open your phone dialer with the code pre-filled.<br>When prompted for PIN, enter your <strong>4-digit PIN</strong> in place of <code>KKKK</code> (or <code>0000</code> for legacy templates).</div><div class="action-buttons-row" style="gap:6px;"><button type="button" class="action-btn dial" id="mbUssdDialBtn" style="flex:1;">📞 Dial USSD</button><button type="button" class="action-btn green" id="mbUssdCopyBtn" style="flex:1;">📋 Copy</button></div><button type="button" class="action-btn close-mbusssd" style="background:#95a5a6;width:100%;margin-top:6px;">Close</button></div>';
+    document.body.appendChild(modal);
+    modal.querySelectorAll('.close-mbusssd').forEach(function(b) { b.addEventListener('click', function() { modal.remove(); }); });
+    const dialBtn = modal.querySelector('#mbUssdDialBtn'); if (dialBtn) dialBtn.addEventListener('click', function() { const link = document.createElement('a'); link.href = 'tel:' + encodeURIComponent(data.ussd).replace(/%23/g, '#'); document.body.appendChild(link); link.click(); document.body.removeChild(link); showToast('📞 Opening dialer with USSD code...', 2600); });
+    const copyBtn = modal.querySelector('#mbUssdCopyBtn'); if (copyBtn) copyBtn.addEventListener('click', function() { const code = data.ussd; if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(code).then(function() { showToast('✅ USSD copied', 2600); }).catch(function() { fallbackCopy(code); }); } else fallbackCopy(code); });
+    modal.addEventListener('click', function(e) { if (e.target === modal) modal.remove(); });
+}
+function fallbackCopy(text) { const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.left = '-9999px'; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); showToast('✅ USSD copied', 2600); } catch (err) { showToast('⚠️ Copy failed', 2600); } document.body.removeChild(ta); }
 
 function openMbFourAgentPicker() {
     const allAgents = getAdminApprovedAgents(); if (!allAgents.length) { showToast('⚠️ No admin-approved agents available yet.', 2800); return; }
@@ -762,43 +900,44 @@ function openMbFourAgentPicker() {
     list.innerHTML = Object.keys(byCountry).sort().map(function(country) {
         const code = COUNTRY_NAME_TO_CODE[country]; const flag = (code && COUNTRY_CODE_TO_FLAG[code]) || '🌍';
         const header = '<div style="font-weight:800;color:#1c6e8f;font-size:.78rem;margin:8px 0 4px;border-left:3px solid #f4a261;padding-left:7px;">' + flag + ' ' + escapeHTML(country) + '</div>';
-        const rows = byCountry[country].sort(function(a, b) { const an = (a.agentData && a.agentData.businessName) || a.name; const bn = (b.agentData && b.agentData.businessName) || b.name; return an.localeCompare(bn); }).map(function(a) { const d = a.agentData || a; const name = (d.businessName || a.name || '').replace(/\(.*\)/, '').trim(); const phone = d.mobileMoney || d.phone || a.phone || '—'; const route = getUssdTemplateForPhone(phone); return '<button type="button" class="broadcast-option" data-mbfour-agent="' + escapeHTML(a.id) + '" style="width:100%;text-align:left;"><span class="bo-icon">' + (d.emoji || '🏢') + '</span><span class="bo-text"><span class="bo-title">' + escapeHTML(name) + ' <span style="color:#27ae60;font-size:.62rem;font-weight:700;">✅ Admin-verified</span></span><span class="bo-sub">📱 ' + escapeHTML(phone) + ' · 🔀 ' + route.label + '</span></span><span style="color:#2c7da0;font-size:1.2rem;">›</span></button>'; }).join('');
+        const rows = byCountry[country].sort(function(a, b) { const an = (a.agentData && a.agentData.businessName) || a.name; const bn = (b.agentData && b.agentData.businessName) || b.name; return an.localeCompare(bn); }).map(function(a) {
+            const d = a.agentData || a; const name = (d.businessName || a.name || '').replace(/\(.*\)/, '').trim();
+            const phone = d.mobileMoney || d.phone || a.phone || '—';
+            const route = getUssdTemplateForPhone(phone);
+            return '<button type="button" class="broadcast-option" data-mbfour-agent="' + escapeHTML(a.id) + '" style="width:100%;text-align:left;"><span class="bo-icon">' + (d.emoji || '🏢') + '</span><span class="bo-text"><span class="bo-title">' + escapeHTML(name) + ' <span style="color:#27ae60;font-size:.62rem;font-weight:700;">✅ Admin-verified</span></span><span class="bo-sub">📱 ' + escapeHTML(phone) + ' · 🔀 ' + route.label + '</span></span><span style="color:#2c7da0;font-size:1.2rem;">›</span></button>';
+        }).join('');
         return header + rows;
     }).join('');
     list.querySelectorAll('[data-mbfour-agent]').forEach(function(btn) { btn.addEventListener('click', function() { const id = btn.getAttribute('data-mbfour-agent'); modal.style.display = 'none'; selectMbFourAgent(id); }); });
     modal.style.display = 'flex';
 }
-function selectMbFourAgent(agentId) {
-    const agent = getAgents().find(function(a) { return a.id === agentId; }); if (!agent) { showToast('⚠️ Agent not found.', 2200); return; }
-    const d = agent.agentData || agent; const phoneRaw = String(d.mobileMoney || d.phone || agent.phone || '').replace(/\D/g, '');
-    if (phoneRaw.length < 6) { showToast('⚠️ Agent has no valid phone number.', 2600); return; }
-    mbFourSelectedAgentId = agentId; mbFourSelectedAgentPhone = phoneRaw;
+function getSenderCountry() { if (currentUser && currentUser.country) return currentUser.country; return getCountryNameFromSelect() || null; }
+
+function handleLocalAgentBtnClick(e) {
+    if (e) e.preventDefault();
+    if (!mbFourSelectedAgentId) { showToast('⚠️ No local agent selected yet. Tap MB-FOUR first.', 2400); return; }
+    const agent = getAgents().find(function(a) { return a.id === mbFourSelectedAgentId; });
+    if (!agent) { showToast('⚠️ Local agent not found.', 2200); return; }
+    const d = agent.agentData || agent;
     const displayName = (d.businessName || agent.name || 'Agent').replace(/\(.*\)/, '').trim();
-    const detailsEl = getEl('localAgentDetails');
-    if (detailsEl) { if (getEl('localAgentName')) getEl('localAgentName').textContent = displayName; if (getEl('localAgentPhone')) getEl('localAgentPhone').textContent = (d.countryCode || '') + ' ' + phoneRaw; detailsEl.classList.add('show'); }
-    const amountRaw = parseFloat(getEl('amountInput') && getEl('amountInput').value) || 0; const amt = Math.round(amountRaw);
-    const route = getUssdTemplateForPhone(phoneRaw); const ussd = route.template.replace('{AGENT}', phoneRaw).replace('{AMOUNT}', String(amt > 0 ? amt : 0));
-    showMbFourUssdModal({ agentName: displayName, agentPhone: phoneRaw, agentCountryCode: d.countryCode || '', amount: amt, routeLabel: route.label, ussd: ussd });
+    const phoneRaw = String(d.mobileMoney || d.phone || agent.phone || '').replace(/\D/g, '');
+    const amount = parseFloat(getEl('amountInput') && getEl('amountInput').value) || 0;
+    if (phoneRaw.length < 6) { showToast('⚠️ Local agent has no valid phone number.', 2400); return; }
+    let routeLabel, ussd;
+    if (isGambianPhone(phoneRaw)) {
+        const destinationDial = getGambiaDestinationDial();
+        if (destinationDial === '220') { routeLabel = 'Gambia Local (777)'; ussd = buildGambiaLocalUssd(phoneRaw, Math.round(amount)); }
+        else { routeLabel = 'Gambia Agent → Intl (144 / ' + destinationDial + ')'; ussd = buildGambiaAgentInternationalUssd(phoneRaw, destinationDial); }
+    } else {
+        const route = getUssdTemplateForPhone(phoneRaw);
+        routeLabel = route.label; ussd = substituteUssdTemplate(route.template, phoneRaw, Math.round(amount));
+    }
+    showMbFourUssdModal({ agentName: displayName, agentPhone: phoneRaw, agentCountryCode: d.countryCode || '', amount: Math.round(amount), routeLabel: routeLabel, ussd: ussd });
 }
-function showMbFourUssdModal(data) {
-    const existing = document.getElementById('mbFourUssdDisplayModal'); if (existing) existing.remove();
-    const modal = document.createElement('div'); modal.id = 'mbFourUssdDisplayModal'; modal.className = 'modal'; modal.style.display = 'flex';
-    const eN = escapeHTML(data.agentName); const eP = escapeHTML(data.agentPhone); const eCC = escapeHTML(data.agentCountryCode || ''); const eA = escapeHTML(String(data.amount)); const eR = escapeHTML(data.routeLabel); const eU = escapeHTML(data.ussd);
-    modal.innerHTML = '<div class="modal-content" style="max-width:460px;"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;"><h3 style="margin:0;color:#0f2b3d;">📞 ' + eR + '</h3><button type="button" class="action-btn close-mbusssd" style="width:32px;height:32px;padding:0;border-radius:50%;background:#ccc;color:#222;font-size:1rem;">✕</button></div><div class="ussd-modal-details"><div class="ussd-modal-row"><span class="ussd-modal-label">🏢 Local Agent</span><span class="ussd-modal-value">' + eN + '</span></div><div class="ussd-modal-row"><span class="ussd-modal-label">📱 Phone</span><span class="ussd-modal-value">' + eCC + ' ' + eP + '</span></div><div class="ussd-modal-row"><span class="ussd-modal-label">💵 Amount</span><span class="ussd-modal-value">' + eA + '</span></div></div><div style="font-weight:700;color:#1c6e8f;font-size:.82rem;margin-bottom:4px;">🔐 USSD Code to Dial:</div><div id="mbUssdCodeBox" class="ussd-code-box">' + eU + '</div><div class="ussd-hint">💡 Tap <strong>Dial USSD</strong> to open your phone dialer with the code pre-filled.<br>When prompted for PIN, enter your <strong>4-digit PIN</strong> in place of <code>0000</code>.</div><div class="action-buttons-row" style="gap:6px;"><button type="button" class="action-btn dial" id="mbUssdDialBtn" style="flex:1;">📞 Dial USSD</button><button type="button" class="action-btn green" id="mbUssdCopyBtn" style="flex:1;">📋 Copy</button></div><button type="button" class="action-btn close-mbusssd" style="background:#95a5a6;width:100%;margin-top:6px;">Close</button></div>';
-    document.body.appendChild(modal);
-    modal.querySelectorAll('.close-mbusssd').forEach(function(b) { b.addEventListener('click', function() { modal.remove(); }); });
-    const dialBtn = modal.querySelector('#mbUssdDialBtn'); if (dialBtn) dialBtn.addEventListener('click', function() { const link = document.createElement('a'); link.href = 'tel:' + encodeURIComponent(data.ussd).replace(/%23/g, '#'); document.body.appendChild(link); link.click(); document.body.removeChild(link); showToast('📞 Opening dialer with USSD code...', 2600); });
-    const copyBtn = modal.querySelector('#mbUssdCopyBtn'); if (copyBtn) copyBtn.addEventListener('click', function() { const code = data.ussd; if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(code).then(function() { showToast('✅ USSD copied', 2600); }).catch(function() { fallbackCopy(code); }); } else fallbackCopy(code); });
-    modal.addEventListener('click', function(e) { if (e.target === modal) modal.remove(); });
-}
-function fallbackCopy(text) { const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.left = '-9999px'; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); showToast('✅ USSD copied', 2600); } catch (err) { showToast('⚠️ Copy failed', 2600); } document.body.removeChild(ta); }
 
-function updateRegAvatarPreview() { const preview = getEl('regAvatarPreview'); if (!preview) return; if (regAvatarDataURL) preview.innerHTML = '<img src="' + regAvatarDataURL + '" style="width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.15);" />'; else preview.textContent = regEmoji || '👤'; }
-function updateAgentBizProfilePreview() { const emojiEl = getEl('agentBizProfilePreviewEmoji'); const imgEl = getEl('agentBizProfilePreview'); const removeBtn = getEl('agentRemoveLogoBtn'); if (agentBizProfileDataURL) { if (emojiEl) emojiEl.style.display = 'none'; if (imgEl) { imgEl.src = agentBizProfileDataURL; imgEl.style.display = 'block'; } if (removeBtn) removeBtn.style.display = 'inline-flex'; } else { if (emojiEl) { emojiEl.style.display = 'inline-block'; emojiEl.textContent = agentBizProfileEmoji || '🏢'; } if (imgEl) { imgEl.src = ''; imgEl.style.display = 'none'; } if (removeBtn) removeBtn.style.display = 'none'; } }
-
-function populateConverterDropdowns() { const fromSel = getEl('convFromCurrency'); const toSel = getEl('convCountrySelect'); if (!fromSel || !toSel) return; const optionsHtml = SUPPORTED_CURRENCIES.map(function(c) { return '<option value="' + c.currency + '">' + c.flag + ' ' + c.name + ' (' + c.currency + ')</option>'; }).join(''); if (!fromSel.options.length) fromSel.innerHTML = optionsHtml; if (!toSel.options.length) toSel.innerHTML = optionsHtml; try { fromSel.value = getUserCurrency(); } catch(e) {} try { toSel.value = 'SLL'; } catch(e) {} }
-function updateConverterModal() { const fromCur = getEl('convFromCurrency').value; const toCur = getEl('convCountrySelect').value; const amt = parseFloat(getEl('convAmount').value) || 0; if (!fromCur || !toCur || amt <= 0) { ['convBase','convCarrear','convLocal','convServices','convTotal','convRecipient'].forEach(function(id) { if (getEl(id)) getEl(id).textContent = '0.00'; }); if (getEl('convRate')) getEl('convRate').textContent = '1.00 = 1.00'; return; } const fromRate = FX_TO_USD[fromCur] || 1; const toRate = FX_TO_USD[toCur] || 1; const conversionRate = fromRate / toRate; const baseInToCur = amt * conversionRate; const carrear = baseInToCur * FEE_CARREAR; const local = baseInToCur * FEE_LOCAL; const services = baseInToCur * FEE_SERVICES; const total = baseInToCur + carrear + local + services; if (getEl('convBase')) getEl('convBase').textContent = amt.toFixed(2) + ' ' + fromCur; if (getEl('convCarrear')) getEl('convCarrear').textContent = carrear.toFixed(2) + ' ' + toCur; if (getEl('convLocal')) getEl('convLocal').textContent = local.toFixed(2) + ' ' + toCur; if (getEl('convServices')) getEl('convServices').textContent = services.toFixed(2) + ' ' + toCur; if (getEl('convTotal')) getEl('convTotal').textContent = total.toFixed(2) + ' ' + toCur; if (getEl('convRate')) getEl('convRate').textContent = '1 ' + fromCur + ' = ' + conversionRate.toFixed(4) + ' ' + toCur; if (getEl('convRecipient')) getEl('convRecipient').textContent = baseInToCur.toFixed(2) + ' ' + toCur; }
-
+/* ============================================================ */
+/* FIXED: setupEventListeners — Register button robust + safe    */
+/* ============================================================ */
 function setupEventListeners() {
     function safe(id, event, handler) { const el = getEl(id); if (el) el.addEventListener(event, handler); }
 
@@ -806,43 +945,123 @@ function setupEventListeners() {
     safe('othersBtn', 'click', function(e) { e.preventDefault(); e.stopPropagation(); const m = getEl('othersDropdownMenu'); if (m) m.classList.toggle('open'); });
     document.addEventListener('click', function(e) { const od = document.querySelector('.others-dropdown'); if (!od) return; if (!od.contains(e.target)) { const m = getEl('othersDropdownMenu'); if (m) m.classList.remove('open'); } });
 
-    safe('loginBtn', 'click', function(e) { e.preventDefault(); getEl('loginError').innerHTML = ''; getEl('loginModal').style.display = 'flex'; });
-    safe('registerBtn', 'click', function(e) { e.preventDefault(); try { populateCountryDropdown('regCountry'); } catch(err) {} try { populateCapitalCityDropdown('regCitySelect'); } catch(err) {} regAvatarDataURL = null; regEmoji = '👤'; updateRegAvatarPreview(); const rb = getEl('regRemoveImageBtn'); if (rb) rb.style.display = 'none'; getEl('registerModal').style.display = 'flex'; });
+    safe('loginBtn', 'click', function(e) { e.preventDefault(); if (getEl('loginError')) getEl('loginError').innerHTML = ''; if (getEl('loginModal')) getEl('loginModal').style.display = 'flex'; });
+
+    /* ============================================================ */
+    /* FIXED: registerBtn — populate dropdowns BEFORE showing modal */
+    /* ============================================================ */
+    safe('registerBtn', 'click', function(e) {
+        e.preventDefault();
+        try {
+            populateCountryDropdown('regCountry');
+            populateCapitalCityDropdown('regCitySelect');
+        } catch (err) { console.warn('registerBtn populate:', err); }
+        regAvatarDataURL = null; regEmoji = '👤';
+        try { updateRegAvatarPreview(); } catch (err) {}
+        try { const rb = getEl('regRemoveImageBtn'); if (rb) rb.style.display = 'none'; } catch (err) {}
+        try { if (getEl('regError')) getEl('regError').textContent = ''; } catch (err) {}
+        try { if (getEl('regSuccess')) getEl('regSuccess').textContent = ''; } catch (err) {}
+        if (getEl('registerModal')) getEl('registerModal').style.display = 'flex';
+    });
+
     safe('logoutBtn', 'click', function(e) { e.preventDefault(); clearUserStorage(); showToast('Logged out'); });
     safe('agentAuthConfirmBtn', 'click', function(e) { e.preventDefault(); confirmAgentAuth(); });
     safe('doLoginBtn', 'click', function(e) { e.preventDefault(); if (loginUser(getEl('loginName').value, getEl('loginPhone').value)) { getEl('loginModal').style.display = 'none'; getEl('loginName').value = ''; getEl('loginPhone').value = ''; } });
     safe('countryCodeSelect', 'change', function() { handleCountrySelectChange(this); });
 
-    safe('regPickEmojiBtn', 'click', function() { const grid = getEl('emojiGrid'); if (!grid) return; grid.innerHTML = ''; AVAILABLE_EMOJIS.forEach(function(e) { const s = document.createElement('span'); s.className = 'emoji-option'; s.textContent = e; s.addEventListener('click', function() { regEmoji = e; regAvatarDataURL = null; updateRegAvatarPreview(); const rb = getEl('regRemoveImageBtn'); if (rb) rb.style.display = 'none'; getEl('emojiPickerModal').style.display = 'none'; }); grid.appendChild(s); }); getEl('emojiPickerModal').style.display = 'flex'; });
+    safe('regPickEmojiBtn', 'click', function() { const grid = getEl('emojiGrid'); if (!grid) return; grid.innerHTML = ''; AVAILABLE_EMOJIS.forEach(function(e) { const s = document.createElement('span'); s.className = 'emoji-option'; s.textContent = e; s.addEventListener('click', function() { regEmoji = e; regAvatarDataURL = null; try { updateRegAvatarPreview(); } catch(err) {} const rb = getEl('regRemoveImageBtn'); if (rb) rb.style.display = 'none'; getEl('emojiPickerModal').style.display = 'none'; }); grid.appendChild(s); }); getEl('emojiPickerModal').style.display = 'flex'; });
     safe('regUploadImageBtn', 'click', function() { const fi = getEl('regAvatarUploadInput'); if (fi) fi.click(); });
-    safe('regAvatarUploadInput', 'change', function() { const f = this.files[0]; if (!f) return; resizeImageFile(f, 200, 0.82).then(function(dataUrl) { regAvatarDataURL = dataUrl; updateRegAvatarPreview(); const rb = getEl('regRemoveImageBtn'); if (rb) rb.style.display = 'inline-flex'; }).catch(function() { showToast('⚠️ Could not process image.', 2200); }); this.value = ''; });
-    safe('regRemoveImageBtn', 'click', function() { regAvatarDataURL = null; regEmoji = '👤'; updateRegAvatarPreview(); this.style.display = 'none'; });
+    safe('regAvatarUploadInput', 'change', function() { const f = this.files[0]; if (!f) return; resizeImageFile(f, 200, 0.82).then(function(dataUrl) { regAvatarDataURL = dataUrl; try { updateRegAvatarPreview(); } catch(err) {} const rb = getEl('regRemoveImageBtn'); if (rb) rb.style.display = 'inline-flex'; }).catch(function() { showToast('⚠️ Could not process image.', 2200); }); this.value = ''; });
+    safe('regRemoveImageBtn', 'click', function() { regAvatarDataURL = null; regEmoji = '👤'; try { updateRegAvatarPreview(); } catch(err) {} this.style.display = 'none'; });
 
+    /* ============================================================ */
+    /* FIXED: doRegisterBtn — full try/catch, safe dropdown read,   */
+    /* guaranteed showLoggedInUI, robust error display               */
+    /* ============================================================ */
     safe('doRegisterBtn', 'click', function(e) {
         e.preventDefault();
-        const errEl = getEl('regError'), okEl = getEl('regSuccess'); if (errEl) errEl.textContent = ''; if (okEl) okEl.textContent = '';
-        const name = (getEl('regName').value || '').trim(); const phone = (getEl('regPhone').value || '').trim(); const city = getCityValue('regCitySelect', 'regCityOther');
-        if (!name || !phone || !city) { if (errEl) errEl.textContent = '❌ Fill required.'; return; }
-        if (registeredUsers.some(function(u) { return u.phone === phone; })) { if (errEl) errEl.textContent = '❌ Phone already registered.'; return; }
-        const newUser = { id: 'user_' + Date.now(), name: name, phone: phone, address: getEl('regAddress').value, city: city, country: getEl('regCountry').value, emoji: regEmoji, avatarDataURL: regAvatarDataURL, role: 'user', nin: getEl('regNin').value, idNumber: getEl('regIdNumber').value };
-        registeredUsers.push(newUser); saveRegisteredUsers();
-        currentUser = { name: name, phone: phone, address: newUser.address, city: city, country: newUser.country, emoji: regEmoji, avatarDataURL: regAvatarDataURL, nin: newUser.nin, idNumber: newUser.idNumber };
-        saveUserToStorage(currentUser);
-        if (okEl) okEl.textContent = '✅ Registered!'; showToast('✅ Registered!', 1500); showLoggedInUI();
-        setTimeout(function() { getEl('registerModal').style.display = 'none'; }, 900);
-        supaBackground(Supa.saveUser(newUser), 'User');
+        const errEl = getEl('regError'); const okEl = getEl('regSuccess');
+        if (errEl) errEl.textContent = ''; if (okEl) okEl.textContent = '';
+        try {
+            /* Ensure dropdowns are populated in case they weren't */
+            try { populateCountryDropdown('regCountry'); } catch (err) {}
+            try { populateCapitalCityDropdown('regCitySelect'); } catch (err) {}
+
+            const nameField = getEl('regName');
+            const phoneField = getEl('regPhone');
+            if (!nameField || !phoneField) { if (errEl) errEl.textContent = '❌ Form not ready, please retry.'; return; }
+
+            const name = (nameField.value || '').trim();
+            const phone = (phoneField.value || '').trim();
+
+            /* City: prefer dropdown, then other text input, then empty */
+            const citySelect = getEl('regCitySelect');
+            const cityOther = getEl('regCityOther');
+            let city = '';
+            if (citySelect && citySelect.value) city = citySelect.value;
+            else if (cityOther && cityOther.value && cityOther.value.trim()) city = cityOther.value.trim();
+            else if (citySelect && citySelect.value === '' && cityOther && cityOther.value === '') city = '';
+
+            if (!name || !phone || !city) {
+                if (errEl) errEl.textContent = '❌ Please fill Name, Phone and City (pick a city or type one under OR).';
+                return;
+            }
+            loadRegisteredUsers();
+            if (registeredUsers.some(function(u) { return u.phone === phone; })) { if (errEl) errEl.textContent = '❌ Phone already registered.'; return; }
+
+            const newUser = {
+                id: 'user_' + Date.now(),
+                name: name,
+                phone: phone,
+                address: (getEl('regAddress') && getEl('regAddress').value) || '',
+                city: city,
+                country: (getEl('regCountry') && getEl('regCountry').value) || 'Sierra Leone',
+                emoji: regEmoji || '👤',
+                avatarDataURL: regAvatarDataURL || null,
+                role: 'user',
+                nin: (getEl('regNin') && getEl('regNin').value) || '',
+                idNumber: (getEl('regIdNumber') && getEl('regIdNumber').value) || ''
+            };
+            registeredUsers.push(newUser);
+            saveRegisteredUsers();
+
+            currentUser = {
+                name: newUser.name,
+                phone: newUser.phone,
+                address: newUser.address,
+                city: newUser.city,
+                country: newUser.country,
+                emoji: newUser.emoji,
+                avatarDataURL: newUser.avatarDataURL,
+                nin: newUser.nin,
+                idNumber: newUser.idNumber
+            };
+            saveUserToStorage(currentUser);
+
+            if (okEl) okEl.textContent = '✅ Registered!';
+            showToast('✅ Registered!', 1500);
+
+            /* Show logged-in UI — wrapped so if any sub-step fails registration still succeeds */
+            try { showLoggedInUI(); } catch (uiErr) { console.warn('showLoggedInUI after register:', uiErr); }
+
+            setTimeout(function() { if (getEl('registerModal')) getEl('registerModal').style.display = 'none'; }, 900);
+            supaBackground(Supa.saveUser(newUser), 'User');
+        } catch (err) {
+            console.error('❌ Register handler error:', err);
+            if (errEl) errEl.textContent = '❌ Registration error: ' + (err && err.message ? err.message : 'unknown');
+        }
     });
 
     safe('userAvatarContainer', 'click', function(e) { if (e.target.closest('.logout-btn') || e.target.closest('.edit-account-btn')) return; if (!currentUser) return; openEmojiPicker(); });
     safe('profileAvatarLarge', 'click', function() { if (!currentUser) return; openEmojiPicker(); });
-    safe('emojiUploadImageBtn', 'click', function() { getEl('avatarUploadInput').click(); });
+    safe('emojiUploadImageBtn', 'click', function() { if (getEl('avatarUploadInput')) getEl('avatarUploadInput').click(); });
     safe('emojiRemoveImageBtn', 'click', function() { removeAvatarImage(); });
     safe('avatarUploadInput', 'change', function() { const f = this.files[0]; if (!f) return; resizeImageFile(f, 200, 0.82).then(function(dataUrl) { applyAvatarImage(dataUrl); }).catch(function() { showToast('⚠️ Could not process image.', 2200); }); this.value = ''; });
 
     safe('editAccountBtn', 'click', function(e) { e.preventDefault(); if (!currentUser) { showToast('⚠️ Login first', 2000); return; } try { populateCountryDropdown('editAccountCountry'); } catch(err) {} try { populateCapitalCityDropdown('editAccountCitySelect'); } catch(err) {} getEl('editAccountName').value = currentUser.name || ''; getEl('editAccountPhone').value = currentUser.phone || ''; getEl('editAccountAddress').value = currentUser.address || ''; setCityValue('editAccountCitySelect', 'editAccountCityOther', currentUser.city || ''); getEl('editAccountCountry').value = currentUser.country || 'Sierra Leone'; getEl('editAccountModal').style.display = 'flex'; });
     safe('saveEditAccountBtn', 'click', function(e) { e.preventDefault(); const name = getEl('editAccountName').value.trim(); const phone = getEl('editAccountPhone').value.trim(); const city = getCityValue('editAccountCitySelect', 'editAccountCityOther'); if (!name || !phone || !city) { getEl('editAccountError').textContent = '❌ Fill Name, Phone & City'; return; } currentUser.name = name; currentUser.phone = phone; currentUser.address = getEl('editAccountAddress').value; currentUser.city = city; currentUser.country = getEl('editAccountCountry').value; saveUserToStorage(currentUser); showLoggedInUI(); showToast('✅ Account updated!', 2000); setTimeout(function() { getEl('editAccountModal').style.display = 'none'; }, 1000); supaBackground(Supa.saveUser(currentUser), 'Account update'); });
 
-    safe('agentDropdownBtn', 'click', function(e) { e.preventDefault(); e.stopPropagation(); getEl('agentDropdownList').classList.toggle('open'); renderAgentDropdown(currentAgentFilterCountry); });
+    safe('agentDropdownBtn', 'click', function(e) { e.preventDefault(); e.stopPropagation(); const list = getEl('agentDropdownList'); if (list) list.classList.toggle('open'); renderAgentDropdown(currentAgentFilterCountry); });
     document.addEventListener('click', function(e) { const c = document.querySelector('.agent-dropdown-container'); if (c && !c.contains(e.target)) { const list = getEl('agentDropdownList'); if (list) list.classList.remove('open'); } });
 
     safe('agentNameSelect', 'change', function() { if (this.value) selectAgent(this.value); else { selectedAgentId = null; _selectedAgentId = null; clearAgentSelection(); } });
@@ -851,9 +1070,7 @@ function setupEventListeners() {
     document.querySelectorAll('.close-modal').forEach(function(b) { b.addEventListener('click', function(e) { e.preventDefault(); const m = this.closest('.modal'); if (m) m.style.display = 'none'; }); });
 
     safe('mainMmBtn', 'click', function(e) { e.preventDefault(); const amt = parseFloat(getEl('amountInput') && getEl('amountInput').value) || 0; if (amt <= 0) { showToast('⚠️ Enter an amount first.', 2200); return; } openMbFourAgentPicker(); });
-
-    safe('localAgentBtn', 'click', function(e) { e.preventDefault(); if (!mbFourSelectedAgentId) { showToast('⚠️ No local agent selected yet. Tap MB-FOUR first.', 2400); return; } const agent = getAgents().find(function(a) { return a.id === mbFourSelectedAgentId; }); if (!agent) { showToast('⚠️ Local agent not found.', 2200); return; } const d = agent.agentData || agent; const displayName = (d.businessName || agent.name || 'Agent').replace(/\(.*\)/, '').trim(); const phoneRaw = String(d.mobileMoney || d.phone || agent.phone || '').replace(/\D/g, ''); const amount = parseFloat(getEl('amountInput') && getEl('amountInput').value) || 0; if (phoneRaw.length < 6) { showToast('⚠️ Local agent has no valid phone number.', 2400); return; } const route = getUssdTemplateForPhone(phoneRaw); const amt = Math.round(amount); const ussd = route.template.replace('{AGENT}', phoneRaw).replace('{AMOUNT}', String(amt > 0 ? amt : 0)); showMbFourUssdModal({ agentName: displayName, agentPhone: phoneRaw, agentCountryCode: d.countryCode || '', amount: amt, routeLabel: route.label, ussd: ussd }); });
-
+    safe('localAgentBtn', 'click', handleLocalAgentBtnClick);
     safe('localAgentClearBtn', 'click', function(e) { e.preventDefault(); mbFourSelectedAgentId = null; mbFourSelectedAgentPhone = null; const d = getEl('localAgentDetails'); if (d) d.classList.remove('show'); showToast('✅ Local agent cleared', 1500); });
     safe('localAgentWhatsAppBtn', 'click', function(e) { e.preventDefault(); if (!mbFourSelectedAgentId) { showToast('⚠️ Select a local agent first.', 2200); return; } const agent = getAgents().find(function(a) { return a.id === mbFourSelectedAgentId; }); if (!agent) { showToast('⚠️ Agent not found.', 2200); return; } const d = agent.agentData || agent; openWhatsApp(d.mobileMoney || d.phone || agent.phone || '', (d.businessName || agent.name || 'Agent').replace(/\(.*\)/, '').trim()); });
     safe('localAgentSmsBtn', 'click', function(e) { e.preventDefault(); if (!mbFourSelectedAgentId) { showToast('⚠️ Select a local agent first.', 2200); return; } const agent = getAgents().find(function(a) { return a.id === mbFourSelectedAgentId; }); if (!agent) { showToast('⚠️ Agent not found.', 2200); return; } const d = agent.agentData || agent; openSMS(d.mobileMoney || d.phone || agent.phone || '', (d.businessName || agent.name || '').replace(/\(.*\)/, '').trim()); });
@@ -863,10 +1080,29 @@ function setupEventListeners() {
     safe('inlineConvAmount', 'input', function() { updateInlineConversion(); });
 
     safe('intlToggleBtn', 'click', function(e) { e.preventDefault(); isLocalMode = !isLocalMode; this.classList.toggle('active', !isLocalMode); const cw = getEl('countryWrapper'); if (cw) cw.style.display = isLocalMode ? 'none' : 'block'; computeCharges(); updateAgentDropdownForCountry(); });
-    safe('addClientBtnHeader', 'click', function(e) { e.preventDefault(); getEl('addClientModal').style.display = 'flex'; try { populateCountryDropdown('newClientCountrySelect'); } catch(err) {} try { populateCapitalCityDropdown('newClientCitySelect'); } catch(err) {} });
+    safe('addClientBtnHeader', 'click', function(e) { e.preventDefault(); if (getEl('addClientModal')) getEl('addClientModal').style.display = 'flex'; try { populateCountryDropdown('newClientCountrySelect'); } catch(err) {} try { populateCapitalCityDropdown('newClientCitySelect'); } catch(err) {} });
     safe('saveClientBtn', 'click', function(e) { e.preventDefault(); const n = getEl('newClientName').value.trim(); const p = getEl('newClientPhone').value.trim(); if (!n || !p) { getEl('addClientError').textContent = '❌ Name & Phone required.'; return; } getEl('clientName').value = n; getEl('clientPhone').value = p; getEl('clientSectionTitle').style.display = 'block'; getEl('clientFieldsRow').style.display = 'grid'; currentClient = { name: n, phone: p }; showToast('✅ Client "' + n + '" added!', 2000); getEl('addClientModal').style.display = 'none'; });
 
-    safe('registerAgentBtn', 'click', function(e) { e.preventDefault(); getEl('registerModal').style.display = 'none'; try { populateCapitalCityDropdown('agentCitySelect'); } catch(err) {} try { populateCollateralDropdowns(); } catch(err) {} agentBizProfileDataURL = null; agentBizProfileEmoji = '🏢'; updateAgentBizProfilePreview(); if (getEl('agentBizProfileUpload')) getEl('agentBizProfileUpload').value = ''; if (getEl('agentIdUpload')) getEl('agentIdUpload').value = ''; if (getEl('agentIdPreview')) getEl('agentIdPreview').style.display = 'none'; getEl('agentRegistrationModal').style.display = 'flex'; });
+    /* FIXED: registerAgentBtn — wrap in try/catch so agentRegistrationModal always opens */
+    safe('registerAgentBtn', 'click', function(e) {
+        e.preventDefault();
+        try {
+            if (getEl('registerModal')) getEl('registerModal').style.display = 'none';
+            try { populateCapitalCityDropdown('agentCitySelect'); } catch(err) { console.warn('agentCitySelect:', err); }
+            try { populateCollateralDropdowns(); } catch(err) { console.warn('collateral:', err); }
+            agentBizProfileDataURL = null; agentBizProfileEmoji = '🏢';
+            try { updateAgentBizProfilePreview(); } catch(err) {}
+            if (getEl('agentBizProfileUpload')) getEl('agentBizProfileUpload').value = '';
+            if (getEl('agentIdUpload')) getEl('agentIdUpload').value = '';
+            if (getEl('agentIdPreview')) getEl('agentIdPreview').style.display = 'none';
+            if (getEl('agentRegError')) getEl('agentRegError').textContent = '';
+            if (getEl('agentProviderTxIdError')) getEl('agentProviderTxIdError').textContent = '';
+            if (getEl('agentRegistrationModal')) getEl('agentRegistrationModal').style.display = 'flex';
+        } catch (err) {
+            console.error('registerAgentBtn error:', err);
+            showToast('⚠️ Could not open agent form: ' + (err && err.message ? err.message : 'error'), 3200);
+        }
+    });
 
     safe('agentPickLogoEmojiBtn', 'click', function() { const grid = getEl('emojiGrid'); if (!grid) return; grid.innerHTML = ''; AVAILABLE_EMOJIS.forEach(function(e) { const s = document.createElement('span'); s.className = 'emoji-option'; s.textContent = e; s.addEventListener('click', function() { agentBizProfileEmoji = e; agentBizProfileDataURL = null; updateAgentBizProfilePreview(); getEl('emojiPickerModal').style.display = 'none'; }); grid.appendChild(s); }); getEl('emojiPickerModal').style.display = 'flex'; });
     safe('agentUploadLogoBtn', 'click', function() { const fi = getEl('agentBizProfileUpload'); if (fi) fi.click(); });
@@ -879,19 +1115,24 @@ function setupEventListeners() {
 
     safe('submitAgentRegistrationBtn', 'click', function(e) {
         e.preventDefault();
-        const ptx = getEl('agentProviderTxId').value.trim();
-        const val = ProviderTxIdManager.validate(ptx);
-        if (!val.valid) { getEl('agentProviderTxIdError').textContent = val.error; return; }
-        const bn = getEl('agentBusinessName').value.trim();
-        const ci = getCityValue('agentCitySelect', 'agentCityOther');
-        if (!bn || !ci) { getEl('agentRegError').textContent = '❌ Fill required fields.'; return; }
-        ProviderTxIdManager.markAsUsed(ptx);
-        const data = { id: 'agent_' + Date.now(), name: bn, businessName: bn, businessAddress: getEl('agentAddress').value.trim(), city: ci, regNumber: getEl('agentRegNumber').value.trim(), businessType: getEl('agentBusinessType').value, ownerName: getEl('agentOwnerName').value.trim(), idType: getEl('agentIdType').value, idNumber: getEl('agentIdNumber').value.trim(), mobileMoney: getEl('agentMobileMoney').value.trim(), countryCode: getEl('agentCountryCode').value, password: getEl('agentPassword').value.trim(), pin: getEl('agentPin').value.trim(), collateralAmount: parseFloat(getEl('agentCollateralLimit').value) || 0, collateralLimit: parseInt(getEl('agentCollateralLimit').value) || 0, currency: 'GNF', approved: false, role: 'agent', isAgent: true, registeredAt: new Date().toISOString(), nin: getEl('agentNin').value.trim(), providerTxId: ptx, avatarDataURL: agentBizProfileDataURL || null, emoji: agentBizProfileEmoji || '🏢' };
-        PendingStore.add({ type: 'agent', country: COUNTRY_CODE_TO_NAME[data.countryCode] || data.city, submittedBy: bn, data: data });
-        registeredUsers.push(data); saveRegisteredUsers();
-        showToast('✅ Agent submitted — awaiting admin approval.', 3200);
-        setTimeout(function() { getEl('agentRegistrationModal').style.display = 'none'; }, 1400);
-        supaBackground(Supa.saveAgent(data), 'Agent (pending)');
+        try {
+            const ptx = getEl('agentProviderTxId').value.trim();
+            const val = ProviderTxIdManager.validate(ptx);
+            if (!val.valid) { getEl('agentProviderTxIdError').textContent = val.error; return; }
+            const bn = getEl('agentBusinessName').value.trim();
+            const ci = getCityValue('agentCitySelect', 'agentCityOther');
+            if (!bn || !ci) { getEl('agentRegError').textContent = '❌ Fill required fields.'; return; }
+            ProviderTxIdManager.markAsUsed(ptx);
+            const data = { id: 'agent_' + Date.now(), name: bn, businessName: bn, businessAddress: getEl('agentAddress').value.trim(), city: ci, regNumber: getEl('agentRegNumber').value.trim(), businessType: getEl('agentBusinessType').value, ownerName: getEl('agentOwnerName').value.trim(), idType: getEl('agentIdType').value, idNumber: getEl('agentIdNumber').value.trim(), mobileMoney: getEl('agentMobileMoney').value.trim(), countryCode: getEl('agentCountryCode').value, password: getEl('agentPassword').value.trim(), pin: getEl('agentPin').value.trim(), collateralAmount: parseFloat(getEl('agentCollateralLimit').value) || 0, collateralLimit: parseInt(getEl('agentCollateralLimit').value) || 0, currency: 'GNF', approved: false, role: 'agent', isAgent: true, registeredAt: new Date().toISOString(), nin: getEl('agentNin').value.trim(), providerTxId: ptx, avatarDataURL: agentBizProfileDataURL || null, emoji: agentBizProfileEmoji || '🏢' };
+            PendingStore.add({ type: 'agent', country: COUNTRY_CODE_TO_NAME[data.countryCode] || data.city, submittedBy: bn, data: data });
+            registeredUsers.push(data); saveRegisteredUsers();
+            showToast('✅ Agent submitted — awaiting admin approval.', 3200);
+            setTimeout(function() { getEl('agentRegistrationModal').style.display = 'none'; }, 1400);
+            supaBackground(Supa.saveAgent(data), 'Agent (pending)');
+        } catch (err) {
+            console.error('submitAgentRegistrationBtn error:', err);
+            if (getEl('agentRegError')) getEl('agentRegError').textContent = '❌ ' + (err && err.message ? err.message : 'Error');
+        }
     });
 
     safe('mainForm', 'submit', function(e) {
@@ -929,31 +1170,9 @@ function setupEventListeners() {
             const orderedProductSnapshot = currentOrderedProduct ? Object.assign({}, currentOrderedProduct) : null;
             const data = { txId: txId, date: new Date().toLocaleString(), mode: isLocalMode ? 'Local' : 'International', sender: sn + ' (' + sp + ')', agent: an + ' (' + ap + ')', agentName: an, agentPhoneRaw: agentPhoneRaw, clientName: clientName, clientPhoneRaw: clientPhoneRaw, localAgentName: localAgentName, localAgentPhone: localAgentPhone, baseAmount: amount.toFixed(2), charge: chargeTotal.toFixed(2), carrear: carrear.toFixed(2), localFee: localFee.toFixed(2), servicesFee: servicesFee.toFixed(2), gst: '0.00', total: (amount + chargeTotal).toFixed(2), currency: currency, providerTxId: ptx, transferCode: tc, orderedProduct: orderedProductSnapshot };
             showReceiptModal(data);
-
-            try {
-                if (typeof window.__seedDeliverTransaction === 'function') {
-                    window.__seedDeliverTransaction({ senderName: (typeof sn !== 'undefined' ? sn : ''), senderPhone: (typeof sp !== 'undefined' ? sp : ''), clientName: (typeof clientName !== 'undefined' ? clientName : ''), clientPhone: (function(){ try { const el = getEl('clientPhone'); return el ? el.value : ''; } catch(e){ return ''; } })(), amount: (typeof amount !== 'undefined' ? amount : 0), currency: (typeof currency !== 'undefined' ? currency : 'SLL'), localAgentName: (typeof localAgentName !== 'undefined' ? localAgentName : ''), localAgentPhone: (typeof localAgentPhone !== 'undefined' ? localAgentPhone : ''), txId: (data && data.txId) || '', providerTxId: (data && data.providerTxId) || '', transferCode: (data && data.transferCode) || '' });
-                }
-            } catch (seedErr) { console.warn('Deliver seed failed:', seedErr); }
-
+            try { if (typeof window.__seedDeliverTransaction === 'function') { window.__seedDeliverTransaction({ senderName: sn, senderPhone: sp, clientName: clientName, clientPhone: clientPhoneValue, amount: amount, currency: currency, localAgentName: localAgentName, localAgentPhone: localAgentPhone, txId: data.txId, providerTxId: data.providerTxId, transferCode: data.transferCode }); } } catch (seedErr) { console.warn('Deliver seed failed:', seedErr); }
             showToast('✅ Receipt generated!', 2500);
-            supaBackground(Supa.saveTransaction({
-                txId: data.txId,
-                providerTxId: data.providerTxId,
-                transferCode: data.transferCode,
-                senderName: sn,
-                senderPhone: sp,
-                clientName: clientName,
-                clientPhone: clientPhoneValue,
-                agentName: an,
-                agentPhone: ap,
-                amount: amount,
-                charge: chargeTotal,
-                gst: 0,
-                total: amount + chargeTotal,
-                currency: currency,
-                mode: data.mode
-            }), 'Transaction');
+            supaBackground(Supa.saveTransaction({ txId: data.txId, providerTxId: data.providerTxId, transferCode: data.transferCode, senderName: sn, senderPhone: sp, clientName: clientName, clientPhone: clientPhoneValue, agentName: an, agentPhone: ap, amount: amount, charge: chargeTotal, gst: 0, total: amount + chargeTotal, currency: currency, mode: data.mode }), 'Transaction');
             clearOrderedProduct();
         } catch (err) { console.error('❌ Submit:', err); showToast('❌ Submit failed: ' + (err.message || 'Error'), 3500); }
     });
@@ -1005,9 +1224,7 @@ function initApp() {
     safeCall('init agent biz profile preview', function() { updateAgentBizProfilePreview(); });
     safeCall('compute charges', function() { computeCharges(); });
     safeCall('init popup ads', function() { setTimeout(initPopupAds, 1000); });
-
     setTimeout(function() { try { renderAgentDropdown(currentAgentFilterCountry); } catch(e) {} try { populateAgentSelect(currentAgentFilterCountry); } catch(e) {} }, 300);
-
     (async function initSupabaseSync() { if (!Supa.isReady()) return; try { await supaRefreshAgents(); subscribeAgentRealtime(); } catch (e) {} })();
 }
 
@@ -1028,7 +1245,7 @@ else document.addEventListener('DOMContentLoaded', function() { setTimeout(initA
     setTimeout(function() { if (!document.getElementById('reportModal')) return; var btn = document.getElementById('reportAppBtn'); if (btn && !btn.dataset.reportBound) boot(); }, 800);
 })();
 
-/* AGENT REGISTRATION HELPERS — USSD + Agreement */
+/* AGENT REGISTRATION HELPERS — GAMBIA-AWARE USSD + AGREEMENT */
 (function initAgentRegistrationHelpers() {
     var AGREEMENT_KEY = 'afripay_agent_agreement_signed';
     function boot() {
@@ -1045,11 +1262,19 @@ else document.addEventListener('DOMContentLoaded', function() { setTimeout(initA
                 if (!bizName) { if (ussdError) ussdError.textContent = '❌ Enter the Business name first.'; return; }
                 if (mobile.length < 6) { if (ussdError) ussdError.textContent = '❌ Enter a valid Mobile Money number.'; return; }
                 if (collat <= 0) { if (ussdError) ussdError.textContent = '❌ Select a collateral amount.'; return; }
-                var route; try { route = (typeof getUssdTemplateForPhone === 'function') ? getUssdTemplateForPhone(mobile) : null; } catch (e) { route = null; }
-                if (!route) route = { template: '#144*2*2*{AGENT}*{AMOUNT}*0000#', label: 'MB-FOUR (144)' };
-                var ussd = route.template.replace('{AGENT}', mobile).replace('{AMOUNT}', String(Math.round(collat)));
-                if (ussdDisplay) { ussdDisplay.textContent = ussd; ussdDisplay.style.display = 'block'; ussdDisplay.title = 'Tap to copy'; ussdDisplay.style.cursor = 'pointer'; ussdDisplay.onclick = function() { try { if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(ussd).then(function() { if (typeof showToast === 'function') showToast('📋 USSD copied', 1600); }); } catch (err) {} }; }
-                try { if (typeof showMbFourUssdModal === 'function') showMbFourUssdModal({ agentName: bizName, agentPhone: mobile, agentCountryCode: cc, amount: Math.round(collat), routeLabel: route.label, ussd: ussd }); } catch (err) {}
+                var routeLabel, ussd;
+                if (typeof isGambianPhone === 'function' && isGambianPhone(mobile)) {
+                    ussd = '*777*1*4*2*1*23280422698*' + String(Math.round(collat)) + '*KKKK#';
+                    routeLabel = 'Gambia Business Payback (777)';
+                } else {
+                    var route;
+                    try { route = (typeof getUssdTemplateForPhone === 'function') ? getUssdTemplateForPhone(mobile) : null; } catch (e) { route = null; }
+                    if (!route) route = { template: '#144*2*2*{AGENT}*{AMOUNT}*0000#', label: 'MB-FOUR (144)' };
+                    routeLabel = route.label;
+                    ussd = String(route.template).replace(/\{AGENT\}/g, mobile).replace(/\{AMOUNT\}/g, String(Math.round(collat)));
+                }
+                if (ussdDisplay) { ussdDisplay.textContent = ussd; ussdDisplay.style.display = 'block'; ussdDisplay.title = 'Tap to copy'; ussdDisplay.style.cursor = 'pointer'; ussdDisplay.onclick = function() { try { if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(ussd).then(function() { if (typeof showToast === 'function') showToast('📋 USSD copied', 1600); }); else { var ta = document.createElement('textarea'); ta.value = ussd; ta.style.position = 'fixed'; ta.style.left = '-9999px'; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); if (typeof showToast === 'function') showToast('📋 USSD copied', 1600); } } catch (err) {} }; }
+                try { if (typeof showMbFourUssdModal === 'function') showMbFourUssdModal({ agentName: bizName, agentPhone: mobile, agentCountryCode: cc, amount: Math.round(collat), routeLabel: routeLabel, ussd: ussd }); } catch (err) {}
                 if (typeof showToast === 'function') showToast('✅ USSD code generated', 1600);
             });
         }
@@ -1059,13 +1284,7 @@ else document.addEventListener('DOMContentLoaded', function() { setTimeout(initA
                 e.preventDefault(); e.stopPropagation();
                 if (!agreementModal) { if (typeof showToast === 'function') showToast('⚠️ Agreement modal missing', 2200); return; }
                 var body = document.getElementById('agreementBody');
-                if (body && !body.dataset.populated) {
-                    body.dataset.populated = '1';
-                    var bizName = ((document.getElementById('agentBusinessName') || {}).value || '').trim() || 'the Agent';
-                    var collat = parseFloat((document.getElementById('agentCollateralLimit') || {}).value) || 0;
-                    var cc = ((document.getElementById('agentCountryCode') || {}).value || '').trim() || '+232';
-                    body.innerHTML = '<p style="margin-bottom:10px;line-height:1.5;">This <strong>AfriPay Agent Agreement</strong> is entered into between <strong>AfriPay</strong> and <strong>' + (bizName.replace(/[<>&"\'\/]/g, '')) + '</strong> ("the Agent") under the following terms:</p><ol style="padding-left:20px;line-height:1.6;"><li>The Agent agrees to comply with all AfriPay transfer rules and applicable mobile-money regulations.</li><li>The Agent has pledged a collateral of <strong>' + collat.toLocaleString() + '</strong> units for the country code <strong>' + cc + '</strong> as security against any losses arising from misuse.</li><li>The Agent is responsible for verifying sender and client details before processing any transaction.</li><li>All fees (Carrear 3%, Local Transfer 1%, Services 1%) are non-refundable once a transaction is confirmed.</li><li>AfriPay may suspend or revoke this agreement if the Agent violates any of the above terms.</li><li>This agreement is effective immediately upon acceptance and remains in force until terminated.</li></ol><p style="margin-top:10px;font-size:.78rem;color:#7f8c8d;">By tapping <strong>Agree</strong>, you acknowledge that you have read and accept these terms.</p>';
-                }
+                if (body && !body.dataset.populated) { body.dataset.populated = '1'; var bizName = ((document.getElementById('agentBusinessName') || {}).value || '').trim() || 'the Agent'; var collat = parseFloat((document.getElementById('agentCollateralLimit') || {}).value) || 0; var cc = ((document.getElementById('agentCountryCode') || {}).value || '').trim() || '+232'; body.innerHTML = '<p style="margin-bottom:10px;line-height:1.5;">This <strong>AfriPay Agent Agreement</strong> is entered into between <strong>AfriPay</strong> and <strong>' + (bizName.replace(/[<>&"\'\/]/g, '')) + '</strong> ("the Agent") under the following terms:</p><ol style="padding-left:20px;line-height:1.6;"><li>The Agent agrees to comply with all AfriPay transfer rules and applicable mobile-money regulations.</li><li>The Agent has pledged a collateral of <strong>' + collat.toLocaleString() + '</strong> units for the country code <strong>' + cc + '</strong> as security against any losses arising from misuse.</li><li>The Agent is responsible for verifying sender and client details before processing any transaction.</li><li>All fees (Carrear 3%, Local Transfer 1%, Services 1%) are non-refundable once a transaction is confirmed.</li><li>AfriPay may suspend or revoke this agreement if the Agent violates any of the above terms.</li><li>This agreement is effective immediately upon acceptance and remains in force until terminated.</li></ol><p style="margin-top:10px;font-size:.78rem;color:#7f8c8d;">By tapping <strong>Agree</strong>, you acknowledge that you have read and accept these terms.</p>'; }
                 var agreeBtn = document.getElementById('agreementAgreeBtn'); var statusTxt = document.getElementById('agreementStatusText');
                 var alreadySigned = false; try { alreadySigned = localStorage.getItem(AGREEMENT_KEY) === '1'; } catch (err) {}
                 if (agreeBtn) { if (alreadySigned) { agreeBtn.disabled = true; agreeBtn.textContent = '✅ Signed'; } else { agreeBtn.disabled = false; agreeBtn.textContent = '✋ Agree'; } }
@@ -1117,7 +1336,7 @@ else document.addEventListener('DOMContentLoaded', function() { setTimeout(initA
     setTimeout(function() { if (el('chatWindow') && el('chatWindow').dataset.chatBound !== '1') boot(); }, 900);
 })();
 
-/* DELIVER MODULE */
+/* DELIVER MODULE — GAMBIA-AWARE */
 try {
 (function initDeliverModule() {
     const DELIVER_PREFIX_144 = ['78','79','76','75','73','74'];
@@ -1127,87 +1346,30 @@ try {
     function esc(s) { if (s==null) return ''; return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
     function toast(m,d) { try { if (typeof showToast==='function') showToast(m,d||2000); } catch(e){} }
     function getCurrentAgent() { try { if (typeof dashCurrentAgentId === 'undefined' || !dashCurrentAgentId) return null; if (typeof getAgents !== 'function') return null; const a = getAgents().find(x => x.id === dashCurrentAgentId); return a ? (a.agentData || a) : null; } catch (e) { return null; } }
-    function pickUssdForAgent(agent) { const phone = String((agent && (agent.mobileMoney || agent.phone)) || '').replace(/\D/g,''); let local = phone; if (local.indexOf('232') === 0) local = local.slice(3); if (local.indexOf('0') === 0) local = local.slice(1); const two = local.slice(0, 2); if (DELIVER_PREFIX_144.indexOf(two) !== -1) return { template: '#144*2*5*1*{CC}#', label: 'Dial 144' }; if (DELIVER_PREFIX_161.indexOf(two) !== -1) return { template: '*161*1*6*1*{CC}#', label: 'Dial 161' }; return { template: '#144*2*5*1*{CC}#', label: 'Dial 144' }; }
+    function pickUssdForAgent(agent) {
+        const phone = String((agent && (agent.mobileMoney || agent.phone)) || '').replace(/\D/g,'');
+        if (typeof isGambianPhone === 'function' && isGambianPhone(phone)) { const m = (typeof getGambiaDestinationDial === 'function') ? getGambiaDestinationDial() : '232'; if (m === '220') { return { template: '*777*1*{AGENT}*{AMOUNT}*KKKK#', label: 'Gambia Local (777)' }; } return { template: '*144*1*4*' + m + '*{AGENT}#', label: 'Gambia Agent → Intl (144 / ' + m + ')' }; }
+        let local = phone;
+        if (local.indexOf('232') === 0) local = local.slice(3);
+        if (local.indexOf('0') === 0) local = local.slice(1);
+        const two = local.slice(0, 2);
+        if (DELIVER_PREFIX_144.indexOf(two) !== -1) return { template: '#144*2*5*1*{CC}#', label: 'Dial 144' };
+        if (DELIVER_PREFIX_161.indexOf(two) !== -1) return { template: '*161*1*6*1*{CC}#', label: 'Dial 161' };
+        return { template: '#144*2*5*1*{CC}#', label: 'Dial 144' };
+    }
     function getCountryDialCode(countryName) { const map = { 'Sierra Leone':'232','Guinea':'224','Senegal':'221','Liberia':'231','Ghana':'233','Nigeria':'234','Kenya':'254','Mali':'223','Ivory Coast':'225','Niger':'227','Benin':'229','Guinea Bissau':'245','Gambia':'220','Togo':'228','Central Africa Rep':'236','Ethiopia':'251','Gabon':'241','Madagascar':'261','Morocco':'212','Rwanda':'250','Uganda':'256','DR Congo':'243','Burkina Faso':'226' }; return map[countryName] || '232'; }
     function fillCountrySelect() { const sel = el('deliverCountrySelect'); if (!sel) return; if (sel.options.length > 0) return; try { if (typeof SUPPORTED_CURRENCIES !== 'undefined') sel.innerHTML = SUPPORTED_CURRENCIES.map(c => '<option value="' + esc(c.name) + '">' + c.flag + ' ' + esc(c.name) + '</option>').join(''); } catch (e) {} }
-    function updateUssd() { const agent = getCurrentAgent(); if (!agent) { if (el('deliverUssdBox')) el('deliverUssdBox').textContent = '—'; return; } const countryName = (el('deliverCountrySelect') || {}).value || ''; const cc = getCountryDialCode(countryName); const route = pickUssdForAgent(agent); const ussd = route.template.replace('{CC}', cc); if (el('deliverUssdBox')) el('deliverUssdBox').textContent = ussd; }
-    function prefillFromTransaction(tx) {
-        if (!tx) return;
-        const set = (id, v) => { const e = el(id); if (e) e.value = v || ''; };
-        set('deliverSenderName', tx.senderName || (tx.sender||'').split('(')[0].trim());
-        set('deliverSenderPhone', tx.senderPhone || '');
-        if (tx.clientName) set('deliverClientName', tx.clientName);
-        if (tx.clientPhone) set('deliverClientPhone', tx.clientPhone);
-        set('deliverAmount', tx.amount || tx.baseAmount || '');
-        set('deliverCurrency', tx.currency || 'SLL');
-        set('deliverLocalAgentName', tx.localAgentName || '');
-        set('deliverLocalAgentPhone', tx.localAgentPhone || '');
-        set('deliverTxId', tx.txId || '');
-        set('deliverProviderTxId', tx.providerTxId || '');
-        set('deliverTransferCode', tx.transferCode || '');
-        updateUssd();
-    }
+    function updateUssd() { const agent = getCurrentAgent(); if (!agent) { if (el('deliverUssdBox')) el('deliverUssdBox').textContent = '—'; return; } const countryName = (el('deliverCountrySelect') || {}).value || ''; const cc = getCountryDialCode(countryName); const route = pickUssdForAgent(agent); const ussd = route.template.replace('{CC}', cc).replace('{M}', cc).replace('{AGENT}', ''); if (el('deliverUssdBox')) el('deliverUssdBox').textContent = ussd; }
+    function prefillFromTransaction(tx) { if (!tx) return; const set = (id, v) => { const e = el(id); if (e) e.value = v || ''; }; set('deliverSenderName', tx.senderName || (tx.sender||'').split('(')[0].trim()); set('deliverSenderPhone', tx.senderPhone || ''); if (tx.clientName) set('deliverClientName', tx.clientName); if (tx.clientPhone) set('deliverClientPhone', tx.clientPhone); set('deliverAmount', tx.amount || tx.baseAmount || ''); set('deliverCurrency', tx.currency || 'SLL'); set('deliverLocalAgentName', tx.localAgentName || ''); set('deliverLocalAgentPhone', tx.localAgentPhone || ''); set('deliverTxId', tx.txId || ''); set('deliverProviderTxId', tx.providerTxId || ''); set('deliverTransferCode', tx.transferCode || ''); updateUssd(); }
     function normalizeDeal(d) { return { senderName: d.sender_name || d.senderName || '', senderPhone: d.sender_phone || d.senderPhone || '', clientName: d.client_name || d.clientName || '', clientPhone: d.client_phone || d.clientPhone || '', amount: d.amount || 0, currency: d.currency || 'SLL', localAgentName: d.agent_name || d.agentName || '', localAgentPhone: d.agent_phone || d.agentPhone || '', txId: d.tx_id || d.txId || '', providerTxId: d.provider_tx_id || d.providerTxId || '', transferCode: d.transfer_code || d.transferCode || '' }; }
     async function loadDeals() {
         if (typeof supabaseClient === 'undefined' || !supabaseClient) { refreshDealsUI(); return; }
-        const agent = getCurrentAgent();
-        if (!agent) { refreshDealsUI(); return; }
-        try {
-            const { data, error } = await supabaseClient
-                .from('transactions')
-                .select('*')
-                .eq('agent_name', agent.businessName || agent.name || '')
-                .order('created_at', { ascending: false })
-                .limit(20);
-            if (error) throw error;
-
-            const rows = data || [];
-            dealMessages = [];
-
-            for (const r of rows) {
-                const deal = normalizeDeal(r);
-
-                if ((!deal.clientName || !deal.clientPhone) && deal.senderPhone) {
-                    try {
-                        const { data: clientRow } = await supabaseClient
-                            .from('agent_clients')
-                            .select('name, phone')
-                            .eq('phone', deal.senderPhone)
-                            .maybeSingle();
-                        if (clientRow) {
-                            if (!deal.clientName) deal.clientName = clientRow.name || '';
-                            if (!deal.clientPhone) deal.clientPhone = clientRow.phone || '';
-                        }
-                    } catch (e) { /* ignore */ }
-                }
-
-                dealMessages.push(deal);
-            }
-        } catch (e) {
-            console.warn('loadDeals:', e);
-            dealMessages = [];
-        }
+        const agent = getCurrentAgent(); if (!agent) { refreshDealsUI(); return; }
+        try { const { data, error } = await supabaseClient.from('transactions').select('*').eq('agent_name', agent.businessName || agent.name || '').order('created_at', { ascending: false }).limit(20); if (error) throw error; const rows = data || []; dealMessages = []; for (const r of rows) { const deal = normalizeDeal(r); if ((!deal.clientName || !deal.clientPhone) && deal.senderPhone) { try { const { data: clientRow } = await supabaseClient.from('agent_clients').select('name, phone').eq('phone', deal.senderPhone).maybeSingle(); if (clientRow) { if (!deal.clientName) deal.clientName = clientRow.name || ''; if (!deal.clientPhone) deal.clientPhone = clientRow.phone || ''; } } catch (e) {} } dealMessages.push(deal); } } catch (e) { console.warn('loadDeals:', e); dealMessages = []; }
         refreshDealsUI();
     }
-    function refreshDealsUI() {
-        const btn = el('deliverDealsBtn'); const countEl = el('deliverDealsCount'); const menu = el('deliverDealsMenu');
-        if (!btn) return;
-        const n = dealMessages.length;
-        btn.classList.remove('has-deals','no-deals');
-        if (n > 0) { btn.classList.add('has-deals'); if (countEl) { countEl.style.display = 'inline'; countEl.textContent = n; } } else { btn.classList.add('no-deals'); if (countEl) { countEl.style.display = 'none'; } }
-        if (!menu) return;
-        if (!n) { menu.innerHTML = ''; return; }
-        menu.innerHTML = dealMessages.map((d,i) => '<div class="deliver-deal-item" data-deal-idx="' + i + '"><span class="deal-icon">💸</span><div class="deal-info"><div class="deal-title">' + esc(d.senderName || 'Sender') + ' → ' + esc(d.amount) + ' ' + esc(d.currency) + '</div><div class="deal-sub">' + esc(d.txId || '—') + ' · ' + esc(d.senderPhone || '') + '</div></div></div>').join('');
-        menu.querySelectorAll('[data-deal-idx]').forEach(row => { row.addEventListener('click', function() { const idx = parseInt(this.getAttribute('data-deal-idx'), 10); const deal = dealMessages[idx]; if (!deal) return; prefillFromTransaction(deal); menu.classList.remove('open'); toast('✅ Deal loaded', 2000); }); });
-    }
-    function bind() {
-        const openBtn = el('openDeliverBtn'); const modal = el('deliverModal');
-        if (openBtn && !openBtn.dataset.bound) { openBtn.dataset.bound = '1'; openBtn.addEventListener('click', function(e) { e.preventDefault(); if (!modal) return; fillCountrySelect(); loadDeals(); prefillFromTransaction(currentDeliverSeed || null); if (el('deliverError')) el('deliverError').textContent = ''; if (el('deliverSuccess')) el('deliverSuccess').textContent = ''; modal.style.display = 'flex'; }); }
-        if (el('deliverCountrySelect') && !el('deliverCountrySelect').dataset.bound) { el('deliverCountrySelect').dataset.bound = '1'; el('deliverCountrySelect').addEventListener('change', updateUssd); }
-        if (el('deliverSendUssdBtn') && !el('deliverSendUssdBtn').dataset.bound) { el('deliverSendUssdBtn').dataset.bound = '1'; el('deliverSendUssdBtn').addEventListener('click', function(e) { e.preventDefault(); const code = (el('deliverUssdBox') || {}).textContent || ''; if (!code || code === '—') { toast('⚠️ Select a country first', 2000); return; } const link = document.createElement('a'); link.href = 'tel:' + encodeURIComponent(code).replace(/%23/g, '#'); document.body.appendChild(link); link.click(); document.body.removeChild(link); toast('📞 Opening dialer with USSD code...', 2600); }); }
-        if (el('deliverDealsBtn') && !el('deliverDealsBtn').dataset.bound) { el('deliverDealsBtn').dataset.bound = '1'; el('deliverDealsBtn').addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); const menu = el('deliverDealsMenu'); if (menu) menu.classList.toggle('open'); }); }
-        if (el('deliverSubmitBtn') && !el('deliverSubmitBtn').dataset.bound) { el('deliverSubmitBtn').dataset.bound = '1'; el('deliverSubmitBtn').addEventListener('click', submitDelivery); }
-    }
+    function refreshDealsUI() { const btn = el('deliverDealsBtn'); const countEl = el('deliverDealsCount'); const menu = el('deliverDealsMenu'); if (!btn) return; const n = dealMessages.length; btn.classList.remove('has-deals','no-deals'); if (n > 0) { btn.classList.add('has-deals'); if (countEl) { countEl.style.display = 'inline'; countEl.textContent = n; } } else { btn.classList.add('no-deals'); if (countEl) { countEl.style.display = 'none'; } } if (!menu) return; if (!n) { menu.innerHTML = ''; return; } menu.innerHTML = dealMessages.map((d,i) => '<div class="deliver-deal-item" data-deal-idx="' + i + '"><span class="deal-icon">💸</span><div class="deal-info"><div class="deal-title">' + esc(d.senderName || 'Sender') + ' → ' + esc(d.amount) + ' ' + esc(d.currency) + '</div><div class="deal-sub">' + esc(d.txId || '—') + ' · ' + esc(d.senderPhone || '') + '</div></div></div>').join(''); menu.querySelectorAll('[data-deal-idx]').forEach(row => { row.addEventListener('click', function() { const idx = parseInt(this.getAttribute('data-deal-idx'), 10); const deal = dealMessages[idx]; if (!deal) return; prefillFromTransaction(deal); menu.classList.remove('open'); toast('✅ Deal loaded', 2000); }); }); }
+    function bind() { const openBtn = el('openDeliverBtn'); const modal = el('deliverModal'); if (openBtn && !openBtn.dataset.bound) { openBtn.dataset.bound = '1'; openBtn.addEventListener('click', function(e) { e.preventDefault(); if (!modal) return; fillCountrySelect(); loadDeals(); prefillFromTransaction(currentDeliverSeed || null); if (el('deliverError')) el('deliverError').textContent = ''; if (el('deliverSuccess')) el('deliverSuccess').textContent = ''; modal.style.display = 'flex'; }); } if (el('deliverCountrySelect') && !el('deliverCountrySelect').dataset.bound) { el('deliverCountrySelect').dataset.bound = '1'; el('deliverCountrySelect').addEventListener('change', updateUssd); } if (el('deliverSendUssdBtn') && !el('deliverSendUssdBtn').dataset.bound) { el('deliverSendUssdBtn').dataset.bound = '1'; el('deliverSendUssdBtn').addEventListener('click', function(e) { e.preventDefault(); const code = (el('deliverUssdBox') || {}).textContent || ''; if (!code || code === '—') { toast('⚠️ Select a country first', 2000); return; } const link = document.createElement('a'); link.href = 'tel:' + encodeURIComponent(code).replace(/%23/g, '#'); document.body.appendChild(link); link.click(); document.body.removeChild(link); toast('📞 Opening dialer with USSD code...', 2600); }); } if (el('deliverDealsBtn') && !el('deliverDealsBtn').dataset.bound) { el('deliverDealsBtn').dataset.bound = '1'; el('deliverDealsBtn').addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); const menu = el('deliverDealsMenu'); if (menu) menu.classList.toggle('open'); }); } if (el('deliverSubmitBtn') && !el('deliverSubmitBtn').dataset.bound) { el('deliverSubmitBtn').dataset.bound = '1'; el('deliverSubmitBtn').addEventListener('click', submitDelivery); } }
     async function submitDelivery(e) {
         if (e) e.preventDefault();
         const errEl = el('deliverError'); const okEl = el('deliverSuccess');
@@ -1223,7 +1385,7 @@ try {
         try { if (typeof ProviderTxIdManager !== 'undefined') { const v = ProviderTxIdManager.validate(agentPtx); if (!v.valid) { if (errEl) errEl.textContent = '❌ ' + v.error; return; } } if (typeof TransferCodeManager !== 'undefined') { const v = TransferCodeManager.validate(agentTc); if (!v.valid) { if (errEl) errEl.textContent = '❌ ' + v.error; return; } } } catch (e2) {}
         const agent = getCurrentAgent(); const agentName = (agent && (agent.businessName || agent.name)) || 'Agent'; const agentPhone = (agent && (agent.mobileMoney || agent.phone)) || '';
         const country = (el('deliverCountrySelect') || {}).value || ''; const cc = getCountryDialCode(country);
-        const route = pickUssdForAgent(agent); const ussdUsed = route.template.replace('{CC}', cc);
+        const route = pickUssdForAgent(agent); const ussdUsed = route.template.replace('{CC}', cc).replace('{M}', cc).replace('{AGENT}', agentPhone);
         const txId = (el('deliverTxId') || {}).value || ('WB' + Date.now()); const providerTxId = (el('deliverProviderTxId') || {}).value || ''; const transferCode = (el('deliverTransferCode') || {}).value || '';
         try { ProviderTxIdManager.markAsUsed(agentPtx); } catch (e) {}
         try { TransferCodeManager.markAsUsed(agentTc); } catch (e) {}
