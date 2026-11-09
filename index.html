@@ -15,6 +15,9 @@
 .ussd-modal-value { color: #1e3b4a; font-weight: 600; text-align: right; max-width: 62%; word-break: break-word; }
 /* Shortcut card shown at the top of the MB-FOUR picker when a product is ordered */
 #mbFourProductShortcut:hover { filter: brightness(0.97); }
+/* Multi-image tiles inside Add/Edit Biz modals */
+.biz-img-tile:hover { border-color: #2c7da0; }
+.biz-img-tile button:hover { filter: brightness(0.85); }
 </style>
 </head>
 <body>
@@ -714,11 +717,12 @@
   </div>
 </div>
 
-<div id="addBizModal" class="modal"><div class="modal-content" style="max-width:540px;">
+<div id="addBizModal" class="modal"><div class="modal-content" style="max-width:600px;">
 <h3 id="addBizTitle">🏢 Add Your Business</h3>
 <div id="addBizError" class="error-msg"></div>
 <div id="addBizSuccess" class="success-msg"></div>
 <input type="hidden" id="bizEditingId" value="" />
+
 <div class="input-group"><label>Business Name *</label><input type="text" id="bizName" /></div>
 <div class="input-group"><label>Contact Phone *</label><input type="tel" id="bizContact" /></div>
 <div class="input-group"><label>Mobile Money Phone *</label><input type="tel" id="bizMobileMoney" /></div>
@@ -728,6 +732,44 @@
 <div class="input-group"><label>City / Town *</label><div class="city-input-row"><select id="bizCitySelect"><option value="">Select city...</option></select><span class="or-text">OR</span><input type="text" id="bizCityOther" /></div></div>
 <div class="input-group"><label>Country *</label><select id="bizCountrySelect"></select></div>
 <div class="input-group"><label>Website (optional)</label><input type="url" id="bizWebsite" /></div>
+
+<!-- NEW: Product / Service Upload Grid (up to 10 images) -->
+<div class="input-group" style="border-top:1px solid #e8edf2;padding-top:10px;margin-top:8px;">
+  <label style="display:flex;justify-content:space-between;align-items:center;">
+    <span>📦 Products / Services (up to 10)</span>
+    <span id="bizImageCount" style="font-size:.72rem;color:#7f8c8d;font-weight:600;">0 / 10</span>
+  </label>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;">
+    <button type="button" class="action-btn blue" id="bizAddImageBtn" style="height:34px;font-size:.75rem;">➕ Add Image</button>
+    <button type="button" class="action-btn" id="bizClearImagesBtn" style="height:34px;font-size:.75rem;background:#95a5a6;">🗑️ Clear All</button>
+  </div>
+  <input type="file" id="bizImageInput" accept="image/*" class="hidden-input" />
+  <div id="bizImageGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;"></div>
+  <div style="font-size:.68rem;color:#7f8c8d;margin-top:6px;">Tap a thumbnail to set its name, price, kind, quality, and delivery — these become the items shoppers see in Quick Pay.</div>
+</div>
+
+<!-- NEW: Payment Panel (local or international USSD) -->
+<div id="bizPayPanel" class="input-group" style="border-top:1px solid #e8edf2;padding-top:10px;margin-top:8px;background:#f9fbfc;border-radius:8px;padding:10px;">
+  <label style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+    <span>💳 Upload / Activation Fee</span>
+    <span id="bizPayModeBadge" class="cbs-badge" style="background:#2c7da0;color:white;font-size:.68rem;">—</span>
+  </label>
+  <div class="input-group" style="margin-bottom:6px;">
+    <label style="font-size:.72rem;">Amount *</label>
+    <input type="number" id="bizPayAmount" step="any" placeholder="e.g. 10000" />
+  </div>
+  <div style="font-size:.72rem;color:#7f8c8d;margin-bottom:4px;">
+    <span id="bizPayRouteLabel">Enter the amount, then Generate.</span>
+  </div>
+  <div id="bizPayUssdBox" class="ussd-code-box" style="display:none;"></div>
+  <div id="bizPayError" class="error-msg"></div>
+  <div class="action-buttons-row" style="gap:6px;margin-top:6px;">
+    <button type="button" class="action-btn green" id="bizPayGenerateBtn" style="flex:1;height:34px;font-size:.75rem;">🔐 Generate USSD</button>
+    <button type="button" class="action-btn dial" id="bizPayDialBtn" style="flex:1;height:34px;font-size:.75rem;display:none;">📞 Dial USSD</button>
+    <button type="button" class="action-btn" id="bizPayCopyBtn" style="flex:1;height:34px;font-size:.75rem;background:#7f8c8d;display:none;">📋 Copy</button>
+  </div>
+</div>
+
 <div class="action-buttons-row" style="margin-top:8px;">
 <button type="button" class="action-btn green" id="submitAddBizBtn" style="flex:1;">📤 Submit Business</button>
 <button type="button" class="action-btn close-modal" style="background:#2c7da0;">Close</button>
