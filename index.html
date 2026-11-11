@@ -776,6 +776,35 @@
 </div>
 </div></div>
 
+<!-- NEW: Edit Biz credential gate modal -->
+<div id="editBizAuthModal" class="modal">
+  <div class="modal-content" style="max-width:400px;">
+    <h3 style="margin-bottom:8px;color:#0f2b3d;">🔐 Verify Business Credentials</h3>
+    <div id="editBizAuthHint" style="font-size:.78rem;color:#7f8c8d;margin-bottom:10px;line-height:1.45;">
+      Enter the credentials for this business to unlock editing.
+    </div>
+    <div id="editBizAuthError" class="error-msg"></div>
+    <div class="input-group">
+      <label>🏢 Business Name *</label>
+      <input type="text" id="editBizAuthName" placeholder="Exact business name" autocomplete="off" />
+    </div>
+    <div class="input-group">
+      <label>📱 Business Phone Number *</label>
+      <input type="tel" id="editBizAuthPhone" placeholder="Mobile money / contact phone" autocomplete="off" />
+    </div>
+    <div class="input-group" id="editBizAuthPinGroup">
+      <label>🔢 5-Digit PIN *</label>
+      <input type="password" id="editBizAuthPin" maxlength="5" inputmode="numeric" autocomplete="off"
+             placeholder="•••••"
+             style="text-align:center;letter-spacing:6px;font-weight:700;" />
+    </div>
+    <div class="action-buttons-row" style="margin-top:10px;">
+      <button type="button" class="action-btn green" id="editBizAuthConfirmBtn" style="flex:1;">🔓 Unlock Edit</button>
+      <button type="button" class="action-btn" id="editBizAuthCancelBtn" style="background:#95a5a6;flex:1;">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <input type="file" id="avatarUploadInput" accept="image/*" class="hidden-input" />
 
 <script src="script.js"></script>
