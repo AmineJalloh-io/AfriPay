@@ -249,7 +249,6 @@ async function supaRefreshBusinesses() {
                 Object.assign(existing, mapped);
                 if (JSON.stringify(existing) !== before) changed = true;
             } else {
-                /* NEW: remove the seeded placeholder so the cloud version takes over */
                 const seededIdx = businesses.findIndex(function (x) {
                     return String(x.name || '').toLowerCase() === String(b.name || '').toLowerCase();
                 });
@@ -303,7 +302,6 @@ window.addEventListener('storage', function (e) {
         console.log('🔄 agents synced from another tab');
     } catch (err) {}
 });
-/* NEW: listen for dashboard edits to businesses */
 window.addEventListener('storage', function (e) {
     if (e.key !== 'afripay_custom_businesses') return;
     try {
@@ -337,6 +335,58 @@ function showToast(msg, dur) {
 }
 function escapeHTML(str) { if (!str) return ''; return String(str).replace(/[&<>"'\/]/g, function(s) { return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#x27;','/':'&#x2F;' }[s]; }); }
 function supaBackground(promise, label) { if (!Supa.isReady()) return; Promise.resolve(promise).catch(function(err) { console.warn('⚠️ ' + (label || 'Sync') + ':', err && err.message); }); }
+
+function summarizeChatBody(body) {
+    const raw = String(body || '');
+    if (raw.indexOf('[img]') === 0) {
+        const bytes = Math.round((raw.length - 5) * 0.75);
+        return '[image] ' + (bytes > 1024 ? Math.round(bytes / 1024) + ' KB' : bytes + ' B');
+    }
+    if (raw.indexOf('[audio]') === 0) {
+        const bytes = Math.round((raw.length - 7) * 0.75);
+        return '[audio] ' + (bytes > 1024 ? Math.round(bytes / 1024) + ' KB' : bytes + ' B');
+    }
+    if (raw.indexOf('[video]') === 0) {
+        const bytes = Math.round((raw.length - 7) * 0.75);
+        return '[video] ' + (bytes > 1024 ? Math.round(bytes / 1024) + ' KB' : bytes + ' B');
+    }
+    return raw;
+}
+async function logChatForDashboard(payload) {
+    if (!supabaseClient) return null;
+    const shortMessage = summarizeChatBody(payload.body);
+    const base = {
+        convo_id: payload.convo_id,
+        sender_key: payload.sender_key,
+        sender_name: payload.sender_name,
+        body: payload.body
+    };
+    try {
+        const { data, error } = await supabaseClient
+            .from('chat_messages')
+            .insert(Object.assign({}, base, { message: shortMessage }))
+            .select()
+            .single();
+        if (!error && data) return data;
+        if (error && !/column .* does not exist/i.test(String(error.message || ''))) throw error;
+    } catch (e) {
+        if (!/column .* does not exist/i.test(String(e && e.message || ''))) {
+            console.warn('logChatForDashboard (with message) failed:', e);
+        }
+    }
+    try {
+        const { data, error } = await supabaseClient
+            .from('chat_messages')
+            .insert(base)
+            .select()
+            .single();
+        if (error) throw error;
+        return data;
+    } catch (e2) {
+        console.warn('logChatForDashboard (body-only) failed:', e2);
+        return null;
+    }
+}
 
 function translatePage() {
     const dict = TRANSLATIONS[currentLang] || TRANSLATIONS.en;
@@ -419,7 +469,6 @@ let currentOrderedProduct = null;
 let mbFourSelectedAgentId = null;
 let mbFourSelectedAgentPhone = null;
 
-/* State for Edit Biz credential gate */
 let pendingEditBizTarget = null;
 let pendingEditBizAttempts = 0;
 
@@ -679,9 +728,6 @@ function computeCharges() {
 }
 function updateInlineConversion() { const from = getEl('inlineConvFrom'), to = getEl('inlineConvTo'), amtEl = getEl('inlineConvAmount'), resEl = getEl('inlineConvResult'); if (!from || !to || !amtEl || !resEl) return; const amt = parseFloat(amtEl.value) || 0; const fromCur = from.value, toCur = to.value; const fromRate = FX_TO_USD[fromCur] || 1; const toRate = FX_TO_USD[toCur] || 1; const result = amt * fromRate / toRate; resEl.value = result.toFixed(2) + ' ' + toCur; }
 
-/* ============================================================ */
-/* Converter helpers                                             */
-/* ============================================================ */
 function populateConverterDropdowns() {
     const from = getEl('convFromCurrency');
     const to = getEl('convCountrySelect');
@@ -776,9 +822,6 @@ function loginUser(fullName, phoneNumber) {
 function loadCustomBusinesses() { try { customBusinesses = JSON.parse(localStorage.getItem('afripay_custom_businesses') || '[]'); } catch (e) { customBusinesses = []; } if (!Array.isArray(customBusinesses)) customBusinesses = []; }
 function saveCustomBusinesses() { try { localStorage.setItem('afripay_custom_businesses', JSON.stringify(customBusinesses)); } catch (e) {} }
 
-/* ============================================================ */
-/* MULTI-IMAGE + PAYMENT HELPERS for Add/Edit Biz                */
-/* ============================================================ */
 const BIZ_MAX_IMAGES = 10;
 let bizImagesWorking = [];
 
@@ -1281,9 +1324,8 @@ function buildGuineaUssd(destinationPhoneDigits, amount) {
 }
 function getGuineaUssdForFlow(destinationPhoneDigits, amount, flow) {
     let digits;
-    if (flow === 'collateral') {
-        digits = GUINEA_COLLATERAL_ACCOUNT;
-    } else {
+    if (flow === 'collateral') { digits = GUINEA_COLLATERAL_ACCOUNT; }
+    else {
         digits = normalizeGnPhone(destinationPhoneDigits);
         if (!digits) return null;
         if (!isGuineanPhone(destinationPhoneDigits)) return null;
@@ -1520,12 +1562,7 @@ function handleLocalAgentBtnClick(e) {
     showMbFourUssdModal({ agentName: displayName, agentPhone: phoneRaw, agentCountryCode: d.countryCode || '', amount: Math.round(amount), routeLabel: routeLabel, ussd: ussd, product: productContext });
 }
 
-/* ============================================================ */
-/* Edit Biz credential helpers                                   */
-/* ============================================================ */
-function normalizeBizPhoneForAuth(phone) {
-    return String(phone || '').replace(/\D/g, '');
-}
+function normalizeBizPhoneForAuth(phone) { return String(phone || '').replace(/\D/g, ''); }
 function resolveBizPin(target) {
     if (!target) return '';
     if (target.pin) return String(target.pin);
@@ -1537,36 +1574,48 @@ function resolveBizPhoneDisplay(target) {
     if (!target) return '';
     return target.mobileMoney || target.contact || '';
 }
+
+/* NEW: always show PIN field — the gate requires name + phone + 5-digit PIN */
 function openEditBizAuthModal(target) {
     pendingEditBizTarget = target;
     pendingEditBizAttempts = 0;
     const name = (target && target.name) || '';
     const phone = resolveBizPhoneDisplay(target);
     const hasPin = !!resolveBizPin(target);
+
     if (getEl('editBizAuthName')) getEl('editBizAuthName').value = name;
     if (getEl('editBizAuthPhone')) getEl('editBizAuthPhone').value = phone;
     if (getEl('editBizAuthPin')) getEl('editBizAuthPin').value = '';
     if (getEl('editBizAuthError')) getEl('editBizAuthError').textContent = '';
+
     const hint = getEl('editBizAuthHint');
     if (hint) {
-        if (hasPin) hint.innerHTML = '🔐 Enter the <strong>5-digit PIN</strong> to unlock editing for <strong>' + escapeHTML(name) + '</strong>.';
-        else hint.innerHTML = '🔐 This business has no PIN on file. Enter the <strong>Business Name</strong> and <strong>Business Phone</strong> exactly as registered to continue.';
+        if (hasPin) {
+            hint.innerHTML = '🔐 Enter the <strong>5-digit PIN</strong> for <strong>' + escapeHTML(name) + '</strong> to unlock editing.';
+        } else {
+            hint.innerHTML = '⚠️ This business has <strong>no PIN on file</strong> yet. Ask the owner to set one from <strong>➕ Add Biz</strong>, or set one from the admin dashboard. Until a PIN exists this business cannot be edited.';
+        }
     }
     const pinGroup = getEl('editBizAuthPinGroup');
-    if (pinGroup) pinGroup.style.display = hasPin ? 'block' : 'none';
+    if (pinGroup) pinGroup.style.display = 'block';
+
     if (getEl('editBizAuthModal')) getEl('editBizAuthModal').style.display = 'flex';
-    setTimeout(function() {
-        const focusEl = hasPin ? getEl('editBizAuthPin') : getEl('editBizAuthName');
+    setTimeout(function () {
+        const focusEl = getEl('editBizAuthPin');
         if (focusEl && focusEl.focus) focusEl.focus();
     }, 60);
 }
+
+/* NEW: PIN is mandatory; a business without a stored PIN cannot be edited */
 function confirmEditBizAuth() {
     const errEl = getEl('editBizAuthError');
     if (errEl) errEl.textContent = '';
     if (!pendingEditBizTarget) { if (errEl) errEl.textContent = '❌ No business selected.'; return; }
+
     const enteredName = ((getEl('editBizAuthName') && getEl('editBizAuthName').value) || '').trim();
     const enteredPhone = ((getEl('editBizAuthPhone') && getEl('editBizAuthPhone').value) || '').trim();
     const enteredPin = ((getEl('editBizAuthPin') && getEl('editBizAuthPin').value) || '').trim();
+
     const expectedName = String(pendingEditBizTarget.name || '').trim();
     const expectedPhone = normalizeBizPhoneForAuth(resolveBizPhoneDisplay(pendingEditBizTarget));
     const expectedPin = resolveBizPin(pendingEditBizTarget);
@@ -1585,9 +1634,16 @@ function confirmEditBizAuth() {
         } catch (e) { /* noop */ }
     }
 
+    if (!expectedPin) {
+        if (errEl) errEl.textContent = '❌ No PIN on file for this business. Use ➕ Add Biz to set one first.';
+        pendingEditBizAttempts++;
+        logAttempt(false, 'no_pin_on_file');
+        handleEditBizAuthFailure();
+        return;
+    }
+
     const nameOk = enteredName.toLowerCase() === expectedName.toLowerCase();
     const phoneOk = normalizeBizPhoneForAuth(enteredPhone) === expectedPhone;
-    const pinOk = expectedPin ? (enteredPin === expectedPin) : true;
 
     if (!nameOk) {
         if (errEl) errEl.textContent = '❌ Business name does not match.';
@@ -1603,7 +1659,14 @@ function confirmEditBizAuth() {
         handleEditBizAuthFailure();
         return;
     }
-    if (expectedPin && !pinOk) {
+    if (!/^\d{5}$/.test(enteredPin)) {
+        if (errEl) errEl.textContent = '❌ PIN must be exactly 5 digits.';
+        pendingEditBizAttempts++;
+        logAttempt(false, 'pin_format');
+        handleEditBizAuthFailure();
+        return;
+    }
+    if (enteredPin !== expectedPin) {
         if (errEl) errEl.textContent = '❌ Incorrect PIN.';
         pendingEditBizAttempts++;
         logAttempt(false, 'pin_mismatch');
@@ -1617,7 +1680,7 @@ function confirmEditBizAuth() {
     const target = pendingEditBizTarget;
     pendingEditBizTarget = null;
     pendingEditBizAttempts = 0;
-    setTimeout(function() { openEditBizModalFor(target); }, 200);
+    setTimeout(function () { openEditBizModalFor(target); }, 200);
 }
 function handleEditBizAuthFailure() {
     if (pendingEditBizAttempts >= 3) {
@@ -1632,7 +1695,6 @@ function openEditBizModalFor(target) {
     if (!target) { showToast('⚠️ Business not found.', 2200); return; }
     const cbs = Array.isArray(customBusinesses) ? customBusinesses : [];
     let targetIsSeeded = (cbs.indexOf(target) === -1);
-
     if (targetIsSeeded) {
         const clone = Object.assign({}, target, {
             id: target.id != null ? target.id : ('biz_' + Date.now()),
@@ -1640,14 +1702,9 @@ function openEditBizModalFor(target) {
             bizImages: Array.isArray(target.bizImages) ? target.bizImages.slice() : []
         });
         const existingCustom = cbs.find(function(b) { return String(b.id) === String(clone.id); });
-        if (!existingCustom) {
-            customBusinesses.push(clone);
-            saveCustomBusinesses();
-        } else {
-            target = existingCustom;
-        }
+        if (!existingCustom) { customBusinesses.push(clone); saveCustomBusinesses(); }
+        else { target = existingCustom; }
     }
-
     try { populateCountryDropdown('bizCountrySelect'); } catch (err) {}
     try { populateCapitalCityDropdown('bizCitySelect'); } catch (err) {}
     const setV = function(id, v) { const el = getEl(id); if (el) el.value = v == null ? '' : v; };
@@ -1659,11 +1716,10 @@ function openEditBizModalFor(target) {
     setV('bizIcon', target.icon || '🏪');
     setV('bizAddress', target.address || '');
     setV('bizWebsite', target.website || '');
+    setV('bizPin', target.pin || '');       /* NEW: pre-fill existing PIN in edit form */
     setV('bizCountrySelect', target.country || (currentUser && currentUser.country) || 'Sierra Leone');
     try { setCityValue('bizCitySelect', 'bizCityOther', target.city || ''); } catch (err) {}
-
     try { bizLoadImagesFromRecord(target); } catch (err) { console.warn('bizLoadImagesFromRecord:', err); }
-
     try {
         const payBox = getEl('bizPayUssdBox'); if (payBox) { payBox.textContent = ''; payBox.style.display = 'none'; }
         const dialBtn = getEl('bizPayDialBtn'); if (dialBtn) dialBtn.style.display = 'none';
@@ -1672,13 +1728,13 @@ function openEditBizModalFor(target) {
         const routeLabel = getEl('bizPayRouteLabel'); if (routeLabel) routeLabel.textContent = 'Enter the amount, then Generate.';
         const payErr = getEl('bizPayError'); if (payErr) payErr.textContent = '';
     } catch (err) {}
-
     const titleEl = getEl('addBizTitle'); if (titleEl) titleEl.textContent = '✏️ Edit Business';
     if (getEl('addBizError')) getEl('addBizError').textContent = '';
     if (getEl('addBizSuccess')) getEl('addBizSuccess').textContent = '';
     if (getEl('addBizModal')) getEl('addBizModal').style.display = 'flex';
 }
 
+/* NEW: reset PIN field so a fresh Add requires generating a new one */
 function openAddBizModal() {
     try { populateCountryDropdown('bizCountrySelect'); } catch (err) {}
     try { populateCapitalCityDropdown('bizCitySelect'); } catch (err) {}
@@ -1691,12 +1747,11 @@ function openAddBizModal() {
     resetVal('bizIcon', '🏪');
     resetVal('bizAddress', '');
     resetVal('bizWebsite', '');
+    resetVal('bizPin', '');
     resetVal('bizCountrySelect', (currentUser && currentUser.country) || 'Sierra Leone');
     try { setCityValue('bizCitySelect', 'bizCityOther', ''); } catch (err) {}
-
     bizImagesWorking = [];
     try { renderBizImageGrid(); } catch (err) {}
-
     try {
         const payBox = getEl('bizPayUssdBox'); if (payBox) { payBox.textContent = ''; payBox.style.display = 'none'; }
         const payAmt = getEl('bizPayAmount'); if (payAmt) payAmt.value = '';
@@ -1706,7 +1761,6 @@ function openAddBizModal() {
         const routeLabel = getEl('bizPayRouteLabel'); if (routeLabel) routeLabel.textContent = 'Enter the amount, then Generate.';
         const payErr = getEl('bizPayError'); if (payErr) payErr.textContent = '';
     } catch (err) {}
-
     const titleEl = getEl('addBizTitle'); if (titleEl) titleEl.textContent = '🏢 Add Your Business';
     if (getEl('addBizError')) getEl('addBizError').textContent = '';
     if (getEl('addBizSuccess')) getEl('addBizSuccess').textContent = '';
@@ -1826,39 +1880,32 @@ function setupEventListeners() {
             const cbs = Array.isArray(customBusinesses) ? customBusinesses : [];
             const seeded = (typeof businesses !== 'undefined' && Array.isArray(businesses)) ? businesses : [];
             let target = null;
-
             if (window.__pendingEditBiz) target = window.__pendingEditBiz;
             if (!target && lastSelectedBusinessId != null) {
                 target = cbs.find(function(b) { return String(b.id) === String(lastSelectedBusinessId); }) || null;
                 if (!target) target = seeded.find(function(b) { return String(b.id) === String(lastSelectedBusinessId); }) || null;
             }
             if (!target && cbs.length === 1) target = cbs[0];
-
-            if (!target && cbs.length > 1) {
-                showToast('⚠️ Tap one of your businesses in Quick Pay first, then Edit Biz', 2600);
-                return;
-            }
-            if (!target) {
-                showToast('ℹ️ No businesses yet — use ➕ Add Biz', 2400);
-                return;
-            }
+            if (!target && cbs.length > 1) { showToast('⚠️ Tap one of your businesses in Quick Pay first, then Edit Biz', 2600); return; }
+            if (!target) { showToast('ℹ️ No businesses yet — use ➕ Add Biz', 2400); return; }
             openEditBizAuthModal(target);
         } catch (err) { console.warn('editBiz:', err); showToast('⚠️ Could not start edit flow', 2200); }
     });
 
     safe('editBizAuthConfirmBtn', 'click', function(e) { e.preventDefault(); confirmEditBizAuth(); });
-    safe('editBizAuthCancelBtn', 'click', function(e) {
+    safe('editBizAuthCancelBtn', 'click', function(e) { e.preventDefault(); if (getEl('editBizAuthModal')) getEl('editBizAuthModal').style.display = 'none'; pendingEditBizTarget = null; pendingEditBizAttempts = 0; });
+    ['editBizAuthPin'].forEach(function(id) { safe(id, 'keydown', function(e) { if (e.key === 'Enter') { e.preventDefault(); confirmEditBizAuth(); } }); });
+
+    /* NEW: 🔑 Generate PIN for Add Biz */
+    safe('bizGeneratePinBtn', 'click', function(e) {
         e.preventDefault();
-        if (getEl('editBizAuthModal')) getEl('editBizAuthModal').style.display = 'none';
-        pendingEditBizTarget = null;
-        pendingEditBizAttempts = 0;
-    });
-    ['editBizAuthPin'].forEach(function(id) {
-        safe(id, 'keydown', function(e) {
-            if (e.key === 'Enter') { e.preventDefault(); confirmEditBizAuth(); }
-        });
+        const pin = String(Math.floor(10000 + Math.random() * 90000));
+        const field = getEl('bizPin');
+        if (field) field.value = pin;
+        showToast('🔑 PIN generated: ' + pin, 3200);
     });
 
+    /* NEW: submit requires a generated 5-digit PIN, and persists it */
     safe('submitAddBizBtn', 'click', function(e) {
         e.preventDefault();
         const errEl = getEl('addBizError'); const okEl = getEl('addBizSuccess');
@@ -1871,6 +1918,11 @@ function setupEventListeners() {
             if (!name) { if (errEl) errEl.textContent = '❌ Business name required.'; return; }
             if (!contact) { if (errEl) errEl.textContent = '❌ Contact phone required.'; return; }
             if (!mobileMoney) { if (errEl) errEl.textContent = '❌ Mobile money required.'; return; }
+
+            const pin = (getEl('bizPin') && getEl('bizPin').value || '').trim();
+            if (!pin) { if (errEl) errEl.textContent = '❌ Please click 🔑 Generate PIN to create a 5-digit PIN.'; return; }
+            if (!/^\d{5}$/.test(pin)) { if (errEl) errEl.textContent = '❌ PIN must be exactly 5 digits.'; return; }
+
             const editingId = getEl('bizEditingId') && getEl('bizEditingId').value;
             const city = getCityValue('bizCitySelect', 'bizCityOther');
             const icon = ((getEl('bizIcon') && getEl('bizIcon').value) || '🏪').trim() || '🏪';
@@ -1882,14 +1934,24 @@ function setupEventListeners() {
             if (editingId) {
                 const idx = customBusinesses.findIndex(function(b) { return String(b.id) === String(editingId); });
                 if (idx === -1) {
-                    savedBiz = { id: editingId, name: name, contact: contact, mobileMoney: mobileMoney, type: type, icon: icon, city: city, country: country, address: address, website: website, goods: [] };
+                    savedBiz = { id: editingId, name: name, contact: contact, mobileMoney: mobileMoney, type: type, icon: icon, city: city, country: country, address: address, website: website, goods: [], pin: pin };
                     customBusinesses.push(savedBiz);
                 } else {
-                    Object.assign(customBusinesses[idx], { name: name, contact: contact, mobileMoney: mobileMoney, type: type, icon: icon, city: city, country: country, address: address, website: website });
+                    Object.assign(customBusinesses[idx], {
+                        name: name, contact: contact, mobileMoney: mobileMoney,
+                        type: type, icon: icon, city: city, country: country,
+                        address: address, website: website, pin: pin
+                    });
                     savedBiz = customBusinesses[idx];
                 }
             } else {
-                savedBiz = { id: 'biz_' + Date.now(), name: name, contact: contact, mobileMoney: mobileMoney, type: type, icon: icon, city: city, country: country, address: address, website: website, goods: [] };
+                savedBiz = {
+                    id: 'biz_' + Date.now(),
+                    name: name, contact: contact, mobileMoney: mobileMoney,
+                    type: type, icon: icon, city: city, country: country,
+                    address: address, website: website, goods: [],
+                    pin: pin
+                };
                 customBusinesses.push(savedBiz);
             }
             try { bizCommitImagesToRecord(savedBiz); } catch (commitErr) { console.warn('bizCommitImagesToRecord:', commitErr); }
@@ -1899,8 +1961,7 @@ function setupEventListeners() {
             (async function persistBusinessToCloud() {
                 try {
                     const existingCustom = customBusinesses.find(function(b) { return String(b.id) === String(savedBiz.id); });
-                    if (existingCustom && existingCustom.pin && !savedBiz.pin) savedBiz.pin = existingCustom.pin;
-
+                    if (existingCustom && !savedBiz.pin && existingCustom.pin) savedBiz.pin = existingCustom.pin;
                     const cloud = await Supa.saveBusiness(savedBiz);
                     if (cloud) {
                         savedBiz.cloud_id = cloud.id;
@@ -1922,28 +1983,9 @@ function setupEventListeners() {
         } catch (err) { console.warn('submitAddBiz:', err); if (errEl) errEl.textContent = '❌ ' + (err && err.message ? err.message : 'Error'); }
     });
 
-    safe('bizAddImageBtn', 'click', function(e) {
-        e.preventDefault();
-        if (bizImagesWorking.length >= BIZ_MAX_IMAGES) { showToast('⚠️ Max ' + BIZ_MAX_IMAGES + ' images per business.', 2200); return; }
-        const fi = getEl('bizImageInput'); if (fi) fi.click();
-    });
-    safe('bizImageInput', 'change', function() {
-        const f = this.files && this.files[0];
-        if (!f) return;
-        resizeImageFile(f, 400, 0.82).then(function(dataUrl) {
-            const slot = bizAddImageSlot(dataUrl, { name: 'New item', price: 0, kind: 'product', quality: 'Standard', delivery: '' });
-            if (slot) { openBizImageMetaEditor(slot); }
-        }).catch(function() { showToast('⚠️ Could not process image.', 2200); });
-        this.value = '';
-    });
-    safe('bizClearImagesBtn', 'click', function(e) {
-        e.preventDefault();
-        if (bizImagesWorking.length === 0) { showToast('ℹ️ No images to clear.', 1600); return; }
-        if (!confirm('Remove all ' + bizImagesWorking.length + ' product images?')) return;
-        bizImagesWorking = [];
-        renderBizImageGrid();
-        showToast('🗑️ All images cleared', 1600);
-    });
+    safe('bizAddImageBtn', 'click', function(e) { e.preventDefault(); if (bizImagesWorking.length >= BIZ_MAX_IMAGES) { showToast('⚠️ Max ' + BIZ_MAX_IMAGES + ' images per business.', 2200); return; } const fi = getEl('bizImageInput'); if (fi) fi.click(); });
+    safe('bizImageInput', 'change', function() { const f = this.files && this.files[0]; if (!f) return; resizeImageFile(f, 400, 0.82).then(function(dataUrl) { const slot = bizAddImageSlot(dataUrl, { name: 'New item', price: 0, kind: 'product', quality: 'Standard', delivery: '' }); if (slot) { openBizImageMetaEditor(slot); } }).catch(function() { showToast('⚠️ Could not process image.', 2200); }); this.value = ''; });
+    safe('bizClearImagesBtn', 'click', function(e) { e.preventDefault(); if (bizImagesWorking.length === 0) { showToast('ℹ️ No images to clear.', 1600); return; } if (!confirm('Remove all ' + bizImagesWorking.length + ' product images?')) return; bizImagesWorking = []; renderBizImageGrid(); showToast('🗑️ All images cleared', 1600); });
 
     safe('bizPayGenerateBtn', 'click', function(e) {
         e.preventDefault();
@@ -1955,8 +1997,7 @@ function setupEventListeners() {
         try {
             const built = buildBizPaymentUssd(mm, amt);
             if (!built || !built.ussd) { if (errEl) errEl.textContent = '❌ Could not generate a USSD code for this number.'; return; }
-            const box = getEl('bizPayUssdBox');
-            if (box) { box.textContent = built.ussd; box.style.display = 'block'; }
+            const box = getEl('bizPayUssdBox'); if (box) { box.textContent = built.ussd; box.style.display = 'block'; }
             const badge = getEl('bizPayModeBadge'); if (badge) badge.textContent = built.mode === 'local' ? 'Local' : (built.mode === 'international' ? 'International' : '—');
             const route = getEl('bizPayRouteLabel'); if (route) route.textContent = built.label;
             const dialBtn = getEl('bizPayDialBtn'); if (dialBtn) { dialBtn.style.display = 'inline-flex'; dialBtn.dataset.ussd = built.ussd; }
@@ -1964,21 +2005,8 @@ function setupEventListeners() {
             showToast('✅ USSD generated', 1800);
         } catch (buildErr) { if (errEl) errEl.textContent = '❌ ' + (buildErr && buildErr.message ? buildErr.message : 'Error'); }
     });
-    safe('bizPayDialBtn', 'click', function(e) {
-        e.preventDefault();
-        const code = this.dataset.ussd || ((getEl('bizPayUssdBox') || {}).textContent || '');
-        if (!code) { showToast('⚠️ Generate a USSD code first.', 2200); return; }
-        const link = document.createElement('a');
-        link.href = 'tel:' + encodeURIComponent(code).replace(/%23/g, '#');
-        document.body.appendChild(link); link.click(); document.body.removeChild(link);
-        showToast('📞 Opening dialer with USSD code...', 2400);
-    });
-    safe('bizPayCopyBtn', 'click', function(e) {
-        e.preventDefault();
-        const code = this.dataset.ussd || ((getEl('bizPayUssdBox') || {}).textContent || '');
-        if (!code) { showToast('⚠️ Generate a USSD code first.', 2200); return; }
-        if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(code).then(function() { showToast('✅ USSD copied', 2000); }).catch(function() { fallbackCopy(code); }); } else fallbackCopy(code);
-    });
+    safe('bizPayDialBtn', 'click', function(e) { e.preventDefault(); const code = this.dataset.ussd || ((getEl('bizPayUssdBox') || {}).textContent || ''); if (!code) { showToast('⚠️ Generate a USSD code first.', 2200); return; } const link = document.createElement('a'); link.href = 'tel:' + encodeURIComponent(code).replace(/%23/g, '#'); document.body.appendChild(link); link.click(); document.body.removeChild(link); showToast('📞 Opening dialer with USSD code...', 2400); });
+    safe('bizPayCopyBtn', 'click', function(e) { e.preventDefault(); const code = this.dataset.ussd || ((getEl('bizPayUssdBox') || {}).textContent || ''); if (!code) { showToast('⚠️ Generate a USSD code first.', 2200); return; } if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(code).then(function() { showToast('✅ USSD copied', 2000); }).catch(function() { fallbackCopy(code); }); } else fallbackCopy(code); });
 
     safe('agentPickLogoEmojiBtn', 'click', function() { const grid = getEl('emojiGrid'); if (!grid) return; grid.innerHTML = ''; AVAILABLE_EMOJIS.forEach(function(e) { const s = document.createElement('span'); s.className = 'emoji-option'; s.textContent = e; s.addEventListener('click', function() { agentBizProfileEmoji = e; agentBizProfileDataURL = null; updateAgentBizProfilePreview(); getEl('emojiPickerModal').style.display = 'none'; }); grid.appendChild(s); }); getEl('emojiPickerModal').style.display = 'flex'; });
     safe('agentUploadLogoBtn', 'click', function() { const fi = getEl('agentBizProfileUpload'); if (fi) fi.click(); });
@@ -2202,10 +2230,56 @@ else document.addEventListener('DOMContentLoaded', function() { setTimeout(initA
     function supaReady() { try { return typeof Supa !== 'undefined' && Supa.isReady && Supa.isReady() && typeof supabaseClient !== 'undefined' && supabaseClient; } catch (e) { return false; } }
     async function ensureConversation(keyA, keyB) { const convoId = buildConvoId(keyA, keyB); if (!supaReady()) return { convo_id: convoId, participant_a: keyA, participant_b: keyB }; try { const { data: existing } = await supabaseClient.from('chat_conversations').select('*').eq('convo_id', convoId).maybeSingle(); if (existing) return existing; const { data, error } = await supabaseClient.from('chat_conversations').insert({ convo_id: convoId, participant_a: keyA, participant_b: keyB }).select().single(); if (error) throw error; return data; } catch (e) { return { convo_id: convoId, participant_a: keyA, participant_b: keyB }; } }
     async function fetchMessages(convoId) { if (!supaReady()) { try { return JSON.parse(localStorage.getItem('chat_local_' + convoId) || '[]'); } catch (e) { return []; } } try { const { data, error } = await supabaseClient.from('chat_messages').select('*').eq('convo_id', convoId).order('created_at', { ascending: true }).limit(300); if (error) throw error; return data || []; } catch (e) { return []; } }
-    function renderMessage(msg) { const mine = msg.sender_key === currentUserKey; const wrap = document.createElement('div'); wrap.className = 'chat-msg ' + (mine ? 'mine' : 'theirs'); const body = msg.body || ''; let bodyHtml = ''; let m; if ((m = body.match(/^\[img\](.+)$/))) bodyHtml = '<img class="chat-img" src="' + esc(m[1]) + '" alt="image" />'; else if ((m = body.match(/^\[audio\](.+)$/))) bodyHtml = '<audio controls src="' + esc(m[1]) + '"></audio>'; else if ((m = body.match(/^\[video\](.+)$/))) bodyHtml = '<video controls src="' + esc(m[1]) + '"></video>'; else bodyHtml = esc(body).replace(/\n/g, '<br>'); wrap.innerHTML = '<div class="msg-head"><strong>' + esc(msg.sender_name || (mine ? 'You' : 'User')) + '</strong> · ' + esc(fmtTime(msg.created_at)) + '</div><div class="msg-body">' + bodyHtml + '</div>'; if (msg.id) wrap.dataset.msgId = msg.id; return wrap; }
+    function renderMessage(msg) { const mine = msg.sender_key === currentUserKey; const wrap = document.createElement('div'); wrap.className = 'chat-msg ' + (mine ? 'mine' : 'theirs'); const body = msg.body || msg.message || ''; let bodyHtml = ''; let m; if ((m = body.match(/^\[img\](.+)$/))) bodyHtml = '<img class="chat-img" src="' + esc(m[1]) + '" alt="image" />'; else if ((m = body.match(/^\[audio\](.+)$/))) bodyHtml = '<audio controls src="' + esc(m[1]) + '"></audio>'; else if ((m = body.match(/^\[video\](.+)$/))) bodyHtml = '<video controls src="' + esc(m[1]) + '"></video>'; else bodyHtml = esc(body).replace(/\n/g, '<br>'); wrap.innerHTML = '<div class="msg-head"><strong>' + esc(msg.sender_name || (mine ? 'You' : 'User')) + '</strong> · ' + esc(fmtTime(msg.created_at)) + '</div><div class="msg-body">' + bodyHtml + '</div>'; if (msg.id) wrap.dataset.msgId = msg.id; return wrap; }
     async function paintMessages() { const list = el('chatMessages'); if (!list) return; const hint = el('chatEmptyHint'); if (!currentConvo) { list.innerHTML = ''; if (hint) { hint.style.display = 'block'; list.appendChild(hint); } return; } if (hint) hint.style.display = 'none'; list.innerHTML = '<div style="text-align:center;color:#95a5a6;font-size:.75rem;padding:8px;">Loading…</div>'; const msgs = await fetchMessages(currentConvo.convoId); list.innerHTML = ''; if (!msgs.length) list.innerHTML = '<div style="text-align:center;color:#95a5a6;font-size:.78rem;padding:20px;">No messages yet. Say hello 👋</div>'; else msgs.forEach(m => list.appendChild(renderMessage(m))); list.scrollTop = list.scrollHeight; }
     function subscribeRealtime(convoId) { if (unsubRealtime) { try { unsubRealtime(); } catch (e) {} unsubRealtime = null; } if (!supaReady() || !convoId) return; try { const channel = supabaseClient.channel('chat:' + convoId).on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_messages', filter: 'convo_id=eq.' + convoId }, (payload) => { const list = el('chatMessages'); if (!list || !payload || !payload.new) return; if (list.querySelector('[data-msg-id="' + payload.new.id + '"]')) return; const node = renderMessage(payload.new); node.dataset.msgId = payload.new.id; const hintNode = list.querySelector('div[style*="No messages"]'); if (hintNode) hintNode.remove(); list.appendChild(node); list.scrollTop = list.scrollHeight; }).subscribe(); unsubRealtime = () => { try { supabaseClient.removeChannel(channel); } catch (e) {} }; } catch (e) {} }
-    async function sendMessage(rawBody) { const body = (rawBody || '').trim(); if (!body) { toast('⚠️ Type a message first', 1500); return; } if (!currentConvo) { toast('⚠️ Select a conversation first', 2000); return; } const convoId = currentConvo.convoId; const payload = { convo_id: convoId, sender_key: currentUserKey, sender_name: currentUserName, body: body }; const list = el('chatMessages'); if (list) { const emptyHint = list.querySelector('div[style*="No messages"]'); if (emptyHint) emptyHint.remove(); const optimistic = renderMessage({ sender_key: currentUserKey, sender_name: currentUserName, body: body, created_at: new Date().toISOString() }); list.appendChild(optimistic); list.scrollTop = list.scrollHeight; } if (supaReady()) { try { const { data, error } = await supabaseClient.from('chat_messages').insert(payload).select().single(); if (error) throw error; if (list && data && data.id) { const nodes = list.querySelectorAll('.chat-msg'); const last = nodes[nodes.length - 1]; if (last && !last.dataset.msgId) last.dataset.msgId = data.id; } try { await supabaseClient.from('chat_conversations').update({ last_message: body, last_message_at: new Date().toISOString() }).eq('convo_id', convoId); } catch (e2) {} } catch (e) { const arr = JSON.parse(localStorage.getItem('chat_local_' + convoId) || '[]'); arr.push({ id: 'local_' + Date.now(), ...payload, created_at: new Date().toISOString() }); localStorage.setItem('chat_local_' + convoId, JSON.stringify(arr)); } } else { const arr = JSON.parse(localStorage.getItem('chat_local_' + convoId) || '[]'); arr.push({ id: 'local_' + Date.now(), ...payload, created_at: new Date().toISOString() }); localStorage.setItem('chat_local_' + convoId, JSON.stringify(arr)); } }
+    async function sendMessage(rawBody) {
+        const body = (rawBody || '').trim();
+        if (!body) { toast('⚠️ Type a message first', 1500); return; }
+        if (!currentConvo) { toast('⚠️ Select a conversation first', 2000); return; }
+        const convoId = currentConvo.convoId;
+        const payload = { convo_id: convoId, sender_key: currentUserKey, sender_name: currentUserName, body: body };
+        const list = el('chatMessages');
+        if (list) {
+            const emptyHint = list.querySelector('div[style*="No messages"]');
+            if (emptyHint) emptyHint.remove();
+            const optimistic = renderMessage({ sender_key: currentUserKey, sender_name: currentUserName, body: body, created_at: new Date().toISOString() });
+            list.appendChild(optimistic);
+            list.scrollTop = list.scrollHeight;
+        }
+        if (supaReady()) {
+            let saved = false;
+            try {
+                const data = await logChatForDashboard(payload);
+                if (data && data.id) {
+                    saved = true;
+                    if (list) {
+                        const nodes = list.querySelectorAll('.chat-msg');
+                        const last = nodes[nodes.length - 1];
+                        if (last && !last.dataset.msgId) last.dataset.msgId = data.id;
+                    }
+                    try {
+                        await supabaseClient.from('chat_conversations').update({
+                            last_message: body,
+                            last_message_at: new Date().toISOString()
+                        }).eq('convo_id', convoId);
+                    } catch (e2) {}
+                }
+            } catch (e) {
+                console.warn('sendMessage → cloud failed:', e);
+            }
+            if (!saved) {
+                const arr = JSON.parse(localStorage.getItem('chat_local_' + convoId) || '[]');
+                arr.push({ id: 'local_' + Date.now(), ...payload, created_at: new Date().toISOString() });
+                localStorage.setItem('chat_local_' + convoId, JSON.stringify(arr));
+                try { if (typeof showToast === 'function') showToast('⚠️ Saved locally — cloud sync failed', 'warn', 3000); } catch (e) {}
+            }
+        } else {
+            const arr = JSON.parse(localStorage.getItem('chat_local_' + convoId) || '[]');
+            arr.push({ id: 'local_' + Date.now(), ...payload, created_at: new Date().toISOString() });
+            localStorage.setItem('chat_local_' + convoId, JSON.stringify(arr));
+        }
+    }
     async function openConversation(opts) { currentConvo = opts; const contactEl = el('chatContact'); if (contactEl) contactEl.textContent = opts.title || 'Conversation'; await paintMessages(); subscribeRealtime(opts.convoId); const inp = el('chatInput'); if (inp) inp.focus(); }
     async function openDirectChat(targetKey, targetName) { const conv = await ensureConversation(currentUserKey, targetKey); await openConversation({ convoId: conv.convo_id, title: targetName || targetKey, kind: 'direct', targetKey: targetKey, targetName: targetName }); }
     async function openGroupChat(kind) { const convoId = 'group_' + kind; const titles = { agents: '🏢 All Agents', users: '👤 All Users', clients: '👥 All Clients', developer: '🧑‍💻 Direct Developer' }; if (kind === 'developer') { await openDirectChat(DEVELOPER_KEY, DEVELOPER_NAME); return; } if (supaReady()) { try { const { data: existing } = await supabaseClient.from('chat_conversations').select('*').eq('convo_id', convoId).maybeSingle(); if (!existing) await supabaseClient.from('chat_conversations').insert({ convo_id: convoId, participant_a: convoId, participant_b: currentUserKey }); } catch (e) {} } await openConversation({ convoId: convoId, title: titles[kind] || ('Group: ' + kind), kind: 'group-' + kind, targetKey: convoId, targetName: titles[kind] }); }
