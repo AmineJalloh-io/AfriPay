@@ -733,6 +733,16 @@
 <div class="input-group"><label>Country *</label><select id="bizCountrySelect"></select></div>
 <div class="input-group"><label>Website (optional)</label><input type="url" id="bizWebsite" /></div>
 
+<!-- NEW: 🔐 Edit Biz PIN (5 digits) — required to save -->
+<div class="input-group">
+  <label>🔐 Edit Biz PIN (5 digits) *</label>
+  <div style="display:flex;gap:6px;align-items:center;">
+    <input type="text" id="bizPin" maxlength="5" inputmode="numeric" readonly placeholder="•••••" style="flex:1;letter-spacing:6px;font-weight:700;text-align:center;background:#f8fafc;" />
+    <button type="button" class="action-btn green" id="bizGeneratePinBtn" style="height:34px;font-size:.78rem;white-space:nowrap;">🔑 Generate PIN</button>
+  </div>
+  <div style="font-size:.68rem;color:#7f8c8d;margin-top:4px;">This 5-digit PIN is required when a user later taps <strong>✏️ Edit Biz</strong> for this business.</div>
+</div>
+
 <!-- NEW: Product / Service Upload Grid (up to 10 images) -->
 <div class="input-group" style="border-top:1px solid #e8edf2;padding-top:10px;margin-top:8px;">
   <label style="display:flex;justify-content:space-between;align-items:center;">
@@ -748,7 +758,7 @@
   <div style="font-size:.68rem;color:#7f8c8d;margin-top:6px;">Tap a thumbnail to set its name, price, kind, quality, and delivery — these become the items shoppers see in Quick Pay.</div>
 </div>
 
-<!-- NEW: Payment Panel (local or international USSD) -->
+<!-- Product / Service Payment Panel -->
 <div id="bizPayPanel" class="input-group" style="border-top:1px solid #e8edf2;padding-top:10px;margin-top:8px;background:#f9fbfc;border-radius:8px;padding:10px;">
   <label style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
     <span>💳 Upload / Activation Fee</span>
@@ -776,7 +786,7 @@
 </div>
 </div></div>
 
-<!-- NEW: Edit Biz credential gate modal -->
+<!-- Edit Biz credential gate modal -->
 <div id="editBizAuthModal" class="modal">
   <div class="modal-content" style="max-width:400px;">
     <h3 style="margin-bottom:8px;color:#0f2b3d;">🔐 Verify Business Credentials</h3>
