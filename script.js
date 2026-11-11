@@ -64,7 +64,84 @@ const Supa = {
     async saveUser(u) { if (!supabaseClient) return null; try { const { data, error } = await supabaseClient.from('users').upsert({ local_id: u.id || null, name: u.name, phone: u.phone, address: u.address || null, city: u.city || null, country: u.country || null, emoji: u.emoji || '👤', avatar_data_url: u.avatarDataURL || null, role: u.role || 'user' }, { onConflict: 'phone' }).select().single(); if (error) throw error; return data; } catch (e) { return null; } },
     async saveAgent(a) { if (!supabaseClient) return null; try { const { data, error } = await supabaseClient.from('agents').upsert({ business_name: a.businessName, business_address: a.businessAddress || null, city: a.city || null, reg_number: a.regNumber || null, business_type: a.businessType || null, owner_name: a.ownerName || null, id_type: a.idType || null, id_number: a.idNumber || null, mobile_money: a.mobileMoney || null, country_code: a.countryCode || null, password: a.password || null, pin: a.pin || null, collateral_amount: a.collateralAmount || 0, collateral_limit: a.collateralLimit || 0, currency: a.currency || 'SLL', approved: a.approved === true, status: a.approved ? 'active' : 'pending', provider_tx_id: a.providerTxId || null, nin: a.nin || null, emoji: a.emoji || '🏢', avatar_data_url: a.avatarDataURL || null }, { onConflict: 'business_name' }).select().single(); if (error) throw error; return data; } catch (e) { return null; } },
     async getAgents() { if (!supabaseClient) return null; try { const { data, error } = await supabaseClient.from('agents').select('*').eq('approved', true); if (error) throw error; return data || []; } catch (e) { return null; } },
-    async saveBusiness(b) { if (!supabaseClient) return null; try { const { data, error } = await supabaseClient.from('businesses').upsert({ local_id: typeof b.id === 'number' ? String(b.id) : (b.id || null), name: b.name, contact: b.contact || null, mobile_money: b.mobileMoney || null, type: b.type || null, icon: b.icon || '🏪', website: b.website || null, address: b.address || null, city: b.city || null, country: b.country || null }, { onConflict: 'name' }).select().single(); if (error) throw error; return data; } catch (e) { return null; } },
+    async saveBusiness(b) {
+        if (!supabaseClient) return null;
+        try {
+            const { data, error } = await supabaseClient.from('businesses').upsert({
+                local_id: typeof b.id === 'number' ? String(b.id) : (b.id || null),
+                name: b.name,
+                contact: b.contact || null,
+                mobile_money: b.mobileMoney || null,
+                type: b.type || null,
+                icon: b.icon || '🏪',
+                website: b.website || null,
+                address: b.address || null,
+                city: b.city || null,
+                country: b.country || null,
+                pin: b.pin || null,
+                biz_images: Array.isArray(b.bizImages) ? b.bizImages : (Array.isArray(b.goods) && b.goods.length && b.goods[0] && b.goods[0].image ? b.goods : []),
+                goods: Array.isArray(b.goods) ? b.goods : [],
+                owner_phone: b.ownerPhone || b.mobileMoney || null,
+                owner_name: b.ownerName || null,
+                updated_at: new Date().toISOString()
+            }, { onConflict: 'name' }).select().single();
+            if (error) throw error;
+            return data;
+        } catch (e) {
+            console.warn('Supa.saveBusiness:', e && e.message);
+            return null;
+        }
+    },
+    async getBusinesses() {
+        if (!supabaseClient) return null;
+        try {
+            const { data, error } = await supabaseClient
+                .from('businesses')
+                .select('*')
+                .order('updated_at', { ascending: false })
+                .limit(500);
+            if (error) throw error;
+            return data || [];
+        } catch (e) {
+            console.warn('Supa.getBusinesses:', e && e.message);
+            return null;
+        }
+    },
+    async getBusinessByPin(businessName) {
+        if (!supabaseClient || !businessName) return null;
+        try {
+            const { data, error } = await supabaseClient
+                .from('businesses')
+                .select('*')
+                .ilike('name', businessName)
+                .maybeSingle();
+            if (error) throw error;
+            return data || null;
+        } catch (e) {
+            console.warn('Supa.getBusinessByPin:', e && e.message);
+            return null;
+        }
+    },
+    async logEditBizAuth(entry) {
+        if (!supabaseClient) return null;
+        try {
+            const { data, error } = await supabaseClient.from('edit_biz_auth_log').insert({
+                business_id: entry.businessId ? String(entry.businessId) : null,
+                business_name: entry.businessName || null,
+                attempted_name: entry.attemptedName || null,
+                attempted_phone: entry.attemptedPhone || null,
+                success: !!entry.success,
+                failure_reason: entry.failureReason || null,
+                attempts_in_session: parseInt(entry.attemptsInSession, 10) || 1,
+                device_info: entry.deviceInfo || (typeof navigator !== 'undefined' ? navigator.userAgent : null)
+            }).select().single();
+            if (error) throw error;
+            return data;
+        } catch (e) {
+            console.warn('Supa.logEditBizAuth:', e && e.message);
+            return null;
+        }
+    },
     async saveTransaction(t) {
         if (!supabaseClient) return null;
         try {
@@ -138,6 +215,60 @@ async function supaRefreshAgents() {
     } catch (e) { console.warn('supaRefreshAgents:', e && e.message); return false; }
 }
 
+/* CLOUD BUSINESSES SYNC */
+async function supaRefreshBusinesses() {
+    if (!Supa.isReady()) return false;
+    try {
+        const cloudBiz = await Supa.getBusinesses();
+        if (!Array.isArray(cloudBiz) || cloudBiz.length === 0) return false;
+        let changed = false;
+        cloudBiz.forEach(function (b) {
+            let existing = customBusinesses.find(function (x) { return x.cloud_id === b.id; });
+            if (!existing) existing = customBusinesses.find(function (x) { return String(x.name || '').toLowerCase() === String(b.name || '').toLowerCase(); });
+            const mapped = {
+                id: existing ? existing.id : ('biz_cloud_' + b.id),
+                cloud_id: b.id,
+                name: b.name,
+                contact: b.contact || '',
+                mobileMoney: b.mobile_money || b.owner_phone || '',
+                type: b.type || 'Other',
+                icon: b.icon || '🏪',
+                website: b.website || '',
+                address: b.address || '',
+                city: b.city || '',
+                country: b.country || '',
+                pin: b.pin || null,
+                goods: Array.isArray(b.goods) ? b.goods : [],
+                bizImages: Array.isArray(b.biz_images) ? b.biz_images : [],
+                ownerName: b.owner_name || '',
+                ownerPhone: b.owner_phone || '',
+                updated_at: b.updated_at || null
+            };
+            if (existing) {
+                const before = JSON.stringify(existing);
+                Object.assign(existing, mapped);
+                if (JSON.stringify(existing) !== before) changed = true;
+            } else {
+                /* NEW: remove the seeded placeholder so the cloud version takes over */
+                const seededIdx = businesses.findIndex(function (x) {
+                    return String(x.name || '').toLowerCase() === String(b.name || '').toLowerCase();
+                });
+                if (seededIdx !== -1) businesses.splice(seededIdx, 1);
+                customBusinesses.push(mapped);
+                changed = true;
+            }
+        });
+        if (changed) {
+            saveCustomBusinesses();
+            try { renderBusinessStrip(); } catch (e) {}
+        }
+        return changed;
+    } catch (e) {
+        console.warn('supaRefreshBusinesses:', e && e.message);
+        return false;
+    }
+}
+
 function subscribeAgentRealtime() {
     if (!Supa.isReady()) return;
     try {
@@ -145,6 +276,21 @@ function subscribeAgentRealtime() {
         window.__agentRealtimeChannel = supabaseClient.channel('agents-live').on('postgres_changes', { event: '*', schema: 'public', table: 'agents' }, function () { console.log('📡 agents table changed'); supaRefreshAgents(); }).subscribe();
         console.log('✅ Subscribed to agents realtime');
     } catch (e) { console.warn('subscribeAgentRealtime:', e && e.message); }
+}
+
+function subscribeBusinessRealtime() {
+    if (!Supa.isReady()) return;
+    try {
+        if (window.__businessRealtimeChannel) { try { supabaseClient.removeChannel(window.__businessRealtimeChannel); } catch (e) {} }
+        window.__businessRealtimeChannel = supabaseClient
+            .channel('businesses-live')
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'businesses' }, function () {
+                console.log('📡 businesses table changed');
+                supaRefreshBusinesses();
+            })
+            .subscribe();
+        console.log('✅ Subscribed to businesses realtime');
+    } catch (e) { console.warn('subscribeBusinessRealtime:', e && e.message); }
 }
 
 window.addEventListener('storage', function (e) {
@@ -157,8 +303,18 @@ window.addEventListener('storage', function (e) {
         console.log('🔄 agents synced from another tab');
     } catch (err) {}
 });
+/* NEW: listen for dashboard edits to businesses */
+window.addEventListener('storage', function (e) {
+    if (e.key !== 'afripay_custom_businesses') return;
+    try {
+        loadCustomBusinesses();
+        renderBusinessStrip();
+        console.log('🔄 businesses synced from dashboard tab');
+    } catch (err) { console.warn('storage-businesses:', err); }
+});
 
 setInterval(function () { if (Supa.isReady()) supaRefreshAgents(); }, 30000);
+setInterval(function () { if (Supa.isReady()) supaRefreshBusinesses(); }, 45000);
 
 /* ============================================================ */
 /* TRANSLATIONS                                                  */
@@ -262,6 +418,10 @@ let dpImageDataURL = null;
 let currentOrderedProduct = null;
 let mbFourSelectedAgentId = null;
 let mbFourSelectedAgentPhone = null;
+
+/* State for Edit Biz credential gate */
+let pendingEditBizTarget = null;
+let pendingEditBizAttempts = 0;
 
 const FEE_CARREAR = 0.03;
 const FEE_LOCAL = 0.01;
@@ -520,29 +680,21 @@ function computeCharges() {
 function updateInlineConversion() { const from = getEl('inlineConvFrom'), to = getEl('inlineConvTo'), amtEl = getEl('inlineConvAmount'), resEl = getEl('inlineConvResult'); if (!from || !to || !amtEl || !resEl) return; const amt = parseFloat(amtEl.value) || 0; const fromCur = from.value, toCur = to.value; const fromRate = FX_TO_USD[fromCur] || 1; const toRate = FX_TO_USD[toCur] || 1; const result = amt * fromRate / toRate; resEl.value = result.toFixed(2) + ' ' + toCur; }
 
 /* ============================================================ */
-/* FIX: Converter helpers that were referenced but never defined */
-/* (caused a ReferenceError that aborted setupEventListeners)    */
+/* Converter helpers                                             */
 /* ============================================================ */
 function populateConverterDropdowns() {
     const from = getEl('convFromCurrency');
     const to = getEl('convCountrySelect');
     if (!from || !to) return;
-
     const curCodes = Object.keys(FX_TO_USD);
     if (!from.options.length) {
-        from.innerHTML = curCodes.map(function (c) {
-            return '<option value="' + c + '">' + c + '</option>';
-        }).join('');
+        from.innerHTML = curCodes.map(function (c) { return '<option value="' + c + '">' + c + '</option>'; }).join('');
     }
     if (!to.options.length) {
         if (typeof SUPPORTED_CURRENCIES !== 'undefined') {
-            to.innerHTML = SUPPORTED_CURRENCIES.map(function (c) {
-                return '<option value="' + c.currency + '">' + c.flag + ' ' + c.name + ' (' + c.currency + ')</option>';
-            }).join('');
+            to.innerHTML = SUPPORTED_CURRENCIES.map(function (c) { return '<option value="' + c.currency + '">' + c.flag + ' ' + c.name + ' (' + c.currency + ')</option>'; }).join('');
         } else {
-            to.innerHTML = curCodes.map(function (c) {
-                return '<option value="' + c + '">' + c + '</option>';
-            }).join('');
+            to.innerHTML = curCodes.map(function (c) { return '<option value="' + c + '">' + c + '</option>'; }).join('');
         }
     }
     try { from.value = getUserCurrency(); } catch (e) {}
@@ -554,20 +706,17 @@ function updateConverterModal() {
     const toEl = getEl('convCountrySelect');
     const amtEl = getEl('convAmount');
     if (!fromEl || !toEl || !amtEl) return;
-
     const amount = parseFloat(amtEl.value) || 0;
     const fromCur = fromEl.value || 'SLL';
     const toCur = toEl.value || 'SLL';
     const fromRate = FX_TO_USD[fromCur] || 1;
     const toRate = FX_TO_USD[toCur] || 1;
-
     const carrear = amount * FEE_CARREAR;
     const local = amount * FEE_LOCAL;
     const services = amount * FEE_SERVICES;
     const chargeTotal = carrear + local + services;
     const total = amount + chargeTotal;
     const recipient = (amount * fromRate) / toRate;
-
     const set = function (id, v) { const e = getEl(id); if (e) e.textContent = v; };
     set('convBase', amount.toFixed(2) + ' ' + fromCur);
     set('convCarrear', carrear.toFixed(2) + ' ' + fromCur);
@@ -614,9 +763,6 @@ function showLoggedOutUI() { try { if (getEl('authButtons')) getEl('authButtons'
 function updateAvatarDisplay(user) { const em = getEl('userAvatarEmoji'), img = getEl('userAvatarImg'); if (!em || !img) return; if (user && user.avatarDataURL) { em.style.display = 'none'; img.style.display = 'block'; img.src = user.avatarDataURL; } else if (user && user.emoji) { em.style.display = 'inline'; img.style.display = 'none'; em.innerText = user.emoji; } else { em.style.display = 'inline'; img.style.display = 'none'; em.innerText = '👤'; } }
 function updateProfileAvatarDisplay(user) { const em = getEl('profileAvatarEmoji'), img = getEl('profileAvatarImg'); if (!em || !img) return; if (user && user.avatarDataURL) { em.style.display = 'none'; img.style.display = 'block'; img.src = user.avatarDataURL; } else if (user && user.emoji) { em.style.display = 'inline'; img.style.display = 'none'; em.innerText = user.emoji; } else { em.style.display = 'inline'; img.style.display = 'none'; em.innerText = '👤'; } }
 
-
-
-
 function loginUser(fullName, phoneNumber) {
     const name = fullName.trim(), phone = phoneNumber.trim();
     if (!name || !phone) { if (getEl('loginError')) getEl('loginError').innerHTML = '❌ Enter both fields'; return false; }
@@ -632,7 +778,6 @@ function saveCustomBusinesses() { try { localStorage.setItem('afripay_custom_bus
 
 /* ============================================================ */
 /* MULTI-IMAGE + PAYMENT HELPERS for Add/Edit Biz                */
-/* Used by the Add Biz / Edit Biz modals (upload grid + USSD).   */
 /* ============================================================ */
 const BIZ_MAX_IMAGES = 10;
 let bizImagesWorking = [];
@@ -747,11 +892,12 @@ function buildBizPaymentUssd(mobileMoney, amount) {
 }
 
 function getAllBusinesses() { return businesses.concat(customBusinesses); }
-function renderBusinessStrip() { const c = getEl('businessIconsContainer'); if (!c) return; c.innerHTML = ''; getAllBusinesses().forEach(function(biz) { const div = document.createElement('div'); div.className = 'business-item'; div.innerHTML = '<div class="business-icon-img">' + (biz.icon || '🏪') + '</div><div class="business-name">' + escapeHTML(biz.name) + '</div><div class="business-category">' + escapeHTML(biz.type) + '</div>'; div.addEventListener('click', function() { lastSelectedBusinessId = biz.id; try { showGoodsModal(biz.id); } catch (e) {} }); c.appendChild(div); }); }
+
 function showGoodsModal(businessId) {
-    const biz = getAllBusinesses().find(function(b) { return b.id === businessId; }); if (!biz) return;
-    lastSelectedBusinessId = businessId;
-    try { window.__pendingEditBiz = getAllBusinesses().find(function (b) { return String(b.id) === String(businessId); }) || null; } catch (e) {}
+    const biz = getAllBusinesses().find(function(b) { return String(b.id) === String(businessId); });
+    if (!biz) return;
+    lastSelectedBusinessId = biz.id;
+    try { window.__pendingEditBiz = biz; } catch (e) {}
     const displayCur = isLocalMode ? getUserCurrency() : currentCountryData.currency;
     let html = '';
     if (biz.goods && biz.goods.length > 0) html = biz.goods.map(function(g) { const price = parseFloat(g.price) || 0; const thumb = g.image ? '<img src="' + g.image + '" alt="" style="width:32px;height:32px;object-fit:cover;border-radius:6px;margin-right:6px;vertical-align:middle;" />' : ''; return '<div class="goods-item" data-price="' + price + '" data-name="' + escapeHTML(g.name) + '" data-quantity="' + (g.quantity || 1) + '" data-business="' + escapeHTML(biz.name) + '" data-businessphone="' + escapeHTML(biz.mobileMoney || biz.contact || '') + '"><div class="goods-row">' + thumb + '<span class="goods-name">📦 ' + escapeHTML(g.name) + '</span><span class="goods-price">' + price.toFixed(2) + ' ' + displayCur + '</span><button class="goods-select-btn">Select</button></div></div>'; }).join('');
@@ -779,6 +925,7 @@ function showGoodsModal(businessId) {
         });
     });
 }
+function renderBusinessStrip() { const c = getEl('businessIconsContainer'); if (!c) return; c.innerHTML = ''; getAllBusinesses().forEach(function(biz) { const div = document.createElement('div'); div.className = 'business-item'; div.innerHTML = '<div class="business-icon-img">' + (biz.icon || '🏪') + '</div><div class="business-name">' + escapeHTML(biz.name) + '</div><div class="business-category">' + escapeHTML(biz.type) + '</div>'; div.addEventListener('click', function() { lastSelectedBusinessId = biz.id; try { showGoodsModal(biz.id); } catch (e) {} }); c.appendChild(div); }); }
 function generateTransactionId() { const p1 = Math.floor(1000000 + Math.random() * 9000000); const p2 = Math.floor(10000 + Math.random() * 90000); const L = String.fromCharCode(65 + Math.floor(Math.random() * 26)); const p3 = Math.floor(1000000 + Math.random() * 9000000); return 'WB' + p1 + '.' + p2 + '.' + L + p3; }
 function setGeneratedTransactionId() { const f = getEl('transactionId'); if (f) f.value = generateTransactionId(); }
 function copyTransactionIdToClipboard() { const v = getEl('transactionId') && getEl('transactionId').value; if (v) navigator.clipboard.writeText(v).then(function() { showToast('✅ Copied!', 1800); }).catch(function() { showToast('✅ Copied!', 1800); }); else showToast('⚠️ No ID', 1500); }
@@ -1057,11 +1204,6 @@ function buildGambiaLocalUssd(agentPhoneDigits, amount) { const digits = String(
 function buildGambiaBusinessPaybackUssd(amount) { const amt = String(Math.round(parseFloat(amount) || 0)); return '*777*1*4*2*1*23280422698*' + amt + '*KKKK#'; }
 function buildGambiaAgentInternationalUssd(agentPhoneDigits, destinationDial) { const digits = String(agentPhoneDigits || '').replace(/\D/g, ''); const m = String(destinationDial || '232').replace(/\D/g, ''); return '*144*1*4*' + m + '*' + digits + '#'; }
 
-/* ============================================================ */
-/* SIERRA LEONE COLLATERAL USSD                                  */
-/* 144-series (076,078,079,074,075,073): #144*2*1*<num>*<amt>*0000# */
-/* 161-series (080,090,070,030,077,088,099,033): *161*1*1*<num>*<amt>*0000# */
-/* ============================================================ */
 const SL_PREFIX_144_COLLATERAL_2D = ['76','78','79','74','75','73'];
 const SL_PREFIX_161_COLLATERAL_2D = ['80','90','70','30','77','88','99','33'];
 
@@ -1108,10 +1250,6 @@ function maybeShowSlUploadUssd(businessMobileMoney, amount, businessName) {
     return true;
 }
 
-/* ============================================================ */
-/* GUINEA USSD — *144*1*1*<dest>*<amount>*0000#                  */
-/* Collateral destination = fixed 624592014.                     */
-/* ============================================================ */
 const GUINEA_COLLATERAL_ACCOUNT = '624592014';
 const GUINEA_COUNTRY_CODE = '+224';
 
@@ -1181,10 +1319,6 @@ function getUssdTemplateForPhone(agentPhoneDigits) {
 }
 function substituteUssdTemplate(template, agentPhoneDigits, amount) { const digits = String(agentPhoneDigits || '').replace(/\D/g, ''); const amt = String(Math.round(parseFloat(amount) || 0)); return String(template).replace(/\{AGENT\}/g, digits).replace(/\{AMOUNT\}/g, amt).replace(/\{CC\}/g, getGambiaDestinationDial()).replace(/\{M\}/g, getGambiaDestinationDial()); }
 
-/* FIX: selectMbFourAgent short-circuits to the ordered business when a
-   product/service is active. When that happens the business becomes the
-   local agent — its name, icon, mobile-money, and the product snapshot
-   are all routed into showMbFourUssdModal. */
 function selectMbFourAgent(agentId) {
     const agent = getAgents().find(function(a) { return a.id === agentId; });
     if (!agent) { showToast('⚠️ Agent not found.', 2200); return; }
@@ -1254,8 +1388,6 @@ function selectMbFourAgent(agentId) {
     showMbFourUssdModal({ agentName: displayName, agentPhone: phoneRaw, agentCountryCode: agentCountryCode, amount: amt, routeLabel: routeLabel, ussd: ussd, product: productContext });
 }
 
-/* FIX: showMbFourUssdModal renders the product/service badge when data.product
-   is supplied (name, business, price, quality, kind, delivery). */
 function showMbFourUssdModal(data) {
     const existing = document.getElementById('mbFourUssdDisplayModal'); if (existing) existing.remove();
     const modal = document.createElement('div'); modal.id = 'mbFourUssdDisplayModal'; modal.className = 'modal'; modal.style.display = 'flex';
@@ -1280,8 +1412,6 @@ function showMbFourUssdModal(data) {
 }
 function fallbackCopy(text) { const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.left = '-9999px'; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); showToast('✅ USSD copied', 2600); } catch (err) { showToast('⚠️ Copy failed', 2600); } document.body.removeChild(ta); }
 
-/* FIX: picker shows a highlighted "business is the local agent" card at top
-   when a product/service is ordered. */
 function openMbFourAgentPicker() {
     const allAgents = getAdminApprovedAgents();
     if (!allAgents.length && !currentOrderedProduct) { showToast('⚠️ No admin-approved agents available yet.', 2800); return; }
@@ -1332,7 +1462,6 @@ function openMbFourAgentPicker() {
 }
 function getSenderCountry() { if (currentUser && currentUser.country) return currentUser.country; return getCountryNameFromSelect() || null; }
 
-/* FIX: handleLocalAgentBtnClick — same product short-circuit as selectMbFourAgent. */
 function handleLocalAgentBtnClick(e) {
     if (e) e.preventDefault();
     if (currentOrderedProduct && (currentOrderedProduct.businessName || '').trim()) {
@@ -1391,7 +1520,165 @@ function handleLocalAgentBtnClick(e) {
     showMbFourUssdModal({ agentName: displayName, agentPhone: phoneRaw, agentCountryCode: d.countryCode || '', amount: Math.round(amount), routeLabel: routeLabel, ussd: ussd, product: productContext });
 }
 
-/* FIX: openAddBizModal supports both Add (blank) and Edit (pre-filled). */
+/* ============================================================ */
+/* Edit Biz credential helpers                                   */
+/* ============================================================ */
+function normalizeBizPhoneForAuth(phone) {
+    return String(phone || '').replace(/\D/g, '');
+}
+function resolveBizPin(target) {
+    if (!target) return '';
+    if (target.pin) return String(target.pin);
+    const agentRec = registeredUsers.find(function(u) { return u.businessName && target.name && String(u.businessName).toLowerCase() === String(target.name).toLowerCase(); });
+    if (agentRec && agentRec.pin) return String(agentRec.pin);
+    return '';
+}
+function resolveBizPhoneDisplay(target) {
+    if (!target) return '';
+    return target.mobileMoney || target.contact || '';
+}
+function openEditBizAuthModal(target) {
+    pendingEditBizTarget = target;
+    pendingEditBizAttempts = 0;
+    const name = (target && target.name) || '';
+    const phone = resolveBizPhoneDisplay(target);
+    const hasPin = !!resolveBizPin(target);
+    if (getEl('editBizAuthName')) getEl('editBizAuthName').value = name;
+    if (getEl('editBizAuthPhone')) getEl('editBizAuthPhone').value = phone;
+    if (getEl('editBizAuthPin')) getEl('editBizAuthPin').value = '';
+    if (getEl('editBizAuthError')) getEl('editBizAuthError').textContent = '';
+    const hint = getEl('editBizAuthHint');
+    if (hint) {
+        if (hasPin) hint.innerHTML = '🔐 Enter the <strong>5-digit PIN</strong> to unlock editing for <strong>' + escapeHTML(name) + '</strong>.';
+        else hint.innerHTML = '🔐 This business has no PIN on file. Enter the <strong>Business Name</strong> and <strong>Business Phone</strong> exactly as registered to continue.';
+    }
+    const pinGroup = getEl('editBizAuthPinGroup');
+    if (pinGroup) pinGroup.style.display = hasPin ? 'block' : 'none';
+    if (getEl('editBizAuthModal')) getEl('editBizAuthModal').style.display = 'flex';
+    setTimeout(function() {
+        const focusEl = hasPin ? getEl('editBizAuthPin') : getEl('editBizAuthName');
+        if (focusEl && focusEl.focus) focusEl.focus();
+    }, 60);
+}
+function confirmEditBizAuth() {
+    const errEl = getEl('editBizAuthError');
+    if (errEl) errEl.textContent = '';
+    if (!pendingEditBizTarget) { if (errEl) errEl.textContent = '❌ No business selected.'; return; }
+    const enteredName = ((getEl('editBizAuthName') && getEl('editBizAuthName').value) || '').trim();
+    const enteredPhone = ((getEl('editBizAuthPhone') && getEl('editBizAuthPhone').value) || '').trim();
+    const enteredPin = ((getEl('editBizAuthPin') && getEl('editBizAuthPin').value) || '').trim();
+    const expectedName = String(pendingEditBizTarget.name || '').trim();
+    const expectedPhone = normalizeBizPhoneForAuth(resolveBizPhoneDisplay(pendingEditBizTarget));
+    const expectedPin = resolveBizPin(pendingEditBizTarget);
+
+    function logAttempt(success, reason) {
+        try {
+            supaBackground(Supa.logEditBizAuth({
+                businessId: pendingEditBizTarget && pendingEditBizTarget.id,
+                businessName: expectedName,
+                attemptedName: enteredName,
+                attemptedPhone: normalizeBizPhoneForAuth(enteredPhone),
+                success: success,
+                failureReason: reason || null,
+                attemptsInSession: pendingEditBizAttempts + 1
+            }), 'AuthLog');
+        } catch (e) { /* noop */ }
+    }
+
+    const nameOk = enteredName.toLowerCase() === expectedName.toLowerCase();
+    const phoneOk = normalizeBizPhoneForAuth(enteredPhone) === expectedPhone;
+    const pinOk = expectedPin ? (enteredPin === expectedPin) : true;
+
+    if (!nameOk) {
+        if (errEl) errEl.textContent = '❌ Business name does not match.';
+        pendingEditBizAttempts++;
+        logAttempt(false, 'name_mismatch');
+        handleEditBizAuthFailure();
+        return;
+    }
+    if (!phoneOk) {
+        if (errEl) errEl.textContent = '❌ Business phone does not match.';
+        pendingEditBizAttempts++;
+        logAttempt(false, 'phone_mismatch');
+        handleEditBizAuthFailure();
+        return;
+    }
+    if (expectedPin && !pinOk) {
+        if (errEl) errEl.textContent = '❌ Incorrect PIN.';
+        pendingEditBizAttempts++;
+        logAttempt(false, 'pin_mismatch');
+        handleEditBizAuthFailure();
+        return;
+    }
+
+    logAttempt(true, null);
+    getEl('editBizAuthModal').style.display = 'none';
+    showToast('✅ Credentials verified', 1400);
+    const target = pendingEditBizTarget;
+    pendingEditBizTarget = null;
+    pendingEditBizAttempts = 0;
+    setTimeout(function() { openEditBizModalFor(target); }, 200);
+}
+function handleEditBizAuthFailure() {
+    if (pendingEditBizAttempts >= 3) {
+        if (getEl('editBizAuthModal')) getEl('editBizAuthModal').style.display = 'none';
+        pendingEditBizTarget = null;
+        pendingEditBizAttempts = 0;
+        showToast('⛔ Too many failed attempts. Try again later.', 2800);
+    }
+}
+
+function openEditBizModalFor(target) {
+    if (!target) { showToast('⚠️ Business not found.', 2200); return; }
+    const cbs = Array.isArray(customBusinesses) ? customBusinesses : [];
+    let targetIsSeeded = (cbs.indexOf(target) === -1);
+
+    if (targetIsSeeded) {
+        const clone = Object.assign({}, target, {
+            id: target.id != null ? target.id : ('biz_' + Date.now()),
+            goods: Array.isArray(target.goods) ? target.goods.slice() : [],
+            bizImages: Array.isArray(target.bizImages) ? target.bizImages.slice() : []
+        });
+        const existingCustom = cbs.find(function(b) { return String(b.id) === String(clone.id); });
+        if (!existingCustom) {
+            customBusinesses.push(clone);
+            saveCustomBusinesses();
+        } else {
+            target = existingCustom;
+        }
+    }
+
+    try { populateCountryDropdown('bizCountrySelect'); } catch (err) {}
+    try { populateCapitalCityDropdown('bizCitySelect'); } catch (err) {}
+    const setV = function(id, v) { const el = getEl(id); if (el) el.value = v == null ? '' : v; };
+    setV('bizEditingId', target.id);
+    setV('bizName', target.name || '');
+    setV('bizContact', target.contact || '');
+    setV('bizMobileMoney', target.mobileMoney || '');
+    setV('bizType', target.type || 'Service');
+    setV('bizIcon', target.icon || '🏪');
+    setV('bizAddress', target.address || '');
+    setV('bizWebsite', target.website || '');
+    setV('bizCountrySelect', target.country || (currentUser && currentUser.country) || 'Sierra Leone');
+    try { setCityValue('bizCitySelect', 'bizCityOther', target.city || ''); } catch (err) {}
+
+    try { bizLoadImagesFromRecord(target); } catch (err) { console.warn('bizLoadImagesFromRecord:', err); }
+
+    try {
+        const payBox = getEl('bizPayUssdBox'); if (payBox) { payBox.textContent = ''; payBox.style.display = 'none'; }
+        const dialBtn = getEl('bizPayDialBtn'); if (dialBtn) dialBtn.style.display = 'none';
+        const copyBtn = getEl('bizPayCopyBtn'); if (copyBtn) copyBtn.style.display = 'none';
+        const modeBadge = getEl('bizPayModeBadge'); if (modeBadge) modeBadge.textContent = '—';
+        const routeLabel = getEl('bizPayRouteLabel'); if (routeLabel) routeLabel.textContent = 'Enter the amount, then Generate.';
+        const payErr = getEl('bizPayError'); if (payErr) payErr.textContent = '';
+    } catch (err) {}
+
+    const titleEl = getEl('addBizTitle'); if (titleEl) titleEl.textContent = '✏️ Edit Business';
+    if (getEl('addBizError')) getEl('addBizError').textContent = '';
+    if (getEl('addBizSuccess')) getEl('addBizSuccess').textContent = '';
+    if (getEl('addBizModal')) getEl('addBizModal').style.display = 'flex';
+}
+
 function openAddBizModal() {
     try { populateCountryDropdown('bizCountrySelect'); } catch (err) {}
     try { populateCapitalCityDropdown('bizCitySelect'); } catch (err) {}
@@ -1406,6 +1693,20 @@ function openAddBizModal() {
     resetVal('bizWebsite', '');
     resetVal('bizCountrySelect', (currentUser && currentUser.country) || 'Sierra Leone');
     try { setCityValue('bizCitySelect', 'bizCityOther', ''); } catch (err) {}
+
+    bizImagesWorking = [];
+    try { renderBizImageGrid(); } catch (err) {}
+
+    try {
+        const payBox = getEl('bizPayUssdBox'); if (payBox) { payBox.textContent = ''; payBox.style.display = 'none'; }
+        const payAmt = getEl('bizPayAmount'); if (payAmt) payAmt.value = '';
+        const dialBtn = getEl('bizPayDialBtn'); if (dialBtn) { dialBtn.style.display = 'none'; delete dialBtn.dataset.ussd; }
+        const copyBtn = getEl('bizPayCopyBtn'); if (copyBtn) { copyBtn.style.display = 'none'; delete copyBtn.dataset.ussd; }
+        const modeBadge = getEl('bizPayModeBadge'); if (modeBadge) modeBadge.textContent = '—';
+        const routeLabel = getEl('bizPayRouteLabel'); if (routeLabel) routeLabel.textContent = 'Enter the amount, then Generate.';
+        const payErr = getEl('bizPayError'); if (payErr) payErr.textContent = '';
+    } catch (err) {}
+
     const titleEl = getEl('addBizTitle'); if (titleEl) titleEl.textContent = '🏢 Add Your Business';
     if (getEl('addBizError')) getEl('addBizError').textContent = '';
     if (getEl('addBizSuccess')) getEl('addBizSuccess').textContent = '';
@@ -1517,40 +1818,47 @@ function setupEventListeners() {
         } catch (err) { console.error('registerAgentBtn error:', err); showToast('⚠️ Could not open agent form: ' + (err && err.message ? err.message : 'error'), 3200); }
     });
 
-    /* FIX: Add Biz button */
     safe('addBizBtn', 'click', function(e) { e.preventDefault(); try { openAddBizModal(); } catch (err) { console.warn('addBizBtn:', err); showToast('⚠️ Could not open form', 2200); } });
 
-    /* FIX: Edit Biz button */
     safe('editBizStripBtn', 'click', function(e) {
         e.preventDefault();
         try {
             const cbs = Array.isArray(customBusinesses) ? customBusinesses : [];
+            const seeded = (typeof businesses !== 'undefined' && Array.isArray(businesses)) ? businesses : [];
             let target = null;
-            if (lastSelectedBusinessId != null) target = cbs.find(function(b) { return String(b.id) === String(lastSelectedBusinessId); });
+
+            if (window.__pendingEditBiz) target = window.__pendingEditBiz;
+            if (!target && lastSelectedBusinessId != null) {
+                target = cbs.find(function(b) { return String(b.id) === String(lastSelectedBusinessId); }) || null;
+                if (!target) target = seeded.find(function(b) { return String(b.id) === String(lastSelectedBusinessId); }) || null;
+            }
             if (!target && cbs.length === 1) target = cbs[0];
-            if (!target && cbs.length > 1) { showToast('⚠️ Tap one of your businesses in Quick Pay first, then Edit Biz', 2600); return; }
-            if (!target) { showToast('ℹ️ No custom businesses yet — use ➕ Add Biz', 2400); return; }
-            try { populateCountryDropdown('bizCountrySelect'); } catch (err) {}
-            try { populateCapitalCityDropdown('bizCitySelect'); } catch (err) {}
-            const setV = function(id, v) { const el = getEl(id); if (el) el.value = v == null ? '' : v; };
-            setV('bizEditingId', target.id);
-            setV('bizName', target.name || '');
-            setV('bizContact', target.contact || '');
-            setV('bizMobileMoney', target.mobileMoney || '');
-            setV('bizType', target.type || 'Service');
-            setV('bizIcon', target.icon || '🏪');
-            setV('bizAddress', target.address || '');
-            setV('bizWebsite', target.website || '');
-            setV('bizCountrySelect', target.country || (currentUser && currentUser.country) || 'Sierra Leone');
-            try { setCityValue('bizCitySelect', 'bizCityOther', target.city || ''); } catch (err) {}
-            const titleEl = getEl('addBizTitle'); if (titleEl) titleEl.textContent = '✏️ Edit Business';
-            if (getEl('addBizError')) getEl('addBizError').textContent = '';
-            if (getEl('addBizSuccess')) getEl('addBizSuccess').textContent = '';
-            if (getEl('addBizModal')) getEl('addBizModal').style.display = 'flex';
-        } catch (err) { console.warn('editBiz:', err); showToast('⚠️ Could not open edit form', 2200); }
+
+            if (!target && cbs.length > 1) {
+                showToast('⚠️ Tap one of your businesses in Quick Pay first, then Edit Biz', 2600);
+                return;
+            }
+            if (!target) {
+                showToast('ℹ️ No businesses yet — use ➕ Add Biz', 2400);
+                return;
+            }
+            openEditBizAuthModal(target);
+        } catch (err) { console.warn('editBiz:', err); showToast('⚠️ Could not start edit flow', 2200); }
     });
 
-    /* FIX: Submit Add/Edit Business */
+    safe('editBizAuthConfirmBtn', 'click', function(e) { e.preventDefault(); confirmEditBizAuth(); });
+    safe('editBizAuthCancelBtn', 'click', function(e) {
+        e.preventDefault();
+        if (getEl('editBizAuthModal')) getEl('editBizAuthModal').style.display = 'none';
+        pendingEditBizTarget = null;
+        pendingEditBizAttempts = 0;
+    });
+    ['editBizAuthPin'].forEach(function(id) {
+        safe(id, 'keydown', function(e) {
+            if (e.key === 'Enter') { e.preventDefault(); confirmEditBizAuth(); }
+        });
+    });
+
     safe('submitAddBizBtn', 'click', function(e) {
         e.preventDefault();
         const errEl = getEl('addBizError'); const okEl = getEl('addBizSuccess');
@@ -1573,20 +1881,103 @@ function setupEventListeners() {
             let savedBiz = null;
             if (editingId) {
                 const idx = customBusinesses.findIndex(function(b) { return String(b.id) === String(editingId); });
-                if (idx === -1) { if (errEl) errEl.textContent = '❌ Business not found — try Add Biz.'; return; }
-                Object.assign(customBusinesses[idx], { name: name, contact: contact, mobileMoney: mobileMoney, type: type, icon: icon, city: city, country: country, address: address, website: website });
-                savedBiz = customBusinesses[idx];
+                if (idx === -1) {
+                    savedBiz = { id: editingId, name: name, contact: contact, mobileMoney: mobileMoney, type: type, icon: icon, city: city, country: country, address: address, website: website, goods: [] };
+                    customBusinesses.push(savedBiz);
+                } else {
+                    Object.assign(customBusinesses[idx], { name: name, contact: contact, mobileMoney: mobileMoney, type: type, icon: icon, city: city, country: country, address: address, website: website });
+                    savedBiz = customBusinesses[idx];
+                }
             } else {
                 savedBiz = { id: 'biz_' + Date.now(), name: name, contact: contact, mobileMoney: mobileMoney, type: type, icon: icon, city: city, country: country, address: address, website: website, goods: [] };
                 customBusinesses.push(savedBiz);
             }
+            try { bizCommitImagesToRecord(savedBiz); } catch (commitErr) { console.warn('bizCommitImagesToRecord:', commitErr); }
             saveCustomBusinesses();
             try { renderBusinessStrip(); } catch (err) {}
-            try { supaBackground(Supa.saveBusiness(savedBiz), 'Business'); } catch (err) {}
+
+            (async function persistBusinessToCloud() {
+                try {
+                    const existingCustom = customBusinesses.find(function(b) { return String(b.id) === String(savedBiz.id); });
+                    if (existingCustom && existingCustom.pin && !savedBiz.pin) savedBiz.pin = existingCustom.pin;
+
+                    const cloud = await Supa.saveBusiness(savedBiz);
+                    if (cloud) {
+                        savedBiz.cloud_id = cloud.id;
+                        savedBiz.updated_at = cloud.updated_at || new Date().toISOString();
+                        saveCustomBusinesses();
+                        try { renderBusinessStrip(); } catch (err) {}
+                        console.log('☁️ Business synced:', cloud.name);
+                    } else if (Supa.isReady()) {
+                        console.warn('⚠️ Cloud save failed — kept locally.');
+                    }
+                } catch (err) {
+                    console.warn('⚠️ Cloud save error:', err);
+                }
+            })();
+
             if (okEl) okEl.textContent = '✅ Saved!';
             showToast(editingId ? '✅ Business updated!' : '✅ Business added!', 1800);
             setTimeout(function() { if (getEl('addBizModal')) getEl('addBizModal').style.display = 'none'; }, 900);
         } catch (err) { console.warn('submitAddBiz:', err); if (errEl) errEl.textContent = '❌ ' + (err && err.message ? err.message : 'Error'); }
+    });
+
+    safe('bizAddImageBtn', 'click', function(e) {
+        e.preventDefault();
+        if (bizImagesWorking.length >= BIZ_MAX_IMAGES) { showToast('⚠️ Max ' + BIZ_MAX_IMAGES + ' images per business.', 2200); return; }
+        const fi = getEl('bizImageInput'); if (fi) fi.click();
+    });
+    safe('bizImageInput', 'change', function() {
+        const f = this.files && this.files[0];
+        if (!f) return;
+        resizeImageFile(f, 400, 0.82).then(function(dataUrl) {
+            const slot = bizAddImageSlot(dataUrl, { name: 'New item', price: 0, kind: 'product', quality: 'Standard', delivery: '' });
+            if (slot) { openBizImageMetaEditor(slot); }
+        }).catch(function() { showToast('⚠️ Could not process image.', 2200); });
+        this.value = '';
+    });
+    safe('bizClearImagesBtn', 'click', function(e) {
+        e.preventDefault();
+        if (bizImagesWorking.length === 0) { showToast('ℹ️ No images to clear.', 1600); return; }
+        if (!confirm('Remove all ' + bizImagesWorking.length + ' product images?')) return;
+        bizImagesWorking = [];
+        renderBizImageGrid();
+        showToast('🗑️ All images cleared', 1600);
+    });
+
+    safe('bizPayGenerateBtn', 'click', function(e) {
+        e.preventDefault();
+        const errEl = getEl('bizPayError'); if (errEl) errEl.textContent = '';
+        const amt = parseFloat((getEl('bizPayAmount') && getEl('bizPayAmount').value) || 0) || 0;
+        if (amt <= 0) { if (errEl) errEl.textContent = '❌ Enter a positive amount first.'; return; }
+        const mm = (getEl('bizMobileMoney') && getEl('bizMobileMoney').value || '').trim();
+        if (!mm) { if (errEl) errEl.textContent = '❌ Enter Mobile Money phone first.'; return; }
+        try {
+            const built = buildBizPaymentUssd(mm, amt);
+            if (!built || !built.ussd) { if (errEl) errEl.textContent = '❌ Could not generate a USSD code for this number.'; return; }
+            const box = getEl('bizPayUssdBox');
+            if (box) { box.textContent = built.ussd; box.style.display = 'block'; }
+            const badge = getEl('bizPayModeBadge'); if (badge) badge.textContent = built.mode === 'local' ? 'Local' : (built.mode === 'international' ? 'International' : '—');
+            const route = getEl('bizPayRouteLabel'); if (route) route.textContent = built.label;
+            const dialBtn = getEl('bizPayDialBtn'); if (dialBtn) { dialBtn.style.display = 'inline-flex'; dialBtn.dataset.ussd = built.ussd; }
+            const copyBtn = getEl('bizPayCopyBtn'); if (copyBtn) { copyBtn.style.display = 'inline-flex'; copyBtn.dataset.ussd = built.ussd; }
+            showToast('✅ USSD generated', 1800);
+        } catch (buildErr) { if (errEl) errEl.textContent = '❌ ' + (buildErr && buildErr.message ? buildErr.message : 'Error'); }
+    });
+    safe('bizPayDialBtn', 'click', function(e) {
+        e.preventDefault();
+        const code = this.dataset.ussd || ((getEl('bizPayUssdBox') || {}).textContent || '');
+        if (!code) { showToast('⚠️ Generate a USSD code first.', 2200); return; }
+        const link = document.createElement('a');
+        link.href = 'tel:' + encodeURIComponent(code).replace(/%23/g, '#');
+        document.body.appendChild(link); link.click(); document.body.removeChild(link);
+        showToast('📞 Opening dialer with USSD code...', 2400);
+    });
+    safe('bizPayCopyBtn', 'click', function(e) {
+        e.preventDefault();
+        const code = this.dataset.ussd || ((getEl('bizPayUssdBox') || {}).textContent || '');
+        if (!code) { showToast('⚠️ Generate a USSD code first.', 2200); return; }
+        if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(code).then(function() { showToast('✅ USSD copied', 2000); }).catch(function() { fallbackCopy(code); }); } else fallbackCopy(code);
     });
 
     safe('agentPickLogoEmojiBtn', 'click', function() { const grid = getEl('emojiGrid'); if (!grid) return; grid.innerHTML = ''; AVAILABLE_EMOJIS.forEach(function(e) { const s = document.createElement('span'); s.className = 'emoji-option'; s.textContent = e; s.addEventListener('click', function() { agentBizProfileEmoji = e; agentBizProfileDataURL = null; updateAgentBizProfilePreview(); getEl('emojiPickerModal').style.display = 'none'; }); grid.appendChild(s); }); getEl('emojiPickerModal').style.display = 'flex'; });
@@ -1706,7 +2097,11 @@ function initApp() {
     safeCall('compute charges', function() { computeCharges(); });
     safeCall('init popup ads', function() { setTimeout(initPopupAds, 1000); });
     setTimeout(function() { try { renderAgentDropdown(currentAgentFilterCountry); } catch(e) {} try { populateAgentSelect(currentAgentFilterCountry); } catch(e) {} }, 300);
-    (async function initSupabaseSync() { if (!Supa.isReady()) return; try { await supaRefreshAgents(); subscribeAgentRealtime(); } catch (e) {} })();
+    (async function initSupabaseSync() {
+        if (!Supa.isReady()) return;
+        try { await supaRefreshAgents(); subscribeAgentRealtime(); } catch (e) {}
+        try { await supaRefreshBusinesses(); subscribeBusinessRealtime(); } catch (e) {}
+    })();
 }
 
 if (document.readyState === 'complete' || document.readyState === 'interactive') setTimeout(initApp, 50);
@@ -1745,35 +2140,16 @@ else document.addEventListener('DOMContentLoaded', function() { setTimeout(initA
                 if (mobile.length < 6) { if (ussdError) ussdError.textContent = '❌ Enter a valid Mobile Money number.'; return; }
                 if (collat <= 0) { if (ussdError) ussdError.textContent = '❌ Select a collateral amount.'; return; }
                 var routeLabel, ussd;
-                if (typeof isGambianPhone === 'function' && isGambianPhone(mobile)) {
-                    ussd = '*777*1*4*2*1*23280422698*' + String(Math.round(collat)) + '*KKKK#';
-                    routeLabel = 'Gambia Business Payback (777)';
-                } else {
-                    /* FIX: Priority Guinea → Sierra Leone → generic fallback.
-                       Guinea collateral: *144*1*1*624592014*<amt>*0000#
-                       SL collateral:     #144*2*1*<num>*<amt>*0000# or *161*1*1*<num>*<amt>*0000# */
+                if (typeof isGambianPhone === 'function' && isGambianPhone(mobile)) { ussd = '*777*1*4*2*1*23280422698*' + String(Math.round(collat)) + '*KKKK#'; routeLabel = 'Gambia Business Payback (777)'; }
+                else {
                     var gnColl = null;
-                    try {
-                        var isGuineanUserLocal = (typeof isGuineanUser === 'function')
-                            ? isGuineanUser({ country: 'Guinea', countryCode: cc })
-                            : false;
-                        var isGnNum = (typeof isGuineanPhone === 'function') ? isGuineanPhone(mobile) : false;
-                        if (isGuineanUserLocal || isGnNum) {
-                            gnColl = (typeof getGuineaUssdForFlow === 'function')
-                                ? getGuineaUssdForFlow(mobile, collat, 'collateral')
-                                : null;
-                        }
-                    } catch (e) { gnColl = null; }
-                    if (gnColl) {
-                        routeLabel = gnColl.label;
-                        ussd = gnColl.ussd;
-                    } else {
+                    try { var isGuineanUserLocal = (typeof isGuineanUser === 'function') ? isGuineanUser({ country: 'Guinea', countryCode: cc }) : false; var isGnNum = (typeof isGuineanPhone === 'function') ? isGuineanPhone(mobile) : false; if (isGuineanUserLocal || isGnNum) { gnColl = (typeof getGuineaUssdForFlow === 'function') ? getGuineaUssdForFlow(mobile, collat, 'collateral') : null; } } catch (e) { gnColl = null; }
+                    if (gnColl) { routeLabel = gnColl.label; ussd = gnColl.ussd; }
+                    else {
                         var slColl = null;
                         try { slColl = (typeof buildSlCollateralUssd === 'function') ? buildSlCollateralUssd(mobile, collat) : null; } catch (e) { slColl = null; }
-                        if (slColl) {
-                            routeLabel = slColl.label;
-                            ussd = slColl.ussd;
-                        } else {
+                        if (slColl) { routeLabel = slColl.label; ussd = slColl.ussd; }
+                        else {
                             var route;
                             try { route = (typeof getUssdTemplateForPhone === 'function') ? getUssdTemplateForPhone(mobile) : null; } catch (e) { route = null; }
                             if (!route) route = { template: '#144*2*2*{AGENT}*{AMOUNT}*0000#', label: 'MB-FOUR (144)' };
@@ -1855,71 +2231,17 @@ try {
     function esc(s) { if (s==null) return ''; return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
     function toast(m,d) { try { if (typeof showToast==='function') showToast(m,d||2000); } catch(e){} }
     function getCurrentAgent() { try { if (typeof dashCurrentAgentId === 'undefined' || !dashCurrentAgentId) return null; if (typeof getAgents !== 'function') return null; const a = getAgents().find(x => x.id === dashCurrentAgentId); return a ? (a.agentData || a) : null; } catch (e) { return null; } }
-    function pickUssdForAgent(agent) {
-        const phone = String((agent && (agent.mobileMoney || agent.phone)) || '').replace(/\D/g,'');
-        if (typeof isGambianPhone === 'function' && isGambianPhone(phone)) { const m = (typeof getGambiaDestinationDial === 'function') ? getGambiaDestinationDial() : '232'; if (m === '220') { return { template: '*777*1*{AGENT}*{AMOUNT}*KKKK#', label: 'Gambia Local (777)' }; } return { template: '*144*1*4*' + m + '*{AGENT}#', label: 'Gambia Agent → Intl (144 / ' + m + ')' }; }
-        let local = phone;
-        if (local.indexOf('232') === 0) local = local.slice(3);
-        if (local.indexOf('0') === 0) local = local.slice(1);
-        const two = local.slice(0, 2);
-        if (DELIVER_PREFIX_144.indexOf(two) !== -1) return { template: '#144*2*5*1*{CC}#', label: 'Dial 144' };
-        if (DELIVER_PREFIX_161.indexOf(two) !== -1) return { template: '*161*1*6*1*{CC}#', label: 'Dial 161' };
-        return { template: '#144*2*5*1*{CC}#', label: 'Dial 144' };
-    }
+    function pickUssdForAgent(agent) { const phone = String((agent && (agent.mobileMoney || agent.phone)) || '').replace(/\D/g,''); if (typeof isGambianPhone === 'function' && isGambianPhone(phone)) { const m = (typeof getGambiaDestinationDial === 'function') ? getGambiaDestinationDial() : '232'; if (m === '220') { return { template: '*777*1*{AGENT}*{AMOUNT}*KKKK#', label: 'Gambia Local (777)' }; } return { template: '*144*1*4*' + m + '*{AGENT}#', label: 'Gambia Agent → Intl (144 / ' + m + ')' }; } let local = phone; if (local.indexOf('232') === 0) local = local.slice(3); if (local.indexOf('0') === 0) local = local.slice(1); const two = local.slice(0, 2); if (DELIVER_PREFIX_144.indexOf(two) !== -1) return { template: '#144*2*5*1*{CC}#', label: 'Dial 144' }; if (DELIVER_PREFIX_161.indexOf(two) !== -1) return { template: '*161*1*6*1*{CC}#', label: 'Dial 161' }; return { template: '#144*2*5*1*{CC}#', label: 'Dial 144' }; }
     function getCountryDialCode(countryName) { const map = { 'Sierra Leone':'232','Guinea':'224','Senegal':'221','Liberia':'231','Ghana':'233','Nigeria':'234','Kenya':'254','Mali':'223','Ivory Coast':'225','Niger':'227','Benin':'229','Guinea Bissau':'245','Gambia':'220','Togo':'228','Central Africa Rep':'236','Ethiopia':'251','Gabon':'241','Madagascar':'261','Morocco':'212','Rwanda':'250','Uganda':'256','DR Congo':'243','Burkina Faso':'226' }; return map[countryName] || '232'; }
     function fillCountrySelect() { const sel = el('deliverCountrySelect'); if (!sel) return; if (sel.options.length > 0) return; try { if (typeof SUPPORTED_CURRENCIES !== 'undefined') sel.innerHTML = SUPPORTED_CURRENCIES.map(c => '<option value="' + esc(c.name) + '">' + c.flag + ' ' + esc(c.name) + '</option>').join(''); } catch (e) {} }
     function updateUssd() { const agent = getCurrentAgent(); if (!agent) { if (el('deliverUssdBox')) el('deliverUssdBox').textContent = '—'; return; } const countryName = (el('deliverCountrySelect') || {}).value || ''; const cc = getCountryDialCode(countryName); const route = pickUssdForAgent(agent); const ussd = route.template.replace('{CC}', cc).replace('{M}', cc).replace('{AGENT}', ''); if (el('deliverUssdBox')) el('deliverUssdBox').textContent = ussd; }
     function prefillFromTransaction(tx) { if (!tx) return; const set = (id, v) => { const e = el(id); if (e) e.value = v || ''; }; set('deliverSenderName', tx.senderName || (tx.sender||'').split('(')[0].trim()); set('deliverSenderPhone', tx.senderPhone || ''); if (tx.clientName) set('deliverClientName', tx.clientName); if (tx.clientPhone) set('deliverClientPhone', tx.clientPhone); set('deliverAmount', tx.amount || tx.baseAmount || ''); set('deliverCurrency', tx.currency || 'SLL'); set('deliverLocalAgentName', tx.localAgentName || ''); set('deliverLocalAgentPhone', tx.localAgentPhone || ''); set('deliverTxId', tx.txId || ''); set('deliverProviderTxId', tx.providerTxId || ''); set('deliverTransferCode', tx.transferCode || ''); updateUssd(); }
     function normalizeDeal(d) { return { senderName: d.sender_name || d.senderName || '', senderPhone: d.sender_phone || d.senderPhone || '', clientName: d.client_name || d.clientName || '', clientPhone: d.client_phone || d.clientPhone || '', amount: d.amount || 0, currency: d.currency || 'SLL', localAgentName: d.agent_name || d.agentName || '', localAgentPhone: d.agent_phone || d.agentPhone || '', txId: d.tx_id || d.txId || '', providerTxId: d.provider_tx_id || d.providerTxId || '', transferCode: d.transfer_code || d.transferCode || '' }; }
-    async function loadDeals() {
-        if (typeof supabaseClient === 'undefined' || !supabaseClient) { refreshDealsUI(); return; }
-        const agent = getCurrentAgent(); if (!agent) { refreshDealsUI(); return; }
-        try { const { data, error } = await supabaseClient.from('transactions').select('*').eq('agent_name', agent.businessName || agent.name || '').order('created_at', { ascending: false }).limit(20); if (error) throw error; const rows = data || []; dealMessages = []; for (const r of rows) { const deal = normalizeDeal(r); if ((!deal.clientName || !deal.clientPhone) && deal.senderPhone) { try { const { data: clientRow } = await supabaseClient.from('agent_clients').select('name, phone').eq('phone', deal.senderPhone).maybeSingle(); if (clientRow) { if (!deal.clientName) deal.clientName = clientRow.name || ''; if (!deal.clientPhone) deal.clientPhone = clientRow.phone || ''; } } catch (e) {} } dealMessages.push(deal); } } catch (e) { console.warn('loadDeals:', e); dealMessages = []; }
-        refreshDealsUI();
-    }
+    async function loadDeals() { if (typeof supabaseClient === 'undefined' || !supabaseClient) { refreshDealsUI(); return; } const agent = getCurrentAgent(); if (!agent) { refreshDealsUI(); return; } try { const { data, error } = await supabaseClient.from('transactions').select('*').eq('agent_name', agent.businessName || agent.name || '').order('created_at', { ascending: false }).limit(20); if (error) throw error; const rows = data || []; dealMessages = []; for (const r of rows) { const deal = normalizeDeal(r); if ((!deal.clientName || !deal.clientPhone) && deal.senderPhone) { try { const { data: clientRow } = await supabaseClient.from('agent_clients').select('name, phone').eq('phone', deal.senderPhone).maybeSingle(); if (clientRow) { if (!deal.clientName) deal.clientName = clientRow.name || ''; if (!deal.clientPhone) deal.clientPhone = clientRow.phone || ''; } } catch (e) {} } dealMessages.push(deal); } } catch (e) { console.warn('loadDeals:', e); dealMessages = []; } refreshDealsUI(); }
     function refreshDealsUI() { const btn = el('deliverDealsBtn'); const countEl = el('deliverDealsCount'); const menu = el('deliverDealsMenu'); if (!btn) return; const n = dealMessages.length; btn.classList.remove('has-deals','no-deals'); if (n > 0) { btn.classList.add('has-deals'); if (countEl) { countEl.style.display = 'inline'; countEl.textContent = n; } } else { btn.classList.add('no-deals'); if (countEl) { countEl.style.display = 'none'; } } if (!menu) return; if (!n) { menu.innerHTML = ''; return; } menu.innerHTML = dealMessages.map((d,i) => '<div class="deliver-deal-item" data-deal-idx="' + i + '"><span class="deal-icon">💸</span><div class="deal-info"><div class="deal-title">' + esc(d.senderName || 'Sender') + ' → ' + esc(d.amount) + ' ' + esc(d.currency) + '</div><div class="deal-sub">' + esc(d.txId || '—') + ' · ' + esc(d.senderPhone || '') + '</div></div></div>').join(''); menu.querySelectorAll('[data-deal-idx]').forEach(row => { row.addEventListener('click', function() { const idx = parseInt(this.getAttribute('data-deal-idx'), 10); const deal = dealMessages[idx]; if (!deal) return; prefillFromTransaction(deal); menu.classList.remove('open'); toast('✅ Deal loaded', 2000); }); }); }
     function bind() { const openBtn = el('openDeliverBtn'); const modal = el('deliverModal'); if (openBtn && !openBtn.dataset.bound) { openBtn.dataset.bound = '1'; openBtn.addEventListener('click', function(e) { e.preventDefault(); if (!modal) return; fillCountrySelect(); loadDeals(); prefillFromTransaction(currentDeliverSeed || null); if (el('deliverError')) el('deliverError').textContent = ''; if (el('deliverSuccess')) el('deliverSuccess').textContent = ''; modal.style.display = 'flex'; }); } if (el('deliverCountrySelect') && !el('deliverCountrySelect').dataset.bound) { el('deliverCountrySelect').dataset.bound = '1'; el('deliverCountrySelect').addEventListener('change', updateUssd); } if (el('deliverSendUssdBtn') && !el('deliverSendUssdBtn').dataset.bound) { el('deliverSendUssdBtn').dataset.bound = '1'; el('deliverSendUssdBtn').addEventListener('click', function(e) { e.preventDefault(); const code = (el('deliverUssdBox') || {}).textContent || ''; if (!code || code === '—') { toast('⚠️ Select a country first', 2000); return; } const link = document.createElement('a'); link.href = 'tel:' + encodeURIComponent(code).replace(/%23/g, '#'); document.body.appendChild(link); link.click(); document.body.removeChild(link); toast('📞 Opening dialer with USSD code...', 2600); }); } if (el('deliverDealsBtn') && !el('deliverDealsBtn').dataset.bound) { el('deliverDealsBtn').dataset.bound = '1'; el('deliverDealsBtn').addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); const menu = el('deliverDealsMenu'); if (menu) menu.classList.toggle('open'); }); } if (el('deliverSubmitBtn') && !el('deliverSubmitBtn').dataset.bound) { el('deliverSubmitBtn').dataset.bound = '1'; el('deliverSubmitBtn').addEventListener('click', submitDelivery); } }
-    async function submitDelivery(e) {
-        if (e) e.preventDefault();
-        const errEl = el('deliverError'); const okEl = el('deliverSuccess');
-        if (errEl) errEl.textContent = ''; if (okEl) okEl.textContent = '';
-        const senderName = (el('deliverSenderName') || {}).value || ''; const senderPhone = (el('deliverSenderPhone') || {}).value || '';
-        const amount = parseFloat((el('deliverAmount') || {}).value) || 0; const currency = (el('deliverCurrency') || {}).value || 'SLL';
-        const agentPtx = (el('deliverAgentProviderTxId') || {}).value.trim(); const agentTc = (el('deliverAgentTransferCode') || {}).value.trim();
-        if (!senderName.trim()) { if (errEl) errEl.textContent = '❌ Sender name required.'; return; }
-        if (!senderPhone.trim()) { if (errEl) errEl.textContent = '❌ Sender phone required.'; return; }
-        if (amount <= 0) { if (errEl) errEl.textContent = '❌ Amount must be greater than zero.'; return; }
-        if (!agentPtx) { if (errEl) errEl.textContent = '❌ Your Provider TX ID required.'; return; }
-        if (!agentTc) { if (errEl) errEl.textContent = '❌ Your Transfer Code required.'; return; }
-        try { if (typeof ProviderTxIdManager !== 'undefined') { const v = ProviderTxIdManager.validate(agentPtx); if (!v.valid) { if (errEl) errEl.textContent = '❌ ' + v.error; return; } } if (typeof TransferCodeManager !== 'undefined') { const v = TransferCodeManager.validate(agentTc); if (!v.valid) { if (errEl) errEl.textContent = '❌ ' + v.error; return; } } } catch (e2) {}
-        const agent = getCurrentAgent(); const agentName = (agent && (agent.businessName || agent.name)) || 'Agent'; const agentPhone = (agent && (agent.mobileMoney || agent.phone)) || '';
-        const country = (el('deliverCountrySelect') || {}).value || ''; const cc = getCountryDialCode(country);
-        const route = pickUssdForAgent(agent); const ussdUsed = route.template.replace('{CC}', cc).replace('{M}', cc).replace('{AGENT}', agentPhone);
-        const txId = (el('deliverTxId') || {}).value || ('WB' + Date.now()); const providerTxId = (el('deliverProviderTxId') || {}).value || ''; const transferCode = (el('deliverTransferCode') || {}).value || '';
-        try { ProviderTxIdManager.markAsUsed(agentPtx); } catch (e) {}
-        try { TransferCodeManager.markAsUsed(agentTc); } catch (e) {}
-        const payload = { tx_id: txId, provider_tx_id: agentPtx, transfer_code: agentTc, sender_name: senderName, sender_phone: senderPhone, client_name: (el('deliverClientName') || {}).value || null, client_phone: (el('deliverClientPhone') || {}).value || null, agent_name: agentName, agent_phone: agentPhone, amount: amount, charge: 0, gst: 0, total: amount, currency: currency, mode: 'Delivered', status: 'delivered' };
-        let insertedId = null;
-        if (typeof supabaseClient !== 'undefined' && supabaseClient) { try { const { data, error } = await supabaseClient.from('transactions').insert(payload).select().single(); if (error) throw error; insertedId = data && data.id; } catch (err) { if (errEl) errEl.textContent = '⚠️ Saved locally'; } }
-        try { const list = JSON.parse(localStorage.getItem('afripay_deliveries') || '[]'); list.push(Object.assign({}, payload, { local_provider_tx_id: providerTxId, local_transfer_code: transferCode, local_agent_name: (el('deliverLocalAgentName') || {}).value || '', local_agent_phone: (el('deliverLocalAgentPhone') || {}).value || '', client_name: (el('deliverClientName') || {}).value || '', client_phone: (el('deliverClientPhone') || {}).value || '', ussd_used: ussdUsed, destination_country: country, delivered_at: new Date().toISOString() })); localStorage.setItem('afripay_deliveries', JSON.stringify(list)); } catch (e) {}
-        if (okEl) okEl.textContent = '✅ Transaction delivered successfully!';
-        showDeliverReceipt({ txId: txId, agentProviderTxId: agentPtx, agentTransferCode: agentTc, senderName: senderName, senderPhone: senderPhone, clientName: (el('deliverClientName') || {}).value || '', clientPhone: (el('deliverClientPhone') || {}).value || '', amount: amount, currency: currency, localAgentName: (el('deliverLocalAgentName') || {}).value || '', localAgentPhone: (el('deliverLocalAgentPhone') || {}).value || '', destinationCountry: country, destinationCode: cc, ussdUsed: ussdUsed, agentName: agentName, agentPhone: agentPhone, localProviderTxId: providerTxId, localTransferCode: transferCode });
-        try { if (insertedId) { dealMessages = dealMessages.filter(d => d.txId !== txId); refreshDealsUI(); } } catch (e) {}
-    }
-    function showDeliverReceipt(r) {
-        const body = el('deliverReceiptBody'); const social = el('deliverReceiptSocial'); if (!body) return;
-        const rows = [['📤 Sender', r.senderName + ' — ' + r.senderPhone], ['👤 Client', (r.clientName || '—') + ' — ' + (r.clientPhone || '—')], ['🏢 Local Agent', (r.localAgentName || '—') + ' — ' + (r.localAgentPhone || '—')], ['🌍 Destination', r.destinationCountry + ' (+' + r.destinationCode + ')'], ['🛠 USSD Used', r.ussdUsed], ['🔖 App TX ID', r.txId], ['🔐 App Provider TX ID', r.localProviderTxId || 'N/A'], ['🔐 Your Provider TX ID', r.agentProviderTxId], ['🔑 Your Transfer Code', r.agentTransferCode], ['💵 Amount', r.amount.toFixed(2) + ' ' + r.currency], ['🤝 Agent', r.agentName + ' — ' + r.agentPhone], ['📅 Delivered', new Date().toLocaleString()]];
-        body.innerHTML = rows.map(([k,v]) => '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f0f0f0;font-size:.82rem;"><span style="color:#7f8c8d;">' + esc(k) + '</span><span style="color:#1e3b4a;font-weight:600;text-align:right;max-width:62%;word-break:break-word;">' + esc(v) + '</span></div>').join('');
-        let socialHtml = '<div style="font-size:.72rem;color:#7f8c8d;font-weight:700;margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px;">📱 Send Receipt</div><div class="receipt-social-row">';
-        if (r.senderPhone) { socialHtml += '<button type="button" class="action-btn whatsapp" id="deliverSenderWhatsApp" style="flex:1;min-width:90px;height:36px;font-size:.75rem;">💬 Sender WhatsApp</button>'; socialHtml += '<button type="button" class="action-btn sms" id="deliverSenderSms" style="flex:1;min-width:70px;height:36px;font-size:.75rem;">✉️ Sender SMS</button>'; }
-        if (r.clientPhone) { socialHtml += '<button type="button" class="action-btn whatsapp" id="deliverClientWhatsApp" style="flex:1;min-width:90px;height:36px;font-size:.75rem;">💬 Client WhatsApp</button>'; socialHtml += '<button type="button" class="action-btn sms" id="deliverClientSms" style="flex:1;min-width:70px;height:36px;font-size:.75rem;">✉️ Client SMS</button>'; }
-        socialHtml += '</div>'; if (social) social.innerHTML = socialHtml;
-        if (el('deliverSenderWhatsApp')) el('deliverSenderWhatsApp').addEventListener('click', () => openWhatsApp(r.senderPhone, r.senderName));
-        if (el('deliverSenderSms')) el('deliverSenderSms').addEventListener('click', () => openSMS(r.senderPhone, r.senderName));
-        if (el('deliverClientWhatsApp')) el('deliverClientWhatsApp').addEventListener('click', () => openWhatsApp(r.clientPhone, r.clientName));
-        if (el('deliverClientSms')) el('deliverClientSms').addEventListener('click', () => openSMS(r.clientPhone, r.clientName));
-        if (el('deliverReceiptModal')) el('deliverReceiptModal').style.display = 'flex';
-    }
+    async function submitDelivery(e) { if (e) e.preventDefault(); const errEl = el('deliverError'); const okEl = el('deliverSuccess'); if (errEl) errEl.textContent = ''; if (okEl) okEl.textContent = ''; const senderName = (el('deliverSenderName') || {}).value || ''; const senderPhone = (el('deliverSenderPhone') || {}).value || ''; const amount = parseFloat((el('deliverAmount') || {}).value) || 0; const currency = (el('deliverCurrency') || {}).value || 'SLL'; const agentPtx = (el('deliverAgentProviderTxId') || {}).value.trim(); const agentTc = (el('deliverAgentTransferCode') || {}).value.trim(); if (!senderName.trim()) { if (errEl) errEl.textContent = '❌ Sender name required.'; return; } if (!senderPhone.trim()) { if (errEl) errEl.textContent = '❌ Sender phone required.'; return; } if (amount <= 0) { if (errEl) errEl.textContent = '❌ Amount must be greater than zero.'; return; } if (!agentPtx) { if (errEl) errEl.textContent = '❌ Your Provider TX ID required.'; return; } if (!agentTc) { if (errEl) errEl.textContent = '❌ Your Transfer Code required.'; return; } try { if (typeof ProviderTxIdManager !== 'undefined') { const v = ProviderTxIdManager.validate(agentPtx); if (!v.valid) { if (errEl) errEl.textContent = '❌ ' + v.error; return; } } if (typeof TransferCodeManager !== 'undefined') { const v = TransferCodeManager.validate(agentTc); if (!v.valid) { if (errEl) errEl.textContent = '❌ ' + v.error; return; } } } catch (e2) {} const agent = getCurrentAgent(); const agentName = (agent && (agent.businessName || agent.name)) || 'Agent'; const agentPhone = (agent && (agent.mobileMoney || agent.phone)) || ''; const country = (el('deliverCountrySelect') || {}).value || ''; const cc = getCountryDialCode(country); const route = pickUssdForAgent(agent); const ussdUsed = route.template.replace('{CC}', cc).replace('{M}', cc).replace('{AGENT}', agentPhone); const txId = (el('deliverTxId') || {}).value || ('WB' + Date.now()); const providerTxId = (el('deliverProviderTxId') || {}).value || ''; const transferCode = (el('deliverTransferCode') || {}).value || ''; try { ProviderTxIdManager.markAsUsed(agentPtx); } catch (e) {} try { TransferCodeManager.markAsUsed(agentTc); } catch (e) {} const payload = { tx_id: txId, provider_tx_id: agentPtx, transfer_code: agentTc, sender_name: senderName, sender_phone: senderPhone, client_name: (el('deliverClientName') || {}).value || null, client_phone: (el('deliverClientPhone') || {}).value || null, agent_name: agentName, agent_phone: agentPhone, amount: amount, charge: 0, gst: 0, total: amount, currency: currency, mode: 'Delivered', status: 'delivered' }; let insertedId = null; if (typeof supabaseClient !== 'undefined' && supabaseClient) { try { const { data, error } = await supabaseClient.from('transactions').insert(payload).select().single(); if (error) throw error; insertedId = data && data.id; } catch (err) { if (errEl) errEl.textContent = '⚠️ Saved locally'; } } try { const list = JSON.parse(localStorage.getItem('afripay_deliveries') || '[]'); list.push(Object.assign({}, payload, { local_provider_tx_id: providerTxId, local_transfer_code: transferCode, local_agent_name: (el('deliverLocalAgentName') || {}).value || '', local_agent_phone: (el('deliverLocalAgentPhone') || {}).value || '', client_name: (el('deliverClientName') || {}).value || '', client_phone: (el('deliverClientPhone') || {}).value || '', ussd_used: ussdUsed, destination_country: country, delivered_at: new Date().toISOString() })); localStorage.setItem('afripay_deliveries', JSON.stringify(list)); } catch (e) {} if (okEl) okEl.textContent = '✅ Transaction delivered successfully!'; showDeliverReceipt({ txId: txId, agentProviderTxId: agentPtx, agentTransferCode: agentTc, senderName: senderName, senderPhone: senderPhone, clientName: (el('deliverClientName') || {}).value || '', clientPhone: (el('deliverClientPhone') || {}).value || '', amount: amount, currency: currency, localAgentName: (el('deliverLocalAgentName') || {}).value || '', localAgentPhone: (el('deliverLocalAgentPhone') || {}).value || '', destinationCountry: country, destinationCode: cc, ussdUsed: ussdUsed, agentName: agentName, agentPhone: agentPhone, localProviderTxId: providerTxId, localTransferCode: transferCode }); try { if (insertedId) { dealMessages = dealMessages.filter(d => d.txId !== txId); refreshDealsUI(); } } catch (e) {} }
+    function showDeliverReceipt(r) { const body = el('deliverReceiptBody'); const social = el('deliverReceiptSocial'); if (!body) return; const rows = [['📤 Sender', r.senderName + ' — ' + r.senderPhone], ['👤 Client', (r.clientName || '—') + ' — ' + (r.clientPhone || '—')], ['🏢 Local Agent', (r.localAgentName || '—') + ' — ' + (r.localAgentPhone || '—')], ['🌍 Destination', r.destinationCountry + ' (+' + r.destinationCode + ')'], ['🛠 USSD Used', r.ussdUsed], ['🔖 App TX ID', r.txId], ['🔐 App Provider TX ID', r.localProviderTxId || 'N/A'], ['🔐 Your Provider TX ID', r.agentProviderTxId], ['🔑 Your Transfer Code', r.agentTransferCode], ['💵 Amount', r.amount.toFixed(2) + ' ' + r.currency], ['🤝 Agent', r.agentName + ' — ' + r.agentPhone], ['📅 Delivered', new Date().toLocaleString()]]; body.innerHTML = rows.map(([k,v]) => '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f0f0f0;font-size:.82rem;"><span style="color:#7f8c8d;">' + esc(k) + '</span><span style="color:#1e3b4a;font-weight:600;text-align:right;max-width:62%;word-break:break-word;">' + esc(v) + '</span></div>').join(''); let socialHtml = '<div style="font-size:.72rem;color:#7f8c8d;font-weight:700;margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px;">📱 Send Receipt</div><div class="receipt-social-row">'; if (r.senderPhone) { socialHtml += '<button type="button" class="action-btn whatsapp" id="deliverSenderWhatsApp" style="flex:1;min-width:90px;height:36px;font-size:.75rem;">💬 Sender WhatsApp</button>'; socialHtml += '<button type="button" class="action-btn sms" id="deliverSenderSms" style="flex:1;min-width:70px;height:36px;font-size:.75rem;">✉️ Sender SMS</button>'; } if (r.clientPhone) { socialHtml += '<button type="button" class="action-btn whatsapp" id="deliverClientWhatsApp" style="flex:1;min-width:90px;height:36px;font-size:.75rem;">💬 Client WhatsApp</button>'; socialHtml += '<button type="button" class="action-btn sms" id="deliverClientSms" style="flex:1;min-width:70px;height:36px;font-size:.75rem;">✉️ Client SMS</button>'; } socialHtml += '</div>'; if (social) social.innerHTML = socialHtml; if (el('deliverSenderWhatsApp')) el('deliverSenderWhatsApp').addEventListener('click', () => openWhatsApp(r.senderPhone, r.senderName)); if (el('deliverSenderSms')) el('deliverSenderSms').addEventListener('click', () => openSMS(r.senderPhone, r.senderName)); if (el('deliverClientWhatsApp')) el('deliverClientWhatsApp').addEventListener('click', () => openWhatsApp(r.clientPhone, r.clientName)); if (el('deliverClientSms')) el('deliverClientSms').addEventListener('click', () => openSMS(r.clientPhone, r.clientName)); if (el('deliverReceiptModal')) el('deliverReceiptModal').style.display = 'flex'; }
     window.__seedDeliverTransaction = function(tx) { currentDeliverSeed = tx || null; };
     function boot() { if (!el('deliverModal')) return; if (el('deliverModal').dataset.bound === '1') return; el('deliverModal').dataset.bound = '1'; bind(); if (el('deliverReceiptCloseXBtn')) el('deliverReceiptCloseXBtn').addEventListener('click', () => { el('deliverReceiptModal').style.display = 'none'; }); if (el('deliverReceiptCloseBtn')) el('deliverReceiptCloseBtn').addEventListener('click', () => { el('deliverReceiptModal').style.display = 'none'; }); if (el('deliverReceiptModal')) el('deliverReceiptModal').addEventListener('click', function(e) { if (e.target === el('deliverReceiptModal')) el('deliverReceiptModal').style.display = 'none'; }); document.addEventListener('click', function(e) { const menu = el('deliverDealsMenu'); const btn = el('deliverDealsBtn'); if (!menu || !btn) return; if (!btn.contains(e.target) && !menu.contains(e.target)) menu.classList.remove('open'); }); console.log('✅ Deliver module initialized'); }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
