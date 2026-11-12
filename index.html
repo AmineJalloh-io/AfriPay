@@ -9,31 +9,88 @@
 <link rel="stylesheet" href="styles.css" />
 <style>
 /* ============================================================ */
-/* 1. GLOBAL WHITE BACKGROUND — main app area stays white so     */
-/*    inputs, labels, modals all remain visible.                 */
-/*    Header + footer are handled separately (blue-black) below. */
+/* 1. GLOBAL BLACK TEXT on all white surfaces                    */
+/*    Ensures every label, number, figure, caption, placeholder  */
+/*    inside the main app (white bg) is BLACK and clearly        */
+/*    readable.                                                  */
 /* ============================================================ */
 html, body {
     background: #ffffff !important;
-    color: #1e3b4a !important;
+    color: #000000 !important;
     margin: 0;
     padding: 0;
 }
 .app-card {
     background: #ffffff !important;
+    color: #000000 !important;
 }
+
+/* The main app content (form container, cards, panels) is white
+   with BLACK text everywhere — including labels, values, small
+   captions, fee rows, amounts, section titles, receipt rows. */
 .form-container,
+.form-container *,
 .business-strip,
+.business-strip *,
 .charge-breakdown-section,
+.charge-breakdown-section *,
 .charges-panel,
+.charges-panel *,
 .currency-converter-inline,
-.local-agent-details {
+.currency-converter-inline *,
+.local-agent-details,
+.local-agent-details *,
+.profile-section,
+.profile-section * {
+    color: #000000 !important;
+}
+/* Re-assert neutral/black for emphasis-on-white helpers */
+.muted, .help-text, .ussd-hint, .cbs-label, .lad-label,
+.cc-fee-row > span:first-child, .charges-row > span:first-child,
+.section-title, .deliver-section-title, .dash-section-title,
+.dash-empty, .dash-list-item, .dash-list-item *,
+label, span, p, div, small, strong, em, b, i, u,
+h1, h2, h3, h4, h5, h6 {
+    color: #000000;
+}
+/* Inside white surfaces, force black even when the element was
+   styled with a tinted colour (fee rows, badges etc.). */
+.form-container label,
+.form-container input,
+.form-container select,
+.form-container textarea,
+.form-container .profile-field,
+.form-container .section-title,
+.modal-content label,
+.modal-content input,
+.modal-content select,
+.modal-content textarea,
+.modal-content p,
+.modal-content li,
+.modal-content div,
+.modal-content span,
+.modal-content h1,
+.modal-content h2,
+.modal-content h3,
+.modal-content h4,
+.modal-content h5,
+.modal-content h6 {
+    color: #000000 !important;
+}
+
+/* Form inputs: black text on white face */
+input, select, textarea {
+    color: #000000 !important;
     background: #ffffff !important;
-    color: #1e3b4a !important;
+    font-weight: 600;
+}
+input::placeholder, textarea::placeholder {
+    color: #666666 !important;
+    opacity: 1;
 }
 
 /* ============================================================ */
-/* 2. HEADER — restore blue-black background, white text/icons   */
+/* 2. HEADER — keep blue-black, WHITE text (contrast)            */
 /* ============================================================ */
 .live-header {
     background: linear-gradient(135deg, #0a2b3c 0%, #1c4e6c 100%) !important;
@@ -51,7 +108,7 @@ html, body {
 .live-header .datetime-box,
 .live-header .datetime-box #currentDate,
 .live-header .datetime-box .time-text {
-    color: #e8f0f5 !important;
+    color: #ffffff !important;
 }
 .live-header .lang-selector select {
     background: rgba(255,255,255,0.12) !important;
@@ -93,25 +150,18 @@ html, body {
 .live-header .user-avatar,
 .live-header .user-avatar-emoji { color: #ffffff !important; }
 
-/* Flag strip: keep it dark too so it reads on the blue-black header */
-.flags-strip {
-    background: #0a2b3c !important;
-}
-.flags-strip .flag-icon {
-    color: #ffffff !important;
-    opacity: 1 !important;
-}
+/* Flag strip on blue-black */
+.flags-strip { background: #0a2b3c !important; }
+.flags-strip .flag-icon { color: #ffffff !important; opacity: 1 !important; }
 
 /* ============================================================ */
-/* 3. FOOTER — restore blue-black background, white text/icons   */
+/* 3. FOOTER — keep blue-black, WHITE text (contrast)            */
 /* ============================================================ */
 .footer-section {
     background: linear-gradient(135deg, #0a2b3c 0%, #1c4e6c 100%) !important;
     color: #ffffff !important;
 }
-.footer-section * {
-    color: #ffffff !important;
-}
+.footer-section * { color: #ffffff !important; }
 .footer-section .footer-btn {
     background: rgba(255,255,255,0.12) !important;
     color: #ffffff !important;
@@ -120,7 +170,6 @@ html, body {
     text-shadow: none !important;
 }
 .footer-section .footer-btn:hover { background: rgba(255,255,255,0.22) !important; }
-/* Keep the intentionally coloured footer buttons coloured */
 .footer-section #howToBtn { background: #2c7da0 !important; color: #ffffff !important; }
 .footer-section #currencyConverterBtn { background: #0f2b3d !important; color: #ffffff !important; }
 .footer-section #reportAppBtn { background: #e74c3c !important; color: #ffffff !important; }
@@ -129,7 +178,7 @@ html, body {
 .footer-section .wp-btn,
 .footer-section .wb-btn {
     background: #ffffff !important;
-    color: #0f2b3d !important;
+    color: #000000 !important;
     font-weight: 700;
 }
 .footer-section .others-dropdown-menu {
@@ -146,60 +195,38 @@ html, body {
 .footer-section .social-icon:hover { background: rgba(255,255,255,0.26) !important; }
 
 /* ============================================================ */
-/* 4. FORM CONTROLS — white face on white main area              */
-/* ============================================================ */
-input, select, textarea, button {
-    color: #1e3b4a !important;
-}
-input:not([type="checkbox"]):not([type="radio"]),
-select,
-textarea {
-    background: #ffffff !important;
-}
-input::placeholder,
-textarea::placeholder {
-    color: #8a9aa5 !important;
-    opacity: 1;
-}
-
-/* ============================================================ */
-/* 5. MODALS — pure white panels                                 */
+/* 4. MODALS — pure white panels with BLACK text                 */
+/*    Overriding the earlier tinted colours so every figure,     */
+/*    label, USSD code, receipt value is BLACK.                  */
 /* ============================================================ */
 .modal { background: rgba(10, 43, 60, 0.45) !important; }
 .modal-content {
     background: #ffffff !important;
-    color: #1e3b4a !important;
+    color: #000000 !important;
     box-shadow: 0 20px 40px rgba(0,0,0,0.18);
 }
-h1, h2, h3, h4, h5, h6 { color: #0f2b3d !important; }
-label,
-.section-title,
-.deliver-section-title,
-.dash-section-title,
-.ussd-modal-label,
-.iac-label,
-.cbs-label,
-.lad-label,
-.charges-row > span:first-child,
-.cc-fee-row > span:first-child,
-#bizPayRouteLabel,
-#mbFourPickerHint,
-#agentDashSubtitle,
-#editBizAuthHint,
-.profile-info-block .profile-field {
-    color: #1e3b4a !important;
+.modal-content * { color: #000000 !important; }
+
+/* Receipt / deliver receipt header strip stays blue-black with
+   white text (this is the ONLY place inside a modal that must
+   NOT be black, since the bg is dark). */
+#deliverReceiptModal .modal-content > div:first-child,
+#deliverReceiptModal .modal-content > div:first-child *,
+#receiptModal .modal-content > div:first-child,
+#receiptModal .modal-content > div:first-child *,
+#agreementModal .modal-content > div:first-child,
+#agreementModal .modal-content > div:first-child * {
+    color: #ffffff !important;
 }
 
-/* ============================================================ */
-/* 6. BUTTONS inside the modal / main area (not header/footer)   */
-/* ============================================================ */
+/* Buttons inside modals keep their strong-white-on-coloured look */
 .action-btn,
 .btn,
 .btn-submit,
 .single-mm-btn,
 .tx-btn,
 .mini-btn,
-.dash-tab,
+.dash-tab.active,
 .goods-select-btn,
 .close-modal,
 .broadcast-option,
@@ -208,53 +235,55 @@ label,
 .deliver-btn,
 .deliver-deals-btn {
     color: #ffffff !important;
-    text-shadow: 0 1px 1px rgba(0,0,0,0.15);
+    text-shadow: 0 1px 1px rgba(0,0,0,0.2);
 }
+/* Neutral (white face) buttons have BLACK text */
 .action-btn.neutral,
 .mini-btn.neutral,
 .btn.neutral,
 .dash-tab:not(.active) {
-    color: #0f2b3d !important;
+    color: #000000 !important;
     text-shadow: none;
 }
-.action-btn.green, .action-btn.blue,
-.action-btn.orange, .action-btn.red,
-.action-btn.whatsapp, .action-btn.sms,
-.action-btn.dial, .single-mm-btn,
-.tx-btn, .dash-tab.active,
+.action-btn.green, .action-btn.blue, .action-btn.orange,
+.action-btn.red, .action-btn.whatsapp, .action-btn.sms,
+.action-btn.dial, .single-mm-btn, .tx-btn, .dash-tab.active,
 .deliver-deals-btn { color: #ffffff !important; }
 
 /* ============================================================ */
-/* 7. Icons / emojis stay fully visible                          */
+/* 5. ICONS / EMOJIS stay fully visible                          */
 /* ============================================================ */
 .flag-icon, .agent-flag, .country-flag,
 .business-icon-img, .emoji-option,
 .popup-ad-icon, .goods-name, .bo-icon,
 .social-icon, .agent-logo-fallback,
 .dash-badge, .cbs-badge,
-.user-avatar, .user-avatar-img {
+.user-avatar, .user-avatar-img,
+.profile-label, .profile-field {
     opacity: 1 !important;
     filter: none !important;
 }
-.agent-initials-inline { background: transparent; color: #1c6e8f !important; font-weight: 800; }
-.muted, .help-text, .ussd-hint { color: #4a6b7a !important; }
-.success-msg { color: #1c7a4e !important; }
-.error-msg { color: #b03a2e !important; }
+.agent-initials-inline { background: transparent; color: #000000 !important; font-weight: 800; }
+
+/* Semantic helpers, still readable */
+.success-msg { color: #006400 !important; }
+.error-msg { color: #b00020 !important; }
 .toast-msg { background: #0f2b3d !important; color: #ffffff !important; }
 
 /* ============================================================ */
-/* 8. USSD MODAL row helpers + Add/Edit Biz tiles                */
+/* 6. USSD MODAL row helpers + Add/Edit Biz tiles                */
 /* ============================================================ */
 .ussd-modal-details { display: flex; flex-direction: column; gap: 4px; }
 .ussd-modal-row { display: flex; justify-content: space-between; font-size: .82rem; padding: 3px 0; border-bottom: 1px solid #f0f0f0; }
-.ussd-modal-label { color: #4a6b7a !important; }
-.ussd-modal-value { color: #1e3b4a !important; font-weight: 600; text-align: right; max-width: 62%; word-break: break-word; }
+.ussd-modal-label { color: #000000 !important; }
+.ussd-modal-value { color: #000000 !important; font-weight: 700; text-align: right; max-width: 62%; word-break: break-word; }
 #mbFourProductShortcut:hover { filter: brightness(0.97); }
 .biz-img-tile:hover { border-color: #2c7da0; }
 .biz-img-tile button:hover { filter: brightness(0.85); }
 
 /* ============================================================ */
-/* 9. DELIVER modal — international agent info card (WHITE bg)   */
+/* 7. DELIVER modal — international agent info card (WHITE bg,   */
+/*    BLACK text for every figure)                              */
 /* ============================================================ */
 .intl-agent-card {
     margin-top: 8px;
@@ -263,11 +292,11 @@ label,
     border-radius: 10px;
     padding: 10px 12px;
     font-size: .78rem;
-    color: #1e3b4a !important;
+    color: #000000 !important;
 }
 .intl-agent-card .iac-title {
     font-weight: 800;
-    color: #1c6e8f !important;
+    color: #000000 !important;
     font-size: .82rem;
     margin-bottom: 6px;
     display: flex;
@@ -276,24 +305,67 @@ label,
 }
 .intl-agent-card .iac-row { display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px dashed #e3ecf3; }
 .intl-agent-card .iac-row:last-child { border-bottom: none; }
-.intl-agent-card .iac-label { color: #4a6b7a !important; }
-.intl-agent-card .iac-value { color: #0f2b3d !important; font-weight: 600; text-align: right; max-width: 62%; word-break: break-word; }
-.intl-agent-card .iac-row.emph .iac-value { color: #c0392b !important; font-weight: 800; }
+.intl-agent-card .iac-label { color: #000000 !important; }
+.intl-agent-card .iac-value { color: #000000 !important; font-weight: 700; text-align: right; max-width: 62%; word-break: break-word; }
+.intl-agent-card .iac-row.emph .iac-value { color: #000000 !important; font-weight: 800; }
 .intl-agent-card .iac-row.total { border-top: 2px solid #1c6e8f; margin-top: 4px; padding-top: 6px; border-bottom: none; }
-.intl-agent-card .iac-row.total .iac-value { color: #0f2b3d !important; font-weight: 900; font-size: .88rem; }
-.intl-agent-card .iac-empty { color: #c0392b !important; font-weight: 600; }
+.intl-agent-card .iac-row.total .iac-value { color: #000000 !important; font-weight: 900; font-size: .88rem; }
+.intl-agent-card .iac-empty { color: #000000 !important; font-weight: 700; }
 
+/* USSD boxes: black text on white — maximum contrast */
 .deliver-ussd-box,
 .ussd-code-box {
     background: #ffffff !important;
-    color: #0f2b3d !important;
+    color: #000000 !important;
     border: 1px dashed #b8c9d6;
     border-radius: 6px;
     padding: 8px 10px;
     font-family: monospace;
-    font-size: .82rem;
-    font-weight: 700;
+    font-size: .85rem;
+    font-weight: 800;
     word-break: break-word;
+}
+
+/* Ensure form value displays inside receipt-like panels are black */
+#deliverUssdBox, #iacUssd, #iacClientReceives,
+#iacCommission, #iacCarrier, #iacName,
+#iacAddress, #iacPhone,
+#displayAmount, #chargeAmount, #gstAmount,
+#totalAmount, #currencySymbol, #cbsCarrear,
+#cbsLocal, #cbsServices, #cbsTotal,
+#bizPayFeeRate, #bizPayFeeAmount,
+#mbUssdCodeBox {
+    color: #000000 !important;
+}
+
+/* Small captions and help text inside modals must be black */
+.modal-content small,
+.modal-content .help-text,
+.modal-content .ussd-hint,
+.modal-content #editBizAuthHint,
+.modal-content #bizPayRouteLabel,
+.modal-content #mbFourPickerHint,
+.modal-content #agentDashSubtitle {
+    color: #000000 !important;
+}
+
+/* Labels & section sub-titles on white surfaces */
+.section-title,
+.deliver-section-title,
+.dash-section-title,
+.profile-info-block .profile-field,
+.local-agent-details .lad-title {
+    color: #000000 !important;
+    font-weight: 800;
+}
+
+/* Big numeric values: heavier weight for extra clarity */
+#displayAmount, #chargeAmount, #gstAmount, #totalAmount,
+#cbsCarrear, #cbsLocal, #cbsServices, #cbsTotal,
+#iacCommission, #iacCarrier, #iacClientReceives,
+#bizPayFeeRate, #bizPayFeeAmount,
+#currencySymbol {
+    font-weight: 800 !important;
 }
 </style>
 </head>
@@ -301,7 +373,6 @@ label,
 
 <div class="app-card" id="appContainer">
 
-<!-- HEADER (blue-black, white text) -->
 <div class="live-header">
 <div class="header-top">
 <div class="logo-container">
@@ -442,9 +513,9 @@ label,
 
 <div class="charge-breakdown-section" id="chargeBreakdownSection">
 <div class="cbs-title">💳 Fee Breakdown <span class="cbs-badge">5%</span></div>
-<div class="cbs-row"><span class="cbs-label">🚚 Carrear Charges <span style="font-size:.65rem;color:#7f8c8d;">(3%)</span></span><span class="cbs-value" id="cbsCarrear">0.00</span></div>
-<div class="cbs-row"><span class="cbs-label">📞 Local Transfer <span style="font-size:.65rem;color:#7f8c8d;">(1%)</span></span><span class="cbs-value" id="cbsLocal">0.00</span></div>
-<div class="cbs-row"><span class="cbs-label">🛠️ Services <span style="font-size:.65rem;color:#7f8c8d;">(1%)</span></span><span class="cbs-value" id="cbsServices">0.00</span></div>
+<div class="cbs-row"><span class="cbs-label">🚚 Carrear Charges <span style="font-size:.65rem;color:#000000;">(3%)</span></span><span class="cbs-value" id="cbsCarrear">0.00</span></div>
+<div class="cbs-row"><span class="cbs-label">📞 Local Transfer <span style="font-size:.65rem;color:#000000;">(1%)</span></span><span class="cbs-value" id="cbsLocal">0.00</span></div>
+<div class="cbs-row"><span class="cbs-label">🛠️ Services <span style="font-size:.65rem;color:#000000;">(1%)</span></span><span class="cbs-value" id="cbsServices">0.00</span></div>
 <div class="cbs-row cbs-total"><span class="cbs-label">💵 Total Charges</span><span class="cbs-value" id="cbsTotal">0.00</span></div>
 </div>
 
@@ -488,7 +559,6 @@ label,
 </form>
 </div>
 
-<!-- FOOTER (blue-black, white text) -->
 <div class="footer-section">
 <div class="footer-buttons">
 <button class="footer-btn" id="aboutAppBtn" data-i18n="about">About</button>
@@ -671,7 +741,7 @@ label,
 <img id="agentBizProfilePreview" class="id-preview" alt="Business Profile Preview" style="width:60px;height:60px;object-fit:cover;border-radius:50%;" />
 </div>
 <div class="collateral-box"><button class="action-btn orange" id="generateCollateralBtn">USSD</button><div id="collateralUssdDisplay" class="ussd-code" style="display:none;"></div><div id="collateralError" class="error-msg"></div></div>
-<div style="text-align:center;margin:6px 0;"><button class="action-btn orange" id="viewAgreementBtn" style="width:100%;">📜 Agreement</button><div style="font-size:.68rem;"><span id="agreementStatusText" style="color:#e74c3c;">Not Signed</span></div></div>
+<div style="text-align:center;margin:6px 0;"><button class="action-btn orange" id="viewAgreementBtn" style="width:100%;">📜 Agreement</button><div style="font-size:.68rem;"><span id="agreementStatusText" style="color:#000000;">Not Signed</span></div></div>
 <div class="input-group"><label>🔐 Provider TX ID *</label><input type="text" id="agentProviderTxId" /><div id="agentProviderTxIdError" class="error-msg"></div></div>
 <div class="action-buttons-row"><button class="action-btn" id="submitAgentRegistrationBtn">Register</button><button class="action-btn close-modal" style="background:#2c7da0;">Close</button></div>
 </div></div>
@@ -704,7 +774,7 @@ label,
   </div>
 </div>
 <input type="hidden" id="editAgentId" />
-<div id="agentDashSubtitle" style="font-size:.68rem;color:#4a6b7a;margin-bottom:5px;"></div>
+<div id="agentDashSubtitle" style="font-size:.68rem;color:#000000;margin-bottom:5px;"></div>
 <div class="dash-tabs">
 <button type="button" class="dash-tab active" data-dash-tab="profile">✏️ Edit</button>
 <button type="button" class="dash-tab" data-dash-tab="agents">🧑‍💼 Agents</button>
@@ -952,10 +1022,10 @@ label,
 <div id="mbFourAgentPicker" class="modal">
   <div class="modal-content" style="max-width:440px;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
-      <h3 style="margin:0;color:#0f2b3d;">📞 MB-FOUR — Select Local Agent</h3>
+      <h3 style="margin:0;color:#000000;">📞 MB-FOUR — Select Local Agent</h3>
       <button type="button" class="action-btn close-modal" style="width:32px;height:32px;padding:0;border-radius:50%;background:#ccc;color:#222;font-size:1rem;">✕</button>
     </div>
-    <div id="mbFourPickerHint" style="font-size:.72rem;color:#4a6b7a;margin-bottom:8px;">Choose a local agent in your country.</div>
+    <div id="mbFourPickerHint" style="font-size:.72rem;color:#000000;margin-bottom:8px;">Choose a local agent in your country.</div>
     <div id="mbFourAgentList" style="max-height:55vh;overflow-y:auto;"></div>
     <div class="action-buttons-row" style="margin-top:8px;">
       <button type="button" class="action-btn close-modal" style="background:#95a5a6;flex:1;">Cancel</button>
@@ -966,7 +1036,7 @@ label,
 <div id="goodsModal" class="modal"><div class="modal-content">
 <h3 id="goodsModalTitle">📦 Select Item</h3>
 <div id="goodsList"></div>
-<a id="businessWebsiteLink" href="#" target="_blank" style="display:block;margin:4px 0;color:#2c7da0;font-size:.75rem;">🌐 Website</a>
+<a id="businessWebsiteLink" href="#" target="_blank" style="display:block;margin:4px 0;color:#000000;font-size:.75rem;">🌐 Website</a>
 <button class="action-btn close-modal" style="width:100%;">Close</button>
 </div></div>
 
@@ -980,7 +1050,7 @@ label,
 <div id="receiptBody" style="padding:12px 16px;"></div>
 <div id="receiptSocialButtons" style="padding:10px 16px;border-top:1px solid #e8edf2;"></div>
 <div style="padding:10px 16px;border-top:1px solid #e8edf2;text-align:center;">
-<div style="font-weight:700;color:#1c6e8f;font-size:.85rem;">✨ Thank you!</div>
+<div style="font-weight:700;color:#000000;font-size:.85rem;">✨ Thank you!</div>
 <button class="action-btn close-modal" id="receiptCloseBtn" style="margin-top:6px;width:100%;">Close</button>
 </div>
 </div>
@@ -1034,13 +1104,13 @@ label,
     <input type="text" id="bizPin" maxlength="5" inputmode="numeric" readonly placeholder="•••••" style="flex:1;letter-spacing:6px;font-weight:700;text-align:center;background:#ffffff;" />
     <button type="button" class="action-btn green" id="bizGeneratePinBtn" style="height:34px;font-size:.78rem;white-space:nowrap;">🔑 Generate PIN</button>
   </div>
-  <div style="font-size:.68rem;color:#4a6b7a;margin-top:4px;">This 5-digit PIN is required when a user later taps <strong>✏️ Edit Biz</strong> for this business.</div>
+  <div style="font-size:.68rem;color:#000000;margin-top:4px;">This 5-digit PIN is required when a user later taps <strong>✏️ Edit Biz</strong> for this business.</div>
 </div>
 
 <div class="input-group" style="border-top:1px solid #e8edf2;padding-top:10px;margin-top:8px;">
   <label style="display:flex;justify-content:space-between;align-items:center;">
     <span>📦 Products / Services (up to 10)</span>
-    <span id="bizImageCount" style="font-size:.72rem;color:#4a6b7a;font-weight:600;">0 / 10</span>
+    <span id="bizImageCount" style="font-size:.72rem;color:#000000;font-weight:600;">0 / 10</span>
   </label>
   <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;">
     <button type="button" class="action-btn blue" id="bizAddImageBtn" style="height:34px;font-size:.75rem;">➕ Add Image</button>
@@ -1048,19 +1118,19 @@ label,
   </div>
   <input type="file" id="bizImageInput" accept="image/*" class="hidden-input" />
   <div id="bizImageGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;"></div>
-  <div style="font-size:.68rem;color:#4a6b7a;margin-top:6px;">Tap a thumbnail to set its name, price, kind, quality, and delivery — these become the items shoppers see in Quick Pay.</div>
+  <div style="font-size:.68rem;color:#000000;margin-top:6px;">Tap a thumbnail to set its name, price, kind, quality, and delivery — these become the items shoppers see in Quick Pay.</div>
 </div>
 
 <div id="bizPayPanel" class="input-group" style="border-top:1px solid #e8edf2;padding-top:10px;margin-top:8px;background:#ffffff;border-radius:8px;padding:10px;">
   <label style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
     <span>💳 Upload / Activation Fee</span>
-    <span id="bizPayModeBadge" class="cbs-badge" style="background:#2c7da0;color:white;font-size:.68rem;">—</span>
+    <span id="bizPayModeBadge" class="cbs-badge" style="background:#2c7da0;color:#ffffff;font-size:.68rem;">—</span>
   </label>
   <div class="input-group" style="margin-bottom:6px;">
     <label style="font-size:.72rem;">Amount *</label>
     <input type="number" id="bizPayAmount" step="any" placeholder="e.g. 10000" />
   </div>
-  <div id="bizPayFeeRow" style="display:none;font-size:.72rem;color:#1e3b4a;background:#ffffff;border:1px solid #c8ddec;border-radius:6px;padding:6px 8px;margin-bottom:6px;">
+  <div id="bizPayFeeRow" style="display:none;font-size:.72rem;color:#000000;background:#ffffff;border:1px solid #c8ddec;border-radius:6px;padding:6px 8px;margin-bottom:6px;">
     <div style="display:flex;justify-content:space-between;">
       <span>📊 Tiered Rate:</span><span id="bizPayFeeRate" style="font-weight:700;">—</span>
     </div>
@@ -1068,7 +1138,7 @@ label,
       <span>💵 Fee Amount (written into USSD):</span><span id="bizPayFeeAmount" style="font-weight:700;">—</span>
     </div>
   </div>
-  <div style="font-size:.72rem;color:#4a6b7a;margin-bottom:4px;">
+  <div style="font-size:.72rem;color:#000000;margin-bottom:4px;">
     <span id="bizPayRouteLabel">Enter the amount, then Generate.</span>
   </div>
   <div id="bizPayUssdBox" class="ussd-code-box" style="display:none;"></div>
@@ -1088,8 +1158,8 @@ label,
 
 <div id="editBizAuthModal" class="modal">
   <div class="modal-content" style="max-width:400px;">
-    <h3 style="margin-bottom:8px;color:#0f2b3d;">🔐 Verify Business Credentials</h3>
-    <div id="editBizAuthHint" style="font-size:.78rem;color:#4a6b7a;margin-bottom:10px;line-height:1.45;">
+    <h3 style="margin-bottom:8px;color:#000000;">🔐 Verify Business Credentials</h3>
+    <div id="editBizAuthHint" style="font-size:.78rem;color:#000000;margin-bottom:10px;line-height:1.45;">
       Enter the credentials for this business to unlock editing.
     </div>
     <div id="editBizAuthError" class="error-msg"></div>
