@@ -9,9 +9,9 @@
 <link rel="stylesheet" href="styles.css" />
 <style>
 /* ============================================================ */
-/* 1. GLOBAL WHITE BACKGROUND — ensures app stays white and      */
-/*    text/icons/buttons/emojis are ALWAYS clearly visible.      */
-/*    These overrides come AFTER styles.css so they win.         */
+/* 1. GLOBAL WHITE BACKGROUND — main app area stays white so     */
+/*    inputs, labels, modals all remain visible.                 */
+/*    Header + footer are handled separately (blue-black) below. */
 /* ============================================================ */
 html, body {
     background: #ffffff !important;
@@ -19,10 +19,10 @@ html, body {
     margin: 0;
     padding: 0;
 }
-.app-card,
+.app-card {
+    background: #ffffff !important;
+}
 .form-container,
-.live-header,
-.footer-section,
 .business-strip,
 .charge-breakdown-section,
 .charges-panel,
@@ -32,7 +32,122 @@ html, body {
     color: #1e3b4a !important;
 }
 
-/* Form controls: always a white face with strong dark text */
+/* ============================================================ */
+/* 2. HEADER — restore blue-black background, white text/icons   */
+/* ============================================================ */
+.live-header {
+    background: linear-gradient(135deg, #0a2b3c 0%, #1c4e6c 100%) !important;
+    color: #ffffff !important;
+}
+.live-header,
+.live-header * {
+    color: #ffffff !important;
+}
+.live-header .brand-text {
+    color: #FFD966 !important;
+    font-weight: 900;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+.live-header .datetime-box,
+.live-header .datetime-box #currentDate,
+.live-header .datetime-box .time-text {
+    color: #e8f0f5 !important;
+}
+.live-header .lang-selector select {
+    background: rgba(255,255,255,0.12) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255,255,255,0.25) !important;
+}
+.live-header .lang-selector select option {
+    background: #0a2b3c !important;
+    color: #ffffff !important;
+}
+.live-header .lang-icon { color: #ffffff !important; }
+.live-header .agent-dropdown-btn {
+    background: rgba(255,255,255,0.12) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255,255,255,0.25) !important;
+}
+.live-header .agent-dropdown-btn #selectedAgentName { color: #ffffff !important; }
+.live-header .agent-dropdown-btn .arrow { color: #FFD966 !important; }
+.live-header .auth-btn {
+    background: #FFD966 !important;
+    color: #0a2b3c !important;
+    font-weight: 800;
+    text-shadow: none !important;
+    border: none !important;
+}
+.live-header .auth-btn:hover { background: #ffe89a !important; }
+.live-header #welcomeSection .user-name-display,
+.live-header #welcomeSection #loggedUserName {
+    color: #ffffff !important;
+    font-weight: 700;
+}
+.live-header .edit-account-btn,
+.live-header .logout-btn {
+    background: rgba(255,255,255,0.15) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255,255,255,0.3) !important;
+}
+.live-header .connection-dot { background: #4ade80 !important; }
+.live-header .user-avatar,
+.live-header .user-avatar-emoji { color: #ffffff !important; }
+
+/* Flag strip: keep it dark too so it reads on the blue-black header */
+.flags-strip {
+    background: #0a2b3c !important;
+}
+.flags-strip .flag-icon {
+    color: #ffffff !important;
+    opacity: 1 !important;
+}
+
+/* ============================================================ */
+/* 3. FOOTER — restore blue-black background, white text/icons   */
+/* ============================================================ */
+.footer-section {
+    background: linear-gradient(135deg, #0a2b3c 0%, #1c4e6c 100%) !important;
+    color: #ffffff !important;
+}
+.footer-section * {
+    color: #ffffff !important;
+}
+.footer-section .footer-btn {
+    background: rgba(255,255,255,0.12) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255,255,255,0.25) !important;
+    font-weight: 700;
+    text-shadow: none !important;
+}
+.footer-section .footer-btn:hover { background: rgba(255,255,255,0.22) !important; }
+/* Keep the intentionally coloured footer buttons coloured */
+.footer-section #howToBtn { background: #2c7da0 !important; color: #ffffff !important; }
+.footer-section #currencyConverterBtn { background: #0f2b3d !important; color: #ffffff !important; }
+.footer-section #reportAppBtn { background: #e74c3c !important; color: #ffffff !important; }
+.footer-section #othersBtn { background: #8e44ad !important; color: #ffffff !important; }
+.footer-section .dp-btn,
+.footer-section .wp-btn,
+.footer-section .wb-btn {
+    background: #ffffff !important;
+    color: #0f2b3d !important;
+    font-weight: 700;
+}
+.footer-section .others-dropdown-menu {
+    background: #ffffff !important;
+    border: 1px solid #c8ddec !important;
+    box-shadow: 0 8px 22px rgba(0,0,0,0.25);
+}
+.footer-section .social-icon {
+    background: rgba(255,255,255,0.14) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255,255,255,0.28) !important;
+    font-weight: 800;
+}
+.footer-section .social-icon:hover { background: rgba(255,255,255,0.26) !important; }
+
+/* ============================================================ */
+/* 4. FORM CONTROLS — white face on white main area              */
+/* ============================================================ */
 input, select, textarea, button {
     color: #1e3b4a !important;
 }
@@ -47,18 +162,16 @@ textarea::placeholder {
     opacity: 1;
 }
 
-/* Every modal & modal content panel is white */
+/* ============================================================ */
+/* 5. MODALS — pure white panels                                 */
+/* ============================================================ */
 .modal { background: rgba(10, 43, 60, 0.45) !important; }
 .modal-content {
     background: #ffffff !important;
     color: #1e3b4a !important;
     box-shadow: 0 20px 40px rgba(0,0,0,0.18);
 }
-
-/* Headings always dark so they read on white */
 h1, h2, h3, h4, h5, h6 { color: #0f2b3d !important; }
-
-/* Labels, small text, secondary text — keep readable on white */
 label,
 .section-title,
 .deliver-section-title,
@@ -77,106 +190,71 @@ label,
     color: #1e3b4a !important;
 }
 
-/* Buttons: the colored ones already carry white text — force it,
-   and give the neutral ones dark text on a visible face. */
+/* ============================================================ */
+/* 6. BUTTONS inside the modal / main area (not header/footer)   */
+/* ============================================================ */
 .action-btn,
-.auth-btn,
-.footer-btn,
 .btn,
 .btn-submit,
 .single-mm-btn,
 .tx-btn,
 .mini-btn,
 .dash-tab,
-.dash-tab.active,
-.chat-tool-btn,
-.chat-send,
 .goods-select-btn,
 .close-modal,
-.agent-dropdown-btn,
-.chat-groups-btn,
-.chat-close,
-.chat-toggle-btn,
-.deliver-btn,
-.deliver-deals-btn,
 .broadcast-option,
 .popup-ad-btn,
 .cc-btn-close,
-.agent-close-btn,
-.agent-logout-btn,
-.edit-account-btn,
-.logout-btn {
+.deliver-btn,
+.deliver-deals-btn {
     color: #ffffff !important;
     text-shadow: 0 1px 1px rgba(0,0,0,0.15);
 }
-/* Neutral buttons get dark text instead */
 .action-btn.neutral,
 .mini-btn.neutral,
 .btn.neutral,
-.footer-btn,
-.btn-submit,
-.auth-btn,
-.agent-dropdown-btn,
-.chat-groups-btn,
-.dash-tab:not(.active),
-.other-btn {
+.dash-tab:not(.active) {
     color: #0f2b3d !important;
     text-shadow: none;
 }
-/* Specific sub-cases: buttons that were already colored keep white text */
-.auth-btn, .footer-btn, .btn-submit, .action-btn.green, .action-btn.blue,
-.action-btn.orange, .action-btn.red, .action-btn.whatsapp, .action-btn.sms,
-.action-btn.dial, .single-mm-btn, .tx-btn, .dash-tab.active,
-.chat-tool-btn, .chat-toggle-btn, .agent-dropdown-btn,
+.action-btn.green, .action-btn.blue,
+.action-btn.orange, .action-btn.red,
+.action-btn.whatsapp, .action-btn.sms,
+.action-btn.dial, .single-mm-btn,
+.tx-btn, .dash-tab.active,
 .deliver-deals-btn { color: #ffffff !important; }
 
-/* Icons & emojis: preserve full opacity, keep them visible */
+/* ============================================================ */
+/* 7. Icons / emojis stay fully visible                          */
+/* ============================================================ */
 .flag-icon, .agent-flag, .country-flag,
-.business-icon-img, .emoji-option, .emoji-option span,
+.business-icon-img, .emoji-option,
 .popup-ad-icon, .goods-name, .bo-icon,
-.chat-tool-btn, .chat-toggle-btn,
 .social-icon, .agent-logo-fallback,
 .dash-badge, .cbs-badge,
 .user-avatar, .user-avatar-img {
     opacity: 1 !important;
     filter: none !important;
 }
-
-/* The "selected agent"/initials bubble, chips, badges */
-.agent-logo-fallback,
-.agent-initials-inline,
-.cbs-badge,
-.dash-badge {
-    color: #ffffff !important;
-    background: #2c7da0;
-}
 .agent-initials-inline { background: transparent; color: #1c6e8f !important; font-weight: 800; }
-
-/* Helpers / placeholders */
 .muted, .help-text, .ussd-hint { color: #4a6b7a !important; }
 .success-msg { color: #1c7a4e !important; }
 .error-msg { color: #b03a2e !important; }
-
-/* Toast – dark bar, white text */
 .toast-msg { background: #0f2b3d !important; color: #ffffff !important; }
 
 /* ============================================================ */
-/* 2. PRODUCT/SERVICE badge inside MB-FOUR USSD modal            */
+/* 8. USSD MODAL row helpers + Add/Edit Biz tiles                */
 /* ============================================================ */
 .ussd-modal-details { display: flex; flex-direction: column; gap: 4px; }
 .ussd-modal-row { display: flex; justify-content: space-between; font-size: .82rem; padding: 3px 0; border-bottom: 1px solid #f0f0f0; }
 .ussd-modal-label { color: #4a6b7a !important; }
 .ussd-modal-value { color: #1e3b4a !important; font-weight: 600; text-align: right; max-width: 62%; word-break: break-word; }
-
-/* Shortcut card shown at the top of the MB-FOUR picker */
 #mbFourProductShortcut:hover { filter: brightness(0.97); }
-
-/* Multi-image tiles inside Add/Edit Biz modals */
 .biz-img-tile:hover { border-color: #2c7da0; }
 .biz-img-tile button:hover { filter: brightness(0.85); }
 
 /* ============================================================ */
-/* 3. DELIVER modal — international agent info card (WHITE bg)   */
+/* 9. DELIVER modal — international agent info card (WHITE bg)   */
 /* ============================================================ */
 .intl-agent-card {
     margin-top: 8px;
@@ -205,18 +283,7 @@ label,
 .intl-agent-card .iac-row.total .iac-value { color: #0f2b3d !important; font-weight: 900; font-size: .88rem; }
 .intl-agent-card .iac-empty { color: #c0392b !important; font-weight: 600; }
 
-/* Deliver USSD code box – white bg, dark bold monospace code */
-.deliver-ussd-box {
-    background: #ffffff !important;
-    color: #0f2b3d !important;
-    border: 1px dashed #b8c9d6;
-    border-radius: 6px;
-    padding: 8px 10px;
-    font-family: monospace;
-    font-size: .82rem;
-    font-weight: 700;
-    word-break: break-word;
-}
+.deliver-ussd-box,
 .ussd-code-box {
     background: #ffffff !important;
     color: #0f2b3d !important;
@@ -233,6 +300,8 @@ label,
 <body>
 
 <div class="app-card" id="appContainer">
+
+<!-- HEADER (blue-black, white text) -->
 <div class="live-header">
 <div class="header-top">
 <div class="logo-container">
@@ -274,7 +343,6 @@ label,
 <button class="edit-account-btn" id="editAccountBtn">✏️</button>
 <button class="logout-btn" id="logoutBtn" data-i18n="logout">Logout</button>
 <span class="connection-indicator"><span class="connection-dot"></span></span>
-</div>
 </div>
 </div>
 </div>
@@ -420,6 +488,7 @@ label,
 </form>
 </div>
 
+<!-- FOOTER (blue-black, white text) -->
 <div class="footer-section">
 <div class="footer-buttons">
 <button class="footer-btn" id="aboutAppBtn" data-i18n="about">About</button>
@@ -635,7 +704,7 @@ label,
   </div>
 </div>
 <input type="hidden" id="editAgentId" />
-<div id="agentDashSubtitle" style="font-size:.68rem;color:#7f8c8d;margin-bottom:5px;"></div>
+<div id="agentDashSubtitle" style="font-size:.68rem;color:#4a6b7a;margin-bottom:5px;"></div>
 <div class="dash-tabs">
 <button type="button" class="dash-tab active" data-dash-tab="profile">✏️ Edit</button>
 <button type="button" class="dash-tab" data-dash-tab="agents">🧑‍💼 Agents</button>
@@ -764,7 +833,6 @@ label,
 
 </div></div>
 
-<!-- DELIVER TRANSACTION MODAL -->
 <div id="deliverModal" class="modal">
   <div class="modal-content" style="max-width:620px;">
     <div class="deliver-header">
