@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="styles.css" />
 <style>
 /* ============================================================ */
-/* 1. GLOBAL BLACK TEXT on all white surfaces                    */
+/* 1. GLOBAL — page background is white, body copy is black      */
 /* ============================================================ */
 html, body {
     background: #ffffff !important;
@@ -20,15 +20,10 @@ html, body {
 .app-card { background: #ffffff !important; color: #000000 !important; }
 
 /* ============================================================ */
-/* 2. FORM CONTAINER — force BLACK on every label/value/title    */
-/*    This is the block that holds SENDER / AGENT / CLIENT /     */
-/*    Amount fields, Fee Breakdown, charges panel, Quick Pay.    */
-/*    Everything inside MUST be black on white.                  */
+/* 2. FORM CONTAINER — every label / value / title BLACK         */
 /* ============================================================ */
 .form-container,
-.form-container * {
-    color: #000000 !important;
-}
+.form-container * { color: #000000 !important; }
 .form-container input,
 .form-container select,
 .form-container textarea {
@@ -41,51 +36,33 @@ html, body {
     color: #666666 !important;
     opacity: 1;
 }
-
-/* Section titles: SENDER / AGENT / CLIENT / Operator / TX ID /
-   Provider TX ID — these were white before. Force black, bold. */
 .form-container .section-title,
 .section-title {
     color: #000000 !important;
     font-weight: 800 !important;
     text-shadow: none !important;
 }
-
-/* Every <label> inside the form (Name, Phone, City, Amount,
-   Agent, Client, etc.) must be pure black */
 .form-container label,
 .input-group > label {
     color: #000000 !important;
     font-weight: 700;
 }
-
-/* The small helper spans for (3%), (1%), etc. */
 .form-container .cbs-label,
 .form-container .cbs-label span,
 .form-container .cbs-value,
-.form-container .cbs-title,
-.form-container .cbs-badge {
-    color: #000000 !important;
-    text-shadow: none !important;
-}
+.form-container .cbs-title { color: #000000 !important; }
 .form-container .cbs-badge {
     background: #2c7da0 !important;
     color: #ffffff !important;
 }
 
-/* Fee breakdown rows */
 .charge-breakdown-section,
-.charge-breakdown-section * {
-    color: #000000 !important;
-}
+.charge-breakdown-section * { color: #000000 !important; }
 .charge-breakdown-section .cbs-row { border-bottom: 1px dashed #d8e3ea !important; }
 .charge-breakdown-section .cbs-total { border-top: 2px solid #1c6e8f !important; }
 
-/* Charges panel — Base / Fee / GST / Total / Currency */
 .charges-panel,
-.charges-panel * {
-    color: #000000 !important;
-}
+.charges-panel * { color: #000000 !important; }
 .charges-panel .charges-row > span:first-child { font-weight: 700; }
 .charges-panel #displayAmount,
 .charges-panel #chargeAmount,
@@ -97,24 +74,17 @@ html, body {
 }
 .charges-panel .total-row { border-top: 2px solid #1c6e8f; padding-top: 6px; }
 
-/* Local agent detail block */
 .local-agent-details,
-.local-agent-details * {
-    color: #000000 !important;
-}
+.local-agent-details * { color: #000000 !important; }
 
-/* Inline converter */
 .currency-converter-inline,
-.currency-converter-inline * {
-    color: #000000 !important;
-}
+.currency-converter-inline * { color: #000000 !important; }
 .currency-converter-inline select,
 .currency-converter-inline input {
     background: #ffffff !important;
     color: #000000 !important;
 }
 
-/* Profile section */
 .profile-section,
 .profile-section *,
 .profile-info-block .profile-field,
@@ -123,19 +93,20 @@ html, body {
 }
 
 /* ============================================================ */
-/* 3. BUSINESS STRIP (Quick Pay) — every business name, category */
-/*    and icon must be BLACK on the white strip.                 */
+/* 3. QUICK PAY STRIP — BUSINESS NAMES IN BLACK                  */
+/*    Business name, category, icon, title all pure black on     */
+/*    white cards.                                               */
 /* ============================================================ */
 .business-strip,
-.business-strip * {
-    color: #000000 !important;
-}
+.business-strip * { color: #000000 !important; }
+
 .business-strip .business-title { color: #000000 !important; font-weight: 800; }
 .business-strip .business-title > span[data-i18n="quickPay"] {
     color: #000000 !important;
     font-weight: 900;
     text-shadow: none !important;
 }
+
 .business-strip .business-item {
     background: #ffffff !important;
     border: 1px solid #e0e8f0 !important;
@@ -151,18 +122,20 @@ html, body {
     filter: none !important;
     opacity: 1 !important;
 }
+/* ⬇ BUSINESS NAMES — now BLACK (was white) */
 .business-strip .business-item .business-name {
     color: #000000 !important;
-    font-weight: 800;
+    font-weight: 900 !important;
     text-shadow: none !important;
+    letter-spacing: .2px;
 }
 .business-strip .business-item .business-category {
     color: #000000 !important;
-    font-weight: 600;
+    font-weight: 600 !important;
     opacity: .85;
 }
-/* Ensure "+ Add Biz" and "✏️ Edit Biz" buttons inside the strip
-   stay readable (white text on colored bg is correct). */
+
+/* Add Biz / Edit Biz buttons keep white text on colored fill */
 .business-strip .add-biz-btn,
 .business-strip .edit-biz-strip-btn {
     color: #ffffff !important;
@@ -170,35 +143,54 @@ html, body {
 }
 
 /* ============================================================ */
-/* 4. HEADER — keep blue-black bg + WHITE text (contrast)        */
+/* 4. HEADER — DARK BG → text in SKY BLUE / YELLOW / WHITE       */
 /* ============================================================ */
 .live-header {
     background: linear-gradient(135deg, #0a2b3c 0%, #1c4e6c 100%) !important;
-    color: #ffffff !important;
+    color: #87ceeb !important; /* sky-blue default on dark */
 }
 .live-header,
-.live-header * { color: #ffffff !important; }
+.live-header * { color: #87ceeb !important; }
+
+/* Brand = YELLOW (most prominent accent) */
 .live-header .brand-text {
     color: #FFD966 !important;
     font-weight: 900;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    text-shadow: 0 1px 3px rgba(0,0,0,0.45);
 }
+
+/* Date / time = WHITE (highest contrast for legibility) */
+.live-header .datetime-box,
+.live-header .datetime-box #currentDate,
+.live-header .datetime-box .time-text {
+    color: #ffffff !important;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+}
+
+/* Language select on dark bg */
 .live-header .lang-selector select {
     background: rgba(255,255,255,0.12) !important;
-    color: #ffffff !important;
-    border: 1px solid rgba(255,255,255,0.25) !important;
+    color: #87ceeb !important;
+    border: 1px solid rgba(135,206,235,0.5) !important;
+    font-weight: 700;
 }
 .live-header .lang-selector select option {
     background: #0a2b3c !important;
-    color: #ffffff !important;
+    color: #87ceeb !important;
 }
+.live-header .lang-icon { color: #FFD966 !important; }
+
+/* Agent dropdown button — sky-blue text, yellow arrow */
 .live-header .agent-dropdown-btn {
     background: rgba(255,255,255,0.12) !important;
-    color: #ffffff !important;
-    border: 1px solid rgba(255,255,255,0.25) !important;
+    color: #87ceeb !important;
+    border: 1px solid rgba(135,206,235,0.5) !important;
+    font-weight: 700;
 }
-.live-header .agent-dropdown-btn #selectedAgentName { color: #ffffff !important; }
+.live-header .agent-dropdown-btn #selectedAgentName { color: #87ceeb !important; }
 .live-header .agent-dropdown-btn .arrow { color: #FFD966 !important; }
+
+/* Login / Register — yellow fill, dark text (contrast) */
 .live-header .auth-btn {
     background: #FFD966 !important;
     color: #0a2b3c !important;
@@ -206,53 +198,109 @@ html, body {
     text-shadow: none !important;
     border: none !important;
 }
+
+/* Welcome user name = WHITE, action buttons = SKY BLUE outline */
+.live-header #welcomeSection .user-name-display,
+.live-header #welcomeSection #loggedUserName {
+    color: #ffffff !important;
+    font-weight: 700;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+}
 .live-header .edit-account-btn,
 .live-header .logout-btn {
-    background: rgba(255,255,255,0.15) !important;
-    color: #ffffff !important;
-    border: 1px solid rgba(255,255,255,0.3) !important;
+    background: rgba(135,206,235,0.18) !important;
+    color: #87ceeb !important;
+    border: 1px solid rgba(135,206,235,0.55) !important;
+    font-weight: 700;
 }
-.live-header .connection-dot { background: #4ade80 !important; }
+.live-header .connection-dot { background: #FFD966 !important; }
 
+/* Agent dropdown list (floating panel) on dark theme */
+.live-header .agent-dropdown-list,
+.agent-dropdown-list {
+    background: #0a2b3c !important;
+    border: 1px solid rgba(135,206,235,0.4) !important;
+}
+.agent-dropdown-list .agent-dropdown-item,
+.agent-dropdown-list .agent-dropdown-item * {
+    color: #87ceeb !important;
+}
+.agent-dropdown-list .agent-dropdown-item:hover {
+    background: rgba(135,206,235,0.12) !important;
+}
+.agent-dropdown-list .agent-logo-fallback {
+    background: #FFD966 !important;
+    color: #0a2b3c !important;
+}
+
+/* Flag strip — sky-blue flags on dark */
 .flags-strip { background: #0a2b3c !important; }
-.flags-strip .flag-icon { color: #ffffff !important; opacity: 1 !important; }
+.flags-strip .flag-icon {
+    color: #87ceeb !important;
+    opacity: 1 !important;
+    filter: none !important;
+}
+.flags-strip .flag-icon:hover { color: #FFD966 !important; }
 
 /* ============================================================ */
-/* 5. FOOTER — keep blue-black bg + WHITE text                   */
+/* 5. FOOTER — DARK BG → text in SKY BLUE / YELLOW / WHITE       */
 /* ============================================================ */
 .footer-section {
     background: linear-gradient(135deg, #0a2b3c 0%, #1c4e6c 100%) !important;
-    color: #ffffff !important;
+    color: #87ceeb !important;
 }
-.footer-section * { color: #ffffff !important; }
+.footer-section,
+.footer-section * { color: #87ceeb !important; }
+
+/* Footer buttons — sky-blue text/border on the dark bg */
 .footer-section .footer-btn {
-    background: rgba(255,255,255,0.12) !important;
-    color: #ffffff !important;
-    border: 1px solid rgba(255,255,255,0.25) !important;
+    background: rgba(135,206,235,0.12) !important;
+    color: #87ceeb !important;
+    border: 1px solid rgba(135,206,235,0.55) !important;
     font-weight: 700;
     text-shadow: none !important;
 }
+.footer-section .footer-btn:hover {
+    background: rgba(135,206,235,0.22) !important;
+    color: #FFD966 !important;
+}
+
+/* Colored brand buttons keep WHITE text for contrast */
 .footer-section #howToBtn { background: #2c7da0 !important; color: #ffffff !important; }
 .footer-section #currencyConverterBtn { background: #0f2b3d !important; color: #ffffff !important; }
 .footer-section #reportAppBtn { background: #e74c3c !important; color: #ffffff !important; }
 .footer-section #othersBtn { background: #8e44ad !important; color: #ffffff !important; }
+
+/* Others dropdown menu: white bg, dark text (readable popup) */
+.footer-section .others-dropdown-menu {
+    background: #ffffff !important;
+    border: 1px solid #c8ddec !important;
+    box-shadow: 0 8px 22px rgba(0,0,0,0.35);
+}
 .footer-section .dp-btn,
 .footer-section .wp-btn,
 .footer-section .wb-btn {
     background: #ffffff !important;
-    color: #000000 !important;
+    color: #0a2b3c !important;
     font-weight: 700;
 }
-.footer-section .others-dropdown-menu {
-    background: #ffffff !important;
-    border: 1px solid #c8ddec !important;
-    box-shadow: 0 8px 22px rgba(0,0,0,0.25);
+.footer-section .dp-btn:hover,
+.footer-section .wp-btn:hover,
+.footer-section .wb-btn:hover {
+    background: #FFD966 !important;
+    color: #0a2b3c !important;
 }
+
+/* Social icons — YELLOW accent on dark */
 .footer-section .social-icon {
-    background: rgba(255,255,255,0.14) !important;
-    color: #ffffff !important;
-    border: 1px solid rgba(255,255,255,0.28) !important;
+    background: rgba(255,217,102,0.16) !important;
+    color: #FFD966 !important;
+    border: 1px solid rgba(255,217,102,0.55) !important;
     font-weight: 800;
+}
+.footer-section .social-icon:hover {
+    background: rgba(255,217,102,0.3) !important;
+    color: #ffffff !important;
 }
 
 /* ============================================================ */
@@ -266,7 +314,8 @@ html, body {
 }
 .modal-content * { color: #000000 !important; }
 
-/* Receipt / Deliver-receipt / Agreement header strips: white-on-blue */
+/* Receipt / Deliver-receipt / Agreement modal header strips:
+   dark bg → sky-blue / yellow / white text */
 #deliverReceiptModal .modal-content > div:first-child,
 #deliverReceiptModal .modal-content > div:first-child *,
 #receiptModal .modal-content > div:first-child,
@@ -274,9 +323,23 @@ html, body {
 #agreementModal .modal-content > div:first-child,
 #agreementModal .modal-content > div:first-child * {
     color: #ffffff !important;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.35);
+}
+#deliverReceiptModal .modal-content > div:first-child div:first-child,
+#receiptModal .modal-content > div:first-child div:first-child {
+    color: #FFD966 !important;
+    font-weight: 900;
+}
+#deliverReceiptModal .modal-content > div:first-child div:nth-child(2),
+#receiptModal .modal-content > div:first-child div:nth-child(2) {
+    color: #87ceeb !important;
+}
+#agreementModal .modal-content > div:first-child h3 {
+    color: #FFD966 !important;
+    font-weight: 900;
 }
 
-/* Buttons keep their designed colours */
+/* Button colours inside modals stay the same (white on colored fill) */
 .action-btn, .btn, .btn-submit, .single-mm-btn, .tx-btn,
 .mini-btn, .dash-tab.active, .goods-select-btn, .close-modal,
 .broadcast-option, .popup-ad-btn, .cc-btn-close, .deliver-btn,
@@ -290,7 +353,7 @@ html, body {
     text-shadow: none;
 }
 
-/* Icons/emojis stay fully opaque */
+/* Icons and emojis stay fully opaque everywhere */
 .flag-icon, .agent-flag, .country-flag,
 .business-icon-img, .emoji-option, .popup-ad-icon,
 .social-icon, .user-avatar, .user-avatar-img {
@@ -301,7 +364,7 @@ html, body {
 
 .success-msg { color: #006400 !important; }
 .error-msg { color: #b00020 !important; }
-.toast-msg { background: #0f2b3d !important; color: #ffffff !important; }
+.toast-msg { background: #0f2b3d !important; color: #FFD966 !important; font-weight: 700; }
 
 /* ============================================================ */
 /* 7. USSD MODAL + Add/Edit Biz tiles                            */
@@ -312,7 +375,7 @@ html, body {
 .biz-img-tile:hover { border-color: #2c7da0; }
 .biz-img-tile button:hover { filter: brightness(0.85); }
 
-/* Deliver / intl agent card */
+/* Deliver international agent card (white bg, black text) */
 .intl-agent-card {
     margin-top: 8px; background: #ffffff !important;
     border: 1px solid #c8ddec; border-radius: 10px;
@@ -340,7 +403,7 @@ html, body {
     word-break: break-word;
 }
 
-/* Big numeric values extra bold for clarity */
+/* Big numeric figures extra bold */
 #displayAmount, #chargeAmount, #gstAmount, #totalAmount,
 #currencySymbol, #cbsCarrear, #cbsLocal, #cbsServices, #cbsTotal,
 #bizPayFeeRate, #bizPayFeeAmount, #iacCommission, #iacCarrier,
@@ -348,6 +411,50 @@ html, body {
     font-weight: 800 !important;
     color: #000000 !important;
 }
+
+/* ============================================================ */
+/* 8. CHAT PANEL — if the chat nav bar is dark, ensure light text */
+/* ============================================================ */
+.chat-nav {
+    background: #0a2b3c !important;
+}
+.chat-nav .chat-contact { color: #FFD966 !important; font-weight: 800; }
+.chat-nav .chat-datetime { color: #87ceeb !important; }
+.chat-nav .chat-groups-btn {
+    background: rgba(135,206,235,0.15) !important;
+    color: #87ceeb !important;
+    border: 1px solid rgba(135,206,235,0.5) !important;
+}
+.chat-nav .chat-close {
+    background: rgba(255,217,102,0.2) !important;
+    color: #FFD966 !important;
+    border: none !important;
+}
+.chat-groups-menu {
+    background: #0a2b3c !important;
+    border: 1px solid rgba(135,206,235,0.45) !important;
+}
+.chat-groups-menu button {
+    color: #87ceeb !important;
+    background: transparent !important;
+}
+.chat-groups-menu button:hover {
+    background: rgba(135,206,235,0.15) !important;
+    color: #FFD966 !important;
+}
+.chat-leftbar { background: #0a2b3c !important; }
+.chat-leftbar .chat-tool-btn { color: #FFD966 !important; }
+.chat-rightbar {
+    background: #0a2b3c !important;
+    color: #87ceeb !important;
+}
+.chat-rightbar .chat-rightbar-title { color: #FFD966 !important; font-weight: 800; }
+.chat-rightbar .chat-member { color: #87ceeb !important; }
+.chat-rightbar .chat-member .name { color: #87ceeb !important; }
+.chat-rightbar .chat-member.online .name { color: #ffffff !important; }
+
+/* Chat toggle floating bubble stays high-contrast */
+.chat-toggle-btn { background: #FFD966 !important; color: #0a2b3c !important; }
 </style>
 </head>
 <body>
