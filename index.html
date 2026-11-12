@@ -69,7 +69,6 @@
 </div>
 </div>
 </div>
-</div>
 
 <div class="flags-strip" id="flagsStrip">
 <div class="flag-grid-wrapper"><div class="flag-grid" id="headerFlagGrid"></div></div>
@@ -733,7 +732,7 @@
 <div class="input-group"><label>Country *</label><select id="bizCountrySelect"></select></div>
 <div class="input-group"><label>Website (optional)</label><input type="url" id="bizWebsite" /></div>
 
-<!-- NEW: 🔐 Edit Biz PIN (5 digits) — required to save -->
+<!-- 🔐 Edit Biz PIN (5 digits) — required to save -->
 <div class="input-group">
   <label>🔐 Edit Biz PIN (5 digits) *</label>
   <div style="display:flex;gap:6px;align-items:center;">
@@ -743,7 +742,7 @@
   <div style="font-size:.68rem;color:#7f8c8d;margin-top:4px;">This 5-digit PIN is required when a user later taps <strong>✏️ Edit Biz</strong> for this business.</div>
 </div>
 
-<!-- NEW: Product / Service Upload Grid (up to 10 images) -->
+<!-- Product / Service Upload Grid (up to 10 images) -->
 <div class="input-group" style="border-top:1px solid #e8edf2;padding-top:10px;margin-top:8px;">
   <label style="display:flex;justify-content:space-between;align-items:center;">
     <span>📦 Products / Services (up to 10)</span>
@@ -758,7 +757,7 @@
   <div style="font-size:.68rem;color:#7f8c8d;margin-top:6px;">Tap a thumbnail to set its name, price, kind, quality, and delivery — these become the items shoppers see in Quick Pay.</div>
 </div>
 
-<!-- Product / Service Payment Panel -->
+<!-- Product / Service Payment Panel — Generate USSD now uses FIXED 073671566 + TIERED FEE -->
 <div id="bizPayPanel" class="input-group" style="border-top:1px solid #e8edf2;padding-top:10px;margin-top:8px;background:#f9fbfc;border-radius:8px;padding:10px;">
   <label style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
     <span>💳 Upload / Activation Fee</span>
@@ -767,6 +766,14 @@
   <div class="input-group" style="margin-bottom:6px;">
     <label style="font-size:.72rem;">Amount *</label>
     <input type="number" id="bizPayAmount" step="any" placeholder="e.g. 10000" />
+  </div>
+  <div id="bizPayFeeRow" style="display:none;font-size:.72rem;color:#1e3b4a;background:#eaf3f8;border:1px solid #c8ddec;border-radius:6px;padding:6px 8px;margin-bottom:6px;">
+    <div style="display:flex;justify-content:space-between;">
+      <span>📊 Tiered Rate:</span><span id="bizPayFeeRate" style="font-weight:700;">—</span>
+    </div>
+    <div style="display:flex;justify-content:space-between;">
+      <span>💵 Fee Amount (written into USSD):</span><span id="bizPayFeeAmount" style="font-weight:700;">—</span>
+    </div>
   </div>
   <div style="font-size:.72rem;color:#7f8c8d;margin-bottom:4px;">
     <span id="bizPayRouteLabel">Enter the amount, then Generate.</span>
