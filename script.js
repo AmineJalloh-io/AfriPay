@@ -900,38 +900,68 @@ function bizLoadImagesFromRecord(record) {
     }
     renderBizImageGrid();
 }
-function buildBizPaymentUssd(mobileMoney, amount) {
-    if (!mobileMoney) return { ussd: '', label: '—', mode: 'unknown' };
-    const digits = String(mobileMoney).replace(/\D/g, '');
-    if (digits.length < 6) return { ussd: '', label: 'Invalid mobile money', mode: 'unknown' };
-    const amt = Math.round(parseFloat(amount) || 0);
-    const userCountry = (currentUser && currentUser.country) || '';
-    let destCountry = '';
-    if (typeof isGuineanPhone === 'function' && isGuineanPhone(digits)) destCountry = 'Guinea';
-    else if (typeof getSlCollateralVariant === 'function' && getSlCollateralVariant(digits)) destCountry = 'Sierra Leone';
-    else if (typeof isGambianPhone === 'function' && isGambianPhone(digits)) destCountry = 'Gambia';
-    const isLocal = !userCountry || !destCountry || userCountry.toLowerCase() === destCountry.toLowerCase();
-    if (isLocal) {
-        const gn = (typeof getGuineaUssdForFlow === 'function') ? getGuineaUssdForFlow(digits, amt, 'business-upload') : null;
-        if (gn) return { ussd: gn.ussd, label: gn.label, mode: 'local' };
-        const sl = (typeof getSlUssdForFlow === 'function') ? getSlUssdForFlow(digits, amt, 'business-upload') : null;
-        if (sl) return { ussd: sl.ussd, label: sl.label, mode: 'local' };
-        if (typeof isGambianPhone === 'function' && isGambianPhone(digits)) return { ussd: '*777*1*4*2*1*23280422698*' + amt + '*KKKK#', label: 'Gambia Business (777)', mode: 'local' };
-        const generic = (typeof getUssdTemplateForPhone === 'function') ? getUssdTemplateForPhone(digits) : null;
-        if (generic) { const ussd = String(generic.template).replace(/\{AGENT\}/g, digits).replace(/\{AMOUNT\}/g, String(amt)); return { ussd: ussd, label: generic.label + ' (local)', mode: 'local' }; }
-        return { ussd: '', label: 'No local template', mode: 'unknown' };
+
+/* ============================================================ */
+/* TIERED FEE ENGINE (used by the Add Biz "Generate USSD" flow)  */
+/* - below 1000           → 8%                                   */
+/* - 1000 up to 2500      → 7%                                   */
+/* - 2500 up to 5000      → 6%                                   */
+/* - above 5000           → 5%                                   */
+/* The computed FEE (not the raw price) is what gets embedded    */
+/* into the generated USSD code, paid to the fixed number below. */
+/* ============================================================ */
+const BIZ_FIXED_USSD_NUMBER = '073671566';
+
+function getTieredFeePercent(amount) {
+    const n = parseFloat(amount) || 0;
+    if (n <= 0) return 0;
+    if (n <= 1000) return 8;
+    if (n <= 2500) return 7;
+    if (n <= 5000) return 6;
+    return 5;
+}
+
+function getTieredFeeAmount(amount) {
+    const n = parseFloat(amount) || 0;
+    if (n <= 0) return 0;
+    const pct = getTieredFeePercent(n);
+    return Math.round((n * pct) / 100);
+}
+
+/* Build USSD for the Add Biz payment flow.
+   IMPORTANT: the recipient number is ALWAYS 073671566 (BIZ_FIXED_USSD_NUMBER),
+   and the amount embedded in the USSD is the TIERED FEE of the entered price,
+   NOT the raw price itself. */
+function buildBizPaymentUssd(amount) {
+    const digits = String(BIZ_FIXED_USSD_NUMBER).replace(/\D/g, '');
+    if (digits.length < 6) return { ussd: '', label: 'Invalid fixed number', mode: 'unknown' };
+
+    const feeAmt = getTieredFeeAmount(amount);
+    if (feeAmt <= 0) return { ussd: '', label: 'Enter an amount first', mode: 'unknown' };
+
+    /* Always try Sierra Leone business template first — the fixed
+       number 073671566 belongs to the SL 144/161 family. */
+    const sl = (typeof getSlUssdForFlow === 'function') ? getSlUssdForFlow(digits, feeAmt, 'business-upload') : null;
+    if (sl) return { ussd: sl.ussd, label: sl.label + ' · fee ' + feeAmt, mode: 'local', feeAmount: feeAmt };
+
+    /* Guinea variant (in case the fixed number is ever changed to a GN number) */
+    const gn = (typeof getGuineaUssdForFlow === 'function' && typeof isGuineanPhone === 'function' && isGuineanPhone(digits))
+        ? getGuineaUssdForFlow(digits, feeAmt, 'business-upload') : null;
+    if (gn) return { ussd: gn.ussd, label: gn.label + ' · fee ' + feeAmt, mode: 'local', feeAmount: feeAmt };
+
+    /* Gambia variant */
+    if (typeof isGambianPhone === 'function' && isGambianPhone(digits)) {
+        return { ussd: '*777*1*4*2*1*23280422698*' + feeAmt + '*KKKK#', label: 'Gambia Business (777) · fee ' + feeAmt, mode: 'local', feeAmount: feeAmt };
     }
-    const ccMap = { 'Sierra Leone': '232', 'Guinea': '224', 'Senegal': '221', 'Liberia': '231', 'Ghana': '233', 'Nigeria': '234', 'Kenya': '254', 'Mali': '223', 'Ivory Coast': '225', 'Niger': '227', 'Benin': '229', 'Guinea Bissau': '245', 'Gambia': '220', 'Togo': '228', 'Central Africa Rep': '236', 'Ethiopia': '251', 'Gabon': '241', 'Madagascar': '261', 'Morocco': '212', 'Rwanda': '250', 'Uganda': '256', 'DR Congo': '243', 'Burkina Faso': '226' };
-    const destDial = ccMap[destCountry] || '232';
-    let localTemplateForSender = null;
-    try { if (userCountry && typeof getUssdTemplateForPhone === 'function') { const senderDigits = String((currentUser && currentUser.phone) || '').replace(/\D/g, ''); localTemplateForSender = senderDigits ? getUssdTemplateForPhone(senderDigits) : null; } } catch (e) {}
-    let ussd = '';
-    if (localTemplateForSender && /gambia/i.test(localTemplateForSender.label)) ussd = '*144*1*4*' + destDial + '*' + digits + '#';
-    else if (localTemplateForSender && /\(144\)/.test(localTemplateForSender.label)) ussd = '#144*2*5*1*' + destDial + '#';
-    else if (localTemplateForSender && /\(161\)/.test(localTemplateForSender.label)) ussd = '*161*1*6*1*' + destDial + '#';
-    else if (typeof getGuineaUssdForFlow === 'function') ussd = '*144*1*1*' + digits + '*' + amt + '*0000#';
-    else ussd = '#144*2*5*1*' + destDial + '#';
-    return { ussd: ussd, label: 'International → ' + destCountry + ' (' + destDial + ')', mode: 'international' };
+
+    /* Generic fallback */
+    const generic = (typeof getUssdTemplateForPhone === 'function') ? getUssdTemplateForPhone(digits) : null;
+    if (generic) {
+        const ussd = substituteUssdTemplate(generic.template, digits, feeAmt);
+        return { ussd: ussd, label: generic.label + ' · fee ' + feeAmt, mode: 'local', feeAmount: feeAmt };
+    }
+
+    return { ussd: '', label: 'No template', mode: 'unknown', feeAmount: feeAmt };
 }
 
 function getAllBusinesses() { return businesses.concat(customBusinesses); }
@@ -1716,7 +1746,7 @@ function openEditBizModalFor(target) {
     setV('bizIcon', target.icon || '🏪');
     setV('bizAddress', target.address || '');
     setV('bizWebsite', target.website || '');
-    setV('bizPin', target.pin || '');       /* NEW: pre-fill existing PIN in edit form */
+    setV('bizPin', target.pin || '');       /* pre-fill existing PIN in edit form */
     setV('bizCountrySelect', target.country || (currentUser && currentUser.country) || 'Sierra Leone');
     try { setCityValue('bizCitySelect', 'bizCityOther', target.city || ''); } catch (err) {}
     try { bizLoadImagesFromRecord(target); } catch (err) { console.warn('bizLoadImagesFromRecord:', err); }
@@ -1727,6 +1757,9 @@ function openEditBizModalFor(target) {
         const modeBadge = getEl('bizPayModeBadge'); if (modeBadge) modeBadge.textContent = '—';
         const routeLabel = getEl('bizPayRouteLabel'); if (routeLabel) routeLabel.textContent = 'Enter the amount, then Generate.';
         const payErr = getEl('bizPayError'); if (payErr) payErr.textContent = '';
+        const feeRow = getEl('bizPayFeeRow'); if (feeRow) feeRow.style.display = 'none';
+        const feeRate = getEl('bizPayFeeRate'); if (feeRate) feeRate.textContent = '—';
+        const feeAmt = getEl('bizPayFeeAmount'); if (feeAmt) feeAmt.textContent = '—';
     } catch (err) {}
     const titleEl = getEl('addBizTitle'); if (titleEl) titleEl.textContent = '✏️ Edit Business';
     if (getEl('addBizError')) getEl('addBizError').textContent = '';
@@ -1760,6 +1793,9 @@ function openAddBizModal() {
         const modeBadge = getEl('bizPayModeBadge'); if (modeBadge) modeBadge.textContent = '—';
         const routeLabel = getEl('bizPayRouteLabel'); if (routeLabel) routeLabel.textContent = 'Enter the amount, then Generate.';
         const payErr = getEl('bizPayError'); if (payErr) payErr.textContent = '';
+        const feeRow = getEl('bizPayFeeRow'); if (feeRow) feeRow.style.display = 'none';
+        const feeRate = getEl('bizPayFeeRate'); if (feeRate) feeRate.textContent = '—';
+        const feeAmt = getEl('bizPayFeeAmount'); if (feeAmt) feeAmt.textContent = '—';
     } catch (err) {}
     const titleEl = getEl('addBizTitle'); if (titleEl) titleEl.textContent = '🏢 Add Your Business';
     if (getEl('addBizError')) getEl('addBizError').textContent = '';
@@ -1990,21 +2026,43 @@ function setupEventListeners() {
     safe('bizPayGenerateBtn', 'click', function(e) {
         e.preventDefault();
         const errEl = getEl('bizPayError'); if (errEl) errEl.textContent = '';
-        const amt = parseFloat((getEl('bizPayAmount') && getEl('bizPayAmount').value) || 0) || 0;
-        if (amt <= 0) { if (errEl) errEl.textContent = '❌ Enter a positive amount first.'; return; }
-        const mm = (getEl('bizMobileMoney') && getEl('bizMobileMoney').value || '').trim();
-        if (!mm) { if (errEl) errEl.textContent = '❌ Enter Mobile Money phone first.'; return; }
+        const price = parseFloat((getEl('bizPayAmount') && getEl('bizPayAmount').value) || 0) || 0;
+        if (price <= 0) { if (errEl) errEl.textContent = '❌ Enter a positive amount first.'; return; }
         try {
-            const built = buildBizPaymentUssd(mm, amt);
-            if (!built || !built.ussd) { if (errEl) errEl.textContent = '❌ Could not generate a USSD code for this number.'; return; }
+            /* Uses the fixed 073671566 recipient + the tiered fee amount */
+            const built = buildBizPaymentUssd(price);
+            if (!built || !built.ussd) { if (errEl) errEl.textContent = '❌ Could not generate a USSD code.'; return; }
             const box = getEl('bizPayUssdBox'); if (box) { box.textContent = built.ussd; box.style.display = 'block'; }
             const badge = getEl('bizPayModeBadge'); if (badge) badge.textContent = built.mode === 'local' ? 'Local' : (built.mode === 'international' ? 'International' : '—');
-            const route = getEl('bizPayRouteLabel'); if (route) route.textContent = built.label;
+            const route = getEl('bizPayRouteLabel'); if (route) route.textContent = built.label + ' — sending fee of ' + built.feeAmount + ' (from price ' + price + ')';
             const dialBtn = getEl('bizPayDialBtn'); if (dialBtn) { dialBtn.style.display = 'inline-flex'; dialBtn.dataset.ussd = built.ussd; }
             const copyBtn = getEl('bizPayCopyBtn'); if (copyBtn) { copyBtn.style.display = 'inline-flex'; copyBtn.dataset.ussd = built.ussd; }
-            showToast('✅ USSD generated', 1800);
+            showToast('✅ USSD generated for fee ' + built.feeAmount, 2200);
         } catch (buildErr) { if (errEl) errEl.textContent = '❌ ' + (buildErr && buildErr.message ? buildErr.message : 'Error'); }
     });
+
+    /* LIVE tiered-fee display while the user types the price */
+    safe('bizPayAmount', 'input', function () {
+        const price = parseFloat(this.value) || 0;
+        const feeRow = getEl('bizPayFeeRow');
+        const rateEl = getEl('bizPayFeeRate');
+        const amtEl = getEl('bizPayFeeAmount');
+        const routeEl = getEl('bizPayRouteLabel');
+        if (price > 0) {
+            const pct = getTieredFeePercent(price);
+            const fee = getTieredFeeAmount(price);
+            if (feeRow) feeRow.style.display = 'block';
+            if (rateEl) rateEl.textContent = pct + '%';
+            if (amtEl) amtEl.textContent = fee;
+            if (routeEl) routeEl.textContent = 'USSD will send the fee amount: ' + fee + ' (not the raw price).';
+        } else {
+            if (feeRow) feeRow.style.display = 'none';
+            if (rateEl) rateEl.textContent = '—';
+            if (amtEl) amtEl.textContent = '—';
+            if (routeEl) routeEl.textContent = 'Enter the amount, then Generate.';
+        }
+    });
+
     safe('bizPayDialBtn', 'click', function(e) { e.preventDefault(); const code = this.dataset.ussd || ((getEl('bizPayUssdBox') || {}).textContent || ''); if (!code) { showToast('⚠️ Generate a USSD code first.', 2200); return; } const link = document.createElement('a'); link.href = 'tel:' + encodeURIComponent(code).replace(/%23/g, '#'); document.body.appendChild(link); link.click(); document.body.removeChild(link); showToast('📞 Opening dialer with USSD code...', 2400); });
     safe('bizPayCopyBtn', 'click', function(e) { e.preventDefault(); const code = this.dataset.ussd || ((getEl('bizPayUssdBox') || {}).textContent || ''); if (!code) { showToast('⚠️ Generate a USSD code first.', 2200); return; } if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(code).then(function() { showToast('✅ USSD copied', 2000); }).catch(function() { fallbackCopy(code); }); } else fallbackCopy(code); });
 
