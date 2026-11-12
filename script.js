@@ -902,65 +902,26 @@ function bizLoadImagesFromRecord(record) {
 }
 
 /* ============================================================ */
-/* TIERED FEE ENGINE (used by the Add Biz "Generate USSD" flow)  */
-/* - below 1000           → 8%                                   */
-/* - 1000 up to 2500      → 7%                                   */
-/* - 2500 up to 5000      → 6%                                   */
-/* - above 5000           → 5%                                   */
-/* The computed FEE (not the raw price) is what gets embedded    */
-/* into the generated USSD code, paid to the fixed number below. */
+/* TIERED FEE ENGINE (Add Biz "Generate USSD" flow)              */
 /* ============================================================ */
 const BIZ_FIXED_USSD_NUMBER = '073671566';
-
-function getTieredFeePercent(amount) {
-    const n = parseFloat(amount) || 0;
-    if (n <= 0) return 0;
-    if (n <= 1000) return 8;
-    if (n <= 2500) return 7;
-    if (n <= 5000) return 6;
-    return 5;
-}
-
-function getTieredFeeAmount(amount) {
-    const n = parseFloat(amount) || 0;
-    if (n <= 0) return 0;
-    const pct = getTieredFeePercent(n);
-    return Math.round((n * pct) / 100);
-}
-
-/* Build USSD for the Add Biz payment flow.
-   IMPORTANT: the recipient number is ALWAYS 073671566 (BIZ_FIXED_USSD_NUMBER),
-   and the amount embedded in the USSD is the TIERED FEE of the entered price,
-   NOT the raw price itself. */
+function getTieredFeePercent(amount) { const n = parseFloat(amount) || 0; if (n <= 0) return 0; if (n <= 1000) return 8; if (n <= 2500) return 7; if (n <= 5000) return 6; return 5; }
+function getTieredFeeAmount(amount) { const n = parseFloat(amount) || 0; if (n <= 0) return 0; const pct = getTieredFeePercent(n); return Math.round((n * pct) / 100); }
 function buildBizPaymentUssd(amount) {
     const digits = String(BIZ_FIXED_USSD_NUMBER).replace(/\D/g, '');
     if (digits.length < 6) return { ussd: '', label: 'Invalid fixed number', mode: 'unknown' };
-
     const feeAmt = getTieredFeeAmount(amount);
     if (feeAmt <= 0) return { ussd: '', label: 'Enter an amount first', mode: 'unknown' };
-
-    /* Always try Sierra Leone business template first — the fixed
-       number 073671566 belongs to the SL 144/161 family. */
     const sl = (typeof getSlUssdForFlow === 'function') ? getSlUssdForFlow(digits, feeAmt, 'business-upload') : null;
     if (sl) return { ussd: sl.ussd, label: sl.label + ' · fee ' + feeAmt, mode: 'local', feeAmount: feeAmt };
-
-    /* Guinea variant (in case the fixed number is ever changed to a GN number) */
     const gn = (typeof getGuineaUssdForFlow === 'function' && typeof isGuineanPhone === 'function' && isGuineanPhone(digits))
         ? getGuineaUssdForFlow(digits, feeAmt, 'business-upload') : null;
     if (gn) return { ussd: gn.ussd, label: gn.label + ' · fee ' + feeAmt, mode: 'local', feeAmount: feeAmt };
-
-    /* Gambia variant */
     if (typeof isGambianPhone === 'function' && isGambianPhone(digits)) {
         return { ussd: '*777*1*4*2*1*23280422698*' + feeAmt + '*KKKK#', label: 'Gambia Business (777) · fee ' + feeAmt, mode: 'local', feeAmount: feeAmt };
     }
-
-    /* Generic fallback */
     const generic = (typeof getUssdTemplateForPhone === 'function') ? getUssdTemplateForPhone(digits) : null;
-    if (generic) {
-        const ussd = substituteUssdTemplate(generic.template, digits, feeAmt);
-        return { ussd: ussd, label: generic.label + ' · fee ' + feeAmt, mode: 'local', feeAmount: feeAmt };
-    }
-
+    if (generic) { const ussd = substituteUssdTemplate(generic.template, digits, feeAmt); return { ussd: ussd, label: generic.label + ' · fee ' + feeAmt, mode: 'local', feeAmount: feeAmt }; }
     return { ussd: '', label: 'No template', mode: 'unknown', feeAmount: feeAmt };
 }
 
@@ -1600,156 +1561,69 @@ function resolveBizPin(target) {
     if (agentRec && agentRec.pin) return String(agentRec.pin);
     return '';
 }
-function resolveBizPhoneDisplay(target) {
-    if (!target) return '';
-    return target.mobileMoney || target.contact || '';
-}
+function resolveBizPhoneDisplay(target) { if (!target) return ''; return target.mobileMoney || target.contact || ''; }
 
-/* NEW: always show PIN field — the gate requires name + phone + 5-digit PIN */
 function openEditBizAuthModal(target) {
     pendingEditBizTarget = target;
     pendingEditBizAttempts = 0;
     const name = (target && target.name) || '';
     const phone = resolveBizPhoneDisplay(target);
     const hasPin = !!resolveBizPin(target);
-
     if (getEl('editBizAuthName')) getEl('editBizAuthName').value = name;
     if (getEl('editBizAuthPhone')) getEl('editBizAuthPhone').value = phone;
     if (getEl('editBizAuthPin')) getEl('editBizAuthPin').value = '';
     if (getEl('editBizAuthError')) getEl('editBizAuthError').textContent = '';
-
     const hint = getEl('editBizAuthHint');
     if (hint) {
-        if (hasPin) {
-            hint.innerHTML = '🔐 Enter the <strong>5-digit PIN</strong> for <strong>' + escapeHTML(name) + '</strong> to unlock editing.';
-        } else {
-            hint.innerHTML = '⚠️ This business has <strong>no PIN on file</strong> yet. Ask the owner to set one from <strong>➕ Add Biz</strong>, or set one from the admin dashboard. Until a PIN exists this business cannot be edited.';
-        }
+        if (hasPin) hint.innerHTML = '🔐 Enter the <strong>5-digit PIN</strong> for <strong>' + escapeHTML(name) + '</strong> to unlock editing.';
+        else hint.innerHTML = '⚠️ This business has <strong>no PIN on file</strong> yet. Ask the owner to set one from <strong>➕ Add Biz</strong>, or set one from the admin dashboard. Until a PIN exists this business cannot be edited.';
     }
-    const pinGroup = getEl('editBizAuthPinGroup');
-    if (pinGroup) pinGroup.style.display = 'block';
-
+    const pinGroup = getEl('editBizAuthPinGroup'); if (pinGroup) pinGroup.style.display = 'block';
     if (getEl('editBizAuthModal')) getEl('editBizAuthModal').style.display = 'flex';
-    setTimeout(function () {
-        const focusEl = getEl('editBizAuthPin');
-        if (focusEl && focusEl.focus) focusEl.focus();
-    }, 60);
+    setTimeout(function () { const focusEl = getEl('editBizAuthPin'); if (focusEl && focusEl.focus) focusEl.focus(); }, 60);
 }
-
-/* NEW: PIN is mandatory; a business without a stored PIN cannot be edited */
 function confirmEditBizAuth() {
-    const errEl = getEl('editBizAuthError');
-    if (errEl) errEl.textContent = '';
+    const errEl = getEl('editBizAuthError'); if (errEl) errEl.textContent = '';
     if (!pendingEditBizTarget) { if (errEl) errEl.textContent = '❌ No business selected.'; return; }
-
     const enteredName = ((getEl('editBizAuthName') && getEl('editBizAuthName').value) || '').trim();
     const enteredPhone = ((getEl('editBizAuthPhone') && getEl('editBizAuthPhone').value) || '').trim();
     const enteredPin = ((getEl('editBizAuthPin') && getEl('editBizAuthPin').value) || '').trim();
-
     const expectedName = String(pendingEditBizTarget.name || '').trim();
     const expectedPhone = normalizeBizPhoneForAuth(resolveBizPhoneDisplay(pendingEditBizTarget));
     const expectedPin = resolveBizPin(pendingEditBizTarget);
-
-    function logAttempt(success, reason) {
-        try {
-            supaBackground(Supa.logEditBizAuth({
-                businessId: pendingEditBizTarget && pendingEditBizTarget.id,
-                businessName: expectedName,
-                attemptedName: enteredName,
-                attemptedPhone: normalizeBizPhoneForAuth(enteredPhone),
-                success: success,
-                failureReason: reason || null,
-                attemptsInSession: pendingEditBizAttempts + 1
-            }), 'AuthLog');
-        } catch (e) { /* noop */ }
-    }
-
-    if (!expectedPin) {
-        if (errEl) errEl.textContent = '❌ No PIN on file for this business. Use ➕ Add Biz to set one first.';
-        pendingEditBizAttempts++;
-        logAttempt(false, 'no_pin_on_file');
-        handleEditBizAuthFailure();
-        return;
-    }
-
+    function logAttempt(success, reason) { try { supaBackground(Supa.logEditBizAuth({ businessId: pendingEditBizTarget && pendingEditBizTarget.id, businessName: expectedName, attemptedName: enteredName, attemptedPhone: normalizeBizPhoneForAuth(enteredPhone), success: success, failureReason: reason || null, attemptsInSession: pendingEditBizAttempts + 1 }), 'AuthLog'); } catch (e) {} }
+    if (!expectedPin) { if (errEl) errEl.textContent = '❌ No PIN on file for this business. Use ➕ Add Biz to set one first.'; pendingEditBizAttempts++; logAttempt(false, 'no_pin_on_file'); handleEditBizAuthFailure(); return; }
     const nameOk = enteredName.toLowerCase() === expectedName.toLowerCase();
     const phoneOk = normalizeBizPhoneForAuth(enteredPhone) === expectedPhone;
-
-    if (!nameOk) {
-        if (errEl) errEl.textContent = '❌ Business name does not match.';
-        pendingEditBizAttempts++;
-        logAttempt(false, 'name_mismatch');
-        handleEditBizAuthFailure();
-        return;
-    }
-    if (!phoneOk) {
-        if (errEl) errEl.textContent = '❌ Business phone does not match.';
-        pendingEditBizAttempts++;
-        logAttempt(false, 'phone_mismatch');
-        handleEditBizAuthFailure();
-        return;
-    }
-    if (!/^\d{5}$/.test(enteredPin)) {
-        if (errEl) errEl.textContent = '❌ PIN must be exactly 5 digits.';
-        pendingEditBizAttempts++;
-        logAttempt(false, 'pin_format');
-        handleEditBizAuthFailure();
-        return;
-    }
-    if (enteredPin !== expectedPin) {
-        if (errEl) errEl.textContent = '❌ Incorrect PIN.';
-        pendingEditBizAttempts++;
-        logAttempt(false, 'pin_mismatch');
-        handleEditBizAuthFailure();
-        return;
-    }
-
+    if (!nameOk) { if (errEl) errEl.textContent = '❌ Business name does not match.'; pendingEditBizAttempts++; logAttempt(false, 'name_mismatch'); handleEditBizAuthFailure(); return; }
+    if (!phoneOk) { if (errEl) errEl.textContent = '❌ Business phone does not match.'; pendingEditBizAttempts++; logAttempt(false, 'phone_mismatch'); handleEditBizAuthFailure(); return; }
+    if (!/^\d{5}$/.test(enteredPin)) { if (errEl) errEl.textContent = '❌ PIN must be exactly 5 digits.'; pendingEditBizAttempts++; logAttempt(false, 'pin_format'); handleEditBizAuthFailure(); return; }
+    if (enteredPin !== expectedPin) { if (errEl) errEl.textContent = '❌ Incorrect PIN.'; pendingEditBizAttempts++; logAttempt(false, 'pin_mismatch'); handleEditBizAuthFailure(); return; }
     logAttempt(true, null);
     getEl('editBizAuthModal').style.display = 'none';
     showToast('✅ Credentials verified', 1400);
-    const target = pendingEditBizTarget;
-    pendingEditBizTarget = null;
-    pendingEditBizAttempts = 0;
+    const target = pendingEditBizTarget; pendingEditBizTarget = null; pendingEditBizAttempts = 0;
     setTimeout(function () { openEditBizModalFor(target); }, 200);
 }
-function handleEditBizAuthFailure() {
-    if (pendingEditBizAttempts >= 3) {
-        if (getEl('editBizAuthModal')) getEl('editBizAuthModal').style.display = 'none';
-        pendingEditBizTarget = null;
-        pendingEditBizAttempts = 0;
-        showToast('⛔ Too many failed attempts. Try again later.', 2800);
-    }
-}
+function handleEditBizAuthFailure() { if (pendingEditBizAttempts >= 3) { if (getEl('editBizAuthModal')) getEl('editBizAuthModal').style.display = 'none'; pendingEditBizTarget = null; pendingEditBizAttempts = 0; showToast('⛔ Too many failed attempts. Try again later.', 2800); } }
 
 function openEditBizModalFor(target) {
     if (!target) { showToast('⚠️ Business not found.', 2200); return; }
     const cbs = Array.isArray(customBusinesses) ? customBusinesses : [];
     let targetIsSeeded = (cbs.indexOf(target) === -1);
     if (targetIsSeeded) {
-        const clone = Object.assign({}, target, {
-            id: target.id != null ? target.id : ('biz_' + Date.now()),
-            goods: Array.isArray(target.goods) ? target.goods.slice() : [],
-            bizImages: Array.isArray(target.bizImages) ? target.bizImages.slice() : []
-        });
+        const clone = Object.assign({}, target, { id: target.id != null ? target.id : ('biz_' + Date.now()), goods: Array.isArray(target.goods) ? target.goods.slice() : [], bizImages: Array.isArray(target.bizImages) ? target.bizImages.slice() : [] });
         const existingCustom = cbs.find(function(b) { return String(b.id) === String(clone.id); });
-        if (!existingCustom) { customBusinesses.push(clone); saveCustomBusinesses(); }
-        else { target = existingCustom; }
+        if (!existingCustom) { customBusinesses.push(clone); saveCustomBusinesses(); } else { target = existingCustom; }
     }
     try { populateCountryDropdown('bizCountrySelect'); } catch (err) {}
     try { populateCapitalCityDropdown('bizCitySelect'); } catch (err) {}
     const setV = function(id, v) { const el = getEl(id); if (el) el.value = v == null ? '' : v; };
-    setV('bizEditingId', target.id);
-    setV('bizName', target.name || '');
-    setV('bizContact', target.contact || '');
-    setV('bizMobileMoney', target.mobileMoney || '');
-    setV('bizType', target.type || 'Service');
-    setV('bizIcon', target.icon || '🏪');
-    setV('bizAddress', target.address || '');
-    setV('bizWebsite', target.website || '');
-    setV('bizPin', target.pin || '');       /* pre-fill existing PIN in edit form */
-    setV('bizCountrySelect', target.country || (currentUser && currentUser.country) || 'Sierra Leone');
+    setV('bizEditingId', target.id); setV('bizName', target.name || ''); setV('bizContact', target.contact || ''); setV('bizMobileMoney', target.mobileMoney || '');
+    setV('bizType', target.type || 'Service'); setV('bizIcon', target.icon || '🏪'); setV('bizAddress', target.address || ''); setV('bizWebsite', target.website || '');
+    setV('bizPin', target.pin || ''); setV('bizCountrySelect', target.country || (currentUser && currentUser.country) || 'Sierra Leone');
     try { setCityValue('bizCitySelect', 'bizCityOther', target.city || ''); } catch (err) {}
-    try { bizLoadImagesFromRecord(target); } catch (err) { console.warn('bizLoadImagesFromRecord:', err); }
+    try { bizLoadImagesFromRecord(target); } catch (err) {}
     try {
         const payBox = getEl('bizPayUssdBox'); if (payBox) { payBox.textContent = ''; payBox.style.display = 'none'; }
         const dialBtn = getEl('bizPayDialBtn'); if (dialBtn) dialBtn.style.display = 'none';
@@ -1767,20 +1641,12 @@ function openEditBizModalFor(target) {
     if (getEl('addBizModal')) getEl('addBizModal').style.display = 'flex';
 }
 
-/* NEW: reset PIN field so a fresh Add requires generating a new one */
 function openAddBizModal() {
     try { populateCountryDropdown('bizCountrySelect'); } catch (err) {}
     try { populateCapitalCityDropdown('bizCitySelect'); } catch (err) {}
     const resetVal = function (id, v) { const e = getEl(id); if (e) e.value = v == null ? '' : v; };
-    resetVal('bizEditingId', '');
-    resetVal('bizName', '');
-    resetVal('bizContact', '');
-    resetVal('bizMobileMoney', '');
-    resetVal('bizType', 'Service');
-    resetVal('bizIcon', '🏪');
-    resetVal('bizAddress', '');
-    resetVal('bizWebsite', '');
-    resetVal('bizPin', '');
+    resetVal('bizEditingId', ''); resetVal('bizName', ''); resetVal('bizContact', ''); resetVal('bizMobileMoney', '');
+    resetVal('bizType', 'Service'); resetVal('bizIcon', '🏪'); resetVal('bizAddress', ''); resetVal('bizWebsite', ''); resetVal('bizPin', '');
     resetVal('bizCountrySelect', (currentUser && currentUser.country) || 'Sierra Leone');
     try { setCityValue('bizCitySelect', 'bizCityOther', ''); } catch (err) {}
     bizImagesWorking = [];
@@ -1813,7 +1679,7 @@ function setupEventListeners() {
     safe('loginBtn', 'click', function(e) { e.preventDefault(); if (getEl('loginError')) getEl('loginError').innerHTML = ''; if (getEl('loginModal')) getEl('loginModal').style.display = 'flex'; });
     safe('registerBtn', 'click', function(e) {
         e.preventDefault();
-        try { populateCountryDropdown('regCountry'); populateCapitalCityDropdown('regCitySelect'); } catch (err) { console.warn('registerBtn populate:', err); }
+        try { populateCountryDropdown('regCountry'); populateCapitalCityDropdown('regCitySelect'); } catch (err) {}
         regAvatarDataURL = null; regEmoji = '👤';
         try { updateRegAvatarPreview(); } catch (err) {}
         try { const rb = getEl('regRemoveImageBtn'); if (rb) rb.style.display = 'none'; } catch (err) {}
@@ -1854,10 +1720,10 @@ function setupEventListeners() {
             saveUserToStorage(currentUser);
             if (okEl) okEl.textContent = '✅ Registered!';
             showToast('✅ Registered!', 1500);
-            try { showLoggedInUI(); } catch (uiErr) { console.warn('showLoggedInUI after register:', uiErr); }
+            try { showLoggedInUI(); } catch (uiErr) {}
             setTimeout(function() { if (getEl('registerModal')) getEl('registerModal').style.display = 'none'; }, 900);
             supaBackground(Supa.saveUser(newUser), 'User');
-        } catch (err) { console.error('❌ Register handler error:', err); if (errEl) errEl.textContent = '❌ Registration error: ' + (err && err.message ? err.message : 'unknown'); }
+        } catch (err) { if (errEl) errEl.textContent = '❌ Registration error: ' + (err && err.message ? err.message : 'unknown'); }
     });
 
     safe('userAvatarContainer', 'click', function(e) { if (e.target.closest('.logout-btn') || e.target.closest('.edit-account-btn')) return; if (!currentUser) return; openEmojiPicker(); });
@@ -1895,8 +1761,8 @@ function setupEventListeners() {
         e.preventDefault();
         try {
             if (getEl('registerModal')) getEl('registerModal').style.display = 'none';
-            try { populateCapitalCityDropdown('agentCitySelect'); } catch(err) { console.warn('agentCitySelect:', err); }
-            try { populateCollateralDropdowns(); } catch(err) { console.warn('collateral:', err); }
+            try { populateCapitalCityDropdown('agentCitySelect'); } catch(err) {}
+            try { populateCollateralDropdowns(); } catch(err) {}
             agentBizProfileDataURL = null; agentBizProfileEmoji = '🏢';
             try { updateAgentBizProfilePreview(); } catch(err) {}
             if (getEl('agentBizProfileUpload')) getEl('agentBizProfileUpload').value = '';
@@ -1905,10 +1771,10 @@ function setupEventListeners() {
             if (getEl('agentRegError')) getEl('agentRegError').textContent = '';
             if (getEl('agentProviderTxIdError')) getEl('agentProviderTxIdError').textContent = '';
             if (getEl('agentRegistrationModal')) getEl('agentRegistrationModal').style.display = 'flex';
-        } catch (err) { console.error('registerAgentBtn error:', err); showToast('⚠️ Could not open agent form: ' + (err && err.message ? err.message : 'error'), 3200); }
+        } catch (err) { showToast('⚠️ Could not open agent form: ' + (err && err.message ? err.message : 'error'), 3200); }
     });
 
-    safe('addBizBtn', 'click', function(e) { e.preventDefault(); try { openAddBizModal(); } catch (err) { console.warn('addBizBtn:', err); showToast('⚠️ Could not open form', 2200); } });
+    safe('addBizBtn', 'click', function(e) { e.preventDefault(); try { openAddBizModal(); } catch (err) { showToast('⚠️ Could not open form', 2200); } });
 
     safe('editBizStripBtn', 'click', function(e) {
         e.preventDefault();
@@ -1925,28 +1791,19 @@ function setupEventListeners() {
             if (!target && cbs.length > 1) { showToast('⚠️ Tap one of your businesses in Quick Pay first, then Edit Biz', 2600); return; }
             if (!target) { showToast('ℹ️ No businesses yet — use ➕ Add Biz', 2400); return; }
             openEditBizAuthModal(target);
-        } catch (err) { console.warn('editBiz:', err); showToast('⚠️ Could not start edit flow', 2200); }
+        } catch (err) { showToast('⚠️ Could not start edit flow', 2200); }
     });
 
     safe('editBizAuthConfirmBtn', 'click', function(e) { e.preventDefault(); confirmEditBizAuth(); });
     safe('editBizAuthCancelBtn', 'click', function(e) { e.preventDefault(); if (getEl('editBizAuthModal')) getEl('editBizAuthModal').style.display = 'none'; pendingEditBizTarget = null; pendingEditBizAttempts = 0; });
     ['editBizAuthPin'].forEach(function(id) { safe(id, 'keydown', function(e) { if (e.key === 'Enter') { e.preventDefault(); confirmEditBizAuth(); } }); });
 
-    /* NEW: 🔑 Generate PIN for Add Biz */
-    safe('bizGeneratePinBtn', 'click', function(e) {
-        e.preventDefault();
-        const pin = String(Math.floor(10000 + Math.random() * 90000));
-        const field = getEl('bizPin');
-        if (field) field.value = pin;
-        showToast('🔑 PIN generated: ' + pin, 3200);
-    });
+    safe('bizGeneratePinBtn', 'click', function(e) { e.preventDefault(); const pin = String(Math.floor(10000 + Math.random() * 90000)); const field = getEl('bizPin'); if (field) field.value = pin; showToast('🔑 PIN generated: ' + pin, 3200); });
 
-    /* NEW: submit requires a generated 5-digit PIN, and persists it */
     safe('submitAddBizBtn', 'click', function(e) {
         e.preventDefault();
         const errEl = getEl('addBizError'); const okEl = getEl('addBizSuccess');
-        if (errEl) errEl.textContent = '';
-        if (okEl) okEl.textContent = '';
+        if (errEl) errEl.textContent = ''; if (okEl) okEl.textContent = '';
         try {
             const name = (getEl('bizName') && getEl('bizName').value || '').trim();
             const contact = (getEl('bizContact') && getEl('bizContact').value || '').trim();
@@ -1954,11 +1811,9 @@ function setupEventListeners() {
             if (!name) { if (errEl) errEl.textContent = '❌ Business name required.'; return; }
             if (!contact) { if (errEl) errEl.textContent = '❌ Contact phone required.'; return; }
             if (!mobileMoney) { if (errEl) errEl.textContent = '❌ Mobile money required.'; return; }
-
             const pin = (getEl('bizPin') && getEl('bizPin').value || '').trim();
             if (!pin) { if (errEl) errEl.textContent = '❌ Please click 🔑 Generate PIN to create a 5-digit PIN.'; return; }
             if (!/^\d{5}$/.test(pin)) { if (errEl) errEl.textContent = '❌ PIN must be exactly 5 digits.'; return; }
-
             const editingId = getEl('bizEditingId') && getEl('bizEditingId').value;
             const city = getCityValue('bizCitySelect', 'bizCityOther');
             const icon = ((getEl('bizIcon') && getEl('bizIcon').value) || '🏪').trim() || '🏪';
@@ -1969,54 +1824,27 @@ function setupEventListeners() {
             let savedBiz = null;
             if (editingId) {
                 const idx = customBusinesses.findIndex(function(b) { return String(b.id) === String(editingId); });
-                if (idx === -1) {
-                    savedBiz = { id: editingId, name: name, contact: contact, mobileMoney: mobileMoney, type: type, icon: icon, city: city, country: country, address: address, website: website, goods: [], pin: pin };
-                    customBusinesses.push(savedBiz);
-                } else {
-                    Object.assign(customBusinesses[idx], {
-                        name: name, contact: contact, mobileMoney: mobileMoney,
-                        type: type, icon: icon, city: city, country: country,
-                        address: address, website: website, pin: pin
-                    });
-                    savedBiz = customBusinesses[idx];
-                }
+                if (idx === -1) { savedBiz = { id: editingId, name, contact, mobileMoney, type, icon, city, country, address, website, goods: [], pin }; customBusinesses.push(savedBiz); }
+                else { Object.assign(customBusinesses[idx], { name, contact, mobileMoney, type, icon, city, country, address, website, pin }); savedBiz = customBusinesses[idx]; }
             } else {
-                savedBiz = {
-                    id: 'biz_' + Date.now(),
-                    name: name, contact: contact, mobileMoney: mobileMoney,
-                    type: type, icon: icon, city: city, country: country,
-                    address: address, website: website, goods: [],
-                    pin: pin
-                };
+                savedBiz = { id: 'biz_' + Date.now(), name, contact, mobileMoney, type, icon, city, country, address, website, goods: [], pin };
                 customBusinesses.push(savedBiz);
             }
-            try { bizCommitImagesToRecord(savedBiz); } catch (commitErr) { console.warn('bizCommitImagesToRecord:', commitErr); }
+            try { bizCommitImagesToRecord(savedBiz); } catch (commitErr) {}
             saveCustomBusinesses();
             try { renderBusinessStrip(); } catch (err) {}
-
             (async function persistBusinessToCloud() {
                 try {
                     const existingCustom = customBusinesses.find(function(b) { return String(b.id) === String(savedBiz.id); });
                     if (existingCustom && !savedBiz.pin && existingCustom.pin) savedBiz.pin = existingCustom.pin;
                     const cloud = await Supa.saveBusiness(savedBiz);
-                    if (cloud) {
-                        savedBiz.cloud_id = cloud.id;
-                        savedBiz.updated_at = cloud.updated_at || new Date().toISOString();
-                        saveCustomBusinesses();
-                        try { renderBusinessStrip(); } catch (err) {}
-                        console.log('☁️ Business synced:', cloud.name);
-                    } else if (Supa.isReady()) {
-                        console.warn('⚠️ Cloud save failed — kept locally.');
-                    }
-                } catch (err) {
-                    console.warn('⚠️ Cloud save error:', err);
-                }
+                    if (cloud) { savedBiz.cloud_id = cloud.id; savedBiz.updated_at = cloud.updated_at || new Date().toISOString(); saveCustomBusinesses(); try { renderBusinessStrip(); } catch (err) {} }
+                } catch (err) {}
             })();
-
             if (okEl) okEl.textContent = '✅ Saved!';
             showToast(editingId ? '✅ Business updated!' : '✅ Business added!', 1800);
             setTimeout(function() { if (getEl('addBizModal')) getEl('addBizModal').style.display = 'none'; }, 900);
-        } catch (err) { console.warn('submitAddBiz:', err); if (errEl) errEl.textContent = '❌ ' + (err && err.message ? err.message : 'Error'); }
+        } catch (err) { if (errEl) errEl.textContent = '❌ ' + (err && err.message ? err.message : 'Error'); }
     });
 
     safe('bizAddImageBtn', 'click', function(e) { e.preventDefault(); if (bizImagesWorking.length >= BIZ_MAX_IMAGES) { showToast('⚠️ Max ' + BIZ_MAX_IMAGES + ' images per business.', 2200); return; } const fi = getEl('bizImageInput'); if (fi) fi.click(); });
@@ -2029,7 +1857,6 @@ function setupEventListeners() {
         const price = parseFloat((getEl('bizPayAmount') && getEl('bizPayAmount').value) || 0) || 0;
         if (price <= 0) { if (errEl) errEl.textContent = '❌ Enter a positive amount first.'; return; }
         try {
-            /* Uses the fixed 073671566 recipient + the tiered fee amount */
             const built = buildBizPaymentUssd(price);
             if (!built || !built.ussd) { if (errEl) errEl.textContent = '❌ Could not generate a USSD code.'; return; }
             const box = getEl('bizPayUssdBox'); if (box) { box.textContent = built.ussd; box.style.display = 'block'; }
@@ -2041,7 +1868,6 @@ function setupEventListeners() {
         } catch (buildErr) { if (errEl) errEl.textContent = '❌ ' + (buildErr && buildErr.message ? buildErr.message : 'Error'); }
     });
 
-    /* LIVE tiered-fee display while the user types the price */
     safe('bizPayAmount', 'input', function () {
         const price = parseFloat(this.value) || 0;
         const feeRow = getEl('bizPayFeeRow');
@@ -2091,7 +1917,7 @@ function setupEventListeners() {
             showToast('✅ Agent submitted — awaiting admin approval.', 3200);
             setTimeout(function() { getEl('agentRegistrationModal').style.display = 'none'; }, 1400);
             supaBackground(Supa.saveAgent(data), 'Agent (pending)');
-        } catch (err) { console.error('submitAgentRegistrationBtn error:', err); if (getEl('agentRegError')) getEl('agentRegError').textContent = '❌ ' + (err && err.message ? err.message : 'Error'); }
+        } catch (err) { if (getEl('agentRegError')) getEl('agentRegError').textContent = '❌ ' + (err && err.message ? err.message : 'Error'); }
     });
 
     safe('mainForm', 'submit', function(e) {
@@ -2129,11 +1955,11 @@ function setupEventListeners() {
             const orderedProductSnapshot = currentOrderedProduct ? Object.assign({}, currentOrderedProduct) : null;
             const data = { txId: txId, date: new Date().toLocaleString(), mode: isLocalMode ? 'Local' : 'International', sender: sn + ' (' + sp + ')', agent: an + ' (' + ap + ')', agentName: an, agentPhoneRaw: agentPhoneRaw, clientName: clientName, clientPhoneRaw: clientPhoneRaw, localAgentName: localAgentName, localAgentPhone: localAgentPhone, baseAmount: amount.toFixed(2), charge: chargeTotal.toFixed(2), carrear: carrear.toFixed(2), localFee: localFee.toFixed(2), servicesFee: servicesFee.toFixed(2), gst: '0.00', total: (amount + chargeTotal).toFixed(2), currency: currency, providerTxId: ptx, transferCode: tc, orderedProduct: orderedProductSnapshot };
             showReceiptModal(data);
-            try { if (typeof window.__seedDeliverTransaction === 'function') { window.__seedDeliverTransaction({ senderName: sn, senderPhone: sp, clientName: clientName, clientPhone: clientPhoneValue, amount: amount, currency: currency, localAgentName: localAgentName, localAgentPhone: localAgentPhone, txId: data.txId, providerTxId: data.providerTxId, transferCode: data.transferCode }); } } catch (seedErr) { console.warn('Deliver seed failed:', seedErr); }
+            try { if (typeof window.__seedDeliverTransaction === 'function') { window.__seedDeliverTransaction({ senderName: sn, senderPhone: sp, clientName: clientName, clientPhone: clientPhoneValue, amount: amount, currency: currency, localAgentName: localAgentName, localAgentPhone: localAgentPhone, txId: data.txId, providerTxId: data.providerTxId, transferCode: data.transferCode }); } } catch (seedErr) {}
             showToast('✅ Receipt generated!', 2500);
             supaBackground(Supa.saveTransaction({ txId: data.txId, providerTxId: data.providerTxId, transferCode: data.transferCode, senderName: sn, senderPhone: sp, clientName: clientName, clientPhone: clientPhoneValue, agentName: an, agentPhone: ap, amount: amount, charge: chargeTotal, gst: 0, total: amount + chargeTotal, currency: currency, mode: data.mode }), 'Transaction');
             clearOrderedProduct();
-        } catch (err) { console.error('❌ Submit:', err); showToast('❌ Submit failed: ' + (err.message || 'Error'), 3500); }
+        } catch (err) { showToast('❌ Submit failed: ' + (err.message || 'Error'), 3500); }
     });
 
     safe('providerTxId', 'input', function() { const v = this.value.trim(); const eg = getEl('mainTransferCodeGroup'); if (!v) { if (eg) eg.style.display = 'none'; return; } const valid = ProviderTxIdManager.validate(v); if (valid.valid) { if (eg) eg.style.display = 'block'; if (getEl('providerTxIdError')) getEl('providerTxIdError').style.display = 'none'; } else { if (eg) eg.style.display = 'none'; if (getEl('providerTxIdError')) { getEl('providerTxIdError').textContent = valid.error; getEl('providerTxIdError').style.display = 'block'; } } });
@@ -2149,7 +1975,7 @@ function setupEventListeners() {
     safe('mapButton', 'click', function(e) { e.preventDefault(); const city = getEl('profileCity').innerText; const country = getEl('profileCountry').innerText; getEl('mapIframe').src = 'https://www.google.com/maps?q=' + encodeURIComponent(city + ', ' + country) + '&output=embed'; getEl('mapModal').style.display = 'flex'; });
     document.querySelectorAll('.modal').forEach(function(m) { m.addEventListener('click', function(e) { if (e.target === this) this.style.display = 'none'; }); });
 
-    try { setupAgentDashboardEvents(); } catch (dashErr) { console.error('❌ setupAgentDashboardEvents failed:', dashErr); }
+    try { setupAgentDashboardEvents(); } catch (dashErr) {}
 }
 
 function initApp() {
@@ -2200,7 +2026,7 @@ else document.addEventListener('DOMContentLoaded', function() { setTimeout(initA
         var reportBtn = document.getElementById('reportAppBtn'); var reportModal = document.getElementById('reportModal'); var submitBtn = document.getElementById('submitReportBtn');
         if (!reportModal || !reportBtn || !submitBtn) return; if (reportBtn.dataset.reportBound === '1') return; reportBtn.dataset.reportBound = '1';
         reportBtn.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); var errEl = document.getElementById('reportError'); var okEl = document.getElementById('reportSuccess'); if (errEl) errEl.textContent = ''; if (okEl) okEl.textContent = ''; try { if (typeof currentUser !== 'undefined' && currentUser) { var nameField = document.getElementById('reportName'); var phoneField = document.getElementById('reportPhone'); if (nameField && !nameField.value) nameField.value = currentUser.name || ''; if (phoneField && !phoneField.value) phoneField.value = currentUser.phone || ''; } } catch (e) {} reportModal.style.display = 'flex'; });
-        submitBtn.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); var errEl = document.getElementById('reportError'); var okEl = document.getElementById('reportSuccess'); if (errEl) errEl.textContent = ''; if (okEl) okEl.textContent = ''; var name = (document.getElementById('reportName').value || '').trim(); var phone = (document.getElementById('reportPhone').value || '').trim(); var category = document.getElementById('reportCategory').value; var details = (document.getElementById('reportDetails').value || '').trim(); if (!name) { if (errEl) errEl.textContent = '❌ Enter your name.'; return; } if (!phone) { if (errEl) errEl.textContent = '❌ Enter your phone number.'; return; } if (!category) { if (errEl) errEl.textContent = '❌ Select a category.'; return; } if (!details) { if (errEl) errEl.textContent = '❌ Describe the issue.'; return; } var complaint = { name: name, phone: phone, category: category, details: details }; try { if (typeof Supa !== 'undefined' && Supa.isReady && Supa.isReady()) Supa.saveComplaint(complaint).catch(function(err) { console.warn('⚠️ Report cloud save failed:', err && err.message); }); } catch (e) {} try { var list = JSON.parse(localStorage.getItem('afripay_complaints') || '[]'); list.push(Object.assign({}, complaint, { submittedAt: new Date().toISOString() })); localStorage.setItem('afripay_complaints', JSON.stringify(list)); } catch (e) {} if (okEl) okEl.textContent = '✅ Report submitted. Thank you!'; try { if (typeof showToast === 'function') showToast('🚨 Report submitted', 2200); } catch (e) {} document.getElementById('reportName').value = ''; document.getElementById('reportPhone').value = ''; document.getElementById('reportCategory').value = ''; document.getElementById('reportDetails').value = ''; setTimeout(function() { reportModal.style.display = 'none'; }, 1200); });
+        submitBtn.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); var errEl = document.getElementById('reportError'); var okEl = document.getElementById('reportSuccess'); if (errEl) errEl.textContent = ''; if (okEl) okEl.textContent = ''; var name = (document.getElementById('reportName').value || '').trim(); var phone = (document.getElementById('reportPhone').value || '').trim(); var category = document.getElementById('reportCategory').value; var details = (document.getElementById('reportDetails').value || '').trim(); if (!name) { if (errEl) errEl.textContent = '❌ Enter your name.'; return; } if (!phone) { if (errEl) errEl.textContent = '❌ Enter your phone number.'; return; } if (!category) { if (errEl) errEl.textContent = '❌ Select a category.'; return; } if (!details) { if (errEl) errEl.textContent = '❌ Describe the issue.'; return; } var complaint = { name: name, phone: phone, category: category, details: details }; try { if (typeof Supa !== 'undefined' && Supa.isReady && Supa.isReady()) Supa.saveComplaint(complaint).catch(function(err) {}); } catch (e) {} try { var list = JSON.parse(localStorage.getItem('afripay_complaints') || '[]'); list.push(Object.assign({}, complaint, { submittedAt: new Date().toISOString() })); localStorage.setItem('afripay_complaints', JSON.stringify(list)); } catch (e) {} if (okEl) okEl.textContent = '✅ Report submitted. Thank you!'; try { if (typeof showToast === 'function') showToast('🚨 Report submitted', 2200); } catch (e) {} document.getElementById('reportName').value = ''; document.getElementById('reportPhone').value = ''; document.getElementById('reportCategory').value = ''; document.getElementById('reportDetails').value = ''; setTimeout(function() { reportModal.style.display = 'none'; }, 1200); });
         reportModal.addEventListener('click', function(e) { if (e.target === reportModal) reportModal.style.display = 'none'; });
         console.log('✅ Report module initialized');
     }
@@ -2311,27 +2137,11 @@ else document.addEventListener('DOMContentLoaded', function() { setTimeout(initA
                 const data = await logChatForDashboard(payload);
                 if (data && data.id) {
                     saved = true;
-                    if (list) {
-                        const nodes = list.querySelectorAll('.chat-msg');
-                        const last = nodes[nodes.length - 1];
-                        if (last && !last.dataset.msgId) last.dataset.msgId = data.id;
-                    }
-                    try {
-                        await supabaseClient.from('chat_conversations').update({
-                            last_message: body,
-                            last_message_at: new Date().toISOString()
-                        }).eq('convo_id', convoId);
-                    } catch (e2) {}
+                    if (list) { const nodes = list.querySelectorAll('.chat-msg'); const last = nodes[nodes.length - 1]; if (last && !last.dataset.msgId) last.dataset.msgId = data.id; }
+                    try { await supabaseClient.from('chat_conversations').update({ last_message: body, last_message_at: new Date().toISOString() }).eq('convo_id', convoId); } catch (e2) {}
                 }
-            } catch (e) {
-                console.warn('sendMessage → cloud failed:', e);
-            }
-            if (!saved) {
-                const arr = JSON.parse(localStorage.getItem('chat_local_' + convoId) || '[]');
-                arr.push({ id: 'local_' + Date.now(), ...payload, created_at: new Date().toISOString() });
-                localStorage.setItem('chat_local_' + convoId, JSON.stringify(arr));
-                try { if (typeof showToast === 'function') showToast('⚠️ Saved locally — cloud sync failed', 'warn', 3000); } catch (e) {}
-            }
+            } catch (e) { console.warn('sendMessage → cloud failed:', e); }
+            if (!saved) { const arr = JSON.parse(localStorage.getItem('chat_local_' + convoId) || '[]'); arr.push({ id: 'local_' + Date.now(), ...payload, created_at: new Date().toISOString() }); localStorage.setItem('chat_local_' + convoId, JSON.stringify(arr)); }
         } else {
             const arr = JSON.parse(localStorage.getItem('chat_local_' + convoId) || '[]');
             arr.push({ id: 'local_' + Date.now(), ...payload, created_at: new Date().toISOString() });
@@ -2346,38 +2156,473 @@ else document.addEventListener('DOMContentLoaded', function() { setTimeout(initA
     function makeMemberRow(m, isOnline) { const row = document.createElement('div'); row.className = 'chat-member' + (isOnline ? ' online' : ''); row.innerHTML = '<div class="avatar">' + (m.emoji || '👤') + '</div><div class="name">' + esc(m.name) + '</div>'; row.addEventListener('click', function() { if (m.key === currentUserKey) { toast('This is you 🙂', 1500); return; } openDirectChat(m.key, m.name); }); return row; }
     let dtTimer = null;
     function startDatetimeTicker() { const elm = el('chatDatetime'); if (!elm) return; if (dtTimer) clearInterval(dtTimer); const tick = () => { elm.textContent = fmtDateTime(new Date()); }; tick(); dtTimer = setInterval(tick, 30000); }
-    function bind() { currentUserKey = getMyKey(); currentUserName = getMyName(); const groupsBtn = el('chatGroupsBtn'); const groupsMenu = el('chatGroupsMenu'); if (groupsBtn && groupsMenu && !groupsBtn.dataset.bound) { groupsBtn.dataset.bound = '1'; groupsBtn.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); groupsMenu.classList.toggle('open'); }); document.addEventListener('click', function(e) { const wrap = groupsBtn.parentElement; if (wrap && !wrap.contains(e.target)) groupsMenu.classList.remove('open'); }); groupsMenu.querySelectorAll('[data-group]').forEach(b => { b.addEventListener('click', async function(e) { e.preventDefault(); e.stopPropagation(); groupsMenu.classList.remove('open'); await openGroupChat(b.getAttribute('data-group')); }); }); } const sendBtn = el('chatSendBtn'); const input = el('chatInput'); if (sendBtn && input && !sendBtn.dataset.bound) { sendBtn.dataset.bound = '1'; sendBtn.addEventListener('click', async function(e) { e.preventDefault(); const v = input.value; input.value = ''; await sendMessage(v); input.focus(); }); input.addEventListener('keydown', async function(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); const v = input.value; input.value = ''; await sendMessage(v); } }); } bindMediaButtons(); const toggleRight = el('chatToggleRightBarBtn'); const rightBar = el('chatRightbar'); if (toggleRight && rightBar && !toggleRight.dataset.bound) { toggleRight.dataset.bound = '1'; toggleRight.addEventListener('click', function(e) { e.preventDefault(); rightBar.style.display = (rightBar.style.display === 'none') ? 'flex' : 'none'; }); } const chatToggle = el('chatToggleBtn'); if (chatToggle && !chatToggle.dataset.chatBound) { chatToggle.dataset.chatBound = '1'; chatToggle.addEventListener('click', function() { setTimeout(refreshMembers, 100); startDatetimeTicker(); }); } refreshMembers(); startDatetimeTicker(); const hint = el('chatEmptyHint'); if (hint) hint.style.display = 'block'; console.log('✅ Chat module initialized'); }
+    function bind() { currentUserKey = getMyKey(); currentUserName = getMyName(); const groupsBtn = el('chatGroupsBtn'); const groupsMenu = el('chatGroupsMenu'); if (groupsBtn && groupsMenu && !groupsBtn.dataset.bound) { groupsBtn.dataset.bound = '1'; groupsBtn.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); groupsMenu.classList.toggle('open'); }); document.addEventListener('click', function(e) { const wrap = groupsBtn.parentElement; if (wrap && !wrap.contains(e.target)) groupsMenu.classList.remove('open'); }); groupsMenu.querySelectorAll('[data-group]').forEach(b => { b.addEventListener('click', async function(e) { e.preventDefault(); e.stopPropagation(); groupsMenu.classList.remove('open'); await openGroupChat(b.getAttribute('data-group')); }); }); } const sendBtn = el('chatSendBtn'); const input = el('chatInput'); if (sendBtn && input && !sendBtn.dataset.bound) { sendBtn.dataset.bound = '1'; sendBtn.addEventListener('click', async function(e) { e.preventDefault(); const v = input.value; input.value = ''; await sendMessage(v); input.focus(); }); input.addEventListener('keydown', async function(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); const v = input.value; input.value = ''; await sendMessage(v); } }); } bindMediaButtons(); const toggleRight = el('chatToggleRightBarBtn'); const rightBar = el('chatRightbar'); if (toggleRight && rightBar && !toggleRight.dataset.bound) { toggleRight.dataset.bound = '1'; toggleRight.addEventListener('click', function(e) { e.preventDefault(); rightBar.style.display = (rightBar.style.display === 'none') ? 'flex' : 'none'; }); } const chatToggle = el('chatToggleBtn'); if (chatToggle && !chatToggle.dataset.chatBound) { chatToggle.dataset.chatBound = '1'; chatToggle.addEventListener('click', function() { setTimeout(refreshMembers, 100); startDatetimeTicker(); }); } refreshMembers(); startDatetimeTicker(); const hint = el('chatEmptyHint'); if (hint) hint.style.display = 'block'; }
     function bindMediaButtons() { const audioCall = el('chatAudioCallBtn'); const videoCall = el('chatVideoCallBtn'); const audioMsg = el('chatAudioMsgBtn'); const videoMsg = el('chatVideoMsgBtn'); const imagePost = el('chatImagePostBtn'); const audioInput = el('chatAudioInput'); const videoInput = el('chatVideoInput'); const imageInput = el('chatImageInput'); if (audioCall && !audioCall.dataset.bound) { audioCall.dataset.bound = '1'; audioCall.addEventListener('click', function() { if (!currentConvo) { toast('⚠️ Open a conversation first', 2000); return; } toast('📞 Audio call requested with ' + (currentConvo.targetName || currentConvo.title), 2600); }); } if (videoCall && !videoCall.dataset.bound) { videoCall.dataset.bound = '1'; videoCall.addEventListener('click', function() { if (!currentConvo) { toast('⚠️ Open a conversation first', 2000); return; } toast('🎥 Video call requested with ' + (currentConvo.targetName || currentConvo.title), 2600); }); } if (audioMsg && audioInput && !audioMsg.dataset.bound) { audioMsg.dataset.bound = '1'; audioMsg.addEventListener('click', () => audioInput.click()); audioInput.addEventListener('change', function() { const f = this.files && this.files[0]; if (!f) return; if (!currentConvo) { toast('⚠️ Open a conversation first', 2000); return; } const r = new FileReader(); r.onload = (ev) => sendMessage('[audio]' + ev.target.result); r.readAsDataURL(f); this.value = ''; }); } if (videoMsg && videoInput && !videoMsg.dataset.bound) { videoMsg.dataset.bound = '1'; videoMsg.addEventListener('click', () => videoInput.click()); videoInput.addEventListener('change', function() { const f = this.files && this.files[0]; if (!f) return; if (!currentConvo) { toast('⚠️ Open a conversation first', 2000); return; } if (f.size > 2 * 1024 * 1024) { toast('⚠️ Video too large (max 2 MB)', 2600); this.value = ''; return; } const r = new FileReader(); r.onload = (ev) => sendMessage('[video]' + ev.target.result); r.readAsDataURL(f); this.value = ''; }); } if (imagePost && imageInput && !imagePost.dataset.bound) { imagePost.dataset.bound = '1'; imagePost.addEventListener('click', () => imageInput.click()); imageInput.addEventListener('change', function() { const f = this.files && this.files[0]; if (!f) return; if (!currentConvo) { toast('⚠️ Open a conversation first', 2000); return; } const r = new FileReader(); r.onload = (ev) => sendMessage('[img]' + ev.target.result); r.readAsDataURL(f); this.value = ''; }); } }
     function boot() { if (!el('chatWindow')) return; if (el('chatWindow').dataset.chatBound === '1') return; el('chatWindow').dataset.chatBound = '1'; bind(); }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
     setTimeout(function() { if (el('chatWindow') && el('chatWindow').dataset.chatBound !== '1') boot(); }, 900);
 })();
 
-/* DELIVER MODULE — GAMBIA-AWARE */
+/* ============================================================ */
+/* DELIVER MODULE — International agent + combined USSD amount   */
+/* ============================================================ */
 try {
 (function initDeliverModule() {
     const DELIVER_PREFIX_144 = ['78','79','76','75','73','74'];
     const DELIVER_PREFIX_161 = ['88','99','77','33','30','80','70','90'];
-    let dealMessages = []; let currentDeliverSeed = null;
+    const INTL_COMMISSION_RATE = 0.13;
+    const CARRIER_RATE = 0.01;
+
+    let dealMessages = [];
+    let currentDeliverSeed = null;
+    let currentIntlAgent = null;
+
     function el(id) { return document.getElementById(id); }
-    function esc(s) { if (s==null) return ''; return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-    function toast(m,d) { try { if (typeof showToast==='function') showToast(m,d||2000); } catch(e){} }
-    function getCurrentAgent() { try { if (typeof dashCurrentAgentId === 'undefined' || !dashCurrentAgentId) return null; if (typeof getAgents !== 'function') return null; const a = getAgents().find(x => x.id === dashCurrentAgentId); return a ? (a.agentData || a) : null; } catch (e) { return null; } }
-    function pickUssdForAgent(agent) { const phone = String((agent && (agent.mobileMoney || agent.phone)) || '').replace(/\D/g,''); if (typeof isGambianPhone === 'function' && isGambianPhone(phone)) { const m = (typeof getGambiaDestinationDial === 'function') ? getGambiaDestinationDial() : '232'; if (m === '220') { return { template: '*777*1*{AGENT}*{AMOUNT}*KKKK#', label: 'Gambia Local (777)' }; } return { template: '*144*1*4*' + m + '*{AGENT}#', label: 'Gambia Agent → Intl (144 / ' + m + ')' }; } let local = phone; if (local.indexOf('232') === 0) local = local.slice(3); if (local.indexOf('0') === 0) local = local.slice(1); const two = local.slice(0, 2); if (DELIVER_PREFIX_144.indexOf(two) !== -1) return { template: '#144*2*5*1*{CC}#', label: 'Dial 144' }; if (DELIVER_PREFIX_161.indexOf(two) !== -1) return { template: '*161*1*6*1*{CC}#', label: 'Dial 161' }; return { template: '#144*2*5*1*{CC}#', label: 'Dial 144' }; }
-    function getCountryDialCode(countryName) { const map = { 'Sierra Leone':'232','Guinea':'224','Senegal':'221','Liberia':'231','Ghana':'233','Nigeria':'234','Kenya':'254','Mali':'223','Ivory Coast':'225','Niger':'227','Benin':'229','Guinea Bissau':'245','Gambia':'220','Togo':'228','Central Africa Rep':'236','Ethiopia':'251','Gabon':'241','Madagascar':'261','Morocco':'212','Rwanda':'250','Uganda':'256','DR Congo':'243','Burkina Faso':'226' }; return map[countryName] || '232'; }
-    function fillCountrySelect() { const sel = el('deliverCountrySelect'); if (!sel) return; if (sel.options.length > 0) return; try { if (typeof SUPPORTED_CURRENCIES !== 'undefined') sel.innerHTML = SUPPORTED_CURRENCIES.map(c => '<option value="' + esc(c.name) + '">' + c.flag + ' ' + esc(c.name) + '</option>').join(''); } catch (e) {} }
-    function updateUssd() { const agent = getCurrentAgent(); if (!agent) { if (el('deliverUssdBox')) el('deliverUssdBox').textContent = '—'; return; } const countryName = (el('deliverCountrySelect') || {}).value || ''; const cc = getCountryDialCode(countryName); const route = pickUssdForAgent(agent); const ussd = route.template.replace('{CC}', cc).replace('{M}', cc).replace('{AGENT}', ''); if (el('deliverUssdBox')) el('deliverUssdBox').textContent = ussd; }
-    function prefillFromTransaction(tx) { if (!tx) return; const set = (id, v) => { const e = el(id); if (e) e.value = v || ''; }; set('deliverSenderName', tx.senderName || (tx.sender||'').split('(')[0].trim()); set('deliverSenderPhone', tx.senderPhone || ''); if (tx.clientName) set('deliverClientName', tx.clientName); if (tx.clientPhone) set('deliverClientPhone', tx.clientPhone); set('deliverAmount', tx.amount || tx.baseAmount || ''); set('deliverCurrency', tx.currency || 'SLL'); set('deliverLocalAgentName', tx.localAgentName || ''); set('deliverLocalAgentPhone', tx.localAgentPhone || ''); set('deliverTxId', tx.txId || ''); set('deliverProviderTxId', tx.providerTxId || ''); set('deliverTransferCode', tx.transferCode || ''); updateUssd(); }
-    function normalizeDeal(d) { return { senderName: d.sender_name || d.senderName || '', senderPhone: d.sender_phone || d.senderPhone || '', clientName: d.client_name || d.clientName || '', clientPhone: d.client_phone || d.clientPhone || '', amount: d.amount || 0, currency: d.currency || 'SLL', localAgentName: d.agent_name || d.agentName || '', localAgentPhone: d.agent_phone || d.agentPhone || '', txId: d.tx_id || d.txId || '', providerTxId: d.provider_tx_id || d.providerTxId || '', transferCode: d.transfer_code || d.transferCode || '' }; }
-    async function loadDeals() { if (typeof supabaseClient === 'undefined' || !supabaseClient) { refreshDealsUI(); return; } const agent = getCurrentAgent(); if (!agent) { refreshDealsUI(); return; } try { const { data, error } = await supabaseClient.from('transactions').select('*').eq('agent_name', agent.businessName || agent.name || '').order('created_at', { ascending: false }).limit(20); if (error) throw error; const rows = data || []; dealMessages = []; for (const r of rows) { const deal = normalizeDeal(r); if ((!deal.clientName || !deal.clientPhone) && deal.senderPhone) { try { const { data: clientRow } = await supabaseClient.from('agent_clients').select('name, phone').eq('phone', deal.senderPhone).maybeSingle(); if (clientRow) { if (!deal.clientName) deal.clientName = clientRow.name || ''; if (!deal.clientPhone) deal.clientPhone = clientRow.phone || ''; } } catch (e) {} } dealMessages.push(deal); } } catch (e) { console.warn('loadDeals:', e); dealMessages = []; } refreshDealsUI(); }
-    function refreshDealsUI() { const btn = el('deliverDealsBtn'); const countEl = el('deliverDealsCount'); const menu = el('deliverDealsMenu'); if (!btn) return; const n = dealMessages.length; btn.classList.remove('has-deals','no-deals'); if (n > 0) { btn.classList.add('has-deals'); if (countEl) { countEl.style.display = 'inline'; countEl.textContent = n; } } else { btn.classList.add('no-deals'); if (countEl) { countEl.style.display = 'none'; } } if (!menu) return; if (!n) { menu.innerHTML = ''; return; } menu.innerHTML = dealMessages.map((d,i) => '<div class="deliver-deal-item" data-deal-idx="' + i + '"><span class="deal-icon">💸</span><div class="deal-info"><div class="deal-title">' + esc(d.senderName || 'Sender') + ' → ' + esc(d.amount) + ' ' + esc(d.currency) + '</div><div class="deal-sub">' + esc(d.txId || '—') + ' · ' + esc(d.senderPhone || '') + '</div></div></div>').join(''); menu.querySelectorAll('[data-deal-idx]').forEach(row => { row.addEventListener('click', function() { const idx = parseInt(this.getAttribute('data-deal-idx'), 10); const deal = dealMessages[idx]; if (!deal) return; prefillFromTransaction(deal); menu.classList.remove('open'); toast('✅ Deal loaded', 2000); }); }); }
-    function bind() { const openBtn = el('openDeliverBtn'); const modal = el('deliverModal'); if (openBtn && !openBtn.dataset.bound) { openBtn.dataset.bound = '1'; openBtn.addEventListener('click', function(e) { e.preventDefault(); if (!modal) return; fillCountrySelect(); loadDeals(); prefillFromTransaction(currentDeliverSeed || null); if (el('deliverError')) el('deliverError').textContent = ''; if (el('deliverSuccess')) el('deliverSuccess').textContent = ''; modal.style.display = 'flex'; }); } if (el('deliverCountrySelect') && !el('deliverCountrySelect').dataset.bound) { el('deliverCountrySelect').dataset.bound = '1'; el('deliverCountrySelect').addEventListener('change', updateUssd); } if (el('deliverSendUssdBtn') && !el('deliverSendUssdBtn').dataset.bound) { el('deliverSendUssdBtn').dataset.bound = '1'; el('deliverSendUssdBtn').addEventListener('click', function(e) { e.preventDefault(); const code = (el('deliverUssdBox') || {}).textContent || ''; if (!code || code === '—') { toast('⚠️ Select a country first', 2000); return; } const link = document.createElement('a'); link.href = 'tel:' + encodeURIComponent(code).replace(/%23/g, '#'); document.body.appendChild(link); link.click(); document.body.removeChild(link); toast('📞 Opening dialer with USSD code...', 2600); }); } if (el('deliverDealsBtn') && !el('deliverDealsBtn').dataset.bound) { el('deliverDealsBtn').dataset.bound = '1'; el('deliverDealsBtn').addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); const menu = el('deliverDealsMenu'); if (menu) menu.classList.toggle('open'); }); } if (el('deliverSubmitBtn') && !el('deliverSubmitBtn').dataset.bound) { el('deliverSubmitBtn').dataset.bound = '1'; el('deliverSubmitBtn').addEventListener('click', submitDelivery); } }
-    async function submitDelivery(e) { if (e) e.preventDefault(); const errEl = el('deliverError'); const okEl = el('deliverSuccess'); if (errEl) errEl.textContent = ''; if (okEl) okEl.textContent = ''; const senderName = (el('deliverSenderName') || {}).value || ''; const senderPhone = (el('deliverSenderPhone') || {}).value || ''; const amount = parseFloat((el('deliverAmount') || {}).value) || 0; const currency = (el('deliverCurrency') || {}).value || 'SLL'; const agentPtx = (el('deliverAgentProviderTxId') || {}).value.trim(); const agentTc = (el('deliverAgentTransferCode') || {}).value.trim(); if (!senderName.trim()) { if (errEl) errEl.textContent = '❌ Sender name required.'; return; } if (!senderPhone.trim()) { if (errEl) errEl.textContent = '❌ Sender phone required.'; return; } if (amount <= 0) { if (errEl) errEl.textContent = '❌ Amount must be greater than zero.'; return; } if (!agentPtx) { if (errEl) errEl.textContent = '❌ Your Provider TX ID required.'; return; } if (!agentTc) { if (errEl) errEl.textContent = '❌ Your Transfer Code required.'; return; } try { if (typeof ProviderTxIdManager !== 'undefined') { const v = ProviderTxIdManager.validate(agentPtx); if (!v.valid) { if (errEl) errEl.textContent = '❌ ' + v.error; return; } } if (typeof TransferCodeManager !== 'undefined') { const v = TransferCodeManager.validate(agentTc); if (!v.valid) { if (errEl) errEl.textContent = '❌ ' + v.error; return; } } } catch (e2) {} const agent = getCurrentAgent(); const agentName = (agent && (agent.businessName || agent.name)) || 'Agent'; const agentPhone = (agent && (agent.mobileMoney || agent.phone)) || ''; const country = (el('deliverCountrySelect') || {}).value || ''; const cc = getCountryDialCode(country); const route = pickUssdForAgent(agent); const ussdUsed = route.template.replace('{CC}', cc).replace('{M}', cc).replace('{AGENT}', agentPhone); const txId = (el('deliverTxId') || {}).value || ('WB' + Date.now()); const providerTxId = (el('deliverProviderTxId') || {}).value || ''; const transferCode = (el('deliverTransferCode') || {}).value || ''; try { ProviderTxIdManager.markAsUsed(agentPtx); } catch (e) {} try { TransferCodeManager.markAsUsed(agentTc); } catch (e) {} const payload = { tx_id: txId, provider_tx_id: agentPtx, transfer_code: agentTc, sender_name: senderName, sender_phone: senderPhone, client_name: (el('deliverClientName') || {}).value || null, client_phone: (el('deliverClientPhone') || {}).value || null, agent_name: agentName, agent_phone: agentPhone, amount: amount, charge: 0, gst: 0, total: amount, currency: currency, mode: 'Delivered', status: 'delivered' }; let insertedId = null; if (typeof supabaseClient !== 'undefined' && supabaseClient) { try { const { data, error } = await supabaseClient.from('transactions').insert(payload).select().single(); if (error) throw error; insertedId = data && data.id; } catch (err) { if (errEl) errEl.textContent = '⚠️ Saved locally'; } } try { const list = JSON.parse(localStorage.getItem('afripay_deliveries') || '[]'); list.push(Object.assign({}, payload, { local_provider_tx_id: providerTxId, local_transfer_code: transferCode, local_agent_name: (el('deliverLocalAgentName') || {}).value || '', local_agent_phone: (el('deliverLocalAgentPhone') || {}).value || '', client_name: (el('deliverClientName') || {}).value || '', client_phone: (el('deliverClientPhone') || {}).value || '', ussd_used: ussdUsed, destination_country: country, delivered_at: new Date().toISOString() })); localStorage.setItem('afripay_deliveries', JSON.stringify(list)); } catch (e) {} if (okEl) okEl.textContent = '✅ Transaction delivered successfully!'; showDeliverReceipt({ txId: txId, agentProviderTxId: agentPtx, agentTransferCode: agentTc, senderName: senderName, senderPhone: senderPhone, clientName: (el('deliverClientName') || {}).value || '', clientPhone: (el('deliverClientPhone') || {}).value || '', amount: amount, currency: currency, localAgentName: (el('deliverLocalAgentName') || {}).value || '', localAgentPhone: (el('deliverLocalAgentPhone') || {}).value || '', destinationCountry: country, destinationCode: cc, ussdUsed: ussdUsed, agentName: agentName, agentPhone: agentPhone, localProviderTxId: providerTxId, localTransferCode: transferCode }); try { if (insertedId) { dealMessages = dealMessages.filter(d => d.txId !== txId); refreshDealsUI(); } } catch (e) {} }
-    function showDeliverReceipt(r) { const body = el('deliverReceiptBody'); const social = el('deliverReceiptSocial'); if (!body) return; const rows = [['📤 Sender', r.senderName + ' — ' + r.senderPhone], ['👤 Client', (r.clientName || '—') + ' — ' + (r.clientPhone || '—')], ['🏢 Local Agent', (r.localAgentName || '—') + ' — ' + (r.localAgentPhone || '—')], ['🌍 Destination', r.destinationCountry + ' (+' + r.destinationCode + ')'], ['🛠 USSD Used', r.ussdUsed], ['🔖 App TX ID', r.txId], ['🔐 App Provider TX ID', r.localProviderTxId || 'N/A'], ['🔐 Your Provider TX ID', r.agentProviderTxId], ['🔑 Your Transfer Code', r.agentTransferCode], ['💵 Amount', r.amount.toFixed(2) + ' ' + r.currency], ['🤝 Agent', r.agentName + ' — ' + r.agentPhone], ['📅 Delivered', new Date().toLocaleString()]]; body.innerHTML = rows.map(([k,v]) => '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f0f0f0;font-size:.82rem;"><span style="color:#7f8c8d;">' + esc(k) + '</span><span style="color:#1e3b4a;font-weight:600;text-align:right;max-width:62%;word-break:break-word;">' + esc(v) + '</span></div>').join(''); let socialHtml = '<div style="font-size:.72rem;color:#7f8c8d;font-weight:700;margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px;">📱 Send Receipt</div><div class="receipt-social-row">'; if (r.senderPhone) { socialHtml += '<button type="button" class="action-btn whatsapp" id="deliverSenderWhatsApp" style="flex:1;min-width:90px;height:36px;font-size:.75rem;">💬 Sender WhatsApp</button>'; socialHtml += '<button type="button" class="action-btn sms" id="deliverSenderSms" style="flex:1;min-width:70px;height:36px;font-size:.75rem;">✉️ Sender SMS</button>'; } if (r.clientPhone) { socialHtml += '<button type="button" class="action-btn whatsapp" id="deliverClientWhatsApp" style="flex:1;min-width:90px;height:36px;font-size:.75rem;">💬 Client WhatsApp</button>'; socialHtml += '<button type="button" class="action-btn sms" id="deliverClientSms" style="flex:1;min-width:70px;height:36px;font-size:.75rem;">✉️ Client SMS</button>'; } socialHtml += '</div>'; if (social) social.innerHTML = socialHtml; if (el('deliverSenderWhatsApp')) el('deliverSenderWhatsApp').addEventListener('click', () => openWhatsApp(r.senderPhone, r.senderName)); if (el('deliverSenderSms')) el('deliverSenderSms').addEventListener('click', () => openSMS(r.senderPhone, r.senderName)); if (el('deliverClientWhatsApp')) el('deliverClientWhatsApp').addEventListener('click', () => openWhatsApp(r.clientPhone, r.clientName)); if (el('deliverClientSms')) el('deliverClientSms').addEventListener('click', () => openSMS(r.clientPhone, r.clientName)); if (el('deliverReceiptModal')) el('deliverReceiptModal').style.display = 'flex'; }
-    window.__seedDeliverTransaction = function(tx) { currentDeliverSeed = tx || null; };
-    function boot() { if (!el('deliverModal')) return; if (el('deliverModal').dataset.bound === '1') return; el('deliverModal').dataset.bound = '1'; bind(); if (el('deliverReceiptCloseXBtn')) el('deliverReceiptCloseXBtn').addEventListener('click', () => { el('deliverReceiptModal').style.display = 'none'; }); if (el('deliverReceiptCloseBtn')) el('deliverReceiptCloseBtn').addEventListener('click', () => { el('deliverReceiptModal').style.display = 'none'; }); if (el('deliverReceiptModal')) el('deliverReceiptModal').addEventListener('click', function(e) { if (e.target === el('deliverReceiptModal')) el('deliverReceiptModal').style.display = 'none'; }); document.addEventListener('click', function(e) { const menu = el('deliverDealsMenu'); const btn = el('deliverDealsBtn'); if (!menu || !btn) return; if (!btn.contains(e.target) && !menu.contains(e.target)) menu.classList.remove('open'); }); console.log('✅ Deliver module initialized'); }
+    function esc(s) { if (s == null) return ''; return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
+    function toast(m, d) { try { if (typeof showToast === 'function') showToast(m, d || 2000); } catch (e) {} }
+    function num(v) { const n = parseFloat(v); return isFinite(n) ? n : 0; }
+    function round2(v) { return Math.round((num(v) + Number.EPSILON) * 100) / 100; }
+
+    /* Resolve the approved international agent for the selected country */
+    function resolveIntlAgent(countryName) {
+        if (!countryName) return null;
+        try {
+            if (typeof getAgents !== 'function' || typeof getAgentCountryName !== 'function') return null;
+            const all = getAgents().filter(function (a) { return (getAgentCountryName(a) || '').toLowerCase() === String(countryName).toLowerCase(); });
+            if (!all.length) return null;
+            const approved = all.filter(function (a) { const d = a.agentData || a; return d.approved === true; });
+            const pool = approved.length ? approved : all;
+            const withPhone = pool.filter(function (a) { const d = a.agentData || a; return String(d.mobileMoney || d.phone || a.phone || '').replace(/\D/g, '').length >= 6; });
+            const pick = (withPhone[0] || pool[0]);
+            const d = pick.agentData || pick;
+            const code = COUNTRY_NAME_TO_CODE[countryName] || d.countryCode || '';
+            return {
+                agent: pick,
+                agentId: pick.id,
+                name: (d.businessName || pick.name || 'International Agent').replace(/\(.*\)/, '').trim(),
+                address: d.businessAddress || d.address || d.city || '—',
+                phone: String(d.mobileMoney || d.phone || pick.phone || '').replace(/\D/g, ''),
+                phoneRaw: d.mobileMoney || d.phone || pick.phone || '',
+                countryName: countryName,
+                countryCode: code,
+                flag: (code && COUNTRY_CODE_TO_FLAG[code]) || '🌍'
+            };
+        } catch (e) { return null; }
+    }
+
+    function intlDialCode(countryName) {
+        const map = { 'Sierra Leone':'232','Guinea':'224','Senegal':'221','Liberia':'231','Ghana':'233','Nigeria':'234','Kenya':'254','Mali':'223','Ivory Coast':'225','Niger':'227','Benin':'229','Guinea Bissau':'245','Gambia':'220','Togo':'228','Central Africa Rep':'236','Ethiopia':'251','Gabon':'241','Madagascar':'261','Morocco':'212','Rwanda':'250','Uganda':'256','DR Congo':'243','Burkina Faso':'226' };
+        return map[countryName] || '232';
+    }
+
+    /* Build the international USSD with the agent's phone + the CLIENT RECEIVING amount */
+    function buildIntlDeliverUssd(agent, clientReceivesAmount) {
+        if (!agent || !agent.phone) return { ussd: '', label: 'No international agent phone' };
+        const digits = String(agent.phone).replace(/\D/g, '');
+        const amt = String(Math.round(num(clientReceivesAmount)));
+        const destDial = intlDialCode(agent.countryName);
+
+        /* Guinea agent: International dialer *144*1*4*<DEST_DIAL>*<AGENT># */
+        try {
+            if (typeof isGuineanPhone === 'function' && isGuineanPhone(digits)) {
+                return { ussd: '*144*1*4*' + destDial + '*' + digits + '#', label: 'International → ' + agent.countryName + ' (144)' };
+            }
+            /* Gambia agent */
+            if (typeof isGambianPhone === 'function' && isGambianPhone(digits)) {
+                return { ussd: '*144*1*4*' + destDial + '*' + digits + '#', label: 'International → ' + agent.countryName + ' (144)' };
+            }
+        } catch (e) {}
+
+        /* Sierra Leone: try to embed agent phone + amount using the SL 144/161 flow */
+        try {
+            if (typeof getSlCollateralVariant === 'function' && getSlCollateralVariant(digits)) {
+                const sl = (typeof getSlUssdForFlow === 'function') ? getSlUssdForFlow(digits, amt, 'payment') : null;
+                if (sl && sl.ussd) {
+                    return { ussd: sl.ussd, label: 'International → ' + agent.countryName + ' (144)' };
+                }
+            }
+        } catch (e) {}
+
+        /* Generic fallback — international dialer with the agent's country code */
+        return { ussd: '#144*2*5*1*' + destDial + '#', label: 'International → ' + agent.countryName + ' (' + destDial + ')' };
+    }
+
+    /* Amount math: base + 13% commission + 1% carrier = client receives */
+    function computeDeliverAmounts(base) {
+        const b = num(base);
+        const commission = round2(b * INTL_COMMISSION_RATE);
+        const carrier = round2(b * CARRIER_RATE);
+        const clientReceives = round2(b + commission + carrier);
+        return { base: b, commission: commission, carrier: carrier, clientReceives: clientReceives };
+    }
+
+    function fillCountrySelect() {
+        const sel = el('deliverCountrySelect'); if (!sel) return;
+        if (sel.options.length > 0) return;
+        try {
+            if (typeof SUPPORTED_CURRENCIES !== 'undefined') {
+                sel.innerHTML = SUPPORTED_CURRENCIES.map(function (c) { return '<option value="' + esc(c.name) + '">' + c.flag + ' ' + esc(c.name) + '</option>'; }).join('');
+            }
+        } catch (e) {}
+    }
+
+    function renderIntlAgentCard() {
+        const countryName = (el('deliverCountrySelect') || {}).value || '';
+        const base = num((el('deliverAmount') || {}).value);
+        const amounts = computeDeliverAmounts(base);
+        const info = resolveIntlAgent(countryName);
+        currentIntlAgent = info;
+
+        const card = el('intlAgentCard');
+        const empty = el('intlAgentEmpty');
+
+        if (!info) {
+            if (card) { card.innerHTML = ''; card.style.display = 'none'; }
+            if (empty) {
+                empty.innerHTML = '<div class="iac-title"><span>⚠️ No Approved International Agent</span></div>'
+                    + '<div class="iac-row"><span class="iac-label">Status</span><span class="iac-value iac-empty">Pick a country with an approved agent in the system.</span></div>';
+                empty.style.display = countryName ? 'block' : 'none';
+            }
+            if (el('deliverUssdBox')) el('deliverUssdBox').textContent = '—';
+            return;
+        }
+
+        if (empty) empty.style.display = 'none';
+        if (card) {
+            card.innerHTML =
+                '<div class="iac-title"><span>🌍 International Agent — ' + esc(countryName) + '</span><span style="margin-left:auto;">' + esc(info.flag || '🌍') + '</span></div>'
+                + '<div class="iac-row"><span class="iac-label">🏢 Name</span><span class="iac-value">' + esc(info.name) + '</span></div>'
+                + '<div class="iac-row"><span class="iac-label">📍 Address</span><span class="iac-value">' + esc(info.address) + '</span></div>'
+                + '<div class="iac-row"><span class="iac-label">📱 Phone</span><span class="iac-value">' + esc(info.countryCode || '') + ' ' + esc(info.phone || '—') + '</span></div>'
+                + '<div class="iac-row"><span class="iac-label">💰 Base Amount</span><span class="iac-value">' + amounts.base.toFixed(2) + '</span></div>'
+                + '<div class="iac-row"><span class="iac-label">🤝 Recipient Commission (13%)</span><span class="iac-value">' + amounts.commission.toFixed(2) + '</span></div>'
+                + '<div class="iac-row"><span class="iac-label">🚚 Carrier Charges (1%)</span><span class="iac-value">' + amounts.carrier.toFixed(2) + '</span></div>'
+                + '<div class="iac-row"><span class="iac-label"><strong>💵 Client Receives</strong></span><span class="iac-value"><strong>' + amounts.clientReceives.toFixed(2) + '</strong></span></div>';
+            card.style.display = 'block';
+        }
+
+        const built = buildIntlDeliverUssd(info, amounts.clientReceives);
+        if (el('deliverUssdBox')) el('deliverUssdBox').textContent = built.ussd || '—';
+    }
+
+    function updateUssd() { renderIntlAgentCard(); }
+
+    function pickUssdForAgent(agent) {
+        const phone = String((agent && (agent.mobileMoney || agent.phone)) || '').replace(/\D/g, '');
+        if (typeof isGambianPhone === 'function' && isGambianPhone(phone)) {
+            const m = (typeof getGambiaDestinationDial === 'function') ? getGambiaDestinationDial() : '232';
+            if (m === '220') return { template: '*777*1*{AGENT}*{AMOUNT}*KKKK#', label: 'Gambia Local (777)' };
+            return { template: '*144*1*4*' + m + '*{AGENT}#', label: 'Gambia Agent → Intl (144 / ' + m + ')' };
+        }
+        let local = phone;
+        if (local.indexOf('232') === 0) local = local.slice(3);
+        if (local.indexOf('0') === 0) local = local.slice(1);
+        const two = local.slice(0, 2);
+        if (DELIVER_PREFIX_144.indexOf(two) !== -1) return { template: '#144*2*5*1*{CC}#', label: 'Dial 144' };
+        if (DELIVER_PREFIX_161.indexOf(two) !== -1) return { template: '*161*1*6*1*{CC}#', label: 'Dial 161' };
+        return { template: '#144*2*5*1*{CC}#', label: 'Dial 144' };
+    }
+    function getCountryDialCode(countryName) { return intlDialCode(countryName); }
+    function getCurrentAgent() {
+        try {
+            if (typeof dashCurrentAgentId === 'undefined' || !dashCurrentAgentId) return null;
+            if (typeof getAgents !== 'function') return null;
+            const a = getAgents().find(x => x.id === dashCurrentAgentId);
+            return a ? (a.agentData || a) : null;
+        } catch (e) { return null; }
+    }
+    function prefillFromTransaction(tx) {
+        if (!tx) return;
+        const set = (id, v) => { const e = el(id); if (e) e.value = v || ''; };
+        set('deliverSenderName', tx.senderName || (tx.sender || '').split('(')[0].trim());
+        set('deliverSenderPhone', tx.senderPhone || '');
+        if (tx.clientName) set('deliverClientName', tx.clientName);
+        if (tx.clientPhone) set('deliverClientPhone', tx.clientPhone);
+        set('deliverAmount', tx.amount || tx.baseAmount || '');
+        set('deliverCurrency', tx.currency || 'SLL');
+        set('deliverLocalAgentName', tx.localAgentName || '');
+        set('deliverLocalAgentPhone', tx.localAgentPhone || '');
+        set('deliverTxId', tx.txId || '');
+        set('deliverProviderTxId', tx.providerTxId || '');
+        set('deliverTransferCode', tx.transferCode || '');
+        updateUssd();
+    }
+    function normalizeDeal(d) {
+        return {
+            senderName: d.sender_name || d.senderName || '',
+            senderPhone: d.sender_phone || d.senderPhone || '',
+            clientName: d.client_name || d.clientName || '',
+            clientPhone: d.client_phone || d.clientPhone || '',
+            amount: d.amount || 0,
+            currency: d.currency || 'SLL',
+            localAgentName: d.agent_name || d.agentName || '',
+            localAgentPhone: d.agent_phone || d.agentPhone || '',
+            txId: d.tx_id || d.txId || '',
+            providerTxId: d.provider_tx_id || d.providerTxId || '',
+            transferCode: d.transfer_code || d.transferCode || ''
+        };
+    }
+    async function loadDeals() {
+        if (typeof supabaseClient === 'undefined' || !supabaseClient) { refreshDealsUI(); return; }
+        const agent = getCurrentAgent(); if (!agent) { refreshDealsUI(); return; }
+        try {
+            const { data, error } = await supabaseClient.from('transactions').select('*').eq('agent_name', agent.businessName || agent.name || '').order('created_at', { ascending: false }).limit(20);
+            if (error) throw error;
+            const rows = data || [];
+            dealMessages = [];
+            for (const r of rows) { dealMessages.push(normalizeDeal(r)); }
+        } catch (e) { dealMessages = []; }
+        refreshDealsUI();
+    }
+    function refreshDealsUI() {
+        const btn = el('deliverDealsBtn'); const countEl = el('deliverDealsCount'); const menu = el('deliverDealsMenu');
+        if (!btn) return;
+        const n = dealMessages.length;
+        btn.classList.remove('has-deals', 'no-deals');
+        if (n > 0) { btn.classList.add('has-deals'); if (countEl) { countEl.style.display = 'inline'; countEl.textContent = n; } }
+        else { btn.classList.add('no-deals'); if (countEl) countEl.style.display = 'none'; }
+        if (!menu) return;
+        if (!n) { menu.innerHTML = ''; return; }
+        menu.innerHTML = dealMessages.map((d, i) => '<div class="deliver-deal-item" data-deal-idx="' + i + '"><span class="deal-icon">💸</span><div class="deal-info"><div class="deal-title">' + esc(d.senderName || 'Sender') + ' → ' + esc(d.amount) + ' ' + esc(d.currency) + '</div><div class="deal-sub">' + esc(d.txId || '—') + ' · ' + esc(d.senderPhone || '') + '</div></div></div>').join('');
+        menu.querySelectorAll('[data-deal-idx]').forEach(row => {
+            row.addEventListener('click', function () {
+                const idx = parseInt(this.getAttribute('data-deal-idx'), 10);
+                const deal = dealMessages[idx]; if (!deal) return;
+                prefillFromTransaction(deal); menu.classList.remove('open'); toast('✅ Deal loaded', 2000);
+            });
+        });
+    }
+
+    function bind() {
+        const openBtn = el('openDeliverBtn'); const modal = el('deliverModal');
+        if (openBtn && !openBtn.dataset.bound) {
+            openBtn.dataset.bound = '1';
+            openBtn.addEventListener('click', function (e) {
+                e.preventDefault(); if (!modal) return;
+                fillCountrySelect(); loadDeals(); prefillFromTransaction(currentDeliverSeed || null);
+                if (el('deliverError')) el('deliverError').textContent = '';
+                if (el('deliverSuccess')) el('deliverSuccess').textContent = '';
+                setTimeout(renderIntlAgentCard, 50);
+                modal.style.display = 'flex';
+            });
+        }
+        if (el('deliverCountrySelect') && !el('deliverCountrySelect').dataset.bound) {
+            el('deliverCountrySelect').dataset.bound = '1';
+            el('deliverCountrySelect').addEventListener('change', updateUssd);
+        }
+        if (el('deliverAmount') && !el('deliverAmount').dataset.bound) {
+            el('deliverAmount').dataset.bound = '1';
+            el('deliverAmount').addEventListener('input', renderIntlAgentCard);
+        }
+        if (el('deliverSendUssdBtn') && !el('deliverSendUssdBtn').dataset.bound) {
+            el('deliverSendUssdBtn').dataset.bound = '1';
+            el('deliverSendUssdBtn').addEventListener('click', function (e) {
+                e.preventDefault();
+                /* Re-resolve the latest amount and agent so the dialed USSD is always current */
+                const countryName = (el('deliverCountrySelect') || {}).value || '';
+                const base = num((el('deliverAmount') || {}).value);
+                const info = resolveIntlAgent(countryName);
+                if (!info || !info.phone) { toast('⚠️ Select a country with an approved agent first', 2400); return; }
+                if (base <= 0) { toast('⚠️ Enter the base amount first', 2200); return; }
+                const amounts = computeDeliverAmounts(base);
+                const built = buildIntlDeliverUssd(info, amounts.clientReceives);
+                if (!built.ussd) { toast('⚠️ Could not build international USSD', 2400); return; }
+                if (el('deliverUssdBox')) el('deliverUssdBox').textContent = built.ussd;
+                const link = document.createElement('a');
+                link.href = 'tel:' + encodeURIComponent(built.ussd).replace(/%23/g, '#');
+                document.body.appendChild(link); link.click(); document.body.removeChild(link);
+                toast('📞 Dialing: ' + built.ussd, 3200);
+            });
+        }
+        if (el('deliverDealsBtn') && !el('deliverDealsBtn').dataset.bound) {
+            el('deliverDealsBtn').dataset.bound = '1';
+            el('deliverDealsBtn').addEventListener('click', function (e) {
+                e.preventDefault(); e.stopPropagation();
+                const menu = el('deliverDealsMenu'); if (menu) menu.classList.toggle('open');
+            });
+        }
+        if (el('deliverSubmitBtn') && !el('deliverSubmitBtn').dataset.bound) {
+            el('deliverSubmitBtn').dataset.bound = '1';
+            el('deliverSubmitBtn').addEventListener('click', submitDelivery);
+        }
+    }
+
+    async function submitDelivery(e) {
+        if (e) e.preventDefault();
+        const errEl = el('deliverError'); const okEl = el('deliverSuccess');
+        if (errEl) errEl.textContent = ''; if (okEl) okEl.textContent = '';
+
+        const senderName = (el('deliverSenderName') || {}).value || '';
+        const senderPhone = (el('deliverSenderPhone') || {}).value || '';
+        const baseAmount = num((el('deliverAmount') || {}).value);
+        const currency = (el('deliverCurrency') || {}).value || 'SLL';
+        const agentPtx = (el('deliverAgentProviderTxId') || {}).value.trim();
+        const agentTc = (el('deliverAgentTransferCode') || {}).value.trim();
+
+        if (!senderName.trim()) { if (errEl) errEl.textContent = '❌ Sender name required.'; return; }
+        if (!senderPhone.trim()) { if (errEl) errEl.textContent = '❌ Sender phone required.'; return; }
+        if (baseAmount <= 0) { if (errEl) errEl.textContent = '❌ Amount must be greater than zero.'; return; }
+        if (!agentPtx) { if (errEl) errEl.textContent = '❌ Your Provider TX ID required.'; return; }
+        if (!agentTc) { if (errEl) errEl.textContent = '❌ Your Transfer Code required.'; return; }
+
+        try {
+            if (typeof ProviderTxIdManager !== 'undefined') { const v = ProviderTxIdManager.validate(agentPtx); if (!v.valid) { if (errEl) errEl.textContent = '❌ ' + v.error; return; } }
+            if (typeof TransferCodeManager !== 'undefined') { const v = TransferCodeManager.validate(agentTc); if (!v.valid) { if (errEl) errEl.textContent = '❌ ' + v.error; return; } }
+        } catch (e2) {}
+
+        const country = (el('deliverCountrySelect') || {}).value || '';
+        const info = currentIntlAgent || resolveIntlAgent(country);
+        if (!info || !info.phone) { if (errEl) errEl.textContent = '❌ No approved international agent with a valid phone for ' + (country || 'this country') + '.'; return; }
+
+        const amounts = computeDeliverAmounts(baseAmount);
+        const builtUssd = buildIntlDeliverUssd(info, amounts.clientReceives);
+        const ussdUsed = builtUssd.ussd;
+
+        const agent = getCurrentAgent();
+        const agentName = (agent && (agent.businessName || agent.name)) || 'Agent';
+        const agentPhone = (agent && (agent.mobileMoney || agent.phone)) || '';
+        const txId = (el('deliverTxId') || {}).value || ('WB' + Date.now());
+        const providerTxId = (el('deliverProviderTxId') || {}).value || '';
+        const transferCode = (el('deliverTransferCode') || {}).value || '';
+
+        try { ProviderTxIdManager.markAsUsed(agentPtx); } catch (e) {}
+        try { TransferCodeManager.markAsUsed(agentTc); } catch (e) {}
+
+        const payload = {
+            tx_id: txId,
+            provider_tx_id: agentPtx,
+            transfer_code: agentTc,
+            sender_name: senderName,
+            sender_phone: senderPhone,
+            client_name: (el('deliverClientName') || {}).value || null,
+            client_phone: (el('deliverClientPhone') || {}).value || null,
+            agent_name: agentName,
+            agent_phone: agentPhone,
+            amount: amounts.clientReceives,
+            charge: amounts.carrier,
+            gst: 0,
+            total: amounts.clientReceives,
+            currency: currency,
+            mode: 'Delivered',
+            status: 'delivered'
+        };
+
+        let insertedId = null;
+        if (typeof supabaseClient !== 'undefined' && supabaseClient) {
+            try { const { data, error } = await supabaseClient.from('transactions').insert(payload).select().single(); if (error) throw error; insertedId = data && data.id; }
+            catch (err) { if (errEl) errEl.textContent = '⚠️ Saved locally (cloud insert failed)'; }
+        }
+
+        try {
+            const list = JSON.parse(localStorage.getItem('afripay_deliveries') || '[]');
+            list.push(Object.assign({}, payload, {
+                local_provider_tx_id: providerTxId,
+                local_transfer_code: transferCode,
+                local_agent_name: (el('deliverLocalAgentName') || {}).value || '',
+                local_agent_phone: (el('deliverLocalAgentPhone') || {}).value || '',
+                client_name: (el('deliverClientName') || {}).value || '',
+                client_phone: (el('deliverClientPhone') || {}).value || '',
+                ussd_used: ussdUsed,
+                destination_country: country,
+                intl_agent_name: info.name,
+                intl_agent_phone: info.phone,
+                intl_agent_address: info.address,
+                base_amount: amounts.base,
+                commission_13: amounts.commission,
+                carrier_1: amounts.carrier,
+                client_receives: amounts.clientReceives,
+                delivered_at: new Date().toISOString()
+            }));
+            localStorage.setItem('afripay_deliveries', JSON.stringify(list));
+        } catch (e) {}
+
+        if (okEl) okEl.textContent = '✅ Transaction delivered successfully!';
+
+        showDeliverReceipt({
+            txId: txId,
+            agentProviderTxId: agentPtx,
+            agentTransferCode: agentTc,
+            senderName: senderName,
+            senderPhone: senderPhone,
+            clientName: (el('deliverClientName') || {}).value || '',
+            clientPhone: (el('deliverClientPhone') || {}).value || '',
+            baseAmount: amounts.base,
+            commission13: amounts.commission,
+            carrier1: amounts.carrier,
+            clientReceives: amounts.clientReceives,
+            currency: currency,
+            localAgentName: (el('deliverLocalAgentName') || {}).value || '',
+            localAgentPhone: (el('deliverLocalAgentPhone') || {}).value || '',
+            destinationCountry: country,
+            destinationCode: info.countryCode || intlDialCode(country),
+            intlAgentName: info.name,
+            intlAgentPhone: info.phone,
+            intlAgentAddress: info.address,
+            ussdUsed: ussdUsed,
+            agentName: agentName,
+            agentPhone: agentPhone,
+            localProviderTxId: providerTxId,
+            localTransferCode: transferCode
+        });
+
+        try { if (insertedId) { dealMessages = dealMessages.filter(d => d.txId !== txId); refreshDealsUI(); } } catch (e) {}
+    }
+
+    function showDeliverReceipt(r) {
+        const body = el('deliverReceiptBody'); const social = el('deliverReceiptSocial');
+        if (!body) return;
+        const rows = [
+            ['📤 Sender', r.senderName + ' — ' + r.senderPhone],
+            ['👤 Client', (r.clientName || '—') + ' — ' + (r.clientPhone || '—')],
+            ['🏢 Local Agent', (r.localAgentName || '—') + ' — ' + (r.localAgentPhone || '—')],
+            ['🌍 Destination', r.destinationCountry + ' (+' + r.destinationCode + ')'],
+            ['🏛 International Agent', r.intlAgentName + ' — ' + r.intlAgentPhone],
+            ['📍 Agent Address', r.intlAgentAddress || '—'],
+            ['💰 Base Amount', r.baseAmount.toFixed(2) + ' ' + r.currency],
+            ['🤝 Recipient Commission (13%)', r.commission13.toFixed(2) + ' ' + r.currency],
+            ['🚚 Carrier Charges (1%)', r.carrier1.toFixed(2) + ' ' + r.currency],
+            ['💵 Client Receives', r.clientReceives.toFixed(2) + ' ' + r.currency],
+            ['🛠 USSD Used', r.ussdUsed],
+            ['🔖 App TX ID', r.txId],
+            ['🔐 App Provider TX ID', r.localProviderTxId || 'N/A'],
+            ['🔐 Your Provider TX ID', r.agentProviderTxId],
+            ['🔑 Your Transfer Code', r.agentTransferCode],
+            ['🤝 Agent', r.agentName + ' — ' + r.agentPhone],
+            ['📅 Delivered', new Date().toLocaleString()]
+        ];
+        body.innerHTML = rows.map(([k, v]) => '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f0f0f0;font-size:.82rem;"><span style="color:#7f8c8d;">' + esc(k) + '</span><span style="color:#1e3b4a;font-weight:600;text-align:right;max-width:62%;word-break:break-word;">' + esc(v) + '</span></div>').join('');
+
+        let socialHtml = '<div style="font-size:.72rem;color:#7f8c8d;font-weight:700;margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px;">📱 Send Receipt</div><div class="receipt-social-row">';
+        if (r.senderPhone) { socialHtml += '<button type="button" class="action-btn whatsapp" id="deliverSenderWhatsApp" style="flex:1;min-width:90px;height:36px;font-size:.75rem;">💬 Sender WhatsApp</button>'; socialHtml += '<button type="button" class="action-btn sms" id="deliverSenderSms" style="flex:1;min-width:70px;height:36px;font-size:.75rem;">✉️ Sender SMS</button>'; }
+        if (r.clientPhone) { socialHtml += '<button type="button" class="action-btn whatsapp" id="deliverClientWhatsApp" style="flex:1;min-width:90px;height:36px;font-size:.75rem;">💬 Client WhatsApp</button>'; socialHtml += '<button type="button" class="action-btn sms" id="deliverClientSms" style="flex:1;min-width:70px;height:36px;font-size:.75rem;">✉️ Client SMS</button>'; }
+        socialHtml += '</div>';
+        if (social) social.innerHTML = socialHtml;
+        if (el('deliverSenderWhatsApp')) el('deliverSenderWhatsApp').addEventListener('click', () => openWhatsApp(r.senderPhone, r.senderName));
+        if (el('deliverSenderSms')) el('deliverSenderSms').addEventListener('click', () => openSMS(r.senderPhone, r.senderName));
+        if (el('deliverClientWhatsApp')) el('deliverClientWhatsApp').addEventListener('click', () => openWhatsApp(r.clientPhone, r.clientName));
+        if (el('deliverClientSms')) el('deliverClientSms').addEventListener('click', () => openSMS(r.clientPhone, r.clientName));
+        if (el('deliverReceiptModal')) el('deliverReceiptModal').style.display = 'flex';
+    }
+
+    window.__seedDeliverTransaction = function (tx) { currentDeliverSeed = tx || null; };
+
+    function boot() {
+        if (!el('deliverModal')) return;
+        if (el('deliverModal').dataset.bound === '1') return;
+        el('deliverModal').dataset.bound = '1';
+        bind();
+        if (el('deliverReceiptCloseXBtn')) el('deliverReceiptCloseXBtn').addEventListener('click', () => { el('deliverReceiptModal').style.display = 'none'; });
+        if (el('deliverReceiptCloseBtn')) el('deliverReceiptCloseBtn').addEventListener('click', () => { el('deliverReceiptModal').style.display = 'none'; });
+        if (el('deliverReceiptModal')) el('deliverReceiptModal').addEventListener('click', function (e) { if (e.target === el('deliverReceiptModal')) el('deliverReceiptModal').style.display = 'none'; });
+        document.addEventListener('click', function (e) {
+            const menu = el('deliverDealsMenu'); const btn = el('deliverDealsBtn');
+            if (!menu || !btn) return;
+            if (!btn.contains(e.target) && !menu.contains(e.target)) menu.classList.remove('open');
+        });
+        console.log('✅ Deliver module initialized (agent card + combined USSD amount)');
+    }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
-    setTimeout(function() { if (el('deliverModal') && el('deliverModal').dataset.bound !== '1') boot(); }, 900);
+    setTimeout(function () { if (el('deliverModal') && el('deliverModal').dataset.bound !== '1') boot(); }, 900);
 })();
 } catch (deliverBootErr) { console.warn('⚠️ Deliver module failed:', deliverBootErr); }
 
