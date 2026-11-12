@@ -10,9 +10,6 @@
 <style>
 /* ============================================================ */
 /* 1. GLOBAL BLACK TEXT on all white surfaces                    */
-/*    Ensures every label, number, figure, caption, placeholder  */
-/*    inside the main app (white bg) is BLACK and clearly        */
-/*    readable.                                                  */
 /* ============================================================ */
 html, body {
     background: #ffffff !important;
@@ -20,95 +17,171 @@ html, body {
     margin: 0;
     padding: 0;
 }
-.app-card {
-    background: #ffffff !important;
-    color: #000000 !important;
-}
+.app-card { background: #ffffff !important; color: #000000 !important; }
 
-/* The main app content (form container, cards, panels) is white
-   with BLACK text everywhere — including labels, values, small
-   captions, fee rows, amounts, section titles, receipt rows. */
+/* ============================================================ */
+/* 2. FORM CONTAINER — force BLACK on every label/value/title    */
+/*    This is the block that holds SENDER / AGENT / CLIENT /     */
+/*    Amount fields, Fee Breakdown, charges panel, Quick Pay.    */
+/*    Everything inside MUST be black on white.                  */
+/* ============================================================ */
 .form-container,
-.form-container *,
-.business-strip,
-.business-strip *,
-.charge-breakdown-section,
-.charge-breakdown-section *,
-.charges-panel,
-.charges-panel *,
-.currency-converter-inline,
-.currency-converter-inline *,
-.local-agent-details,
-.local-agent-details *,
-.profile-section,
-.profile-section * {
+.form-container * {
     color: #000000 !important;
 }
-/* Re-assert neutral/black for emphasis-on-white helpers */
-.muted, .help-text, .ussd-hint, .cbs-label, .lad-label,
-.cc-fee-row > span:first-child, .charges-row > span:first-child,
-.section-title, .deliver-section-title, .dash-section-title,
-.dash-empty, .dash-list-item, .dash-list-item *,
-label, span, p, div, small, strong, em, b, i, u,
-h1, h2, h3, h4, h5, h6 {
-    color: #000000;
-}
-/* Inside white surfaces, force black even when the element was
-   styled with a tinted colour (fee rows, badges etc.). */
-.form-container label,
 .form-container input,
 .form-container select,
-.form-container textarea,
-.form-container .profile-field,
-.form-container .section-title,
-.modal-content label,
-.modal-content input,
-.modal-content select,
-.modal-content textarea,
-.modal-content p,
-.modal-content li,
-.modal-content div,
-.modal-content span,
-.modal-content h1,
-.modal-content h2,
-.modal-content h3,
-.modal-content h4,
-.modal-content h5,
-.modal-content h6 {
-    color: #000000 !important;
-}
-
-/* Form inputs: black text on white face */
-input, select, textarea {
+.form-container textarea {
     color: #000000 !important;
     background: #ffffff !important;
     font-weight: 600;
 }
-input::placeholder, textarea::placeholder {
+.form-container input::placeholder,
+.form-container textarea::placeholder {
     color: #666666 !important;
     opacity: 1;
 }
 
+/* Section titles: SENDER / AGENT / CLIENT / Operator / TX ID /
+   Provider TX ID — these were white before. Force black, bold. */
+.form-container .section-title,
+.section-title {
+    color: #000000 !important;
+    font-weight: 800 !important;
+    text-shadow: none !important;
+}
+
+/* Every <label> inside the form (Name, Phone, City, Amount,
+   Agent, Client, etc.) must be pure black */
+.form-container label,
+.input-group > label {
+    color: #000000 !important;
+    font-weight: 700;
+}
+
+/* The small helper spans for (3%), (1%), etc. */
+.form-container .cbs-label,
+.form-container .cbs-label span,
+.form-container .cbs-value,
+.form-container .cbs-title,
+.form-container .cbs-badge {
+    color: #000000 !important;
+    text-shadow: none !important;
+}
+.form-container .cbs-badge {
+    background: #2c7da0 !important;
+    color: #ffffff !important;
+}
+
+/* Fee breakdown rows */
+.charge-breakdown-section,
+.charge-breakdown-section * {
+    color: #000000 !important;
+}
+.charge-breakdown-section .cbs-row { border-bottom: 1px dashed #d8e3ea !important; }
+.charge-breakdown-section .cbs-total { border-top: 2px solid #1c6e8f !important; }
+
+/* Charges panel — Base / Fee / GST / Total / Currency */
+.charges-panel,
+.charges-panel * {
+    color: #000000 !important;
+}
+.charges-panel .charges-row > span:first-child { font-weight: 700; }
+.charges-panel #displayAmount,
+.charges-panel #chargeAmount,
+.charges-panel #gstAmount,
+.charges-panel #totalAmount,
+.charges-panel #currencySymbol {
+    color: #000000 !important;
+    font-weight: 800;
+}
+.charges-panel .total-row { border-top: 2px solid #1c6e8f; padding-top: 6px; }
+
+/* Local agent detail block */
+.local-agent-details,
+.local-agent-details * {
+    color: #000000 !important;
+}
+
+/* Inline converter */
+.currency-converter-inline,
+.currency-converter-inline * {
+    color: #000000 !important;
+}
+.currency-converter-inline select,
+.currency-converter-inline input {
+    background: #ffffff !important;
+    color: #000000 !important;
+}
+
+/* Profile section */
+.profile-section,
+.profile-section *,
+.profile-info-block .profile-field,
+.profile-info-block .profile-label {
+    color: #000000 !important;
+}
+
 /* ============================================================ */
-/* 2. HEADER — keep blue-black, WHITE text (contrast)            */
+/* 3. BUSINESS STRIP (Quick Pay) — every business name, category */
+/*    and icon must be BLACK on the white strip.                 */
+/* ============================================================ */
+.business-strip,
+.business-strip * {
+    color: #000000 !important;
+}
+.business-strip .business-title { color: #000000 !important; font-weight: 800; }
+.business-strip .business-title > span[data-i18n="quickPay"] {
+    color: #000000 !important;
+    font-weight: 900;
+    text-shadow: none !important;
+}
+.business-strip .business-item {
+    background: #ffffff !important;
+    border: 1px solid #e0e8f0 !important;
+    border-radius: 10px;
+    color: #000000 !important;
+}
+.business-strip .business-item:hover {
+    border-color: #2c7da0 !important;
+    background: #f5fbff !important;
+}
+.business-strip .business-item .business-icon-img {
+    color: #000000 !important;
+    filter: none !important;
+    opacity: 1 !important;
+}
+.business-strip .business-item .business-name {
+    color: #000000 !important;
+    font-weight: 800;
+    text-shadow: none !important;
+}
+.business-strip .business-item .business-category {
+    color: #000000 !important;
+    font-weight: 600;
+    opacity: .85;
+}
+/* Ensure "+ Add Biz" and "✏️ Edit Biz" buttons inside the strip
+   stay readable (white text on colored bg is correct). */
+.business-strip .add-biz-btn,
+.business-strip .edit-biz-strip-btn {
+    color: #ffffff !important;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.25);
+}
+
+/* ============================================================ */
+/* 4. HEADER — keep blue-black bg + WHITE text (contrast)        */
 /* ============================================================ */
 .live-header {
     background: linear-gradient(135deg, #0a2b3c 0%, #1c4e6c 100%) !important;
     color: #ffffff !important;
 }
 .live-header,
-.live-header * {
-    color: #ffffff !important;
-}
+.live-header * { color: #ffffff !important; }
 .live-header .brand-text {
     color: #FFD966 !important;
     font-weight: 900;
     text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-}
-.live-header .datetime-box,
-.live-header .datetime-box #currentDate,
-.live-header .datetime-box .time-text {
-    color: #ffffff !important;
 }
 .live-header .lang-selector select {
     background: rgba(255,255,255,0.12) !important;
@@ -119,7 +192,6 @@ input::placeholder, textarea::placeholder {
     background: #0a2b3c !important;
     color: #ffffff !important;
 }
-.live-header .lang-icon { color: #ffffff !important; }
 .live-header .agent-dropdown-btn {
     background: rgba(255,255,255,0.12) !important;
     color: #ffffff !important;
@@ -134,12 +206,6 @@ input::placeholder, textarea::placeholder {
     text-shadow: none !important;
     border: none !important;
 }
-.live-header .auth-btn:hover { background: #ffe89a !important; }
-.live-header #welcomeSection .user-name-display,
-.live-header #welcomeSection #loggedUserName {
-    color: #ffffff !important;
-    font-weight: 700;
-}
 .live-header .edit-account-btn,
 .live-header .logout-btn {
     background: rgba(255,255,255,0.15) !important;
@@ -147,15 +213,12 @@ input::placeholder, textarea::placeholder {
     border: 1px solid rgba(255,255,255,0.3) !important;
 }
 .live-header .connection-dot { background: #4ade80 !important; }
-.live-header .user-avatar,
-.live-header .user-avatar-emoji { color: #ffffff !important; }
 
-/* Flag strip on blue-black */
 .flags-strip { background: #0a2b3c !important; }
 .flags-strip .flag-icon { color: #ffffff !important; opacity: 1 !important; }
 
 /* ============================================================ */
-/* 3. FOOTER — keep blue-black, WHITE text (contrast)            */
+/* 5. FOOTER — keep blue-black bg + WHITE text                   */
 /* ============================================================ */
 .footer-section {
     background: linear-gradient(135deg, #0a2b3c 0%, #1c4e6c 100%) !important;
@@ -169,7 +232,6 @@ input::placeholder, textarea::placeholder {
     font-weight: 700;
     text-shadow: none !important;
 }
-.footer-section .footer-btn:hover { background: rgba(255,255,255,0.22) !important; }
 .footer-section #howToBtn { background: #2c7da0 !important; color: #ffffff !important; }
 .footer-section #currencyConverterBtn { background: #0f2b3d !important; color: #ffffff !important; }
 .footer-section #reportAppBtn { background: #e74c3c !important; color: #ffffff !important; }
@@ -192,12 +254,9 @@ input::placeholder, textarea::placeholder {
     border: 1px solid rgba(255,255,255,0.28) !important;
     font-weight: 800;
 }
-.footer-section .social-icon:hover { background: rgba(255,255,255,0.26) !important; }
 
 /* ============================================================ */
-/* 4. MODALS — pure white panels with BLACK text                 */
-/*    Overriding the earlier tinted colours so every figure,     */
-/*    label, USSD code, receipt value is BLACK.                  */
+/* 6. MODALS — white bg + BLACK text                             */
 /* ============================================================ */
 .modal { background: rgba(10, 43, 60, 0.45) !important; }
 .modal-content {
@@ -207,9 +266,7 @@ input::placeholder, textarea::placeholder {
 }
 .modal-content * { color: #000000 !important; }
 
-/* Receipt / deliver receipt header strip stays blue-black with
-   white text (this is the ONLY place inside a modal that must
-   NOT be black, since the bg is dark). */
+/* Receipt / Deliver-receipt / Agreement header strips: white-on-blue */
 #deliverReceiptModal .modal-content > div:first-child,
 #deliverReceiptModal .modal-content > div:first-child *,
 #receiptModal .modal-content > div:first-child,
@@ -219,102 +276,59 @@ input::placeholder, textarea::placeholder {
     color: #ffffff !important;
 }
 
-/* Buttons inside modals keep their strong-white-on-coloured look */
-.action-btn,
-.btn,
-.btn-submit,
-.single-mm-btn,
-.tx-btn,
-.mini-btn,
-.dash-tab.active,
-.goods-select-btn,
-.close-modal,
-.broadcast-option,
-.popup-ad-btn,
-.cc-btn-close,
-.deliver-btn,
+/* Buttons keep their designed colours */
+.action-btn, .btn, .btn-submit, .single-mm-btn, .tx-btn,
+.mini-btn, .dash-tab.active, .goods-select-btn, .close-modal,
+.broadcast-option, .popup-ad-btn, .cc-btn-close, .deliver-btn,
 .deliver-deals-btn {
     color: #ffffff !important;
     text-shadow: 0 1px 1px rgba(0,0,0,0.2);
 }
-/* Neutral (white face) buttons have BLACK text */
-.action-btn.neutral,
-.mini-btn.neutral,
-.btn.neutral,
+.action-btn.neutral, .mini-btn.neutral, .btn.neutral,
 .dash-tab:not(.active) {
     color: #000000 !important;
     text-shadow: none;
 }
-.action-btn.green, .action-btn.blue, .action-btn.orange,
-.action-btn.red, .action-btn.whatsapp, .action-btn.sms,
-.action-btn.dial, .single-mm-btn, .tx-btn, .dash-tab.active,
-.deliver-deals-btn { color: #ffffff !important; }
 
-/* ============================================================ */
-/* 5. ICONS / EMOJIS stay fully visible                          */
-/* ============================================================ */
+/* Icons/emojis stay fully opaque */
 .flag-icon, .agent-flag, .country-flag,
-.business-icon-img, .emoji-option,
-.popup-ad-icon, .goods-name, .bo-icon,
-.social-icon, .agent-logo-fallback,
-.dash-badge, .cbs-badge,
-.user-avatar, .user-avatar-img,
-.profile-label, .profile-field {
+.business-icon-img, .emoji-option, .popup-ad-icon,
+.social-icon, .user-avatar, .user-avatar-img {
     opacity: 1 !important;
     filter: none !important;
 }
 .agent-initials-inline { background: transparent; color: #000000 !important; font-weight: 800; }
 
-/* Semantic helpers, still readable */
 .success-msg { color: #006400 !important; }
 .error-msg { color: #b00020 !important; }
 .toast-msg { background: #0f2b3d !important; color: #ffffff !important; }
 
 /* ============================================================ */
-/* 6. USSD MODAL row helpers + Add/Edit Biz tiles                */
+/* 7. USSD MODAL + Add/Edit Biz tiles                            */
 /* ============================================================ */
-.ussd-modal-details { display: flex; flex-direction: column; gap: 4px; }
 .ussd-modal-row { display: flex; justify-content: space-between; font-size: .82rem; padding: 3px 0; border-bottom: 1px solid #f0f0f0; }
 .ussd-modal-label { color: #000000 !important; }
 .ussd-modal-value { color: #000000 !important; font-weight: 700; text-align: right; max-width: 62%; word-break: break-word; }
-#mbFourProductShortcut:hover { filter: brightness(0.97); }
 .biz-img-tile:hover { border-color: #2c7da0; }
 .biz-img-tile button:hover { filter: brightness(0.85); }
 
-/* ============================================================ */
-/* 7. DELIVER modal — international agent info card (WHITE bg,   */
-/*    BLACK text for every figure)                              */
-/* ============================================================ */
+/* Deliver / intl agent card */
 .intl-agent-card {
-    margin-top: 8px;
-    background: #ffffff !important;
-    border: 1px solid #c8ddec;
-    border-radius: 10px;
-    padding: 10px 12px;
-    font-size: .78rem;
-    color: #000000 !important;
+    margin-top: 8px; background: #ffffff !important;
+    border: 1px solid #c8ddec; border-radius: 10px;
+    padding: 10px 12px; font-size: .78rem; color: #000000 !important;
 }
-.intl-agent-card .iac-title {
-    font-weight: 800;
-    color: #000000 !important;
-    font-size: .82rem;
-    margin-bottom: 6px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
+.intl-agent-card .iac-title { font-weight: 800; color: #000000 !important; font-size: .82rem; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
 .intl-agent-card .iac-row { display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px dashed #e3ecf3; }
 .intl-agent-card .iac-row:last-child { border-bottom: none; }
-.intl-agent-card .iac-label { color: #000000 !important; }
-.intl-agent-card .iac-value { color: #000000 !important; font-weight: 700; text-align: right; max-width: 62%; word-break: break-word; }
-.intl-agent-card .iac-row.emph .iac-value { color: #000000 !important; font-weight: 800; }
+.intl-agent-card .iac-label,
+.intl-agent-card .iac-value { color: #000000 !important; }
+.intl-agent-card .iac-value { font-weight: 700; text-align: right; max-width: 62%; word-break: break-word; }
 .intl-agent-card .iac-row.total { border-top: 2px solid #1c6e8f; margin-top: 4px; padding-top: 6px; border-bottom: none; }
-.intl-agent-card .iac-row.total .iac-value { color: #000000 !important; font-weight: 900; font-size: .88rem; }
+.intl-agent-card .iac-row.total .iac-value { font-weight: 900; font-size: .88rem; }
 .intl-agent-card .iac-empty { color: #000000 !important; font-weight: 700; }
 
-/* USSD boxes: black text on white — maximum contrast */
-.deliver-ussd-box,
-.ussd-code-box {
+.deliver-ussd-box, .ussd-code-box {
     background: #ffffff !important;
     color: #000000 !important;
     border: 1px dashed #b8c9d6;
@@ -326,46 +340,13 @@ input::placeholder, textarea::placeholder {
     word-break: break-word;
 }
 
-/* Ensure form value displays inside receipt-like panels are black */
-#deliverUssdBox, #iacUssd, #iacClientReceives,
-#iacCommission, #iacCarrier, #iacName,
-#iacAddress, #iacPhone,
-#displayAmount, #chargeAmount, #gstAmount,
-#totalAmount, #currencySymbol, #cbsCarrear,
-#cbsLocal, #cbsServices, #cbsTotal,
-#bizPayFeeRate, #bizPayFeeAmount,
-#mbUssdCodeBox {
-    color: #000000 !important;
-}
-
-/* Small captions and help text inside modals must be black */
-.modal-content small,
-.modal-content .help-text,
-.modal-content .ussd-hint,
-.modal-content #editBizAuthHint,
-.modal-content #bizPayRouteLabel,
-.modal-content #mbFourPickerHint,
-.modal-content #agentDashSubtitle {
-    color: #000000 !important;
-}
-
-/* Labels & section sub-titles on white surfaces */
-.section-title,
-.deliver-section-title,
-.dash-section-title,
-.profile-info-block .profile-field,
-.local-agent-details .lad-title {
-    color: #000000 !important;
-    font-weight: 800;
-}
-
-/* Big numeric values: heavier weight for extra clarity */
+/* Big numeric values extra bold for clarity */
 #displayAmount, #chargeAmount, #gstAmount, #totalAmount,
-#cbsCarrear, #cbsLocal, #cbsServices, #cbsTotal,
-#iacCommission, #iacCarrier, #iacClientReceives,
-#bizPayFeeRate, #bizPayFeeAmount,
-#currencySymbol {
+#currencySymbol, #cbsCarrear, #cbsLocal, #cbsServices, #cbsTotal,
+#bizPayFeeRate, #bizPayFeeAmount, #iacCommission, #iacCarrier,
+#iacClientReceives {
     font-weight: 800 !important;
+    color: #000000 !important;
 }
 </style>
 </head>
@@ -513,9 +494,9 @@ input::placeholder, textarea::placeholder {
 
 <div class="charge-breakdown-section" id="chargeBreakdownSection">
 <div class="cbs-title">💳 Fee Breakdown <span class="cbs-badge">5%</span></div>
-<div class="cbs-row"><span class="cbs-label">🚚 Carrear Charges <span style="font-size:.65rem;color:#000000;">(3%)</span></span><span class="cbs-value" id="cbsCarrear">0.00</span></div>
-<div class="cbs-row"><span class="cbs-label">📞 Local Transfer <span style="font-size:.65rem;color:#000000;">(1%)</span></span><span class="cbs-value" id="cbsLocal">0.00</span></div>
-<div class="cbs-row"><span class="cbs-label">🛠️ Services <span style="font-size:.65rem;color:#000000;">(1%)</span></span><span class="cbs-value" id="cbsServices">0.00</span></div>
+<div class="cbs-row"><span class="cbs-label">🚚 Carrear Charges <span style="font-size:.65rem;">(3%)</span></span><span class="cbs-value" id="cbsCarrear">0.00</span></div>
+<div class="cbs-row"><span class="cbs-label">📞 Local Transfer <span style="font-size:.65rem;">(1%)</span></span><span class="cbs-value" id="cbsLocal">0.00</span></div>
+<div class="cbs-row"><span class="cbs-label">🛠️ Services <span style="font-size:.65rem;">(1%)</span></span><span class="cbs-value" id="cbsServices">0.00</span></div>
 <div class="cbs-row cbs-total"><span class="cbs-label">💵 Total Charges</span><span class="cbs-value" id="cbsTotal">0.00</span></div>
 </div>
 
