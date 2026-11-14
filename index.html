@@ -69,6 +69,7 @@
 </div>
 </div>
 </div>
+</div>
 
 <div class="flags-strip" id="flagsStrip">
 <div class="flag-grid-wrapper"><div class="flag-grid" id="headerFlagGrid"></div></div>
@@ -553,7 +554,6 @@
 
 </div></div>
 
-<!-- DELIVER TRANSACTION MODAL -->
 <div id="deliverModal" class="modal">
   <div class="modal-content" style="max-width:620px;">
     <div class="deliver-header">
@@ -592,12 +592,7 @@
       <label>Select Country *</label>
       <select id="deliverCountrySelect"></select>
     </div>
-
-    <!-- International agent card appears directly below the country dropdown -->
-    <div id="intlAgentCard" class="intl-agent-card" style="display:none;"></div>
-    <div id="intlAgentEmpty" class="intl-agent-card" style="display:none;"></div>
-
-    <div class="input-group" style="margin-top:8px;">
+    <div class="input-group">
       <label>Generated USSD Code</label>
       <div class="deliver-ussd-box" id="deliverUssdBox">—</div>
       <button type="button" class="action-btn green" id="deliverSendUssdBtn" style="margin-top:6px;width:100%;">📞 Send (Dial USSD)</button>
@@ -738,15 +733,7 @@
 <div class="input-group"><label>Country *</label><select id="bizCountrySelect"></select></div>
 <div class="input-group"><label>Website (optional)</label><input type="url" id="bizWebsite" /></div>
 
-<div class="input-group">
-  <label>🔐 Edit Biz PIN (5 digits) *</label>
-  <div style="display:flex;gap:6px;align-items:center;">
-    <input type="text" id="bizPin" maxlength="5" inputmode="numeric" readonly placeholder="•••••" style="flex:1;letter-spacing:6px;font-weight:700;text-align:center;background:#f8fafc;" />
-    <button type="button" class="action-btn green" id="bizGeneratePinBtn" style="height:34px;font-size:.78rem;white-space:nowrap;">🔑 Generate PIN</button>
-  </div>
-  <div style="font-size:.68rem;color:#7f8c8d;margin-top:4px;">This 5-digit PIN is required when a user later taps <strong>✏️ Edit Biz</strong> for this business.</div>
-</div>
-
+<!-- NEW: Product / Service Upload Grid (up to 10 images) -->
 <div class="input-group" style="border-top:1px solid #e8edf2;padding-top:10px;margin-top:8px;">
   <label style="display:flex;justify-content:space-between;align-items:center;">
     <span>📦 Products / Services (up to 10)</span>
@@ -761,6 +748,7 @@
   <div style="font-size:.68rem;color:#7f8c8d;margin-top:6px;">Tap a thumbnail to set its name, price, kind, quality, and delivery — these become the items shoppers see in Quick Pay.</div>
 </div>
 
+<!-- NEW: Payment Panel (local or international USSD) -->
 <div id="bizPayPanel" class="input-group" style="border-top:1px solid #e8edf2;padding-top:10px;margin-top:8px;background:#f9fbfc;border-radius:8px;padding:10px;">
   <label style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
     <span>💳 Upload / Activation Fee</span>
@@ -769,14 +757,6 @@
   <div class="input-group" style="margin-bottom:6px;">
     <label style="font-size:.72rem;">Amount *</label>
     <input type="number" id="bizPayAmount" step="any" placeholder="e.g. 10000" />
-  </div>
-  <div id="bizPayFeeRow" style="display:none;font-size:.72rem;color:#1e3b4a;background:#eaf3f8;border:1px solid #c8ddec;border-radius:6px;padding:6px 8px;margin-bottom:6px;">
-    <div style="display:flex;justify-content:space-between;">
-      <span>📊 Tiered Rate:</span><span id="bizPayFeeRate" style="font-weight:700;">—</span>
-    </div>
-    <div style="display:flex;justify-content:space-between;">
-      <span>💵 Fee Amount (written into USSD):</span><span id="bizPayFeeAmount" style="font-weight:700;">—</span>
-    </div>
   </div>
   <div style="font-size:.72rem;color:#7f8c8d;margin-bottom:4px;">
     <span id="bizPayRouteLabel">Enter the amount, then Generate.</span>
@@ -796,6 +776,7 @@
 </div>
 </div></div>
 
+<!-- NEW: Edit Biz credential gate modal -->
 <div id="editBizAuthModal" class="modal">
   <div class="modal-content" style="max-width:400px;">
     <h3 style="margin-bottom:8px;color:#0f2b3d;">🔐 Verify Business Credentials</h3>
