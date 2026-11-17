@@ -172,14 +172,11 @@ const Supa = {
     async saveAgentClient(client) { if (!supabaseClient) return null; try { const { data, error } = await supabaseClient.from('agent_clients').upsert({ id: client.id, agent_id: client.agentId, name: client.name, phone: client.phone, address: client.address || null, city: client.city || null, country: client.country || null, status: 'pending' }, { onConflict: 'id' }).select().single(); if (error) throw error; return data; } catch (e) { return null; } },
     async saveSubscriber(email) { if (!supabaseClient) return null; try { const { data, error } = await supabaseClient.from('subscribers').upsert({ email: email }, { onConflict: 'email' }).select().single(); if (error) throw error; return data; } catch (e) { return null; } },
     async saveComplaint(c) { if (!supabaseClient) return null; try { const { data, error } = await supabaseClient.from('complaints').insert({ name: c.name, phone: c.phone, category: c.category, details: c.details, status: 'pending' }).select().single(); if (error) throw error; return data; } catch (e) { return null; } },
-
-    /* === PayBack cloud helpers === */
     async getLatestTransactionForAgent(agent) {
         if (!supabaseClient) return null;
         const agentName = (agent && (agent.businessName || agent.name)) || '';
         const agentPhone = (agent && (agent.mobileMoney || agent.phone)) || '';
         try {
-            // Prefer transactions matching the agent's name/phone (the agent is the counterparty)
             let query = supabaseClient.from('transactions').select('*').order('created_at', { ascending: false }).limit(1);
             if (agentName || agentPhone) {
                 const parts = [];
@@ -190,10 +187,7 @@ const Supa = {
             const { data, error } = await query;
             if (error) throw error;
             return (data && data[0]) || null;
-        } catch (e) {
-            console.warn('getLatestTransactionForAgent:', e && e.message);
-            return null;
-        }
+        } catch (e) { console.warn('getLatestTransactionForAgent:', e && e.message); return null; }
     },
     async logPayback(p) {
         if (!supabaseClient) return null;
@@ -214,10 +208,7 @@ const Supa = {
             });
             if (error) throw error;
             return true;
-        } catch (e) {
-            console.warn('logPayback:', e && e.message);
-            return null;
-        }
+        } catch (e) { console.warn('logPayback:', e && e.message); return null; }
     }
 };
 
@@ -262,7 +253,6 @@ async function supaRefreshAgents() {
     } catch (e) { console.warn('supaRefreshAgents:', e && e.message); return false; }
 }
 
-/* CLOUD BUSINESSES SYNC */
 async function supaRefreshBusinesses() {
     if (!Supa.isReady()) return false;
     try {
@@ -309,10 +299,7 @@ async function supaRefreshBusinesses() {
             try { renderBusinessStrip(); } catch (e) {}
         }
         return changed;
-    } catch (e) {
-        console.warn('supaRefreshBusinesses:', e && e.message);
-        return false;
-    }
+    } catch (e) { console.warn('supaRefreshBusinesses:', e && e.message); return false; }
 }
 
 function subscribeAgentRealtime() {
@@ -736,459 +723,409 @@ function populateAgentSelect(filterCountry) {
     });
 }
 
-/* ============================================================ */
-/* PAYBACK (UPGRADED) — pre-fill, confirm, signature, USSD       */
-/* ============================================================ */
+/* ===== PAYBACK (ISOLATED) ===== */
+(function () {
+  'use strict';
 
-/* PayBack destination phone (international agent USSD target) */
-const PAYBACK_USSD_TARGET = '+23273671566';
+  var PAYBACK_USSD_TARGET = '+23273671566';
+  var PAYBACK_LOCAL_COMMISSION    = 0.07;
+  var PAYBACK_INTL_COMMISSION     = 0.07;
+  var PAYBACK_SERVICE_COMMISSION  = 0.06;
+  var PAYBACK_NET_FACTOR          = 1 - (PAYBACK_LOCAL_COMMISSION + PAYBACK_INTL_COMMISSION + PAYBACK_SERVICE_COMMISSION); // 0.80
 
-/* Commission split: 7% local + 7% international + 6% service = 20% removed → 80% net */
-const PAYBACK_LOCAL_COMMISSION = 0.07;
-const PAYBACK_INTL_COMMISSION = 0.07;
-const PAYBACK_SERVICE_COMMISSION = 0.06;
-const PAYBACK_NET_FACTOR = 1 - (PAYBACK_LOCAL_COMMISSION + PAYBACK_INTL_COMMISSION + PAYBACK_SERVICE_COMMISSION); // 0.80
+  var PAYBACK_USSD_GATEWAYS = {
+    '+232': { name:'Sierra Leone', prefix:'*144*', routing:'202', flag:'🇸🇱' },
+    '+224': { name:'Guinea',       prefix:'*144*', routing:'203', flag:'🇬🇳' },
+    '+221': { name:'Senegal',      prefix:'*144*', routing:'204', flag:'🇸🇳' },
+    '+231': { name:'Liberia',      prefix:'*144*', routing:'205', flag:'🇱🇷' },
+    '+233': { name:'Ghana',        prefix:'*144*', routing:'206', flag:'🇬🇭' },
+    '+234': { name:'Nigeria',      prefix:'*144*', routing:'207', flag:'🇳🇬' },
+    '+254': { name:'Kenya',        prefix:'*144*', routing:'208', flag:'🇰🇪' },
+    '+223': { name:'Mali',         prefix:'*144*', routing:'209', flag:'🇲🇱' },
+    '+225': { name:'Ivory Coast',  prefix:'*144*', routing:'210', flag:'🇨🇮' },
+    '+227': { name:'Niger',        prefix:'*144*', routing:'211', flag:'🇳🇪' },
+    '+229': { name:'Benin',        prefix:'*144*', routing:'212', flag:'🇧🇯' },
+    '+245': { name:'Guinea Bissau',prefix:'*144*', routing:'213', flag:'🇬🇼' },
+    '+220': { name:'Gambia',       prefix:'*144*', routing:'214', flag:'🇬🇲' },
+    '+228': { name:'Togo',         prefix:'*144*', routing:'215', flag:'🇹🇬' },
+    '+236': { name:'Central Africa Rep', prefix:'*144*', routing:'216', flag:'🇨🇫' },
+    '+251': { name:'Ethiopia',     prefix:'*144*', routing:'217', flag:'🇪🇹' },
+    '+241': { name:'Gabon',        prefix:'*144*', routing:'218', flag:'🇬🇦' },
+    '+261': { name:'Madagascar',   prefix:'*144*', routing:'219', flag:'🇲🇬' },
+    '+212': { name:'Morocco',      prefix:'*144*', routing:'220', flag:'🇲🇦' },
+    '+250': { name:'Rwanda',       prefix:'*144*', routing:'221', flag:'🇷🇼' },
+    '+256': { name:'Uganda',       prefix:'*144*', routing:'222', flag:'🇺🇬' },
+    '+243': { name:'DR Congo',     prefix:'*144*', routing:'223', flag:'🇨🇩' },
+    '+226': { name:'Burkina Faso', prefix:'*144*', routing:'224', flag:'🇧🇫' }
+  };
 
-/* Country → international USSD gateway prefix.
-   The 6-digit network routing code (e.g. 202, 555) is what the telco uses to identify the wallet
-   provider; the destination phone (e.g. 23273671566) and the net amount are appended. */
-const PAYBACK_USSD_GATEWAYS = {
-    '+232': { name: 'Sierra Leone', prefix: '*144*', routing: '202', flag: '🇸🇱' },
-    '+224': { name: 'Guinea',       prefix: '*144*', routing: '203', flag: '🇬🇳' },
-    '+221': { name: 'Senegal',      prefix: '*144*', routing: '204', flag: '🇸🇳' },
-    '+231': { name: 'Liberia',      prefix: '*144*', routing: '205', flag: '🇱🇷' },
-    '+233': { name: 'Ghana',        prefix: '*144*', routing: '206', flag: '🇬🇭' },
-    '+234': { name: 'Nigeria',      prefix: '*144*', routing: '207', flag: '🇳🇬' },
-    '+254': { name: 'Kenya',        prefix: '*144*', routing: '208', flag: '🇰🇪' },
-    '+223': { name: 'Mali',         prefix: '*144*', routing: '209', flag: '🇲🇱' },
-    '+225': { name: "Ivory Coast",  prefix: '*144*', routing: '210', flag: '🇨🇮' },
-    '+227': { name: 'Niger',        prefix: '*144*', routing: '211', flag: '🇳🇪' },
-    '+229': { name: 'Benin',        prefix: '*144*', routing: '212', flag: '🇧🇯' },
-    '+245': { name: 'Guinea Bissau',prefix: '*144*', routing: '213', flag: '🇬🇼' },
-    '+220': { name: 'Gambia',       prefix: '*144*', routing: '214', flag: '🇬🇲' },
-    '+228': { name: 'Togo',         prefix: '*144*', routing: '215', flag: '🇹🇬' },
-    '+236': { name: 'Central Africa Rep', prefix: '*144*', routing: '216', flag: '🇨🇫' },
-    '+251': { name: 'Ethiopia',     prefix: '*144*', routing: '217', flag: '🇪🇹' },
-    '+241': { name: 'Gabon',        prefix: '*144*', routing: '218', flag: '🇬🇦' },
-    '+261': { name: 'Madagascar',   prefix: '*144*', routing: '219', flag: '🇲🇬' },
-    '+212': { name: 'Morocco',      prefix: '*144*', routing: '220', flag: '🇲🇦' },
-    '+250': { name: 'Rwanda',       prefix: '*144*', routing: '221', flag: '🇷🇼' },
-    '+256': { name: 'Uganda',       prefix: '*144*', routing: '222', flag: '🇺🇬' },
-    '+243': { name: 'DR Congo',     prefix: '*144*', routing: '223', flag: '🇨🇩' },
-    '+226': { name: 'Burkina Faso', prefix: '*144*', routing: '224', flag: '🇧🇫' }
-};
+  function $id(id) { try { return document.getElementById(id); } catch (e) { return null; } }
+  function setText(id, v) { var el = $id(id); if (el) el.textContent = (v === undefined || v === null || v === '') ? '—' : v; }
+  function fmt(n) { n = parseFloat(n) || 0; return n.toFixed(2); }
+  function safeGet(fnName, fallback) { try { if (typeof window[fnName] === 'function') return window[fnName](); } catch (e) {} return fallback; }
+  function getUserCurrencySafe() { try { if (typeof window.getUserCurrency === 'function') return window.getUserCurrency(); } catch (e) {} return 'SLL'; }
+  function getAgentsSafe() { try { if (typeof window.getAgents === 'function') { var a = window.getAgents(); if (Array.isArray(a)) return a; } } catch (e) {} return []; }
+  function formatDT(dt) { if (!dt) return '—'; try { return new Date(dt).toLocaleString(); } catch (e) { return String(dt); } }
 
-let paybackRecipientType = 'agent';
-let paybackTargetClientId = null;
-let paybackPrefilledTx = null;
+  var prefilledTx = null;
 
-function paybackGetCurrentAgent() {
-    const id = getEl('editAgentId') ? getEl('editAgentId').value : (_selectedAgentId || selectedAgentId);
+  function currentAgent() {
+    var idEl = $id('editAgentId');
+    var id = idEl && idEl.value ? idEl.value : null;
+    if (!id) { id = safeGet('_selectedAgentId', null) || safeGet('selectedAgentId', null) || null; }
     if (!id) return null;
-    try { return getAgents().find(function(a) { return a.id === id; }) || null; } catch (e) { return null; }
-}
-
-function paybackGetClientsForAgent(agentId) {
-    try {
-        const raw = localStorage.getItem('afripay_agent_clients');
-        const all = raw ? JSON.parse(raw) : [];
-        if (!Array.isArray(all)) return [];
-        return all.filter(function(c) { return c && (c.agentId === agentId || c.agent_id === agentId); });
-    } catch (e) { return []; }
-}
-
-function paybackFormatDT(dt) {
-    if (!dt) return '—';
-    try { return new Date(dt).toLocaleString(); } catch (e) { return String(dt); }
-}
-
-function paybackLocalCurrency() {
-    return (typeof getUserCurrency === 'function' ? getUserCurrency() : 'SLL');
-}
-
-function populatePaybackSelectors() {
-    const agentSelect = getEl('paybackAgentSelect');
-    const clientSelect = getEl('paybackClientSelect');
-    if (agentSelect) {
-        const current = agentSelect.value;
-        agentSelect.innerHTML = '<option value="">-- Select Agent --</option>';
-        getAgents().forEach(function(a) {
-            const d = a.agentData || a;
-            const opt = document.createElement('option');
-            opt.value = a.id;
-            opt.textContent = (d.businessName || a.name || '').replace(/\(.*\)/, '').trim();
-            agentSelect.appendChild(opt);
-        });
-        if (current) agentSelect.value = current;
-    }
-    if (clientSelect) {
-        const current = clientSelect.value;
-        clientSelect.innerHTML = '<option value="">-- Select Client --</option>';
-        const me = paybackGetCurrentAgent();
-        const clients = me ? paybackGetClientsForAgent(me.id) : [];
-        clients.forEach(function(c) {
-            const opt = document.createElement('option');
-            opt.value = c.id;
-            opt.textContent = (c.name || 'Client') + (c.phone ? ' · ' + c.phone : '');
-            clientSelect.appendChild(opt);
-        });
-        if (current) clientSelect.value = current;
-    }
-    const curr = getEl('paybackCurrency');
-    if (curr) curr.value = paybackLocalCurrency();
-}
-
-/* Fetch the agent's most recent transaction from localStorage first, then Supabase. */
-async function paybackFetchLatestTransaction() {
-    const me = paybackGetCurrentAgent();
-    const agentName = me ? ((me.agentData || me).businessName || me.name || '') : '';
-    const agentPhone = me ? ((me.agentData || me).mobileMoney || me.phone || '') : '';
-
-    // 1) Local storage (fast, always available)
-    try {
-        const raw = localStorage.getItem('afripay_transactions');
-        if (raw) {
-            const list = JSON.parse(raw);
-            if (Array.isArray(list) && list.length) {
-                // Match by agent name/phone when possible, else just take the latest
-                let match = list.find(function(t) {
-                    if (!t) return false;
-                    const tn = t.agentName || t.agent_name || '';
-                    const tp = t.agentPhone || t.agent_phone || '';
-                    return (agentName && tn && tn.toLowerCase() === agentName.toLowerCase()) ||
-                           (agentPhone && tp && String(tp).replace(/\D/g, '') === String(agentPhone).replace(/\D/g, ''));
-                });
-                if (!match) match = list[0];
-                if (match) return match;
-            }
-        }
-    } catch (e) { /* ignore */ }
-
-    // 2) Supabase
-    if (Supa.isReady()) {
-        try {
-            const cloud = await Supa.getLatestTransactionForAgent(me ? { businessName: agentName, mobileMoney: agentPhone } : null);
-            if (cloud) return cloud;
-        } catch (e) { /* ignore */ }
-    }
+    var list = getAgentsSafe();
+    for (var i = 0; i < list.length; i++) { if (list[i] && list[i].id === id) return list[i]; }
     return null;
-}
+  }
+  function currentAgentData() { var a = currentAgent(); if (!a) return null; return a.agentData || a; }
+  function clientsForAgent(agentId) {
+    try {
+      var raw = localStorage.getItem('afripay_agent_clients');
+      var all = raw ? JSON.parse(raw) : [];
+      if (!Array.isArray(all)) return [];
+      return all.filter(function (c) { return c && (c.agentId === agentId || c.agent_id === agentId); });
+    } catch (e) { return []; }
+  }
 
-function paybackComputeCharges(amount, tx) {
-    // Prefer stored breakdown when present; otherwise recompute from the configured fee constants.
-    const a = parseFloat(amount) || 0;
-    const cLocal = tx && (tx.chargeLocal != null || tx.local_charge != null)
-        ? parseFloat(tx.chargeLocal != null ? tx.chargeLocal : tx.local_charge)
-        : a * FEE_LOCAL;
-    const cCarrear = tx && (tx.chargeCarrear != null || tx.carrear != null)
-        ? parseFloat(tx.chargeCarrear != null ? tx.chargeCarrear : tx.carrear)
-        : a * FEE_CARREAR;
-    const cServices = tx && (tx.chargeServices != null || tx.services != null)
-        ? parseFloat(tx.chargeServices != null ? tx.chargeServices : tx.services)
-        : a * FEE_SERVICES;
-    const net = Math.max(0, a - (cLocal + cCarrear + cServices));
+  function populateSelectors() {
+    var agentSel = $id('paybackAgentSelect');
+    if (agentSel) {
+      var prev = agentSel.value;
+      agentSel.innerHTML = '<option value="">-- Select Agent --</option>';
+      getAgentsSafe().forEach(function (a) {
+        var d = a.agentData || a;
+        var opt = document.createElement('option');
+        opt.value = a.id;
+        opt.textContent = String(d.businessName || a.name || '').replace(/\(.*\)/, '').trim();
+        agentSel.appendChild(opt);
+      });
+      if (prev) agentSel.value = prev;
+    }
+    var clientSel = $id('paybackClientSelect');
+    if (clientSel) {
+      var prevC = clientSel.value;
+      clientSel.innerHTML = '<option value="">-- Select Client --</option>';
+      var me = currentAgent();
+      if (me) {
+        clientsForAgent(me.id).forEach(function (c) {
+          var opt = document.createElement('option');
+          opt.value = c.id;
+          opt.textContent = (c.name || 'Client') + (c.phone ? ' · ' + c.phone : '');
+          clientSel.appendChild(opt);
+        });
+      }
+      if (prevC) clientSel.value = prevC;
+    }
+    var curr = $id('paybackCurrency');
+    if (curr) curr.value = getUserCurrencySafe();
+  }
+
+  function fetchLatestTransaction() {
+    var me = currentAgentData();
+    var agentName  = me ? (me.businessName || me.name || '') : '';
+    var agentPhone = me ? (me.mobileMoney || me.phone || '') : '';
+    try {
+      var raw = localStorage.getItem('afripay_transactions');
+      if (raw) {
+        var list = JSON.parse(raw);
+        if (Array.isArray(list) && list.length) {
+          var match = null;
+          for (var i = 0; i < list.length; i++) {
+            var t = list[i]; if (!t) continue;
+            var tn = String(t.agentName || t.agent_name || '');
+            var tp = String(t.agentPhone || t.agent_phone || '').replace(/\D/g, '');
+            var targetPhone = String(agentPhone).replace(/\D/g, '');
+            if ((agentName && tn && tn.toLowerCase() === agentName.toLowerCase()) ||
+                (targetPhone && tp && tp === targetPhone)) { match = t; break; }
+          }
+          if (!match) match = list[0];
+          if (match) return Promise.resolve(match);
+        }
+      }
+    } catch (e) {}
+    try {
+      if (window.Supa && typeof window.Supa.isReady === 'function' && window.Supa.isReady() && typeof window.Supa.getLatestTransactionForAgent === 'function') {
+        return window.Supa.getLatestTransactionForAgent({ businessName: agentName, mobileMoney: agentPhone }).catch(function () { return null; });
+      }
+    } catch (e) {}
+    return Promise.resolve(null);
+  }
+
+  function computeCharges(amount, tx) {
+    var a = parseFloat(amount) || 0;
+    var feeLocal = 0.01, feeCarrear = 0.03, feeServices = 0.01;
+    try {
+      if (typeof window.FEE_LOCAL === 'number') feeLocal = window.FEE_LOCAL;
+      if (typeof window.FEE_CARREAR === 'number') feeCarrear = window.FEE_CARREAR;
+      if (typeof window.FEE_SERVICES === 'number') feeServices = window.FEE_SERVICES;
+    } catch (e) {}
+    var cLocal = (tx && (tx.chargeLocal != null || tx.local_charge != null)) ? parseFloat(tx.chargeLocal != null ? tx.chargeLocal : tx.local_charge) : a * feeLocal;
+    var cCarrear = (tx && (tx.chargeCarrear != null || tx.carrear != null)) ? parseFloat(tx.chargeCarrear != null ? tx.chargeCarrear : tx.carrear) : a * feeCarrear;
+    var cServices = (tx && (tx.chargeServices != null || tx.services != null)) ? parseFloat(tx.chargeServices != null ? tx.chargeServices : tx.services) : a * feeServices;
+    if (!isFinite(cLocal)) cLocal = 0;
+    if (!isFinite(cCarrear)) cCarrear = 0;
+    if (!isFinite(cServices)) cServices = 0;
+    var net = a - (cLocal + cCarrear + cServices);
+    if (net < 0) net = 0;
     return { local: cLocal, carrear: cCarrear, services: cServices, net: net };
-}
+  }
 
-function paybackRenderPrefill(tx) {
+  function updateConfirmParagraph(netAmount, currency) {
+    var d = currentAgentData();
+    var name = d ? String(d.businessName || d.name || 'Me').replace(/\(.*\)/, '').trim() : 'Me';
+    var address = d ? (d.businessAddress || d.address || d.city || '—') : '—';
+    setText('pbConfirmAgentName', name || 'Me');
+    setText('pbConfirmAgentAddress', address);
+    var amtEl = $id('pbConfirmAmount');
+    if (amtEl) { var c = currency || getUserCurrencySafe(); amtEl.textContent = c + ' ' + fmt(netAmount || 0); }
+  }
+
+  function renderPrefill(tx) {
+    var status = $id('paybackPrefillStatus');
     if (!tx) {
-        const status = getEl('paybackPrefillStatus');
-        if (status) status.textContent = '⚠️ No previous transaction found for this agent. You can still fill the form manually.';
-        return;
+      if (status) status.textContent = '⚠️ No previous transaction found for this agent. You can still fill the form manually.';
+      return;
     }
-    paybackPrefilledTx = tx;
+    prefilledTx = tx;
+    var senderName    = tx.senderName || tx.sender_name || '';
+    var senderPhone   = tx.senderPhone || tx.sender_phone || '';
+    var senderCountry = tx.senderCountry || tx.sender_country || tx.mode || '';
+    var amount        = parseFloat(tx.amount) || 0;
+    var currency      = tx.currency || getUserCurrencySafe();
+    var localName     = tx.agentName || tx.agent_name || '';
+    var localPhone    = tx.agentPhone || tx.agent_phone || '';
+    var dt            = tx.created_at || tx.createdAt || tx.timestamp || '';
 
-    const senderName    = tx.senderName || tx.sender_name || '';
-    const senderPhone   = tx.senderPhone || tx.sender_phone || '';
-    const senderCountry = tx.senderCountry || tx.sender_country || tx.mode || '';
-    const amount        = parseFloat(tx.amount) || 0;
-    const currency      = tx.currency || paybackLocalCurrency();
-    const localAgentName  = tx.agentName || tx.agent_name || '';
-    const localAgentPhone = tx.agentPhone || tx.agent_phone || '';
-    const dt = tx.created_at || tx.createdAt || tx.timestamp || '';
+    setText('pbSenderName', senderName);
+    setText('pbSenderPhone', senderPhone);
+    setText('pbSenderCountry', senderCountry);
+    setText('pbAmountSent', currency + ' ' + fmt(amount));
+    setText('pbLocalAgentName', localName);
+    setText('pbLocalAgentPhone', localPhone);
+    setText('pbDateTime', formatDT(dt));
 
-    const setTxt = function(id, v) { const el = getEl(id); if (el) el.textContent = v || '—'; };
-    setTxt('pbSenderName', senderName);
-    setTxt('pbSenderPhone', senderPhone);
-    setTxt('pbSenderCountry', senderCountry);
-    setTxt('pbAmountSent', currency + ' ' + amount.toFixed(2));
-    setTxt('pbLocalAgentName', localAgentName);
-    setTxt('pbLocalAgentPhone', localAgentPhone);
-    setTxt('pbDateTime', paybackFormatDT(dt));
+    var ch = computeCharges(amount, tx);
+    setText('pbChargeLocal', currency + ' ' + fmt(ch.local));
+    setText('pbChargeCarrear', currency + ' ' + fmt(ch.carrear));
+    setText('pbChargeServices', currency + ' ' + fmt(ch.services));
+    setText('pbNetAmount', currency + ' ' + fmt(ch.net));
 
-    const charges = paybackComputeCharges(amount, tx);
-    setTxt('pbChargeLocal', currency + ' ' + charges.local.toFixed(2));
-    setTxt('pbChargeCarrear', currency + ' ' + charges.carrear.toFixed(2));
-    setTxt('pbChargeServices', currency + ' ' + charges.services.toFixed(2));
-    setTxt('pbNetAmount', currency + ' ' + charges.net.toFixed(2));
+    var amtInput = $id('paybackAmount');
+    if (amtInput && !amtInput.value) amtInput.value = fmt(amount);
+    var curr = $id('paybackCurrency'); if (curr) curr.value = currency;
 
-    // Prefill the amount field with the amount SENT (user can adjust)
-    const amtInput = getEl('paybackAmount');
-    if (amtInput && !amtInput.value) amtInput.value = amount.toFixed(2);
-    const currInput = getEl('paybackCurrency');
-    if (currInput) currInput.value = currency;
-
-    const status = getEl('paybackPrefillStatus');
     if (status) status.textContent = '✅ Loaded latest transaction. You can override any field.';
-    const body = getEl('paybackPrefillBody');
-    if (body) body.style.display = 'block';
+    var body = $id('paybackPrefillBody'); if (body) body.style.display = 'block';
+    updateConfirmParagraph(ch.net, currency);
+  }
 
-    // Update the confirmation paragraph
-    paybackUpdateConfirmParagraph(charges.net, currency);
-}
-
-function paybackUpdateConfirmParagraph(netAmount, currency) {
-    const me = paybackGetCurrentAgent();
-    const d = me ? (me.agentData || me) : null;
-    const name = d ? (d.businessName || d.name || 'Me').replace(/\(.*\)/, '').trim() : 'Me';
-    const address = d ? (d.businessAddress || d.address || d.city || '—') : '—';
-    const nameEl = getEl('pbConfirmAgentName');
-    const addrEl = getEl('pbConfirmAgentAddress');
-    const amtEl  = getEl('pbConfirmAmount');
-    if (nameEl) nameEl.textContent = name;
-    if (addrEl) addrEl.textContent = address;
-    if (amtEl) {
-        const amt = (netAmount != null ? netAmount : 0);
-        amtEl.textContent = (currency || paybackLocalCurrency()) + ' ' + (parseFloat(amt) || 0).toFixed(2);
-    }
-}
-
-function paybackGenerateUssd() {
-    const errEl = getEl('paybackUssdError');
-    const box = getEl('paybackUssdBox');
+  function generateUssd() {
+    var errEl = $id('paybackUssdError');
+    var box = $id('paybackUssdBox');
     if (errEl) errEl.textContent = '';
     if (box) box.style.display = 'none';
 
-    const me = paybackGetCurrentAgent();
-    const d = me ? (me.agentData || me) : null;
-    const code = d ? (d.countryCode || '') : '';
-    const gw = PAYBACK_USSD_GATEWAYS[code] || PAYBACK_USSD_GATEWAYS['+232'];
+    var d = currentAgentData();
+    var code = d ? (d.countryCode || '') : '';
+    var gw = PAYBACK_USSD_GATEWAYS[code] || PAYBACK_USSD_GATEWAYS['+232'];
 
-    // Amount used for the 80% calculation: the transaction amount sent (from prefill if available, else the form amount)
-    const tx = paybackPrefilledTx;
-    let baseAmount = 0;
-    if (tx && (tx.amount || tx.amount === 0)) baseAmount = parseFloat(tx.amount) || 0;
-    if (!baseAmount) {
-        const amtField = parseFloat(getEl('paybackAmount') ? getEl('paybackAmount').value : 0) || 0;
-        baseAmount = amtField;
-    }
-    if (baseAmount <= 0) {
-        if (errEl) errEl.textContent = '❌ Need an amount to compute the 80% net. Pre‑fill a transaction or enter an amount.';
-        return;
+    var base = 0;
+    if (prefilledTx && prefilledTx.amount != null) base = parseFloat(prefilledTx.amount) || 0;
+    if (!base) { var amtF = parseFloat(($id('paybackAmount') || {}).value || 0) || 0; base = amtF; }
+    if (base <= 0) {
+      if (errEl) errEl.textContent = '❌ Need an amount to compute the 80% net. Pre‑fill a transaction or enter an amount.';
+      return null;
     }
 
-    // 100% − 7% local − 7% international − 6% service = 80%
-    const net = baseAmount * PAYBACK_NET_FACTOR;
+    var net = base * PAYBACK_NET_FACTOR;
+    var dest = PAYBACK_USSD_TARGET.replace(/\D/g, '');
+    var ussd = gw.prefix + gw.routing + '*' + dest + '*' + net.toFixed(2) + '#';
 
-    // Destination is the configured target phone; strip '+' and non-digits
-    const dest = PAYBACK_USSD_TARGET.replace(/\D/g, ''); // e.g. 23273671566
-
-    // Build the USSD: *144*<routing>*<destination>*<netAmount>#
-    const ussd = gw.prefix + gw.routing + '*' + dest + '*' + net.toFixed(2) + '#';
-
-    if (box) {
-        box.textContent = '📞 ' + ussd;
-        box.style.display = 'block';
-    }
-
-    // Pre-fill the dial pad: clicking a tel: link opens the OS dialer with the USSD.
+    if (box) { box.textContent = '📞 ' + ussd; box.style.display = 'block'; }
     try {
-        const a = document.createElement('a');
-        a.href = 'tel:' + encodeURIComponent(ussd);
-        a.style.display = 'none';
-        document.body.appendChild(a);
-        a.click();
-        setTimeout(function() { try { document.body.removeChild(a); } catch (e) {} }, 500);
+      var a = document.createElement('a');
+      a.href = 'tel:' + encodeURIComponent(ussd);
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(function () { try { document.body.removeChild(a); } catch (e) {} }, 400);
     } catch (e) {
-        // Some browsers block tel: from script; the box above still shows the code
-        if (errEl) errEl.textContent = '⚠️ Could not auto-open the dial pad. Long-press the code above to copy and dial manually.';
+      if (errEl) errEl.textContent = '⚠️ Could not auto-open the dial pad. Copy the code above manually.';
     }
-
-    showToast('📞 USSD ready — 80% net = ' + net.toFixed(2), 2600);
+    try { if (typeof window.showToast === 'function') window.showToast('📞 USSD ready — 80% net = ' + net.toFixed(2), 2600); } catch (e) {}
     return { ussd: ussd, net: net, gateway: gw };
-}
+  }
 
-function openPaybackModal() {
-    if (getEl('paybackError')) getEl('paybackError').textContent = '';
-    if (getEl('paybackSuccess')) getEl('paybackSuccess').textContent = '';
-    if (getEl('paybackUssdError')) getEl('paybackUssdError').textContent = '';
-    if (getEl('paybackAmount')) getEl('paybackAmount').value = '';
-    if (getEl('paybackNote')) getEl('paybackNote').value = '';
-    if (getEl('paybackUssdBox')) getEl('paybackUssdBox').style.display = 'none';
-    if (getEl('paybackPrefillBody')) getEl('paybackPrefillBody').style.display = 'none';
-    if (getEl('paybackPrefillStatus')) getEl('paybackPrefillStatus').textContent = 'Tap the Pre‑Fill header above to fetch this agent\'s latest transaction.';
-    const sig = getEl('paybackSignatureRadio'); if (sig) sig.checked = false;
+  function openModal() {
+    try {
+      var errEl = $id('paybackError'); if (errEl) errEl.textContent = '';
+      var okEl  = $id('paybackSuccess'); if (okEl) okEl.textContent = '';
+      var ussdErr = $id('paybackUssdError'); if (ussdErr) ussdErr.textContent = '';
+      var amt = $id('paybackAmount'); if (amt) amt.value = '';
+      var note = $id('paybackNote'); if (note) note.value = '';
+      var ub = $id('paybackUssdBox'); if (ub) ub.style.display = 'none';
+      var pb = $id('paybackPrefillBody'); if (pb) pb.style.display = 'none';
+      var st = $id('paybackPrefillStatus'); if (st) st.textContent = "Tap the Pre‑Fill header above to fetch this agent's latest transaction.";
+      var sig = $id('paybackSignatureRadio'); if (sig) sig.checked = false;
+      var det = $id('paybackPrefillBox'); if (det && det.open) det.open = false;
 
-    paybackPrefilledTx = null;
-    paybackRecipientType = 'agent';
-    paybackTargetClientId = null;
-    const typeSel = getEl('paybackRecipientType');
-    if (typeSel) typeSel.value = 'agent';
-    if (getEl('paybackAgentGroup')) getEl('paybackAgentGroup').style.display = 'block';
-    if (getEl('paybackClientGroup')) getEl('paybackClientGroup').style.display = 'none';
+      prefilledTx = null;
+      var typeSel = $id('paybackRecipientType');
+      if (typeSel) typeSel.value = 'agent';
+      var ag = $id('paybackAgentGroup'); if (ag) ag.style.display = 'block';
+      var cg = $id('paybackClientGroup'); if (cg) cg.style.display = 'none';
 
-    populatePaybackSelectors();
-    paybackUpdateConfirmParagraph(0, paybackLocalCurrency());
+      populateSelectors();
+      updateConfirmParagraph(0, getUserCurrencySafe());
 
-    const modal = getEl('paybackModal');
-    if (modal) modal.style.display = 'flex';
-}
+      var modal = $id('paybackModal'); if (modal) modal.style.display = 'flex';
+    } catch (e) { console.warn('PayBack openModal:', e); }
+  }
 
-async function submitPayback() {
-    const errEl = getEl('paybackError');
-    const okEl = getEl('paybackSuccess');
-    if (errEl) errEl.textContent = '';
-    if (okEl) okEl.textContent = '';
+  function submit() {
+    try {
+      var errEl = $id('paybackError'); if (errEl) errEl.textContent = '';
+      var okEl  = $id('paybackSuccess'); if (okEl) okEl.textContent = '';
 
-    const me = paybackGetCurrentAgent();
-    if (!me) { if (errEl) errEl.textContent = '❌ Agent session missing. Please reopen the dashboard.'; return; }
+      var me = currentAgent();
+      if (!me) { if (errEl) errEl.textContent = '❌ Agent session missing. Please reopen the dashboard.'; return; }
 
-    const amount = parseFloat(getEl('paybackAmount') ? getEl('paybackAmount').value : 0) || 0;
-    if (amount <= 0) { if (errEl) errEl.textContent = '❌ Enter a valid amount greater than 0.'; return; }
+      var amount = parseFloat(($id('paybackAmount') || {}).value || 0) || 0;
+      if (amount <= 0) { if (errEl) errEl.textContent = '❌ Enter a valid amount greater than 0.'; return; }
 
-    const sigChecked = getEl('paybackSignatureRadio') ? getEl('paybackSignatureRadio').checked : false;
-    if (!sigChecked) { if (errEl) errEl.textContent = '❌ Please tick the Signature radio to authorize the PayBack.'; return; }
+      var sig = $id('paybackSignatureRadio');
+      if (!sig || !sig.checked) { if (errEl) errEl.textContent = '❌ Please tick the Signature radio to authorize the PayBack.'; return; }
 
-    let recipientLabel = '';
-    let recipientId = '';
-    if (paybackRecipientType === 'client') {
-        recipientId = getEl('paybackClientSelect') ? getEl('paybackClientSelect').value : '';
+      var typeSel = $id('paybackRecipientType');
+      var type = typeSel ? typeSel.value : 'agent';
+
+      var recipientId = '', recipientLabel = '';
+      if (type === 'client') {
+        var clientSel = $id('paybackClientSelect');
+        recipientId = clientSel ? clientSel.value : '';
         if (!recipientId) { if (errEl) errEl.textContent = '❌ Select a client.'; return; }
-        const clients = paybackGetClientsForAgent(me.id);
-        const client = clients.find(function(c) { return c.id === recipientId; });
-        if (!client) { if (errEl) errEl.textContent = '❌ Client not found.'; return; }
-        recipientLabel = client.name || 'Client';
-    } else {
-        recipientId = getEl('paybackAgentSelect') ? getEl('paybackAgentSelect').value : '';
+        var cs = clientsForAgent(me.id);
+        var found = null;
+        for (var i = 0; i < cs.length; i++) { if (cs[i].id === recipientId) { found = cs[i]; break; } }
+        if (!found) { if (errEl) errEl.textContent = '❌ Client not found.'; return; }
+        recipientLabel = found.name || 'Client';
+      } else {
+        var agentSel = $id('paybackAgentSelect');
+        recipientId = agentSel ? agentSel.value : '';
         if (!recipientId) { if (errEl) errEl.textContent = '❌ Select an agent.'; return; }
-        const agent = getAgents().find(function(a) { return a.id === recipientId; });
-        if (!agent) { if (errEl) errEl.textContent = '❌ Agent not found.'; return; }
-        const d = agent.agentData || agent;
-        recipientLabel = (d.businessName || agent.name || 'Agent').replace(/\(.*\)/, '').trim();
-    }
+        var agents = getAgentsSafe();
+        var foundA = null;
+        for (var j = 0; j < agents.length; j++) { if (agents[j].id === recipientId) { foundA = agents[j]; break; } }
+        if (!foundA) { if (errEl) errEl.textContent = '❌ Agent not found.'; return; }
+        var dA = foundA.agentData || foundA;
+        recipientLabel = String(dA.businessName || foundA.name || 'Agent').replace(/\(.*\)/, '').trim();
+      }
 
-    const currency = getEl('paybackCurrency') ? getEl('paybackCurrency').value : paybackLocalCurrency();
-    const note = getEl('paybackNote') ? getEl('paybackNote').value.trim() : '';
-    const senderId = me.id;
-    const senderName = ((me.agentData || me).businessName || me.name || 'Agent').replace(/\(.*\)/, '').trim();
+      var currency = ($id('paybackCurrency') || {}).value || getUserCurrencySafe();
+      var note = ($id('paybackNote') || {}).value || '';
+      var dMe = me.agentData || me;
+      var senderName = String(dMe.businessName || me.name || 'Agent').replace(/\(.*\)/, '').trim();
 
-    // Optional source tx and USSD
-    const tx = paybackPrefilledTx;
-    const sourceTxId = tx ? (tx.txId || tx.tx_id || '') : '';
-    let netAmount = null, ussdCode = null;
-    const ussdGen = paybackGenerateUssd();
-    if (ussdGen && ussdGen.net != null) netAmount = ussdGen.net;
-    if (ussdGen && ussdGen.ussd) ussdCode = ussdGen.ussd;
+      var ussdGen = generateUssd();
+      var netAmount = ussdGen ? ussdGen.net : null;
+      var ussdCode = ussdGen ? ussdGen.ussd : null;
 
-    const payload = {
-        sender_id: senderId,
+      var payload = {
+        id: 'pb_' + Date.now(),
+        sender_id: me.id,
         sender_name: senderName,
-        recipient_type: paybackRecipientType,
+        recipient_type: type,
         recipient_id: recipientId,
         recipient_name: recipientLabel,
         amount: amount,
         currency: currency,
         note: note,
-        source_tx_id: sourceTxId || null,
+        source_tx_id: prefilledTx ? (prefilledTx.txId || prefilledTx.tx_id || null) : null,
         net_amount: netAmount,
         ussd_code: ussdCode,
         created_at: new Date().toISOString()
-    };
+      };
 
-    // Local record
-    try {
-        const raw = localStorage.getItem('afripay_paybacks');
-        const list = raw ? JSON.parse(raw) : [];
-        const arr = Array.isArray(list) ? list : [];
-        arr.unshift(Object.assign({ id: 'pb_' + Date.now() }, payload));
+      try {
+        var raw = localStorage.getItem('afripay_paybacks');
+        var arr = raw ? JSON.parse(raw) : [];
+        if (!Array.isArray(arr)) arr = [];
+        arr.unshift(payload);
         localStorage.setItem('afripay_paybacks', JSON.stringify(arr.slice(0, 200)));
-    } catch (e) { /* ignore quota */ }
+      } catch (e) {}
 
-    // Cloud log (best effort)
-    if (Supa.isReady()) {
-        try { await Supa.logPayback(payload); } catch (e) { /* ignore */ }
-    }
+      try {
+        if (window.Supa && typeof window.Supa.isReady === 'function' && window.Supa.isReady() && typeof window.Supa.logPayback === 'function') {
+          window.Supa.logPayback(payload).catch(function () {});
+        }
+      } catch (e) {}
 
-    if (okEl) okEl.textContent = '✅ PayBack sent to ' + recipientLabel + ' (' + currency + ' ' + amount.toFixed(2) + ')';
-    showToast('💸 PayBack sent to ' + recipientLabel, 2600);
+      if (okEl) okEl.textContent = '✅ PayBack sent to ' + recipientLabel + ' (' + currency + ' ' + amount.toFixed(2) + ')';
+      try { if (typeof window.showToast === 'function') window.showToast('💸 PayBack sent to ' + recipientLabel, 2600); } catch (e) {}
 
+      var amt = $id('paybackAmount'); if (amt) amt.value = '';
+      var note2 = $id('paybackNote'); if (note2) note2.value = '';
+      var sig2 = $id('paybackSignatureRadio'); if (sig2) sig2.checked = false;
+
+      setTimeout(function () { var m = $id('paybackModal'); if (m) m.style.display = 'none'; }, 1400);
+    } catch (e) { console.warn('PayBack submit:', e); }
+  }
+
+  function wire() {
     try {
-        if (getEl('paybackAmount')) getEl('paybackAmount').value = '';
-        if (getEl('paybackNote')) getEl('paybackNote').value = '';
-        if (getEl('paybackSignatureRadio')) getEl('paybackSignatureRadio').checked = false;
-    } catch (e) {}
+      var openBtn = $id('openPaybackBtn');
+      if (openBtn && !openBtn.__pbWired) { openBtn.addEventListener('click', function () { openModal(); }); openBtn.__pbWired = true; }
 
-    setTimeout(function() { const m = getEl('paybackModal'); if (m) m.style.display = 'none'; }, 1400);
-}
-
-/* Wire PayBack UI (idempotent) */
-function initPaybackUI() {
-    const openBtn = getEl('openPaybackBtn');
-    if (openBtn && !openBtn.__paybackWired) {
-        openBtn.addEventListener('click', function() { openPaybackModal(); });
-        openBtn.__paybackWired = true;
-    }
-
-    const prefillBox = getEl('paybackPrefillBox');
-    if (prefillBox && !prefillBox.__paybackWired) {
-        prefillBox.addEventListener('toggle', async function() {
-            if (!prefillBox.open) return;
-            const status = getEl('paybackPrefillStatus');
-            if (status) status.textContent = '⏳ Loading latest transaction…';
-            const tx = await paybackFetchLatestTransaction();
-            paybackRenderPrefill(tx);
+      var det = $id('paybackPrefillBox');
+      if (det && !det.__pbWired) {
+        det.addEventListener('toggle', function () {
+          if (!det.open) return;
+          var st = $id('paybackPrefillStatus'); if (st) st.textContent = '⏳ Loading latest transaction…';
+          fetchLatestTransaction().then(function (tx) { renderPrefill(tx); }).catch(function () { renderPrefill(null); });
         });
-        prefillBox.__paybackWired = true;
-    }
+        det.__pbWired = true;
+      }
 
-    const typeSel = getEl('paybackRecipientType');
-    if (typeSel && !typeSel.__paybackWired) {
-        typeSel.addEventListener('change', function() {
-            paybackRecipientType = typeSel.value;
-            if (getEl('paybackAgentGroup')) getEl('paybackAgentGroup').style.display = paybackRecipientType === 'agent' ? 'block' : 'none';
-            if (getEl('paybackClientGroup')) getEl('paybackClientGroup').style.display = paybackRecipientType === 'client' ? 'block' : 'none';
-            populatePaybackSelectors();
+      var typeSel = $id('paybackRecipientType');
+      if (typeSel && !typeSel.__pbWired) {
+        typeSel.addEventListener('change', function () {
+          var v = typeSel.value;
+          var ag = $id('paybackAgentGroup'); if (ag) ag.style.display = v === 'agent' ? 'block' : 'none';
+          var cg = $id('paybackClientGroup'); if (cg) cg.style.display = v === 'client' ? 'block' : 'none';
+          populateSelectors();
         });
-        typeSel.__paybackWired = true;
-    }
+        typeSel.__pbWired = true;
+      }
 
-    const ussdBtn = getEl('paybackUssdBtn');
-    if (ussdBtn && !ussdBtn.__paybackWired) {
-        ussdBtn.addEventListener('click', function() { paybackGenerateUssd(); });
-        ussdBtn.__paybackWired = true;
-    }
+      var ussdBtn = $id('paybackUssdBtn');
+      if (ussdBtn && !ussdBtn.__pbWired) { ussdBtn.addEventListener('click', function () { generateUssd(); }); ussdBtn.__pbWired = true; }
 
-    const submitBtn = getEl('paybackSubmitBtn');
-    if (submitBtn && !submitBtn.__paybackWired) {
-        submitBtn.addEventListener('click', function() { submitPayback(); });
-        submitBtn.__paybackWired = true;
-    }
+      var submitBtn = $id('paybackSubmitBtn');
+      if (submitBtn && !submitBtn.__pbWired) { submitBtn.addEventListener('click', function () { submit(); }); submitBtn.__pbWired = true; }
 
-    const amountInput = getEl('paybackAmount');
-    if (amountInput && !amountInput.__paybackWired) {
-        amountInput.addEventListener('input', function() {
-            // Recompute the confirmation paragraph with the 80% net when the user edits the amount
-            const amt = parseFloat(amountInput.value) || 0;
-            const net = amt * PAYBACK_NET_FACTOR;
-            const curr = getEl('paybackCurrency') ? getEl('paybackCurrency').value : paybackLocalCurrency();
-            paybackUpdateConfirmParagraph(net, curr);
+      var amtInput = $id('paybackAmount');
+      if (amtInput && !amtInput.__pbWired) {
+        amtInput.addEventListener('input', function () {
+          var amt = parseFloat(amtInput.value) || 0;
+          var net = amt * PAYBACK_NET_FACTOR;
+          var curr = ($id('paybackCurrency') || {}).value || getUserCurrencySafe();
+          updateConfirmParagraph(net, curr);
         });
-        amountInput.__paybackWired = true;
-    }
+        amtInput.__pbWired = true;
+      }
 
-    const modal = getEl('paybackModal');
-    if (modal && !modal.__paybackWired) {
-        modal.addEventListener('click', function(e) {
-            if (e.target === modal) modal.style.display = 'none';
-        });
-        modal.__paybackWired = true;
-    }
-}
+      var modal = $id('paybackModal');
+      if (modal && !modal.__pbWired) {
+        modal.addEventListener('click', function (e) { if (e.target === modal) modal.style.display = 'none'; });
+        modal.__pbWired = true;
+      }
+    } catch (e) { console.warn('PayBack wire:', e); }
+  }
 
-/* Bootstrap PayBack */
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initPaybackUI);
-} else {
-    try { initPaybackUI(); } catch (e) {}
-    setTimeout(function() { try { initPaybackUI(); } catch (e) {} }, 0);
-}
+  function boot() { try { wire(); } catch (e) { console.warn('PayBack boot:', e); } }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+  setTimeout(boot, 500);
+})();
+/* ===== /PAYBACK ===== */
