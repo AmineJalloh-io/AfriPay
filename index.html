@@ -8,6 +8,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="stylesheet" href="styles.css" />
 <style>
+/* Product/Service badge inside MB-FOUR USSD modal */
 .ussd-modal-details { display: flex; flex-direction: column; gap: 4px; }
 .ussd-modal-row { display: flex; justify-content: space-between; font-size: .82rem; padding: 3px 0; border-bottom: 1px solid #f0f0f0; }
 .ussd-modal-label { color: #7f8c8d; }
@@ -17,9 +18,8 @@
 .biz-img-tile button:hover { filter: brightness(0.85); }
 
 /* ===== PayBack styles ===== */
-#paybackPrefillBox { cursor:pointer; user-select:none; }
 .pb-prefill-card { background:#fff7ea; border:1px dashed #e67e22; border-radius:10px; padding:10px 12px; margin-bottom:10px; }
-.pb-prefill-card summary { font-weight:800; color:#b35309; cursor:pointer; outline:none; }
+.pb-prefill-card summary { font-weight:800; color:#b35309; cursor:pointer; outline:none; list-style:none; }
 .pb-prefill-card summary::-webkit-details-marker { display:none; }
 .pb-prefill-card summary::before { content:"▸"; display:inline-block; margin-right:6px; transition:transform .2s; }
 .pb-prefill-card[open] summary::before { transform:rotate(90deg); }
@@ -576,13 +576,11 @@
 <!-- ====================== PAYBACK (UPGRADED) ====================== -->
 <div id="paybackModal" class="modal">
   <div class="modal-content" style="max-width:560px;max-height:92vh;overflow-y:auto;">
-
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
       <h3 style="margin:0;color:#0f2b3d;">💸 PayBack</h3>
       <button type="button" class="action-btn close-modal" style="width:32px;height:32px;padding:0;border-radius:50%;background:#ccc;color:#222;font-size:1rem;">✕</button>
     </div>
 
-    <!-- Pre-Fill box -->
     <details class="pb-prefill-card" id="paybackPrefillBox">
       <summary>⚡ Pre‑Fill — tap to load latest transaction</summary>
       <div id="paybackPrefillStatus" style="font-size:.72rem;color:#7f8c8d;margin-top:6px;">Tap the header above to fetch this agent's latest transaction.</div>
@@ -641,7 +639,6 @@
       <textarea id="paybackNote" placeholder="Optional note for the recipient..." style="min-height:64px;"></textarea>
     </div>
 
-    <!-- Confirmation paragraph + signature -->
     <div class="pb-confirm-para" id="paybackConfirmPara">
       I confirm that this transaction was done by <strong id="pbConfirmAgentName">Me</strong>
       (<span id="pbConfirmAgentAddress">—</span>) for the amount of
@@ -652,7 +649,6 @@
       <label for="paybackSignatureRadio">✍️ <strong>Signature</strong> — I authorize this PayBack (radio button acts as my e‑signature)</label>
     </div>
 
-    <!-- USSD -->
     <div class="input-group" style="margin-top:10px;">
       <label>📞 Agent's International USSD (destination <code>+232 73 671 566</code>)</label>
       <button type="button" class="action-btn green" id="paybackUssdBtn" style="width:100%;height:38px;">📞 Generate USSD (Dial Pad)</button>
