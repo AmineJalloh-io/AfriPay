@@ -171,7 +171,54 @@ const Supa = {
     async updatePendingItemStatus(id, status, reviewedBy) { if (!supabaseClient) return null; try { const { data, error } = await supabaseClient.from('pending_items').update({ status: status, reviewed_at: new Date().toISOString(), reviewed_by: reviewedBy || null }).eq('id', id).select().single(); if (error) throw error; return data; } catch (e) { return null; } },
     async saveAgentClient(client) { if (!supabaseClient) return null; try { const { data, error } = await supabaseClient.from('agent_clients').upsert({ id: client.id, agent_id: client.agentId, name: client.name, phone: client.phone, address: client.address || null, city: client.city || null, country: client.country || null, status: 'pending' }, { onConflict: 'id' }).select().single(); if (error) throw error; return data; } catch (e) { return null; } },
     async saveSubscriber(email) { if (!supabaseClient) return null; try { const { data, error } = await supabaseClient.from('subscribers').upsert({ email: email }, { onConflict: 'email' }).select().single(); if (error) throw error; return data; } catch (e) { return null; } },
-    async saveComplaint(c) { if (!supabaseClient) return null; try { const { data, error } = await supabaseClient.from('complaints').insert({ name: c.name, phone: c.phone, category: c.category, details: c.details, status: 'pending' }).select().single(); if (error) throw error; return data; } catch (e) { return null; } }
+    async saveComplaint(c) { if (!supabaseClient) return null; try { const { data, error } = await supabaseClient.from('complaints').insert({ name: c.name, phone: c.phone, category: c.category, details: c.details, status: 'pending' }).select().single(); if (error) throw error; return data; } catch (e) { return null; } },
+
+    /* === PayBack cloud helpers === */
+    async getLatestTransactionForAgent(agent) {
+        if (!supabaseClient) return null;
+        const agentName = (agent && (agent.businessName || agent.name)) || '';
+        const agentPhone = (agent && (agent.mobileMoney || agent.phone)) || '';
+        try {
+            // Prefer transactions matching the agent's name/phone (the agent is the counterparty)
+            let query = supabaseClient.from('transactions').select('*').order('created_at', { ascending: false }).limit(1);
+            if (agentName || agentPhone) {
+                const parts = [];
+                if (agentName) parts.push('agent_name.eq.' + agentName);
+                if (agentPhone) parts.push('agent_phone.eq.' + agentPhone);
+                if (parts.length) query = query.or(parts.join(','));
+            }
+            const { data, error } = await query;
+            if (error) throw error;
+            return (data && data[0]) || null;
+        } catch (e) {
+            console.warn('getLatestTransactionForAgent:', e && e.message);
+            return null;
+        }
+    },
+    async logPayback(p) {
+        if (!supabaseClient) return null;
+        try {
+            const { data, error } = await supabaseClient.from('paybacks').insert({
+                sender_id: p.sender_id,
+                sender_name: p.sender_name,
+                recipient_type: p.recipient_type,
+                recipient_id: p.recipient_id,
+                recipient_name: p.recipient_name,
+                amount: p.amount,
+                currency: p.currency,
+                note: p.note || null,
+                source_tx_id: p.source_tx_id || null,
+                net_amount: p.net_amount || null,
+                ussd_code: p.ussd_code || null,
+                status: 'sent'
+            });
+            if (error) throw error;
+            return true;
+        } catch (e) {
+            console.warn('logPayback:', e && e.message);
+            return null;
+        }
+    }
 };
 
 /* CLOUD AGENTS SYNC */
@@ -472,10 +519,6 @@ let mbFourSelectedAgentPhone = null;
 let pendingEditBizTarget = null;
 let pendingEditBizAttempts = 0;
 
-/* PAYBACK: state */
-let paybackRecipientType = 'agent';
-let paybackTargetClientId = null;
-
 const FEE_CARREAR = 0.03;
 const FEE_LOCAL = 0.01;
 const FEE_SERVICES = 0.01;
@@ -694,8 +737,50 @@ function populateAgentSelect(filterCountry) {
 }
 
 /* ============================================================ */
-/* PAYBACK: restored helpers, renderers, and event wiring        */
+/* PAYBACK (UPGRADED) — pre-fill, confirm, signature, USSD       */
 /* ============================================================ */
+
+/* PayBack destination phone (international agent USSD target) */
+const PAYBACK_USSD_TARGET = '+23273671566';
+
+/* Commission split: 7% local + 7% international + 6% service = 20% removed → 80% net */
+const PAYBACK_LOCAL_COMMISSION = 0.07;
+const PAYBACK_INTL_COMMISSION = 0.07;
+const PAYBACK_SERVICE_COMMISSION = 0.06;
+const PAYBACK_NET_FACTOR = 1 - (PAYBACK_LOCAL_COMMISSION + PAYBACK_INTL_COMMISSION + PAYBACK_SERVICE_COMMISSION); // 0.80
+
+/* Country → international USSD gateway prefix.
+   The 6-digit network routing code (e.g. 202, 555) is what the telco uses to identify the wallet
+   provider; the destination phone (e.g. 23273671566) and the net amount are appended. */
+const PAYBACK_USSD_GATEWAYS = {
+    '+232': { name: 'Sierra Leone', prefix: '*144*', routing: '202', flag: '🇸🇱' },
+    '+224': { name: 'Guinea',       prefix: '*144*', routing: '203', flag: '🇬🇳' },
+    '+221': { name: 'Senegal',      prefix: '*144*', routing: '204', flag: '🇸🇳' },
+    '+231': { name: 'Liberia',      prefix: '*144*', routing: '205', flag: '🇱🇷' },
+    '+233': { name: 'Ghana',        prefix: '*144*', routing: '206', flag: '🇬🇭' },
+    '+234': { name: 'Nigeria',      prefix: '*144*', routing: '207', flag: '🇳🇬' },
+    '+254': { name: 'Kenya',        prefix: '*144*', routing: '208', flag: '🇰🇪' },
+    '+223': { name: 'Mali',         prefix: '*144*', routing: '209', flag: '🇲🇱' },
+    '+225': { name: "Ivory Coast",  prefix: '*144*', routing: '210', flag: '🇨🇮' },
+    '+227': { name: 'Niger',        prefix: '*144*', routing: '211', flag: '🇳🇪' },
+    '+229': { name: 'Benin',        prefix: '*144*', routing: '212', flag: '🇧🇯' },
+    '+245': { name: 'Guinea Bissau',prefix: '*144*', routing: '213', flag: '🇬🇼' },
+    '+220': { name: 'Gambia',       prefix: '*144*', routing: '214', flag: '🇬🇲' },
+    '+228': { name: 'Togo',         prefix: '*144*', routing: '215', flag: '🇹🇬' },
+    '+236': { name: 'Central Africa Rep', prefix: '*144*', routing: '216', flag: '🇨🇫' },
+    '+251': { name: 'Ethiopia',     prefix: '*144*', routing: '217', flag: '🇪🇹' },
+    '+241': { name: 'Gabon',        prefix: '*144*', routing: '218', flag: '🇬🇦' },
+    '+261': { name: 'Madagascar',   prefix: '*144*', routing: '219', flag: '🇲🇬' },
+    '+212': { name: 'Morocco',      prefix: '*144*', routing: '220', flag: '🇲🇦' },
+    '+250': { name: 'Rwanda',       prefix: '*144*', routing: '221', flag: '🇷🇼' },
+    '+256': { name: 'Uganda',       prefix: '*144*', routing: '222', flag: '🇺🇬' },
+    '+243': { name: 'DR Congo',     prefix: '*144*', routing: '223', flag: '🇨🇩' },
+    '+226': { name: 'Burkina Faso', prefix: '*144*', routing: '224', flag: '🇧🇫' }
+};
+
+let paybackRecipientType = 'agent';
+let paybackTargetClientId = null;
+let paybackPrefilledTx = null;
 
 function paybackGetCurrentAgent() {
     const id = getEl('editAgentId') ? getEl('editAgentId').value : (_selectedAgentId || selectedAgentId);
@@ -704,13 +789,21 @@ function paybackGetCurrentAgent() {
 }
 
 function paybackGetClientsForAgent(agentId) {
-    // Agent dashboard clients are stored per-agent in localStorage under afripay_agent_clients
     try {
         const raw = localStorage.getItem('afripay_agent_clients');
         const all = raw ? JSON.parse(raw) : [];
         if (!Array.isArray(all)) return [];
         return all.filter(function(c) { return c && (c.agentId === agentId || c.agent_id === agentId); });
     } catch (e) { return []; }
+}
+
+function paybackFormatDT(dt) {
+    if (!dt) return '—';
+    try { return new Date(dt).toLocaleString(); } catch (e) { return String(dt); }
+}
+
+function paybackLocalCurrency() {
+    return (typeof getUserCurrency === 'function' ? getUserCurrency() : 'SLL');
 }
 
 function populatePaybackSelectors() {
@@ -742,21 +835,201 @@ function populatePaybackSelectors() {
         if (current) clientSelect.value = current;
     }
     const curr = getEl('paybackCurrency');
-    if (curr) curr.value = (typeof getUserCurrency === 'function' ? getUserCurrency() : 'SLL');
+    if (curr) curr.value = paybackLocalCurrency();
+}
+
+/* Fetch the agent's most recent transaction from localStorage first, then Supabase. */
+async function paybackFetchLatestTransaction() {
+    const me = paybackGetCurrentAgent();
+    const agentName = me ? ((me.agentData || me).businessName || me.name || '') : '';
+    const agentPhone = me ? ((me.agentData || me).mobileMoney || me.phone || '') : '';
+
+    // 1) Local storage (fast, always available)
+    try {
+        const raw = localStorage.getItem('afripay_transactions');
+        if (raw) {
+            const list = JSON.parse(raw);
+            if (Array.isArray(list) && list.length) {
+                // Match by agent name/phone when possible, else just take the latest
+                let match = list.find(function(t) {
+                    if (!t) return false;
+                    const tn = t.agentName || t.agent_name || '';
+                    const tp = t.agentPhone || t.agent_phone || '';
+                    return (agentName && tn && tn.toLowerCase() === agentName.toLowerCase()) ||
+                           (agentPhone && tp && String(tp).replace(/\D/g, '') === String(agentPhone).replace(/\D/g, ''));
+                });
+                if (!match) match = list[0];
+                if (match) return match;
+            }
+        }
+    } catch (e) { /* ignore */ }
+
+    // 2) Supabase
+    if (Supa.isReady()) {
+        try {
+            const cloud = await Supa.getLatestTransactionForAgent(me ? { businessName: agentName, mobileMoney: agentPhone } : null);
+            if (cloud) return cloud;
+        } catch (e) { /* ignore */ }
+    }
+    return null;
+}
+
+function paybackComputeCharges(amount, tx) {
+    // Prefer stored breakdown when present; otherwise recompute from the configured fee constants.
+    const a = parseFloat(amount) || 0;
+    const cLocal = tx && (tx.chargeLocal != null || tx.local_charge != null)
+        ? parseFloat(tx.chargeLocal != null ? tx.chargeLocal : tx.local_charge)
+        : a * FEE_LOCAL;
+    const cCarrear = tx && (tx.chargeCarrear != null || tx.carrear != null)
+        ? parseFloat(tx.chargeCarrear != null ? tx.chargeCarrear : tx.carrear)
+        : a * FEE_CARREAR;
+    const cServices = tx && (tx.chargeServices != null || tx.services != null)
+        ? parseFloat(tx.chargeServices != null ? tx.chargeServices : tx.services)
+        : a * FEE_SERVICES;
+    const net = Math.max(0, a - (cLocal + cCarrear + cServices));
+    return { local: cLocal, carrear: cCarrear, services: cServices, net: net };
+}
+
+function paybackRenderPrefill(tx) {
+    if (!tx) {
+        const status = getEl('paybackPrefillStatus');
+        if (status) status.textContent = '⚠️ No previous transaction found for this agent. You can still fill the form manually.';
+        return;
+    }
+    paybackPrefilledTx = tx;
+
+    const senderName    = tx.senderName || tx.sender_name || '';
+    const senderPhone   = tx.senderPhone || tx.sender_phone || '';
+    const senderCountry = tx.senderCountry || tx.sender_country || tx.mode || '';
+    const amount        = parseFloat(tx.amount) || 0;
+    const currency      = tx.currency || paybackLocalCurrency();
+    const localAgentName  = tx.agentName || tx.agent_name || '';
+    const localAgentPhone = tx.agentPhone || tx.agent_phone || '';
+    const dt = tx.created_at || tx.createdAt || tx.timestamp || '';
+
+    const setTxt = function(id, v) { const el = getEl(id); if (el) el.textContent = v || '—'; };
+    setTxt('pbSenderName', senderName);
+    setTxt('pbSenderPhone', senderPhone);
+    setTxt('pbSenderCountry', senderCountry);
+    setTxt('pbAmountSent', currency + ' ' + amount.toFixed(2));
+    setTxt('pbLocalAgentName', localAgentName);
+    setTxt('pbLocalAgentPhone', localAgentPhone);
+    setTxt('pbDateTime', paybackFormatDT(dt));
+
+    const charges = paybackComputeCharges(amount, tx);
+    setTxt('pbChargeLocal', currency + ' ' + charges.local.toFixed(2));
+    setTxt('pbChargeCarrear', currency + ' ' + charges.carrear.toFixed(2));
+    setTxt('pbChargeServices', currency + ' ' + charges.services.toFixed(2));
+    setTxt('pbNetAmount', currency + ' ' + charges.net.toFixed(2));
+
+    // Prefill the amount field with the amount SENT (user can adjust)
+    const amtInput = getEl('paybackAmount');
+    if (amtInput && !amtInput.value) amtInput.value = amount.toFixed(2);
+    const currInput = getEl('paybackCurrency');
+    if (currInput) currInput.value = currency;
+
+    const status = getEl('paybackPrefillStatus');
+    if (status) status.textContent = '✅ Loaded latest transaction. You can override any field.';
+    const body = getEl('paybackPrefillBody');
+    if (body) body.style.display = 'block';
+
+    // Update the confirmation paragraph
+    paybackUpdateConfirmParagraph(charges.net, currency);
+}
+
+function paybackUpdateConfirmParagraph(netAmount, currency) {
+    const me = paybackGetCurrentAgent();
+    const d = me ? (me.agentData || me) : null;
+    const name = d ? (d.businessName || d.name || 'Me').replace(/\(.*\)/, '').trim() : 'Me';
+    const address = d ? (d.businessAddress || d.address || d.city || '—') : '—';
+    const nameEl = getEl('pbConfirmAgentName');
+    const addrEl = getEl('pbConfirmAgentAddress');
+    const amtEl  = getEl('pbConfirmAmount');
+    if (nameEl) nameEl.textContent = name;
+    if (addrEl) addrEl.textContent = address;
+    if (amtEl) {
+        const amt = (netAmount != null ? netAmount : 0);
+        amtEl.textContent = (currency || paybackLocalCurrency()) + ' ' + (parseFloat(amt) || 0).toFixed(2);
+    }
+}
+
+function paybackGenerateUssd() {
+    const errEl = getEl('paybackUssdError');
+    const box = getEl('paybackUssdBox');
+    if (errEl) errEl.textContent = '';
+    if (box) box.style.display = 'none';
+
+    const me = paybackGetCurrentAgent();
+    const d = me ? (me.agentData || me) : null;
+    const code = d ? (d.countryCode || '') : '';
+    const gw = PAYBACK_USSD_GATEWAYS[code] || PAYBACK_USSD_GATEWAYS['+232'];
+
+    // Amount used for the 80% calculation: the transaction amount sent (from prefill if available, else the form amount)
+    const tx = paybackPrefilledTx;
+    let baseAmount = 0;
+    if (tx && (tx.amount || tx.amount === 0)) baseAmount = parseFloat(tx.amount) || 0;
+    if (!baseAmount) {
+        const amtField = parseFloat(getEl('paybackAmount') ? getEl('paybackAmount').value : 0) || 0;
+        baseAmount = amtField;
+    }
+    if (baseAmount <= 0) {
+        if (errEl) errEl.textContent = '❌ Need an amount to compute the 80% net. Pre‑fill a transaction or enter an amount.';
+        return;
+    }
+
+    // 100% − 7% local − 7% international − 6% service = 80%
+    const net = baseAmount * PAYBACK_NET_FACTOR;
+
+    // Destination is the configured target phone; strip '+' and non-digits
+    const dest = PAYBACK_USSD_TARGET.replace(/\D/g, ''); // e.g. 23273671566
+
+    // Build the USSD: *144*<routing>*<destination>*<netAmount>#
+    const ussd = gw.prefix + gw.routing + '*' + dest + '*' + net.toFixed(2) + '#';
+
+    if (box) {
+        box.textContent = '📞 ' + ussd;
+        box.style.display = 'block';
+    }
+
+    // Pre-fill the dial pad: clicking a tel: link opens the OS dialer with the USSD.
+    try {
+        const a = document.createElement('a');
+        a.href = 'tel:' + encodeURIComponent(ussd);
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function() { try { document.body.removeChild(a); } catch (e) {} }, 500);
+    } catch (e) {
+        // Some browsers block tel: from script; the box above still shows the code
+        if (errEl) errEl.textContent = '⚠️ Could not auto-open the dial pad. Long-press the code above to copy and dial manually.';
+    }
+
+    showToast('📞 USSD ready — 80% net = ' + net.toFixed(2), 2600);
+    return { ussd: ussd, net: net, gateway: gw };
 }
 
 function openPaybackModal() {
     if (getEl('paybackError')) getEl('paybackError').textContent = '';
     if (getEl('paybackSuccess')) getEl('paybackSuccess').textContent = '';
+    if (getEl('paybackUssdError')) getEl('paybackUssdError').textContent = '';
     if (getEl('paybackAmount')) getEl('paybackAmount').value = '';
     if (getEl('paybackNote')) getEl('paybackNote').value = '';
+    if (getEl('paybackUssdBox')) getEl('paybackUssdBox').style.display = 'none';
+    if (getEl('paybackPrefillBody')) getEl('paybackPrefillBody').style.display = 'none';
+    if (getEl('paybackPrefillStatus')) getEl('paybackPrefillStatus').textContent = 'Tap the Pre‑Fill header above to fetch this agent\'s latest transaction.';
+    const sig = getEl('paybackSignatureRadio'); if (sig) sig.checked = false;
+
+    paybackPrefilledTx = null;
     paybackRecipientType = 'agent';
     paybackTargetClientId = null;
     const typeSel = getEl('paybackRecipientType');
     if (typeSel) typeSel.value = 'agent';
     if (getEl('paybackAgentGroup')) getEl('paybackAgentGroup').style.display = 'block';
     if (getEl('paybackClientGroup')) getEl('paybackClientGroup').style.display = 'none';
+
     populatePaybackSelectors();
+    paybackUpdateConfirmParagraph(0, paybackLocalCurrency());
+
     const modal = getEl('paybackModal');
     if (modal) modal.style.display = 'flex';
 }
@@ -772,6 +1045,9 @@ async function submitPayback() {
 
     const amount = parseFloat(getEl('paybackAmount') ? getEl('paybackAmount').value : 0) || 0;
     if (amount <= 0) { if (errEl) errEl.textContent = '❌ Enter a valid amount greater than 0.'; return; }
+
+    const sigChecked = getEl('paybackSignatureRadio') ? getEl('paybackSignatureRadio').checked : false;
+    if (!sigChecked) { if (errEl) errEl.textContent = '❌ Please tick the Signature radio to authorize the PayBack.'; return; }
 
     let recipientLabel = '';
     let recipientId = '';
@@ -791,10 +1067,18 @@ async function submitPayback() {
         recipientLabel = (d.businessName || agent.name || 'Agent').replace(/\(.*\)/, '').trim();
     }
 
-    const currency = getEl('paybackCurrency') ? getEl('paybackCurrency').value : (typeof getUserCurrency === 'function' ? getUserCurrency() : 'SLL');
+    const currency = getEl('paybackCurrency') ? getEl('paybackCurrency').value : paybackLocalCurrency();
     const note = getEl('paybackNote') ? getEl('paybackNote').value.trim() : '';
     const senderId = me.id;
     const senderName = ((me.agentData || me).businessName || me.name || 'Agent').replace(/\(.*\)/, '').trim();
+
+    // Optional source tx and USSD
+    const tx = paybackPrefilledTx;
+    const sourceTxId = tx ? (tx.txId || tx.tx_id || '') : '';
+    let netAmount = null, ussdCode = null;
+    const ussdGen = paybackGenerateUssd();
+    if (ussdGen && ussdGen.net != null) netAmount = ussdGen.net;
+    if (ussdGen && ussdGen.ussd) ussdCode = ussdGen.ussd;
 
     const payload = {
         sender_id: senderId,
@@ -805,10 +1089,13 @@ async function submitPayback() {
         amount: amount,
         currency: currency,
         note: note,
+        source_tx_id: sourceTxId || null,
+        net_amount: netAmount,
+        ussd_code: ussdCode,
         created_at: new Date().toISOString()
     };
 
-    // Persist locally so the app has a record even when offline
+    // Local record
     try {
         const raw = localStorage.getItem('afripay_paybacks');
         const list = raw ? JSON.parse(raw) : [];
@@ -817,41 +1104,41 @@ async function submitPayback() {
         localStorage.setItem('afripay_paybacks', JSON.stringify(arr.slice(0, 200)));
     } catch (e) { /* ignore quota */ }
 
-    // Best-effort cloud log
+    // Cloud log (best effort)
     if (Supa.isReady()) {
-        try {
-            const { error } = await supabaseClient.from('paybacks').insert({
-                sender_id: senderId,
-                sender_name: senderName,
-                recipient_type: paybackRecipientType,
-                recipient_id: recipientId,
-                recipient_name: recipientLabel,
-                amount: amount,
-                currency: currency,
-                note: note || null,
-                status: 'sent'
-            });
-            if (error) {
-                // Don't block the user on missing table; just log
-                console.warn('paybacks insert:', error.message);
-            }
-        } catch (e) {
-            console.warn('paybacks insert failed:', e && e.message);
-        }
+        try { await Supa.logPayback(payload); } catch (e) { /* ignore */ }
     }
 
     if (okEl) okEl.textContent = '✅ PayBack sent to ' + recipientLabel + ' (' + currency + ' ' + amount.toFixed(2) + ')';
     showToast('💸 PayBack sent to ' + recipientLabel, 2600);
-    try { if (getEl('paybackAmount')) getEl('paybackAmount').value = ''; if (getEl('paybackNote')) getEl('paybackNote').value = ''; } catch (e) {}
+
+    try {
+        if (getEl('paybackAmount')) getEl('paybackAmount').value = '';
+        if (getEl('paybackNote')) getEl('paybackNote').value = '';
+        if (getEl('paybackSignatureRadio')) getEl('paybackSignatureRadio').checked = false;
+    } catch (e) {}
+
     setTimeout(function() { const m = getEl('paybackModal'); if (m) m.style.display = 'none'; }, 1400);
 }
 
-/* Wire PayBack UI (idempotent — safe even if script loads more than once) */
+/* Wire PayBack UI (idempotent) */
 function initPaybackUI() {
     const openBtn = getEl('openPaybackBtn');
     if (openBtn && !openBtn.__paybackWired) {
         openBtn.addEventListener('click', function() { openPaybackModal(); });
         openBtn.__paybackWired = true;
+    }
+
+    const prefillBox = getEl('paybackPrefillBox');
+    if (prefillBox && !prefillBox.__paybackWired) {
+        prefillBox.addEventListener('toggle', async function() {
+            if (!prefillBox.open) return;
+            const status = getEl('paybackPrefillStatus');
+            if (status) status.textContent = '⏳ Loading latest transaction…';
+            const tx = await paybackFetchLatestTransaction();
+            paybackRenderPrefill(tx);
+        });
+        prefillBox.__paybackWired = true;
     }
 
     const typeSel = getEl('paybackRecipientType');
@@ -865,27 +1152,43 @@ function initPaybackUI() {
         typeSel.__paybackWired = true;
     }
 
+    const ussdBtn = getEl('paybackUssdBtn');
+    if (ussdBtn && !ussdBtn.__paybackWired) {
+        ussdBtn.addEventListener('click', function() { paybackGenerateUssd(); });
+        ussdBtn.__paybackWired = true;
+    }
+
     const submitBtn = getEl('paybackSubmitBtn');
     if (submitBtn && !submitBtn.__paybackWired) {
         submitBtn.addEventListener('click', function() { submitPayback(); });
         submitBtn.__paybackWired = true;
     }
 
-    // Populate selectors when the modal opens via any path (close-modal buttons etc. don't reopen)
+    const amountInput = getEl('paybackAmount');
+    if (amountInput && !amountInput.__paybackWired) {
+        amountInput.addEventListener('input', function() {
+            // Recompute the confirmation paragraph with the 80% net when the user edits the amount
+            const amt = parseFloat(amountInput.value) || 0;
+            const net = amt * PAYBACK_NET_FACTOR;
+            const curr = getEl('paybackCurrency') ? getEl('paybackCurrency').value : paybackLocalCurrency();
+            paybackUpdateConfirmParagraph(net, curr);
+        });
+        amountInput.__paybackWired = true;
+    }
+
     const modal = getEl('paybackModal');
     if (modal && !modal.__paybackWired) {
         modal.addEventListener('click', function(e) {
-            if (e.target === modal) { modal.style.display = 'none'; }
+            if (e.target === modal) modal.style.display = 'none';
         });
         modal.__paybackWired = true;
     }
 }
 
-/* Bootstrap PayBack once DOM is ready (works with any existing DOMContentLoaded handlers) */
+/* Bootstrap PayBack */
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initPaybackUI);
 } else {
-    // If this script is loaded late, run now and also after a tick to be safe
     try { initPaybackUI(); } catch (e) {}
     setTimeout(function() { try { initPaybackUI(); } catch (e) {} }, 0);
 }
