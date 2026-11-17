@@ -8,16 +8,34 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="stylesheet" href="styles.css" />
 <style>
-/* Product/Service badge inside MB-FOUR USSD modal */
 .ussd-modal-details { display: flex; flex-direction: column; gap: 4px; }
 .ussd-modal-row { display: flex; justify-content: space-between; font-size: .82rem; padding: 3px 0; border-bottom: 1px solid #f0f0f0; }
 .ussd-modal-label { color: #7f8c8d; }
 .ussd-modal-value { color: #1e3b4a; font-weight: 600; text-align: right; max-width: 62%; word-break: break-word; }
-/* Shortcut card shown at the top of the MB-FOUR picker when a product is ordered */
 #mbFourProductShortcut:hover { filter: brightness(0.97); }
-/* Multi-image tiles inside Add/Edit Biz modals */
 .biz-img-tile:hover { border-color: #2c7da0; }
 .biz-img-tile button:hover { filter: brightness(0.85); }
+
+/* ===== PayBack styles ===== */
+#paybackPrefillBox { cursor:pointer; user-select:none; }
+.pb-prefill-card { background:#fff7ea; border:1px dashed #e67e22; border-radius:10px; padding:10px 12px; margin-bottom:10px; }
+.pb-prefill-card summary { font-weight:800; color:#b35309; cursor:pointer; outline:none; }
+.pb-prefill-card summary::-webkit-details-marker { display:none; }
+.pb-prefill-card summary::before { content:"▸"; display:inline-block; margin-right:6px; transition:transform .2s; }
+.pb-prefill-card[open] summary::before { transform:rotate(90deg); }
+.pb-prefill-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px 10px; margin-top:8px; font-size:.78rem; }
+.pb-prefill-grid .pb-full { grid-column:1 / -1; }
+.pb-row { display:flex; justify-content:space-between; border-bottom:1px dashed #f0dcc2; padding:3px 0; }
+.pb-row .lbl { color:#7f8c8d; }
+.pb-row .val { color:#1e3b4a; font-weight:700; text-align:right; }
+.pb-row.pb-neg .val { color:#c0392b; }
+.pb-row.pb-net { border-top:2px solid #e67e22; border-bottom:none; margin-top:4px; padding-top:6px; }
+.pb-row.pb-net .val { color:#1c6e3f; font-size:.95rem; }
+.pb-charges-title { font-weight:800; color:#2c3e50; margin-top:8px; margin-bottom:2px; font-size:.78rem; }
+.pb-signature { display:flex; gap:8px; align-items:center; margin-top:8px; font-size:.78rem; color:#1e3b4a; }
+.pb-signature input[type="radio"] { transform:scale(1.2); accent-color:#2c7da0; }
+.pb-confirm-para { background:#eef6fb; border-left:4px solid #2c7da0; padding:8px 10px; font-size:.78rem; line-height:1.5; color:#1e3b4a; border-radius:6px; }
+.pb-ussd-box { background:#0f2b3d; color:#ffd966; padding:10px 12px; border-radius:8px; font-family:'Courier New',monospace; font-size:.85rem; word-break:break-all; margin-top:6px; }
 </style>
 </head>
 <body>
@@ -420,7 +438,6 @@
 <div class="edit-agent-header">
   <h3 id="agentDashTitle">🏢 Agent Dashboard</h3>
   <div class="edit-agent-header-actions">
-    <!-- PAYBACK: restored button in the agent dashboard header -->
     <button type="button" class="deliver-btn" id="openPaybackBtn" style="background:linear-gradient(135deg,#e67e22,#d35400);">💸 PayBack</button>
     <button type="button" class="deliver-btn" id="openDeliverBtn">🚚 Deliver</button>
     <button type="button" class="deliver-btn" id="refreshAgentsBtn" style="background:linear-gradient(135deg,#2c7da0,#1c4e6c);">🔄 Refresh</button>
@@ -556,16 +573,37 @@
 
 </div></div>
 
-<!-- PAYBACK: restored PayBack modal -->
+<!-- ====================== PAYBACK (UPGRADED) ====================== -->
 <div id="paybackModal" class="modal">
-  <div class="modal-content" style="max-width:520px;">
+  <div class="modal-content" style="max-width:560px;max-height:92vh;overflow-y:auto;">
+
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
       <h3 style="margin:0;color:#0f2b3d;">💸 PayBack</h3>
       <button type="button" class="action-btn close-modal" style="width:32px;height:32px;padding:0;border-radius:50%;background:#ccc;color:#222;font-size:1rem;">✕</button>
     </div>
-    <div style="font-size:.72rem;color:#7f8c8d;margin-bottom:8px;">
-      Send a payback / refund to another agent or client. The recipient will be notified in-app.
-    </div>
+
+    <!-- Pre-Fill box -->
+    <details class="pb-prefill-card" id="paybackPrefillBox">
+      <summary>⚡ Pre‑Fill — tap to load latest transaction</summary>
+      <div id="paybackPrefillStatus" style="font-size:.72rem;color:#7f8c8d;margin-top:6px;">Tap the header above to fetch this agent's latest transaction.</div>
+      <div id="paybackPrefillBody" style="display:none;">
+        <div class="pb-prefill-grid">
+          <div class="pb-row"><span class="lbl">Sender</span><span class="val" id="pbSenderName">—</span></div>
+          <div class="pb-row"><span class="lbl">Phone</span><span class="val" id="pbSenderPhone">—</span></div>
+          <div class="pb-row"><span class="lbl">Country</span><span class="val" id="pbSenderCountry">—</span></div>
+          <div class="pb-row"><span class="lbl">Amount sent</span><span class="val" id="pbAmountSent">—</span></div>
+          <div class="pb-row"><span class="lbl">Local agent</span><span class="val" id="pbLocalAgentName">—</span></div>
+          <div class="pb-row"><span class="lbl">Agent phone</span><span class="val" id="pbLocalAgentPhone">—</span></div>
+          <div class="pb-row pb-full"><span class="lbl">Date / time</span><span class="val" id="pbDateTime">—</span></div>
+        </div>
+        <div class="pb-charges-title">💳 Charges removed (net result)</div>
+        <div class="pb-row pb-neg"><span class="lbl">📞 Local Transfer (1%)</span><span class="val" id="pbChargeLocal">0.00</span></div>
+        <div class="pb-row pb-neg"><span class="lbl">🚚 Carrear (3%)</span><span class="val" id="pbChargeCarrear">0.00</span></div>
+        <div class="pb-row pb-neg"><span class="lbl">🛠️ Services (1%)</span><span class="val" id="pbChargeServices">0.00</span></div>
+        <div class="pb-row pb-net"><span class="lbl">✅ Net amount after charges</span><span class="val" id="pbNetAmount">0.00</span></div>
+      </div>
+    </details>
+
     <div id="paybackError" class="error-msg"></div>
     <div id="paybackSuccess" class="success-msg"></div>
 
@@ -603,12 +641,35 @@
       <textarea id="paybackNote" placeholder="Optional note for the recipient..." style="min-height:64px;"></textarea>
     </div>
 
+    <!-- Confirmation paragraph + signature -->
+    <div class="pb-confirm-para" id="paybackConfirmPara">
+      I confirm that this transaction was done by <strong id="pbConfirmAgentName">Me</strong>
+      (<span id="pbConfirmAgentAddress">—</span>) for the amount of
+      <strong id="pbConfirmAmount">—</strong> and I attach my signature below.
+    </div>
+    <div class="pb-signature">
+      <input type="radio" id="paybackSignatureRadio" name="paybackSignature" />
+      <label for="paybackSignatureRadio">✍️ <strong>Signature</strong> — I authorize this PayBack (radio button acts as my e‑signature)</label>
+    </div>
+
+    <!-- USSD -->
+    <div class="input-group" style="margin-top:10px;">
+      <label>📞 Agent's International USSD (destination <code>+232 73 671 566</code>)</label>
+      <button type="button" class="action-btn green" id="paybackUssdBtn" style="width:100%;height:38px;">📞 Generate USSD (Dial Pad)</button>
+      <div id="paybackUssdBox" class="pb-ussd-box" style="display:none;">—</div>
+      <div id="paybackUssdError" class="error-msg"></div>
+      <div style="font-size:.68rem;color:#7f8c8d;margin-top:4px;">
+        USSD is prefilled with the <strong>80%</strong> that remains after the local agent's <strong>7%</strong> commission, the international agent's <strong>7%</strong>, and a <strong>6%</strong> service retention — i.e. 100% − 7% − 7% − 6% = <strong>80%</strong>.
+      </div>
+    </div>
+
     <div class="action-buttons-row" style="margin-top:10px;">
       <button type="button" class="action-btn green" id="paybackSubmitBtn" style="flex:1;">💸 Send PayBack</button>
       <button type="button" class="action-btn close-modal" style="background:#95a5a6;flex:1;">Cancel</button>
     </div>
   </div>
 </div>
+<!-- ==================== /PAYBACK (UPGRADED) ==================== -->
 
 <div id="deliverModal" class="modal">
   <div class="modal-content" style="max-width:620px;">
@@ -789,7 +850,6 @@
 <div class="input-group"><label>Country *</label><select id="bizCountrySelect"></select></div>
 <div class="input-group"><label>Website (optional)</label><input type="url" id="bizWebsite" /></div>
 
-<!-- NEW: Product / Service Upload Grid (up to 10 images) -->
 <div class="input-group" style="border-top:1px solid #e8edf2;padding-top:10px;margin-top:8px;">
   <label style="display:flex;justify-content:space-between;align-items:center;">
     <span>📦 Products / Services (up to 10)</span>
@@ -804,7 +864,6 @@
   <div style="font-size:.68rem;color:#7f8c8d;margin-top:6px;">Tap a thumbnail to set its name, price, kind, quality, and delivery — these become the items shoppers see in Quick Pay.</div>
 </div>
 
-<!-- NEW: Payment Panel (local or international USSD) -->
 <div id="bizPayPanel" class="input-group" style="border-top:1px solid #e8edf2;padding-top:10px;margin-top:8px;background:#f9fbfc;border-radius:8px;padding:10px;">
   <label style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
     <span>💳 Upload / Activation Fee</span>
@@ -832,7 +891,6 @@
 </div>
 </div></div>
 
-<!-- NEW: Edit Biz credential gate modal -->
 <div id="editBizAuthModal" class="modal">
   <div class="modal-content" style="max-width:400px;">
     <h3 style="margin-bottom:8px;color:#0f2b3d;">🔐 Verify Business Credentials</h3>
