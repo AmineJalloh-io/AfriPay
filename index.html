@@ -17,6 +17,52 @@
 .biz-img-tile:hover { border-color: #2c7da0; }
 .biz-img-tile button:hover { filter: brightness(0.85); }
 
+/* ===== Header admin notification badge ===== */
+.header-notif-btn {
+  position: relative;
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.15);
+  border: 1.5px solid rgba(255,255,255,.35);
+  color: #fff;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.05rem;
+  padding: 0;
+  transition: transform .15s, background .15s;
+  margin-right: 8px;
+}
+.header-notif-btn.show { display: inline-flex; }
+.header-notif-btn:hover { background: rgba(255,255,255,.25); transform: scale(1.06); }
+.header-notif-btn.pulse { animation: hnb-pulse 1.6s ease-in-out infinite; }
+@keyframes hnb-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(231,76,60,.65); }
+  50%      { box-shadow: 0 0 0 9px rgba(231,76,60,0); }
+}
+.header-notif-btn .hnb-count {
+  position: absolute;
+  top: -6px; right: -6px;
+  min-width: 18px; height: 18px;
+  padding: 0 4px;
+  background: #e74c3c;
+  color: #fff;
+  border-radius: 9px;
+  font-size: .62rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 2px rgba(255,255,255,.95);
+  line-height: 1;
+}
+.chat-toggle-btn.admin-pulse { animation: chat-admin-pulse 1.6s ease-in-out infinite; }
+@keyframes chat-admin-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(231,76,60,.65); }
+  50%      { box-shadow: 0 0 0 12px rgba(231,76,60,0); }
+}
+
 /* ===== PayBack styles ===== */
 .pb-prefill-card { background:#fff7ea; border:1px dashed #e67e22; border-radius:10px; padding:10px 12px; margin-bottom:10px; }
 .pb-prefill-card summary { font-weight:800; color:#b35309; cursor:pointer; outline:none; list-style:none; }
@@ -67,6 +113,13 @@
 </button>
 <div class="agent-dropdown-list" id="agentDropdownList"></div>
 </div>
+
+<!-- ADMIN MESSAGE NOTIFICATION BADGE -->
+<button type="button" class="header-notif-btn" id="headerAdminBadge" title="Admin messages" aria-label="Admin messages">
+  <span class="hnb-icon">🔔</span>
+  <span class="hnb-count" id="headerAdminCount">0</span>
+</button>
+
 <div class="auth-section" id="authSection">
 <div class="auth-buttons" id="authButtons">
 <button class="auth-btn" id="loginBtn" data-i18n="login">Login</button>
@@ -573,7 +626,7 @@
 
 </div></div>
 
-<!-- ====================== PAYBACK (UPGRADED) ====================== -->
+<!-- ====================== PAYBACK MODAL ====================== -->
 <div id="paybackModal" class="modal">
   <div class="modal-content" style="max-width:560px;max-height:92vh;overflow-y:auto;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
@@ -665,7 +718,7 @@
     </div>
   </div>
 </div>
-<!-- ==================== /PAYBACK (UPGRADED) ==================== -->
+<!-- ==================== /PAYBACK MODAL ==================== -->
 
 <div id="deliverModal" class="modal">
   <div class="modal-content" style="max-width:620px;">
