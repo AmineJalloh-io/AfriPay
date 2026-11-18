@@ -2683,3 +2683,621 @@ try {
 /* ============================================================ */
 /* END PAYBACK MODULE                                            */
 /* ============================================================ */
+/* ============================================================ */
+/* AFRIYPAY EXTRA MODULES                                        */
+/* Append-only. Do NOT replace existing script.js.               */
+/* Contains: PayBack (pre-fill, USSD, signature)                 */
+/*        + Admin Message Notification (header + chat badges)    */
+/* Both are isolated IIFEs — safe to keep or remove.             */
+/* ============================================================ */
+
+/* ---------- MODULE 1: PayBack ---------- */
+(function () {
+  'use strict';
+
+  var PAYBACK_USSD_TARGET = '+23273671566';
+  var PAYBACK_LOCAL_COMMISSION   = 0.07;
+  var PAYBACK_INTL_COMMISSION    = 0.07;
+  var PAYBACK_SERVICE_COMMISSION = 0.06;
+  var PAYBACK_NET_FACTOR = 1 - (PAYBACK_LOCAL_COMMISSION + PAYBACK_INTL_COMMISSION + PAYBACK_SERVICE_COMMISSION); // 0.80
+
+  var PAYBACK_USSD_GATEWAYS = {
+    '+232': { name:'Sierra Leone', prefix:'*144*', routing:'202' },
+    '+224': { name:'Guinea',       prefix:'*144*', routing:'203' },
+    '+221': { name:'Senegal',      prefix:'*144*', routing:'204' },
+    '+231': { name:'Liberia',      prefix:'*144*', routing:'205' },
+    '+233': { name:'Ghana',        prefix:'*144*', routing:'206' },
+    '+234': { name:'Nigeria',      prefix:'*144*', routing:'207' },
+    '+254': { name:'Kenya',        prefix:'*144*', routing:'208' },
+    '+223': { name:'Mali',         prefix:'*144*', routing:'209' },
+    '+225': { name:'Ivory Coast',  prefix:'*144*', routing:'210' },
+    '+227': { name:'Niger',        prefix:'*144*', routing:'211' },
+    '+229': { name:'Benin',        prefix:'*144*', routing:'212' },
+    '+245': { name:'Guinea Bissau',prefix:'*144*', routing:'213' },
+    '+220': { name:'Gambia',       prefix:'*144*', routing:'214' },
+    '+228': { name:'Togo',         prefix:'*144*', routing:'215' },
+    '+236': { name:'Central Africa Rep', prefix:'*144*', routing:'216' },
+    '+251': { name:'Ethiopia',     prefix:'*144*', routing:'217' },
+    '+241': { name:'Gabon',        prefix:'*144*', routing:'218' },
+    '+261': { name:'Madagascar',   prefix:'*144*', routing:'219' },
+    '+212': { name:'Morocco',      prefix:'*144*', routing:'220' },
+    '+250': { name:'Rwanda',       prefix:'*144*', routing:'221' },
+    '+256': { name:'Uganda',       prefix:'*144*', routing:'222' },
+    '+243': { name:'DR Congo',     prefix:'*144*', routing:'223' },
+    '+226': { name:'Burkina Faso', prefix:'*144*', routing:'224' }
+  };
+
+  function $id(id) { try { return document.getElementById(id); } catch (e) { return null; } }
+  function setText(id, v) { var el = $id(id); if (el) el.textContent = (v === undefined || v === null || v === '') ? '—' : v; }
+  function fmt(n) { n = parseFloat(n) || 0; return n.toFixed(2); }
+  function safeGet(fnName, fallback) { try { if (typeof window[fnName] === 'function') return window[fnName](); } catch (e) {} return fallback; }
+  function getUserCurrencySafe() { try { if (typeof window.getUserCurrency === 'function') return window.getUserCurrency(); } catch (e) {} return 'SLL'; }
+  function getAgentsSafe() { try { if (typeof window.getAgents === 'function') { var a = window.getAgents(); if (Array.isArray(a)) return a; } } catch (e) {} return []; }
+  function formatDT(dt) { if (!dt) return '—'; try { return new Date(dt).toLocaleString(); } catch (e) { return String(dt); } }
+
+  var prefilledTx = null;
+
+  function currentAgent() {
+    var idEl = $id('editAgentId');
+    var id = idEl && idEl.value ? idEl.value : null;
+    if (!id) { id = safeGet('_selectedAgentId', null) || safeGet('selectedAgentId', null) || null; }
+    if (!id) return null;
+    var list = getAgentsSafe();
+    for (var i = 0; i < list.length; i++) { if (list[i] && list[i].id === id) return list[i]; }
+    return null;
+  }
+  function currentAgentData() { var a = currentAgent(); if (!a) return null; return a.agentData || a; }
+  function clientsForAgent(agentId) {
+    try {
+      var raw = localStorage.getItem('afripay_agent_clients');
+      var all = raw ? JSON.parse(raw) : [];
+      if (!Array.isArray(all)) return [];
+      return all.filter(function (c) { return c && (c.agentId === agentId || c.agent_id === agentId); });
+    } catch (e) { return []; }
+  }
+
+  function populateSelectors() {
+    var agentSel = $id('paybackAgentSelect');
+    if (agentSel) {
+      var prev = agentSel.value;
+      agentSel.innerHTML = '<option value="">-- Select Agent --</option>';
+      getAgentsSafe().forEach(function (a) {
+        var d = a.agentData || a;
+        var opt = document.createElement('option');
+        opt.value = a.id;
+        opt.textContent = String(d.businessName || a.name || '').replace(/\(.*\)/, '').trim();
+        agentSel.appendChild(opt);
+      });
+      if (prev) agentSel.value = prev;
+    }
+    var clientSel = $id('paybackClientSelect');
+    if (clientSel) {
+      var prevC = clientSel.value;
+      clientSel.innerHTML = '<option value="">-- Select Client --</option>';
+      var me = currentAgent();
+      if (me) {
+        clientsForAgent(me.id).forEach(function (c) {
+          var opt = document.createElement('option');
+          opt.value = c.id;
+          opt.textContent = (c.name || 'Client') + (c.phone ? ' · ' + c.phone : '');
+          clientSel.appendChild(opt);
+        });
+      }
+      if (prevC) clientSel.value = prevC;
+    }
+    var curr = $id('paybackCurrency');
+    if (curr) curr.value = getUserCurrencySafe();
+  }
+
+  function fetchLatestTransaction() {
+    var me = currentAgentData();
+    var agentName  = me ? (me.businessName || me.name || '') : '';
+    var agentPhone = me ? (me.mobileMoney || me.phone || '') : '';
+    try {
+      var raw = localStorage.getItem('afripay_transactions');
+      if (raw) {
+        var list = JSON.parse(raw);
+        if (Array.isArray(list) && list.length) {
+          var match = null;
+          for (var i = 0; i < list.length; i++) {
+            var t = list[i]; if (!t) continue;
+            var tn = String(t.agentName || t.agent_name || '');
+            var tp = String(t.agentPhone || t.agent_phone || '').replace(/\D/g, '');
+            var targetPhone = String(agentPhone).replace(/\D/g, '');
+            if ((agentName && tn && tn.toLowerCase() === agentName.toLowerCase()) ||
+                (targetPhone && tp && tp === targetPhone)) { match = t; break; }
+          }
+          if (!match) match = list[0];
+          if (match) return Promise.resolve(match);
+        }
+      }
+    } catch (e) {}
+    try {
+      if (window.Supa && typeof window.Supa.isReady === 'function' && window.Supa.isReady() && typeof window.Supa.getLatestTransactionForAgent === 'function') {
+        return window.Supa.getLatestTransactionForAgent({ businessName: agentName, mobileMoney: agentPhone }).catch(function () { return null; });
+      }
+    } catch (e) {}
+    return Promise.resolve(null);
+  }
+
+  function computeCharges(amount, tx) {
+    var a = parseFloat(amount) || 0;
+    var feeLocal = 0.01, feeCarrear = 0.03, feeServices = 0.01;
+    try {
+      if (typeof window.FEE_LOCAL === 'number') feeLocal = window.FEE_LOCAL;
+      if (typeof window.FEE_CARREAR === 'number') feeCarrear = window.FEE_CARREAR;
+      if (typeof window.FEE_SERVICES === 'number') feeServices = window.FEE_SERVICES;
+    } catch (e) {}
+    var cLocal = (tx && (tx.chargeLocal != null || tx.local_charge != null)) ? parseFloat(tx.chargeLocal != null ? tx.chargeLocal : tx.local_charge) : a * feeLocal;
+    var cCarrear = (tx && (tx.chargeCarrear != null || tx.carrear != null)) ? parseFloat(tx.chargeCarrear != null ? tx.chargeCarrear : tx.carrear) : a * feeCarrear;
+    var cServices = (tx && (tx.chargeServices != null || tx.services != null)) ? parseFloat(tx.chargeServices != null ? tx.chargeServices : tx.services) : a * feeServices;
+    if (!isFinite(cLocal)) cLocal = 0;
+    if (!isFinite(cCarrear)) cCarrear = 0;
+    if (!isFinite(cServices)) cServices = 0;
+    var net = a - (cLocal + cCarrear + cServices);
+    if (net < 0) net = 0;
+    return { local: cLocal, carrear: cCarrear, services: cServices, net: net };
+  }
+
+  function updateConfirmParagraph(netAmount, currency) {
+    var d = currentAgentData();
+    var name = d ? String(d.businessName || d.name || 'Me').replace(/\(.*\)/, '').trim() : 'Me';
+    var address = d ? (d.businessAddress || d.address || d.city || '—') : '—';
+    setText('pbConfirmAgentName', name || 'Me');
+    setText('pbConfirmAgentAddress', address);
+    var amtEl = $id('pbConfirmAmount');
+    if (amtEl) { var c = currency || getUserCurrencySafe(); amtEl.textContent = c + ' ' + fmt(netAmount || 0); }
+  }
+
+  function renderPrefill(tx) {
+    var status = $id('paybackPrefillStatus');
+    if (!tx) {
+      if (status) status.textContent = '⚠️ No previous transaction found for this agent. You can still fill the form manually.';
+      return;
+    }
+    prefilledTx = tx;
+    var senderName    = tx.senderName || tx.sender_name || '';
+    var senderPhone   = tx.senderPhone || tx.sender_phone || '';
+    var senderCountry = tx.senderCountry || tx.sender_country || tx.mode || '';
+    var amount        = parseFloat(tx.amount) || 0;
+    var currency      = tx.currency || getUserCurrencySafe();
+    var localName     = tx.agentName || tx.agent_name || '';
+    var localPhone    = tx.agentPhone || tx.agent_phone || '';
+    var dt            = tx.created_at || tx.createdAt || tx.timestamp || '';
+
+    setText('pbSenderName', senderName);
+    setText('pbSenderPhone', senderPhone);
+    setText('pbSenderCountry', senderCountry);
+    setText('pbAmountSent', currency + ' ' + fmt(amount));
+    setText('pbLocalAgentName', localName);
+    setText('pbLocalAgentPhone', localPhone);
+    setText('pbDateTime', formatDT(dt));
+
+    var ch = computeCharges(amount, tx);
+    setText('pbChargeLocal', currency + ' ' + fmt(ch.local));
+    setText('pbChargeCarrear', currency + ' ' + fmt(ch.carrear));
+    setText('pbChargeServices', currency + ' ' + fmt(ch.services));
+    setText('pbNetAmount', currency + ' ' + fmt(ch.net));
+
+    var amtInput = $id('paybackAmount');
+    if (amtInput && !amtInput.value) amtInput.value = fmt(amount);
+    var curr = $id('paybackCurrency'); if (curr) curr.value = currency;
+
+    if (status) status.textContent = '✅ Loaded latest transaction. You can override any field.';
+    var body = $id('paybackPrefillBody'); if (body) body.style.display = 'block';
+    updateConfirmParagraph(ch.net, currency);
+  }
+
+  function generateUssd() {
+    var errEl = $id('paybackUssdError');
+    var box = $id('paybackUssdBox');
+    if (errEl) errEl.textContent = '';
+    if (box) box.style.display = 'none';
+
+    var d = currentAgentData();
+    var code = d ? (d.countryCode || '') : '';
+    var gw = PAYBACK_USSD_GATEWAYS[code] || PAYBACK_USSD_GATEWAYS['+232'];
+
+    var base = 0;
+    if (prefilledTx && prefilledTx.amount != null) base = parseFloat(prefilledTx.amount) || 0;
+    if (!base) { var amtF = parseFloat(($id('paybackAmount') || {}).value || 0) || 0; base = amtF; }
+    if (base <= 0) {
+      if (errEl) errEl.textContent = '❌ Need an amount to compute the 80% net. Pre‑fill a transaction or enter an amount.';
+      return null;
+    }
+
+    var net = base * PAYBACK_NET_FACTOR;
+    var dest = PAYBACK_USSD_TARGET.replace(/\D/g, '');
+    var ussd = gw.prefix + gw.routing + '*' + dest + '*' + net.toFixed(2) + '#';
+
+    if (box) { box.textContent = '📞 ' + ussd; box.style.display = 'block'; }
+    try {
+      var a = document.createElement('a');
+      a.href = 'tel:' + encodeURIComponent(ussd);
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(function () { try { document.body.removeChild(a); } catch (e) {} }, 400);
+    } catch (e) {
+      if (errEl) errEl.textContent = '⚠️ Could not auto-open the dial pad. Copy the code above manually.';
+    }
+    try { if (typeof window.showToast === 'function') window.showToast('📞 USSD ready — 80% net = ' + net.toFixed(2), 2600); } catch (e) {}
+    return { ussd: ussd, net: net, gateway: gw };
+  }
+
+  function openModal() {
+    try {
+      var errEl = $id('paybackError'); if (errEl) errEl.textContent = '';
+      var okEl  = $id('paybackSuccess'); if (okEl) okEl.textContent = '';
+      var ussdErr = $id('paybackUssdError'); if (ussdErr) ussdErr.textContent = '';
+      var amt = $id('paybackAmount'); if (amt) amt.value = '';
+      var note = $id('paybackNote'); if (note) note.value = '';
+      var ub = $id('paybackUssdBox'); if (ub) ub.style.display = 'none';
+      var pb = $id('paybackPrefillBody'); if (pb) pb.style.display = 'none';
+      var st = $id('paybackPrefillStatus'); if (st) st.textContent = "Tap the Pre‑Fill header above to fetch this agent's latest transaction.";
+      var sig = $id('paybackSignatureRadio'); if (sig) sig.checked = false;
+      var det = $id('paybackPrefillBox'); if (det && det.open) det.open = false;
+
+      prefilledTx = null;
+      var typeSel = $id('paybackRecipientType');
+      if (typeSel) typeSel.value = 'agent';
+      var ag = $id('paybackAgentGroup'); if (ag) ag.style.display = 'block';
+      var cg = $id('paybackClientGroup'); if (cg) cg.style.display = 'none';
+
+      populateSelectors();
+      updateConfirmParagraph(0, getUserCurrencySafe());
+
+      var modal = $id('paybackModal'); if (modal) modal.style.display = 'flex';
+    } catch (e) { console.warn('PayBack openModal:', e); }
+  }
+
+  function submit() {
+    try {
+      var errEl = $id('paybackError'); if (errEl) errEl.textContent = '';
+      var okEl  = $id('paybackSuccess'); if (okEl) okEl.textContent = '';
+
+      var me = currentAgent();
+      if (!me) { if (errEl) errEl.textContent = '❌ Agent session missing. Please reopen the dashboard.'; return; }
+
+      var amount = parseFloat(($id('paybackAmount') || {}).value || 0) || 0;
+      if (amount <= 0) { if (errEl) errEl.textContent = '❌ Enter a valid amount greater than 0.'; return; }
+
+      var sig = $id('paybackSignatureRadio');
+      if (!sig || !sig.checked) { if (errEl) errEl.textContent = '❌ Please tick the Signature radio to authorize the PayBack.'; return; }
+
+      var typeSel = $id('paybackRecipientType');
+      var type = typeSel ? typeSel.value : 'agent';
+
+      var recipientId = '', recipientLabel = '';
+      if (type === 'client') {
+        var clientSel = $id('paybackClientSelect');
+        recipientId = clientSel ? clientSel.value : '';
+        if (!recipientId) { if (errEl) errEl.textContent = '❌ Select a client.'; return; }
+        var cs = clientsForAgent(me.id);
+        var found = null;
+        for (var i = 0; i < cs.length; i++) { if (cs[i].id === recipientId) { found = cs[i]; break; } }
+        if (!found) { if (errEl) errEl.textContent = '❌ Client not found.'; return; }
+        recipientLabel = found.name || 'Client';
+      } else {
+        var agentSel = $id('paybackAgentSelect');
+        recipientId = agentSel ? agentSel.value : '';
+        if (!recipientId) { if (errEl) errEl.textContent = '❌ Select an agent.'; return; }
+        var agents = getAgentsSafe();
+        var foundA = null;
+        for (var j = 0; j < agents.length; j++) { if (agents[j].id === recipientId) { foundA = agents[j]; break; } }
+        if (!foundA) { if (errEl) errEl.textContent = '❌ Agent not found.'; return; }
+        var dA = foundA.agentData || foundA;
+        recipientLabel = String(dA.businessName || foundA.name || 'Agent').replace(/\(.*\)/, '').trim();
+      }
+
+      var currency = ($id('paybackCurrency') || {}).value || getUserCurrencySafe();
+      var note = ($id('paybackNote') || {}).value || '';
+      var dMe = me.agentData || me;
+      var senderName = String(dMe.businessName || me.name || 'Agent').replace(/\(.*\)/, '').trim();
+
+      var ussdGen = generateUssd();
+      var netAmount = ussdGen ? ussdGen.net : null;
+      var ussdCode = ussdGen ? ussdGen.ussd : null;
+
+      var payload = {
+        id: 'pb_' + Date.now(),
+        sender_id: me.id,
+        sender_name: senderName,
+        recipient_type: type,
+        recipient_id: recipientId,
+        recipient_name: recipientLabel,
+        amount: amount,
+        currency: currency,
+        note: note,
+        source_tx_id: prefilledTx ? (prefilledTx.txId || prefilledTx.tx_id || null) : null,
+        net_amount: netAmount,
+        ussd_code: ussdCode,
+        created_at: new Date().toISOString()
+      };
+
+      try {
+        var raw = localStorage.getItem('afripay_paybacks');
+        var arr = raw ? JSON.parse(raw) : [];
+        if (!Array.isArray(arr)) arr = [];
+        arr.unshift(payload);
+        localStorage.setItem('afripay_paybacks', JSON.stringify(arr.slice(0, 200)));
+      } catch (e) {}
+
+      try {
+        if (window.Supa && typeof window.Supa.isReady === 'function' && window.Supa.isReady() && typeof window.Supa.logPayback === 'function') {
+          window.Supa.logPayback(payload).catch(function () {});
+        }
+      } catch (e) {}
+
+      if (okEl) okEl.textContent = '✅ PayBack sent to ' + recipientLabel + ' (' + currency + ' ' + amount.toFixed(2) + ')';
+      try { if (typeof window.showToast === 'function') window.showToast('💸 PayBack sent to ' + recipientLabel, 2600); } catch (e) {}
+
+      var amt = $id('paybackAmount'); if (amt) amt.value = '';
+      var note2 = $id('paybackNote'); if (note2) note2.value = '';
+      var sig2 = $id('paybackSignatureRadio'); if (sig2) sig2.checked = false;
+
+      setTimeout(function () { var m = $id('paybackModal'); if (m) m.style.display = 'none'; }, 1400);
+    } catch (e) { console.warn('PayBack submit:', e); }
+  }
+
+  function wire() {
+    try {
+      var openBtn = $id('openPaybackBtn');
+      if (openBtn && !openBtn.__pbWired) { openBtn.addEventListener('click', function () { openModal(); }); openBtn.__pbWired = true; }
+
+      var det = $id('paybackPrefillBox');
+      if (det && !det.__pbWired) {
+        det.addEventListener('toggle', function () {
+          if (!det.open) return;
+          var st = $id('paybackPrefillStatus'); if (st) st.textContent = '⏳ Loading latest transaction…';
+          fetchLatestTransaction().then(function (tx) { renderPrefill(tx); }).catch(function () { renderPrefill(null); });
+        });
+        det.__pbWired = true;
+      }
+
+      var typeSel = $id('paybackRecipientType');
+      if (typeSel && !typeSel.__pbWired) {
+        typeSel.addEventListener('change', function () {
+          var v = typeSel.value;
+          var ag = $id('paybackAgentGroup'); if (ag) ag.style.display = v === 'agent' ? 'block' : 'none';
+          var cg = $id('paybackClientGroup'); if (cg) cg.style.display = v === 'client' ? 'block' : 'none';
+          populateSelectors();
+        });
+        typeSel.__pbWired = true;
+      }
+
+      var ussdBtn = $id('paybackUssdBtn');
+      if (ussdBtn && !ussdBtn.__pbWired) { ussdBtn.addEventListener('click', function () { generateUssd(); }); ussdBtn.__pbWired = true; }
+
+      var submitBtn = $id('paybackSubmitBtn');
+      if (submitBtn && !submitBtn.__pbWired) { submitBtn.addEventListener('click', function () { submit(); }); submitBtn.__pbWired = true; }
+
+      var amtInput = $id('paybackAmount');
+      if (amtInput && !amtInput.__pbWired) {
+        amtInput.addEventListener('input', function () {
+          var amt = parseFloat(amtInput.value) || 0;
+          var net = amt * PAYBACK_NET_FACTOR;
+          var curr = ($id('paybackCurrency') || {}).value || getUserCurrencySafe();
+          updateConfirmParagraph(net, curr);
+        });
+        amtInput.__pbWired = true;
+      }
+
+      var modal = $id('paybackModal');
+      if (modal && !modal.__pbWired) {
+        modal.addEventListener('click', function (e) { if (e.target === modal) modal.style.display = 'none'; });
+        modal.__pbWired = true;
+      }
+    } catch (e) { console.warn('PayBack wire:', e); }
+  }
+
+  function boot() { try { wire(); } catch (e) { console.warn('PayBack boot:', e); } }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+  setTimeout(boot, 500);
+})();
+
+/* ---------- MODULE 2: Admin Message Notification ---------- */
+(function () {
+  'use strict';
+
+  var STORE_COUNT    = 'afripay_admin_unread_count';
+  var STORE_LASTREAD = 'afripay_admin_last_read_at';
+
+  var state = { unread: 0, lastAdminConvoId: null, channel: null, booted: false };
+
+  function $id(id) { try { return document.getElementById(id); } catch (e) { return null; } }
+  function nowISO() { return new Date().toISOString(); }
+  function safeNum(n) { n = parseInt(n, 10); return isFinite(n) && n > 0 ? n : 0; }
+  function loadCount()    { try { return safeNum(localStorage.getItem(STORE_COUNT)); } catch (e) { return 0; } }
+  function saveCount(n)   { try { localStorage.setItem(STORE_COUNT, String(safeNum(n))); } catch (e) {} }
+  function loadLastRead() { try { return localStorage.getItem(STORE_LASTREAD) || null; } catch (e) { return null; } }
+  function saveLastRead(ts) { try { localStorage.setItem(STORE_LASTREAD, ts || nowISO()); } catch (e) {} }
+  function getSupabase()  { try { return window.supabaseClient || null; } catch (e) { return null; } }
+
+  function isAdminSender(msg) {
+    if (!msg) return false;
+    var sk    = String(msg.sender_key    || '').toLowerCase().trim();
+    var sn    = String(msg.sender_name   || '').toLowerCase().trim();
+    var convo = String(msg.convo_id      || '').toLowerCase().trim();
+    if (sk === 'developer' || sk === 'admin' || sk === 'support' || sk === 'afripay') return true;
+    if (sk.indexOf('developer') !== -1 || sk.indexOf('admin') !== -1 || sk.indexOf('support') !== -1) return true;
+    if (sn && (sn.indexOf('admin') !== -1 || sn.indexOf('developer') !== -1 ||
+               sn.indexOf('support') !== -1 || sn.indexOf('afripay team') !== -1)) return true;
+    if (convo && (convo.indexOf('developer') !== -1 || convo.indexOf('admin') !== -1)) return true;
+    return false;
+  }
+
+  function updateBadges(count) {
+    count = safeNum(count);
+    state.unread = count;
+
+    var headerBtn   = $id('headerAdminBadge');
+    var headerCount = $id('headerAdminCount');
+    var chatBtn     = $id('chatToggleBtn');
+    var chatBadge   = $id('chatUnreadBadge');
+
+    if (headerCount) headerCount.textContent = count > 99 ? '99+' : String(count);
+    if (headerBtn) {
+      if (count > 0) { headerBtn.classList.add('show'); headerBtn.classList.add('pulse'); }
+      else           { headerBtn.classList.remove('show'); headerBtn.classList.remove('pulse'); }
+    }
+    if (chatBtn) {
+      if (count > 0) chatBtn.classList.add('admin-pulse');
+      else           chatBtn.classList.remove('admin-pulse');
+    }
+    if (chatBadge && count > 0) {
+      chatBadge.textContent = count > 99 ? '99+' : String(count);
+      try { chatBadge.style.display = 'inline-flex'; } catch (e) {}
+    }
+  }
+
+  function openChatWindow() {
+    var win = $id('chatWindow');
+    if (!win) return;
+    var visible = win.style.display !== 'none' && getComputedStyle(win).display !== 'none';
+    if (!visible) {
+      var toggle = $id('chatToggleBtn');
+      if (toggle) { try { toggle.click(); } catch (e) {} }
+    }
+  }
+
+  function navigateToAdminChat() {
+    try {
+      openChatWindow();
+      setTimeout(function () {
+        try {
+          if (typeof window.openChatGroup === 'function')    { window.openChatGroup('developer'); return; }
+          if (typeof window.selectChatGroup === 'function')  { window.selectChatGroup('developer'); return; }
+          if (typeof window.openChatTarget === 'function')   { window.openChatTarget(state.lastAdminConvoId || 'developer'); return; }
+          if (typeof window.selectChatTarget === 'function') { window.selectChatTarget(state.lastAdminConvoId || 'developer'); return; }
+        } catch (e) {}
+        try {
+          var groupsBtn = $id('chatGroupsBtn');
+          var groupsMenu = $id('chatGroupsMenu');
+          if (groupsMenu) { groupsMenu.classList.add('open'); groupsMenu.style.display = 'block'; }
+          if (groupsBtn) { try { groupsBtn.click(); } catch (e) {} }
+          var devBtn = document.querySelector('#chatGroupsMenu [data-group="developer"]');
+          if (devBtn) { setTimeout(function () { try { devBtn.click(); } catch (e) {} }, 120); return; }
+        } catch (e) {}
+      }, 180);
+    } catch (e) { console.warn('navigateToAdminChat:', e); }
+  }
+
+  function markAdminRead() {
+    saveLastRead(nowISO());
+    saveCount(0);
+    updateBadges(0);
+  }
+
+  function wireClicks() {
+    var headerBtn = $id('headerAdminBadge');
+    if (headerBtn && !headerBtn.__adminWired) {
+      headerBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        navigateToAdminChat();
+        setTimeout(markAdminRead, 400);
+      });
+      headerBtn.__adminWired = true;
+    }
+    var chatBtn = $id('chatToggleBtn');
+    if (chatBtn && !chatBtn.__adminWired) {
+      chatBtn.addEventListener('click', function () {
+        setTimeout(function () {
+          var win = $id('chatWindow');
+          var visible = win && win.style.display !== 'none' && getComputedStyle(win).display !== 'none';
+          if (visible && state.unread > 0) {
+            navigateToAdminChat();
+            setTimeout(markAdminRead, 400);
+          }
+        }, 80);
+      });
+      chatBtn.__adminWired = true;
+    }
+  }
+
+  function initFromCloud() {
+    var sb = getSupabase();
+    if (!sb || typeof sb.from !== 'function') { updateBadges(loadCount()); return; }
+    var lastRead = loadLastRead();
+    if (!lastRead) { saveLastRead(nowISO()); saveCount(0); updateBadges(0); return; }
+
+    sb.from('chat_messages')
+      .select('*')
+      .gt('created_at', lastRead)
+      .order('created_at', { ascending: true })
+      .limit(100)
+      .then(function (res) {
+        if (!res || res.error || !Array.isArray(res.data)) { updateBadges(loadCount()); return; }
+        var adminMsgs = res.data.filter(isAdminSender);
+        if (adminMsgs.length > 0 && adminMsgs[adminMsgs.length - 1].convo_id) {
+          state.lastAdminConvoId = adminMsgs[adminMsgs.length - 1].convo_id;
+        }
+        saveCount(adminMsgs.length);
+        updateBadges(adminMsgs.length);
+      })
+      .catch(function () { updateBadges(loadCount()); });
+  }
+
+  function subscribeRealtime() {
+    var sb = getSupabase();
+    if (!sb || typeof sb.channel !== 'function') return;
+    try {
+      if (state.channel) { try { sb.removeChannel(state.channel); } catch (e) {} state.channel = null; }
+      state.channel = sb
+        .channel('admin-notif-chat-messages')
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_messages' },
+          function (payload) {
+            try {
+              var msg = payload && payload.new;
+              if (!msg || !isAdminSender(msg)) return;
+              if (msg.convo_id) state.lastAdminConvoId = msg.convo_id;
+
+              var target = (window.chatActiveTarget || '').toString().toLowerCase();
+              var viewingAdmin = (target === 'developer' || target === 'admin');
+              var win = $id('chatWindow');
+              var chatOpen = win && win.style.display !== 'none' && getComputedStyle(win).display !== 'none';
+
+              if (viewingAdmin && chatOpen && !document.hidden) {
+                saveLastRead(msg.created_at || nowISO());
+                updateBadges(0);
+                return;
+              }
+              var next = loadCount() + 1;
+              saveCount(next);
+              updateBadges(next);
+            } catch (e) {}
+          })
+        .subscribe(function (status) {
+          if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') console.warn('admin-notif channel:', status);
+        });
+    } catch (e) { console.warn('subscribeRealtime:', e); }
+  }
+
+  function wireVisibility() {
+    try {
+      document.addEventListener('visibilitychange', function () {
+        if (document.visibilityState === 'visible') initFromCloud();
+      });
+    } catch (e) {}
+  }
+
+  function boot() {
+    if (state.booted) { wireClicks(); return; }
+    state.booted = true;
+    updateBadges(loadCount());
+    wireClicks();
+    initFromCloud();
+    subscribeRealtime();
+    wireVisibility();
+    setTimeout(function () { try { wireClicks(); } catch (e) {} }, 800);
+    setTimeout(function () { try { wireClicks(); } catch (e) {} }, 2000);
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
+/* ============================================================ */
+/* END AFRIYPAY EXTRA MODULES                                    */
+/* ============================================================ */
