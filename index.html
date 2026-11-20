@@ -8,7 +8,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="stylesheet" href="styles.css" />
 <style>
-/* Base app styles */
+/* ---- Base app styles ---- */
 .ussd-modal-details { display: flex; flex-direction: column; gap: 4px; }
 .ussd-modal-row { display: flex; justify-content: space-between; font-size: .82rem; padding: 3px 0; border-bottom: 1px solid #f0f0f0; }
 .ussd-modal-label { color: #7f8c8d; }
@@ -17,7 +17,7 @@
 .biz-img-tile:hover { border-color: #2c7da0; }
 .biz-img-tile button:hover { filter: brightness(0.85); }
 
-/* Header admin notification badge */
+/* ---- Header admin notification badge ---- */
 .header-notif-btn { position: relative; width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,.15); border: 1.5px solid rgba(255,255,255,.35); color: #fff; cursor: pointer; display: none; align-items: center; justify-content: center; font-size: 1.05rem; padding: 0; transition: transform .15s, background .15s; margin-right: 8px; }
 .header-notif-btn.show { display: inline-flex; }
 .header-notif-btn:hover { background: rgba(255,255,255,.25); transform: scale(1.06); }
@@ -27,7 +27,7 @@
 .chat-toggle-btn.admin-pulse { animation: chat-admin-pulse 1.6s ease-in-out infinite; }
 @keyframes chat-admin-pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(231,76,60,.65); } 50% { box-shadow: 0 0 0 12px rgba(231,76,60,0); } }
 
-/* PayBack styles */
+/* ---- PayBack styles ---- */
 .pb-prefill-card { background:#fff7ea; border:1px dashed #e67e22; border-radius:10px; padding:10px 12px; margin-bottom:10px; }
 .pb-prefill-card summary { font-weight:800; color:#b35309; cursor:pointer; outline:none; list-style:none; }
 .pb-prefill-card summary::-webkit-details-marker { display:none; }
@@ -47,7 +47,7 @@
 .pb-confirm-para { background:#eef6fb; border-left:4px solid #2c7da0; padding:8px 10px; font-size:.78rem; line-height:1.5; color:#1e3b4a; border-radius:6px; }
 .pb-ussd-box { background:#0f2b3d; color:#ffd966; padding:10px 12px; border-radius:8px; font-family:'Courier New',monospace; font-size:.85rem; word-break:break-all; margin-top:6px; }
 
-/* ============ CALL UI ============ */
+/* ---- Call UI ---- */
 .call-modal { z-index: 3000 !important; padding: 0 !important; }
 .call-modal .call-wrap { position: fixed; inset: 0; display: flex; flex-direction: column; background: #0a1a24; }
 .call-topbar { padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; color: #fff; background: rgba(0,0,0,.45); font-size: .85rem; }
@@ -85,6 +85,38 @@
 .participant-item .pi-icon { font-size: 1.2rem; }
 .participant-item .pi-name { flex: 1; font-size: .85rem; color: #1e3b4a; font-weight: 600; }
 .participant-item .pi-role { font-size: .68rem; color: #7f8c8d; text-transform: uppercase; }
+
+/* ---- Presence dots ---- */
+.chat-member-list .chat-member-item,
+.chat-member-list .chat-member,
+.chat-member-list li { display: flex !important; align-items: center !important; gap: 8px !important; padding: 7px 8px !important; border-radius: 8px; cursor: pointer; border-bottom: 1px solid #eef2f6; }
+.chat-member-list .chat-member-item:hover,
+.chat-member-list .chat-member:hover,
+.chat-member-list li:hover { background: #f1f7fb; }
+.afripay-presence-dot { width: 9px; height: 9px; background: #27ae60; border-radius: 50%; box-shadow: 0 0 0 2px rgba(39,174,96,.25); flex: 0 0 9px; animation: afripay-dot-pulse 2s ease-in-out infinite; }
+@keyframes afripay-dot-pulse { 0%,100% { box-shadow: 0 0 0 2px rgba(39,174,96,.25); } 50% { box-shadow: 0 0 0 5px rgba(39,174,96,.06); } }
+.afripay-presence-avatar { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg,#0a2b3c,#2c7da0); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: .95rem; flex: 0 0 28px; }
+.afripay-presence-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .82rem; color: #1e3b4a; font-weight: 600; }
+.afripay-presence-role { font-size: .62rem; color: #7f8c8d; text-transform: uppercase; letter-spacing: .5px; padding: 2px 6px; background: #eef2f6; border-radius: 8px; }
+
+/* ---- Chat as modal ---- */
+#chatBackdrop { display: none; position: fixed; inset: 0; background: rgba(10, 43, 60, .55); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); z-index: 940; opacity: 0; transition: opacity .22s ease; }
+#chatBackdrop.show { display: block; opacity: 1; }
+.chat-window { position: fixed !important; top: 50% !important; left: 50% !important; right: auto !important; bottom: auto !important; transform: translate(-50%, -50%) scale(.96) !important; width: min(calc(100vw - 32px), 720px) !important; max-width: 720px !important; height: min(calc(100vh - 80px), 720px) !important; max-height: 720px !important; border-radius: 18px !important; box-shadow: 0 24px 60px rgba(0, 0, 0, .35), 0 4px 12px rgba(0, 0, 0, .18) !important; z-index: 950 !important; opacity: 0; pointer-events: none; transition: opacity .22s ease, transform .22s ease; display: flex !important; }
+.chat-window.open { opacity: 1; pointer-events: auto; transform: translate(-50%, -50%) scale(1) !important; }
+.chat-window:not(.open) { display: none !important; }
+.chat-window .chat-leftbar { flex: 0 0 46px !important; height: 100%; }
+.chat-window .chat-main { flex: 1 1 auto !important; min-width: 0 !important; height: 100%; }
+.chat-window .chat-rightbar { flex: 0 0 170px !important; max-width: 170px !important; min-width: 170px !important; height: 100%; }
+.chat-window .chat-nav-actions { display: flex; align-items: center; gap: 6px; }
+.chat-window #chatCloseBtn { width: 34px; height: 34px; border-radius: 50%; background: rgba(231, 76, 60, .12); color: #e74c3c; border: none; font-size: 1rem; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: background .15s; }
+.chat-window #chatCloseBtn:hover { background: rgba(231, 76, 60, .25); }
+.chat-window .chat-leftbar .chat-tool-btn { width: 36px !important; height: 36px !important; }
+.chat-toggle-btn { z-index: 900 !important; }
+@media (max-width: 760px) {
+  .chat-window { width: calc(100vw - 16px) !important; height: calc(100vh - 40px) !important; max-height: calc(100vh - 40px) !important; border-radius: 14px !important; }
+  .chat-window .chat-rightbar { display: none !important; }
+}
 </style>
 </head>
 <body>
@@ -322,6 +354,9 @@
 <div class="toast-msg" id="toastMsg"></div>
 <button class="chat-toggle-btn" id="chatToggleBtn">💬<span class="chat-badge" id="chatUnreadBadge">0</span></button>
 
+<!-- CHAT BACKDROP -->
+<div id="chatBackdrop"></div>
+
 <div class="chat-window" id="chatWindow">
   <div class="chat-leftbar" id="chatLeftbar">
     <button type="button" class="chat-tool-btn" id="chatAudioCallBtn" title="Audio call">📞</button>
@@ -402,7 +437,7 @@
     <div class="input-group"><label>Details *</label><textarea id="reportDetails" placeholder="Describe the issue..." style="min-height:80px;"></textarea></div>
     <div class="action-buttons-row">
       <button type="button" class="action-btn red" id="submitReportBtn">🚨 Submit Report</button>
-      <button type="button" class="action-btn close-modal">Cancel</button>
+      <button class="action-btn close-modal">Cancel</button>
     </div>
   </div>
 </div>
@@ -970,7 +1005,7 @@
 
 <input type="file" id="avatarUploadInput" accept="image/*" class="hidden-input" />
 
-<!-- ============ CALL UI ============ -->
+<!-- CALL UI -->
 <div id="callModal" class="modal call-modal" style="display:none;">
   <div class="call-wrap">
     <div class="call-topbar">
@@ -1013,7 +1048,7 @@
     </div>
   </div>
 </div>
-<!-- ============ /CALL UI ============ -->
+<!-- /CALL UI -->
 
 <script src="script.js"></script>
 </body>
