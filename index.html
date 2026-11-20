@@ -8,7 +8,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="stylesheet" href="styles.css" />
 <style>
-/* Product/Service badge inside MB-FOUR USSD modal */
+/* Base app styles */
 .ussd-modal-details { display: flex; flex-direction: column; gap: 4px; }
 .ussd-modal-row { display: flex; justify-content: space-between; font-size: .82rem; padding: 3px 0; border-bottom: 1px solid #f0f0f0; }
 .ussd-modal-label { color: #7f8c8d; }
@@ -17,53 +17,17 @@
 .biz-img-tile:hover { border-color: #2c7da0; }
 .biz-img-tile button:hover { filter: brightness(0.85); }
 
-/* ===== Header admin notification badge ===== */
-.header-notif-btn {
-  position: relative;
-  width: 38px; height: 38px;
-  border-radius: 50%;
-  background: rgba(255,255,255,.15);
-  border: 1.5px solid rgba(255,255,255,.35);
-  color: #fff;
-  cursor: pointer;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.05rem;
-  padding: 0;
-  transition: transform .15s, background .15s;
-  margin-right: 8px;
-}
+/* Header admin notification badge */
+.header-notif-btn { position: relative; width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,.15); border: 1.5px solid rgba(255,255,255,.35); color: #fff; cursor: pointer; display: none; align-items: center; justify-content: center; font-size: 1.05rem; padding: 0; transition: transform .15s, background .15s; margin-right: 8px; }
 .header-notif-btn.show { display: inline-flex; }
 .header-notif-btn:hover { background: rgba(255,255,255,.25); transform: scale(1.06); }
 .header-notif-btn.pulse { animation: hnb-pulse 1.6s ease-in-out infinite; }
-@keyframes hnb-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(231,76,60,.65); }
-  50%      { box-shadow: 0 0 0 9px rgba(231,76,60,0); }
-}
-.header-notif-btn .hnb-count {
-  position: absolute;
-  top: -6px; right: -6px;
-  min-width: 18px; height: 18px;
-  padding: 0 4px;
-  background: #e74c3c;
-  color: #fff;
-  border-radius: 9px;
-  font-size: .62rem;
-  font-weight: 800;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 0 0 2px rgba(255,255,255,.95);
-  line-height: 1;
-}
+@keyframes hnb-pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(231,76,60,.65); } 50% { box-shadow: 0 0 0 9px rgba(231,76,60,0); } }
+.header-notif-btn .hnb-count { position: absolute; top: -6px; right: -6px; min-width: 18px; height: 18px; padding: 0 4px; background: #e74c3c; color: #fff; border-radius: 9px; font-size: .62rem; font-weight: 800; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 2px rgba(255,255,255,.95); line-height: 1; }
 .chat-toggle-btn.admin-pulse { animation: chat-admin-pulse 1.6s ease-in-out infinite; }
-@keyframes chat-admin-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(231,76,60,.65); }
-  50%      { box-shadow: 0 0 0 12px rgba(231,76,60,0); }
-}
+@keyframes chat-admin-pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(231,76,60,.65); } 50% { box-shadow: 0 0 0 12px rgba(231,76,60,0); } }
 
-/* ===== PayBack styles ===== */
+/* PayBack styles */
 .pb-prefill-card { background:#fff7ea; border:1px dashed #e67e22; border-radius:10px; padding:10px 12px; margin-bottom:10px; }
 .pb-prefill-card summary { font-weight:800; color:#b35309; cursor:pointer; outline:none; list-style:none; }
 .pb-prefill-card summary::-webkit-details-marker { display:none; }
@@ -83,56 +47,44 @@
 .pb-confirm-para { background:#eef6fb; border-left:4px solid #2c7da0; padding:8px 10px; font-size:.78rem; line-height:1.5; color:#1e3b4a; border-radius:6px; }
 .pb-ussd-box { background:#0f2b3d; color:#ffd966; padding:10px 12px; border-radius:8px; font-family:'Courier New',monospace; font-size:.85rem; word-break:break-all; margin-top:6px; }
 
-
-
-  /* ===== Header admin notification badge ===== */
-.header-notif-btn {
-  position: relative;
-  width: 38px; height: 38px;
-  border-radius: 50%;
-  background: rgba(255,255,255,.15);
-  border: 1.5px solid rgba(255,255,255,.35);
-  color: #fff;
-  cursor: pointer;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.05rem;
-  padding: 0;
-  transition: transform .15s, background .15s;
-}
-.header-notif-btn.show { display: inline-flex; }
-.header-notif-btn:hover { background: rgba(255,255,255,.25); transform: scale(1.06); }
-.header-notif-btn.pulse { animation: hnb-pulse 1.6s ease-in-out infinite; }
-@keyframes hnb-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(231,76,60,.65); }
-  50%      { box-shadow: 0 0 0 9px rgba(231,76,60,0); }
-}
-.header-notif-btn .hnb-count {
-  position: absolute;
-  top: -6px; right: -6px;
-  min-width: 18px; height: 18px;
-  padding: 0 4px;
-  background: #e74c3c;
-  color: #fff;
-  border-radius: 9px;
-  font-size: .62rem;
-  font-weight: 800;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 0 0 2px rgba(255,255,255,.95);
-  line-height: 1;
-}
-
-/* Pulse the chat toggle button when admin messages are pending */
-.chat-toggle-btn.admin-pulse { animation: chat-admin-pulse 1.6s ease-in-out infinite; }
-@keyframes chat-admin-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(231,76,60,.65); }
-  50%      { box-shadow: 0 0 0 12px rgba(231,76,60,0); }
-}
-
-  
+/* ============ CALL UI ============ */
+.call-modal { z-index: 3000 !important; padding: 0 !important; }
+.call-modal .call-wrap { position: fixed; inset: 0; display: flex; flex-direction: column; background: #0a1a24; }
+.call-topbar { padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; color: #fff; background: rgba(0,0,0,.45); font-size: .85rem; }
+.call-status { font-weight: 700; }
+.call-timer { font-family: 'Courier New', monospace; color: #ffd966; font-weight: 700; }
+.call-videos { flex: 1; display: grid; gap: 6px; padding: 6px; overflow: hidden; }
+.call-videos[data-count="1"] { grid-template-columns: 1fr; }
+.call-videos[data-count="2"] { grid-template-columns: 1fr 1fr; }
+.call-videos[data-count="3"] { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+.call-videos[data-count="4"] { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+.call-videos[data-count="5"], .call-videos[data-count="6"] { grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 1fr 1fr; }
+.call-tile { position: relative; background: #12212d; border-radius: 10px; overflow: hidden; display: flex; align-items: center; justify-content: center; min-height: 100px; }
+.call-tile video { width: 100%; height: 100%; object-fit: cover; }
+.call-tile .tile-label { position: absolute; bottom: 8px; left: 8px; background: rgba(0,0,0,.65); color: #fff; padding: 3px 10px; border-radius: 12px; font-size: .7rem; font-weight: 600; }
+.call-controls { padding: 14px; display: flex; justify-content: center; gap: 16px; background: rgba(0,0,0,.45); }
+.call-ctrl { width: 58px; height: 58px; border-radius: 50%; border: none; background: #2c7da0; color: #fff; font-size: 1.5rem; cursor: pointer; transition: filter .15s; }
+.call-ctrl:hover { filter: brightness(1.15); }
+.call-ctrl.end { background: #e74c3c; }
+.call-ctrl.muted { background: #7f8c8d; }
+.call-incoming { z-index: 3100 !important; }
+.incoming-card { background: linear-gradient(135deg,#0a2b3c,#1c4e6c); padding: 26px; border-radius: 18px; text-align: center; color: #fff; min-width: 300px; max-width: 360px; animation: incoming-in .3s ease-out; }
+@keyframes incoming-in { from { transform: scale(.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.incoming-icon { font-size: 3rem; }
+.incoming-name { font-size: 1.2rem; font-weight: 700; margin-top: 8px; }
+.incoming-sub { font-size: .85rem; opacity: .8; margin-bottom: 18px; }
+.incoming-actions { display: flex; gap: 10px; }
+.incoming-btn { flex: 1; padding: 13px; border: none; border-radius: 30px; font-weight: 700; cursor: pointer; font-size: .9rem; }
+.incoming-btn.decline { background: #e74c3c; color: #fff; }
+.incoming-btn.accept { background: #27ae60; color: #fff; }
+.call-btn-inline { background: transparent; border: none; font-size: 1rem; cursor: pointer; padding: 2px 6px; border-radius: 50%; }
+.call-btn-inline:hover { background: rgba(44,125,160,.15); }
+.participant-item { display: flex; align-items: center; padding: 10px 12px; cursor: pointer; border-bottom: 1px solid #e8edf2; gap: 10px; }
+.participant-item:hover { background: #f5f8fa; }
+.participant-item input[type="checkbox"] { accent-color: #2c7da0; transform: scale(1.2); }
+.participant-item .pi-icon { font-size: 1.2rem; }
+.participant-item .pi-name { flex: 1; font-size: .85rem; color: #1e3b4a; font-weight: 600; }
+.participant-item .pi-role { font-size: .68rem; color: #7f8c8d; text-transform: uppercase; }
 </style>
 </head>
 <body>
@@ -165,7 +117,6 @@
 <div class="agent-dropdown-list" id="agentDropdownList"></div>
 </div>
 
-<!-- ADMIN MESSAGE NOTIFICATION BADGE -->
 <button type="button" class="header-notif-btn" id="headerAdminBadge" title="Admin messages" aria-label="Admin messages">
   <span class="hnb-icon">🔔</span>
   <span class="hnb-count" id="headerAdminCount">0</span>
@@ -677,7 +628,6 @@
 
 </div></div>
 
-<!-- ====================== PAYBACK MODAL ====================== -->
 <div id="paybackModal" class="modal">
   <div class="modal-content" style="max-width:560px;max-height:92vh;overflow-y:auto;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
@@ -769,7 +719,6 @@
     </div>
   </div>
 </div>
-<!-- ==================== /PAYBACK MODAL ==================== -->
 
 <div id="deliverModal" class="modal">
   <div class="modal-content" style="max-width:620px;">
@@ -1020,6 +969,51 @@
 </div>
 
 <input type="file" id="avatarUploadInput" accept="image/*" class="hidden-input" />
+
+<!-- ============ CALL UI ============ -->
+<div id="callModal" class="modal call-modal" style="display:none;">
+  <div class="call-wrap">
+    <div class="call-topbar">
+      <div class="call-status" id="callStatus">Calling...</div>
+      <div class="call-timer" id="callTimer"></div>
+    </div>
+    <div class="call-videos" id="callVideos"></div>
+    <div class="call-controls">
+      <button class="call-ctrl" id="callMuteBtn" title="Mute">🎤</button>
+      <button class="call-ctrl" id="callCamBtn" title="Camera">📹</button>
+      <button class="call-ctrl end" id="callEndBtn" title="End">📵</button>
+    </div>
+  </div>
+</div>
+
+<div id="incomingCallModal" class="modal call-incoming" style="display:none;">
+  <div class="incoming-card">
+    <div class="incoming-icon" id="incomingIcon">👤</div>
+    <div class="incoming-name" id="incomingName">Someone</div>
+    <div class="incoming-sub" id="incomingSub">Audio call</div>
+    <div class="incoming-actions">
+      <button class="incoming-btn decline" id="incomingDeclineBtn">📵 Decline</button>
+      <button class="incoming-btn accept" id="incomingAcceptBtn">📞 Accept</button>
+    </div>
+  </div>
+</div>
+
+<div id="participantPickerModal" class="modal" style="display:none;">
+  <div class="modal-content" style="max-width:500px;">
+    <h3 style="color:#0f2b3d;margin-bottom:6px;">📞 Start a Call</h3>
+    <div style="font-size:.75rem;color:#7f8c8d;margin-bottom:10px;">
+      Select one or more contacts. Multiple selections start a conference call.
+    </div>
+    <input type="text" id="participantSearch" placeholder="🔍 Search by name or phone..." style="width:100%;padding:9px 14px;border-radius:22px;border:1px solid #d0dce8;margin-bottom:10px;font-size:.85rem;" />
+    <div id="participantList" style="max-height:48vh;overflow-y:auto;border:1px solid #e8edf2;border-radius:10px;"></div>
+    <div class="action-buttons-row" style="margin-top:12px;gap:8px;">
+      <button class="action-btn green" id="startAudioBtn" style="flex:1;">📞 Audio</button>
+      <button class="action-btn blue" id="startVideoBtn" style="flex:1;">🎥 Video</button>
+      <button class="action-btn close-modal" style="background:#95a5a6;">Cancel</button>
+    </div>
+  </div>
+</div>
+<!-- ============ /CALL UI ============ -->
 
 <script src="script.js"></script>
 </body>
