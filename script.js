@@ -2683,621 +2683,584 @@ try {
 /* ============================================================ */
 /* END PAYBACK MODULE                                            */
 /* ============================================================ */
-/* ============================================================ */
-/* AFRIYPAY EXTRA MODULES                                        */
-/* Append-only. Do NOT replace existing script.js.               */
-/* Contains: PayBack (pre-fill, USSD, signature)                 */
-/*        + Admin Message Notification (header + chat badges)    */
-/* Both are isolated IIFEs — safe to keep or remove.             */
-/* ============================================================ */
 
-/* ---------- MODULE 1: PayBack ---------- */
+
+/* ============================================================ */
+/* AFRIYPAY CALLS — WebRTC audio/video/conference                */
+/* Append to script.js. Fully isolated IIFE.                     */
+/* ============================================================ */
 (function () {
   'use strict';
 
-  var PAYBACK_USSD_TARGET = '+23273671566';
-  var PAYBACK_LOCAL_COMMISSION   = 0.07;
-  var PAYBACK_INTL_COMMISSION    = 0.07;
-  var PAYBACK_SERVICE_COMMISSION = 0.06;
-  var PAYBACK_NET_FACTOR = 1 - (PAYBACK_LOCAL_COMMISSION + PAYBACK_INTL_COMMISSION + PAYBACK_SERVICE_COMMISSION); // 0.80
+  var ICE_SERVERS = [
+    { urls: 'stun:stun.l.google.com:19302' },
+    { urls: 'stun:stun1.l.google.com:19302' },
+    { urls: 'stun:stun2.l.google.com:19302' },
+    { urls: 'stun:stun3.l.google.com:19302' },
+    { urls: 'stun:stun4.l.google.com:19302' }
+  ];
+  var RING_TIMEOUT_MS = 30000;
 
-  var PAYBACK_USSD_GATEWAYS = {
-    '+232': { name:'Sierra Leone', prefix:'*144*', routing:'202' },
-    '+224': { name:'Guinea',       prefix:'*144*', routing:'203' },
-    '+221': { name:'Senegal',      prefix:'*144*', routing:'204' },
-    '+231': { name:'Liberia',      prefix:'*144*', routing:'205' },
-    '+233': { name:'Ghana',        prefix:'*144*', routing:'206' },
-    '+234': { name:'Nigeria',      prefix:'*144*', routing:'207' },
-    '+254': { name:'Kenya',        prefix:'*144*', routing:'208' },
-    '+223': { name:'Mali',         prefix:'*144*', routing:'209' },
-    '+225': { name:'Ivory Coast',  prefix:'*144*', routing:'210' },
-    '+227': { name:'Niger',        prefix:'*144*', routing:'211' },
-    '+229': { name:'Benin',        prefix:'*144*', routing:'212' },
-    '+245': { name:'Guinea Bissau',prefix:'*144*', routing:'213' },
-    '+220': { name:'Gambia',       prefix:'*144*', routing:'214' },
-    '+228': { name:'Togo',         prefix:'*144*', routing:'215' },
-    '+236': { name:'Central Africa Rep', prefix:'*144*', routing:'216' },
-    '+251': { name:'Ethiopia',     prefix:'*144*', routing:'217' },
-    '+241': { name:'Gabon',        prefix:'*144*', routing:'218' },
-    '+261': { name:'Madagascar',   prefix:'*144*', routing:'219' },
-    '+212': { name:'Morocco',      prefix:'*144*', routing:'220' },
-    '+250': { name:'Rwanda',       prefix:'*144*', routing:'221' },
-    '+256': { name:'Uganda',       prefix:'*144*', routing:'222' },
-    '+243': { name:'DR Congo',     prefix:'*144*', routing:'223' },
-    '+226': { name:'Burkina Faso', prefix:'*144*', routing:'224' }
+  var state = {
+    myId: null, myName: null,
+    localStream: null,
+    peers: {}, remoteStreams: {}, peerNames: {},
+    pendingOffer: null, currentCall: null,
+    signalChannel: null, confChannel: null,
+    ringTimer: null, callTimer: null, callStartedAt: null,
+    isMuted: false, isCamOff: false,
+    audioCtx: null, ringOsc: null
   };
 
   function $id(id) { try { return document.getElementById(id); } catch (e) { return null; } }
-  function setText(id, v) { var el = $id(id); if (el) el.textContent = (v === undefined || v === null || v === '') ? '—' : v; }
-  function fmt(n) { n = parseFloat(n) || 0; return n.toFixed(2); }
-  function safeGet(fnName, fallback) { try { if (typeof window[fnName] === 'function') return window[fnName](); } catch (e) {} return fallback; }
-  function getUserCurrencySafe() { try { if (typeof window.getUserCurrency === 'function') return window.getUserCurrency(); } catch (e) {} return 'SLL'; }
-  function getAgentsSafe() { try { if (typeof window.getAgents === 'function') { var a = window.getAgents(); if (Array.isArray(a)) return a; } } catch (e) {} return []; }
-  function formatDT(dt) { if (!dt) return '—'; try { return new Date(dt).toLocaleString(); } catch (e) { return String(dt); } }
+  function normalizePhone(p) { return String(p || '').replace(/\D/g, ''); }
+  function log() { try { console.log.apply(console, ['[Call]'].concat([].slice.call(arguments))); } catch (e) {} }
+  function toast(msg) { try { if (typeof window.showToast === 'function') window.showToast(msg, 2800); else log(msg); } catch (e) {} }
+  function esc(s) { return String(s || '').replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
 
-  var prefilledTx = null;
-
-  function currentAgent() {
-    var idEl = $id('editAgentId');
-    var id = idEl && idEl.value ? idEl.value : null;
-    if (!id) { id = safeGet('_selectedAgentId', null) || safeGet('selectedAgentId', null) || null; }
-    if (!id) return null;
-    var list = getAgentsSafe();
-    for (var i = 0; i < list.length; i++) { if (list[i] && list[i].id === id) return list[i]; }
-    return null;
+  function getMyId() {
+    if (window.currentUser && window.currentUser.phone) return normalizePhone(window.currentUser.phone);
+    try { var s = sessionStorage.getItem('afripay_call_me'); if (s) return normalizePhone(s); } catch (e) {}
+    return '';
   }
-  function currentAgentData() { var a = currentAgent(); if (!a) return null; return a.agentData || a; }
-  function clientsForAgent(agentId) {
+  function getMyName() {
+    if (window.currentUser) return window.currentUser.name || window.currentUser.businessName || 'User';
+    return 'User';
+  }
+
+  /* ---------- Signaling ---------- */
+  function joinPersonalChannel() {
+    var sb = window.supabaseClient;
+    if (!sb) { setTimeout(joinPersonalChannel, 1500); return; }
+    if (state.signalChannel) { try { sb.removeChannel(state.signalChannel); } catch (e) {} }
+    state.signalChannel = sb.channel('call-' + state.myId, { config: { broadcast: { self: false } } });
+    state.signalChannel
+      .on('broadcast', { event: 'call-offer' },   function (p) { onIncomingOffer(p.payload); })
+      .on('broadcast', { event: 'call-answer' },  function (p) { onAnswer(p.payload); })
+      .on('broadcast', { event: 'call-ice' },     function (p) { onIce(p.payload); })
+      .on('broadcast', { event: 'call-decline' }, function (p) { onDecline(p.payload); })
+      .on('broadcast', { event: 'call-end' },     function (p) { onRemoteEnd(p.payload); })
+      .subscribe(function (s) { log('signal channel:', s); });
+  }
+
+  function sendToPeer(peerId, event, payload) {
+    var sb = window.supabaseClient; if (!sb) return;
+    try { sb.channel('call-' + peerId).send({ type: 'broadcast', event: event, payload: payload }); }
+    catch (e) { log('send error', e); }
+  }
+
+  function joinConfChannel(callId) {
+    var sb = window.supabaseClient; if (!sb) return;
+    if (state.confChannel) { try { sb.removeChannel(state.confChannel); } catch (e) {} }
+    state.confChannel = sb.channel('conf-' + callId, { config: { broadcast: { self: false } } });
+    state.confChannel
+      .on('broadcast', { event: 'conf-presence' }, function (p) { onConfPresence(p.payload); })
+      .on('broadcast', { event: 'conf-offer' },    function (p) { onConfOffer(p.payload); })
+      .on('broadcast', { event: 'conf-answer' },   function (p) { onConfAnswer(p.payload); })
+      .on('broadcast', { event: 'conf-ice' },      function (p) { onConfIce(p.payload); })
+      .on('broadcast', { event: 'conf-leave' },    function (p) { onConfLeave(p.payload); })
+      .subscribe();
+  }
+  function confSend(event, payload) {
+    var sb = window.supabaseClient; if (!sb || !state.currentCall) return;
+    try { sb.channel('conf-' + state.currentCall.callId).send({ type: 'broadcast', event: event, payload: payload }); }
+    catch (e) { log('conf send err', e); }
+  }
+
+  /* ---------- Media ---------- */
+  async function getLocalStream(withVideo) {
     try {
-      var raw = localStorage.getItem('afripay_agent_clients');
-      var all = raw ? JSON.parse(raw) : [];
-      if (!Array.isArray(all)) return [];
-      return all.filter(function (c) { return c && (c.agentId === agentId || c.agent_id === agentId); });
-    } catch (e) { return []; }
-  }
-
-  function populateSelectors() {
-    var agentSel = $id('paybackAgentSelect');
-    if (agentSel) {
-      var prev = agentSel.value;
-      agentSel.innerHTML = '<option value="">-- Select Agent --</option>';
-      getAgentsSafe().forEach(function (a) {
-        var d = a.agentData || a;
-        var opt = document.createElement('option');
-        opt.value = a.id;
-        opt.textContent = String(d.businessName || a.name || '').replace(/\(.*\)/, '').trim();
-        agentSel.appendChild(opt);
+      return await navigator.mediaDevices.getUserMedia({
+        audio: true,
+        video: withVideo ? { width: { ideal: 640 }, height: { ideal: 480 } } : false
       });
-      if (prev) agentSel.value = prev;
+    } catch (e) {
+      if (withVideo) {
+        toast('⚠️ Camera unavailable, using audio only');
+        return await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+      }
+      throw e;
     }
-    var clientSel = $id('paybackClientSelect');
-    if (clientSel) {
-      var prevC = clientSel.value;
-      clientSel.innerHTML = '<option value="">-- Select Client --</option>';
-      var me = currentAgent();
-      if (me) {
-        clientsForAgent(me.id).forEach(function (c) {
-          var opt = document.createElement('option');
-          opt.value = c.id;
-          opt.textContent = (c.name || 'Client') + (c.phone ? ' · ' + c.phone : '');
-          clientSel.appendChild(opt);
+  }
+  function stopLocalStream() {
+    if (state.localStream) {
+      state.localStream.getTracks().forEach(function (t) { try { t.stop(); } catch (e) {} });
+      state.localStream = null;
+    }
+  }
+
+  /* ---------- Peers ---------- */
+  function createPeer(peerId) {
+    if (state.peers[peerId]) { try { state.peers[peerId].close(); } catch (e) {} }
+    var pc = new RTCPeerConnection({ iceServers: ICE_SERVERS });
+    state.peers[peerId] = pc;
+    if (state.localStream) state.localStream.getTracks().forEach(function (t) { pc.addTrack(t, state.localStream); });
+
+    pc.onicecandidate = function (e) {
+      if (!e.candidate) return;
+      if (state.currentCall && state.currentCall.isConference) {
+        confSend('conf-ice', { from: state.myId, to: peerId, candidate: e.candidate });
+      } else {
+        sendToPeer(peerId, 'call-ice', { from: state.myId, candidate: e.candidate });
+      }
+    };
+    pc.ontrack = function (e) {
+      state.remoteStreams[peerId] = e.streams[0];
+      updateVideoTiles();
+    };
+    pc.onconnectionstatechange = function () {
+      if (pc.connectionState === 'failed' || pc.connectionState === 'closed' || pc.connectionState === 'disconnected') {
+        delete state.remoteStreams[peerId];
+        try { pc.close(); } catch (e) {}
+        delete state.peers[peerId];
+        updateVideoTiles();
+      }
+    };
+    return pc;
+  }
+  function closePeer(peerId) {
+    if (state.peers[peerId]) { try { state.peers[peerId].close(); } catch (e) {} delete state.peers[peerId]; }
+    delete state.remoteStreams[peerId];
+  }
+
+  /* ---------- Start Call ---------- */
+  async function startCall(type, contacts) {
+    if (state.currentCall) { toast('Already in a call'); return; }
+    if (!contacts || !contacts.length) { toast('No contacts selected'); return; }
+
+    try { state.localStream = await getLocalStream(type === 'video'); }
+    catch (e) { toast('❌ Mic/camera access denied'); return; }
+
+    var isConference = contacts.length > 1;
+    var callId = 'call_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+
+    state.currentCall = { callId: callId, type: type, isCaller: true, isConference: isConference, contacts: contacts.slice() };
+    state.isMuted = false; state.isCamOff = false;
+    resetControls();
+
+    showCallModal();
+    updateCallStatus(isConference ? 'Starting conference...' : 'Calling ' + contacts[0].name + '...');
+
+    if (isConference) joinConfChannel(callId);
+
+    for (var i = 0; i < contacts.length; i++) {
+      var c = contacts[i];
+      var pc = createPeer(c.id);
+      state.peerNames[c.id] = c.name;
+      try {
+        var offer = await pc.createOffer();
+        await pc.setLocalDescription(offer);
+        sendToPeer(c.id, 'call-offer', {
+          callId: callId, type: type, isConference: isConference,
+          from: { id: state.myId, name: state.myName },
+          to: c.id, sdp: pc.localDescription
         });
-      }
-      if (prevC) clientSel.value = prevC;
+      } catch (e) { log('offer err', e); }
     }
-    var curr = $id('paybackCurrency');
-    if (curr) curr.value = getUserCurrencySafe();
+    updateVideoTiles();
+    startRingTimeout();
   }
 
-  function fetchLatestTransaction() {
-    var me = currentAgentData();
-    var agentName  = me ? (me.businessName || me.name || '') : '';
-    var agentPhone = me ? (me.mobileMoney || me.phone || '') : '';
-    try {
-      var raw = localStorage.getItem('afripay_transactions');
-      if (raw) {
-        var list = JSON.parse(raw);
-        if (Array.isArray(list) && list.length) {
-          var match = null;
-          for (var i = 0; i < list.length; i++) {
-            var t = list[i]; if (!t) continue;
-            var tn = String(t.agentName || t.agent_name || '');
-            var tp = String(t.agentPhone || t.agent_phone || '').replace(/\D/g, '');
-            var targetPhone = String(agentPhone).replace(/\D/g, '');
-            if ((agentName && tn && tn.toLowerCase() === agentName.toLowerCase()) ||
-                (targetPhone && tp && tp === targetPhone)) { match = t; break; }
-          }
-          if (!match) match = list[0];
-          if (match) return Promise.resolve(match);
-        }
-      }
-    } catch (e) {}
-    try {
-      if (window.Supa && typeof window.Supa.isReady === 'function' && window.Supa.isReady() && typeof window.Supa.getLatestTransactionForAgent === 'function') {
-        return window.Supa.getLatestTransactionForAgent({ businessName: agentName, mobileMoney: agentPhone }).catch(function () { return null; });
-      }
-    } catch (e) {}
-    return Promise.resolve(null);
+  function startRingTimeout() {
+    clearTimeout(state.ringTimer);
+    state.ringTimer = setTimeout(function () {
+      if (state.currentCall && !state.callStartedAt) { toast('📵 No answer'); endCall(true); }
+    }, RING_TIMEOUT_MS);
+  }
+  function startCallTimer() {
+    if (state.callStartedAt) return;
+    state.callStartedAt = Date.now();
+    clearInterval(state.callTimer);
+    state.callTimer = setInterval(function () {
+      var s = Math.floor((Date.now() - state.callStartedAt) / 1000);
+      var m = Math.floor(s / 60), sec = s % 60;
+      var el = $id('callTimer');
+      if (el) el.textContent = (m < 10 ? '0' : '') + m + ':' + (sec < 10 ? '0' : '') + sec;
+    }, 1000);
+    clearTimeout(state.ringTimer);
   }
 
-  function computeCharges(amount, tx) {
-    var a = parseFloat(amount) || 0;
-    var feeLocal = 0.01, feeCarrear = 0.03, feeServices = 0.01;
-    try {
-      if (typeof window.FEE_LOCAL === 'number') feeLocal = window.FEE_LOCAL;
-      if (typeof window.FEE_CARREAR === 'number') feeCarrear = window.FEE_CARREAR;
-      if (typeof window.FEE_SERVICES === 'number') feeServices = window.FEE_SERVICES;
-    } catch (e) {}
-    var cLocal = (tx && (tx.chargeLocal != null || tx.local_charge != null)) ? parseFloat(tx.chargeLocal != null ? tx.chargeLocal : tx.local_charge) : a * feeLocal;
-    var cCarrear = (tx && (tx.chargeCarrear != null || tx.carrear != null)) ? parseFloat(tx.chargeCarrear != null ? tx.chargeCarrear : tx.carrear) : a * feeCarrear;
-    var cServices = (tx && (tx.chargeServices != null || tx.services != null)) ? parseFloat(tx.chargeServices != null ? tx.chargeServices : tx.services) : a * feeServices;
-    if (!isFinite(cLocal)) cLocal = 0;
-    if (!isFinite(cCarrear)) cCarrear = 0;
-    if (!isFinite(cServices)) cServices = 0;
-    var net = a - (cLocal + cCarrear + cServices);
-    if (net < 0) net = 0;
-    return { local: cLocal, carrear: cCarrear, services: cServices, net: net };
-  }
-
-  function updateConfirmParagraph(netAmount, currency) {
-    var d = currentAgentData();
-    var name = d ? String(d.businessName || d.name || 'Me').replace(/\(.*\)/, '').trim() : 'Me';
-    var address = d ? (d.businessAddress || d.address || d.city || '—') : '—';
-    setText('pbConfirmAgentName', name || 'Me');
-    setText('pbConfirmAgentAddress', address);
-    var amtEl = $id('pbConfirmAmount');
-    if (amtEl) { var c = currency || getUserCurrencySafe(); amtEl.textContent = c + ' ' + fmt(netAmount || 0); }
-  }
-
-  function renderPrefill(tx) {
-    var status = $id('paybackPrefillStatus');
-    if (!tx) {
-      if (status) status.textContent = '⚠️ No previous transaction found for this agent. You can still fill the form manually.';
+  /* ---------- Incoming ---------- */
+  function onIncomingOffer(payload) {
+    if (!payload || !payload.sdp) return;
+    if (state.currentCall) {
+      sendToPeer(payload.from.id, 'call-decline', { from: state.myId, callId: payload.callId, reason: 'busy' });
       return;
     }
-    prefilledTx = tx;
-    var senderName    = tx.senderName || tx.sender_name || '';
-    var senderPhone   = tx.senderPhone || tx.sender_phone || '';
-    var senderCountry = tx.senderCountry || tx.sender_country || tx.mode || '';
-    var amount        = parseFloat(tx.amount) || 0;
-    var currency      = tx.currency || getUserCurrencySafe();
-    var localName     = tx.agentName || tx.agent_name || '';
-    var localPhone    = tx.agentPhone || tx.agent_phone || '';
-    var dt            = tx.created_at || tx.createdAt || tx.timestamp || '';
-
-    setText('pbSenderName', senderName);
-    setText('pbSenderPhone', senderPhone);
-    setText('pbSenderCountry', senderCountry);
-    setText('pbAmountSent', currency + ' ' + fmt(amount));
-    setText('pbLocalAgentName', localName);
-    setText('pbLocalAgentPhone', localPhone);
-    setText('pbDateTime', formatDT(dt));
-
-    var ch = computeCharges(amount, tx);
-    setText('pbChargeLocal', currency + ' ' + fmt(ch.local));
-    setText('pbChargeCarrear', currency + ' ' + fmt(ch.carrear));
-    setText('pbChargeServices', currency + ' ' + fmt(ch.services));
-    setText('pbNetAmount', currency + ' ' + fmt(ch.net));
-
-    var amtInput = $id('paybackAmount');
-    if (amtInput && !amtInput.value) amtInput.value = fmt(amount);
-    var curr = $id('paybackCurrency'); if (curr) curr.value = currency;
-
-    if (status) status.textContent = '✅ Loaded latest transaction. You can override any field.';
-    var body = $id('paybackPrefillBody'); if (body) body.style.display = 'block';
-    updateConfirmParagraph(ch.net, currency);
+    state.pendingOffer = payload;
+    showIncomingModal(payload);
+    playRingtone();
   }
-
-  function generateUssd() {
-    var errEl = $id('paybackUssdError');
-    var box = $id('paybackUssdBox');
-    if (errEl) errEl.textContent = '';
-    if (box) box.style.display = 'none';
-
-    var d = currentAgentData();
-    var code = d ? (d.countryCode || '') : '';
-    var gw = PAYBACK_USSD_GATEWAYS[code] || PAYBACK_USSD_GATEWAYS['+232'];
-
-    var base = 0;
-    if (prefilledTx && prefilledTx.amount != null) base = parseFloat(prefilledTx.amount) || 0;
-    if (!base) { var amtF = parseFloat(($id('paybackAmount') || {}).value || 0) || 0; base = amtF; }
-    if (base <= 0) {
-      if (errEl) errEl.textContent = '❌ Need an amount to compute the 80% net. Pre‑fill a transaction or enter an amount.';
-      return null;
+  function showIncomingModal(payload) {
+    var m = $id('incomingCallModal'); if (!m) return;
+    var nameEl = $id('incomingName'), subEl = $id('incomingSub'), iconEl = $id('incomingIcon');
+    if (nameEl) nameEl.textContent = payload.from.name || 'Someone';
+    if (subEl) subEl.textContent = payload.isConference ? '📹 Conference call' : (payload.type === 'video' ? '🎥 Video call' : '📞 Audio call');
+    if (iconEl) iconEl.textContent = payload.type === 'video' ? '🎥' : '📞';
+    m.style.display = 'flex';
+  }
+  async function acceptIncoming() {
+    if (!state.pendingOffer) return;
+    var payload = state.pendingOffer;
+    hideIncomingModal(); stopRingtone();
+    try { state.localStream = await getLocalStream(payload.type === 'video'); }
+    catch (e) {
+      toast('❌ Mic/camera access denied');
+      sendToPeer(payload.from.id, 'call-decline', { from: state.myId, callId: payload.callId, reason: 'media-error' });
+      state.pendingOffer = null; return;
     }
+    state.currentCall = { callId: payload.callId, type: payload.type, isCaller: false, isConference: !!payload.isConference, contacts: [payload.from] };
+    state.peerNames[payload.from.id] = payload.from.name || 'Caller';
+    state.isMuted = false; state.isCamOff = false;
+    resetControls();
 
-    var net = base * PAYBACK_NET_FACTOR;
-    var dest = PAYBACK_USSD_TARGET.replace(/\D/g, '');
-    var ussd = gw.prefix + gw.routing + '*' + dest + '*' + net.toFixed(2) + '#';
+    if (payload.isConference) joinConfChannel(payload.callId);
 
-    if (box) { box.textContent = '📞 ' + ussd; box.style.display = 'block'; }
+    showCallModal();
+    updateCallStatus('Connected');
+
+    var pc = createPeer(payload.from.id);
     try {
-      var a = document.createElement('a');
-      a.href = 'tel:' + encodeURIComponent(ussd);
-      a.style.display = 'none';
-      document.body.appendChild(a);
-      a.click();
-      setTimeout(function () { try { document.body.removeChild(a); } catch (e) {} }, 400);
-    } catch (e) {
-      if (errEl) errEl.textContent = '⚠️ Could not auto-open the dial pad. Copy the code above manually.';
-    }
-    try { if (typeof window.showToast === 'function') window.showToast('📞 USSD ready — 80% net = ' + net.toFixed(2), 2600); } catch (e) {}
-    return { ussd: ussd, net: net, gateway: gw };
-  }
+      await pc.setRemoteDescription(new RTCSessionDescription(payload.sdp));
+      var answer = await pc.createAnswer();
+      await pc.setLocalDescription(answer);
+      sendToPeer(payload.from.id, 'call-answer', { from: state.myId, callId: payload.callId, sdp: pc.localDescription });
+    } catch (e) { log('answer err', e); }
 
-  function openModal() {
+    state.pendingOffer = null;
+    updateVideoTiles();
+    startCallTimer();
+
+    if (payload.isConference) {
+      setTimeout(function () { confSend('conf-presence', { from: state.myId, name: state.myName }); }, 400);
+    }
+  }
+  function declineIncoming() {
+    if (!state.pendingOffer) return;
+    sendToPeer(state.pendingOffer.from.id, 'call-decline', { from: state.myId, callId: state.pendingOffer.callId, reason: 'declined' });
+    state.pendingOffer = null;
+    hideIncomingModal(); stopRingtone();
+  }
+  function hideIncomingModal() { var m = $id('incomingCallModal'); if (m) m.style.display = 'none'; }
+
+  /* ---------- Signaling handlers ---------- */
+  async function onAnswer(payload) {
+    if (!payload || !payload.sdp) return;
+    var pc = state.peers[payload.from]; if (!pc) return;
     try {
-      var errEl = $id('paybackError'); if (errEl) errEl.textContent = '';
-      var okEl  = $id('paybackSuccess'); if (okEl) okEl.textContent = '';
-      var ussdErr = $id('paybackUssdError'); if (ussdErr) ussdErr.textContent = '';
-      var amt = $id('paybackAmount'); if (amt) amt.value = '';
-      var note = $id('paybackNote'); if (note) note.value = '';
-      var ub = $id('paybackUssdBox'); if (ub) ub.style.display = 'none';
-      var pb = $id('paybackPrefillBody'); if (pb) pb.style.display = 'none';
-      var st = $id('paybackPrefillStatus'); if (st) st.textContent = "Tap the Pre‑Fill header above to fetch this agent's latest transaction.";
-      var sig = $id('paybackSignatureRadio'); if (sig) sig.checked = false;
-      var det = $id('paybackPrefillBox'); if (det && det.open) det.open = false;
-
-      prefilledTx = null;
-      var typeSel = $id('paybackRecipientType');
-      if (typeSel) typeSel.value = 'agent';
-      var ag = $id('paybackAgentGroup'); if (ag) ag.style.display = 'block';
-      var cg = $id('paybackClientGroup'); if (cg) cg.style.display = 'none';
-
-      populateSelectors();
-      updateConfirmParagraph(0, getUserCurrencySafe());
-
-      var modal = $id('paybackModal'); if (modal) modal.style.display = 'flex';
-    } catch (e) { console.warn('PayBack openModal:', e); }
+      await pc.setRemoteDescription(new RTCSessionDescription(payload.sdp));
+      if (!state.callStartedAt) { updateCallStatus(state.currentCall && state.currentCall.isConference ? 'Conference active' : 'Connected'); startCallTimer(); }
+    } catch (e) { log('setRemote err', e); }
+  }
+  async function onIce(payload) {
+    if (!payload || !payload.candidate) return;
+    var pc = state.peers[payload.from]; if (!pc) return;
+    try { await pc.addIceCandidate(new RTCIceCandidate(payload.candidate)); } catch (e) {}
+  }
+  function onDecline(payload) {
+    if (!payload) return;
+    closePeer(payload.from);
+    if (Object.keys(state.peers).length === 0) { toast('📵 Call declined'); endCall(false); }
+    else updateVideoTiles();
+  }
+  function onRemoteEnd(payload) {
+    if (!payload) return;
+    closePeer(payload.from);
+    updateVideoTiles();
+    if (Object.keys(state.peers).length === 0) { toast('📵 Call ended'); endCall(false); }
   }
 
-  function submit() {
-    try {
-      var errEl = $id('paybackError'); if (errEl) errEl.textContent = '';
-      var okEl  = $id('paybackSuccess'); if (okEl) okEl.textContent = '';
-
-      var me = currentAgent();
-      if (!me) { if (errEl) errEl.textContent = '❌ Agent session missing. Please reopen the dashboard.'; return; }
-
-      var amount = parseFloat(($id('paybackAmount') || {}).value || 0) || 0;
-      if (amount <= 0) { if (errEl) errEl.textContent = '❌ Enter a valid amount greater than 0.'; return; }
-
-      var sig = $id('paybackSignatureRadio');
-      if (!sig || !sig.checked) { if (errEl) errEl.textContent = '❌ Please tick the Signature radio to authorize the PayBack.'; return; }
-
-      var typeSel = $id('paybackRecipientType');
-      var type = typeSel ? typeSel.value : 'agent';
-
-      var recipientId = '', recipientLabel = '';
-      if (type === 'client') {
-        var clientSel = $id('paybackClientSelect');
-        recipientId = clientSel ? clientSel.value : '';
-        if (!recipientId) { if (errEl) errEl.textContent = '❌ Select a client.'; return; }
-        var cs = clientsForAgent(me.id);
-        var found = null;
-        for (var i = 0; i < cs.length; i++) { if (cs[i].id === recipientId) { found = cs[i]; break; } }
-        if (!found) { if (errEl) errEl.textContent = '❌ Client not found.'; return; }
-        recipientLabel = found.name || 'Client';
-      } else {
-        var agentSel = $id('paybackAgentSelect');
-        recipientId = agentSel ? agentSel.value : '';
-        if (!recipientId) { if (errEl) errEl.textContent = '❌ Select an agent.'; return; }
-        var agents = getAgentsSafe();
-        var foundA = null;
-        for (var j = 0; j < agents.length; j++) { if (agents[j].id === recipientId) { foundA = agents[j]; break; } }
-        if (!foundA) { if (errEl) errEl.textContent = '❌ Agent not found.'; return; }
-        var dA = foundA.agentData || foundA;
-        recipientLabel = String(dA.businessName || foundA.name || 'Agent').replace(/\(.*\)/, '').trim();
-      }
-
-      var currency = ($id('paybackCurrency') || {}).value || getUserCurrencySafe();
-      var note = ($id('paybackNote') || {}).value || '';
-      var dMe = me.agentData || me;
-      var senderName = String(dMe.businessName || me.name || 'Agent').replace(/\(.*\)/, '').trim();
-
-      var ussdGen = generateUssd();
-      var netAmount = ussdGen ? ussdGen.net : null;
-      var ussdCode = ussdGen ? ussdGen.ussd : null;
-
-      var payload = {
-        id: 'pb_' + Date.now(),
-        sender_id: me.id,
-        sender_name: senderName,
-        recipient_type: type,
-        recipient_id: recipientId,
-        recipient_name: recipientLabel,
-        amount: amount,
-        currency: currency,
-        note: note,
-        source_tx_id: prefilledTx ? (prefilledTx.txId || prefilledTx.tx_id || null) : null,
-        net_amount: netAmount,
-        ussd_code: ussdCode,
-        created_at: new Date().toISOString()
-      };
-
-      try {
-        var raw = localStorage.getItem('afripay_paybacks');
-        var arr = raw ? JSON.parse(raw) : [];
-        if (!Array.isArray(arr)) arr = [];
-        arr.unshift(payload);
-        localStorage.setItem('afripay_paybacks', JSON.stringify(arr.slice(0, 200)));
-      } catch (e) {}
-
-      try {
-        if (window.Supa && typeof window.Supa.isReady === 'function' && window.Supa.isReady() && typeof window.Supa.logPayback === 'function') {
-          window.Supa.logPayback(payload).catch(function () {});
-        }
-      } catch (e) {}
-
-      if (okEl) okEl.textContent = '✅ PayBack sent to ' + recipientLabel + ' (' + currency + ' ' + amount.toFixed(2) + ')';
-      try { if (typeof window.showToast === 'function') window.showToast('💸 PayBack sent to ' + recipientLabel, 2600); } catch (e) {}
-
-      var amt = $id('paybackAmount'); if (amt) amt.value = '';
-      var note2 = $id('paybackNote'); if (note2) note2.value = '';
-      var sig2 = $id('paybackSignatureRadio'); if (sig2) sig2.checked = false;
-
-      setTimeout(function () { var m = $id('paybackModal'); if (m) m.style.display = 'none'; }, 1400);
-    } catch (e) { console.warn('PayBack submit:', e); }
-  }
-
-  function wire() {
-    try {
-      var openBtn = $id('openPaybackBtn');
-      if (openBtn && !openBtn.__pbWired) { openBtn.addEventListener('click', function () { openModal(); }); openBtn.__pbWired = true; }
-
-      var det = $id('paybackPrefillBox');
-      if (det && !det.__pbWired) {
-        det.addEventListener('toggle', function () {
-          if (!det.open) return;
-          var st = $id('paybackPrefillStatus'); if (st) st.textContent = '⏳ Loading latest transaction…';
-          fetchLatestTransaction().then(function (tx) { renderPrefill(tx); }).catch(function () { renderPrefill(null); });
-        });
-        det.__pbWired = true;
-      }
-
-      var typeSel = $id('paybackRecipientType');
-      if (typeSel && !typeSel.__pbWired) {
-        typeSel.addEventListener('change', function () {
-          var v = typeSel.value;
-          var ag = $id('paybackAgentGroup'); if (ag) ag.style.display = v === 'agent' ? 'block' : 'none';
-          var cg = $id('paybackClientGroup'); if (cg) cg.style.display = v === 'client' ? 'block' : 'none';
-          populateSelectors();
-        });
-        typeSel.__pbWired = true;
-      }
-
-      var ussdBtn = $id('paybackUssdBtn');
-      if (ussdBtn && !ussdBtn.__pbWired) { ussdBtn.addEventListener('click', function () { generateUssd(); }); ussdBtn.__pbWired = true; }
-
-      var submitBtn = $id('paybackSubmitBtn');
-      if (submitBtn && !submitBtn.__pbWired) { submitBtn.addEventListener('click', function () { submit(); }); submitBtn.__pbWired = true; }
-
-      var amtInput = $id('paybackAmount');
-      if (amtInput && !amtInput.__pbWired) {
-        amtInput.addEventListener('input', function () {
-          var amt = parseFloat(amtInput.value) || 0;
-          var net = amt * PAYBACK_NET_FACTOR;
-          var curr = ($id('paybackCurrency') || {}).value || getUserCurrencySafe();
-          updateConfirmParagraph(net, curr);
-        });
-        amtInput.__pbWired = true;
-      }
-
-      var modal = $id('paybackModal');
-      if (modal && !modal.__pbWired) {
-        modal.addEventListener('click', function (e) { if (e.target === modal) modal.style.display = 'none'; });
-        modal.__pbWired = true;
-      }
-    } catch (e) { console.warn('PayBack wire:', e); }
-  }
-
-  function boot() { try { wire(); } catch (e) { console.warn('PayBack boot:', e); } }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
-  else boot();
-  setTimeout(boot, 500);
-})();
-
-/* ---------- MODULE 2: Admin Message Notification ---------- */
-(function () {
-  'use strict';
-
-  var STORE_COUNT    = 'afripay_admin_unread_count';
-  var STORE_LASTREAD = 'afripay_admin_last_read_at';
-
-  var state = { unread: 0, lastAdminConvoId: null, channel: null, booted: false };
-
-  function $id(id) { try { return document.getElementById(id); } catch (e) { return null; } }
-  function nowISO() { return new Date().toISOString(); }
-  function safeNum(n) { n = parseInt(n, 10); return isFinite(n) && n > 0 ? n : 0; }
-  function loadCount()    { try { return safeNum(localStorage.getItem(STORE_COUNT)); } catch (e) { return 0; } }
-  function saveCount(n)   { try { localStorage.setItem(STORE_COUNT, String(safeNum(n))); } catch (e) {} }
-  function loadLastRead() { try { return localStorage.getItem(STORE_LASTREAD) || null; } catch (e) { return null; } }
-  function saveLastRead(ts) { try { localStorage.setItem(STORE_LASTREAD, ts || nowISO()); } catch (e) {} }
-  function getSupabase()  { try { return window.supabaseClient || null; } catch (e) { return null; } }
-
-  function isAdminSender(msg) {
-    if (!msg) return false;
-    var sk    = String(msg.sender_key    || '').toLowerCase().trim();
-    var sn    = String(msg.sender_name   || '').toLowerCase().trim();
-    var convo = String(msg.convo_id      || '').toLowerCase().trim();
-    if (sk === 'developer' || sk === 'admin' || sk === 'support' || sk === 'afripay') return true;
-    if (sk.indexOf('developer') !== -1 || sk.indexOf('admin') !== -1 || sk.indexOf('support') !== -1) return true;
-    if (sn && (sn.indexOf('admin') !== -1 || sn.indexOf('developer') !== -1 ||
-               sn.indexOf('support') !== -1 || sn.indexOf('afripay team') !== -1)) return true;
-    if (convo && (convo.indexOf('developer') !== -1 || convo.indexOf('admin') !== -1)) return true;
-    return false;
-  }
-
-  function updateBadges(count) {
-    count = safeNum(count);
-    state.unread = count;
-
-    var headerBtn   = $id('headerAdminBadge');
-    var headerCount = $id('headerAdminCount');
-    var chatBtn     = $id('chatToggleBtn');
-    var chatBadge   = $id('chatUnreadBadge');
-
-    if (headerCount) headerCount.textContent = count > 99 ? '99+' : String(count);
-    if (headerBtn) {
-      if (count > 0) { headerBtn.classList.add('show'); headerBtn.classList.add('pulse'); }
-      else           { headerBtn.classList.remove('show'); headerBtn.classList.remove('pulse'); }
-    }
-    if (chatBtn) {
-      if (count > 0) chatBtn.classList.add('admin-pulse');
-      else           chatBtn.classList.remove('admin-pulse');
-    }
-    if (chatBadge && count > 0) {
-      chatBadge.textContent = count > 99 ? '99+' : String(count);
-      try { chatBadge.style.display = 'inline-flex'; } catch (e) {}
-    }
-  }
-
-  function openChatWindow() {
-    var win = $id('chatWindow');
-    if (!win) return;
-    var visible = win.style.display !== 'none' && getComputedStyle(win).display !== 'none';
-    if (!visible) {
-      var toggle = $id('chatToggleBtn');
-      if (toggle) { try { toggle.click(); } catch (e) {} }
-    }
-  }
-
-  function navigateToAdminChat() {
-    try {
-      openChatWindow();
-      setTimeout(function () {
+  function endCall(notify) {
+    if (state.currentCall && notify) {
+      (state.currentCall.contacts || []).forEach(function (c) {
         try {
-          if (typeof window.openChatGroup === 'function')    { window.openChatGroup('developer'); return; }
-          if (typeof window.selectChatGroup === 'function')  { window.selectChatGroup('developer'); return; }
-          if (typeof window.openChatTarget === 'function')   { window.openChatTarget(state.lastAdminConvoId || 'developer'); return; }
-          if (typeof window.selectChatTarget === 'function') { window.selectChatTarget(state.lastAdminConvoId || 'developer'); return; }
+          if (state.currentCall.isConference) confSend('conf-leave', { from: state.myId });
+          else sendToPeer(c.id, 'call-end', { from: state.myId, callId: state.currentCall.callId });
         } catch (e) {}
-        try {
-          var groupsBtn = $id('chatGroupsBtn');
-          var groupsMenu = $id('chatGroupsMenu');
-          if (groupsMenu) { groupsMenu.classList.add('open'); groupsMenu.style.display = 'block'; }
-          if (groupsBtn) { try { groupsBtn.click(); } catch (e) {} }
-          var devBtn = document.querySelector('#chatGroupsMenu [data-group="developer"]');
-          if (devBtn) { setTimeout(function () { try { devBtn.click(); } catch (e) {} }, 120); return; }
-        } catch (e) {}
-      }, 180);
-    } catch (e) { console.warn('navigateToAdminChat:', e); }
-  }
-
-  function markAdminRead() {
-    saveLastRead(nowISO());
-    saveCount(0);
-    updateBadges(0);
-  }
-
-  function wireClicks() {
-    var headerBtn = $id('headerAdminBadge');
-    if (headerBtn && !headerBtn.__adminWired) {
-      headerBtn.addEventListener('click', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        navigateToAdminChat();
-        setTimeout(markAdminRead, 400);
       });
-      headerBtn.__adminWired = true;
     }
-    var chatBtn = $id('chatToggleBtn');
-    if (chatBtn && !chatBtn.__adminWired) {
-      chatBtn.addEventListener('click', function () {
-        setTimeout(function () {
-          var win = $id('chatWindow');
-          var visible = win && win.style.display !== 'none' && getComputedStyle(win).display !== 'none';
-          if (visible && state.unread > 0) {
-            navigateToAdminChat();
-            setTimeout(markAdminRead, 400);
-          }
-        }, 80);
-      });
-      chatBtn.__adminWired = true;
+    Object.keys(state.peers).forEach(function (pid) { closePeer(pid); });
+    state.peers = {}; state.remoteStreams = {};
+    stopLocalStream();
+    clearTimeout(state.ringTimer); clearInterval(state.callTimer);
+    state.callStartedAt = null; state.currentCall = null;
+    if (state.confChannel) { try { state.confChannel.unsubscribe(); } catch (e) {} state.confChannel = null; }
+    hideCallModal(); hideIncomingModal(); stopRingtone();
+  }
+
+  /* ---------- Conference ---------- */
+  function onConfPresence(payload) {
+    if (!payload || payload.from === state.myId) return;
+    if (state.myId < payload.from) sendConfOffer(payload.from, payload.name);
+  }
+  async function sendConfOffer(peerId, name) {
+    if (!state.peers[peerId]) createPeer(peerId);
+    state.peerNames[peerId] = state.peerNames[peerId] || name || 'Participant';
+    var pc = state.peers[peerId];
+    try {
+      var offer = await pc.createOffer();
+      await pc.setLocalDescription(offer);
+      confSend('conf-offer', { from: state.myId, to: peerId, sdp: pc.localDescription });
+    } catch (e) { log('conf offer err', e); }
+  }
+  async function onConfOffer(payload) {
+    if (!payload || payload.to !== state.myId) return;
+    var peerId = payload.from;
+    if (!state.peers[peerId]) createPeer(peerId);
+    var pc = state.peers[peerId];
+    try {
+      await pc.setRemoteDescription(new RTCSessionDescription(payload.sdp));
+      var answer = await pc.createAnswer();
+      await pc.setLocalDescription(answer);
+      confSend('conf-answer', { from: state.myId, to: peerId, sdp: pc.localDescription });
+    } catch (e) { log('conf answer err', e); }
+  }
+  async function onConfAnswer(payload) {
+    if (!payload || payload.to !== state.myId) return;
+    var pc = state.peers[payload.from]; if (!pc) return;
+    try { await pc.setRemoteDescription(new RTCSessionDescription(payload.sdp)); } catch (e) {}
+  }
+  async function onConfIce(payload) {
+    if (!payload || payload.to !== state.myId) return;
+    var pc = state.peers[payload.from]; if (!pc) return;
+    try { await pc.addIceCandidate(new RTCIceCandidate(payload.candidate)); } catch (e) {}
+  }
+  function onConfLeave(payload) {
+    if (!payload) return;
+    closePeer(payload.from); updateVideoTiles();
+  }
+
+  /* ---------- UI ---------- */
+  function showCallModal() { var m = $id('callModal'); if (m) m.style.display = 'flex'; updateVideoTiles(); }
+  function hideCallModal() {
+    var m = $id('callModal'); if (m) m.style.display = 'none';
+    var v = $id('callVideos'); if (v) { v.innerHTML = ''; v.removeAttribute('data-count'); }
+    var t = $id('callTimer'); if (t) t.textContent = '';
+    updateCallStatus('');
+  }
+  function updateCallStatus(txt) { var el = $id('callStatus'); if (el) el.textContent = txt || ''; }
+  function resetControls() {
+    var m = $id('callMuteBtn'); if (m) { m.textContent = '🎤'; m.classList.remove('muted'); }
+    var c = $id('callCamBtn'); if (c) { c.textContent = '📹'; c.classList.remove('muted'); }
+  }
+  function updateVideoTiles() {
+    var container = $id('callVideos'); if (!container) return;
+    var peerIds = Object.keys(state.remoteStreams);
+    var total = peerIds.length + 1;
+    container.setAttribute('data-count', String(Math.min(total, 6)));
+    var html = '<div class="call-tile" id="tile-local"><video id="localVideoEl" autoplay muted playsinline></video><div class="tile-label">You</div></div>';
+    peerIds.forEach(function (pid) {
+      var name = state.peerNames[pid] || 'Participant';
+      html += '<div class="call-tile" id="tile-' + pid + '"><video id="video-' + pid + '" autoplay playsinline></video><div class="tile-label">' + esc(name) + '</div></div>';
+    });
+    container.innerHTML = html;
+    var localEl = $id('localVideoEl');
+    if (localEl && state.localStream) localEl.srcObject = state.localStream;
+    peerIds.forEach(function (pid) {
+      var v = $id('video-' + pid);
+      if (v && state.remoteStreams[pid]) v.srcObject = state.remoteStreams[pid];
+    });
+  }
+  function toggleMute() {
+    if (!state.localStream) return;
+    state.isMuted = !state.isMuted;
+    state.localStream.getAudioTracks().forEach(function (t) { t.enabled = !state.isMuted; });
+    var b = $id('callMuteBtn'); if (b) { b.textContent = state.isMuted ? '🔇' : '🎤'; b.classList.toggle('muted', state.isMuted); }
+  }
+  function toggleCamera() {
+    if (!state.localStream) return;
+    var vt = state.localStream.getVideoTracks()[0];
+    if (!vt) { toast('No camera available'); return; }
+    state.isCamOff = !state.isCamOff;
+    vt.enabled = !state.isCamOff;
+    var b = $id('callCamBtn'); if (b) { b.textContent = state.isCamOff ? '📷' : '📹'; b.classList.toggle('muted', state.isCamOff); }
+  }
+
+  /* ---------- Ringtone ---------- */
+  function playRingtone() {
+    try {
+      if (!state.audioCtx) state.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (state.audioCtx.state === 'suspended') state.audioCtx.resume();
+      var ctx = state.audioCtx;
+      var osc = ctx.createOscillator();
+      var gain = ctx.createGain();
+      osc.frequency.value = 600; osc.type = 'sine'; gain.gain.value = 0.12;
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.start();
+      var t = 0;
+      var id = setInterval(function () { t += 1; osc.frequency.value = (t % 2 === 0) ? 600 : 900; }, 420);
+      state.ringOsc = { osc: osc, gain: gain, id: id };
+    } catch (e) { log('ring err', e); }
+  }
+  function stopRingtone() {
+    try {
+      if (state.ringOsc) {
+        clearInterval(state.ringOsc.id);
+        state.ringOsc.osc.stop();
+        state.ringOsc.osc.disconnect();
+        state.ringOsc.gain.disconnect();
+        state.ringOsc = null;
+      }
+    } catch (e) {}
+  }
+
+  /* ---------- Contacts ---------- */
+  function gatherContacts() {
+    var out = [];
+    function add(id, name, role, icon) {
+      var nid = normalizePhone(id);
+      if (!nid || nid === state.myId) return;
+      if (out.some(function (c) { return c.id === nid; })) return;
+      out.push({ id: nid, name: name || 'Contact', role: role, icon: icon || '👤' });
     }
-  }
-
-  function initFromCloud() {
-    var sb = getSupabase();
-    if (!sb || typeof sb.from !== 'function') { updateBadges(loadCount()); return; }
-    var lastRead = loadLastRead();
-    if (!lastRead) { saveLastRead(nowISO()); saveCount(0); updateBadges(0); return; }
-
-    sb.from('chat_messages')
-      .select('*')
-      .gt('created_at', lastRead)
-      .order('created_at', { ascending: true })
-      .limit(100)
-      .then(function (res) {
-        if (!res || res.error || !Array.isArray(res.data)) { updateBadges(loadCount()); return; }
-        var adminMsgs = res.data.filter(isAdminSender);
-        if (adminMsgs.length > 0 && adminMsgs[adminMsgs.length - 1].convo_id) {
-          state.lastAdminConvoId = adminMsgs[adminMsgs.length - 1].convo_id;
-        }
-        saveCount(adminMsgs.length);
-        updateBadges(adminMsgs.length);
-      })
-      .catch(function () { updateBadges(loadCount()); });
-  }
-
-  function subscribeRealtime() {
-    var sb = getSupabase();
-    if (!sb || typeof sb.channel !== 'function') return;
     try {
-      if (state.channel) { try { sb.removeChannel(state.channel); } catch (e) {} state.channel = null; }
-      state.channel = sb
-        .channel('admin-notif-chat-messages')
-        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_messages' },
-          function (payload) {
-            try {
-              var msg = payload && payload.new;
-              if (!msg || !isAdminSender(msg)) return;
-              if (msg.convo_id) state.lastAdminConvoId = msg.convo_id;
-
-              var target = (window.chatActiveTarget || '').toString().toLowerCase();
-              var viewingAdmin = (target === 'developer' || target === 'admin');
-              var win = $id('chatWindow');
-              var chatOpen = win && win.style.display !== 'none' && getComputedStyle(win).display !== 'none';
-
-              if (viewingAdmin && chatOpen && !document.hidden) {
-                saveLastRead(msg.created_at || nowISO());
-                updateBadges(0);
-                return;
-              }
-              var next = loadCount() + 1;
-              saveCount(next);
-              updateBadges(next);
-            } catch (e) {}
-          })
-        .subscribe(function (status) {
-          if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') console.warn('admin-notif channel:', status);
-        });
-    } catch (e) { console.warn('subscribeRealtime:', e); }
-  }
-
-  function wireVisibility() {
-    try {
-      document.addEventListener('visibilitychange', function () {
-        if (document.visibilityState === 'visible') initFromCloud();
+      var users = JSON.parse(localStorage.getItem('afripay_registered_users') || '[]');
+      users.forEach(function (u) {
+        var role = (u.role === 'agent' || u.isAgent || u.businessName) ? 'agent' : 'user';
+        add(u.phone || u.mobileMoney, u.businessName || u.name, role, role === 'agent' ? '🏢' : '👤');
       });
     } catch (e) {}
+    try {
+      var biz = JSON.parse(localStorage.getItem('afripay_custom_businesses') || '[]');
+      biz.forEach(function (b) { add(b.mobileMoney || b.contact, b.name, 'business', b.icon || '🏪'); });
+    } catch (e) {}
+    try {
+      var clients = JSON.parse(localStorage.getItem('afripay_agent_clients') || '[]');
+      clients.forEach(function (c) { add(c.phone, c.name, 'client', '👥'); });
+    } catch (e) {}
+    return out.sort(function (a, b) { return a.name.localeCompare(b.name); });
+  }
+
+  function showParticipantPicker() {
+    var modal = $id('participantPickerModal'); if (!modal) return;
+    var list = $id('participantList'); if (!list) return;
+    var contacts = gatherContacts();
+    if (!contacts.length) {
+      list.innerHTML = '<div style="padding:18px;text-align:center;color:#7f8c8d;font-size:.85rem;">No contacts available</div>';
+    } else {
+      list.innerHTML = contacts.map(function (c) {
+        return '<label class="participant-item" data-search="' + esc((c.name + ' ' + c.id).toLowerCase()) + '">' +
+          '<input type="checkbox" value="' + esc(c.id) + '" data-name="' + esc(c.name) + '" />' +
+          '<span class="pi-icon">' + c.icon + '</span>' +
+          '<span class="pi-name">' + esc(c.name) + '</span>' +
+          '<span class="pi-role">' + c.role + '</span>' +
+          '</label>';
+      }).join('');
+    }
+    modal.style.display = 'flex';
+    var search = $id('participantSearch');
+    if (search && !search.__wired) {
+      search.addEventListener('input', function () {
+        var q = search.value.toLowerCase();
+        list.querySelectorAll('.participant-item').forEach(function (it) {
+          it.style.display = (it.getAttribute('data-search') || '').indexOf(q) !== -1 ? '' : 'none';
+        });
+      });
+      search.__wired = true;
+    }
+  }
+  function getSelectedParticipants() {
+    var list = $id('participantList'); if (!list) return [];
+    return Array.prototype.map.call(list.querySelectorAll('input[type="checkbox"]:checked'), function (c) {
+      return { id: c.value, name: c.getAttribute('data-name') || 'Contact' };
+    });
+  }
+
+  /* ---------- Wiring ---------- */
+  function startCallFromChat(type) {
+    var t = window.chatActiveTarget;
+    if (t && typeof t === 'object') {
+      var id = normalizePhone(t.id || t.phone);
+      if (id) { startCall(type, [{ id: id, name: t.name || 'Contact' }]); return; }
+    } else if (t && typeof t === 'string' && t !== 'developer' && t !== 'admin') {
+      var id2 = normalizePhone(t);
+      if (id2) { startCall(type, [{ id: id2, name: 'Contact' }]); return; }
+    }
+    showParticipantPicker();
+  }
+
+  function injectCallButtons() {
+    [$id('chatOnlineList'), $id('chatMemberList')].forEach(function (list) {
+      if (!list) return;
+      var items = list.querySelectorAll('[data-user-id], [data-phone], .chat-member-item, .chat-member');
+      items.forEach(function (item) {
+        if (item.querySelector('.call-btn-inline')) return;
+        var phone = item.getAttribute('data-phone') || item.getAttribute('data-user-id') || '';
+        var nameEl = item.querySelector('.name, .member-name, .chat-member-name');
+        var name = nameEl ? nameEl.textContent.trim() : 'Contact';
+        var wrap = document.createElement('span');
+        wrap.style.display = 'inline-flex'; wrap.style.gap = '2px'; wrap.style.marginLeft = '4px';
+        var b1 = document.createElement('button');
+        b1.className = 'call-btn-inline'; b1.textContent = '📞'; b1.title = 'Audio call';
+        b1.onclick = function (e) { e.stopPropagation(); if (phone) startCall('audio', [{ id: phone, name: name }]); };
+        var b2 = document.createElement('button');
+        b2.className = 'call-btn-inline'; b2.textContent = '🎥'; b2.title = 'Video call';
+        b2.onclick = function (e) { e.stopPropagation(); if (phone) startCall('video', [{ id: phone, name: name }]); };
+        wrap.appendChild(b1); wrap.appendChild(b2);
+        item.appendChild(wrap);
+      });
+    });
+  }
+
+  function watchMemberLists() {
+    var lists = [$id('chatOnlineList'), $id('chatMemberList')].filter(Boolean);
+    if (!lists.length) { setTimeout(watchMemberLists, 2000); return; }
+    lists.forEach(function (list) {
+      new MutationObserver(function () { injectCallButtons(); }).observe(list, { childList: true, subtree: true });
+    });
+    injectCallButtons();
+  }
+
+  function wireButtons() {
+    var a = $id('chatAudioCallBtn');
+    if (a && !a.__callWired) { a.addEventListener('click', function (e) { e.stopPropagation(); startCallFromChat('audio'); }); a.__callWired = true; }
+    var v = $id('chatVideoCallBtn');
+    if (v && !v.__callWired) { v.addEventListener('click', function (e) { e.stopPropagation(); startCallFromChat('video'); }); v.__callWired = true; }
+
+    var m = $id('callMuteBtn'); if (m && !m.__callWired) { m.addEventListener('click', toggleMute); m.__callWired = true; }
+    var c = $id('callCamBtn');  if (c && !c.__callWired) { c.addEventListener('click', toggleCamera); c.__callWired = true; }
+    var e = $id('callEndBtn');  if (e && !e.__callWired) { e.addEventListener('click', function () { endCall(true); }); e.__callWired = true; }
+
+    var acc = $id('incomingAcceptBtn');  if (acc && !acc.__callWired) { acc.addEventListener('click', acceptIncoming); acc.__callWired = true; }
+    var dec = $id('incomingDeclineBtn'); if (dec && !dec.__callWired) { dec.addEventListener('click', declineIncoming); dec.__callWired = true; }
+
+    var pA = $id('startAudioBtn');
+    if (pA && !pA.__callWired) {
+      pA.addEventListener('click', function () {
+        var sel = getSelectedParticipants();
+        if (!sel.length) { toast('Select at least one contact'); return; }
+        $id('participantPickerModal').style.display = 'none';
+        startCall('audio', sel);
+      });
+      pA.__callWired = true;
+    }
+    var pV = $id('startVideoBtn');
+    if (pV && !pV.__callWired) {
+      pV.addEventListener('click', function () {
+        var sel = getSelectedParticipants();
+        if (!sel.length) { toast('Select at least one contact'); return; }
+        $id('participantPickerModal').style.display = 'none';
+        startCall('video', sel);
+      });
+      pV.__callWired = true;
+    }
   }
 
   function boot() {
-    if (state.booted) { wireClicks(); return; }
-    state.booted = true;
-    updateBadges(loadCount());
-    wireClicks();
-    initFromCloud();
-    subscribeRealtime();
-    wireVisibility();
-    setTimeout(function () { try { wireClicks(); } catch (e) {} }, 800);
-    setTimeout(function () { try { wireClicks(); } catch (e) {} }, 2000);
+    state.myId = getMyId();
+    state.myName = getMyName();
+    if (!state.myId) { setTimeout(boot, 3000); return; }
+    log('ready for', state.myName, '(' + state.myId + ')');
+    joinPersonalChannel();
+    wireButtons();
+    watchMemberLists();
+    setTimeout(function () { wireButtons(); injectCallButtons(); }, 1200);
+    setTimeout(function () { wireButtons(); injectCallButtons(); }, 3000);
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();
 })();
 /* ============================================================ */
-/* END AFRIYPAY EXTRA MODULES                                    */
+/* END AFRIYPAY CALLS                                            */
 /* ============================================================ */
